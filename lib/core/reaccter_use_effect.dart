@@ -1,5 +1,8 @@
+library reactter;
+
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
+export 'package:get/get.dart';
 
 class UseEffect<T extends GetxController> extends StatefulWidget {
   final GetControllerBuilder<T> builder;

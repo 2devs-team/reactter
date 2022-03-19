@@ -1,4 +1,5 @@
 // ignore_for_file: avoid_print, annotate_overrides, overridden_fields
+library reactter;
 
 import 'package:flutter/material.dart';
 
@@ -15,7 +16,7 @@ class WidgetException extends AsyncException {
   Object originalError;
 
   WidgetException({required this.originalError})
-      : super(originalError: originalError, typeOfError: "WIDGET");
+      : super(originalError: originalError, typeOfError: "REACTTER WIDGET");
 
   Widget createWidget(BuildContext context, String message) {
     return Center(
@@ -35,7 +36,8 @@ class AsyncException {
   String typeOfError;
   Object originalError;
 
-  AsyncException({required this.originalError, this.typeOfError = "ASYNC"}) {
+  AsyncException(
+      {required this.originalError, this.typeOfError = "REACTTER ASYNC"}) {
     printErrorMessage();
   }
 
