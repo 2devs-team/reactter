@@ -1,10 +1,10 @@
 # Reactter by [2devs.io](https://2devs.io)
 
-## Current version: **0.0.1-dev.2**
+## Current version: **0.0.1-dev.3**
 
 ## [Beta release]
 
-## [0.0.1-dev.2] - 2022-03-19
+## [0.0.1-dev.3] - 2022-03-19
 ### Added
 - useEffect
 - useState
