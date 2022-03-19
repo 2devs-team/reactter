@@ -2,8 +2,7 @@
 
 # What is?
 
-Reactter is a package that uses [Get](https://get.dev) as base to implement reactive behavior using some names and functionality we are familiarized from React Js. 
-
+Reactter is a package that uses [Get](https://pub.dev/packages/get) as base to implement reactive behavior using some names and functionality we are familiarized from React Js. 
 
 # Features
 - useEffect
@@ -64,5 +63,13 @@ import 'package:reactter/reactter.dart';
 ## **This package still in development, you can use it for testing or in small example applications, IT'S NOT RECOMMENDED TO USE IT IN PRODUCTION.**
 
 <br>
+
+# Development by **2devs.io**
+
+- Leo Castellanos <leoocast.dev@gmail.com>
+- Carlos León <carleon.dev@gmail.com> 
+
+<BR>
+
 
 Copyright (c) 2022 **2devs.io**

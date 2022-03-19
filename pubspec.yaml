@@ -1,10 +1,7 @@
 name: reactter
-description: Use Get as React.
+description: Reactter is a package that uses [Get](https://pub.dev/packages/get) as base to implement reactive behavior using some names and functionality we are familiarized from React Js.
 version: 0.0.1-dev.1
-authors:
-  - Creator Leo Castellanos <leoocast.dev@gmail.com>
-  - Creator Carlos León <carleon.dev@gmail.com>
-homepage: 2devs.io
+homepage: https://2devs.io
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
