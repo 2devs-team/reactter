@@ -1,7 +1,7 @@
 
 <div align="center">
-    <img src="https://raw.githubusercontent.com/Leoocast/2devs/main/public/reactter_logo.png?token=GHSAT0AAAAAABSVITVYL2PFKKCZUMWQV6KYYRVTNSQ"
-        alt="Markdown Monster icon"
+    <img src="https://user-images.githubusercontent.com/26921084/159114960-b3b5b1bc-0bca-4c19-808a-a55bff792d7f.png"
+        alt="Reactter logo"
         style="width: 30%" />
 </div>
 
