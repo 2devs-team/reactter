@@ -4,7 +4,7 @@ import 'package:reactter/reactter.dart';
 import 'package:reactter/utils/helpers/reactter_future_helper.dart';
 
 class AppController extends ReactterController {
-  late Reactter<int> counter = useState<int>(
+  late Reactter<int> counter = useState(
     'counter',
     0,
     willUpdate: (prev, _) => {

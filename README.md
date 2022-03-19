@@ -1,39 +1,68 @@
-<!-- 
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/guides/libraries/writing-package-pages). 
 
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-library-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/developing-packages). 
--->
+# What is?
 
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+Reactter is a package that uses [Get](https://get.dev) as base to implement reactive behavior using some names and functionality we are familiarized from React Js. 
 
-## Features
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+# Features
+- useEffect
+- useState
+- Reactter View
+- Reactter State
+- Reactter Controller
+- Routing Controller
+- Helpers
+- Exceptions
+- Types
+
+<br>
+
+# Usage
+
+## useState:
+
+```dart
+//You can do this:
+ late Reactter<int> counter = useState('counter', 0);
+
+//Or add callbacks to catch events  
+ late Reactter<int> counter = useState(
+    'counter', 0,
+    willUpdate: (prevValue, _) => {
+      print("Before update!"),
+    },
+    didUpdate: (_, nextValue) => {
+      print("After update!"),
+    },
+  );
+```
+
+## useEffect:
+> You can use multiple ids
+
+```dart 
+Widget build(BuildContext context) {
+    return UseEffect<YourController>(
+        id: ['counter', 'loading']
+        builder: (controller) => Text(controller.counter.value.toString())
+    );
+}
+```
 
 ## Getting started
 
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
-
-## Usage
-
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder. 
+Just import the package
 
 ```dart
-const like = 'sample';
+import 'package:reactter/reactter.dart';
 ```
 
-## Additional information
+<br>
 
-TODO: Tell users more about the package: where to find more information, how to 
-contribute to the package, how to file issues, what response they can expect 
-from the package authors, and more.
+# WARNING: 
+## **This package still in development, you can use it for testing or in small example applications, IT'S NOT RECOMMENDED TO USE IT IN PRODUCTION.**
+
+<br>
+
+Copyright (c) 2022 **2devs.io**
