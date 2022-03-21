@@ -6,7 +6,7 @@ import 'package:reactter/utils/helpers/reactter_future_helper.dart';
 class AppController extends ReactterController {
   late Reactter<int> counter = useState(
     'counter',
-    0,
+    700,
     willUpdate: (prev, _) => {
       print("Before update!"),
     },

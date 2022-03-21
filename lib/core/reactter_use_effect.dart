@@ -41,12 +41,41 @@ class UseEffect<T extends GetxController> extends GetBuilder<T> {
 class UseEffectState<T extends GetxController> extends GetBuilderState<T> {
   List<VoidCallback?>? _removes;
   Object? _filter;
+  bool? _isCreator = false;
+
   @override
   void initState() {
+    // _GetBuilderState._currentState = this;
     super.initState();
+    widget.initState?.call(this);
+
+    var isRegistered = GetInstance().isRegistered<T>(tag: widget.tag);
+
+    if (widget.global) {
+      if (isRegistered) {
+        if (GetInstance().isPrepared<T>(tag: widget.tag)) {
+          _isCreator = true;
+        } else {
+          _isCreator = false;
+        }
+        controller = GetInstance().find<T>(tag: widget.tag);
+      } else {
+        controller = widget.init;
+        _isCreator = true;
+        GetInstance()
+            .lazyPut<T>(() => controller!, tag: widget.tag, fenix: true);
+        GetInstance().put<T>(controller!, tag: widget.tag);
+      }
+    } else {
+      controller = widget.init;
+      _isCreator = true;
+      controller?.onStart();
+    }
+
     if (widget.filter != null) {
       _filter = widget.filter!(controller!);
     }
+
     _subscribeToController();
   }
 

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:reactter/core/reaccter_use_effect.dart';
+import 'package:reactter/core/reactter_factory.dart';
 import 'package:reactter/reactter.dart';
 
 import 'app_controller.dart';
@@ -10,6 +10,16 @@ class ExamplePage extends ReactterView<AppController> {
   @override
   Widget build(BuildContext context) {
     Get.put(AppController());
+
+    ReactterFactory().register<AppController>(() => AppController());
+
+    final constructors = ReactterFactory().constructors;
+
+    print(ReactterFactory().isRegistered<AppController>());
+    final instance = ReactterFactory().getInstance<AppController>();
+    final newInstance = ReactterFactory().getInstance<AppController>();
+
+    final counterValue = instance?.counter.value ?? 50;
 
     return Scaffold(
       appBar: AppBar(
@@ -25,7 +35,7 @@ class ExamplePage extends ReactterView<AppController> {
             UseEffect<AppController>(
               builder: (controller) {
                 return Text(
-                  controller.counter.value.toString(),
+                  counterValue.toString(),
                   style: Theme.of(context).textTheme.headline4,
                 );
               },
