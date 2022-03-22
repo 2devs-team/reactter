@@ -31,11 +31,8 @@ class ExamplePage extends StatelessWidget {
         ),
       ],
       builder: (context) {
-        final controllersStates =
-            ReactterProvider.of<TestingController>(context);
-
-        final stateOf1 = controllersStates?[0].instance as TestingController;
-        final stateOf2 = controllersStates?[1].instance as TestingController2;
+        final stateOf1 = ReactterProvider.of<TestingController>(context);
+        final stateOf2 = ReactterProvider.of<TestingController2>(context);
 
         return Scaffold(
           appBar: AppBar(
@@ -46,10 +43,10 @@ class ExamplePage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Text(
-                  stateOf1.text,
+                  stateOf1?.text ?? 'No funca',
                 ),
                 Text(
-                  stateOf2.text,
+                  stateOf2?.text ?? "No funca",
                 ),
                 ElevatedButton(
                   onPressed: () {

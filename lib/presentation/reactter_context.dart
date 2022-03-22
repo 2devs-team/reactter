@@ -43,11 +43,21 @@ class ReactterProvider extends StatefulWidget {
   final List<ReactterController> controllers;
   final Widget Function(BuildContext context) builder;
 
-  static List<ReactterController>? of<T extends Object>(BuildContext context) {
-    final ReactterProviderState? result =
+  static T? of<T extends Object>(BuildContext context) {
+    final ReactterProviderState? mainState =
         context.findAncestorStateOfType<ReactterProviderState>();
 
-    return result!.controllers!;
+    if (mainState == null) {
+      return null;
+    }
+
+    for (var controller in mainState.controllers!) {
+      if (controller.type == T) {
+        return ReactterFactory().getInstance<T>() as T;
+      }
+    }
+
+    return null;
   }
 
   @override
