@@ -1,17 +1,18 @@
-import 'package:example/example_dispose.dart';
 import 'package:flutter/material.dart';
 import 'package:reactter/presentation/reactter_context.dart';
+import 'package:reactter/presentation/reactter_use_context.dart';
+import 'package:reactter/presentation/reactter_use_provider.dart';
 
-class TestingController {
+class WatfContext {
   String text = "Texto original 1";
 
-  TestingController();
+  WatfContext();
 }
 
-class TestingController2 {
+class Testing2Context {
   String text = "Texto original 2";
 
-  TestingController2();
+  Testing2Context();
 }
 
 class ExamplePage extends StatelessWidget {
@@ -20,19 +21,19 @@ class ExamplePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ReactterProvider(
-      controllers: [
-        ReactterController<TestingController>(
-          () => TestingController(),
+      contexts: [
+        ReactterContext<WatfContext>(
+          () => WatfContext(),
           init: true,
         ),
-        ReactterController<TestingController2>(
-          () => TestingController2(),
+        ReactterContext<Testing2Context>(
+          () => Testing2Context(),
           init: true,
         ),
       ],
       builder: (context) {
-        final stateOf1 = ReactterProvider.of<TestingController>(context);
-        final stateOf2 = ReactterProvider.of<TestingController2>(context);
+        // final stateOf1 = ReactterProvider.getContext<TestingContext>(context);
+        // final stateOf2 = ReactterProvider.getContext<Testing2Context>(context);
 
         return Scaffold(
           appBar: AppBar(
@@ -42,20 +43,28 @@ class ExamplePage extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Text(
-                  stateOf1?.text ?? 'No funca',
-                ),
-                Text(
-                  stateOf2?.text ?? "No funca",
+                // Text(
+                //   stateOf1?.text ?? 'No funca',
+                // ),
+                // Text(
+                //   stateOf2?.text ?? "No funca",
+                // ),
+                UseProvider(builder: (_, contextOf) {
+                  return Column(
+                    children: [
+                      Text(contextOf<WatfContext>().text),
+                      Text(contextOf<Testing2Context>().text),
+                    ],
+                  );
+                }),
+                UseContext<WatfContext>(
+                  builder: (context, instance) {
+                    final test = instance as WatfContext;
+                    return Text(instance.text);
+                  },
                 ),
                 ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => const ExampleDispose(),
-                      ),
-                    );
-                  },
+                  onPressed: () {},
                   child: const Text("Go to example 1"),
                 )
               ],

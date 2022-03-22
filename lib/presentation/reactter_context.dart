@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:reactter/reactter.dart';
 
-class ReactterController<T extends Object> {
+class ReactterContext<T extends Object> {
   final String id;
   final Type type = T;
   final T Function() constructor;
@@ -9,7 +9,7 @@ class ReactterController<T extends Object> {
   final bool init;
   final bool create;
 
-  ReactterController(
+  ReactterContext(
     this.constructor, {
     this.init = false,
     this.create = false,
@@ -37,13 +37,13 @@ class ReactterController<T extends Object> {
 
 class ReactterProvider extends StatefulWidget {
   const ReactterProvider(
-      {Key? key, required this.controllers, required this.builder})
+      {Key? key, required this.contexts, required this.builder})
       : super(key: key);
 
-  final List<ReactterController> controllers;
+  final List<ReactterContext> contexts;
   final Widget Function(BuildContext context) builder;
 
-  static T? of<T extends Object>(BuildContext context) {
+  static T? getContext<T extends Object>(BuildContext context) {
     final ReactterProviderState? mainState =
         context.findAncestorStateOfType<ReactterProviderState>();
 
@@ -51,7 +51,7 @@ class ReactterProvider extends StatefulWidget {
       return null;
     }
 
-    for (var controller in mainState.controllers!) {
+    for (var controller in mainState.contexts!) {
       if (controller.type == T) {
         return ReactterFactory().getInstance<T>() as T;
       }
@@ -60,21 +60,30 @@ class ReactterProvider extends StatefulWidget {
     return null;
   }
 
+  static ReactterProviderState? of(BuildContext context) {
+    return context.findAncestorStateOfType<ReactterProviderState>();
+  }
+
   @override
   State<ReactterProvider> createState() => ReactterProviderState();
 }
 
 class ReactterProviderState extends State<ReactterProvider> {
-  List<ReactterController>? controllers;
+  List<ReactterContext>? contexts;
+  Map<Type, Object?>? instanceMapper;
 
   @override
   initState() {
     super.initState();
 
-    controllers = widget.controllers;
+    contexts = widget.contexts;
 
-    for (var controller in widget.controllers) {
+    for (var controller in widget.contexts) {
       controller.initialize(true);
+
+      instanceMapper ??= {};
+      instanceMapper
+          ?.addEntries([MapEntry(controller.type, controller.instance)]);
     }
   }
 
@@ -87,7 +96,7 @@ class ReactterProviderState extends State<ReactterProvider> {
 
   @override
   dispose() {
-    for (var controller in widget.controllers) {
+    for (var controller in widget.contexts) {
       print('[REACTTER] Instance "' +
           controller.type.toString() +
           '" with hashcode: ' +
