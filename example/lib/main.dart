@@ -15,22 +15,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Get.put(RoutingController());
+    Get.put(AppController());
 
     final _routingController = Get.find<RoutingController>();
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: CreateContext(
-        controllers: [
-          ContextProvider<AppController>(() => AppController(), init: true)
-        ],
-        child: CreateContext(
-          controllers: [
-            ContextProvider<AppController>(() => AppController(), init: true)
-          ],
-          child: const ExamplePage(),
-        ),
-      ),
+      home: const ExamplePage(),
       navigatorObservers: [_routingController],
     );
   }

@@ -14,6 +14,8 @@ class AppController extends ReactterController {
     },
   );
 
+  final textToShow = UseState<String>("Texto original del controller");
+
   @override
   onInit() {
     super.onInit();
@@ -28,6 +30,10 @@ class AppController extends ReactterController {
       await delay(2000);
       print("Data getted!");
     });
+  }
+
+  void changeText() {
+    textToShow.value = "Cóoooosmico";
   }
 
   void onClick() async {

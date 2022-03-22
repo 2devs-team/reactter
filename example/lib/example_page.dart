@@ -1,24 +1,26 @@
+import 'package:example/example_dispose.dart';
 import 'package:flutter/material.dart';
+import 'package:reactter/core/reactter_factory.dart';
+import 'package:reactter/presentation/reactter_component.dart';
+import 'package:reactter/presentation/reactter_render.dart';
 import 'package:reactter/reactter.dart';
 
 import 'app_controller.dart';
 
-class ExamplePage extends ReactterComponent<AppController> {
+class ExamplePage extends StatelessWidget {
   const ExamplePage({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    Get.put(AppController());
-
     // ReactterFactory().register<AppController>(() => AppController());
 
-    final constructors = ReactterFactory().constructors;
+    // final constructors = ReactterFactory().constructors;
 
     // print(ReactterFactory().isRegistered<AppController>());
     // final instance = ReactterFactory().getInstance<AppController>();
 
     // final newInstance = ReactterFactory().getInstance<AppController>();
 
-    final test = "";
+    // final test = "";
     // final counterValue = instance?.counter.value ?? 50;
 
     return Scaffold(
@@ -32,19 +34,18 @@ class ExamplePage extends ReactterComponent<AppController> {
             const Text(
               'You have pushed the button this many times:',
             ),
-            Render<AppController>(
-              builder: (controller) {
-                return Text(
-                  0.toString(),
-                  style: Theme.of(context).textTheme.headline4,
-                );
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => const ExampleDispose()));
               },
-            ),
+              child: const Text("Go to example 1"),
+            )
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: state.onClick,
+        onPressed: () {},
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.

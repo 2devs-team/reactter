@@ -14,11 +14,13 @@ class ContextProvider<T extends Object> {
     this.id = "",
   }) {
     ReactterFactory().register<T>(constructor);
+    print('[REACTTER] Instance "' + type.toString() + '" has been registered');
   }
 
   initialize() {
     if (!init) return;
     instance = ReactterFactory().getInstance<T>(hashCode);
+    print('[REACTTER] Instance "' + type.toString() + '" has been initialized');
   }
 
   destroy() {
@@ -58,6 +60,12 @@ class _CreateContextState extends State<CreateContext> {
   @override
   dispose() {
     for (var contextProvider in widget.controllers) {
+      print('[REACTTER] Instance "' +
+          contextProvider.type.toString() +
+          '" with hashcode: ' +
+          contextProvider.hashCode.toString() +
+          ' has been initialize');
+
       contextProvider.destroy();
     }
 

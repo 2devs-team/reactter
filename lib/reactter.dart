@@ -13,7 +13,6 @@ export 'package:reactter/core/reactter_factory.dart';
 export 'package:get/get.dart';
 export 'package:get/get_state_manager/src/simple/get_widget_cache.dart';
 export 'package:reactter/presentation/reactter_component.dart';
-export 'package:reactter/presentation/reactter_render.dart';
 
 class UseState<T> {
   UseState(
