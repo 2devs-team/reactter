@@ -14,7 +14,7 @@ class ExampleDispose2 extends ReactterComponent<TestingController> {
       body: CreateContext(
         controllers: [
           ContextProvider<TestingController>(
-            () => TestingController("Instancia 2"),
+            () => TestingController(),
             init: true,
             create: true,
           )

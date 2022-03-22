@@ -1,14 +1,17 @@
 import 'package:example/example_dispose.dart';
 import 'package:flutter/material.dart';
+import 'package:reactter/presentation/reactter_context.dart';
 
 class TestingController {
-  String text = "Texto original";
+  String text = "Texto original 1";
 
-  TestingController(this.text);
+  TestingController();
+}
 
-  void changeText() {
-    text = "Cooooosmicooooooooooo";
-  }
+class TestingController2 {
+  String text = "Texto original 2";
+
+  TestingController2();
 }
 
 class ExamplePage extends StatelessWidget {
@@ -16,35 +19,58 @@ class ExamplePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Reactter example"),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => const ExampleDispose(),
-                  ),
-                );
-              },
-              child: const Text("Go to example 1"),
-            )
-          ],
+    return ReactterProvider(
+      controllers: [
+        ReactterController<TestingController>(
+          () => TestingController(),
+          init: true,
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+        ReactterController<TestingController2>(
+          () => TestingController2(),
+          init: true,
+        ),
+      ],
+      builder: (context) {
+        final controllersStates =
+            ReactterProvider.of<TestingController>(context);
+
+        final stateOf1 = controllersStates?[0].instance as TestingController;
+        final stateOf2 = controllersStates?[1].instance as TestingController2;
+
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text("Reactter example"),
+          ),
+          body: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  stateOf1.text,
+                ),
+                Text(
+                  stateOf2.text,
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const ExampleDispose(),
+                      ),
+                    );
+                  },
+                  child: const Text("Go to example 1"),
+                )
+              ],
+            ),
+          ),
+          floatingActionButton: FloatingActionButton(
+            onPressed: () {},
+            tooltip: 'Increment',
+            child: const Icon(Icons.add),
+          ), // This trailing comma makes auto-formatting nicer for build methods.
+        );
+      },
     );
   }
 }

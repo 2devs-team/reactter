@@ -1,0 +1,66 @@
+final AppContext = CreateContext(
+    states: () => (),
+)
+
+build(){
+    return AppContext.Provider(builder: (states) {
+        return Container(child: Text(states.text))
+    })
+}
+
+
+build(){
+    return AppContext.Provider(builder: (states) {
+        return 
+            Container(
+                    child: Render(states: states, builder: (states) => {
+                        return Text(states["Home"].text)
+                    },
+                ), 
+            )
+        }
+    )
+}
+
+build(){
+    return CreateGlobalContext(
+      controllers: [
+          ReactterContext<Class>(
+            () => Class(),
+            init: false,
+          )
+        ],
+      builder: (context) {
+        return UseRender(
+          states:[ ReactterContext.of<Class>(context).state],
+          builder: () => Widget,
+        ),
+      }
+    ),
+}
+
+build(){
+    return ReactterProvider(
+      controllers: [
+          ReactterContext<Class1>(
+            () => Class(),
+            init: false,
+          )
+          ReactterContext<Class2>(
+            () => Class(),
+            init: false,
+          )
+        ],
+      builder: (context) {
+
+          final stateOf1 = ReactterProvider.of<Class1>(context).state;
+          final stateOf2 = ReactterProvider.of<Class2>(context).state;
+
+          return Text(stateOf.text)
+        // return UseRender(
+        //   states:[ ReactterProvider.of<Class>(context).state],
+        //   builder: () => Widget,
+        // ),
+      }
+    ),
+}

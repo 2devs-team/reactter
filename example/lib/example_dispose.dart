@@ -16,7 +16,7 @@ class ExampleDispose extends ReactterComponent<TestingController> {
       body: CreateContext(
         controllers: [
           ContextProvider<TestingController>(
-            () => TestingController("Instancia 1"),
+            () => TestingController(),
             init: false,
           )
         ],
@@ -42,11 +42,11 @@ class ExampleDispose extends ReactterComponent<TestingController> {
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: state.changeText,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: state.changeText,
+      //   tooltip: 'Increment',
+      //   child: const Icon(Icons.add),
+      // ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
