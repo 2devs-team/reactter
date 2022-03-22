@@ -33,4 +33,21 @@ class ReactterFactory {
 
     return _reactterFactory.instances[T] as T;
   }
+
+  // T? getInstance<T extends Object>(T Function() creatorFn) {
+  //   if (!isRegistered<T>()) {
+  //     final creator = _reactterFactory.constructors[T];
+
+  //     if (creator == null) {
+  //       register<T>(creatorFn);
+
+  //       //Recursivo
+  //       return getInstance<T>(creatorFn);
+  //     }
+
+  //     _reactterFactory.instances[T] = creator();
+  //   }
+
+  //   return _reactterFactory.instances[T] as T;
+  // }
 }

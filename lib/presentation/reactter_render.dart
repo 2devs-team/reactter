@@ -2,9 +2,10 @@ library reactter;
 
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
+import 'package:reactter/core/reactter_factory.dart';
 
-class UseEffect<T extends GetxController> extends GetBuilder<T> {
-  const UseEffect({
+class Render<T extends GetxController> extends GetBuilder<T> {
+  const Render({
     Key? key,
     required final GetControllerBuilder<T> builder,
     final bool global = true,
@@ -50,6 +51,8 @@ class UseEffectState<T extends GetxController> extends GetBuilderState<T> {
     widget.initState?.call(this);
 
     var isRegistered = GetInstance().isRegistered<T>(tag: widget.tag);
+
+    final isReactterRegister = ReactterFactory().isRegistered<T>();
 
     if (widget.global) {
       if (isRegistered) {

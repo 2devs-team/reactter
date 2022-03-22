@@ -6,7 +6,7 @@ import 'package:get/get_state_manager/src/simple/get_widget_cache.dart';
 import 'package:reactter/utils/reactter_types.dart';
 
 export 'package:reactter/utils/reactter_types.dart';
-export 'package:reactter/core/reaccter_use_effect.dart';
+export 'package:reactter/presentation/reactter_use_effect.dart';
 export 'package:reactter/core/reactter_routing_controller.dart';
 export 'package:reactter/core/reactter_controller.dart';
 export 'package:get/get.dart';

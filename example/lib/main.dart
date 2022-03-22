@@ -1,5 +1,7 @@
+import 'package:example/app_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:reactter/presentation/reactter_create_context.dart';
 import 'example_page.dart';
 import 'package:reactter/reactter.dart';
 
@@ -16,22 +18,12 @@ class MyApp extends StatelessWidget {
 
     final _routingController = Get.find<RoutingController>();
 
-    return GetMaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
-      smartManagement: SmartManagement.keepFactory,
-      supportedLocales: const [
-        Locale('es'),
-        Locale('en'),
-      ],
-      routingCallback: _routingController.routingCallback,
-      initialRoute: '/example_page',
-      getPages: [
-        GetPage(
-          name: '/example_page',
-          page: () => const ExamplePage(),
-          transition: Transition.noTransition,
-        ),
-      ],
+      home: CreateContext(
+        controllers: [() => AppController()],
+        child: const ExamplePage(),
+      ),
       navigatorObservers: [_routingController],
     );
   }

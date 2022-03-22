@@ -11,6 +11,8 @@ import 'package:reactter/utils/reactter_types.dart';
 class ReactterController extends GetxController {
   final _routingController = Get.find<RoutingController>();
 
+  get getInstance => this;
+
   String route = '';
   final List<Reactter> statesList = [];
   bool Function() notReloadIf = () => false;
