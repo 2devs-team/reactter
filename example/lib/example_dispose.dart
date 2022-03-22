@@ -1,11 +1,10 @@
+import 'package:example/example_page.dart';
 import 'package:flutter/material.dart';
 import 'package:reactter/presentation/reactter_create_context.dart';
 import 'package:reactter/reactter.dart';
-
-import 'app_controller.dart';
 import 'example_dispose_2.dart';
 
-class ExampleDispose extends ReactterComponent<AppController> {
+class ExampleDispose extends ReactterComponent<TestingController> {
   const ExampleDispose({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -15,14 +14,19 @@ class ExampleDispose extends ReactterComponent<AppController> {
       ),
       body: CreateContext(
         controllers: [
-          ContextProvider<AppController>(() => AppController(), init: true)
+          ContextProvider<TestingController>(
+            () => TestingController("Instancia 1"),
+            init: true,
+            create: true,
+          )
         ],
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Text(
-                state.textToShow.value,
+                state.text,
+                style: TextStyle(fontSize: 30),
               ),
               ElevatedButton(
                 onPressed: () {

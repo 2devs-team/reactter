@@ -7,20 +7,33 @@ class ContextProvider<T extends Object> {
   final T Function() constructor;
   T? instance;
   final bool init;
+  final bool create;
 
   ContextProvider(
     this.constructor, {
     this.init = false,
+    this.create = false,
     this.id = "",
   }) {
     ReactterFactory().register<T>(constructor);
+
+    print('//////////////////////////////////');
     print('[REACTTER] Instance "' + type.toString() + '" has been registered');
+
+    initialize();
   }
 
   initialize() {
     if (!init) return;
-    instance = ReactterFactory().getInstance<T>(hashCode);
-    print('[REACTTER] Instance "' + type.toString() + '" has been initialized');
+
+    instance = ReactterFactory().getInstance<T>(
+      hashCode,
+      create,
+      'ContextProvider ' + hashCode.toString(),
+    );
+
+    print('[REACTTER] Instance "' + type.toString() + '" has been created');
+    print('//////////////////////////////////');
   }
 
   destroy() {
@@ -47,9 +60,9 @@ class _CreateContextState extends State<CreateContext> {
   initState() {
     super.initState();
 
-    for (var contextProvider in widget.controllers) {
-      contextProvider.initialize();
-    }
+    // for (var contextProvider in widget.controllers) {
+    //   contextProvider.initialize();
+    // }
   }
 
   @override
@@ -64,7 +77,7 @@ class _CreateContextState extends State<CreateContext> {
           contextProvider.type.toString() +
           '" with hashcode: ' +
           contextProvider.hashCode.toString() +
-          ' has been initialize');
+          ' has been disposed');
 
       contextProvider.destroy();
     }

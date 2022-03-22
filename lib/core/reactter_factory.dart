@@ -10,7 +10,7 @@ class ReactterFactory {
   ReactterFactory._();
 
   Map<Type, Object Function()> constructors = {};
-  Map<Type, Object> instances = {};
+  Map<Type, List<Object>> instances = {};
   Map<Type, List<int>> instancesRunning = {};
 
   void register<T extends Object>(T Function() creator) {
@@ -21,7 +21,12 @@ class ReactterFactory {
     return _reactterFactory.instances[T] != null;
   }
 
-  T? getInstance<T extends Object>([int? hashCode]) {
+  T? getInstance<T extends Object>([
+    int? hashCode,
+    bool create = false,
+    String from = "",
+  ]) {
+    print('[REACTTER] getInstance called from ' + from);
     if (!isRegistered<T>()) {
       final creator = _reactterFactory.constructors[T];
 
@@ -29,7 +34,8 @@ class ReactterFactory {
         return null;
       }
 
-      _reactterFactory.instances[T] = creator();
+      _reactterFactory.instances[T] ??= [];
+      _reactterFactory.instances[T]?.add(creator());
 
       if (hashCode != null) {
         _reactterFactory.instancesRunning[T] ??= [];
@@ -37,7 +43,23 @@ class ReactterFactory {
       }
     }
 
-    return _reactterFactory.instances[T] as T;
+    if (create) {
+      final creator = _reactterFactory.constructors[T];
+
+      _reactterFactory.instances[T] ??= [];
+      _reactterFactory.instances[T]?.add(creator!());
+
+      print("[REACTTER] Instance has been created from getInstance");
+    }
+
+    // final test = _reactterFactory.instances;
+
+    // final instances = _reactterFactory.instances[T];
+    // final instancesRunning = _reactterFactory.instancesRunning[T];
+
+    final instance = _reactterFactory.instances[T]?.last;
+
+    return instance as T;
   }
 
   destroy<T>([int? hashCode]) {

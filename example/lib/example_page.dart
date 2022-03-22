@@ -1,28 +1,20 @@
 import 'package:example/example_dispose.dart';
 import 'package:flutter/material.dart';
-import 'package:reactter/core/reactter_factory.dart';
-import 'package:reactter/presentation/reactter_component.dart';
-import 'package:reactter/presentation/reactter_render.dart';
-import 'package:reactter/reactter.dart';
 
-import 'app_controller.dart';
+class TestingController {
+  String text = "Texto original";
+
+  TestingController(this.text);
+
+  void changeText() {
+    text = "Cooooosmicooooooooooo";
+  }
+}
 
 class ExamplePage extends StatelessWidget {
   const ExamplePage({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    // ReactterFactory().register<AppController>(() => AppController());
-
-    // final constructors = ReactterFactory().constructors;
-
-    // print(ReactterFactory().isRegistered<AppController>());
-    // final instance = ReactterFactory().getInstance<AppController>();
-
-    // final newInstance = ReactterFactory().getInstance<AppController>();
-
-    // final test = "";
-    // final counterValue = instance?.counter.value ?? 50;
-
     return Scaffold(
       appBar: AppBar(
         title: const Text("Reactter example"),
@@ -36,8 +28,11 @@ class ExamplePage extends StatelessWidget {
             ),
             ElevatedButton(
               onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const ExampleDispose()));
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const ExampleDispose(),
+                  ),
+                );
               },
               child: const Text("Go to example 1"),
             )
