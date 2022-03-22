@@ -52,7 +52,7 @@ class RenderState<T extends GetxController> extends GetBuilderState<T> {
 
     var isRegistered = GetInstance().isRegistered<T>(tag: widget.tag);
 
-    final isReactterRegister = ReactterFactory().isRegistered<T>();
+    // final isReactterRegister = ReactterFactory().isBuilded<T>();
 
     if (widget.global) {
       if (isRegistered) {

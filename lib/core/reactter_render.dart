@@ -15,7 +15,7 @@ class _ReactterRenderState<T extends ReactterController>
   void initState() {
     super.initState();
 
-    var isRegistered = ReactterFactory().isRegistered<T>();
+    // var isRegistered = ReactterFactory().isBuilded<T>();
   }
 
   @override

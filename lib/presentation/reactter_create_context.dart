@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:reactter/core/reactter_factory.dart';
+import 'package:reactter/reactter.dart';
 
 class ContextProvider<T extends Object> {
   final String id;
@@ -15,29 +15,23 @@ class ContextProvider<T extends Object> {
     this.create = false,
     this.id = "",
   }) {
-    ReactterFactory().register<T>(constructor);
+    Reactter.factory.register<T>(constructor);
 
-    print('//////////////////////////////////');
-    print('[REACTTER] Instance "' + type.toString() + '" has been registered');
-
-    initialize();
+    initialize(init);
   }
 
-  initialize() {
+  initialize([bool init = false]) {
     if (!init) return;
 
-    instance = ReactterFactory().getInstance<T>(
-      hashCode,
-      create,
-      'ContextProvider ' + hashCode.toString(),
-    );
+    if (instance != null) return;
 
-    print('[REACTTER] Instance "' + type.toString() + '" has been created');
-    print('//////////////////////////////////');
+    instance = Reactter.factory.getInstance<T>(create, 'ContextProvider');
   }
 
   destroy() {
-    ReactterFactory().destroy<T>(hashCode);
+    if (instance == null) return;
+
+    Reactter.factory.deleted(instance!);
   }
 }
 
@@ -60,9 +54,9 @@ class _CreateContextState extends State<CreateContext> {
   initState() {
     super.initState();
 
-    // for (var contextProvider in widget.controllers) {
-    //   contextProvider.initialize();
-    // }
+    for (var contextProvider in widget.controllers) {
+      contextProvider.initialize(true);
+    }
   }
 
   @override

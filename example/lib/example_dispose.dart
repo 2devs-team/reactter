@@ -6,6 +6,7 @@ import 'example_dispose_2.dart';
 
 class ExampleDispose extends ReactterComponent<TestingController> {
   const ExampleDispose({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -16,8 +17,7 @@ class ExampleDispose extends ReactterComponent<TestingController> {
         controllers: [
           ContextProvider<TestingController>(
             () => TestingController("Instancia 1"),
-            init: true,
-            create: true,
+            init: false,
           )
         ],
         child: Center(
@@ -30,8 +30,11 @@ class ExampleDispose extends ReactterComponent<TestingController> {
               ),
               ElevatedButton(
                 onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const ExampleDispose2()));
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const ExampleDispose2(),
+                    ),
+                  );
                 },
                 child: const Text("Go to example 2"),
               )

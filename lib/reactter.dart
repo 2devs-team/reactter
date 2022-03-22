@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 library reactter;
 
 import 'package:flutter/material.dart';
@@ -13,6 +15,12 @@ export 'package:reactter/core/reactter_factory.dart';
 export 'package:get/get.dart';
 export 'package:get/get_state_manager/src/simple/get_widget_cache.dart';
 export 'package:reactter/presentation/reactter_component.dart';
+
+import 'package:reactter/core/reactter_interface.dart';
+
+class _ReactterInterface extends ReactterInterface {}
+
+final Reactter = _ReactterInterface();
 
 class UseState<T> {
   UseState(
