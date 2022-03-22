@@ -36,10 +36,10 @@ class Render<T extends GetxController> extends GetBuilder<T> {
           didUpdateWidget: didUpdateWidget,
         );
   @override
-  UseEffectState<T> createState() => UseEffectState<T>();
+  RenderState<T> createState() => RenderState<T>();
 }
 
-class UseEffectState<T extends GetxController> extends GetBuilderState<T> {
+class RenderState<T extends GetxController> extends GetBuilderState<T> {
   List<VoidCallback?>? _removes;
   Object? _filter;
   bool? _isCreator = false;

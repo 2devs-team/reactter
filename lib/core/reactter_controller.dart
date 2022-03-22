@@ -1,5 +1,4 @@
 // ignore_for_file: prefer_function_declarations_over_variables
-
 library reactter;
 
 import 'package:get/get.dart';
@@ -14,12 +13,15 @@ class ReactterController extends GetxController {
   get getInstance => this;
 
   String route = '';
-  final List<Reactter> statesList = [];
+  final List<UseState> statesList = [];
   bool Function() notReloadIf = () => false;
+
+  Map<String, UseState> get states => {};
 
   @override
   void onInit() async {
     super.onInit();
+
     _routingController.addListenerId('routing', onRoutingChanged);
   }
 
@@ -54,9 +56,9 @@ class ReactterController extends GetxController {
   }
 
   void onReload() {
-    for (var state in statesList) {
-      state.reset();
-    }
+    // for (var state in states) {
+    //   state.reset();
+    // }
   }
 
   Future<T?>? callAsync<T>(
@@ -82,19 +84,19 @@ class ReactterController extends GetxController {
     }
   }
 
-  Reactter<T> useState<T>(
+  UseState<T> useState<T>(
     String key,
     T initial, {
     UpdateCallback<T>? willUpdate,
     UpdateCallback<T>? didUpdate,
     bool? alwayUpdate,
   }) {
-    final state = Reactter<T>(
-      key,
+    final state = UseState<T>(
+      // key,
       initial,
-      beforeUpdate: willUpdate,
-      afterUpdate: didUpdate,
-      update: update,
+      willUpdate: willUpdate,
+      didUpdate: didUpdate,
+      // update: update,
       alwayUpdate:
           (alwayUpdate ?? false) || T == Map || T == List || T == Object,
     );

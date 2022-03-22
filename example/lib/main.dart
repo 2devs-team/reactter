@@ -21,8 +21,15 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: CreateContext(
-        controllers: [() => AppController()],
-        child: const ExamplePage(),
+        controllers: [
+          ContextProvider<AppController>(() => AppController(), init: true)
+        ],
+        child: CreateContext(
+          controllers: [
+            ContextProvider<AppController>(() => AppController(), init: true)
+          ],
+          child: const ExamplePage(),
+        ),
       ),
       navigatorObservers: [_routingController],
     );

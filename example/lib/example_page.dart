@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:reactter/core/reactter_factory.dart';
-import 'package:reactter/presentation/reactter_component.dart';
-import 'package:reactter/presentation/reactter_render.dart';
 import 'package:reactter/reactter.dart';
 
 import 'app_controller.dart';
@@ -16,12 +13,13 @@ class ExamplePage extends ReactterComponent<AppController> {
 
     final constructors = ReactterFactory().constructors;
 
-    print(ReactterFactory().isRegistered<AppController>());
-    final instance = ReactterFactory().getInstance<AppController>();
+    // print(ReactterFactory().isRegistered<AppController>());
+    // final instance = ReactterFactory().getInstance<AppController>();
 
-    final newInstance = ReactterFactory().getInstance<AppController>();
+    // final newInstance = ReactterFactory().getInstance<AppController>();
 
-    final counterValue = instance?.counter.value ?? 50;
+    final test = "";
+    // final counterValue = instance?.counter.value ?? 50;
 
     return Scaffold(
       appBar: AppBar(
@@ -37,7 +35,7 @@ class ExamplePage extends ReactterComponent<AppController> {
             Render<AppController>(
               builder: (controller) {
                 return Text(
-                  counterValue.toString(),
+                  0.toString(),
                   style: Theme.of(context).textTheme.headline4,
                 );
               },

@@ -9,29 +9,33 @@ export 'package:reactter/utils/reactter_types.dart';
 export 'package:reactter/presentation/reactter_use_effect.dart';
 export 'package:reactter/core/reactter_routing_controller.dart';
 export 'package:reactter/core/reactter_controller.dart';
+export 'package:reactter/core/reactter_factory.dart';
 export 'package:get/get.dart';
 export 'package:get/get_state_manager/src/simple/get_widget_cache.dart';
+export 'package:reactter/presentation/reactter_component.dart';
+export 'package:reactter/presentation/reactter_render.dart';
 
-class Reactter<T> {
-  Reactter(
-    this.key,
+class UseState<T> {
+  UseState(
+    // this.key,
     this.initial, {
     this.alwayUpdate = false,
-    UpdateCallback<T>? beforeUpdate,
-    UpdateCallback<T>? afterUpdate,
-    void Function([List<Object>?, bool])? update,
-  })  : _update = update,
-        _beforeUpdate = beforeUpdate,
-        _afterUpdate = afterUpdate;
+    UpdateCallback<T>? willUpdate,
+    UpdateCallback<T>? didUpdate,
+    // void Function([List<Object>?, bool])? update,
+  })  :
+        // _update = update,
+        _beforeUpdate = willUpdate,
+        _afterUpdate = didUpdate;
 
-  final String key;
+  // final String key;
   T initial;
   final bool alwayUpdate;
   final UpdateCallback<T>? _afterUpdate;
   final UpdateCallback<T>? _beforeUpdate;
   final List<UpdateCallback<T>> _beforeUpdateList = [];
   final List<UpdateCallback<T>> _afterUpdateList = [];
-  final void Function([List<Object>?, bool])? _update;
+  // final void Function([List<Object>?, bool])? _update;
 
   late T _value = initial;
   T get value => _value;
@@ -64,7 +68,7 @@ class Reactter<T> {
   }
 
   void update() {
-    _update?.call([key]);
+    // _update?.call([key]);
   }
 
   void _onBeforeUpdate(T oldValue, T value) {
