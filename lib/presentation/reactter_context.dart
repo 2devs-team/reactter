@@ -138,8 +138,11 @@ class ReactterProvider extends ReactterInheritedProvider {
       // We have to use this method instead of dependOnInheritedElement, because
       // dependOnInheritedElement does not support relocating using GlobalKey
       // if no provider were found previously.
-      context.dependOnInheritedWidgetOfExactType<
-          _ReactterInheritedProviderScope>();
+      context
+          .dependOnInheritedWidgetOfExactType<_ReactterInheritedProviderScope>(
+              aspect: (_) {
+        return true;
+      });
     }
 
     return inheritedElement;
@@ -489,6 +492,7 @@ class _ReactterInheritedProviderScopeElement extends InheritedElement {
             //   _debugIsSelecting = true;
             //   return true;
             // }());
+            shouldNotify = true;
             // shouldNotify = updateShouldNotify(value);
           } finally {
             // assert(() {
@@ -565,10 +569,10 @@ class _ReactterInheritedProviderScopeElement extends InheritedElement {
     //   isBuildFromExternalSources: _isBuildFromExternalSources,
     // );
     // _isBuildFromExternalSources = false;
-    if (_shouldNotifyDependents) {
-      _shouldNotifyDependents = false;
-      notifyClients(widget);
-    }
+    // if (_shouldNotifyDependents) {
+    // _shouldNotifyDependents = false;
+    notifyClients(widget);
+    // }
     return super.build();
   }
 
