@@ -76,11 +76,27 @@ extension ReactterBuildContext on BuildContext {
   T $<T>([
     List<UseState> Function(T instance)? selector,
   ]) {
+    Iterable<dynamic>? _valueStates;
+    T? _instance;
+
+    _instance =
+        ReactterProvider.of<T>(this, listen: selector != null, aspect: (_) {
+      final _valueStatesToCompared = selector?.call(_instance!) ?? [];
+
+      for (var index = 0; index <= _valueStatesToCompared.length; index++) {
+        if (_valueStatesToCompared[index].value != _valueStates) {
+          return true;
+        }
+      }
+
+      return false;
+    });
+
+    _valueStates = selector?.call(_instance!).map((state) => state.value);
+
+    assert(_instance != null, 'Instance "$T" does not exist');
+
     // final _instance = ReactterProvider.of(this)?.getInstance<T>();
-
-    final _instance = ReactterProvider.of(this, listen: true)?.getInstance<T>();
-
-    // final _valueStates = selector?.call(_instance!).map((state) => state.value);
 
     // ReactterProvider.of(this, listen: true, aspect: (_) {
     //   final _valueStatesToCompared = selector?.call(_instance!) ?? [];
@@ -126,26 +142,24 @@ class ReactterProvider extends ReactterInheritedProvider {
     }
   }
 
-  static _ReactterInheritedProviderScopeElement? of(
+  static T? of<T>(
     BuildContext context, {
     bool listen = false,
-    Object? aspect,
+    _SelectorAspect? aspect,
   }) {
-    final inheritedElement = _inheritedElementOf(context);
+    final _inheritedElement = _inheritedElementOf(context);
+    final _instance = _inheritedElement?.getInstance<T>();
 
     if (listen) {
-      // bind context with the element
-      // We have to use this method instead of dependOnInheritedElement, because
-      // dependOnInheritedElement does not support relocating using GlobalKey
-      // if no provider were found previously.
-      context
-          .dependOnInheritedWidgetOfExactType<_ReactterInheritedProviderScope>(
-              aspect: (_) {
-        return true;
-      });
+      if (aspect != null) {
+        context.dependOnInheritedElement(_inheritedElement!, aspect: aspect);
+      } else {
+        context.dependOnInheritedWidgetOfExactType<
+            _ReactterInheritedProviderScope>();
+      }
     }
 
-    return inheritedElement;
+    return _instance;
 
     // return listen
     //     ? context
@@ -492,7 +506,7 @@ class _ReactterInheritedProviderScopeElement extends InheritedElement {
             //   _debugIsSelecting = true;
             //   return true;
             // }());
-            shouldNotify = true;
+            shouldNotify = updateShouldNotify(this);
             // shouldNotify = updateShouldNotify(value);
           } finally {
             // assert(() {
@@ -654,7 +668,7 @@ class _ReactterInheritedProviderScopeElement extends InheritedElement {
   // }
 }
 
-typedef _SelectorAspect<T> = bool Function(T value);
+typedef _SelectorAspect<T> = bool Function(InheritedElement inheritedElement);
 
 class _Dependency<T> {
   bool shouldClearSelectors = false;
