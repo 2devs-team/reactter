@@ -1,0 +1,30 @@
+read -> $$
+watch - todo -> $
+select - seleccionados -> $ (()=>())
+
+(V1.0)
+1. Comunicación entre vistas
+2. Creates 
+3. LifeCycle de ReactterContext
+-------------------------------------
+
+(V1.2)
+4. UseEffect (beta)
+5. Hooks (beta)
+
+(V2.0)
+6. ReactterRoutter
+
+(V1.ReactterComponents)
+7. Buttons (Release)
+8. AppBars
+9. Inputs
+
+(V1.ReactterForm)
+10. Form
+
+
+_____
+Utils?
+Extensions?
+Helpers?

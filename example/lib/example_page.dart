@@ -22,6 +22,8 @@ class WatfContext extends ReactterContext {
 
   onPressed() {
     pruebaDeFuego.value = "COSSSMICOOOOOOOOOOOOO";
+    print("Que peo?");
+    print(pruebaDeFuego.value);
   }
 
   onPressed2() {

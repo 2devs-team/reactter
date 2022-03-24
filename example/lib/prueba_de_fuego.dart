@@ -11,25 +11,41 @@ class PruebaDeFuego extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text("test")),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text("No me renderizo"),
-            Builder(builder: (context) {
-              return Text("Yo si y me vae pito");
-            }),
-            UseBuilder(builder: (context, _, __) {
-              return ElevatedButton(
-                onPressed: () {
-                  context.$<WatfContext>().onPressed();
-                },
-                child: const Text("Test"),
-              );
-            })
+      body: UseProvider(
+          contexts: [
+            UseContext(
+              () => WatfContext(),
+              init: true,
+            ),
+            UseContext(
+              () => Testing2Context(),
+              init: true,
+            ),
           ],
-        ),
-      ),
+          builder: (context, _) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text("No me renderizo"),
+                  Builder(builder: (context) {
+                    return Text("Yo si y me vae pito");
+                  }),
+                  UseBuilder(builder: (context, _, __) {
+                    return ElevatedButton(
+                      onPressed: () {
+                        final test = context
+                            .$<WatfContext>((inst) => [inst.pruebaDeFuego]);
+
+                        test.onPressed();
+                      },
+                      child: const Text("Test"),
+                    );
+                  })
+                ],
+              ),
+            );
+          }),
     );
   }
 }
