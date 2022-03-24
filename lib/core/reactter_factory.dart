@@ -40,7 +40,7 @@ class ReactterFactory {
     print('getInstance: $imp');
     if (create) {
       final _builder = _reactterFactory.builders[T];
-      final _key = _getKey();
+      final _key = _getKey<T>();
 
       if (_builder == null) {
         Reactter.log(
@@ -51,11 +51,16 @@ class ReactterFactory {
       final _instance = _builder();
 
       Reactter.log(
-          'Instance "${T.toString()}"($_instance.hashCode) has been created');
+          'Instance "${T.toString()}"(${_instance.hashCode}) has been created');
 
-      _addInstance<T>(key: _key, instance: _instance);
+      _addInstance<T>(key: _key, instance: _instance as T);
 
-      return _instance as T;
+      _addInstanceRunning<T>(
+        key: _getKey<T>(true),
+        instance: _instance,
+      );
+
+      return _instance;
     }
 
     var _instance = _getGlobalInstance<T>();
@@ -67,19 +72,27 @@ class ReactterFactory {
         return null;
       }
 
-      _instance = _builder();
+      _instance = _builder() as T;
 
       Reactter.log(
-        'Instance "${T.toString()}"($_instance.hashCode) has been created as global',
+        'Instance "${T.toString()}"(${_instance.hashCode}) has been created as global',
       );
+
+      _addInstance<T>(
+        key: _getKey<T>(true),
+        instance: _instance,
+      );
+    } else {
+      Reactter.log(
+          'Instance "${T.toString()}"(${_instance.hashCode}) already created');
     }
 
-    _addInstance<T>(
-      key: _getKey(true),
+    _addInstanceRunning(
+      key: _getKey<T>(true),
       instance: _instance,
     );
 
-    return _instance as T;
+    return _instance;
   }
 
   void deleted(Object instance) {
@@ -108,7 +121,7 @@ class ReactterFactory {
     }
   }
 
-  String _getKey<T extends Object>([
+  String _getKey<T>([
     bool global = false,
   ]) {
     if (global) {
@@ -118,17 +131,24 @@ class ReactterFactory {
     return T.hashCode.toString();
   }
 
-  Object? _getGlobalInstance<T extends Object>() {
-    return instances[_getKey<T>(true)]?.first;
+  T? _getGlobalInstance<T>() {
+    final trueKey = _getKey<T>(true);
+
+    return instances[trueKey]?.first as T?;
   }
 
   _addInstance<T extends Object>({
     required String key,
-    required Object instance,
+    required T instance,
   }) {
     _reactterFactory.instances[key] ??= [];
     _reactterFactory.instances[key]?.add(instance);
+  }
 
+  _addInstanceRunning<T extends Object>({
+    required String key,
+    required T instance,
+  }) {
     _reactterFactory.instancesRunning[key] ??=
         (_reactterFactory.instancesRunning[key] ?? 0) + 1;
   }

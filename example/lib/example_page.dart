@@ -1,32 +1,35 @@
+import 'package:example/prueba_de_fuego.dart';
 import 'package:flutter/material.dart';
 import 'package:reactter/presentation/reactter_context.dart';
 import 'package:reactter/reactter.dart';
 
 class Global {
-  static final x = UseState<String?>(null, alwayUpdate: true);
+  static final x = UseState<String?>("Estado inicial", alwayUpdate: true);
 }
 
-class WatfContext extends ReactterStates {
+class WatfContext extends ReactterContext {
   String text = "Texto original 1";
 
-  final y = UseState<String?>(null, alwayUpdate: true);
+  final y = UseState<String?>("Texto chidori", alwayUpdate: true);
 
   UseState<String?> get refx => Global.x;
 
   WatfContext() {
-    renderWhenStateChanged([Global.x, y]);
+    renderWhenStateChanged([Global.x, y, pruebaDeFuego]);
   }
 
+  final pruebaDeFuego = UseState<String?>("Texto inicial", alwayUpdate: true);
+
   onPressed() {
-    Global.x.value = 'New text';
+    pruebaDeFuego.value = "COSSSMICOOOOOOOOOOOOO";
   }
 
   onPressed2() {
-    y.value = 'New text y';
+    Global.x.value = "Estado final";
   }
 }
 
-class Testing2Context extends ReactterStates {
+class Testing2Context extends ReactterContext {
   String text = "Texto original 2";
 
   UseState<String?> get refx => Global.x;
@@ -40,22 +43,24 @@ class ExamplePage extends StatelessWidget {
   const ExamplePage({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return ReactterProvider(
+  Widget build(BuildContext _) {
+    return UseProvider(
       contexts: [
-        ReactterContext(
+        UseContext(
           () => WatfContext(),
           init: true,
         ),
-        ReactterContext(
+        UseContext(
           () => Testing2Context(),
           init: true,
         ),
       ],
-      builder: (context, _) {
+      builder: (A, __) {
         // final stateOf1 = ReactterProvider.getContext<TestingContext>(context);
         // final stateOf2 = ReactterProvider.getContext<Testing2Context>(context);
         // context.$<WatfContext>().x.value;
+
+        print("REBUILD CONTEXT");
 
         return Scaffold(
           appBar: AppBar(
@@ -67,24 +72,30 @@ class ExamplePage extends StatelessWidget {
               children: <Widget>[
                 Column(
                   children: [
-                    ReactterConsumer(builder: (context, _, __) {
-                      final cons = context.$<WatfContext>((inst) => [Global.x]);
-                      print('render part A');
-                      return Text(cons.refx.value ?? 'NULL');
-                    }),
-                    ReactterConsumer(builder: (context, _, __) {
-                      final cons =
-                          context.$<Testing2Context>((inst) => [Global.x]);
-                      print('render part B');
-                      return Text(cons.refx.value ?? 'NULL');
-                    }),
-                    Text(context.$<WatfContext>().y.value ?? 'NULL'),
+                    UseBuilder(
+                      child: const Text(""),
+                      builder: (B, _, newChild) {
+                        print("REBUILD BUILDER");
+                        final cons =
+                            B.$<WatfContext>((inst) => [inst.pruebaDeFuego]);
+                        return Column(
+                          children: [
+                            Text(cons.pruebaDeFuego.value ?? 'NULL'),
+                            newChild ?? Container()
+                          ],
+                        );
+                      },
+                    ),
+                    // UseBuilder(builder: (context, _, __) {
+                    //   final cons =
+                    //       context.$<Testing2Context>((inst) => [Global.x]);
+                    //   print('render part B');
+                    //   return Text(cons.refx.value ?? 'NULL');
+                    // }),
+                    // Text(context.$<WatfContext>().y.value ?? 'NULL'),
                   ],
                 ),
-                Builder(builder: (context) {
-                  // print('render part B');
-                  return Text('NULL');
-                }),
+
                 // Text(
                 //   stateOf1?.text ?? 'No funca',
                 // ),
@@ -107,7 +118,11 @@ class ExamplePage extends StatelessWidget {
                 // ),
                 ElevatedButton(
                   onPressed: () {
-                    context.$<WatfContext>().onPressed();
+                    // A.$<WatfContext>().onPressed();
+                    Navigator.push(
+                        A,
+                        MaterialPageRoute(
+                            builder: (context) => const PruebaDeFuego()));
                   },
                   child: const Text("Go to example 1"),
                 )
@@ -116,7 +131,7 @@ class ExamplePage extends StatelessWidget {
           ),
           floatingActionButton: FloatingActionButton(
             onPressed: () {
-              context.$<WatfContext>().onPressed2();
+              A.$<WatfContext>().onPressed();
             },
             tooltip: 'Increment',
             child: const Icon(Icons.add),

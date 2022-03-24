@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/single_child_widget.dart';
 import 'package:reactter/reactter.dart';
 
-class ReactterStates extends ChangeNotifier {
-  ReactterStates();
+class ReactterContext {
+  ReactterContext();
 
   List<UseState>? _states;
   void Function()? _whenChanged;
@@ -14,7 +14,6 @@ class ReactterStates extends ChangeNotifier {
     for (final state in _states ?? []) {
       state.didUpdate((_, newValue) {
         _whenChanged?.call();
-        print("New value " + newValue);
       });
     }
   }
@@ -33,14 +32,14 @@ abstract class _ReactterContext<T extends Object> {
   void destroy();
 }
 
-class ReactterContext<T extends Object> extends _ReactterContext {
+class UseContext<T extends Object> extends _ReactterContext {
   final String id;
   final bool init;
   final bool isCreated;
 
   T? _instance;
 
-  ReactterContext(
+  UseContext(
     Create<T> create, {
     this.init = false,
     this.isCreated = false,
@@ -79,8 +78,7 @@ extension ReactterBuildContext on BuildContext {
     Iterable<dynamic>? _valueStates;
     T? _instance;
 
-    _instance =
-        ReactterProvider.of<T>(this, listen: selector != null, aspect: (_) {
+    _instance = UseProvider.of<T>(this, listen: selector != null, aspect: (_) {
       final _valueStatesToCompared = selector?.call(_instance!) ?? [];
 
       for (var index = 0; index <= _valueStatesToCompared.length; index++) {
@@ -114,11 +112,13 @@ extension ReactterBuildContext on BuildContext {
   }
 }
 
-class ReactterProvider extends ReactterInheritedProvider {
+class Test {}
+
+class UseProvider extends ReactterInheritedProvider {
   final List<_ReactterContext> contexts;
   final Map<Type, Object?> _instanceMapper = {};
 
-  ReactterProvider({
+  UseProvider({
     Key? key,
     required this.contexts,
     TransitionBuilder? builder,
@@ -127,16 +127,22 @@ class ReactterProvider extends ReactterInheritedProvider {
           key: key,
           builder: builder,
           child: child,
-        );
+        ) {
+    initialize();
+  }
 
-  initialize(InheritedElement inheritedElement) {
+  initialize() {
     for (var _context in contexts) {
       _context.initialize(true);
 
       _instanceMapper[_context.instance.runtimeType] = _context.instance;
+    }
+  }
 
-      if (_context.instance is ReactterStates) {
-        final instance = _context.instance as ReactterStates;
+  setRebuilds(InheritedElement inheritedElement) {
+    for (var _context in contexts) {
+      if (_context.instance is ReactterContext) {
+        final instance = _context.instance as ReactterContext;
         instance.whenChanged = () => inheritedElement.markNeedsBuild();
       }
     }
@@ -331,11 +337,11 @@ StatefulWidget was disposed.
 //   }
 // }
 
-class ReactterConsumer<T> extends SingleChildStatelessWidget {
+class UseBuilder<T> extends SingleChildStatelessWidget {
   /// {@template provider.consumer.constructor}
   /// Consumes a [Provider<T>]
   /// {@endtemplate}
-  ReactterConsumer({
+  UseBuilder({
     Key? key,
     required this.builder,
     Widget? child,
@@ -356,7 +362,7 @@ class ReactterConsumer<T> extends SingleChildStatelessWidget {
   Widget buildWithChild(BuildContext context, Widget? child) {
     return builder(
       context,
-      ReactterProvider.of(context)?.getInstance<T>() as T,
+      UseProvider.of<T>(context) as T,
       child,
     );
   }
@@ -429,7 +435,7 @@ class _ReactterInheritedProviderScopeElement extends InheritedElement {
       super.widget as _ReactterInheritedProviderScope;
 
   T? getInstance<T>() {
-    return (widget.owner as ReactterProvider).getInstance<T>();
+    return (widget.owner as UseProvider).getInstance<T>();
   }
 
   // @override
@@ -444,7 +450,7 @@ class _ReactterInheritedProviderScopeElement extends InheritedElement {
 
   @override
   void mount(Element? parent, dynamic newSlot) {
-    (widget.owner as ReactterProvider).initialize(this);
+    (widget.owner as UseProvider).setRebuilds(this);
 
     super.mount(parent, newSlot);
   }
