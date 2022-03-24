@@ -32,16 +32,16 @@ class UseState<T> {
     // void Function([List<Object>?, bool])? update,
   })  :
         // _update = update,
-        _beforeUpdate = willUpdate,
-        _afterUpdate = didUpdate;
+        _willUpdate = willUpdate,
+        _didUpdate = didUpdate;
 
   // final String key;
   T initial;
   final bool alwayUpdate;
-  final UpdateCallback<T>? _afterUpdate;
-  final UpdateCallback<T>? _beforeUpdate;
-  final List<UpdateCallback<T>> _beforeUpdateList = [];
-  final List<UpdateCallback<T>> _afterUpdateList = [];
+  final UpdateCallback<T>? _didUpdate;
+  final UpdateCallback<T>? _willUpdate;
+  final List<UpdateCallback<T>> _didUpdateList = [];
+  final List<UpdateCallback<T>> _willUpdateList = [];
   // final void Function([List<Object>?, bool])? _update;
 
   late T _value = initial;
@@ -50,24 +50,24 @@ class UseState<T> {
     if (value != _value || alwayUpdate || value.hashCode != _value.hashCode) {
       final oldValue = _value;
 
-      _onBeforeUpdate(oldValue, value);
+      _onWillUpdate(oldValue, value);
 
       _value = value;
 
       update();
 
-      _onAfterUpdate(oldValue, value);
+      _onDidUpdate(oldValue, value);
     }
   }
 
-  Function beforeUpdate(UpdateCallback<T> listener) {
-    _beforeUpdateList.add(listener);
-    return () => _beforeUpdateList.remove(listener);
+  Function willUpdate(UpdateCallback<T> listener) {
+    _willUpdateList.add(listener);
+    return () => _willUpdateList.remove(listener);
   }
 
-  Function afterUpdate(UpdateCallback<T> listener) {
-    _afterUpdateList.add(listener);
-    return () => _afterUpdateList.remove(listener);
+  Function didUpdate(UpdateCallback<T> listener) {
+    _didUpdateList.add(listener);
+    return () => _didUpdateList.remove(listener);
   }
 
   void reset() {
@@ -78,18 +78,18 @@ class UseState<T> {
     // _update?.call([key]);
   }
 
-  void _onBeforeUpdate(T oldValue, T value) {
-    _beforeUpdate?.call(oldValue, value);
+  void _onWillUpdate(T oldValue, T value) {
+    _willUpdate?.call(oldValue, value);
 
-    for (final listener in _beforeUpdateList) {
+    for (final listener in _willUpdateList) {
       listener(oldValue, value);
     }
   }
 
-  void _onAfterUpdate(T oldValue, T value) {
-    _afterUpdate?.call(oldValue, value);
+  void _onDidUpdate(T oldValue, T value) {
+    _didUpdate?.call(oldValue, value);
 
-    for (final listener in _afterUpdateList) {
+    for (final listener in _didUpdateList) {
       listener(oldValue, value);
     }
   }
