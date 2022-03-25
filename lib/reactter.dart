@@ -5,7 +5,9 @@ library reactter;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/simple/get_widget_cache.dart';
+import 'package:reactter/presentation/reactter_context.dart';
 import 'package:reactter/utils/reactter_types.dart';
+import 'package:reactter/core/reactter_interface.dart';
 
 export 'package:reactter/utils/reactter_types.dart';
 export 'package:reactter/presentation/reactter_use_effect.dart';
@@ -15,25 +17,39 @@ export 'package:reactter/core/reactter_factory.dart';
 export 'package:get/get.dart';
 export 'package:get/get_state_manager/src/simple/get_widget_cache.dart';
 export 'package:reactter/presentation/reactter_component.dart';
-
-import 'package:reactter/core/reactter_interface.dart';
+export 'package:reactter/presentation/reactter_context.dart';
 
 class _ReactterInterface extends ReactterInterface {}
 
 final Reactter = _ReactterInterface();
 
-class UseState<T> {
+abstract class UseHook {}
+
+class UseEffect extends UseHook {
+  UseEffect(
+    void Function() callback,
+    List<UseHook> dependencies, [
+    ReactterContext? context,
+  ]) {
+    context?.listenHooks([this]);
+  }
+}
+
+class UseState<T> extends UseHook {
   UseState(
     // this.key,
     this.initial, {
     this.alwayUpdate = false,
     UpdateCallback<T>? willUpdate,
     UpdateCallback<T>? didUpdate,
+    ReactterContext? context,
     // void Function([List<Object>?, bool])? update,
   })  :
         // _update = update,
         _willUpdate = willUpdate,
-        _didUpdate = didUpdate;
+        _didUpdate = didUpdate {
+    context?.listenHooks([this]);
+  }
 
   // final String key;
   T initial;
@@ -60,12 +76,12 @@ class UseState<T> {
     }
   }
 
-  Function willUpdate(UpdateCallback<T> listener) {
+  void Function() willUpdate(UpdateCallback<T> listener) {
     _willUpdateList.add(listener);
     return () => _willUpdateList.remove(listener);
   }
 
-  Function didUpdate(UpdateCallback<T> listener) {
+  void Function() didUpdate(UpdateCallback<T> listener) {
     _didUpdateList.add(listener);
     return () => _didUpdateList.remove(listener);
   }

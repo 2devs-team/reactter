@@ -1,29 +1,49 @@
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
 import 'package:provider/single_child_widget.dart';
 import 'package:reactter/reactter.dart';
 
+typedef Create<T> = T Function();
+
 class ReactterContext {
-  ReactterContext();
+  final Set<UseHook> _hooks = {};
+  final Set<void Function()> _removeListeners = {};
+  final Set<InheritedElement> _dependencies = {};
 
-  List<UseState>? _states;
-  void Function()? _whenChanged;
+  void addDependency(InheritedElement dependency) {
+    _dependencies.add(dependency);
+  }
 
-  set whenChanged(void Function() fn) {
-    _whenChanged = fn;
+  void removeDependency(InheritedElement dependency) {
+    _dependencies.remove(dependency);
+  }
 
-    for (final state in _states ?? []) {
-      state.didUpdate((_, newValue) {
-        _whenChanged?.call();
-      });
+  void listenHooks(List<UseHook> hooks) {
+    for (final _hook in hooks) {
+      if (_hooks.contains(_hook)) {
+        return;
+      }
+      _hooks.add(_hook);
+
+      if (_hook is UseState) {
+        final _removeListener = _hook.didUpdate((_, __) {
+          for (final _dependency in _dependencies) {
+            _dependency.markNeedsBuild();
+          }
+        });
+
+        _removeListeners.add(_removeListener);
+      }
     }
   }
 
-  void renderWhenStateChanged(List<UseState> states) {
-    _states = states;
+  void removeHookListener() {
+    for (final _removeListener in _removeListeners) {
+      _removeListener();
+    }
   }
 }
-
-typedef Create<T> = T Function();
 
 abstract class _ReactterContext<T extends Object> {
   T? get instance;
@@ -71,48 +91,37 @@ class UseContext<T extends Object> extends _ReactterContext {
   }
 }
 
-extension ReactterBuildContext on BuildContext {
-  T $<T>([
-    List<UseState> Function(T instance)? selector,
-  ]) {
-    Iterable<dynamic>? _valueStates;
+extension BuildContextExtension on BuildContext {
+  T $<T>([List<UseState> Function(T instance)? selector]) {
     T? _instance;
 
-    _instance = UseProvider.of<T>(this, listen: selector != null, aspect: (_) {
-      final _valueStatesToCompared = selector?.call(_instance!) ?? [];
+    if (selector == null) {
+      _instance = UseProvider.of<T>(this, listen: true);
+    } else {
+      Iterable<dynamic>? _valueStates;
 
-      for (var index = 0; index <= _valueStatesToCompared.length; index++) {
-        if (_valueStatesToCompared[index].value != _valueStates) {
-          return true;
+      _instance = UseProvider.of<T>(this, listen: true, aspect: (_) {
+        final _valueStatesToCompared = selector(_instance!);
+
+        for (var index = 0; index <= _valueStatesToCompared.length; index++) {
+          if (_valueStatesToCompared[index].value != _valueStates) {
+            return true;
+          }
         }
-      }
 
-      return false;
-    });
+        return false;
+      });
 
-    _valueStates = selector?.call(_instance!).map((state) => state.value);
+      _valueStates = selector(_instance!).map((state) => state.value);
+    }
 
     assert(_instance != null, 'Instance "$T" does not exist');
 
-    // final _instance = ReactterProvider.of(this)?.getInstance<T>();
-
-    // ReactterProvider.of(this, listen: true, aspect: (_) {
-    //   final _valueStatesToCompared = selector?.call(_instance!) ?? [];
-
-    //   for (var index = 0; index <= _valueStatesToCompared.length; index++) {
-    //     if (_valueStatesToCompared[index].value != _valueStates) {
-    //       return true;
-    //     }
-    //   }
-
-    //   return false;
-    // });
-
     return _instance!;
   }
-}
 
-class Test {}
+  T $$<T>() => UseProvider.of<T>(this)!;
+}
 
 class UseProvider extends ReactterInheritedProvider {
   final List<_ReactterContext> contexts;
@@ -139,11 +148,20 @@ class UseProvider extends ReactterInheritedProvider {
     }
   }
 
-  setRebuilds(InheritedElement inheritedElement) {
+  addDependencyToContexts(InheritedElement inheritedElement) {
     for (var _context in contexts) {
       if (_context.instance is ReactterContext) {
         final instance = _context.instance as ReactterContext;
-        instance.whenChanged = () => inheritedElement.markNeedsBuild();
+        instance.addDependency(inheritedElement);
+      }
+    }
+  }
+
+  removeDependencyFromContexts(InheritedElement inheritedElement) {
+    for (var _context in contexts) {
+      if (_context.instance is ReactterContext) {
+        final instance = _context.instance as ReactterContext;
+        instance.removeDependency(inheritedElement);
       }
     }
   }
@@ -450,7 +468,7 @@ class _ReactterInheritedProviderScopeElement extends InheritedElement {
 
   @override
   void mount(Element? parent, dynamic newSlot) {
-    (widget.owner as UseProvider).setRebuilds(this);
+    (widget.owner as UseProvider).addDependencyToContexts(this);
 
     super.mount(parent, newSlot);
   }
@@ -574,11 +592,11 @@ class _ReactterInheritedProviderScopeElement extends InheritedElement {
     }
   }
 
-  @override
-  void didChangeDependencies() {
-    // _isBuildFromExternalSources = true;
-    super.didChangeDependencies();
-  }
+  // @override
+  // void didChangeDependencies() {
+  //   // _isBuildFromExternalSources = true;
+  //   super.didChangeDependencies();
+  // }
 
   @override
   Widget build() {
@@ -604,21 +622,22 @@ class _ReactterInheritedProviderScopeElement extends InheritedElement {
     //     ...ProviderBinding.debugInstance.providerDetails,
     //   }..remove(_debugId);
     // }
+    (widget.owner as UseProvider).removeDependencyFromContexts(this);
     super.unmount();
   }
 
   // @override
   // bool get hasValue => _delegateState.hasValue;
 
-  // @override
-  void markNeedsNotifyDependents() {
-    // if (!_isNotifyDependentsEnabled) {
-    //   return;
-    // }
+  // // @override
+  // void markNeedsNotifyDependents() {
+  //   // if (!_isNotifyDependentsEnabled) {
+  //   //   return;
+  //   // }
 
-    markNeedsBuild();
-    _shouldNotifyDependents = true;
-  }
+  //   markNeedsBuild();
+  //   _shouldNotifyDependents = true;
+  // }
 
   // bool _debugSetInheritedLock(bool value) {
   //   assert(() {

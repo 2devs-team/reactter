@@ -14,11 +14,11 @@ class PruebaDeFuego extends StatelessWidget {
       body: UseProvider(
           contexts: [
             UseContext(
-              () => WatfContext(),
+              () => ClassA(),
               init: true,
             ),
             UseContext(
-              () => Testing2Context(),
+              () => ClassB(),
               init: true,
             ),
           ],
@@ -35,7 +35,7 @@ class PruebaDeFuego extends StatelessWidget {
                     return ElevatedButton(
                       onPressed: () {
                         final test = context
-                            .$<WatfContext>((inst) => [inst.pruebaDeFuego]);
+                            .$<ClassA>((inst) => [inst.pruebaDeFuego]);
 
                         test.onPressed();
                       },
