@@ -125,7 +125,7 @@ extension BuildContextExtension on BuildContext {
 
 class UseProvider extends ReactterInheritedProvider {
   final List<_ReactterContext> contexts;
-  final Map<Type, Object?> _instanceMapper = {};
+  final Map<Type, Object?> instanceMapper = {};
 
   UseProvider({
     Key? key,
@@ -144,12 +144,15 @@ class UseProvider extends ReactterInheritedProvider {
     for (var _context in contexts) {
       _context.initialize(true);
 
-      _instanceMapper[_context.instance.runtimeType] = _context.instance;
+      instanceMapper[_context.instance.runtimeType] = _context.instance;
     }
   }
 
-  addDependencyToContexts(InheritedElement inheritedElement) {
-    for (var _context in contexts) {
+  addDependencyToContexts(
+      _ReactterInheritedProviderScopeElement inheritedElement) {
+    final _useProvider = (inheritedElement.widget.owner as UseProvider);
+
+    for (var _context in _useProvider.contexts) {
       if (_context.instance is ReactterContext) {
         final instance = _context.instance as ReactterContext;
         instance.addDependency(inheritedElement);
@@ -157,8 +160,11 @@ class UseProvider extends ReactterInheritedProvider {
     }
   }
 
-  removeDependencyFromContexts(InheritedElement inheritedElement) {
-    for (var _context in contexts) {
+  removeDependencyFromContexts(
+      _ReactterInheritedProviderScopeElement inheritedElement) {
+    final _useProvider = (inheritedElement.widget.owner as UseProvider);
+
+    for (var _context in _useProvider.contexts) {
       if (_context.instance is ReactterContext) {
         final instance = _context.instance as ReactterContext;
         instance.removeDependency(inheritedElement);
@@ -184,17 +190,10 @@ class UseProvider extends ReactterInheritedProvider {
     }
 
     return _instance;
-
-    // return listen
-    //     ? context
-    //         .dependOnInheritedWidgetOfExactType<
-    //             ReactterInheritedWidget<ReactterProviderState>>(aspect: aspect)
-    //         ?.data
-    //     : context.findAncestorStateOfType<ReactterProviderState>();
   }
 
   T? getInstance<T>() {
-    return _instanceMapper[T] as T?;
+    return instanceMapper[T] as T?;
   }
 
   static _ReactterInheritedProviderScopeElement? _inheritedElementOf(
@@ -207,10 +206,6 @@ Tried to call context.read/watch/select or similar on a `context` that is null.
 This can happen if you used the context of a StatefulWidget and that
 StatefulWidget was disposed.
 ''');
-    // assert(
-    //   _debugIsSelecting == false,
-    //   'Cannot call context.read/watch/select inside the callback of a context.select',
-    // );
     _ReactterInheritedProviderScopeElement? inheritedElement;
 
     if (context.widget is _ReactterInheritedProviderScope) {
@@ -234,126 +229,46 @@ StatefulWidget was disposed.
 
     return inheritedElement;
   }
+
+  static _ReactterInheritedProviderScopeElement? _inheritedElementChildOf(
+    BuildContext context,
+  ) {
+    _ReactterInheritedProviderScopeElement? _inheritedElement;
+
+    context.visitChildElements((element) {
+      _inheritedElement = element.getElementForInheritedWidgetOfExactType<
+              _ReactterInheritedProviderScope>()!
+          as _ReactterInheritedProviderScopeElement?;
+    });
+
+    return _inheritedElement;
+  }
+
+  @override
+  Widget buildWithChild(BuildContext context, Widget? child) {
+    final _inheritedElementParent = _inheritedElementOf(context);
+
+    if (_inheritedElementParent != null) {
+      final _useProviderParent =
+          (_inheritedElementParent.widget.owner as UseProvider);
+      instanceMapper.addAll(_useProviderParent.instanceMapper);
+
+      // Execute after build.
+      // Search child inheritedElement and add it to dependencies instance
+      Future.microtask(() {
+        final _inheritedElement = _inheritedElementChildOf(context);
+
+        for (var _instance in instanceMapper.values) {
+          if (_instance is ReactterContext) {
+            _instance.addDependency(_inheritedElement!);
+          }
+        }
+      });
+    }
+
+    return super.buildWithChild(context, child);
+  }
 }
-
-// class ReactterProvider extends StatefulWidget {
-//   const ReactterProvider(
-//       {Key? key, required this.contexts, required this.builder})
-//       : super(key: key);
-
-//   final List<_ReactterContext> contexts;
-//   final Widget Function(BuildContext context) builder;
-
-//   static T? getContext<T extends Object>(BuildContext context) {
-//     final ReactterProviderState? mainState =
-//         context.findAncestorStateOfType<ReactterProviderState>();
-
-//     if (mainState == null) {
-//       return null;
-//     }
-
-//     for (var controller in mainState.contexts!) {
-//       if (controller is T) {
-//         return ReactterFactory().getInstance<T>() as T;
-//       }
-//     }
-
-//     return null;
-//   }
-
-//   // static ReactterProviderState? of(BuildContext context) {
-//   //   return context.findAncestorStateOfType<ReactterProviderState>();
-//   // }
-
-//   static ReactterProviderState? of(
-//     BuildContext context, {
-//     bool listen = false,
-//     Object? aspect,
-//   }) {
-//     return listen
-//         ? context
-//             .dependOnInheritedWidgetOfExactType<
-//                 ReactterInheritedWidget<ReactterProviderState>>(aspect: aspect)
-//             ?.data
-//         : context.findAncestorStateOfType<ReactterProviderState>();
-//   }
-
-//   @override
-//   State<ReactterProvider> createState() => ReactterProviderState();
-// }
-
-// class ReactterProviderState extends State<ReactterProvider> {
-//   List<_ReactterContext>? contexts;
-//   Map<Type, Object?>? instanceMapper;
-
-//   @override
-//   initState() {
-//     super.initState();
-
-//     contexts = widget.contexts;
-
-//     for (var _context in contexts!) {
-//       _context.initialize(true);
-
-//       instanceMapper ??= {};
-//       instanceMapper?[_context.instance.runtimeType] = _context.instance;
-
-//       if (_context.instance is ReactterStates) {
-//         final instance = _context.instance as ReactterStates;
-//         instance.whenChanged = () => setState(() {});
-//       }
-//     }
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return ReactterInheritedWidget<ReactterProviderState>(
-//       child: Builder(builder: (context) {
-//         return widget.builder(context);
-//       }),
-//       data: this,
-//     );
-//     // return Builder(builder: (context) {
-//     //   return widget.builder(context);
-//     // });
-//   }
-
-//   @override
-//   dispose() {
-//     contexts = widget.contexts as List<ReactterContext>;
-
-//     for (var controller in contexts!) {
-//       print('[REACTTER] Instance "' +
-//           controller.instance.runtimeType.toString() +
-//           '" with hashcode: ' +
-//           controller.hashCode.toString() +
-//           ' has been disposed');
-
-//       controller.destroy();
-//     }
-
-//     super.dispose();
-//   }
-
-//   T? getInstance<T>() {
-//     return instanceMapper?[T] as T?;
-//   }
-// }
-
-// class ReactterInheritedWidget<T> extends InheritedWidget {
-//   final T data;
-
-//   const ReactterInheritedWidget({
-//     Key? key,
-//     required Widget child,
-//     required this.data,
-//   }) : super(key: key, child: child);
-
-//   @override
-//   bool updateShouldNotify(InheritedWidget oldWidget) {
-//     return true;
-//   }
-// }
 
 class UseBuilder<T> extends SingleChildStatelessWidget {
   /// {@template provider.consumer.constructor}

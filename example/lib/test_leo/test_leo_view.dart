@@ -75,54 +75,64 @@ class TestLeoView extends StatelessWidget {
           ),
         ],
         builder: (context, _) {
-          final appContext = context.$<AppContext>((inst) => [inst.userName]);
+          print('render contextA');
+          final _appContext = context.static<AppContext>();
           final cartContext = context.static<CartContext>();
+          print(_appContext.userName.value);
 
-          return Scaffold(
-            appBar: AppBar(
-              title: const Text("Reactter example"),
-            ),
-            body: Container(
-              padding: const EdgeInsets.all(15),
-              child: SingleChildScrollView(
-                physics: const ScrollPhysics(),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(appContext.userName.value),
-                    ElevatedButton(
-                      onPressed: appContext.changeUserName,
-                      child: const Text("Change user name"),
-                    ),
-                    const SizedBox(height: 20),
-                    Text("Items: ${cartContext.itemsLenght.value}"),
-                    const SizedBox(height: 20),
-                    ListView.builder(
-                      physics: const NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      padding: const EdgeInsets.all(8),
-                      itemCount: cartContext.items.value.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return Container(
-                          height: 50,
-                          color: Colors.amber,
-                          child: Center(
-                            child: Text(
-                                'Entry ${cartContext.items.value[index].id}'),
+          return UseProvider(
+              contexts: [],
+              builder: (context, _) {
+                print('render contextB');
+                final appContext =
+                    context.$<AppContext>((inst) => [inst.userName]);
+
+                return Scaffold(
+                  appBar: AppBar(
+                    title: const Text("Reactter example"),
+                  ),
+                  body: Container(
+                    padding: const EdgeInsets.all(15),
+                    child: SingleChildScrollView(
+                      physics: const ScrollPhysics(),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(appContext.userName.value),
+                          ElevatedButton(
+                            onPressed: appContext.changeUserName,
+                            child: const Text("Change user name"),
                           ),
-                        );
-                      },
-                    )
-                  ],
-                ),
-              ),
-            ),
-            floatingActionButton: FloatingActionButton(
-              onPressed: cartContext.addItemToCart,
-              tooltip: 'Increment',
-              child: const Icon(Icons.add),
-            ),
-          );
+                          const SizedBox(height: 20),
+                          Text("Items: ${cartContext.itemsLenght.value}"),
+                          const SizedBox(height: 20),
+                          ListView.builder(
+                            physics: const NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            padding: const EdgeInsets.all(8),
+                            itemCount: cartContext.items.value.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return Container(
+                                height: 50,
+                                color: Colors.amber,
+                                child: Center(
+                                  child: Text(
+                                      'Entry ${cartContext.items.value[index].id}'),
+                                ),
+                              );
+                            },
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                  floatingActionButton: FloatingActionButton(
+                    onPressed: cartContext.addItemToCart,
+                    tooltip: 'Increment',
+                    child: const Icon(Icons.add),
+                  ),
+                );
+              });
         });
   }
 }
