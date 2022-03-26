@@ -6,17 +6,17 @@ import 'package:reactter/reactter.dart';
 
 typedef Create<T> = T Function();
 
-class ReactterContext {
+class ReactterContext with ReactterLifeCycle {
   final Set<UseHook> _hooks = {}; //_contextHooks
   final Set<void Function()> _removeListeners = {};
-  final Set<InheritedElement> _dependencies = {};
+  final List<void Function()> _listeners = [];
 
-  void addDependency(InheritedElement dependency) {
-    _dependencies.add(dependency);
+  void addListener(void Function() listener) {
+    _listeners.add(listener);
   }
 
-  void removeDependency(InheritedElement dependency) {
-    _dependencies.remove(dependency);
+  void removeListener(void Function() listener) {
+    _listeners.remove(listener);
   }
 
   void listenHooks(List<UseHook> hooks) {
@@ -28,8 +28,8 @@ class ReactterContext {
 
       if (_hook is UseState) {
         final _removeListener = _hook.didUpdate((_, __) {
-          for (final _dependency in _dependencies) {
-            _dependency.markNeedsBuild();
+          for (final _listener in _listeners) {
+            _listener();
           }
         });
 
@@ -45,14 +45,22 @@ class ReactterContext {
   }
 }
 
-abstract class _ReactterContext<T extends Object> {
+mixin ReactterLifeCycle {
+  void willMount() {}
+
+  void didMount() {}
+
+  void willUnmount() {}
+}
+
+abstract class _UseContext<T extends Object> {
   T? get instance;
 
   void initialize([bool init = false]);
   void destroy();
 }
 
-class UseContext<T extends Object> extends _ReactterContext {
+class UseContext<T extends Object> extends _UseContext {
   final String id;
   final bool init;
   final bool isCreated;
@@ -124,7 +132,7 @@ extension BuildContextExtension on BuildContext {
 }
 
 class UseProvider extends ReactterInheritedProvider {
-  final List<_ReactterContext> contexts;
+  final List<_UseContext> contexts;
   final Map<Type, Object?> instanceMapper = {};
 
   UseProvider({
@@ -144,32 +152,40 @@ class UseProvider extends ReactterInheritedProvider {
     for (var _context in contexts) {
       _context.initialize(true);
 
+      if (_context.instance is ReactterContext) {
+        (_context.instance as ReactterContext).willMount();
+      }
+
       instanceMapper[_context.instance.runtimeType] = _context.instance;
     }
   }
 
-  addDependencyToContexts(
-      _ReactterInheritedProviderScopeElement inheritedElement) {
-    final _useProvider = (inheritedElement.widget.owner as UseProvider);
-
-    for (var _context in _useProvider.contexts) {
+  _iterateContextWithInherit(
+      _ReactterInheritedProviderScopeElement inheritedElement,
+      Function(ReactterContext) action) {
+    for (var _context in contexts) {
       if (_context.instance is ReactterContext) {
         final instance = _context.instance as ReactterContext;
-        instance.addDependency(inheritedElement);
+
+        action(instance);
       }
     }
   }
 
-  removeDependencyFromContexts(
-      _ReactterInheritedProviderScopeElement inheritedElement) {
-    final _useProvider = (inheritedElement.widget.owner as UseProvider);
+  didMount(_ReactterInheritedProviderScopeElement inheritedElement) {
+    _iterateContextWithInherit(inheritedElement, (instance) {
+      instance
+        ..didMount()
+        ..addListener(inheritedElement.markNeedsBuild);
+    });
+  }
 
-    for (var _context in _useProvider.contexts) {
-      if (_context.instance is ReactterContext) {
-        final instance = _context.instance as ReactterContext;
-        instance.removeDependency(inheritedElement);
-      }
-    }
+  willUnmount(_ReactterInheritedProviderScopeElement inheritedElement) {
+    _iterateContextWithInherit(inheritedElement, (instance) {
+      instance
+        ..willUnmount()
+        ..removeListener(inheritedElement.markNeedsBuild);
+    });
   }
 
   static T? of<T>(
@@ -258,9 +274,13 @@ StatefulWidget was disposed.
       Future.microtask(() {
         final _inheritedElement = _inheritedElementChildOf(context);
 
+        if (_inheritedElement == null) {
+          return;
+        }
+
         for (var _instance in instanceMapper.values) {
           if (_instance is ReactterContext) {
-            _instance.addDependency(_inheritedElement!);
+            _instance.addListener(_inheritedElement.markNeedsBuild);
           }
         }
       });
@@ -383,7 +403,7 @@ class _ReactterInheritedProviderScopeElement extends InheritedElement {
 
   @override
   void mount(Element? parent, dynamic newSlot) {
-    (widget.owner as UseProvider).addDependencyToContexts(this);
+    (widget.owner as UseProvider).didMount(this);
 
     super.mount(parent, newSlot);
   }
@@ -537,7 +557,7 @@ class _ReactterInheritedProviderScopeElement extends InheritedElement {
     //     ...ProviderBinding.debugInstance.providerDetails,
     //   }..remove(_debugId);
     // }
-    (widget.owner as UseProvider).removeDependencyFromContexts(this);
+    (widget.owner as UseProvider).willUnmount(this);
     super.unmount();
   }
 

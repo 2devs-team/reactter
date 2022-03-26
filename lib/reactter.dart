@@ -23,7 +23,10 @@ class _ReactterInterface extends ReactterInterface {}
 
 final Reactter = _ReactterInterface();
 
-abstract class UseHook {}
+abstract class UseHook extends ReactterContext {
+  // void Function() willUpdate(Function listener);
+  // void Function() didUpdate(listener);
+}
 
 class UseEffect extends UseHook {
   UseEffect(
@@ -31,7 +34,17 @@ class UseEffect extends UseHook {
     List<UseHook> dependencies, [
     ReactterContext? context,
   ]) {
+    addListener(callback);
+    listenHooks(dependencies);
     context?.listenHooks([this]);
+  }
+
+  void Function() willUpdate(void Function() listener) {
+    return () {};
+  }
+
+  void Function() didUpdate(Function listener) {
+    return () {};
   }
 }
 

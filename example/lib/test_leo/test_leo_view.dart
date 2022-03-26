@@ -22,9 +22,25 @@ class AppContext extends ReactterContext {
   }
 }
 
+class UseUser extends UseHook {
+  late final items =
+      UseState<List<CartItem>>([], alwaysUpdate: true, context: this);
+
+  UseUser() {
+    UseEffect(
+      () {
+        print("Items are changing");
+      },
+      [items],
+      this,
+    );
+  }
+}
+
 class CartContext extends ReactterContext {
   final items = UseState<List<CartItem>>([], alwaysUpdate: true);
   final itemsLenght = UseState<int>(0, alwaysUpdate: true);
+  final useUser = UseUser();
 
   CartContext() {
     listenHooks([
@@ -36,18 +52,19 @@ class CartContext extends ReactterContext {
       () {
         print("Items are changing");
       },
-      [items],
+      [items, useUser],
       this,
     );
   }
 
   addItemToCart() {
-    items.value.add(
+    items.value = [
+      ...items.value,
       CartItem(
         id: getUnixTime(),
         name: "name${getUnixTime()}",
       ),
-    );
+    ];
 
     itemsLenght.value = itemsLenght.value + 1;
     print(items.value);
