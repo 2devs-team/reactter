@@ -7,7 +7,7 @@ import 'package:reactter/reactter.dart';
 typedef Create<T> = T Function();
 
 class ReactterContext {
-  final Set<UseHook> _hooks = {};
+  final Set<UseHook> _hooks = {}; //_contextHooks
   final Set<void Function()> _removeListeners = {};
   final Set<InheritedElement> _dependencies = {};
 
@@ -120,7 +120,7 @@ extension BuildContextExtension on BuildContext {
     return _instance!;
   }
 
-  T $$<T>() => UseProvider.of<T>(this)!;
+  T static<T>() => UseProvider.of<T>(this)!;
 }
 
 class UseProvider extends ReactterInheritedProvider {

@@ -3,21 +3,21 @@ import 'package:flutter/material.dart';
 import 'package:reactter/reactter.dart';
 
 class Global {
-  static final x = UseState<String?>("Estado inicial", alwayUpdate: true);
+  static final x = UseState<String?>("Estado inicial", alwaysUpdate: true);
 }
 
 class ClassA extends ReactterContext {
   String text = "Texto original 1";
 
   late final y =
-      UseState<String?>("Texto chidori", alwayUpdate: true, context: this);
+      UseState<String?>("Texto chidori", alwaysUpdate: true, context: this);
 
   UseState<String?> get refx => Global.x;
 
   ClassA() {
     UseEffect(
       () {
-        // do anything
+        print("Global X and local Y changing");
       },
       [Global.x, y],
       this,
@@ -29,7 +29,7 @@ class ClassA extends ReactterContext {
     ]);
   }
 
-  final pruebaDeFuego = UseState<String?>("Texto inicial", alwayUpdate: true);
+  final pruebaDeFuego = UseState<String?>("Texto inicial", alwaysUpdate: true);
 
   onPressed() {
     pruebaDeFuego.value = "COSSSMICOOOOOOOOOOOOO";
@@ -146,7 +146,7 @@ class ExamplePage extends StatelessWidget {
           ),
           floatingActionButton: FloatingActionButton(
             onPressed: () {
-              contextA.$$<ClassA>().onPressed();
+              contextA.static<ClassA>().onPressed();
             },
             tooltip: 'Increment',
             child: const Icon(Icons.add),

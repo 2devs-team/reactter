@@ -39,7 +39,7 @@ class UseState<T> extends UseHook {
   UseState(
     // this.key,
     this.initial, {
-    this.alwayUpdate = false,
+    this.alwaysUpdate = false,
     UpdateCallback<T>? willUpdate,
     UpdateCallback<T>? didUpdate,
     ReactterContext? context,
@@ -53,7 +53,7 @@ class UseState<T> extends UseHook {
 
   // final String key;
   T initial;
-  final bool alwayUpdate;
+  final bool alwaysUpdate;
   final UpdateCallback<T>? _didUpdate;
   final UpdateCallback<T>? _willUpdate;
   final List<UpdateCallback<T>> _didUpdateList = [];
@@ -63,7 +63,7 @@ class UseState<T> extends UseHook {
   late T _value = initial;
   T get value => _value;
   set value(T value) {
-    if (value != _value || alwayUpdate || value.hashCode != _value.hashCode) {
+    if (value != _value || alwaysUpdate || value.hashCode != _value.hashCode) {
       final oldValue = _value;
 
       _onWillUpdate(oldValue, value);

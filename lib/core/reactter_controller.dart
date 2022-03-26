@@ -97,7 +97,7 @@ class ReactterController extends GetxController {
       willUpdate: willUpdate,
       didUpdate: didUpdate,
       // update: update,
-      alwayUpdate:
+      alwaysUpdate:
           (alwayUpdate ?? false) || T == Map || T == List || T == Object,
     );
     statesList.addAll([state]);

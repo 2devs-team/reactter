@@ -1,4 +1,5 @@
 import 'package:example/app_controller.dart';
+import 'package:example/test_leo/test_leo_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:reactter/presentation/reactter_create_context.dart';
@@ -14,15 +15,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Get.put(RoutingController());
-    Get.put(AppController());
-
-    final _routingController = Get.find<RoutingController>();
-
-    return MaterialApp(
+    return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: const ExamplePage(),
-      navigatorObservers: [_routingController],
+      // home: ExamplePage(),
+      home: TestLeoView(),
     );
   }
 }
