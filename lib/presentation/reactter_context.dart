@@ -6,41 +6,22 @@ import 'package:reactter/reactter.dart';
 
 typedef Create<T> = T Function();
 
-class ReactterContext with ReactterLifeCycle {
-  final Set<UseHook> _hooks = {}; //_contextHooks
-  final Set<void Function()> _removeListeners = {};
-  final List<void Function()> _listeners = [];
+class ReactterContext extends ReactterHookGestor with ReactterLifeCycle {}
 
-  void addListener(void Function() listener) {
-    _listeners.add(listener);
+mixin ReactterPubSub {
+  final List<void Function()> _subscribers = [];
+
+  void subscribe(void Function() subscriber) {
+    _subscribers.add(subscriber);
   }
 
-  void removeListener(void Function() listener) {
-    _listeners.remove(listener);
+  void unsubscribe(void Function() subscriber) {
+    _subscribers.remove(subscriber);
   }
 
-  void listenHooks(List<UseHook> hooks) {
-    for (final _hook in hooks) {
-      if (_hooks.contains(_hook)) {
-        return;
-      }
-      _hooks.add(_hook);
-
-      if (_hook is UseState) {
-        final _removeListener = _hook.didUpdate((_, __) {
-          for (final _listener in _listeners) {
-            _listener();
-          }
-        });
-
-        _removeListeners.add(_removeListener);
-      }
-    }
-  }
-
-  void removeHookListener() {
-    for (final _removeListener in _removeListeners) {
-      _removeListener();
+  void publish() {
+    for (final _subscriber in _subscribers) {
+      _subscriber();
     }
   }
 }
@@ -106,13 +87,15 @@ extension BuildContextExtension on BuildContext {
     if (selector == null) {
       _instance = UseProvider.of<T>(this, listen: true);
     } else {
-      Iterable<dynamic>? _valueStates;
+      List<dynamic>? _valueStates;
 
       _instance = UseProvider.of<T>(this, listen: true, aspect: (_) {
         final _valueStatesToCompared = selector(_instance!);
 
-        for (var index = 0; index <= _valueStatesToCompared.length; index++) {
-          if (_valueStatesToCompared[index].value != _valueStates) {
+        for (var index = 0;
+            index <= _valueStatesToCompared.length - 1;
+            index++) {
+          if (_valueStatesToCompared[index].value != _valueStates?[index]) {
             return true;
           }
         }
@@ -120,10 +103,13 @@ extension BuildContextExtension on BuildContext {
         return false;
       });
 
-      _valueStates = selector(_instance!).map((state) => state.value);
+      if (_instance != null) {
+        _valueStates = selector(_instance).map((state) => state.value).toList();
+      }
     }
 
-    assert(_instance != null, 'Instance "$T" does not exist');
+    assert(_instance != null,
+        'Instance "$T" does not exist from contexts UseProviders');
 
     return _instance!;
   }
@@ -176,7 +162,7 @@ class UseProvider extends ReactterInheritedProvider {
     _iterateContextWithInherit(inheritedElement, (instance) {
       instance
         ..didMount()
-        ..addListener(inheritedElement.markNeedsBuild);
+        ..subscribe(inheritedElement.markNeedsBuild);
     });
   }
 
@@ -184,7 +170,7 @@ class UseProvider extends ReactterInheritedProvider {
     _iterateContextWithInherit(inheritedElement, (instance) {
       instance
         ..willUnmount()
-        ..removeListener(inheritedElement.markNeedsBuild);
+        ..unsubscribe(inheritedElement.markNeedsBuild);
     });
   }
 
@@ -280,7 +266,7 @@ StatefulWidget was disposed.
 
         for (var _instance in instanceMapper.values) {
           if (_instance is ReactterContext) {
-            _instance.addListener(_inheritedElement.markNeedsBuild);
+            _instance.subscribe(_inheritedElement.markNeedsBuild);
           }
         }
       });

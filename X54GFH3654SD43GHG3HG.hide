@@ -8,7 +8,7 @@ select - seleccionados -> $ (()=>())
 -------------------------------------
 
 (V1.2)
-- Creates 
+- Creates
 - UseEffect (beta)
 - Hooks (beta)
 
@@ -22,7 +22,6 @@ select - seleccionados -> $ (()=>())
 
 (V1.ReactterForm)
 - Form
-
 
 _____
 Utils?

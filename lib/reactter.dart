@@ -23,55 +23,54 @@ class _ReactterInterface extends ReactterInterface {}
 
 final Reactter = _ReactterInterface();
 
-abstract class UseHook extends ReactterContext {
-  // void Function() willUpdate(Function listener);
-  // void Function() didUpdate(listener);
+class ReactterHook with ReactterPubSub {}
+
+class ReactterHookGestor extends ReactterHook {
+  final Set<ReactterHook> _hooks = {};
+
+  void listenHooks(List<ReactterHook> hooks) {
+    for (final _hook in hooks) {
+      if (_hooks.contains(_hook)) {
+        return;
+      }
+
+      _hooks.add(_hook);
+
+      _hook.subscribe(publish);
+    }
+  }
 }
 
-class UseEffect extends UseHook {
+class UseEffect extends ReactterHookGestor {
   UseEffect(
     void Function() callback,
-    List<UseHook> dependencies, [
-    ReactterContext? context,
+    List<ReactterHook> dependencies, [
+    ReactterHookGestor? context,
   ]) {
-    addListener(callback);
+    subscribe(callback);
     listenHooks(dependencies);
     context?.listenHooks([this]);
   }
-
-  void Function() willUpdate(void Function() listener) {
-    return () {};
-  }
-
-  void Function() didUpdate(Function listener) {
-    return () {};
-  }
 }
 
-class UseState<T> extends UseHook {
+class UseState<T> extends ReactterHook {
   UseState(
-    // this.key,
     this.initial, {
     this.alwaysUpdate = false,
     UpdateCallback<T>? willUpdate,
     UpdateCallback<T>? didUpdate,
-    ReactterContext? context,
-    // void Function([List<Object>?, bool])? update,
-  })  :
-        // _update = update,
-        _willUpdate = willUpdate,
+    ReactterHookGestor? context,
+  })  : _willUpdate = willUpdate,
         _didUpdate = didUpdate {
     context?.listenHooks([this]);
   }
 
-  // final String key;
   T initial;
   final bool alwaysUpdate;
   final UpdateCallback<T>? _didUpdate;
   final UpdateCallback<T>? _willUpdate;
   final List<UpdateCallback<T>> _didUpdateList = [];
   final List<UpdateCallback<T>> _willUpdateList = [];
-  // final void Function([List<Object>?, bool])? _update;
 
   late T _value = initial;
   T get value => _value;
@@ -86,6 +85,8 @@ class UseState<T> extends UseHook {
       update();
 
       _onDidUpdate(oldValue, value);
+
+      publish();
     }
   }
 

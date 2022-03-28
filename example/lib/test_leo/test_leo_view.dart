@@ -22,7 +22,7 @@ class AppContext extends ReactterContext {
   }
 }
 
-class UseUser extends UseHook {
+class UseUser extends ReactterHookGestor {
   late final items =
       UseState<List<CartItem>>([], alwaysUpdate: true, context: this);
 
@@ -58,7 +58,7 @@ class CartContext extends ReactterContext {
   }
 
   addItemToCart() {
-    items.value = [
+    useUser.items.value = [
       ...items.value,
       CartItem(
         id: getUnixTime(),
@@ -82,27 +82,35 @@ class TestLeoView extends StatelessWidget {
   Widget build(BuildContext _) {
     return UseProvider(
         contexts: [
+          //// Se crea la instancia de manera asyncrona
+          // UseContext.async(() async => AppContext()),
           UseContext(
             () => AppContext(),
+            // eliminar init, es igual a lazy=false
             init: true,
+            //// Se crea la instancia en el primer context que lo requiera
+            //// y se elimina la instancia cuando no hay contexts que lo requiera
+            // lazy: true,
+            //// Todo context con id es una instancia nueva
+            // id: 'key',
           ),
           UseContext(
             () => CartContext(),
             init: true,
           ),
         ],
-        builder: (context, _) {
+        builder: (contextA, _) {
           print('render contextA');
-          final _appContext = context.static<AppContext>();
-          final cartContext = context.static<CartContext>();
-          print(_appContext.userName.value);
+          // final _appContext = context.static<AppContext>();
+          final cartContext = contextA.static<CartContext>();
+          // print(_appContext.userName.value);
 
           return UseProvider(
               contexts: [],
-              builder: (context, _) {
-                print('render contextB');
+              builder: (contextB, _) {
+                final cartContext = contextB.$<CartContext>();
                 final appContext =
-                    context.$<AppContext>((inst) => [inst.userName]);
+                    contextB.$<AppContext>((inst) => [inst.userName]);
 
                 return Scaffold(
                   appBar: AppBar(
