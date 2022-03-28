@@ -77,8 +77,8 @@ class CartContext extends ReactterContext {
   }
 }
 
-class UseProviderInsideUseProviderTest extends StatelessWidget {
-  const UseProviderInsideUseProviderTest({Key? key}) : super(key: key);
+class NestedUseProvider extends StatelessWidget {
+  const NestedUseProvider({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
