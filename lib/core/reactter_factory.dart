@@ -1,8 +1,6 @@
-// ignore_for_file: constant_identifier_names
+// ignore_for_file: constant_identifier_names, avoid_print
 
-library reactter;
-
-import 'package:reactter/reactter.dart';
+import 'package:reactter/engine/reactter_interface_instance.dart';
 
 const GLOBAL_KEY = '_[GLOBAL]_';
 

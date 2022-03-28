@@ -1,10 +1,5 @@
-import 'package:example/app_controller.dart';
-import 'package:example/test_leo/test_leo_view.dart';
+import 'package:example/testing_cases/use_provider_inside_use_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:reactter/presentation/reactter_create_context.dart';
-import 'example_page.dart';
-import 'package:reactter/reactter.dart';
 
 Future<void> main() async {
   runApp(const MyApp());
@@ -18,7 +13,7 @@ class MyApp extends StatelessWidget {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
       // home: ExamplePage(),
-      home: TestLeoView(),
+      home: UseProviderInsideUseProviderTest(),
     );
   }
 }

@@ -1,3 +1,5 @@
+library reactter;
+
 import 'package:flutter/material.dart';
 import 'package:reactter/utils/reaccter_exceptions.dart';
 

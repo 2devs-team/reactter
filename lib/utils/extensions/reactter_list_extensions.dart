@@ -1,3 +1,5 @@
+library reactter;
+
 extension ListExtension<T> on List<T> {
   List<R> to<R>(R Function(T) fn) => map((item) => fn(item)).toList();
 
