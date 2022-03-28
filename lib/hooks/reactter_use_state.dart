@@ -3,13 +3,13 @@ library reactter;
 import 'package:reactter/core/reactter_types.dart';
 import 'package:reactter/hooks/reactter_hook.dart';
 
-class UseState<T> extends ReactterHook {
+class UseState<T> extends ReactterHookAbstract {
   UseState(
     this.initial, {
     this.alwaysUpdate = false,
     UpdateCallback<T>? willUpdate,
     UpdateCallback<T>? didUpdate,
-    ReactterHookGestor? context,
+    ReactterHook? context,
   })  : _willUpdate = willUpdate,
         _didUpdate = didUpdate {
     context?.listenHooks([this]);

@@ -2,12 +2,12 @@ library reactter;
 
 import 'package:reactter/engine/mixins/reactter_publish_suscription.dart';
 
-class ReactterHook with ReactterPubSub {}
+abstract class ReactterHookAbstract with ReactterPubSub {}
 
-class ReactterHookGestor extends ReactterHook {
-  final Set<ReactterHook> _hooks = {};
+class ReactterHook extends ReactterHookAbstract {
+  final Set<ReactterHookAbstract> _hooks = {};
 
-  void listenHooks(List<ReactterHook> hooks) {
+  void listenHooks(List<ReactterHookAbstract> hooks) {
     for (final _hook in hooks) {
       if (_hooks.contains(_hook)) {
         return;

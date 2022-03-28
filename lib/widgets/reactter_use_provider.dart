@@ -9,7 +9,7 @@ import 'package:reactter/engine/widgets/reactter_inherit_provider_scope_element.
 import 'package:reactter/widgets/reactter_use_context.dart';
 import 'package:reactter/hooks/reactter_hook.dart';
 
-class ReactterContext extends ReactterHookGestor with ReactterLifeCycle {}
+class ReactterContext extends ReactterHook with ReactterLifeCycle {}
 
 class UseProvider extends ReactterInheritedProvider {
   final List<UseContextAbstraction> contexts;

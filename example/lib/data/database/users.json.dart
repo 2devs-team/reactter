@@ -1,3 +1,5 @@
+class UserJson {
+  static String get = """
 {
     "users": [{
             "id": 1,
@@ -1832,4 +1834,5 @@
     "total": 100,
     "skip": 0,
     "limit": 30
+}""";
 }

@@ -1,3 +1,5 @@
+class CartJson {
+  static String get = """
 {
     "carts": [{
         "id": 1,
@@ -963,4 +965,5 @@
     "total": 20,
     "skip": 0,
     "limit": 20
+}""";
 }

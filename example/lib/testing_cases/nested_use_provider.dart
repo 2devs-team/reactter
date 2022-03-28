@@ -24,7 +24,7 @@ class AppContext extends ReactterContext {
   }
 }
 
-class UseUser extends ReactterHookGestor {
+class UseUser extends ReactterHook {
   late final items =
       UseState<List<CartItem>>([], alwaysUpdate: true, context: this);
 

@@ -1,3 +1,5 @@
+class ProductsJson {
+  static String get = """
 {
     "products": [{
         "id": 1,
@@ -363,4 +365,5 @@
     "total": 100,
     "skip": 0,
     "limit": 30
+}""";
 }
