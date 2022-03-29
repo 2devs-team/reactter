@@ -117,7 +117,7 @@
    ```dart
     ....
     ),
-    userConsumer.userName.when(
+    userContext.userName.when(
         
         // Base state
         standby: (value) => Text("Standby: " + value),
