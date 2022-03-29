@@ -2,7 +2,7 @@
 
 import 'package:example/data/models/cart.dart';
 import 'package:example/data/models/mocks.dart';
-import 'package:example/testing_cases/use_effect_escenary.dart';
+import 'package:example/testing_cases/use_effect_example.dart';
 import 'package:flutter/material.dart';
 import 'package:reactter/reactter.dart';
 import 'package:reactter/widgets/reactter_use_provider.dart';

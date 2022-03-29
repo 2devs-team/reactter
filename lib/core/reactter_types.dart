@@ -5,3 +5,5 @@ typedef FutureVoidCallback = Future<void> Function();
 typedef Create<T> = T Function();
 typedef SelectorAspect<T> = bool Function(InheritedElement inheritedElement);
 typedef BuildWithChild = Widget Function(BuildContext context, Widget? child);
+typedef WidgetCreator = Widget Function();
+typedef WidgetCreatorValue<T> = Widget Function(T value);

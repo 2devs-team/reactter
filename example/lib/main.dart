@@ -1,6 +1,5 @@
+import 'package:example/testing_cases/use_future_example.dart';
 import 'package:flutter/material.dart';
-
-import 'testing_cases/use_effect_escenary.dart';
 
 Future<void> main() async {
   runApp(const MyApp());
@@ -15,7 +14,8 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       // home: ExamplePage(),
       // home: NestedUseProvider(),
-      home: UseEffectExample(),
+      // home: UseEffectExample(),
+      home: UseFutureExample(),
     );
   }
 }
