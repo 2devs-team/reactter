@@ -1,16 +1,15 @@
-read -> $$
-watch - todo -> $
-select - seleccionados -> $ (()=>())
-
 (V1.0)
-- Comunicación entre vistas
-- LifeCycle de ReactterContext
+- Comunicación entre vistas (READY)
+- LifeCycle de ReactterContext (READY)
+- UseEffect (READY)
+- Hooks (READY)
 -------------------------------------
 
 (V1.2)
+- Equatable
 - Creates
-- UseEffect (beta)
-- Hooks (beta)
+- Lazy Context
+- Widget Consumer
 
 (V2.0)
 - ReactterRoutter
