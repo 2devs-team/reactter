@@ -36,7 +36,7 @@ class UseEffectExample extends StatelessWidget {
         ),
       ],
       builder: (context, _) {
-        final userConsumer = context.$<UserContext>();
+        final useContext = context.of<UserContext>();
 
         return Scaffold(
           appBar: AppBar(
@@ -49,15 +49,15 @@ class UseEffectExample extends StatelessWidget {
               children: [
                 // Text(appContext.userName.value),
                 const SizedBox(height: 20),
-                Text("Users: ${userConsumer.users!.length}"),
+                Text("Users: ${useContext.users!.length}"),
                 const SizedBox(height: 20),
                 ListView.builder(
                   physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
                   padding: const EdgeInsets.all(8),
-                  itemCount: userConsumer.users!.length,
+                  itemCount: useContext.users!.length,
                   itemBuilder: (BuildContext context, int index) {
-                    final user = userConsumer.users![index];
+                    final user = useContext.users![index];
 
                     return Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -70,7 +70,7 @@ class UseEffectExample extends StatelessWidget {
                         ),
                         ElevatedButton(
                             onPressed: () {
-                              userConsumer.onClickUser(context, index);
+                              useContext.onClickUser(context, index);
                             },
                             child: const Text("View"))
                       ],

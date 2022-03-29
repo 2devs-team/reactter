@@ -53,7 +53,7 @@ class UseContext<T extends Object> extends UseContextAbstraction {
 }
 
 extension BuildContextExtension on BuildContext {
-  T $<T>([List<UseState> Function(T instance)? selector]) {
+  T of<T>([List<UseState> Function(T instance)? selector]) {
     T? _instance;
 
     if (selector == null) {
@@ -86,5 +86,5 @@ extension BuildContextExtension on BuildContext {
     return _instance!;
   }
 
-  T static<T>() => UseProvider.of<T>(this)!;
+  T ofStatic<T>() => UseProvider.of<T>(this)!;
 }

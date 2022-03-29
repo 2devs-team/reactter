@@ -69,7 +69,7 @@ class UseFutureExample extends StatelessWidget {
         ),
       ],
       builder: (context, _) {
-        final userConsumer = context.$<UserContext>();
+        final userConsumer = context.of<UserContext>();
 
         print("Main builder");
         return Scaffold(

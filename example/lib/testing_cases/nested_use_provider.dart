@@ -110,9 +110,9 @@ class NestedUseProvider extends StatelessWidget {
         return UseProvider(
           contexts: const [],
           builder: (contextB, _) {
-            final cartContext = contextB.$<CartContext>();
+            final cartContext = contextB.of<CartContext>();
             final appContext =
-                contextB.$<AppContext>((inst) => [inst.userName]);
+                contextB.of<AppContext>((inst) => [inst.userName]);
 
             return Scaffold(
               appBar: AppBar(

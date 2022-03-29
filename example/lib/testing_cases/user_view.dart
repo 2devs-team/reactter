@@ -45,7 +45,7 @@ class UserView extends StatelessWidget {
       ],
       builder: (context, _) {
         print("REBUILD ROOT");
-        final userStatic = context.static<UserApp>();
+        final userStatic = context.ofStatic<UserApp>();
 
         return Scaffold(
           appBar: AppBar(
@@ -54,7 +54,7 @@ class UserView extends StatelessWidget {
           body: SingleChildScrollView(
             physics: const ScrollPhysics(),
             child: Builder(builder: (context) {
-              final userDynamic = context.$<UserApp>();
+              final userDynamic = context.of<UserApp>();
 
               final cart = userDynamic.cart.value;
 
