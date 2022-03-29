@@ -33,7 +33,7 @@ class UseProvider extends ReactterInheritedProvider {
       _context.initialize(true);
 
       if (_context.instance is ReactterContext) {
-        (_context.instance as ReactterContext).willMount();
+        (_context.instance as ReactterContext).awake();
       }
 
       instanceMapper[_context.instance.runtimeType] = _context.instance;
@@ -50,6 +50,12 @@ class UseProvider extends ReactterInheritedProvider {
         action(instance);
       }
     }
+  }
+
+  willMount(ReactterInheritedProviderScopeElement inheritedElement) {
+    _iterateContextWithInherit(inheritedElement, (instance) {
+      instance.willMount();
+    });
   }
 
   didMount(ReactterInheritedProviderScopeElement inheritedElement) {

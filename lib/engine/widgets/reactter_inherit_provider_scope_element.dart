@@ -43,9 +43,11 @@ class ReactterInheritedProviderScopeElement extends InheritedElement {
 
   @override
   void mount(Element? parent, dynamic newSlot) {
-    (widget.owner as UseProvider).didMount(this);
+    (widget.owner as UseProvider).willMount(this);
 
     super.mount(parent, newSlot);
+
+    (widget.owner as UseProvider).didMount(this);
   }
 
   @override

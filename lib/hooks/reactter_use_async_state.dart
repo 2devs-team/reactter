@@ -21,10 +21,13 @@ class UseAsyncState<T> extends UseState<T> {
 
   final Future<T> Function() asyncValue;
 
-  bool isRequestDone = false;
+  bool _isRequestDone = false;
+  bool _error = false;
+  Object? errorObject;
 
   set result(T _value) {
-    isRequestDone = true;
+    clear();
+    _isRequestDone = true;
     value = _value;
   }
 
@@ -36,9 +39,35 @@ class UseAsyncState<T> extends UseState<T> {
   }
 
   resolve() async {
+    clear();
     _isLoading = true;
-    result = await asyncValue();
+
+    try {
+      result = await asyncValue();
+    } catch (e) {
+      setError(e);
+    } finally {
+      _isLoading = false;
+    }
+  }
+
+  clear() {
+    _isRequestDone = false;
+    errorObject = null;
+    _error = false;
     _isLoading = false;
+  }
+
+  setError(Object error) {
+    errorObject = error;
+    _error = true;
+  }
+
+  @override
+  void reset() {
+    clear();
+    publish();
+    super.reset();
   }
 
   // @override
@@ -47,22 +76,23 @@ class UseAsyncState<T> extends UseState<T> {
   // }
 
   Widget when({
-    WidgetCreator? standby,
+    WidgetCreatorValue<T>? standby,
     WidgetCreator? loading,
     WidgetCreatorValue<T>? done,
+    WidgetCreatorErrorHandler? error,
   }) {
-    if (!isLoading && isRequestDone) {
-      return done?.call(value) ?? const SizedBox.shrink();
-    }
-
-    if (!isLoading) {
-      return standby?.call() ?? const SizedBox.shrink();
+    if (_error) {
+      return error?.call(errorObject) ?? const SizedBox.shrink();
     }
 
     if (isLoading) {
       return loading?.call() ?? const SizedBox.shrink();
     }
 
-    return const SizedBox.shrink();
+    if (!isLoading && _isRequestDone) {
+      return done?.call(value) ?? const SizedBox.shrink();
+    }
+
+    return standby?.call(value) ?? const SizedBox.shrink();
   }
 }

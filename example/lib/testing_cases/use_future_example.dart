@@ -10,24 +10,49 @@ class Global {
 }
 
 class UserContext extends ReactterContext {
-  final data = UseState<String?>(null);
+  late final data = UseState<String?>(null, context: this);
 
   late final userName =
-      UseAsyncState<String?>(null, fillUsername, context: this);
+      UseAsyncState<String>("My username", fillUsername, context: this);
 
   Future<String> fillUsername() async {
     await delay(2000);
 
-    return "Leoocast";
+    print("->>> useState");
+
+    return "Username filled";
   }
 
-  Future<void> loadData() async {
-    await delay(2000);
+  loadData() {
+    print("->>> loadData");
+
+    print("->>> finish loadData");
     data.value = "Data filled!";
   }
 
   loadUserName() async {
     await userName.resolve();
+  }
+
+  @override
+  awake() {
+    print("->>> awake");
+    loadData();
+  }
+
+  @override
+  willMount() {
+    print("->>> willMount");
+  }
+
+  @override
+  didMount() {
+    print("->>> didMount");
+  }
+
+  @override
+  willUnmount() {
+    print("->>> willUnmount");
   }
 }
 
@@ -46,6 +71,7 @@ class UseFutureExample extends StatelessWidget {
       builder: (context, _) {
         final userConsumer = context.$<UserContext>();
 
+        print("Main builder");
         return Scaffold(
           appBar: AppBar(
             title: const Text("Reactter UseFuture"),
@@ -62,16 +88,17 @@ class UseFutureExample extends StatelessWidget {
                   height: 15,
                 ),
                 userConsumer.userName.when(
-                  standby: () => const Text("Wating for load"),
+                  standby: (value) => Text("Standby: " + value),
                   loading: () => const CircularProgressIndicator(),
-                  done: (value) => Text(value!),
+                  done: (value) => Text(value),
+                  error: (error) => const Text(
+                    "Ha ocurrido un error al completar la solicitud",
+                    style: TextStyle(color: Colors.red),
+                  ),
                 ),
-                // UseFuture<String>(
-                //   watch: userConsumer.data,
-                //   future: userConsumer.loadData(),
-                //   isWaiting: () => const CircularProgressIndicator(),
-                //   isDone: (value) => Text(value),
-                // ),
+                userConsumer.data.value == null
+                    ? const CircularProgressIndicator()
+                    : Text(userConsumer.data.value ?? '')
               ],
             ),
           ),
