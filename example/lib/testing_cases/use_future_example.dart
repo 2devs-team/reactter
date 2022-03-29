@@ -12,15 +12,14 @@ class Global {
 class UserContext extends ReactterContext {
   final data = UseState<String?>(null);
 
-  // UserContext() {
-  //   listenHooks([userName]);
-  // }
+  late final userName =
+      UseAsyncState<String?>(null, fillUsername, context: this);
 
-  late final userName = UseAsyncState<String?>(null, () async {
+  Future<String> fillUsername() async {
     await delay(2000);
 
     return "Leoocast";
-  }, context: this);
+  }
 
   Future<void> loadData() async {
     await delay(2000);
@@ -57,14 +56,14 @@ class UseFutureExample extends StatelessWidget {
               children: [
                 ElevatedButton(
                   onPressed: userConsumer.loadUserName,
-                  child: Text("Load username"),
+                  child: const Text("Load username"),
                 ),
                 const SizedBox(
                   height: 15,
                 ),
                 userConsumer.userName.when(
-                  standby: () => Text("Wating for load"),
-                  loading: () => CircularProgressIndicator(),
+                  standby: () => const Text("Wating for load"),
+                  loading: () => const CircularProgressIndicator(),
                   done: (value) => Text(value!),
                 ),
                 // UseFuture<String>(

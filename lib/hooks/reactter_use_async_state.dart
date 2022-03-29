@@ -10,14 +10,10 @@ class UseAsyncState<T> extends UseState<T> {
   UseAsyncState(
     initial,
     this.asyncValue, {
-    UpdateCallback<T>? willUpdate,
-    UpdateCallback<T>? didUpdate,
     ReactterHook? context,
   }) : super(
           initial,
           alwaysUpdate: true,
-          willUpdate: willUpdate,
-          didUpdate: didUpdate,
           context: context,
         ) {
     context?.listenHooks([this]);
@@ -26,9 +22,8 @@ class UseAsyncState<T> extends UseState<T> {
   final Future<T> Function() asyncValue;
 
   bool isRequestDone = false;
-  T? result;
 
-  set _result(T _value) {
+  set result(T _value) {
     isRequestDone = true;
     value = _value;
   }
@@ -42,14 +37,14 @@ class UseAsyncState<T> extends UseState<T> {
 
   resolve() async {
     _isLoading = true;
-    _result = await asyncValue();
+    result = await asyncValue();
     _isLoading = false;
   }
 
-  @override
-  void update() {
-    print("Rebuild async update");
-  }
+  // @override
+  // void update() {
+  //   print("Rebuild async update");
+  // }
 
   Widget when({
     WidgetCreator? standby,
@@ -68,6 +63,6 @@ class UseAsyncState<T> extends UseState<T> {
       return loading?.call() ?? const SizedBox.shrink();
     }
 
-    return Container();
+    return const SizedBox.shrink();
   }
 }
