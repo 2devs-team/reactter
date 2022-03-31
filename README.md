@@ -3,7 +3,7 @@ A light state management with React syntax.
 By using `Reactter` you get:
 
 # Features
-- Use familiarized syntax such as [UseState](#UseState), [UseEffect](#UseEffect), [UseContext](#UseContext), [Custom hooks](#Custom-hooks) and more.
+- Use familiarized syntax such as [UseState](#UseState), [UseEffect](#UseEffect), [UseContext](#UseProvider-and-UseContext), [Custom hooks](#Custom-hooks) and more.
 - Create custom hooks to reuse functionality.
 - Reduce significantly boilerplate code.
 - Improve code readability.
@@ -65,7 +65,7 @@ AppContext(){
 It should be used inside a `ReactterContext` constructor.
 <br><br>
 
-## **UseProvider** and  **UseContext**
+## **UseProvider** and **UseContext**
 
 ```dart
 UseProvider(
