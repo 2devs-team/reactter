@@ -3,7 +3,7 @@ A light state management with React syntax.
 By using `Reactter` you get:
 
 # Features
-- Use familiarized syntax such as [Custom foo description](#UseState), `UseEffect`, `UseContext` and more.
+- Use familiarized syntax such as [UseState](#UseState), [UseEffect](#UseEffect), [UseContext](#UseContext), [Custom hooks](#Custom-hooks) and more.
 - Create custom hooks to reuse functionality.
 - Reduce significantly boilerplate code.
 - Improve code readability.
@@ -36,7 +36,7 @@ class AppContext extends ReactterContext {
 
 
 ```
-You can also create any other classes and set an `UseState` prop to share the state.
+You can also create any other classes and set an [UseState](#UseState) prop to share the state.
 ```dart
 class Global {
   static final currentUser = UseState<User?>(null);
@@ -169,7 +169,7 @@ class UserContext extends ReactterContext with UseCart {
   }
 }
 ```
-We recommend to use `mixins` for create hooks due the ease of injecting variables, but any class that extends from `ReactterHook` can be a `Custom Hook`.
+We recommend to use `mixins` for create hooks due the ease of injecting variables, but any class that extends from `ReactterHook` can be a [Custom hook](#Custom-hooks).
 
 <br>
 
@@ -225,7 +225,7 @@ We want keeping adding features for `Reactter`, those are some we have in mind o
 <br><br>
 
 # WARNING: 
-## `Reactter` has just left development status, you can use it in production with small applications but with caution, we are working to make it more testable and consider all possible situations of state management. The API could changes in the future due the `Roadmap`.
+## `Reactter` has just left development status, you can use it in production with small applications but with caution, we are working to make it more testable and consider all possible situations of state management. The API could changes in the future due the [Roadmap](#Roadmap).
 
 <br>
 
@@ -242,9 +242,5 @@ or by email:
 - Carlos León <carleon.dev@gmail.com> 
 
 <br>
-
-[Link to use state](#UseState)
-<br>
-[Link to lifecycle](#Lifecycle-methods-on-ReactterContext)
 
 ## Copyright (c) 2022 **[2devs.io](https://2devs.io/)** 
