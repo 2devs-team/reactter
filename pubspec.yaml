@@ -1,6 +1,6 @@
 name: reactter
-description: Reactter is a package that uses GetX as base to implement reactive behavior using some names and functionality we are familiarized from React Js.
-version: 0.0.1-dev.4
+description: A light state management with React syntax.
+version: 1.0.0-dev
 homepage: https://2devs.io
 license: MIT License
 
@@ -11,7 +11,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  get: ^4.6.1
 
 dev_dependencies:
   flutter_lints: ^1.0.0
