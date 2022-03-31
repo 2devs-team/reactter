@@ -5,7 +5,6 @@ import '../hooks/reactter_hook.dart';
 /// Inyects the [callback] in the [UseState] [dependencies] given to execute when any of
 /// those changes.
 ///
-/// ```
 /// This example produces a [UseEffect], it must be called on [ReactterContext]
 /// constructor:
 ///

@@ -9,6 +9,6 @@ export 'src/hooks/reactter_use_async_state.dart' show UseAsyncState;
 //Widgets
 export 'src/widgets/reactter_use_builder.dart' show UseBuilder;
 export 'src/widgets/reactter_use_context.dart'
-    show UseContext, BuildContextExtension;
+    show UseContext, ReactterBuildContextExtension;
 export 'src/widgets/reactter_use_provider.dart'
     show UseProvider, ReactterContext;

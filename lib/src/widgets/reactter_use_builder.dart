@@ -4,7 +4,23 @@ import 'package:flutter/material.dart';
 import '../widgets/reactter_use_provider.dart';
 
 /// Create a new context to provide [T] to his builder.
+///
+/// You canse use a native [Builder] or this to encapsulate and control re-renders.
+///
+/// This example produces one [UseBuilder] with an [AppContext] as [T].
+///
+/// ```dart
+/// UseBuilder<AppContext>(
+///  builder: (context){
+///
+///     final appContext = context.of<AppContext>();
+///
+///     return Text(appContext.name?.value)
+///   }
+/// )
+/// ```
 class UseBuilder<T> extends StatelessWidget {
+  /// This prop is experimental, you can omit it.
   final Widget? child;
 
   const UseBuilder({
