@@ -1,10 +1,10 @@
 library reactter;
 
 import 'package:flutter/material.dart';
-import 'package:reactter/core/reactter_types.dart';
-import 'package:reactter/hooks/reactter_hook.dart';
+import '../core/reactter_types.dart';
+import '../hooks/reactter_hook.dart';
 
-import '../reactter.dart';
+import '../../reactter.dart';
 
 class UseAsyncState<T> extends UseState<T> {
   UseAsyncState(

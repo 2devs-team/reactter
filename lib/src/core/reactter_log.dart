@@ -1,5 +1,5 @@
 import 'dart:developer' as developer;
-import 'package:reactter/engine/reactter_interface_instance.dart';
+import '../engine/reactter_interface_instance.dart';
 
 ///VoidCallback from logs
 typedef LogWriterCallback = void Function(String text, {bool isError});

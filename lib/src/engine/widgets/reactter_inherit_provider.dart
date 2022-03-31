@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:reactter/core/reactter_types.dart';
-import 'package:reactter/engine/widgets/reactter_inherit_provider_scope.dart';
+import '../../core/reactter_types.dart';
+import '../../engine/widgets/reactter_inherit_provider_scope.dart';
 
 class ReactterInheritedProvider extends StatelessWidget {
   final Widget? child;

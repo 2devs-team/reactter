@@ -2,7 +2,7 @@
 library reactter;
 
 import 'package:flutter/material.dart';
-import 'package:reactter/widgets/reactter_context_provider.dart';
+import '../widgets/reactter_context_provider.dart';
 
 class CreateContext extends StatefulWidget {
   final List<ContextProvider> controllers;

@@ -162,7 +162,7 @@ You can use it like this:
 class UserContext extends ReactterContext with UseCart {
   final user = Global.currentUser;
 
-  UserApp() {
+  UserContext() {
     UseEffect(() {
       cart.value = api.getUserCart(user.value?.id ?? 0);
     }, [user]);

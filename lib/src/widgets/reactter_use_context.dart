@@ -1,10 +1,10 @@
 library reactter;
 
 import 'package:flutter/material.dart';
-import 'package:reactter/core/reactter_types.dart';
-import 'package:reactter/hooks/reactter_use_state.dart';
-import 'package:reactter/engine/reactter_interface_instance.dart';
-import 'package:reactter/widgets/reactter_use_provider.dart';
+import '../core/reactter_types.dart';
+import '../hooks/reactter_use_state.dart';
+import '../engine/reactter_interface_instance.dart';
+import '../widgets/reactter_use_provider.dart';
 
 abstract class UseContextAbstraction<T extends Object> {
   T? get instance;

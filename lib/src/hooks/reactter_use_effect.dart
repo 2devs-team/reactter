@@ -1,6 +1,6 @@
 library reactter;
 
-import 'package:reactter/hooks/reactter_hook.dart';
+import '../hooks/reactter_hook.dart';
 
 class UseEffect extends ReactterHook {
   UseEffect(

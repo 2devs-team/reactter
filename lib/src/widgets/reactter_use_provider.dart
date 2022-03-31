@@ -1,13 +1,13 @@
 library reactter;
 
 import 'package:flutter/material.dart';
-import 'package:reactter/core/reactter_types.dart';
-import 'package:reactter/engine/mixins/reactter_life_cycle.dart';
-import 'package:reactter/engine/widgets/reactter_inherit_provider.dart';
-import 'package:reactter/engine/widgets/reactter_inherit_provider_scope.dart';
-import 'package:reactter/engine/widgets/reactter_inherit_provider_scope_element.dart';
-import 'package:reactter/widgets/reactter_use_context.dart';
-import 'package:reactter/hooks/reactter_hook.dart';
+import '../core/reactter_types.dart';
+import '../engine/mixins/reactter_life_cycle.dart';
+import '../engine/widgets/reactter_inherit_provider.dart';
+import '../engine/widgets/reactter_inherit_provider_scope.dart';
+import '../engine/widgets/reactter_inherit_provider_scope_element.dart';
+import '../widgets/reactter_use_context.dart';
+import '../hooks/reactter_hook.dart';
 
 class ReactterContext extends ReactterHook with ReactterLifeCycle {}
 

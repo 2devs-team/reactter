@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:reactter/engine/widgets/reactter_inherit_provider.dart';
-import 'package:reactter/engine/widgets/reactter_inherit_provider_scope_element.dart';
+import '../../engine/widgets/reactter_inherit_provider.dart';
+import '../../engine/widgets/reactter_inherit_provider_scope_element.dart';
 
 class ReactterInheritedProviderScope extends InheritedWidget {
   const ReactterInheritedProviderScope({

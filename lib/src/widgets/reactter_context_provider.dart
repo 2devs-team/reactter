@@ -1,6 +1,6 @@
 library reactter;
 
-import 'package:reactter/engine/reactter_interface_instance.dart';
+import '../engine/reactter_interface_instance.dart';
 
 class ContextProvider<T extends Object> {
   final String id;

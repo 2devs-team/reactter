@@ -3,7 +3,6 @@
 import 'package:example/data/models/user.dart';
 import 'package:flutter/material.dart';
 import 'package:reactter/reactter.dart';
-import 'package:reactter/utils/helpers/reactter_future_helper.dart';
 
 class Global {
   static final currentUser = UseState<User?>(null);
@@ -16,7 +15,7 @@ class UserContext extends ReactterContext {
       UseAsyncState<String>("My username", fillUsername, context: this);
 
   Future<String> fillUsername() async {
-    await delay(2000);
+    await Future.delayed(const Duration(milliseconds: 2000));
 
     print("->>> useState");
 

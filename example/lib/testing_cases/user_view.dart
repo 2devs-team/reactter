@@ -5,7 +5,6 @@ import 'package:example/data/models/mocks.dart';
 import 'package:example/testing_cases/use_effect_example.dart';
 import 'package:flutter/material.dart';
 import 'package:reactter/reactter.dart';
-import 'package:reactter/widgets/reactter_use_provider.dart';
 
 mixin UseCart on ReactterHook {
   late final cart = UseState<Cart?>(null, alwaysUpdate: true, context: this);

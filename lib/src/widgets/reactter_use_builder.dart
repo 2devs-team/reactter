@@ -1,7 +1,7 @@
 library reactter;
 
 import 'package:flutter/material.dart';
-import 'package:reactter/widgets/reactter_use_provider.dart';
+import '../widgets/reactter_use_provider.dart';
 
 class UseBuilder<T> extends StatelessWidget {
   final Widget? child;

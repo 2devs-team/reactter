@@ -1,7 +1,7 @@
 library reactter;
 
-import 'package:reactter/core/reactter_types.dart';
-import 'package:reactter/hooks/reactter_hook.dart';
+import '../core/reactter_types.dart';
+import '../hooks/reactter_hook.dart';
 
 class UseState<T> extends ReactterHookAbstract {
   UseState(

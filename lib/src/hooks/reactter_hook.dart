@@ -1,6 +1,6 @@
 library reactter;
 
-import 'package:reactter/engine/mixins/reactter_publish_suscription.dart';
+import '../engine/mixins/reactter_publish_suscription.dart';
 
 abstract class ReactterHookAbstract with ReactterPubSub {}
 
