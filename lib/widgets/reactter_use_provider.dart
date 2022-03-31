@@ -147,7 +147,7 @@ StatefulWidget was disposed.
   }
 
   @override
-  Widget buildWithChild(BuildContext context, Widget? child) {
+  Widget build(BuildContext context) {
     final _inheritedElementParent = _inheritedElementOf(context);
 
     if (_inheritedElementParent != null) {
@@ -172,6 +172,6 @@ StatefulWidget was disposed.
       });
     }
 
-    return super.buildWithChild(context, child);
+    return super.build(context);
   }
 }
