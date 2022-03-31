@@ -23,17 +23,6 @@ class AppContext extends ReactterContext {
     constructor with listenHooks() */
     final username = UseState<String>("");
 
-    //Or add callbacks to catch events  
-    final username = UseState<String>(
-        "",
-        willUpdate: (prevValue, _) => {
-            print("Before update!"),
-        },
-        didUpdate: (_, nextValue) => {
-            print("After update!"),
-        },
-    );
-
     AppContext(){
         listenHooks([username]);
     }
