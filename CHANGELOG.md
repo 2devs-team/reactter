@@ -1,6 +1,17 @@
 # Reactter by [2devs.io](https://2devs.io)
 
-## [1.0.0-dev] - `Release` `2022-03-31`
+## [1.0.0] - `Official Release` - `2022-03-31`
+
+### Changed
+  * Fix some documentation.
+  * Package description (was too short).
+  * Remove unused imports in library.
+### Added
+  * Documentation
+  * Improve performance with primitive loops in functions.
+  * 130 points in pub.dev.
+
+## [1.0.0-dev] - `Dev Release` - `2022-03-31`
 
 ### Changed
 

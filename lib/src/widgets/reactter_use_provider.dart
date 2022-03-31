@@ -9,24 +9,71 @@ import '../engine/widgets/reactter_inherit_provider_scope_element.dart';
 import '../widgets/reactter_use_context.dart';
 import '../hooks/reactter_hook.dart';
 
+/// Provide the functionlatiy of [ReactterHook] and [ReactterLifeCycle] to any class.
+///
+/// We recommend to call you class with `Context` to improve readability.
+///
+///```dart
+/// class AppContext extends ReactterContext {
+///     late final name = UseState<String>('Leo León', context: this);
+/// }
+/// ```
+/// To use it, you should provide it wih [UseProvider] and [UseContext],
+/// you can access to the prop values with [ReactterBuildContextExtension].
+///
+/// This example produces on [UseProvider] with an [UseContext] of type [AppContext],
+/// and read all the states in builder:
+///
+/// ```dart
+/// UseProvider(
+///  contexts: [
+///    UseContext(
+///      () => AppContext(),
+///      init: true,
+///    )
+///  ],
+///  builder: (context) {
+///     appContext = context.of<AppContext>();
+///
+///     return Text(appContext.name.value);
+///   }
+/// )
+/// ```
 class ReactterContext extends ReactterHook with ReactterLifeCycle {}
 
 /// Provide [contexts] to his builder.
 ///
 /// This widget always must be called if you want to provide any state.
+///
+/// All the context in [contexts] going to be provided to this builder.
+///
+/// This example produces one [UseProvider] with an [AppContext] inside.
+/// but you can use as many you need
+///
+/// ```dart
+/// UseProvider(
+///  contexts: [
+///    UseContext(
+///      () => AppContext(),
+///      init: true,
+///    )
+///  ],
+///  builder: () => Container();
+/// )
+/// ```
 class UseProvider extends ReactterInheritedProvider {
   /// All the context that going to be provided to this builder.
-  ///
-  /// This example produces one [UseContext], but you can use as many you need.
+  /// This example produces one [UseProvider].
   ///
   /// ```dart
   /// UseProvider(
   ///  contexts: [
   ///    UseContext(
-  ///      () => UserContext(),
+  ///      () => AppContext(),
   ///      init: true,
   ///    )
-  ///  ]
+  ///  ],
+  ///  builder: () => Container();
   /// )
   /// ```
   final List<UseContextAbstraction> contexts;

@@ -17,10 +17,19 @@ abstract class UseContextAbstraction<T extends Object> {
 ///
 /// [create] is the builder function.
 ///
-/// ```dart
-/// final appContext = context.of<AppContext>();
+/// This widget always must be called inside [contexts] of [UseProvider].
 ///
-/// Text(appContext.property.value);
+/// This example produces one [UseContext] with an [AppContext] inside.
+///
+/// ```dart
+/// UseProvider(
+///  contexts: [
+///    UseContext(
+///      () => AppContext(),
+///      init: true,
+///    )
+///  ]
+/// )
 /// ```
 class UseContext<T extends Object> extends UseContextAbstraction {
   /// Experimental feature, no need it at the moment.
@@ -67,9 +76,42 @@ class UseContext<T extends Object> extends UseContextAbstraction {
   }
 }
 
-extension BuildContextExtension on BuildContext {
+/// In charge of return listeners of the given [ReactterContext].
+///
+/// This example use [of] to produce one context with all the listen state of [AppContext].
+///
+/// ```dart
+///
+/// final appContext = context.of<AppContext>();
+///
+/// Text(appContext.property.value);
+///
+///
+/// ```
+/// This example use [of] and [selector] to produce one context with just
+/// the selected state of [AppContext]. You can use as many properties you need.
+///
+/// ```dart
+///
+/// final appContext = context.of<AppContext>((ctx) => [ctx.propToWatch1, ctx.propToWatch2]);
+///
+/// Text(appContext.propToWatch.value);
+/// ```
+///
+/// This example use [ofStatic] to produce one context with all the static states of [AppContext].
+/// This means that the widget doesn't rebuild when state change which improves performance.
+///
+/// ```dart
+///
+/// final appContext = context.ofStatic<AppContext>();
+///
+/// Text(appContext.property.value);
+///
+/// ```
+///
+/// This is usefull when you know the variable doesn't need to change.
+extension ReactterBuildContextExtension on BuildContext {
   /// Returns all the listeners of the given [ReactterContext].
-  ///
   /// This example produces one context with all the listen state of [AppContext].
   ///
   /// ```dart
@@ -78,10 +120,9 @@ extension BuildContextExtension on BuildContext {
   ///
   /// Text(appContext.property.value);
   ///
-  ///
   /// ```
-  /// This example produces one context with just the selected state of [AppContext].
-  /// You can use as many properties you need.
+  /// This example use [of] and [selector] to produce one context with just
+  /// the selected state of [AppContext]. You can use as many properties you need.
   ///
   /// ```dart
   ///
@@ -89,6 +130,7 @@ extension BuildContextExtension on BuildContext {
   ///
   /// Text(appContext.propToWatch.value);
   /// ```
+  ///
   T of<T>([List<UseState> Function(T instance)? selector]) {
     T? _instance;
 
