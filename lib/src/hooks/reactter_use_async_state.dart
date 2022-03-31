@@ -6,6 +6,17 @@ import '../hooks/reactter_hook.dart';
 
 import '../../reactter.dart';
 
+/// This class extends from [UseState].
+/// Has the same capabilities but receive [asyncValue] which works as a the [value] initializer.
+///
+/// This example produces one simple [UseAsyncState]:
+/// ```dart
+///late final userName =
+///       UseAsyncState<String>("My username", () async {
+///           return await api.getUserName();
+///       });
+///
+/// ```
 class UseAsyncState<T> extends UseState<T> {
   UseAsyncState(
     initial,
@@ -19,14 +30,17 @@ class UseAsyncState<T> extends UseState<T> {
     context?.listenHooks([this]);
   }
 
+  /// Works as a the [value] initializer.
+  /// Need to call [resolve()] to execute.
   final Future<T> Function() asyncValue;
 
   bool _isRequestDone = false;
   bool _error = false;
   Object? errorObject;
 
+  // Set result from the request, clear the states and set [value].
   set result(T _value) {
-    clear();
+    _clear();
     _isRequestDone = true;
     value = _value;
   }
@@ -38,8 +52,18 @@ class UseAsyncState<T> extends UseState<T> {
     publish();
   }
 
+  /// Resolve [asyncValue] to fill [value].
+  ///
+  /// This example produces the use we recommend:
+  /// ```dart
+  /// onClick(){
+  ///   state.resolve();
+  /// }
+  /// ```
+  ///
+  /// You able to call wherever you want, in the constructor or in any [lifecycle] method.
   resolve() async {
-    clear();
+    _clear();
     _isLoading = true;
 
     try {
@@ -51,7 +75,8 @@ class UseAsyncState<T> extends UseState<T> {
     }
   }
 
-  clear() {
+  /// Clear all state values for correct handling.
+  _clear() {
     _isRequestDone = false;
     errorObject = null;
     _error = false;
@@ -63,18 +88,35 @@ class UseAsyncState<T> extends UseState<T> {
     _error = true;
   }
 
+  /// Reset [value] to his initial value.
   @override
   void reset() {
-    clear();
+    _clear();
     publish();
     super.reset();
   }
 
-  // @override
-  // void update() {
-  //   print("Rebuild async update");
-  // }
-
+  /// React when the [value] change and re-render the widget depending of the state.
+  ///
+  /// `standby`: When the state has the initial value.
+  /// `loading`: When the request for the state is retrieving the value.
+  /// `done`: When the request is done.
+  /// `error`: If any errors happens in the request.
+  ///
+  /// Example:
+  ///
+  /// ```dart
+  /// userContext.userName.when(
+  ///
+  ///   standby: (value) => Text("Standby: ${value}"),
+  ///
+  ///   loading: () => const CircularProgressIndicator(),
+  ///
+  ///   done: (value) => Text(value),
+  ///
+  ///   error: (error) => const Text("Unhandled exception: ${error}"),
+  /// )
+  /// ```
   Widget when({
     WidgetCreatorValue<T>? standby,
     WidgetCreator? loading,

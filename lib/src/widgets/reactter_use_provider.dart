@@ -11,8 +11,29 @@ import '../hooks/reactter_hook.dart';
 
 class ReactterContext extends ReactterHook with ReactterLifeCycle {}
 
+/// Provide [contexts] to his builder.
+///
+/// This widget always must be called if you want to provide any state.
 class UseProvider extends ReactterInheritedProvider {
+  /// All the context that going to be provided to this builder.
+  ///
+  /// This example produces one [UseContext], but you can use as many you need.
+  ///
+  /// ```dart
+  /// UseProvider(
+  ///  contexts: [
+  ///    UseContext(
+  ///      () => UserContext(),
+  ///      init: true,
+  ///    )
+  ///  ]
+  /// )
+  /// ```
   final List<UseContextAbstraction> contexts;
+
+  /// Save all the instances living inside this [UseProvider].
+  ///
+  /// This object is who controls the state in every [UseProvider].
   final Map<Type, Object?> instanceMapper = {};
 
   UseProvider({
@@ -25,9 +46,12 @@ class UseProvider extends ReactterInheritedProvider {
           builder: builder,
           child: child,
         ) {
+    // Necessary to keep data in hotreload.
     initialize();
   }
 
+  /// Initialize every instance inside [instanceMapper]
+  /// and executes his [awake()] method.
   initialize() {
     for (var _context in contexts) {
       _context.initialize(true);
@@ -40,6 +64,7 @@ class UseProvider extends ReactterInheritedProvider {
     }
   }
 
+  /// Iterates his children to set an action in every state.
   _iterateContextWithInherit(
       ReactterInheritedProviderScopeElement inheritedElement,
       Function(ReactterContext) action) {
@@ -52,12 +77,15 @@ class UseProvider extends ReactterInheritedProvider {
     }
   }
 
+  /// Executes all [willMount] from every [ReactterContext] in his children.
   willMount(ReactterInheritedProviderScopeElement inheritedElement) {
     _iterateContextWithInherit(inheritedElement, (instance) {
       instance.willMount();
     });
   }
 
+  /// Executes all [didMount] methods from every [ReactterContext] in his children and add
+  /// the [markNeedsBuild] method to his listener for update when state change.
   didMount(ReactterInheritedProviderScopeElement inheritedElement) {
     _iterateContextWithInherit(inheritedElement, (instance) {
       instance
@@ -66,6 +94,8 @@ class UseProvider extends ReactterInheritedProvider {
     });
   }
 
+  /// Executes all [willUnmount] methods from every [ReactterContext] in his children and remove
+  /// the [markNeedsBuild] method from his listener.
   willUnmount(ReactterInheritedProviderScopeElement inheritedElement) {
     _iterateContextWithInherit(inheritedElement, (instance) {
       instance
@@ -74,6 +104,7 @@ class UseProvider extends ReactterInheritedProvider {
     });
   }
 
+  /// Returns all the listeners of the given [ReactterContext]
   static T? of<T>(
     BuildContext context, {
     bool listen = false,
@@ -98,10 +129,12 @@ class UseProvider extends ReactterInheritedProvider {
     return instanceMapper[T] as T?;
   }
 
+  /// An InheritedProvider<T>'s update tries to obtain a parent provider of
+  /// the same type.
   static ReactterInheritedProviderScopeElement? _inheritedElementOf(
     BuildContext context,
   ) {
-    // ignore: unnecessary_null_comparison, can happen if the application depends on a non-migrated code
+    // ignore: unnecessary_null_comparison, can happen if the application depends on a non-migrated code.
     assert(context != null, '''
 Tried to call context.read/watch/select or similar on a `context` that is null.
 
@@ -111,8 +144,6 @@ StatefulWidget was disposed.
     ReactterInheritedProviderScopeElement? inheritedElement;
 
     if (context.widget is ReactterInheritedProviderScope) {
-      // An InheritedProvider<T>'s update tries to obtain a parent provider of
-      // the same type.
       context.visitAncestorElements((parent) {
         inheritedElement = parent.getElementForInheritedWidgetOfExactType<
                 ReactterInheritedProviderScope>()
@@ -125,13 +156,10 @@ StatefulWidget was disposed.
           as ReactterInheritedProviderScopeElement?;
     }
 
-    // if (inheritedElement == null && null is! T) {
-    //   // throw ProviderNotFoundException(T, context.widget.runtimeType);
-    // }
-
     return inheritedElement;
   }
 
+  /// An InheritedProvider<T>'s tries to obtain children of the same type.
   static ReactterInheritedProviderScopeElement? _inheritedElementChildOf(
     BuildContext context,
   ) {
@@ -155,8 +183,8 @@ StatefulWidget was disposed.
           (_inheritedElementParent.widget.owner as UseProvider);
       instanceMapper.addAll(_useProviderParent.instanceMapper);
 
-      // Execute after build.
-      // Search child inheritedElement and add it to dependencies instance
+      /// Execute after build.
+      /// Search child inheritedElement and add it to dependencies instance.
       Future.microtask(() {
         final _inheritedElement = _inheritedElementChildOf(context);
 

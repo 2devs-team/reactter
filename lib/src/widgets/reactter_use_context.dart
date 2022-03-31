@@ -13,10 +13,24 @@ abstract class UseContextAbstraction<T extends Object> {
   void destroy();
 }
 
+/// Save the state in memory from a [ReactterContext].
+///
+/// [create] is the builder function.
+///
+/// ```dart
+/// final appContext = context.of<AppContext>();
+///
+/// Text(appContext.property.value);
+/// ```
 class UseContext<T extends Object> extends UseContextAbstraction {
+  /// Experimental feature, no need it at the moment.
   final String id;
-  final bool init;
+
+  /// Experimental feature, no need it at the moment.
   final bool isCreated;
+
+  /// Initialize the context at the moment [UseContext] is called.
+  final bool init;
 
   T? _instance;
 
@@ -35,6 +49,7 @@ class UseContext<T extends Object> extends UseContextAbstraction {
   T? get instance => _instance;
   set instance(T? value) => _instance = value;
 
+  /// Executes in constructor, intitialize the instance and save it in [_instance].
   @override
   initialize([bool init = false]) {
     if (!init) return;
@@ -53,6 +68,27 @@ class UseContext<T extends Object> extends UseContextAbstraction {
 }
 
 extension BuildContextExtension on BuildContext {
+  /// Returns all the listeners of the given [ReactterContext].
+  ///
+  /// This example produces one context with all the listen state of [AppContext].
+  ///
+  /// ```dart
+  ///
+  /// final appContext = context.of<AppContext>();
+  ///
+  /// Text(appContext.property.value);
+  ///
+  ///
+  /// ```
+  /// This example produces one context with just the selected state of [AppContext].
+  /// You can use as many properties you need.
+  ///
+  /// ```dart
+  ///
+  /// final appContext = context.of<AppContext>((ctx) => [ctx.propToWatch1, ctx.propToWatch2]);
+  ///
+  /// Text(appContext.propToWatch.value);
+  /// ```
   T of<T>([List<UseState> Function(T instance)? selector]) {
     T? _instance;
 
@@ -86,5 +122,19 @@ extension BuildContextExtension on BuildContext {
     return _instance!;
   }
 
+  /// Returns all the listeners of the given [ReactterContext] but just for read.
+  /// This means that the widget doesn't rebuild when state change which improves performance.
+  ///
+  /// This example produces one context with all the static states of [AppContext].
+  ///
+  /// ```dart
+  ///
+  /// final appContext = context.ofStatic<AppContext>();
+  ///
+  /// Text(appContext.property.value);
+  ///
+  /// ```
+  ///
+  /// This is usefull when you know the variable doesn't need to change.
   T ofStatic<T>() => UseProvider.of<T>(this)!;
 }

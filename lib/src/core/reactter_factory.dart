@@ -2,6 +2,7 @@
 
 import '../engine/reactter_interface_instance.dart';
 
+/// The key used to indentify global instances inside [ReactterFactory]
 const GLOBAL_KEY = '_[GLOBAL]_';
 
 class ReactterFactory {
@@ -13,12 +14,26 @@ class ReactterFactory {
 
   ReactterFactory._();
 
+  /// Store the builders from every [UseContext] in memory to create when needed.
   Map<Type, Object Function()> builders = {};
   // Map<String, ...> = Map<String + Type.hashCode.toString(), ...>
+
+  /// Store every instance created from [builders].
+  ///
+  /// This variable is who keep all the states running in memory.
   Map<String, List<Object>> instances = {};
+
+  /// Store every key used by an [instance].
+  ///
+  /// Example: `_[Global]_`
   Map<Object, String> instancesKeys = {};
+
+  /// Going to save all the instance running in case there are more than one of the same type.
+  ///
+  /// This object is experimental.
   Map<String, int> instancesRunning = {};
 
+  /// Register a builder function in [builders].
   void register<T extends Object>(T Function() builder) {
     if (_reactterFactory.builders[T] != null) {
       Reactter.log('Instance "${T.toString()}" already registered');
@@ -29,11 +44,17 @@ class ReactterFactory {
     Reactter.log('Instance "${T.toString()}" has been registered');
   }
 
+  /// Remove a builder function from [builders].
   void unregistered<T extends Object>() {
     _reactterFactory.builders.remove(T);
     Reactter.log('Instance "${T.toString()}" has been unregistered');
   }
 
+  /// Search for a [T] instance given. This [T] has to be a [ReactterContext] object.
+  ///
+  /// If a [builder] of [T] isn't in [builders] returns `null`
+  ///
+  /// Create the instance if is not create but is already registered in [builders]
   T? getInstance<T extends Object>([bool create = false, String? imp]) {
     print('getInstance: $imp');
     if (create) {
@@ -93,6 +114,7 @@ class ReactterFactory {
     return _instance;
   }
 
+  /// Delete the instace from [instances] but keep the [builder] in memory.
   void deleted(Object instance) {
     try {
       final _key = _reactterFactory.instances.entries
@@ -119,6 +141,7 @@ class ReactterFactory {
     }
   }
 
+  /// Get a key for identify objects in [instancesKeys].
   String _getKey<T>([
     bool global = false,
   ]) {
@@ -129,6 +152,7 @@ class ReactterFactory {
     return T.hashCode.toString();
   }
 
+  /// Get a key for identify objects in [instancesKeys] in case it would be a Global instance.
   T? _getGlobalInstance<T>() {
     final trueKey = _getKey<T>(true);
 

@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import '../../engine/widgets/reactter_inherit_provider.dart';
 import '../../engine/widgets/reactter_inherit_provider_scope_element.dart';
 
+/// Wrapper from [InheritedWidget].
+///
+/// Create a provider [ReactterInheritedProvider] to communicate [ReactterInheritedProviderScopeElement].
 class ReactterInheritedProviderScope extends InheritedWidget {
   const ReactterInheritedProviderScope({
     required this.owner,

@@ -19,17 +19,17 @@ By using `Reactter` you get:
 
 class AppContext extends ReactterContext {
         
-    /* You can create the state here and add it to dependencies in 
-    constructor with listenHooks() */
+    // You can create the state here and add it to dependencies in 
+    // constructor with listenHooks() */
     final username = UseState<String>("");
 
     AppContext(){
         listenHooks([username]);
     }
 
-    /* But we recommend to give the context to the state this way:
-    With this, you no longer need to put it in listenHooks()
-    which is cleaner */
+    // But we recommend to give the context to the state this way:
+    // With this, you no longer need to put it in listenHooks()
+    // which is cleaner */
     late final firstName = UseState<String>("Leo", context: this);
     late final lastName = UseState<String>("León", context: this);
 }
@@ -90,7 +90,7 @@ UseProvider(
 ## Reading values
 As you can see, in the example above, you can read the value from context in three different ways:
   1. `context.of<AnyContext>()`: Get all the states listeners of context.
-  2. `context.of<AnyContext>((ctx) => [ctx.anyState])`: Get the listener of an specific state to rebuild, you can use as many you want.
+  2. `context.of<AnyContext>((ctx) => [ctx.anyState])`: Get the listener of an specific state to rebuild, you can use as many you need.
   3. `context.ofStatic<AppContext>()`: Read all the states, but no rebuild when change.
 <br><br>
 
@@ -136,7 +136,7 @@ userContext.userName.when(
 
 `<AnyAsyncState>.when` receives four functions an always return a widget to handle the view depending from the status of the state:
 
-* `standby`: Is the initial value from state. 
+* `standby`: When the state has the initial value.
 * `loading`: When the request for the state is retrieving the value. 
 * `done`: When the request is done. 
 * `error`: If any errors happens in the request. 

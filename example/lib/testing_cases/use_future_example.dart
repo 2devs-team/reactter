@@ -9,7 +9,11 @@ class Global {
 }
 
 class UserContext extends ReactterContext {
-  late final data = UseState<String?>(null, context: this);
+  late final data = UseState<String?>(null,
+      context: this,
+      didUpdate: (_, newValue) {},
+      willUpdate: (_, __) {},
+      alwaysUpdate: true);
 
   late final userName =
       UseAsyncState<String>("My username", fillUsername, context: this);

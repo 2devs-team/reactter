@@ -1,3 +1,4 @@
+/// Inject listeners to state
 mixin ReactterPubSub {
   final List<void Function()> _subscribers = [];
 
@@ -9,6 +10,9 @@ mixin ReactterPubSub {
     _subscribers.remove(subscriber);
   }
 
+  /// Rebuild everytime is called.
+  ///
+  /// Here is when [markAsNeedRebuild] is set when the instance is created.
   void publish() {
     for (final _subscriber in _subscribers) {
       _subscriber();
