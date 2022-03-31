@@ -27,7 +27,7 @@ class AppContext extends ReactterContext {
         listenHooks([username]);
     }
 
-    // But we recommend to give the context to the state this way:
+    // We recommend to give the context to the state this way:
     // With this, you no longer need to put it in listenHooks()
     // which is cleaner */
     late final firstName = UseState<String>("Leo", context: this);

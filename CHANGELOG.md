@@ -1,6 +1,6 @@
 # Reactter by [2devs.io](https://2devs.io)
 
-## [1.0.0-dev] - `Release` `2022-03-30`
+## [1.0.0-dev] - `Release` `2022-03-31`
 
 ### Changed
 
