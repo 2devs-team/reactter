@@ -5,7 +5,7 @@ import 'package:reactter/reactter.dart';
 class AppContext extends ReactterContext {
   late final counter = UseState<int>(0, context: this);
 
-  late final counterByTwo = UseState<double>(0, context: this);
+  late final counterByTwo = UseState<int>(0, context: this);
 
   AppContext() {
     UseEffect(() {
@@ -13,7 +13,9 @@ class AppContext extends ReactterContext {
     }, [counter]);
   }
 
-  onClickIncrement() => counter.value = counter.value + 1;
+  increment() => counter.value = counter.value + 1;
+
+  reset() => counter.reset();
 }
 
 class ReactterExample extends StatelessWidget {
@@ -29,7 +31,10 @@ class ReactterExample extends StatelessWidget {
         ),
       ],
       builder: (context, _) {
+        print("Render");
+
         final appContext = context.of<AppContext>();
+
         return Scaffold(
           appBar: AppBar(
             title: const Text("Reactter"),
@@ -38,14 +43,28 @@ class ReactterExample extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text("Counter value: " + appContext.counter.value.toString()),
+                Text("Counter value * 2: ${appContext.counterByTwo.value}"),
+                const SizedBox(height: 12),
                 Text("Counter value: " + appContext.counter.value.toString()),
               ],
             ),
           ),
-          floatingActionButton: FloatingActionButton(
-            child: const Icon(Icons.add),
-            onPressed: appContext.onClickIncrement,
+          floatingActionButton: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Container(
+                margin: const EdgeInsets.only(right: 15),
+                child: FloatingActionButton(
+                  backgroundColor: Colors.red.shade800,
+                  child: const Icon(Icons.clear),
+                  onPressed: appContext.reset,
+                ),
+              ),
+              FloatingActionButton(
+                child: const Icon(Icons.add),
+                onPressed: appContext.increment,
+              ),
+            ],
           ),
         );
       },

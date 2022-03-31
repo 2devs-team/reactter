@@ -3,7 +3,7 @@ A light state management with React syntax.
 By using `Reactter` you get:
 
 # Features
-- Use familiarized syntax such as `UseState`, `UseEffect`, `UseContext` and more.
+- Use familiarized syntax such as [Custom foo description](#UseState), `UseEffect`, `UseContext` and more.
 - Create custom hooks to reuse functionality.
 - Reduce significantly boilerplate code.
 - Improve code readability.
@@ -241,7 +241,10 @@ or by email:
 - Leo Castellanos <leoocast.dev@gmail.com>
 - Carlos León <carleon.dev@gmail.com> 
 
-
 <br>
+
+[Link to use state](#UseState)
+<br>
+[Link to lifecycle](#Lifecycle-methods-on-ReactterContext)
 
 ## Copyright (c) 2022 **[2devs.io](https://2devs.io/)** 
