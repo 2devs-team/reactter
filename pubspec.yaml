@@ -1,5 +1,5 @@
 name: reactter
-description: Reactter is a package that uses GetX as base to implement reactive behavior using some names and functionality we are familiarized from React Js.
+description: A light state management with React syntax.
 version: 0.0.1-dev.4
 homepage: https://2devs.io
 license: MIT License

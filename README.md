@@ -1,4 +1,4 @@
-An light state management with React syntax.
+A light state management with React syntax.
 
 By using `Reactter` you get:
 
@@ -8,7 +8,7 @@ By using `Reactter` you get:
 - Reduce significantly boilerplate code.
 - Improve code readability.
 - Unidirectional data flow.
-- An easy way to share global information between in the application. 
+- An easy way to share global information in the application. 
 <br><br>
 
 # Usage
