@@ -52,7 +52,7 @@
         final appContext = context.of<AppContext>((ctx) => [ctx.userName]);
 
         // Read all the states, but no rebuild when change.
-        final appContextStaic = context.ofStatic<AppContext>();
+        final appContextStatic = context.ofStatic<AppContext>();
 
         return Text(appContext.username.value);
       }
