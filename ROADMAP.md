@@ -28,17 +28,27 @@ We want keeping adding features for `Reactter`, those are some we have in mind o
 <br><br>
 
 
-
 # Contribute
 If you want to contribute don't hesitate to create an issue or pull-request in **[Reactter repository](https://github.com/Leoocast/reactter).**
 
-You can find us in twitter:
-*  [@leoocast10](https://twitter.com/leoocast10)
+You can:
+* Add a new custom hook.
+* Add a new widget.
+* Add examples.
+* Report bugs.
+* Report situations difficult to implement.
+* Report an unclear error.
+* Report unclear documentation.
+* Write articles or make videos teaching how to use **[Reactter](https://github.com/Leoocast/reactter)**.
 
-or by email:
+Any idea is welcome!
+<br><br>
 
-- Leo Castellanos <leoocast.dev@gmail.com>
-- Carlos León <carleon.dev@gmail.com> 
+
+# Authors:
+
+- **[Leo Castellanos](https://twitter.com/leoocast10)** - <leoocast.dev@gmail.com>
+- **[Carlos León](_blank)** - <carleon.dev@gmail.com> 
 
 <br>
 
