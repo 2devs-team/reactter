@@ -100,7 +100,8 @@ class UseProvider extends ReactterInheritedProvider {
   /// Initialize every instance inside [instanceMapper]
   /// and executes his [awake()] method.
   initialize() {
-    for (var _context in contexts) {
+    for (var i = 0; i < contexts.length; i++) {
+      final _context = contexts[i];
       _context.initialize(true);
 
       if (_context.instance is ReactterContext) {
@@ -115,9 +116,9 @@ class UseProvider extends ReactterInheritedProvider {
   _iterateContextWithInherit(
       ReactterInheritedProviderScopeElement inheritedElement,
       Function(ReactterContext) action) {
-    for (var _context in contexts) {
-      if (_context.instance is ReactterContext) {
-        final instance = _context.instance as ReactterContext;
+    for (var i = 0; i < contexts.length; i++) {
+      if (contexts[i].instance is ReactterContext) {
+        final instance = contexts[i].instance as ReactterContext;
 
         action(instance);
       }
@@ -232,19 +233,21 @@ StatefulWidget was disposed.
 
       /// Execute after build.
       /// Search child inheritedElement and add it to dependencies instance.
-      Future.microtask(() {
-        final _inheritedElement = _inheritedElementChildOf(context);
+      Future.microtask(
+        () {
+          final _inheritedElement = _inheritedElementChildOf(context);
 
-        if (_inheritedElement == null) {
-          return;
-        }
-
-        for (var _instance in instanceMapper.values) {
-          if (_instance is ReactterContext) {
-            _instance.subscribe(_inheritedElement.markNeedsBuild);
+          if (_inheritedElement == null) {
+            return;
           }
-        }
-      });
+
+          for (var _instance in instanceMapper.values) {
+            if (_instance is ReactterContext) {
+              _instance.subscribe(_inheritedElement.markNeedsBuild);
+            }
+          }
+        },
+      );
     }
 
     return super.build(context);
