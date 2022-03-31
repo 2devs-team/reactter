@@ -3,8 +3,7 @@ library reactter;
 import 'package:flutter/material.dart';
 import '../core/reactter_types.dart';
 import '../hooks/reactter_hook.dart';
-
-import '../../reactter.dart';
+import 'reactter_use_state.dart';
 
 /// This class extends from [UseState].
 /// Has the same capabilities but receive [asyncValue] which works as a the [value] initializer.
