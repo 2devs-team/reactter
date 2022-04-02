@@ -1,5 +1,7 @@
 // ignore_for_file: avoid_print
 
+import 'dart:developer';
+
 import 'package:example/data/models/cart.dart';
 import 'package:example/data/models/mocks.dart';
 import 'package:example/testing_cases/use_effect_example.dart';
@@ -20,31 +22,39 @@ mixin UseCart on ReactterHook {
   }
 }
 
-class UserApp extends ReactterContext with UseCart {
+class UserContext extends ReactterContext with UseCart {
   final user = Global.currentUser;
 
-  UserApp() {
+  UserContext(AppContext appcontext) {
     UseEffect(() {
+      log('"UseEffect UserApp": INITIALIZE');
+
       cart.value = Mocks.getUserCart(user.value?.id ?? 0);
-    }, [user]);
+
+      return () {
+        log('"UseEffect UserApp": DISPOSE');
+      };
+    }, [user], this);
   }
 }
 
 class UserView extends StatelessWidget {
-  const UserView({Key? key}) : super(key: key);
+  final AppContext appcontext;
+
+  const UserView(this.appcontext, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return UseProvider(
       contexts: [
         UseContext(
-          () => UserApp(),
+          () => UserContext(appcontext),
           init: true,
         ),
       ],
       builder: (context, _) {
         print("REBUILD ROOT");
-        final userStatic = context.ofStatic<UserApp>();
+        final userStatic = context.ofStatic<UserContext>();
 
         return Scaffold(
           appBar: AppBar(
@@ -53,7 +63,7 @@ class UserView extends StatelessWidget {
           body: SingleChildScrollView(
             physics: const ScrollPhysics(),
             child: Builder(builder: (context) {
-              final userDynamic = context.of<UserApp>();
+              final userDynamic = context.of<UserContext>();
 
               final cart = userDynamic.cart.value;
 

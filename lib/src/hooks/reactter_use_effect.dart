@@ -1,6 +1,7 @@
 library reactter;
 
 import '../hooks/reactter_hook.dart';
+import '../core/reactter_types.dart';
 
 /// Inyects the [callback] in the [UseState] [dependencies] given to execute when any of
 /// those changes.
@@ -37,12 +38,13 @@ import '../hooks/reactter_hook.dart';
 /// of the props in the class.
 class UseEffect extends ReactterHook {
   UseEffect(
-    void Function() callback,
+    UseEffectCallback callback,
     List<ReactterHookAbstract> dependencies, [
     ReactterHook? context,
   ]) {
     subscribe(callback);
     listenHooks(dependencies);
-    context?.listenHooks([this]);
+
+    context?.listenHooks([this], callback);
   }
 }

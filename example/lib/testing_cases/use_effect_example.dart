@@ -10,16 +10,12 @@ class Global {
   static final currentUser = UseState<User?>(null);
 }
 
-class UserContext extends ReactterContext {
+class AppContext extends ReactterContext {
   final users = Mocks.getUsers();
+  final usersVisited = UseState<int>(0);
 
   onClickUser(BuildContext context, int index) {
     Global.currentUser.value = users![index];
-
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const UserView()),
-    );
   }
 }
 
@@ -31,12 +27,12 @@ class UseEffectExample extends StatelessWidget {
     return UseProvider(
       contexts: [
         UseContext(
-          () => UserContext(),
+          () => AppContext(),
           init: true,
         ),
       ],
       builder: (context, _) {
-        final useContext = context.of<UserContext>();
+        final appContext = context.of<AppContext>();
 
         return Scaffold(
           appBar: AppBar(
@@ -49,15 +45,17 @@ class UseEffectExample extends StatelessWidget {
               children: [
                 // Text(appContext.userName.value),
                 const SizedBox(height: 20),
-                Text("Users: ${useContext.users!.length}"),
+                Text("Users: ${appContext.users!.length}"),
+                const SizedBox(height: 20),
+                Text("Users visited: ${appContext.usersVisited.value}"),
                 const SizedBox(height: 20),
                 ListView.builder(
                   physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
                   padding: const EdgeInsets.all(8),
-                  itemCount: useContext.users!.length,
+                  itemCount: appContext.users!.length,
                   itemBuilder: (BuildContext context, int index) {
-                    final user = useContext.users![index];
+                    final user = appContext.users![index];
 
                     return Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -70,7 +68,13 @@ class UseEffectExample extends StatelessWidget {
                         ),
                         ElevatedButton(
                             onPressed: () {
-                              useContext.onClickUser(context, index);
+                              appContext.onClickUser(context, index);
+
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => UserView(appContext)),
+                              );
                             },
                             child: const Text("View"))
                       ],
