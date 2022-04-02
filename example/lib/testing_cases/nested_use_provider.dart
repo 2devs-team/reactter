@@ -84,17 +84,9 @@ class NestedUseProvider extends StatelessWidget {
   Widget build(BuildContext context) {
     return UseProvider(
       contexts: [
-        //// Se crea la instancia de manera asyncrona
-        // UseContext.async(() async => AppContext()),
         UseContext(
           () => AppContext(),
-          // eliminar init, es igual a lazy=false
           init: true,
-          //// Se crea la instancia en el primer context que lo requiera
-          //// y se elimina la instancia cuando no hay contexts que lo requiera
-          // lazy: true,
-          //// Todo context con id es una instancia nueva
-          // id: 'key',
         ),
         UseContext(
           () => CartContext(),
@@ -103,9 +95,6 @@ class NestedUseProvider extends StatelessWidget {
       ],
       builder: (contextA, _) {
         print('render contextA');
-        // final _appContext = context.static<AppContext>();
-        // final cartContext = contextA.static<CartContext>();
-        // print(_appContext.userName.value);
 
         return UseProvider(
           contexts: const [],

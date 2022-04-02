@@ -55,12 +55,20 @@ class ReactterExample extends StatelessWidget {
               Container(
                 margin: const EdgeInsets.only(right: 15),
                 child: FloatingActionButton(
+                  key: const Key(
+                    //Testing porpuses, Reactter don't need it.
+                    'resetButton',
+                  ),
                   backgroundColor: Colors.red.shade800,
                   child: const Icon(Icons.clear),
                   onPressed: appContext.reset,
                 ),
               ),
               FloatingActionButton(
+                key: const Key(
+                  //Testing porpuses, Reactter don't need it.
+                  'addButton',
+                ),
                 child: const Icon(Icons.add),
                 onPressed: appContext.increment,
               ),

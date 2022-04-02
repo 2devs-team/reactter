@@ -25,8 +25,17 @@ class UserApp extends ReactterContext with UseCart {
 
   UserApp() {
     UseEffect(() {
-      cart.value = Mocks.getUserCart(user.value?.id ?? 0);
+      updateCart();
     }, [user]);
+  }
+
+  @override
+  awake() {
+    updateCart();
+  }
+
+  updateCart() {
+    cart.value = Mocks.getUserCart(user.value?.id ?? 0);
   }
 }
 
@@ -61,7 +70,6 @@ class UserView extends StatelessWidget {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Text(appContext.userName.value),
                   const SizedBox(height: 20),
                   Text("items in cart: ${cart?.products?.length ?? 0}"),
                   const SizedBox(height: 20),
@@ -83,6 +91,7 @@ class UserView extends StatelessWidget {
                             ),
                           ),
                           ElevatedButton(
+                            key: Key('remove_${index + 1}'), //Testing purposes
                             style:
                                 ElevatedButton.styleFrom(primary: Colors.red),
                             onPressed: () {

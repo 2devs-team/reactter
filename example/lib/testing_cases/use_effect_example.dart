@@ -15,11 +15,6 @@ class UserContext extends ReactterContext {
 
   onClickUser(BuildContext context, int index) {
     Global.currentUser.value = users![index];
-
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const UserView()),
-    );
   }
 }
 
@@ -69,8 +64,15 @@ class UseEffectExample extends StatelessWidget {
                           ),
                         ),
                         ElevatedButton(
+                            key: Key('button_${user.firstName}'),
                             onPressed: () {
                               useContext.onClickUser(context, index);
+
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const UserView()),
+                              );
                             },
                             child: const Text("View"))
                       ],
