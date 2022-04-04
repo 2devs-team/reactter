@@ -2,6 +2,7 @@ library reactter;
 
 import 'package:flutter/material.dart';
 import '../core/reactter_types.dart';
+import '../engine/reactter_interface_instance.dart';
 import '../engine/mixins/reactter_life_cycle.dart';
 import '../engine/widgets/reactter_inherit_provider.dart';
 import '../engine/widgets/reactter_inherit_provider_scope.dart';
@@ -149,6 +150,8 @@ class UseProvider extends ReactterInheritedProvider {
       instance
         ..willUnmount()
         ..unsubscribe(inheritedElement.markNeedsBuild);
+
+      Reactter.factory.deleted(instance);
     });
   }
 

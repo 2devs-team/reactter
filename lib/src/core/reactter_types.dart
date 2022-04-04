@@ -4,7 +4,7 @@ typedef UpdateCallback<T> = void Function(T newValue, T oldValue);
 
 typedef FutureVoidCallback = Future<void> Function();
 
-typedef Create<T> = T Function();
+typedef BuilderContext<T> = T Function();
 
 typedef SelectorAspect<T> = bool Function(InheritedElement inheritedElement);
 

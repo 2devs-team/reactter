@@ -32,11 +32,8 @@ abstract class UseContextAbstraction<T extends Object> {
 /// )
 /// ```
 class UseContext<T extends Object> extends UseContextAbstraction {
-  /// Experimental feature, no need it at the moment.
-  final String id;
-
-  /// Experimental feature, no need it at the moment.
-  final bool isCreated;
+  /// Id usted to identify the context
+  final String? id;
 
   /// Initialize the context at the moment [UseContext] is called.
   final bool init;
@@ -44,12 +41,11 @@ class UseContext<T extends Object> extends UseContextAbstraction {
   T? _instance;
 
   UseContext(
-    Create<T> create, {
+    BuilderContext<T> builderContext, {
     this.init = false,
-    this.isCreated = false,
-    this.id = "",
+    this.id,
   }) {
-    Reactter.factory.register<T>(create);
+    Reactter.factory.register<T>(builderContext);
 
     initialize(init);
   }
@@ -65,7 +61,7 @@ class UseContext<T extends Object> extends UseContextAbstraction {
 
     if (instance != null) return;
 
-    instance = Reactter.factory.getInstance<T>(isCreated, 'ContextProvider');
+    instance = Reactter.factory.getInstance<T>(id: id);
   }
 
   @override

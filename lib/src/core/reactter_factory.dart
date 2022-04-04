@@ -3,7 +3,8 @@
 import '../engine/reactter_interface_instance.dart';
 
 /// The key used to indentify global instances inside [ReactterFactory]
-const GLOBAL_KEY = '_[GLOBAL]_';
+const GLOBAL_KEY = '[GLOBAL]';
+const CREATE_KEY = '[CREATE]';
 
 class ReactterFactory {
   static final ReactterFactory _reactterFactory = ReactterFactory._();
@@ -55,11 +56,37 @@ class ReactterFactory {
   /// If a [builder] of [T] isn't in [builders] returns `null`
   ///
   /// Create the instance if is not create but is already registered in [builders]
-  T? getInstance<T extends Object>([bool create = false, String? imp]) {
-    // print('getInstance: $imp');
-    if (create) {
+  T? getInstance<T extends Object>({String? id}) {
+    // if (id != null) {
+    //   final _builder = _reactterFactory.builders[T];
+    //   final _key = _getKey<T>();
+
+    //   if (_builder == null) {
+    //     Reactter.log(
+    //         'Builder for instance "${T.toString()}" is not registered. You should register instance with "Reactter.factory.register<${T.toString()}>()" or "CreateContext<${T.toString()}>(...)"');
+    //     return null;
+    //   }
+
+    //   final _instance = _builder();
+
+    //   Reactter.log(
+    //       'Instance "${T.toString()}[id=$id]"(${_instance.hashCode}) has been created');
+
+    //   _addInstance<T>(key: _key, instance: _instance as T);
+
+    //   _addInstanceRunning<T>(
+    //     key: _getKey<T>(id: id),
+    //     instance: _instance,
+    //   );
+
+    //   return _instance;
+    // }
+
+    var _instance = _getInstance<T>(id: id);
+    final _id = id != null ? "[id='$id']" : "";
+
+    if (_instance == null) {
       final _builder = _reactterFactory.builders[T];
-      final _key = _getKey<T>();
 
       if (_builder == null) {
         Reactter.log(
@@ -67,47 +94,23 @@ class ReactterFactory {
         return null;
       }
 
-      final _instance = _builder();
-
-      Reactter.log(
-          'Instance "${T.toString()}"(${_instance.hashCode}) has been created');
-
-      _addInstance<T>(key: _key, instance: _instance as T);
-
-      _addInstanceRunning<T>(
-        key: _getKey<T>(true),
-        instance: _instance,
-      );
-
-      return _instance;
-    }
-
-    var _instance = _getGlobalInstance<T>();
-
-    if (_instance == null) {
-      final _builder = _reactterFactory.builders[T];
-
-      if (_builder == null) {
-        return null;
-      }
-
       _instance = _builder() as T;
 
       Reactter.log(
-        'Instance "${T.toString()}"(${_instance.hashCode}) has been created as global',
+        'Instance "${T.toString()}$_id"(${_instance.hashCode}) has been created',
       );
 
       _addInstance<T>(
-        key: _getKey<T>(true),
+        key: _getKey<T>(id: id),
         instance: _instance,
       );
     } else {
       Reactter.log(
-          'Instance "${T.toString()}"(${_instance.hashCode}) already created');
+          'Instance "${T.toString()}$_id"(${_instance.hashCode}) already created');
     }
 
     _addInstanceRunning(
-      key: _getKey<T>(true),
+      key: _getKey<T>(),
       instance: _instance,
     );
 
@@ -142,21 +145,19 @@ class ReactterFactory {
   }
 
   /// Get a key for identify objects in [instancesKeys].
-  String _getKey<T>([
-    bool global = false,
-  ]) {
-    if (global) {
-      return '$GLOBAL_KEY${T.hashCode.toString()}';
+  String _getKey<T>({String? id}) {
+    if (id == null) {
+      return '${GLOBAL_KEY}_${T.hashCode.toString()}';
     }
 
-    return T.hashCode.toString();
+    return '${CREATE_KEY}_[$id]_${T.hashCode.toString()}';
   }
 
-  /// Get a key for identify objects in [instancesKeys] in case it would be a Global instance.
-  T? _getGlobalInstance<T>() {
-    final trueKey = _getKey<T>(true);
+  /// Get a key for identify objects in [instances]
+  T? _getInstance<T>({String? id}) {
+    final _key = _getKey<T>(id: id);
 
-    return instances[trueKey]?.first as T?;
+    return instances[_key]?.first as T?;
   }
 
   _addInstance<T extends Object>({
