@@ -1,6 +1,7 @@
 // ignore_for_file: constant_identifier_names, avoid_print
 
 import '../engine/reactter_interface_instance.dart';
+import 'reactter_types.dart';
 
 /// The key used to indentify global instances inside [ReactterFactory]
 const GLOBAL_KEY = '[GLOBAL]';
@@ -16,7 +17,7 @@ class ReactterFactory {
   ReactterFactory._();
 
   /// Store the builders from every [UseContext] in memory to create when needed.
-  Map<Type, Object Function()> builders = {};
+  Map<String, Object Function()> builders = {};
   // Map<String, ...> = Map<String + Type.hashCode.toString(), ...>
 
   /// Store every instance created from [builders].
@@ -35,20 +36,43 @@ class ReactterFactory {
   Map<String, int> instancesRunning = {};
 
   /// Register a builder function in [builders].
-  void register<T extends Object>(T Function() builder) {
-    if (_reactterFactory.builders[T] != null) {
-      Reactter.log('Instance "${T.toString()}" already registered');
+  void register<T extends Object>(
+    BuilderContext<T> builder, [
+    String id = "",
+    bool save = false,
+  ]) {
+    final findBuilder = _reactterFactory.builders["$T"] != null;
+    final findIdBuilder = _reactterFactory.builders["$T[id='$id']"] != null;
+
+    if (id == "") {
+      if (findBuilder) {
+        Reactter.log('Instance "${T.toString()}$id" already registered');
+        return;
+      }
+
+      _reactterFactory.builders.addEntries([MapEntry("$T", builder)]);
+
+      Reactter.log('Instance "${T.toString()}" has been registered');
+
       return;
     }
 
-    _reactterFactory.builders.addEntries([MapEntry(T, builder)]);
-    Reactter.log('Instance "${T.toString()}" has been registered');
+    if (findIdBuilder) {
+      Reactter.log('Instance "${T.toString()}$id" already registered');
+      return;
+    }
+
+    if (save) {
+      _reactterFactory.builders.addEntries([MapEntry("$T[id='$id']", builder)]);
+    }
+
+    Reactter.log("Instance '$T[id='$id']' has been registered");
   }
 
   /// Remove a builder function from [builders].
   void unregistered<T extends Object>() {
-    _reactterFactory.builders.remove(T);
-    Reactter.log('Instance "${T.toString()}" has been unregistered');
+    _reactterFactory.builders.remove("$T");
+    Reactter.log('Instance "$T" has been unregistered');
   }
 
   /// Search for a [T] instance given. This [T] has to be a [ReactterContext] object.
@@ -56,7 +80,7 @@ class ReactterFactory {
   /// If a [builder] of [T] isn't in [builders] returns `null`
   ///
   /// Create the instance if is not create but is already registered in [builders]
-  T? getInstance<T extends Object>({String? id}) {
+  T? getInstance<T extends Object>({String? id, bool save = false}) {
     // if (id != null) {
     //   final _builder = _reactterFactory.builders[T];
     //   final _key = _getKey<T>();
@@ -86,7 +110,9 @@ class ReactterFactory {
     final _id = id != null ? "[id='$id']" : "";
 
     if (_instance == null) {
-      final _builder = _reactterFactory.builders[T];
+      InstanceBuilder<T>? _builder = (id == null || save == false)
+          ? _reactterFactory.builders[T.toString()]
+          : _reactterFactory.builders["$T$_id"];
 
       if (_builder == null) {
         Reactter.log(

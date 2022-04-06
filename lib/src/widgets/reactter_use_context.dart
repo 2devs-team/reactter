@@ -9,6 +9,11 @@ import '../widgets/reactter_use_provider.dart';
 abstract class UseContextAbstraction<T extends Object> {
   T? get instance;
 
+  /// Id usted to identify the context
+  final String? id;
+
+  UseContextAbstraction(this.id);
+
   void initialize([bool init = false]);
   void destroy();
 }
@@ -32,20 +37,19 @@ abstract class UseContextAbstraction<T extends Object> {
 /// )
 /// ```
 class UseContext<T extends Object> extends UseContextAbstraction {
-  /// Id usted to identify the context
-  final String? id;
-
   /// Initialize the context at the moment [UseContext] is called.
   final bool init;
+  final bool save;
 
   T? _instance;
 
   UseContext(
     BuilderContext<T> builderContext, {
     this.init = false,
-    this.id,
-  }) {
-    Reactter.factory.register<T>(builderContext);
+    this.save = false,
+    String? id,
+  }) : super(id) {
+    Reactter.factory.register<T>(builderContext, id ?? '', save);
 
     initialize(init);
   }
@@ -61,7 +65,7 @@ class UseContext<T extends Object> extends UseContextAbstraction {
 
     if (instance != null) return;
 
-    instance = Reactter.factory.getInstance<T>(id: id);
+    instance = Reactter.factory.getInstance<T>(id: id, save: save);
   }
 
   @override
@@ -107,6 +111,75 @@ class UseContext<T extends Object> extends UseContextAbstraction {
 ///
 /// This is usefull when you know the variable doesn't need to change.
 extension ReactterBuildContextExtension on BuildContext {
+  bool _validateAspectRebuild<T>(
+    T instance,
+    Selector<T> selector,
+    List<dynamic>? valueStates,
+  ) {
+    final _valueStatesToCompared = selector(instance);
+
+    /// If selector select nothing
+    if (_valueStatesToCompared.isEmpty) return true;
+
+    for (var index = 0; index <= _valueStatesToCompared.length - 1; index++) {
+      if (_valueStatesToCompared[index].value != valueStates?[index]) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  List<dynamic>? _getValueStates<T>(T instance, Selector<T> selector) =>
+      selector(instance).map((state) => state.value).toList();
+
+  T _instanceController<T>({Selector<T>? selector, String? id}) {
+    T? _instance;
+    List<dynamic>? _valueStates;
+
+    if (id != null) {
+      if (selector == null) {
+        _instance = UseProvider.of<T>(this, listen: true, id: id);
+      } else {
+        _instance = UseProvider.of<T>(
+          this,
+          id: id,
+          listen: true,
+          aspect: (_) =>
+              _validateAspectRebuild<T>(_instance!, selector, _valueStates),
+        );
+
+        if (_instance != null) {
+          _valueStates = _getValueStates(_instance, selector);
+        }
+      }
+
+      assert(_instance != null,
+          'Instance "$T" with id: "$id" does not exist in UseProvider');
+
+      return _instance!;
+    }
+
+    if (selector == null) {
+      _instance = UseProvider.of<T>(this, listen: true);
+    } else {
+      _instance = UseProvider.of<T>(
+        this,
+        listen: true,
+        aspect: (_) =>
+            _validateAspectRebuild<T>(_instance!, selector, _valueStates),
+      );
+
+      if (_instance != null) {
+        _valueStates = _getValueStates<T>(_instance, selector);
+      }
+    }
+
+    assert(_instance != null, 'Instance "$T" does not exist in UseProvider');
+
+    return _instance!;
+  }
+
   /// Returns all the listeners of the given [ReactterContext].
   /// This example produces one context with all the listen state of [AppContext].
   ///
@@ -127,7 +200,7 @@ extension ReactterBuildContextExtension on BuildContext {
   /// Text(appContext.propToWatch.value);
   /// ```
   ///
-  T of<T>([List<UseState> Function(T instance)? selector]) {
+  T of<T>([Selector<T>? selector]) {
     T? _instance;
 
     if (selector == null) {
@@ -178,4 +251,9 @@ extension ReactterBuildContextExtension on BuildContext {
   ///
   /// This is usefull when you know the variable doesn't need to change.
   T ofStatic<T>() => UseProvider.of<T>(this)!;
+
+  T ofId<T>(String id, [Selector<T>? selector]) {
+    //Cambiar a stateSelector ?
+    return _instanceController(id: id, selector: selector);
+  }
 }

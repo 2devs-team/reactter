@@ -82,7 +82,7 @@ class UseProvider extends ReactterInheritedProvider {
   /// Save all the instances living inside this [UseProvider].
   ///
   /// This object is who controls the state in every [UseProvider].
-  final Map<Type, Object?> instanceMapper = {};
+  final Map<String, Object?> instanceMapper = {};
 
   UseProvider({
     Key? key,
@@ -109,7 +109,8 @@ class UseProvider extends ReactterInheritedProvider {
         (_context.instance as ReactterContext).awake();
       }
 
-      instanceMapper[_context.instance.runtimeType] = _context.instance;
+      instanceMapper[_context.instance.runtimeType.toString() +
+          (_context.id ?? '')] = _context.instance;
     }
   }
 
@@ -160,9 +161,10 @@ class UseProvider extends ReactterInheritedProvider {
     BuildContext context, {
     bool listen = false,
     SelectorAspect? aspect,
+    String id = "",
   }) {
     final _inheritedElement = _inheritedElementOf(context);
-    final _instance = _inheritedElement?.getInstance<T>();
+    final _instance = _inheritedElement?.getInstance<T>(id);
 
     if (listen) {
       if (aspect != null) {
@@ -176,8 +178,8 @@ class UseProvider extends ReactterInheritedProvider {
     return _instance;
   }
 
-  T? getInstance<T>() {
-    return instanceMapper[T] as T?;
+  T? getInstance<T>([String id = ""]) {
+    return instanceMapper[T.toString() + id] as T?;
   }
 
   /// An InheritedProvider<T>'s update tries to obtain a parent provider of

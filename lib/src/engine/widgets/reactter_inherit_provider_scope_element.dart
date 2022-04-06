@@ -21,8 +21,8 @@ class ReactterInheritedProviderScopeElement extends InheritedElement {
       super.widget as ReactterInheritedProviderScope;
 
   /// Provides the instance from context [T] from a [UseProvider] parent.
-  T? getInstance<T>() {
-    return (widget.owner as UseProvider).getInstance<T>();
+  T? getInstance<T>([String id = ""]) {
+    return (widget.owner as UseProvider).getInstance<T>(id);
   }
 
   /// Executes lyfecicle [willMount] and [didMount] method before and after render respectively.
