@@ -39,7 +39,7 @@ import '../hooks/reactter_hook.dart';
 ///   }
 /// )
 /// ```
-class ReactterContext extends ReactterHook with ReactterLifeCycle {}
+class ReactterContext extends ReactterHook {}
 
 /// Provide [contexts] to his builder.
 ///
@@ -137,8 +137,8 @@ class UseProvider extends ReactterInheritedProvider {
   didMount(ReactterInheritedProviderScopeElement inheritedElement) {
     _iterateContextWithInherit(inheritedElement, (instance) {
       instance
-        ..didMount()
-        ..subscribe(inheritedElement.markNeedsBuild);
+        ..subscribe(inheritedElement.markNeedsBuild)
+        ..didMount();
     });
   }
 
