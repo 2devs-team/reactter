@@ -1,5 +1,13 @@
 # Reactter by [2devs.io](https://2devs.io)
 
+## [2.0.0] -  `2022-03-31`
+
+### Changed
+  * Fix some documentation.
+  * Removed Utils folder from library.
+### Added
+  * Improve performance with primitive loops in functions.
+  * 
 ## [1.0.1] -  `2022-03-31`
 
 ### Changed
