@@ -142,6 +142,9 @@ extension ReactterBuildContextExtension on BuildContext {
       _instance = UseProvider.of<T>(this, listen: true, aspect: (_) {
         final _valueStatesToCompared = selector(_instance!);
 
+        /// If selector select nothing
+        if (_valueStatesToCompared.isEmpty) return true;
+
         for (var index = 0;
             index <= _valueStatesToCompared.length - 1;
             index++) {
