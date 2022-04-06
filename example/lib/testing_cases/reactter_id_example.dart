@@ -5,13 +5,16 @@ import 'package:reactter/reactter.dart';
 class AppContext extends ReactterContext {
   late final data = UseState<String>("", context: this);
 
-  late final counter = UseState<int>(1, context: this);
+  late final counter = UseState<int>(5, context: this);
 
   AppContext([_data = "Default"]) {
     data.value = _data;
   }
 
-  increment() => counter.value = counter.value + 1;
+  increment() {
+    counter.value = counter.value + 1;
+  }
+
   reset() => counter.reset();
 }
 
@@ -49,8 +52,9 @@ class ReactterIdExample extends StatelessWidget {
         final mainContext = context.ofStatic<AppContext>();
 
         final idTest1 = context.ofId<AppContext>("id_test_1");
-        final idTest2 = context.ofId<AppContext>("id_test_2");
-        final newBuilder = context.ofId<AppContext>("new_builder");
+
+        // final idTest2 = context.ofId<AppContext>("id_test_2");
+        // final newBuilder = context.ofId<AppContext>("new_builder");
 
         return Scaffold(
           appBar: AppBar(
@@ -67,28 +71,28 @@ class ReactterIdExample extends StatelessWidget {
                 ),
                 Text("data: ${mainContext.data.value}"),
                 Text("counter: ${mainContext.counter.value}"),
-                const SizedBox(height: 15),
-                const Text(
-                  "id_test_1",
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                Text("data: ${idTest1.data.value}"),
-                Text("counter: ${idTest1.counter.value}"),
-                const SizedBox(height: 15),
-                const Text(
-                  "id_test_2",
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                Text("data: ${idTest2.data.value}"),
-                Text("counter: ${idTest2.counter.value}"),
-                const SizedBox(height: 15),
-                const Text(
-                  "new_builder",
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                Text("data: ${newBuilder.data.value}"),
-                Text("counter: ${newBuilder.counter.value}"),
-                const SizedBox(height: 15),
+                // const SizedBox(height: 15),
+                // const Text(
+                //   "id_test_1",
+                //   style: TextStyle(fontWeight: FontWeight.bold),
+                // ),
+                // Text("data: ${idTest1.data.value}"),
+                // Text("counter: ${idTest1.counter.value}"),
+                // const SizedBox(height: 15),
+                // const Text(
+                //   "id_test_2",
+                //   style: TextStyle(fontWeight: FontWeight.bold),
+                // ),
+                // Text("data: ${idTest2.data.value}"),
+                // Text("counter: ${idTest2.counter.value}"),
+                // const SizedBox(height: 15),
+                // const Text(
+                //   "new_builder",
+                //   style: TextStyle(fontWeight: FontWeight.bold),
+                // ),
+                // Text("data: ${newBuilder.data.value}"),
+                // Text("counter: ${newBuilder.counter.value}"),
+                // const SizedBox(height: 15),
               ],
             ),
           ),
@@ -118,69 +122,69 @@ class ReactterIdExample extends StatelessWidget {
                     ),
                   ],
                 ),
-                Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Text("id_test_1"),
-                    Row(
-                      children: [
-                        FloatingActionButton(
-                          backgroundColor: Colors.red.shade800,
-                          child: const Icon(Icons.clear),
-                          onPressed: idTest1.reset,
-                          mini: true,
-                        ),
-                        FloatingActionButton(
-                          child: const Icon(Icons.add),
-                          onPressed: idTest1.increment,
-                          mini: true,
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Text("id_test_2"),
-                    Row(
-                      children: [
-                        FloatingActionButton(
-                          backgroundColor: Colors.red.shade800,
-                          child: const Icon(Icons.clear),
-                          onPressed: idTest2.reset,
-                          mini: true,
-                        ),
-                        FloatingActionButton(
-                          child: const Icon(Icons.add),
-                          onPressed: idTest2.increment,
-                          mini: true,
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Text("new_builder"),
-                    Row(
-                      children: [
-                        FloatingActionButton(
-                          backgroundColor: Colors.red.shade800,
-                          child: const Icon(Icons.clear),
-                          onPressed: newBuilder.reset,
-                          mini: true,
-                        ),
-                        FloatingActionButton(
-                          child: const Icon(Icons.add),
-                          onPressed: newBuilder.increment,
-                          mini: true,
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
+                // Column(
+                //   mainAxisSize: MainAxisSize.min,
+                //   children: [
+                //     const Text("id_test_1"),
+                //     Row(
+                //       children: [
+                //         FloatingActionButton(
+                //           backgroundColor: Colors.red.shade800,
+                //           child: const Icon(Icons.clear),
+                //           onPressed: idTest1.reset,
+                //           mini: true,
+                //         ),
+                //         FloatingActionButton(
+                //           child: const Icon(Icons.add),
+                //           onPressed: idTest1.increment,
+                //           mini: true,
+                //         ),
+                //       ],
+                //     ),
+                //   ],
+                // ),
+                // Column(
+                //   mainAxisSize: MainAxisSize.min,
+                //   children: [
+                //     const Text("id_test_2"),
+                //     Row(
+                //       children: [
+                //         FloatingActionButton(
+                //           backgroundColor: Colors.red.shade800,
+                //           child: const Icon(Icons.clear),
+                //           onPressed: idTest2.reset,
+                //           mini: true,
+                //         ),
+                //         FloatingActionButton(
+                //           child: const Icon(Icons.add),
+                //           onPressed: idTest2.increment,
+                //           mini: true,
+                //         ),
+                //       ],
+                //     ),
+                //   ],
+                // ),
+                // Column(
+                //   mainAxisSize: MainAxisSize.min,
+                //   children: [
+                //     const Text("new_builder"),
+                //     Row(
+                //       children: [
+                //         FloatingActionButton(
+                //           backgroundColor: Colors.red.shade800,
+                //           child: const Icon(Icons.clear),
+                //           onPressed: newBuilder.reset,
+                //           mini: true,
+                //         ),
+                //         FloatingActionButton(
+                //           child: const Icon(Icons.add),
+                //           onPressed: newBuilder.increment,
+                //           mini: true,
+                //         ),
+                //       ],
+                //     ),
+                //   ],
+                // ),
               ],
             ),
           ),

@@ -256,4 +256,6 @@ extension ReactterBuildContextExtension on BuildContext {
     //Cambiar a stateSelector ?
     return _instanceController(id: id, selector: selector);
   }
+
+  T ofIdStatic<T>(String id) => UseProvider.of<T>(this, id: id)!;
 }
