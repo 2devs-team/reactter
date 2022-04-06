@@ -8,6 +8,8 @@ typedef UseEffectCallback = void Function()? Function();
 
 typedef Create<T> = T Function();
 
+typedef BuilderContext<T> = T Function();
+
 typedef SelectorAspect<T> = bool Function(InheritedElement inheritedElement);
 
 typedef BuildWithChild = Widget Function(BuildContext context, Widget? child);
