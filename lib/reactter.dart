@@ -1,5 +1,8 @@
 library reactter;
 
+//Interface
+export 'src/engine/reactter_interface_instance.dart';
+
 //Hooks
 export 'src/hooks/reactter_hook.dart' show ReactterHook;
 export 'src/hooks/reactter_use_effect.dart' show UseEffect;

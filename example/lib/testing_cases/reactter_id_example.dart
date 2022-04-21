@@ -43,7 +43,6 @@ class ReactterIdExample extends StatelessWidget {
           () => AppContext("Change by create contructor"),
           init: true,
           id: "new_builder",
-          save: true,
         ),
       ],
       builder: (context, _) {

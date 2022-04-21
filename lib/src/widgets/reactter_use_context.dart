@@ -39,17 +39,15 @@ abstract class UseContextAbstraction<T extends Object> {
 class UseContext<T extends Object> extends UseContextAbstraction {
   /// Initialize the context at the moment [UseContext] is called.
   final bool init;
-  final bool save;
 
   T? _instance;
 
   UseContext(
     BuilderContext<T> builderContext, {
     this.init = false,
-    this.save = false,
     String? id,
   }) : super(id) {
-    Reactter.factory.register<T>(builderContext, id ?? '', save);
+    Reactter.factory.register<T>(builderContext, id);
 
     initialize(init);
   }
@@ -65,7 +63,7 @@ class UseContext<T extends Object> extends UseContextAbstraction {
 
     if (instance != null) return;
 
-    instance = Reactter.factory.getInstance<T>(id: id, save: save);
+    instance = Reactter.factory.getInstance<T>(id);
   }
 
   @override

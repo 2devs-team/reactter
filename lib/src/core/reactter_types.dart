@@ -11,7 +11,7 @@ typedef Create<T> = T Function();
 
 typedef BuilderContext<T> = T Function();
 
-typedef InstanceBuilder<T> = Object Function();
+typedef InstanceBuilder<T> = T Function();
 
 typedef Selector<T> = List<UseState> Function(T instance);
 
