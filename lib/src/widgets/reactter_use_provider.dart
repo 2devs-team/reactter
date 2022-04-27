@@ -2,45 +2,13 @@ library reactter;
 
 import 'package:flutter/material.dart';
 import '../core/reactter_types.dart';
+import '../core/mixins/reactter_life_cycle.dart';
+import '../core/reactter_context.dart';
 import '../engine/reactter_interface_instance.dart';
-import '../engine/mixins/reactter_life_cycle.dart';
-import '../engine/widgets/reactter_inherit_provider.dart';
-import '../engine/widgets/reactter_inherit_provider_scope.dart';
-import '../engine/widgets/reactter_inherit_provider_scope_element.dart';
+import '../engine/reactter_inherit_provider.dart';
+import '../engine/reactter_inherit_provider_scope.dart';
+import '../engine/reactter_inherit_provider_scope_element.dart';
 import '../widgets/reactter_use_context.dart';
-import '../hooks/reactter_hook.dart';
-
-/// Provide the functionlatiy of [ReactterHook] and [ReactterLifeCycle] to any class.
-///
-/// We recommend to call you class with `Context` to improve readability.
-///
-///```dart
-/// class AppContext extends ReactterContext {
-///     late final name = UseState<String>('Leo León', context: this);
-/// }
-/// ```
-/// To use it, you should provide it wih [UseProvider] and [UseContext],
-/// you can access to the prop values with [ReactterBuildContextExtension].
-///
-/// This example produces on [UseProvider] with an [UseContext] of type [AppContext],
-/// and read all the states in builder:
-///
-/// ```dart
-/// UseProvider(
-///  contexts: [
-///    UseContext(
-///      () => AppContext(),
-///      init: true,
-///    )
-///  ],
-///  builder: (context) {
-///     appContext = context.of<AppContext>();
-///
-///     return Text(appContext.name.value);
-///   }
-/// )
-/// ```
-class ReactterContext extends ReactterHook {}
 
 /// Provide [contexts] to his builder.
 ///
@@ -106,7 +74,7 @@ class UseProvider extends ReactterInheritedProvider {
       _context.initialize(true);
 
       if (_context.instance is ReactterContext) {
-        (_context.instance as ReactterContext).awake();
+        (_context.instance as ReactterContext).executeEvent(EVENT_TYPE.awake);
       }
 
       instanceMapper[_context.instance.runtimeType.toString() +
@@ -130,7 +98,7 @@ class UseProvider extends ReactterInheritedProvider {
   /// Executes all [willMount] from every [ReactterContext] in his children.
   willMount(ReactterInheritedProviderScopeElement inheritedElement) {
     _iterateContextWithInherit(inheritedElement, (instance) {
-      instance.willMount();
+      instance.executeEvent(EVENT_TYPE.willMount);
     });
   }
 
@@ -140,7 +108,7 @@ class UseProvider extends ReactterInheritedProvider {
     _iterateContextWithInherit(inheritedElement, (instance) {
       instance
         ..subscribe(inheritedElement.markNeedsBuild)
-        ..didMount();
+        ..executeEvent(EVENT_TYPE.didMount);
     });
   }
 
@@ -149,7 +117,7 @@ class UseProvider extends ReactterInheritedProvider {
   willUnmount(ReactterInheritedProviderScopeElement inheritedElement) {
     _iterateContextWithInherit(inheritedElement, (instance) {
       instance
-        ..willUnmount()
+        ..executeEvent(EVENT_TYPE.willUnmount)
         ..unsubscribe(inheritedElement.markNeedsBuild);
 
       Reactter.factory.deleted(instance);

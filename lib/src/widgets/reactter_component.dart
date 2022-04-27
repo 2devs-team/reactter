@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:reactter/src/core/reactter_types.dart';
-
-import '../../reactter.dart';
+import '../core/reactter_context.dart';
+import '../core/reactter_types.dart';
+import '../hooks/reactter_use_state.dart';
+import '../widgets/reactter_use_context.dart';
+import '../widgets/reactter_use_provider.dart';
 
 abstract class ReactterComponent<T extends ReactterContext>
     extends StatelessWidget {

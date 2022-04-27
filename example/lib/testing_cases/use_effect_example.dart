@@ -2,6 +2,7 @@
 
 import 'package:example/data/models/mocks.dart';
 import 'package:example/data/models/user.dart';
+import 'package:example/testing_cases/use_async_example.dart';
 import 'package:example/testing_cases/user_view.dart';
 import 'package:flutter/material.dart';
 import 'package:reactter/reactter.dart';
@@ -67,17 +68,31 @@ class UseEffectExample extends StatelessWidget {
                           ),
                         ),
                         ElevatedButton(
-                            key: Key('button_${user.firstName}'),
-                            onPressed: () {
-                              appContext.onClickUser(context, index);
+                          key: Key('button_${user.firstName}'),
+                          onPressed: () {
+                            appContext.onClickUser(context, index);
 
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => UserView(appContext)),
-                              );
-                            },
-                            child: const Text("View"))
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => UserView(appContext)),
+                            );
+                          },
+                          child: const Text("View"),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            appContext.onClickUser(context, index);
+
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const UseFutureExample()),
+                            );
+                          },
+                          child: const Text("Other"),
+                        )
                       ],
                     );
                   },

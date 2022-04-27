@@ -1,8 +1,8 @@
 library reactter;
 
 import 'package:flutter/material.dart';
+import '../core/reactter_context.dart';
 import '../core/reactter_types.dart';
-import '../hooks/reactter_hook.dart';
 import 'reactter_use_state.dart';
 
 /// This class extends from [UseState].
@@ -20,7 +20,7 @@ class UseAsyncState<T> extends UseState<T> {
   UseAsyncState(
     initial,
     this.asyncValue, {
-    ReactterHook? context,
+    ReactterContext? context,
   }) : super(
           initial,
           alwaysUpdate: true,

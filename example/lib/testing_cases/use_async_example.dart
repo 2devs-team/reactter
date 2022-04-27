@@ -9,11 +9,11 @@ class Global {
 }
 
 class UserContext extends ReactterContext {
-  late final data = UseState<String?>(null,
-      context: this,
-      didUpdate: (_, newValue) {},
-      willUpdate: (_, __) {},
-      alwaysUpdate: true);
+  late final data = UseState<String?>(
+    null,
+    alwaysUpdate: true,
+    context: this,
+  );
 
   late final userName =
       UseAsyncState<String>("My username", fillUsername, context: this);
@@ -28,7 +28,7 @@ class UserContext extends ReactterContext {
 
   loadData() {
     print("->>> loadData");
-
+    loadUserName();
     print("->>> finish loadData");
     data.value = "Data filled!";
   }
@@ -37,25 +37,28 @@ class UserContext extends ReactterContext {
     await userName.resolve();
   }
 
-  @override
-  awake() {
-    print("->>> awake");
-    loadData();
-  }
+  UserContext() {
+    onAwake(() {
+      print("->>> awake");
+      loadData();
+    });
 
-  @override
-  willMount() {
-    print("->>> willMount");
-  }
+    onWillMount(() {
+      print("->>> willMount");
+    });
 
-  @override
-  didMount() {
-    print("->>> didMount");
-  }
+    onDidMount(() {
+      print("->>> didMount");
+    });
 
-  @override
-  willUnmount() {
-    print("->>> willUnmount");
+    onWillUnmount(() {
+      print("->>> willUnmount");
+    });
+
+    UseEffect(() {
+      print('UseEffect executed');
+      return () => print("Return UseEffect executed");
+    }, [userName], this);
   }
 }
 

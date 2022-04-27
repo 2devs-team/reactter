@@ -1,7 +1,8 @@
 library reactter;
 
 import '../core/reactter_types.dart';
-import '../hooks/reactter_hook.dart';
+import '../core/reactter_hook.dart';
+import '../core/reactter_hook_manager.dart';
 
 /// Returns an instance of [UseState] where the prop [value] is the given type [T].
 ///
@@ -30,17 +31,12 @@ import '../hooks/reactter_hook.dart';
 /// );
 ///
 /// ```
-class UseState<T> extends ReactterHookAbstract {
+class UseState<T> extends ReactterHook {
   UseState(
     this.initial, {
     this.alwaysUpdate = false,
-    UpdateCallback<T>? willUpdate,
-    UpdateCallback<T>? didUpdate,
-    ReactterHook? context,
-  })  : _willUpdate = willUpdate,
-        _didUpdate = didUpdate {
-    context?.listenHooks([this]);
-  }
+    ReactterHookManager? context,
+  }) : super(context);
 
   /// The initial value in state.
   T initial;
@@ -50,14 +46,6 @@ class UseState<T> extends ReactterHookAbstract {
   /// You can omit it if you are working with primitive types, but if [value]
   /// is an [Object] like [List] or [Class] is necessary to keep in true.
   final bool alwaysUpdate;
-
-  /// Main method that will execute after [value] is updated.
-  /// This is what you give as a the prop [didUpdate].
-  final UpdateCallback<T>? _didUpdate;
-
-  /// Main method that will execute before [value] going to be updated.
-  /// This is what you give as a the prop [willUpdate].
-  final UpdateCallback<T>? _willUpdate;
 
   /// A list of of listeners functions to execute when [value] is updated.
   final List<UpdateCallback<T>> _didUpdateList = [];
@@ -74,8 +62,6 @@ class UseState<T> extends ReactterHookAbstract {
       _onWillUpdate(oldValue, value);
 
       _value = value;
-
-      update();
 
       _onDidUpdate(oldValue, value);
 
@@ -102,14 +88,8 @@ class UseState<T> extends ReactterHookAbstract {
     value = initial;
   }
 
-  void update() {
-    // _update?.call([key]);
-  }
-
   /// Execute all listeners before [value] will updated.
   void _onWillUpdate(T oldValue, T value) {
-    _willUpdate?.call(oldValue, value);
-
     for (final listener in _willUpdateList) {
       listener(oldValue, value);
     }
@@ -117,8 +97,6 @@ class UseState<T> extends ReactterHookAbstract {
 
   /// Execute all listeners when [value] is updated.
   void _onDidUpdate(T oldValue, T value) {
-    _didUpdate?.call(oldValue, value);
-
     for (final listener in _didUpdateList) {
       listener(oldValue, value);
     }
