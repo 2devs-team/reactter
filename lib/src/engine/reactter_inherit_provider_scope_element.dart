@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../core/reactter_types.dart';
-import '../../engine/widgets/reactter_inherit_provider_scope.dart';
-import '../../widgets/reactter_use_provider.dart';
+import 'reactter_inherit_provider_scope.dart';
+import '../core/reactter_types.dart';
+import '../widgets/reactter_use_provider.dart';
 
 class _Dependency<T> {
   bool shouldClearSelectors = false;
