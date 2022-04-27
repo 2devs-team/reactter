@@ -2,8 +2,8 @@
 
 import 'dart:ui';
 
-import '../engine/reactter_interface_instance.dart';
 import 'reactter_types.dart';
+import '../engine/reactter_interface_instance.dart';
 
 class ReactterInstance<T> {
   Type type = T;
@@ -124,7 +124,7 @@ class ReactterFactory {
       if (_instance.nRunning < 1) {
         final _log = 'Instance "$_instance" has been deleted';
 
-        _reactterFactory.instances.remove(_instance);
+        _instance.instance = null;
 
         Reactter.log(_log);
       }
