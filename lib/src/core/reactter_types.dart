@@ -5,9 +5,7 @@ typedef UpdateCallback<T> = void Function(T newValue, T oldValue);
 
 typedef FutureVoidCallback = Future<void> Function();
 
-typedef UseEffectCallback = void Function()? Function();
-
-typedef Create<T> = T Function();
+typedef FunctionCallback = void Function()? Function();
 
 typedef BuilderContext<T> = T Function();
 
