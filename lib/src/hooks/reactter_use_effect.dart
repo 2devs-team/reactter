@@ -1,7 +1,7 @@
 library reactter;
 
-import '../hooks/reactter_hook.dart';
-import '../core/reactter_types.dart';
+import '../core/reactter_context.dart';
+import '../core/reactter_hook.dart';
 
 /// Inyects the [callback] in the [UseState] [dependencies] given to execute when any of
 /// those changes.
@@ -37,14 +37,38 @@ import '../core/reactter_types.dart';
 /// Any class can be a hook, but we recommend do it with mixins due the injection
 /// of the props in the class.
 class UseEffect extends ReactterHook {
+  Function? _unsubscribeCallback;
+
   UseEffect(
-    UseEffectCallback callback,
-    List<ReactterHookAbstract> dependencies, [
-    ReactterHook? context,
-  ]) {
-    subscribe(callback);
+    Function callback,
+    List<ReactterHook> dependencies, [
+    ReactterContext? context,
+  ]) : super(context) {
     listenHooks(dependencies);
 
-    context?.listenHooks([this], callback);
+    if (context == null) {
+      subscribe(() => _onSubscribe(callback));
+    }
+
+    context?.onDidMount(() {
+      _onSubscribe(callback);
+      subscribe(() => _onSubscribe(callback));
+    });
+
+    context?.onWillUnmount(_onUnsubscribe);
+  }
+
+  _onSubscribe(Function callback) {
+    _onUnsubscribe();
+
+    final _returnCallback = callback();
+
+    if (_returnCallback is Function) {
+      _unsubscribeCallback = _returnCallback;
+    }
+  }
+
+  _onUnsubscribe() {
+    _unsubscribeCallback?.call();
   }
 }
