@@ -50,7 +50,7 @@ class ReactterIdExample extends StatelessWidget {
 
         final mainContext = context.ofStatic<AppContext>();
 
-        final idTest1 = context.ofId<AppContext>("id_test_1");
+        // final idTest1 = context.ofId<AppContext>("id_test_1");
 
         // final idTest2 = context.ofId<AppContext>("id_test_2");
         // final newBuilder = context.ofId<AppContext>("new_builder");
