@@ -7,8 +7,6 @@ typedef FutureVoidCallback = Future<void> Function();
 
 typedef FunctionCallback = void Function()? Function();
 
-typedef BuilderContext<T> = T Function();
-
 typedef InstanceBuilder<T> = T Function();
 
 typedef Selector<T> = List<UseState> Function(T instance);

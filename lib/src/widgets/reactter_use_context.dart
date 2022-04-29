@@ -1,71 +1,83 @@
 library reactter;
 
 import 'package:flutter/material.dart';
+import 'package:reactter/src/core/reactter_context.dart';
 import '../core/reactter_types.dart';
 import '../engine/reactter_interface_instance.dart';
 import '../widgets/reactter_use_provider.dart';
 
-abstract class UseContextAbstraction<T extends Object> {
+abstract class UseContextAbstraction<T extends ReactterContext> {
   T? get instance;
 
-  /// Id usted to identify the context
-  final String? id;
+  String? get id;
 
-  UseContextAbstraction(this.id);
+  UseContextAbstraction();
 
   void initialize([bool init = false]);
+
+  @protected
   void destroy();
 }
 
-/// Save the state in memory from a [ReactterContext].
+/// Takes a instance of [ReactterContext] class defined on firts parameter `instanceBuilder`
+/// and manages it like a context.
 ///
-/// [create] is the builder function.
-///
-/// This widget always must be called inside [contexts] of [UseProvider].
-///
-/// This example produces one [UseContext] with an [AppContext] inside.
+/// It's necessary use it inside `contexts` of [UseProvider].
 ///
 /// ```dart
 /// UseProvider(
 ///  contexts: [
 ///    UseContext(
 ///      () => AppContext(),
-///      init: true,
-///    )
-///  ]
+///    ),
+///  ],
 /// )
 /// ```
-class UseContext<T extends Object> extends UseContextAbstraction {
-  /// Initialize the context at the moment [UseContext] is called.
+class UseContext<T extends ReactterContext> extends UseContextAbstraction {
+  /// Create a instances of [ReactterContext] class
+  final InstanceBuilder<T> instanceBuilder;
+
+  /// Id usted to identify the context
+  @override
+  final String? id;
+
+  /// Create the instance defined on firts parameter `instanceBuilder` when [UseContext] is called.
   final bool init;
 
-  T? _instance;
+  /// Invoked when instance defined on firts parameter `instanceBuilder` is created
+  final void Function(T instance)? onInit;
+
+  /// Contain a instance of [ReactterContext] class
+  @override
+  T? instance;
 
   UseContext(
-    BuilderContext<T> builderContext, {
+    this.instanceBuilder, {
+    this.id,
     this.init = false,
-    String? id,
-  }) : super(id) {
-    Reactter.factory.register<T>(builderContext, id);
+    this.onInit,
+  }) : super() {
+    Reactter.factory.register<T>(instanceBuilder, id);
 
     initialize(init);
   }
 
+  /// Executes to intitialize the instance and save it in `instance`
   @override
-  T? get instance => _instance;
-  set instance(T? value) => _instance = value;
-
-  /// Executes in constructor, intitialize the instance and save it in [_instance].
-  @override
+  @protected
   initialize([bool init = false]) {
-    if (!init) return;
+    if (init) return;
 
-    if (instance != null) return;
+    instance ??= Reactter.factory.getInstance<T>(id);
 
-    instance = Reactter.factory.getInstance<T>(id);
+    if (instance != null) {
+      onInit?.call(instance!);
+    }
   }
 
+  /// Executes when the `instance` is no longer required
   @override
+  @protected
   destroy() {
     if (instance == null) return;
 
