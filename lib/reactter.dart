@@ -16,6 +16,6 @@ export 'src/hooks/reactter_use_async_state.dart' show UseAsyncState;
 // Widgets
 export 'src/widgets/reactter_component.dart' show ReactterComponent;
 export 'src/widgets/reactter_use_builder.dart' show UseBuilder;
-export 'src/widgets/reactter_use_context.dart'
-    show UseContext, ReactterBuildContextExtension;
-export 'src/widgets/reactter_use_provider.dart' show UseProvider;
+export 'src/widgets/reactter_use_context.dart' show UseContext;
+export 'src/widgets/reactter_use_provider.dart'
+    show UseProvider, ReactterBuildContextExtension;

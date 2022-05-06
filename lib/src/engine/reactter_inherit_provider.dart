@@ -1,6 +1,7 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'reactter_inherit_provider_scope.dart';
 import '../core/reactter_types.dart';
+import '../engine/reactter_inherit_provider_scope_element.dart';
 
 /// Wrapper a [ReactterInheritedProviderScope].
 ///
@@ -27,7 +28,16 @@ class ReactterInheritedProvider extends StatelessWidget {
       owner: this,
       child: builder != null
           ? Builder(
-              builder: (context) => builder!(context, child),
+              builder: (context) {
+                final _inheritedElement =
+                    context.getElementForInheritedWidgetOfExactType<
+                            ReactterInheritedProviderScope>()
+                        as ReactterInheritedProviderScopeElement;
+
+                _inheritedElement.removeInstanceDependencies();
+
+                return builder!(context, child);
+              },
             )
           : child!,
     );
