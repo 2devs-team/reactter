@@ -25,9 +25,13 @@ void main() {
 
 class User {
   final userName = UseState<String>("LeoLeón");
+  late final firstName = UseState<String>("Leo");
+  late final lastName = UseState<String>("León");
 
-  late final firstName = UseState<String>("Leo", didUpdate: changeUserName);
-  late final lastName = UseState<String>("León", didUpdate: changeUserName);
+  User() {
+    firstName.didUpdate(changeUserName);
+    lastName.didUpdate(changeUserName);
+  }
 
   changeUserName(String prev, String next) {
     userName.value = firstName.value + lastName.value;

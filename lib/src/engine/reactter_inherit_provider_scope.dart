@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../engine/widgets/reactter_inherit_provider.dart';
-import '../../engine/widgets/reactter_inherit_provider_scope_element.dart';
+import 'reactter_inherit_provider.dart';
+import 'reactter_inherit_provider_scope_element.dart';
 
 /// Wrapper from [InheritedWidget].
 ///

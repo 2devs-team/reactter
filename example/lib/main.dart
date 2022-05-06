@@ -1,4 +1,5 @@
 // ignore_for_file: avoid_print
+import 'package:example/testing_cases/reactter_id_example.dart';
 import 'package:flutter/material.dart';
 import 'package:reactter/reactter.dart';
 
@@ -25,6 +26,10 @@ class ReactterExample extends StatelessWidget {
   Widget build(BuildContext context) {
     return UseProvider(
       contexts: [
+        UseContext(
+          () => AppContext(),
+          init: true,
+        ),
         UseContext(
           () => AppContext(),
           init: true,
@@ -90,7 +95,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      home: ReactterExample(),
+      home: ReactterIdExample(),
     );
   }
 }

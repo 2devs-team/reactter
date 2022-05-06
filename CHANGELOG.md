@@ -1,13 +1,17 @@
 # Reactter by [2devs.io](https://2devs.io)
 
-## [2.0.0] -  `2022-03-31`
+## [2.0.0-dev.1] -  `Dev Release` `2022-04-19`
 
 ### Changed
   * Fix some documentation.
-  * Removed Utils folder from library.
+  * `UseEffect` has lifecycle control of the context.
+  * `UseContext` works with unique ids to create unique instances.
+  * Removed equatable from __#Roadmap__.
+  
 ### Added
-  * Improve performance with primitive loops in functions.
-  * 
+  * Tests.
+  * `ReactterComponent`.
+
 ## [1.0.1] -  `2022-03-31`
 
 ### Changed

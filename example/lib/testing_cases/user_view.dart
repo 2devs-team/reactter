@@ -8,7 +8,7 @@ import 'package:example/testing_cases/use_effect_example.dart';
 import 'package:flutter/material.dart';
 import 'package:reactter/reactter.dart';
 
-mixin UseCart on ReactterHook {
+mixin UseCart on ReactterHookManager {
   late final cart = UseState<Cart?>(null, alwaysUpdate: true, context: this);
 
   removeItemFromCart(int productId) {
@@ -35,11 +35,6 @@ class UserContext extends ReactterContext with UseCart {
         log('"UseEffect UserApp": DISPOSE');
       };
     }, [user], this);
-  }
-
-  @override
-  awake() {
-    updateCart();
   }
 
   updateCart() {

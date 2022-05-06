@@ -7,7 +7,7 @@ class AppContext extends ReactterContext {
   late final counterByTwo = UseState<int>(0, context: this);
 
   late final theme =
-      UseState<String>('Light', context: this, alwaysUpdate: true);
+      UseState<String>('light', context: this, alwaysUpdate: true);
 
   AppContext() {
     UseEffect(() {
@@ -17,6 +17,7 @@ class AppContext extends ReactterContext {
 
   increment() {
     counter.value = counter.value + 1;
+    theme.value = theme.value == 'dark' ? 'light' : 'dark';
   }
 
   reset() => counter.reset();
@@ -24,6 +25,12 @@ class AppContext extends ReactterContext {
 
 class CounterComponent extends ReactterComponent<AppContext> {
   const CounterComponent({Key? key}) : super(key: key);
+
+  @override
+  get builder => () => AppContext();
+
+  @override
+  get id => 'test';
 
   @override
   listen(ctx) {
@@ -50,13 +57,11 @@ class ReactterComponentTest extends StatelessWidget {
   Widget build(BuildContext context) {
     return UseProvider(
       contexts: [
-        UseContext(
-          () => AppContext(),
-          init: true,
-        ),
+        UseContext(() => AppContext(), id: 'test'),
       ],
       builder: (context, _) {
-        final appContext = context.of<AppContext>((ctx) => [ctx.theme]);
+        final appContext =
+            context.ofId<AppContext>('test', (ctx) => [ctx.theme]);
 
         return Scaffold(
           appBar: AppBar(

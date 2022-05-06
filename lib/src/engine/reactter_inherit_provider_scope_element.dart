@@ -1,7 +1,8 @@
-import 'package:flutter/material.dart';
-import '../../core/reactter_types.dart';
-import '../../engine/widgets/reactter_inherit_provider_scope.dart';
-import '../../widgets/reactter_use_provider.dart';
+import 'package:flutter/widgets.dart';
+import 'reactter_inherit_provider_scope.dart';
+import '../core/reactter_context.dart';
+import '../core/reactter_types.dart';
+import '../widgets/reactter_use_provider.dart';
 
 class _Dependency<T> {
   bool shouldClearSelectors = false;
@@ -9,21 +10,18 @@ class _Dependency<T> {
   final selectors = <SelectorAspect<T>>[];
 }
 
-/// Main element who is is in charge to make a rebuild in the view.
+/// Main element who it is in charge to make a rebuild in the view.
 class ReactterInheritedProviderScopeElement extends InheritedElement {
   ReactterInheritedProviderScopeElement(ReactterInheritedProviderScope widget)
       : super(widget);
 
   bool _updatedShouldNotify = false;
 
+  final List<ReactterContext> _instanceDependencies = [];
+
   @override
   ReactterInheritedProviderScope get widget =>
       super.widget as ReactterInheritedProviderScope;
-
-  /// Provides the instance from context [T] from a [UseProvider] parent.
-  T? getInstance<T>() {
-    return (widget.owner as UseProvider).getInstance<T>();
-  }
 
   /// Executes lyfecicle [willMount] and [didMount] method before and after render respectively.
   @override
@@ -73,7 +71,7 @@ class ReactterInheritedProviderScopeElement extends InheritedElement {
     var shouldNotify = false;
     if (dependencies != null) {
       if (dependencies is _Dependency) {
-        // select can never be used inside `didChangeDependencies`, so if the
+        // select can never be used inside [didChangeDependencies], so if the
         // dependent is already marked as needed build, there is no point
         // in executing the selectors.
         if (dependent.dirty) {
@@ -123,5 +121,23 @@ class ReactterInheritedProviderScopeElement extends InheritedElement {
   void unmount() {
     (widget.owner as UseProvider).willUnmount(this);
     super.unmount();
+  }
+
+  /// Adds instance to [_instanceDependencies] and subscribes [markNeedsBuild]
+  void dependOnInstance(instance) {
+    if (instance is ReactterContext) {
+      instance.subscribe(markNeedsBuild);
+      _instanceDependencies.add(instance);
+    }
+  }
+
+  /// Removes instance from [_instanceDependencies] and unsubscribes [markNeedsBuild]
+  void removeInstanceDependencies() {
+    for (var i = 0; i < _instanceDependencies.length; i++) {
+      final _isntance = _instanceDependencies[i];
+      _isntance.unsubscribe(markNeedsBuild);
+    }
+
+    _instanceDependencies.clear();
   }
 }
