@@ -1,8 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'reactter_inherit_provider_scope.dart';
-import '../core/reactter_context.dart';
+import '../core/mixins/reactter_publish_suscription.dart';
 import '../core/reactter_types.dart';
-import '../widgets/reactter_use_provider.dart';
 
 class _Dependency<T> {
   bool shouldClearSelectors = false;
@@ -17,7 +16,7 @@ class ReactterInheritedProviderScopeElement extends InheritedElement {
 
   bool _updatedShouldNotify = false;
 
-  final List<ReactterContext> _instanceDependencies = [];
+  final List<ReactterPubSub> _dependencies = [];
 
   @override
   ReactterInheritedProviderScope get widget =>
@@ -26,11 +25,11 @@ class ReactterInheritedProviderScopeElement extends InheritedElement {
   /// Executes lyfecicle [willMount] and [didMount] method before and after render respectively.
   @override
   void mount(Element? parent, dynamic newSlot) {
-    (widget.owner as UseProvider).willMount(this);
+    widget.owner.willMount();
 
     super.mount(parent, newSlot);
 
-    (widget.owner as UseProvider).didMount(this);
+    widget.owner.didMount();
   }
 
   @override
@@ -119,25 +118,23 @@ class ReactterInheritedProviderScopeElement extends InheritedElement {
 
   @override
   void unmount() {
-    (widget.owner as UseProvider).willUnmount(this);
+    widget.owner.willUnmount();
     super.unmount();
   }
 
-  /// Adds instance to [_instanceDependencies] and subscribes [markNeedsBuild]
-  void dependOnInstance(instance) {
-    if (instance is ReactterContext) {
-      instance.subscribe(markNeedsBuild);
-      _instanceDependencies.add(instance);
-    }
+  /// Adds instance to [_dependencies] and subscribes [markNeedsBuild]
+  void dependOnInstance(ReactterPubSub instance) {
+    instance.subscribe(markNeedsBuild);
+    _dependencies.add(instance);
   }
 
-  /// Removes instance from [_instanceDependencies] and unsubscribes [markNeedsBuild]
-  void removeInstanceDependencies() {
-    for (var i = 0; i < _instanceDependencies.length; i++) {
-      final _isntance = _instanceDependencies[i];
+  /// Removes instance from [_dependencies] and unsubscribes [markNeedsBuild]
+  void removeDependencies() {
+    for (var i = 0; i < _dependencies.length; i++) {
+      final _isntance = _dependencies[i];
       _isntance.unsubscribe(markNeedsBuild);
     }
 
-    _instanceDependencies.clear();
+    _dependencies.clear();
   }
 }

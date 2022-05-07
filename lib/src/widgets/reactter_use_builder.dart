@@ -1,27 +1,42 @@
 library reactter;
 
 import 'package:flutter/material.dart';
+import '../core/reactter_context.dart';
 import '../widgets/reactter_use_provider.dart';
 
-/// Create a new context to provide [T] to his builder.
+/// Creates a new context to provide the instances of [T] to [builder] method.
 ///
-/// You canse use a native [Builder] or this to encapsulate and control re-renders.
+/// Helps to encapsulate and control re-renders.
 ///
-/// This example produces one [UseBuilder] with an [AppContext] as [T].
+/// This example produces one [UseBuilder] with an [AppContext] as [T] :
 ///
 /// ```dart
 /// UseBuilder<AppContext>(
-///  builder: (context){
-///
-///     final appContext = context.of<AppContext>();
-///
-///     return Text(appContext.name?.value)
+///  child: Icon(Icons.person),
+///  builder: (context, ctx, child){
+///     return Row(
+///       children: [
+///         Text(appContext.name.value),
+///         child,
+///       ],
+///     );
 ///   }
 /// )
 /// ```
-class UseBuilder<T> extends StatelessWidget {
-  /// This prop is experimental, you can omit it.
+class UseBuilder<T extends ReactterContext> extends StatelessWidget {
+  /// Provides a widget witch render one time.
+  ///
+  /// It's expose on [builder] method as third parameter.
+  @protected
   final Widget? child;
+
+  /// Method which has the render logic
+  ///
+  /// Exposes [BuilderContext], instance of [T] and [child] widget as parameters.
+  /// and returns a widget.
+  @protected
+  final Widget Function(BuildContext context, T instance, Widget? child)
+      builder;
 
   const UseBuilder({
     Key? key,
@@ -29,20 +44,11 @@ class UseBuilder<T> extends StatelessWidget {
     this.child,
   }) : super(key: key);
 
-  /// Build a widget tree based on the value from a [Context<T>].
-  ///
-  /// Must not be `null`.
-  final Widget Function(
-    BuildContext context,
-    T value,
-    Widget? child,
-  ) builder;
-
   @override
   Widget build(BuildContext context) {
     return builder(
       context,
-      UseProvider.of<T>(context) as T,
+      UseProvider.contextOf<T>(context),
       child,
     );
   }

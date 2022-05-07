@@ -6,16 +6,23 @@ import '../engine/reactter_inherit_provider_scope_element.dart';
 /// Wrapper a [ReactterInheritedProviderScope].
 ///
 /// Need for communicate and search parents and childs.
-class ReactterInheritedProvider extends StatelessWidget {
+abstract class ReactterInheritedProvider extends StatelessWidget {
+  /// Provides a widget witch render one time.
+  ///
+  /// It's expose on [builder] method as second parameter.
   final Widget? child;
+
+  /// Method which has the render logic
+  ///
+  /// Exposes [BuilderContext] and [child] widget as parameters.
+  /// and returns a widget.
+  final BuildWithChild? builder;
 
   const ReactterInheritedProvider({
     Key? key,
-    this.builder,
     this.child,
+    this.builder,
   }) : super(key: key);
-
-  final BuildWithChild? builder;
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +41,7 @@ class ReactterInheritedProvider extends StatelessWidget {
                             ReactterInheritedProviderScope>()
                         as ReactterInheritedProviderScopeElement;
 
-                _inheritedElement.removeInstanceDependencies();
+                _inheritedElement.removeDependencies();
 
                 return builder!(context, child);
               },
@@ -42,4 +49,10 @@ class ReactterInheritedProvider extends StatelessWidget {
           : child!,
     );
   }
+
+  willMount();
+
+  didMount();
+
+  willUnmount();
 }

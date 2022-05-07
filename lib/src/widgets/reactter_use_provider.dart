@@ -4,141 +4,130 @@ import 'package:flutter/widgets.dart';
 import '../core/reactter_types.dart';
 import '../core/mixins/reactter_life_cycle.dart';
 import '../core/reactter_context.dart';
-import '../engine/reactter_interface_instance.dart';
 import '../engine/reactter_inherit_provider.dart';
 import '../engine/reactter_inherit_provider_scope.dart';
 import '../engine/reactter_inherit_provider_scope_element.dart';
 import '../widgets/reactter_use_context.dart';
 
-/// Provide [contexts] to his builder.
+/// Takes all the [UseContext] of [ReactterContext] defined on [contexts]
+/// and it's provides to [builder] method through [BuildContext] as parameter.
+/// For access to the instances of [ReactterContext]
+/// is necessary use the methods of [ReactterBuildContextExtension].
 ///
-/// This widget always must be called if you want to provide any state.
+/// It is also responsible for fires the lifecycle events of [ReactterContext],
 ///
-/// All the context in [contexts] going to be provided to this builder.
-///
-/// This example produces one [UseProvider] with an [AppContext] inside.
-/// but you can use as many you need
+/// This example produces one [UseProvider] with an [AppContext] inside:
 ///
 /// ```dart
 /// UseProvider(
-///  contexts: [
-///    UseContext(
-///      () => AppContext(),
-///      init: true,
-///    )
-///  ],
-///  builder: () => Container();
+///   contexts: [
+///     UseContext(() => AppContext()),
+///   ],
+///   child: Icon(Icons.person),
+///   builder: (context, child) {
+///     final appContext = context.of<AppContext>();
+///
+///     return Row(
+///       children: [
+///         Text(appContext.name.value),
+///         child,
+///       ],
+///     );
+///   },
 /// )
 /// ```
 class UseProvider extends ReactterInheritedProvider {
-  /// All the context that going to be provided to this builder.
-  /// This example produces one [UseProvider].
-  ///
-  /// ```dart
-  /// UseProvider(
-  ///  contexts: [
-  ///    UseContext(
-  ///      () => AppContext(),
-  ///      init: true,
-  ///    )
-  ///  ],
-  ///  builder: () => Container();
-  /// )
-  /// ```
+  /// Stores all [UseContext]
+  @protected
   final List<UseContextAbstraction> contexts;
 
   UseProvider({
     Key? key,
     required this.contexts,
-    TransitionBuilder? builder,
     Widget? child,
+    TransitionBuilder? builder,
   }) : super(
           key: key,
-          builder: builder,
           child: child,
+          builder: builder,
         ) {
     // Necessary to keep data in hotreload.
-    initialize();
+    _initialize();
   }
 
-  /// Initialize every instance inside [instanceMapper]
-  /// and executes his [awake()] method.
-  initialize() {
+  /// Initializes every instance of [contexts]
+  /// and executes it's lifecycle [awake].
+  _initialize() {
     for (var i = 0; i < contexts.length; i++) {
-      final _context = contexts[i];
-
-      _context.initialize(true);
-
-      if (_context.instance is ReactterContext) {
-        (_context.instance as ReactterContext).executeEvent(EVENT_TYPE.awake);
-      }
+      contexts[i].initialize(true);
     }
   }
 
-  /// Iterates his children to set an action in every state.
-  _iterateContextWithInherit(
-      ReactterInheritedProviderScopeElement inheritedElement,
-      Function(ReactterContext) action) {
+  /// Executes lifecycle [willMount] from every [ReactterContext]
+  @override
+  @protected
+  willMount() {
     for (var i = 0; i < contexts.length; i++) {
-      if (contexts[i].instance is ReactterContext) {
-        final instance = contexts[i].instance as ReactterContext;
-
-        action(instance);
-      }
+      contexts[i].instance?.executeEvent(EVENT_TYPE.willMount);
     }
   }
 
-  /// Executes all [willMount] from every [ReactterContext] in his children.
-  willMount(ReactterInheritedProviderScopeElement inheritedElement) {
-    _iterateContextWithInherit(inheritedElement, (instance) {
-      instance.executeEvent(EVENT_TYPE.willMount);
-    });
+  /// Executes lifecycle [didMount] from every [ReactterContext]
+  @override
+  @protected
+  didMount() {
+    for (var i = 0; i < contexts.length; i++) {
+      contexts[i].instance?.executeEvent(EVENT_TYPE.didMount);
+    }
   }
 
-  /// Executes all [didMount] methods from every [ReactterContext] in his children and add
-  /// the [markNeedsBuild] method to his listener for update when state change.
-  didMount(ReactterInheritedProviderScopeElement inheritedElement) {
-    _iterateContextWithInherit(inheritedElement, (instance) {
-      instance.executeEvent(EVENT_TYPE.didMount);
-    });
+  /// Destroys every instance of [contexts]
+  /// and executes it's lifecycle [willUnmount].
+  @override
+  @protected
+  willUnmount() {
+    for (var i = 0; i < contexts.length; i++) {
+      contexts[i].destroy();
+    }
   }
 
-  /// Executes all [willUnmount] methods from every [ReactterContext] in his children and remove
-  /// the [markNeedsBuild] method from his listener.
-  willUnmount(ReactterInheritedProviderScopeElement inheritedElement) {
-    _iterateContextWithInherit(inheritedElement, (instance) {
-      instance.executeEvent(EVENT_TYPE.willUnmount);
-
-      Reactter.factory.deleted(instance);
-    });
-  }
-
-  /// Returns instance [ReactterContext] and context listens when call [markNeedsBuild]
-  static T? of<T>(
+  /// Returns a [instance] of [T]
+  /// and puts contexts listen to when it should be re-rendered
+  static T contextOf<T extends ReactterContext?>(
     BuildContext context, {
-    bool listen = false,
-    SelectorAspect? aspect,
     String? id,
+    ListenHooks<T>? listenHooks,
+    SelectorAspect? aspect,
+    bool listen = true,
   }) {
     final _inheritedElement = _inheritedElementOf(context);
     final _instance = _getInstance<T>(context, id);
 
-    if (listen) {
-      if (_instance != null) {
-        _inheritedElement?.dependOnInstance(_instance);
-      }
+    if (!listen || _instance == null) {
+      return _instance as T;
+    }
 
-      if (aspect != null) {
-        context.dependOnInheritedElement(_inheritedElement!, aspect: aspect);
-      } else {
-        context.dependOnInheritedWidgetOfExactType<
-            ReactterInheritedProviderScope>();
+    if (listenHooks != null) {
+      final _hooks = listenHooks(_instance);
+
+      for (var i = 0; i < _hooks.length; i++) {
+        _inheritedElement?.dependOnInstance(_hooks[i]);
       }
+    } else {
+      _inheritedElement?.dependOnInstance(_instance);
+    }
+
+    if (aspect != null) {
+      context.dependOnInheritedElement(_inheritedElement!, aspect: aspect);
+    } else {
+      context
+          .dependOnInheritedWidgetOfExactType<ReactterInheritedProviderScope>();
     }
 
     return _instance;
   }
 
+  /// Obtain the [instance] of [T] from nearest ancestor [UseProvider]
   static T? _getInstance<T>(BuildContext context, String? id) {
     T? instance;
 
@@ -154,7 +143,8 @@ class UseProvider extends ReactterInheritedProvider {
 
       for (var i = 0; i < _contexts.length; i++) {
         final _useContext = _contexts[i];
-        if (_useContext.type == T && _useContext.id == id) {
+
+        if (_useContext.instance is T && _useContext.id == id) {
           instance = _useContext.instance as T?;
           break;
         }
@@ -162,6 +152,10 @@ class UseProvider extends ReactterInheritedProvider {
 
       return instance == null;
     });
+
+    if (instance == null && null is! T) {
+      throw ReactterContextNotFoundException(T, context.widget.runtimeType);
+    }
 
     return instance;
   }
@@ -171,13 +165,6 @@ class UseProvider extends ReactterInheritedProvider {
   static ReactterInheritedProviderScopeElement? _inheritedElementOf(
     BuildContext context,
   ) {
-    // ignore: unnecessary_null_comparison, can happen if the application depends on a non-migrated code.
-    assert(context != null, '''
-Tried to call context.read/watch/select or similar on a `context` that is null.
-
-This can happen if you used the context of a StatefulWidget and that
-StatefulWidget was disposed.
-''');
     ReactterInheritedProviderScopeElement? inheritedElement;
 
     if (context.widget is ReactterInheritedProviderScope) {
@@ -197,186 +184,223 @@ StatefulWidget was disposed.
   }
 }
 
-/// In charge of return listeners of the given [ReactterContext].
-///
-/// This example use [of] to produce one context with all the listen state of [AppContext].
-///
-/// ```dart
-///
-/// final appContext = context.of<AppContext>();
-///
-/// Text(appContext.property.value);
-///
-///
-/// ```
-/// This example use [of] and [selector] to produce one context with just
-/// the selected state of [AppContext]. You can use as many properties you need.
-///
-/// ```dart
-///
-/// final appContext = context.of<AppContext>((ctx) => [ctx.propToWatch1, ctx.propToWatch2]);
-///
-/// Text(appContext.propToWatch.value);
-/// ```
-///
-/// This example use [ofStatic] to produce one context with all the static states of [AppContext].
-/// This means that the widget doesn't rebuild when state change which improves performance.
-///
-/// ```dart
-///
-/// final appContext = context.ofStatic<AppContext>();
-///
-/// Text(appContext.property.value);
-///
-/// ```
-///
-/// This is usefull when you know the variable doesn't need to change.
+/// Exposes methods to helps to get and listen the [instance] of [ReactterContext].
 extension ReactterBuildContextExtension on BuildContext {
-  bool _validateAspectRebuild<T>(
-    T instance,
-    Selector<T> selector,
-    List<dynamic>? valueStates,
-  ) {
-    final _valueStatesToCompared = selector(instance);
-
-    /// If selector select nothing
-    if (_valueStatesToCompared.isEmpty) return true;
-
-    for (var index = 0; index <= _valueStatesToCompared.length - 1; index++) {
-      if (_valueStatesToCompared[index].value != valueStates?[index]) {
-        return true;
-      }
-    }
-
-    return false;
-  }
-
-  List<dynamic>? _getValueStates<T>(T instance, Selector<T> selector) =>
-      selector(instance).map((state) => state.value).toList();
-
-  T _instanceController<T>({Selector<T>? selector, String? id}) {
-    T? _instance;
-    List<dynamic>? _valueStates;
-
-    if (id != null) {
-      if (selector == null) {
-        _instance = UseProvider.of<T>(this, listen: true, id: id);
-      } else {
-        _instance = UseProvider.of<T>(
-          this,
-          id: id,
-          listen: true,
-          aspect: (_) =>
-              _validateAspectRebuild<T>(_instance!, selector, _valueStates),
-        );
-
-        if (_instance != null) {
-          _valueStates = _getValueStates(_instance, selector);
-        }
-      }
-
-      assert(_instance != null,
-          'Instance "$T" with id: "$id" does not exist in UseProvider');
-
-      return _instance!;
-    }
-
-    if (selector == null) {
-      _instance = UseProvider.of<T>(this, listen: true);
-    } else {
-      _instance = UseProvider.of<T>(
-        this,
-        listen: true,
-        aspect: (_) =>
-            _validateAspectRebuild<T>(_instance!, selector, _valueStates),
-      );
-
-      if (_instance != null) {
-        _valueStates = _getValueStates<T>(_instance, selector);
-      }
-    }
-
-    assert(_instance != null, 'Instance "$T" does not exist in UseProvider');
-
-    return _instance!;
-  }
-
-  /// Returns all the listeners of the given [ReactterContext].
-  /// This example produces one context with all the listen state of [AppContext].
+  /// Obtain a [instance] of [T] from the nearest ancestor [UseProvider],
+  /// and subscribe to it or specific hooks put in [listenHooks] parameter.
+  ///
+  /// If [T] is nullable and no matching [ReactterContext] are found, [of] will
+  /// return `null`.
+  ///
+  /// If [T] is non-nullable and the [ReactterContext] obtained returned `null`, will
+  /// throw [ProviderNullException].
+  ///
+  /// This allows widgets to optionally depend on a provider:
   ///
   /// ```dart
+  /// Builder(builder: (context) {
+  ///   final appContext = context.of<AppContext?>();
   ///
-  /// final appContext = context.of<AppContext>();
+  ///   if (appContext == null) Text('no found');
   ///
-  /// Text(appContext.property.value);
-  ///
+  ///   return Text(appContext.state.value);
+  /// }),
   /// ```
-  /// This example use [of] and [selector] to produce one context with just
-  /// the selected state of [AppContext]. You can use as many properties you need.
+  ///
+  /// If only need to listen to one or some hooks,
+  /// use [listenHooks] which is first parameter:
   ///
   /// ```dart
+  /// Builder(builder: (context) {
+  ///   final appContext = context.of<AppContext>(
+  ///     (ctx) => [ctx.stateA, ctx.stateB],
+  ///   );
   ///
-  /// final appContext = context.of<AppContext>((ctx) => [ctx.propToWatch1, ctx.propToWatch2]);
-  ///
-  /// Text(appContext.propToWatch.value);
+  ///   return Text(appContext.stateA.value);
+  /// }),
   /// ```
   ///
-  T of<T>([Selector<T>? selector]) {
-    T? _instance;
+  /// Calling this method is equivalent to calling:
+  ///
+  /// ```dart
+  /// UseProvider.contextOf<T>(context, listenHooks: listenHooks);
+  /// ```
+  T of<T extends ReactterContext?>([ListenHooks<T>? listenHooks]) =>
+      UseProvider.contextOf<T>(this, listenHooks: listenHooks);
 
-    if (selector == null) {
-      _instance = UseProvider.of<T>(this, listen: true);
-    } else {
-      List<dynamic>? _valueStates;
+  /// Obtain a [instance] of [T] with [id] from the nearest ancestor [UseProvider],
+  /// and subscribe to it or specific hooks put in [listenHooks] parameter.
+  ///
+  /// If [T] is nullable and no matching [ReactterContext] are found, [ofId] will
+  /// return `null`.
+  ///
+  /// If [T] is non-nullable and the [ReactterContext] obtained returned `null`, will
+  /// throw [ProviderNullException].
+  ///
+  /// This allows widgets to optionally depend on a provider:
+  ///
+  /// ```dart
+  /// Builder(builder: (context) {
+  ///   final appContext = context.ofId<AppContext?>('uniqueId');
+  ///
+  ///   if (appContext == null) Text('no found');
+  ///
+  ///   return Text(appContext.state.value);
+  /// }),
+  /// ```
+  ///
+  /// If only need to listen to one or some hooks,
+  /// use [listenHooks] which is second parameter:
+  ///
+  /// ```dart
+  /// Builder(builder: (context) {
+  ///   final appContext = context.of<AppContext>(
+  ///     'uniqueId',
+  ///     (ctx) => [ctx.stateA, ctx.stateB],
+  ///   );
+  ///
+  ///   return Text(appContext.stateA.value);
+  /// }),
+  /// ```
+  ///
+  /// Calling this method is equivalent to calling:
+  ///
+  /// ```dart
+  /// UseProvider.contextOf<T>(context, id: id, listenHooks: listenHooks);
+  /// ```
+  T ofId<T extends ReactterContext?>(
+    String id, [
+    ListenHooks<T>? listenHooks,
+  ]) =>
+      UseProvider.contextOf<T>(this, id: id, listenHooks: listenHooks);
 
-      _instance = UseProvider.of<T>(this, listen: true, aspect: (_) {
-        final _valueStatesToCompared = selector(_instance!);
+  /// Obtain a [instance] of [T] from the nearest ancestor [UseProvider].
+  ///
+  /// If [T] is nullable and no matching [ReactterContext] are found, [ofStatic] will
+  /// return `null`.
+  ///
+  /// If [T] is non-nullable and the [ReactterContext] obtained returned `null`, will
+  /// throw [ProviderNullException].
+  ///
+  /// This allows widgets to optionally depend on a provider:
+  ///
+  /// ```dart
+  /// Builder(builder: (context) {
+  ///   final appContext = context.ofStatic<AppContext?>();
+  ///
+  ///   if (appContext == null) Text('no found');
+  ///
+  ///   return Text(appContext.state.value);
+  /// }),
+  /// ```
+  ///
+  /// Calling this method is equivalent to calling:
+  ///
+  /// ```dart
+  /// UseProvider.contextOf<T>(context, listen: false);
+  /// ```
+  T ofStatic<T extends ReactterContext?>() =>
+      UseProvider.contextOf<T>(this, listen: false);
 
-        /// If selector select nothing
-        if (_valueStatesToCompared.isEmpty) return true;
+  /// Obtain a [instance] of [T] with [id] from the nearest ancestor [UseProvider].
+  ///
+  /// If [T] is nullable and no matching [ReactterContext] are found, [ofIdStatic] will
+  /// return `null`.
+  ///
+  /// If [T] is non-nullable and the [ReactterContext] obtained returned `null`, will
+  /// throw [ProviderNullException].
+  ///
+  /// This allows widgets to optionally depend on a provider:
+  ///
+  /// ```dart
+  /// Builder(builder: (context) {
+  ///   final appContext = context.ofStatic<AppContext?>('uniqueId');
+  ///
+  ///   if (appContext == null) Text('no found');
+  ///
+  ///   return Text(appContext.state.value);
+  /// }),
+  /// ```
+  ///
+  /// Calling this method is equivalent to calling:
+  ///
+  /// ```dart
+  /// UseProvider.contextOf<T>(context, id: id, listen: false);
+  /// ```
+  T ofIdStatic<T extends ReactterContext?>(String id) =>
+      UseProvider.contextOf<T>(this, id: id, listen: false);
+}
 
-        for (var index = 0;
-            index <= _valueStatesToCompared.length - 1;
-            index++) {
-          if (_valueStatesToCompared[index].value != _valueStates?[index]) {
-            return true;
-          }
-        }
+/// The error that will be thrown if [UseProvider.contextOf] fails to find a [ReactterContext]
+/// as an ancestor of the [BuildContext] used.
+class ReactterContextNotFoundException implements Exception {
+  /// Create a ProviderNotFound error with the type represented as a String.
+  ReactterContextNotFoundException(
+    this.valueType,
+    this.widgetType,
+  );
 
-        return false;
-      });
+  /// The type of the value being retrieved
+  final Type valueType;
 
-      if (_instance != null) {
-        _valueStates = selector(_instance).map((state) => state.value).toList();
+  /// The type of the Widget requesting the value
+  final Type widgetType;
+
+  @override
+  String toString() {
+    return '''
+Error: Could not find the correct `UseContext<$valueType>` above this `$widgetType` Widget
+
+This happens because you used a `BuildContext` that does not include the `ReactterContext`
+of your choice. There are a few common scenarios:
+
+- You added a new `UseProvider` in your `main.dart` and performed a hot-reload.
+  To fix, perform a hot-restart.
+
+- The `ReactterContext` you are trying to read is in a different route.
+
+  `UseContext are "scoped". So if you insert of `UseContext` inside a route, then
+  other routes will not be able to access that `ReactterContext`.
+
+- You used a `BuildContext` that is an ancestor of the provider you are trying to read.
+
+  Make sure that `$widgetType` is under your `UseProvider` with `UseContext<$valueType>`.
+  This usually happens when you are creating a `ReactterContext` and trying to read it immediately.
+
+  For example, instead of:
+
+  ```
+  Widget build(BuildContext context) {
+    return UseProvider(
+      contexts: [
+        UseContext(() => AppContext())
+      ],
+      // Will throw a `ReactterContextNotFoundException`, because `context` is associated
+      // to the widget that is the parent of `UseProvider`.
+      child: Text(context.of<AppContext>().state.value),
+    ),
+  }
+  ```
+
+  consider using `builder` like so:
+
+  ```
+  Widget build(BuildContext context) {
+    return UseProvider(
+      contexts: [
+        UseContext(() => AppContext())
+      ],
+      // we use `builder` to obtain a new `BuildContext` that has access to the provider
+      builder: (context) {
+        // No longer throws
+        return Text(context.of<AppContext>().state.value),
       }
-    }
-
-    assert(_instance != null,
-        'Instance "$T" does not exist from contexts UseProviders');
-
-    return _instance!;
+    ),
   }
+  ```
 
-  /// Returns all the listeners of the given [ReactterContext] but just for read.
-  /// This means that the widget doesn't rebuild when state change which improves performance.
-  ///
-  /// This example produces one context with all the static states of [AppContext].
-  ///
-  /// ```dart
-  ///
-  /// final appContext = context.ofStatic<AppContext>();
-  ///
-  /// Text(appContext.property.value);
-  ///
-  /// ```
-  ///
-  /// This is usefull when you know the variable doesn't need to change.
-  T ofStatic<T>() => UseProvider.of<T>(this)!;
-
-  T ofId<T>(String id, [Selector<T>? selector]) {
-    //Cambiar a stateSelector ?
-    return _instanceController(id: id, selector: selector);
+If none of these solutions work, consider asking for help on StackOverflow:
+https://stackoverflow.com/questions/tagged/flutter
+''';
   }
-
-  T ofIdStatic<T>(String id) => UseProvider.of<T>(this, id: id)!;
 }
