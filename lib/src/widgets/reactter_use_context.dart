@@ -1,14 +1,13 @@
 library reactter;
 
 import 'package:flutter/widgets.dart';
+import '../core/mixins/reactter_life_cycle.dart';
 import '../core/reactter_context.dart';
 import '../core/reactter_types.dart';
 import '../engine/reactter_interface_instance.dart';
 import '../widgets/reactter_use_provider.dart';
 
 abstract class UseContextAbstraction<T extends ReactterContext> {
-  Type get type;
-
   T? get instance;
 
   String? get id;
@@ -17,14 +16,13 @@ abstract class UseContextAbstraction<T extends ReactterContext> {
 
   void initialize([bool init = false]);
 
-  @protected
   void destroy();
 }
 
-/// Takes a instance of [ReactterContext] class defined on firts parameter `instanceBuilder`
-/// and manages it like a context.
-///
-/// It's necessary use it inside `contexts` of [UseProvider].
+/// Takes a instance of [ReactterContext] class defined
+/// on firts parameter [instanceBuilder] and manages it like a context.
+///"
+/// It's necessary use it inside [contexts] of [UseProvider] :
 ///
 /// ```dart
 /// UseProvider(
@@ -36,10 +34,8 @@ abstract class UseContextAbstraction<T extends ReactterContext> {
 /// )
 /// ```
 class UseContext<T extends ReactterContext> extends UseContextAbstraction {
-  @override
-  Type get type => T;
-
   /// Create a instances of [ReactterContext] class
+  @protected
   final InstanceBuilder<T> instanceBuilder;
 
   /// Id usted to identify the context
@@ -47,13 +43,16 @@ class UseContext<T extends ReactterContext> extends UseContextAbstraction {
   final String? id;
 
   /// Create the instance defined on firts parameter `instanceBuilder` when [UseContext] is called.
+  @protected
   final bool init;
 
   /// Invoked when instance defined on firts parameter `instanceBuilder` is created
+  @protected
   final void Function(T instance)? onInit;
 
   /// Contain a instance of [ReactterContext] class
   @override
+  @protected
   T? instance;
 
   UseContext(
@@ -67,13 +66,16 @@ class UseContext<T extends ReactterContext> extends UseContextAbstraction {
     initialize(init);
   }
 
-  /// Executes to intitialize the instance and save it in `instance`
+  /// Executes to intitialize the instance and save it in [instance].
+  ///
+  /// Fires lifecycle [awake] when instance is created.
   @override
   @protected
   initialize([bool init = false]) {
     if (!init) return;
 
     instance ??= Reactter.factory.getInstance<T>(id);
+    instance?.executeEvent(EVENT_TYPE.awake);
 
     if (instance != null) {
       onInit?.call(instance!);
@@ -86,6 +88,7 @@ class UseContext<T extends ReactterContext> extends UseContextAbstraction {
   destroy() {
     if (instance == null) return;
 
+    instance?.executeEvent(EVENT_TYPE.willUnmount);
     Reactter.factory.deleted(instance!);
   }
 }

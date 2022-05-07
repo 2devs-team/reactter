@@ -9,7 +9,7 @@ typedef FunctionCallback = void Function()? Function();
 
 typedef InstanceBuilder<T> = T Function();
 
-typedef Selector<T> = List<UseState> Function(T instance);
+typedef ListenHooks<T> = List<ReactterHook> Function(T instance);
 
 typedef SelectorAspect<T> = bool Function(InheritedElement inheritedElement);
 
@@ -20,3 +20,7 @@ typedef WidgetCreator = Widget Function();
 typedef WidgetCreatorValue<T> = Widget Function(T value);
 
 typedef WidgetCreatorErrorHandler = Widget Function(Object? error);
+
+typedef LogWriterCallback = void Function(String text, {bool isError});
+
+typedef AsyncFunction<T> = Future<T> Function();
