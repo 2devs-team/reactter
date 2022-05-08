@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:reactter/reactter.dart';
 
 mixin UseCart on ReactterHookManager {
-  late final cart = UseState<Cart?>(null, alwaysUpdate: true, context: this);
+  late final cart = UseState<Cart?>(null, this);
 
   removeItemFromCart(int productId) {
     final newProducts = cart.value?.products
@@ -49,7 +49,7 @@ class UserView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return UseProvider(
+    return ReactterProvider(
       contexts: [
         UseContext(
           () => UserContext(appcontext),

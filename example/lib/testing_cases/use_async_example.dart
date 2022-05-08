@@ -9,14 +9,10 @@ class Global {
 }
 
 class UserContext extends ReactterContext {
-  late final data = UseState<String?>(
-    null,
-    alwaysUpdate: true,
-    context: this,
-  );
+  late final data = UseState<String?>(null, this);
 
   late final userName =
-      UseAsyncState<String>("My username", fillUsername, context: this);
+      UseAsyncState<String>("My username", fillUsername, this);
 
   Future<String> fillUsername() async {
     await Future.delayed(const Duration(milliseconds: 2000));
@@ -67,7 +63,7 @@ class UseFutureExample extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return UseProvider(
+    return ReactterProvider(
       contexts: [
         UseContext(
           () => UserContext(),

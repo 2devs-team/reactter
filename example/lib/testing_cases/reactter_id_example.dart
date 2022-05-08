@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:reactter/reactter.dart';
 
 class AppContext extends ReactterContext {
-  late final data = UseState<String>("", context: this);
+  late final data = UseState<String>("", this);
 
-  late final counter = UseState<int>(5, context: this);
+  late final counter = UseState<int>(5, this);
 
   AppContext([_data = "Default"]) {
     data.value = _data;
@@ -23,7 +23,7 @@ class ReactterIdExample extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return UseProvider(
+    return ReactterProvider(
       contexts: [
         UseContext(
           () => AppContext(),
@@ -45,6 +45,9 @@ class ReactterIdExample extends StatelessWidget {
           id: "new_builder",
         ),
       ],
+      child: Row(
+        children: const [],
+      ),
       builder: (context, _) {
         print("Render");
 

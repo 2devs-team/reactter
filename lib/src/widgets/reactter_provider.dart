@@ -7,7 +7,7 @@ import '../core/reactter_context.dart';
 import '../engine/reactter_inherit_provider.dart';
 import '../engine/reactter_inherit_provider_scope.dart';
 import '../engine/reactter_inherit_provider_scope_element.dart';
-import '../widgets/reactter_use_context.dart';
+import '../hooks/reactter_use_context.dart';
 
 /// Takes all the [UseContext] of [ReactterContext] defined on [contexts]
 /// and it's provides to [builder] method through [BuildContext] as parameter.
@@ -16,10 +16,10 @@ import '../widgets/reactter_use_context.dart';
 ///
 /// It is also responsible for fires the lifecycle events of [ReactterContext],
 ///
-/// This example produces one [UseProvider] with an [AppContext] inside:
+/// This example produces one [ReactterProvider] with an [AppContext] inside:
 ///
 /// ```dart
-/// UseProvider(
+/// ReactterProvider(
 ///   contexts: [
 ///     UseContext(() => AppContext()),
 ///   ],
@@ -36,12 +36,12 @@ import '../widgets/reactter_use_context.dart';
 ///   },
 /// )
 /// ```
-class UseProvider extends ReactterInheritedProvider {
+class ReactterProvider extends ReactterInheritedProvider {
   /// Stores all [UseContext]
   @protected
   final List<UseContextAbstraction> contexts;
 
-  UseProvider({
+  ReactterProvider({
     Key? key,
     required this.contexts,
     Widget? child,
@@ -127,7 +127,7 @@ class UseProvider extends ReactterInheritedProvider {
     return _instance;
   }
 
-  /// Obtain the [instance] of [T] from nearest ancestor [UseProvider]
+  /// Obtain the [instance] of [T] from nearest ancestor [ReactterProvider]
   static T? _getInstance<T>(BuildContext context, String? id) {
     T? instance;
 
@@ -137,7 +137,7 @@ class UseProvider extends ReactterInheritedProvider {
           as ReactterInheritedProviderScopeElement?;
 
       final _contexts =
-          (_inheritedElement?.widget.owner as UseProvider?)?.contexts;
+          (_inheritedElement?.widget.owner as ReactterProvider?)?.contexts;
 
       if (_contexts == null) return true;
 
@@ -186,7 +186,7 @@ class UseProvider extends ReactterInheritedProvider {
 
 /// Exposes methods to helps to get and listen the [instance] of [ReactterContext].
 extension ReactterBuildContextExtension on BuildContext {
-  /// Obtain a [instance] of [T] from the nearest ancestor [UseProvider],
+  /// Obtain a [instance] of [T] from the nearest ancestor [ReactterProvider],
   /// and subscribe to it or specific hooks put in [listenHooks] parameter.
   ///
   /// If [T] is nullable and no matching [ReactterContext] are found, [of] will
@@ -223,12 +223,12 @@ extension ReactterBuildContextExtension on BuildContext {
   /// Calling this method is equivalent to calling:
   ///
   /// ```dart
-  /// UseProvider.contextOf<T>(context, listenHooks: listenHooks);
+  /// ReactterProvider.contextOf<T>(context, listenHooks: listenHooks);
   /// ```
   T of<T extends ReactterContext?>([ListenHooks<T>? listenHooks]) =>
-      UseProvider.contextOf<T>(this, listenHooks: listenHooks);
+      ReactterProvider.contextOf<T>(this, listenHooks: listenHooks);
 
-  /// Obtain a [instance] of [T] with [id] from the nearest ancestor [UseProvider],
+  /// Obtain a [instance] of [T] with [id] from the nearest ancestor [ReactterProvider],
   /// and subscribe to it or specific hooks put in [listenHooks] parameter.
   ///
   /// If [T] is nullable and no matching [ReactterContext] are found, [ofId] will
@@ -266,15 +266,15 @@ extension ReactterBuildContextExtension on BuildContext {
   /// Calling this method is equivalent to calling:
   ///
   /// ```dart
-  /// UseProvider.contextOf<T>(context, id: id, listenHooks: listenHooks);
+  /// ReactterProvider.contextOf<T>(context, id: id, listenHooks: listenHooks);
   /// ```
   T ofId<T extends ReactterContext?>(
     String id, [
     ListenHooks<T>? listenHooks,
   ]) =>
-      UseProvider.contextOf<T>(this, id: id, listenHooks: listenHooks);
+      ReactterProvider.contextOf<T>(this, id: id, listenHooks: listenHooks);
 
-  /// Obtain a [instance] of [T] from the nearest ancestor [UseProvider].
+  /// Obtain a [instance] of [T] from the nearest ancestor [ReactterProvider].
   ///
   /// If [T] is nullable and no matching [ReactterContext] are found, [ofStatic] will
   /// return `null`.
@@ -297,12 +297,12 @@ extension ReactterBuildContextExtension on BuildContext {
   /// Calling this method is equivalent to calling:
   ///
   /// ```dart
-  /// UseProvider.contextOf<T>(context, listen: false);
+  /// ReactterProvider.contextOf<T>(context, listen: false);
   /// ```
   T ofStatic<T extends ReactterContext?>() =>
-      UseProvider.contextOf<T>(this, listen: false);
+      ReactterProvider.contextOf<T>(this, listen: false);
 
-  /// Obtain a [instance] of [T] with [id] from the nearest ancestor [UseProvider].
+  /// Obtain a [instance] of [T] with [id] from the nearest ancestor [ReactterProvider].
   ///
   /// If [T] is nullable and no matching [ReactterContext] are found, [ofIdStatic] will
   /// return `null`.
@@ -325,13 +325,13 @@ extension ReactterBuildContextExtension on BuildContext {
   /// Calling this method is equivalent to calling:
   ///
   /// ```dart
-  /// UseProvider.contextOf<T>(context, id: id, listen: false);
+  /// ReactterProvider.contextOf<T>(context, id: id, listen: false);
   /// ```
   T ofIdStatic<T extends ReactterContext?>(String id) =>
-      UseProvider.contextOf<T>(this, id: id, listen: false);
+      ReactterProvider.contextOf<T>(this, id: id, listen: false);
 }
 
-/// The error that will be thrown if [UseProvider.contextOf] fails to find a [ReactterContext]
+/// The error that will be thrown if [ReactterProvider.contextOf] fails to find a [ReactterContext]
 /// as an ancestor of the [BuildContext] used.
 class ReactterContextNotFoundException implements Exception {
   /// Create a ProviderNotFound error with the type represented as a String.
@@ -354,7 +354,7 @@ Error: Could not find the correct `UseContext<$valueType>` above this `$widgetTy
 This happens because you used a `BuildContext` that does not include the `ReactterContext`
 of your choice. There are a few common scenarios:
 
-- You added a new `UseProvider` in your `main.dart` and performed a hot-reload.
+- You added a new `ReactterProvider` in your `main.dart` and performed a hot-reload.
   To fix, perform a hot-restart.
 
 - The `ReactterContext` you are trying to read is in a different route.
@@ -364,19 +364,19 @@ of your choice. There are a few common scenarios:
 
 - You used a `BuildContext` that is an ancestor of the provider you are trying to read.
 
-  Make sure that `$widgetType` is under your `UseProvider` with `UseContext<$valueType>`.
+  Make sure that `$widgetType` is under your `ReactterProvider` with `UseContext<$valueType>`.
   This usually happens when you are creating a `ReactterContext` and trying to read it immediately.
 
   For example, instead of:
 
   ```
   Widget build(BuildContext context) {
-    return UseProvider(
+    return ReactterProvider(
       contexts: [
         UseContext(() => AppContext())
       ],
       // Will throw a `ReactterContextNotFoundException`, because `context` is associated
-      // to the widget that is the parent of `UseProvider`.
+      // to the widget that is the parent of `ReactterProvider`.
       child: Text(context.of<AppContext>().state.value),
     ),
   }
@@ -386,7 +386,7 @@ of your choice. There are a few common scenarios:
 
   ```
   Widget build(BuildContext context) {
-    return UseProvider(
+    return ReactterProvider(
       contexts: [
         UseContext(() => AppContext())
       ],

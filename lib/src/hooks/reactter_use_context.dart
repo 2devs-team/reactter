@@ -5,7 +5,7 @@ import '../core/mixins/reactter_life_cycle.dart';
 import '../core/reactter_context.dart';
 import '../core/reactter_types.dart';
 import '../engine/reactter_interface_instance.dart';
-import '../widgets/reactter_use_provider.dart';
+import '../widgets/reactter_provider.dart';
 
 abstract class UseContextAbstraction<T extends ReactterContext> {
   T? get instance;
@@ -22,10 +22,10 @@ abstract class UseContextAbstraction<T extends ReactterContext> {
 /// Takes a instance of [ReactterContext] class defined
 /// on firts parameter [instanceBuilder] and manages it like a context.
 ///"
-/// It's necessary use it inside [contexts] of [UseProvider] :
+/// It's necessary use it inside [contexts] of [ReactterProvider] :
 ///
 /// ```dart
-/// UseProvider(
+/// ReactterProvider(
 ///  contexts: [
 ///    UseContext(
 ///      () => AppContext(),

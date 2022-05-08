@@ -2,12 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:reactter/reactter.dart';
 
 class AppContext extends ReactterContext {
-  late final counter = UseState<int>(0, context: this);
+  late final counter = UseState<int>(0, this);
 
-  late final counterByTwo = UseState<int>(0, context: this);
+  late final counterByTwo = UseState<int>(0, this);
 
-  late final theme =
-      UseState<String>('light', context: this, alwaysUpdate: true);
+  late final theme = UseState<String>('light', this);
 
   AppContext() {
     UseEffect(() {
@@ -33,12 +32,12 @@ class CounterComponent extends ReactterComponent<AppContext> {
   get id => 'test';
 
   @override
-  listen(ctx) {
+  listenHooks(ctx) {
     return [ctx.theme];
   }
 
   @override
-  Widget render(ctx) {
+  Widget render(ctx, context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -55,7 +54,7 @@ class ReactterComponentTest extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return UseProvider(
+    return ReactterProvider(
       contexts: [
         UseContext(() => AppContext(), id: 'test'),
       ],

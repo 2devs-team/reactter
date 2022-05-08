@@ -1,12 +1,12 @@
 // ignore_for_file: avoid_print
-import 'package:example/testing_cases/reactter_id_example.dart';
+import 'package:example/testing_cases/nested_use_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:reactter/reactter.dart';
 
 class AppContext extends ReactterContext {
-  late final counter = UseState<int>(0, context: this);
+  late final counter = UseState<int>(0, this);
 
-  late final counterByTwo = UseState<int>(0, context: this);
+  late final counterByTwo = UseState<int>(0, this);
 
   AppContext() {
     UseEffect(() {
@@ -24,7 +24,7 @@ class ReactterExample extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return UseProvider(
+    return ReactterProvider(
       contexts: [
         UseContext(
           () => AppContext(),
@@ -95,7 +95,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      home: ReactterIdExample(),
+      home: NestedReactterProvider(),
     );
   }
 }

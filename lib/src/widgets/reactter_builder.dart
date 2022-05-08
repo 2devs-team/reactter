@@ -2,16 +2,16 @@ library reactter;
 
 import 'package:flutter/material.dart';
 import '../core/reactter_context.dart';
-import '../widgets/reactter_use_provider.dart';
+import 'reactter_provider.dart';
 
 /// Creates a new context to provide the instances of [T] to [builder] method.
 ///
 /// Helps to encapsulate and control re-renders.
 ///
-/// This example produces one [UseBuilder] with an [AppContext] as [T] :
+/// This example produces one [ReactterBuilder] with an [AppContext] as [T] :
 ///
 /// ```dart
-/// UseBuilder<AppContext>(
+/// ReactterBuilder<AppContext>(
 ///  child: Icon(Icons.person),
 ///  builder: (context, ctx, child){
 ///     return Row(
@@ -23,7 +23,7 @@ import '../widgets/reactter_use_provider.dart';
 ///   }
 /// )
 /// ```
-class UseBuilder<T extends ReactterContext> extends StatelessWidget {
+class ReactterBuilder<T extends ReactterContext> extends StatelessWidget {
   /// Provides a widget witch render one time.
   ///
   /// It's expose on [builder] method as third parameter.
@@ -38,7 +38,7 @@ class UseBuilder<T extends ReactterContext> extends StatelessWidget {
   final Widget Function(BuildContext context, T instance, Widget? child)
       builder;
 
-  const UseBuilder({
+  const ReactterBuilder({
     Key? key,
     required this.builder,
     this.child,
@@ -48,7 +48,7 @@ class UseBuilder<T extends ReactterContext> extends StatelessWidget {
   Widget build(BuildContext context) {
     return builder(
       context,
-      UseProvider.contextOf<T>(context),
+      ReactterProvider.contextOf<T>(context),
       child,
     );
   }

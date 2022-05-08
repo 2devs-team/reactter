@@ -25,7 +25,7 @@ class UseEffectExample extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return UseProvider(
+    return ReactterProvider(
       contexts: [
         UseContext(
           () => AppContext(),

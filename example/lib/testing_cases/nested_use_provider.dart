@@ -11,7 +11,7 @@ class CartItem {
 }
 
 class AppContext extends ReactterContext {
-  final userName = UseState<String>("Leo", alwaysUpdate: true);
+  final userName = UseState<String>("Leo");
 
   AppContext() {
     listenHooks([
@@ -25,8 +25,7 @@ class AppContext extends ReactterContext {
 }
 
 class UseUser extends ReactterHook {
-  late final items =
-      UseState<List<CartItem>>([], alwaysUpdate: true, context: this);
+  late final items = UseState<List<CartItem>>([], this);
 
   UseUser([ReactterContext? context]) : super(context) {
     UseEffect(() {
@@ -36,9 +35,8 @@ class UseUser extends ReactterHook {
 }
 
 class CartContext extends ReactterContext {
-  late final items =
-      UseState<List<CartItem>>([], alwaysUpdate: true, context: this);
-  late final itemsLenght = UseState<int>(0, alwaysUpdate: true, context: this);
+  late final items = UseState<List<CartItem>>([], this);
+  late final itemsLenght = UseState<int>(0, this);
   late final user = UseUser(this);
 
   CartContext() {
@@ -64,12 +62,12 @@ class CartContext extends ReactterContext {
   }
 }
 
-class NestedUseProvider extends StatelessWidget {
-  const NestedUseProvider({Key? key}) : super(key: key);
+class NestedReactterProvider extends StatelessWidget {
+  const NestedReactterProvider({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return UseProvider(
+    return ReactterProvider(
       contexts: [
         UseContext(
           () => AppContext(),
@@ -83,12 +81,12 @@ class NestedUseProvider extends StatelessWidget {
       builder: (contextA, _) {
         print('render contextA');
 
-        return UseProvider(
+        return ReactterProvider(
           contexts: const [],
           builder: (contextB, _) {
-            final cartContext = contextB.of<CartContext>();
-            final appContext =
-                contextB.of<AppContext>((inst) => [inst.userName]);
+            print('render contextB');
+            final cartContext = contextB.of<CartContext?>();
+            final appContext = contextB.of<AppContext>((ctx) => [ctx.userName]);
 
             return Scaffold(
               appBar: AppBar(
@@ -107,20 +105,20 @@ class NestedUseProvider extends StatelessWidget {
                         child: const Text("Change user name"),
                       ),
                       const SizedBox(height: 20),
-                      Text("Items: ${cartContext.itemsLenght.value}"),
+                      Text("Items: ${cartContext?.itemsLenght.value}"),
                       const SizedBox(height: 20),
                       ListView.builder(
                         physics: const NeverScrollableScrollPhysics(),
                         shrinkWrap: true,
                         padding: const EdgeInsets.all(8),
-                        itemCount: cartContext.items.value.length,
+                        itemCount: cartContext?.items.value.length,
                         itemBuilder: (BuildContext context, int index) {
                           return Container(
                             height: 50,
                             color: Colors.amber,
                             child: Center(
                               child: Text(
-                                  'Entry ${cartContext.items.value[index].id}'),
+                                  'Entry ${cartContext?.items.value[index].id}'),
                             ),
                           );
                         },
@@ -130,7 +128,7 @@ class NestedUseProvider extends StatelessWidget {
                 ),
               ),
               floatingActionButton: FloatingActionButton(
-                onPressed: cartContext.addItemToCart,
+                onPressed: cartContext?.addItemToCart,
                 tooltip: 'Increment',
                 child: const Icon(Icons.add),
               ),

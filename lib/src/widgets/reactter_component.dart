@@ -1,43 +1,50 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import '../core/reactter_context.dart';
+import '../core/reactter_hook.dart';
 import '../core/reactter_types.dart';
-import '../hooks/reactter_use_state.dart';
-import '../widgets/reactter_use_context.dart';
-import '../widgets/reactter_use_provider.dart';
+import '../hooks/reactter_use_context.dart';
+import 'reactter_provider.dart';
 
+/// Provides the functionality of [ReactterProvider] with a [UseContext] of [T],
+/// and exposes the instance of [T] through [render] method.
 abstract class ReactterComponent<T extends ReactterContext>
     extends StatelessWidget {
   const ReactterComponent({Key? key}) : super(key: key);
 
+  /// Id of [T].
   @protected
   String? get id => null;
 
+  /// How to builder the instance of [T].
+  @protected
   InstanceBuilder<T>? get builder => null;
 
+  /// Listen hooks to mark need to build.
   @protected
-  List<UseState> listen(T ctx);
+  List<ReactterHook> listenHooks(T ctx);
 
-  T _getContext(BuildContext context) {
-    return id == null ? context.of<T>(listen) : context.ofId<T>(id!, listen);
-  }
+  /// Replace a build method. Provides the instances of [T] and context of [BuildContext].
+  @protected
+  Widget render(T ctx, BuildContext context);
 
   @protected
   @override
   Widget build(BuildContext context) {
     if (builder == null) {
-      return render(_getContext(context));
+      return render(_getContext(context), context);
     }
 
-    return UseProvider(
+    return ReactterProvider(
       contexts: [
         UseContext<T>(builder!),
       ],
-      builder: (context, _) {
-        return render(_getContext(context));
-      },
+      builder: (context, _) => render(_getContext(context), context),
     );
   }
 
-  @protected
-  Widget render(T ctx);
+  T _getContext(BuildContext context) {
+    return id == null
+        ? context.of<T>(listenHooks)
+        : context.ofId<T>(id!, listenHooks);
+  }
 }
