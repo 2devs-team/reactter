@@ -1,24 +1,24 @@
 import 'mixins/reactter_life_cycle.dart';
 import 'reactter_hook_manager.dart';
 
-/// Provide the functionlatiy of [ReactterHookManager] and [ReactterLifeCycle] to any class.
+/// Provides the functionlatiy of [ReactterHookManager] and [ReactterLifeCycle] to any class.
 ///
-/// It's recommended to name you class with `Context` suffix to improve readability.
+/// It's recommended to name you class with `Context` suffix to improve readability:
 ///
 ///```dart
 /// class AppContext extends ReactterContext {
-///   late final name = UseState<String>('Leo León', context: this);
+///   late final name = UseState<String>('Leo León', this);
 /// }
 /// ```
 ///
-/// To use it, you should provide it within [UseProvider] and [UseContext],
-/// you can access to the prop values with [ReactterBuildContextExtension].
+/// To use it, you should provide it within [ReactterProvider] with an [UseContext],
+/// you can access to the property values with [ReactterBuildContextExtension].
 ///
-/// This example contain a [UseProvider] with an [UseContext]
+/// This example contain a [ReactterProvider] with an [UseContext]
 /// of type [AppContext], and read all the states in builder:
 ///
 /// ```dart
-/// UseProvider(
+/// ReactterProvider(
 ///  contexts: [
 ///    UseContext(
 ///      () => AppContext()
@@ -31,4 +31,5 @@ import 'reactter_hook_manager.dart';
 ///   }
 /// )
 /// ```
-class ReactterContext extends ReactterHookManager with ReactterLifeCycle {}
+abstract class ReactterContext extends ReactterHookManager
+    with ReactterLifeCycle {}

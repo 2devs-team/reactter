@@ -1,66 +1,85 @@
 library reactter;
 
+import 'package:flutter/widgets.dart';
+
+import '../core/mixins/reactter_publish_suscription.dart';
 import '../core/reactter_context.dart';
 import '../core/reactter_hook.dart';
 
-/// Inyects the [callback] in the [UseState] [dependencies] given to execute when any of
-/// those changes.
+/// It's a hook that manages side-effect on [ReactterContext]
+///
+/// The side-effect logic into the [callback] function is executed
+/// when [dependencies] of [ReactterHook] argument has changes
+/// or [context] of [ReactterContext] trigger lifecycle [didMount].
+///
+/// If the [callback] returns a function,
+/// then [UseEffect] considers this as an `effect cleanup`.
+///
+/// The `effect cleanup` callback is execute when before [callback] is called
+/// or [context] trigger lifecycle [willUnmount]
 ///
 /// This example produces a [UseEffect], it must be called on [ReactterContext]
 /// constructor:
 ///
 /// ```dart
-/// AppContext() {
-///   UseEffect(() {
-///     userName.value = firstName + lastName;
-///   }, [firstName, lastName]);
-/// }
-/// ```
-/// You can create your own hook with mixins:
+/// class AppContext extends ReactterContext {
+///   late final name = UseState<String?>(null, this);
+///   late final firstName = UseState("Carlos", this);
+///   late final lastName = UseState("Leon", this);
 ///
-///```dart
-/// mixin UseCart on ReactterHook {
-///     late final cart = UseState<Cart?>(null, context: this);
-/// }
-/// ```
-
-/// This gonna expose `cart` to any [ReactterContext]
-///```dart
-/// UserContext extends ReactterContext with UseCart {
+///   AppContext() {
+///     UseEffect(() {
+///       // name.value = "Carlos Leon" on first time
+///       // name.value = "Leo Cast" after 2 seconds pass
+///       name.value = "${firstName.value} ${lastName.value}";
+///     }, [firstName, lastName], this);
 ///
-///   List<Product>? getCart(){
-///     return cart?.value.productList;
+///     Future.delayed(Duration(seconds: 1), () {
+///       firstName.value = "Leo";
+///       lastName.value = "Cast";
+///     });
 ///   }
 /// }
 /// ```
-///
-/// Any class can be a hook, but we recommend do it with mixins due the injection
-/// of the props in the class.
 class UseEffect extends ReactterHook {
+  /// Function to control side-effect and effect cleanup.
+  @protected
+  final Function callback;
+
+  /// Hooks dependencies
+  @protected
+  final List<ReactterHook> dependencies;
+
   Function? _unsubscribeCallback;
 
   UseEffect(
-    Function callback,
-    List<ReactterHook> dependencies, [
+    this.callback,
+    this.dependencies, [
     ReactterContext? context,
   ]) : super(context) {
     listenHooks(dependencies);
 
     if (context == null) {
-      subscribe(() => _onSubscribe(callback));
+      subscribe(PubSubEvent.willUpdate, _onUnsubscribe);
+      subscribe(PubSubEvent.didUpdate, _onSubscribe);
     }
 
     context?.onDidMount(() {
-      _onSubscribe(callback);
-      subscribe(() => _onSubscribe(callback));
+      _onSubscribe();
+
+      subscribe(PubSubEvent.willUpdate, _onUnsubscribe);
+      subscribe(PubSubEvent.didUpdate, _onSubscribe);
     });
 
-    context?.onWillUnmount(_onUnsubscribe);
+    context?.onWillUnmount(() {
+      _onUnsubscribe.call();
+
+      unsubscribe(PubSubEvent.willUpdate, _onUnsubscribe);
+      unsubscribe(PubSubEvent.didUpdate, _onSubscribe);
+    });
   }
 
-  _onSubscribe(Function callback) {
-    _onUnsubscribe();
-
+  void _onSubscribe() {
     final _returnCallback = callback();
 
     if (_returnCallback is Function) {
@@ -68,7 +87,7 @@ class UseEffect extends ReactterHook {
     }
   }
 
-  _onUnsubscribe() {
+  void _onUnsubscribe() {
     _unsubscribeCallback?.call();
   }
 }

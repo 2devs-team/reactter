@@ -17,7 +17,7 @@ abstract class ReactterComponent<T extends ReactterContext>
 
   /// How to builder the instance of [T].
   @protected
-  InstanceBuilder<T>? get builder => null;
+  ContextBuilder<T>? get builder => null;
 
   /// Listen hooks to mark need to build.
   @protected

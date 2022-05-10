@@ -5,70 +5,74 @@ import '../core/reactter_context.dart';
 import '../core/reactter_types.dart';
 import 'reactter_use_state.dart';
 
-/// This class extends from [UseState].
-/// Has the same capabilities but receive [asyncValue] which works as a the [value] initializer.
+/// Has the same functionality of [UseState] but providing a [asyncValue]
+/// which sets [value] when [resolve] method is called
 ///
-/// This example produces one simple [UseAsyncState]:
+/// This example produces one simple [UseAsyncState] :
+///
 /// ```dart
-///late final userName =
-///       UseAsyncState<String>("My username", () async {
-///           return await api.getUserName();
-///       });
+/// late final userName = UseAsyncState<String>(
+///   "My username",
+///   () async => await api.getUserName(),
+///   this,
+/// );
+/// ```
 ///
+/// It also has [when] method that returns a widget depending on the state of the hook.
+/// for example:
+///
+/// ```dart
+/// userName.when(
+///   standby: (value) => Text("Standby: ${value}"),
+///   loading: () => const CircularProgressIndicator(),
+///   done: (value) => Text(value),
+///   error: (error) => const Text("Unhandled exception: ${error}"),
+/// );
 /// ```
 class UseAsyncState<T> extends UseState<T> {
   UseAsyncState(
     initial,
-    this.asyncValue, {
+    this.asyncValue, [
     ReactterContext? context,
-  }) : super(
-          initial,
-          alwaysUpdate: true,
-          context: context,
-        ) {
+  ]) : super(initial, context) {
     context?.listenHooks([this]);
   }
 
   /// Works as a the [value] initializer.
-  /// Need to call [resolve()] to execute.
-  final Future<T> Function() asyncValue;
+  /// Need to call [resolve] to execute.
+  final AsyncFunction<T> asyncValue;
 
-  bool _isRequestDone = false;
-  bool _error = false;
-  Object? errorObject;
+  bool get isDone => _isDone;
+  bool _isDone = false;
 
-  // Set result from the request, clear the states and set [value].
-  set result(T _value) {
-    _clear();
-    _isRequestDone = true;
-    value = _value;
-  }
-
-  bool isLoading = false;
+  bool get isLoading => _loading;
+  bool _loading = false;
   set _isLoading(bool _value) {
-    isLoading = _value;
+    _loading = _value;
     if (!_value) return;
-    publish();
+    update();
   }
 
-  /// Resolve [asyncValue] to fill [value].
-  ///
-  /// This example produces the use we recommend:
-  /// ```dart
-  /// onClick(){
-  ///   state.resolve();
-  /// }
-  /// ```
-  ///
-  /// You able to call wherever you want, in the constructor or in any [lifecycle] method.
+  bool get hasError => _hasError;
+  Object? get error => _errorObject;
+  bool _hasError = false;
+  Object? _errorObject;
+  set _error(Object _value) {
+    _errorObject = _value;
+    _hasError = true;
+  }
+
+  /// Execute [asyncValue] to resolve [value].
   resolve() async {
     _clear();
     _isLoading = true;
 
     try {
-      result = await asyncValue();
+      final _value = await asyncValue();
+      _isDone = true;
+      value = _value;
     } catch (e) {
-      setError(e);
+      _error = e;
     } finally {
       _isLoading = false;
     }
@@ -76,22 +80,17 @@ class UseAsyncState<T> extends UseState<T> {
 
   /// Clear all state values for correct handling.
   _clear() {
-    _isRequestDone = false;
-    errorObject = null;
-    _error = false;
-    _isLoading = false;
-  }
-
-  setError(Object error) {
-    errorObject = error;
-    _error = true;
+    _isDone = false;
+    _loading = false;
+    _hasError = false;
+    _errorObject = null;
   }
 
   /// Reset [value] to his initial value.
   @override
   void reset() {
     _clear();
-    publish();
+    update();
     super.reset();
   }
 
@@ -102,17 +101,13 @@ class UseAsyncState<T> extends UseState<T> {
   /// `done`: When the request is done.
   /// `error`: If any errors happens in the request.
   ///
-  /// Example:
+  /// For example:
   ///
   /// ```dart
   /// userContext.userName.when(
-  ///
   ///   standby: (value) => Text("Standby: ${value}"),
-  ///
   ///   loading: () => const CircularProgressIndicator(),
-  ///
   ///   done: (value) => Text(value),
-  ///
   ///   error: (error) => const Text("Unhandled exception: ${error}"),
   /// )
   /// ```
@@ -122,15 +117,15 @@ class UseAsyncState<T> extends UseState<T> {
     WidgetCreatorValue<T>? done,
     WidgetCreatorErrorHandler? error,
   }) {
-    if (_error) {
-      return error?.call(errorObject) ?? const SizedBox.shrink();
+    if (hasError) {
+      return error?.call(_errorObject) ?? const SizedBox.shrink();
     }
 
     if (isLoading) {
       return loading?.call() ?? const SizedBox.shrink();
     }
 
-    if (!isLoading && _isRequestDone) {
+    if (!isLoading && _isDone) {
       return done?.call(value) ?? const SizedBox.shrink();
     }
 

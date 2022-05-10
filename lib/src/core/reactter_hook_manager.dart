@@ -3,11 +3,10 @@ library reactter;
 import 'reactter_hook.dart';
 import 'mixins/reactter_publish_suscription.dart';
 
-/// It's provides [publish] and [subscribe] methods,
+/// Provides the functionlatiy of [ReactterPubSub],
 /// and manages the [ReactterHook] witch add from [listenHooks] method.
 ///
-/// You can use it as a mixin for [ReactterContext] or [ReactterHook] class,
-/// for example:
+/// This is an example of how to create a custom hook with mixin:
 ///
 ///```dart
 /// mixin LoadingMixin on ReactterHookManager {
@@ -34,10 +33,10 @@ import 'mixins/reactter_publish_suscription.dart';
 ///```
 ///
 class ReactterHookManager with ReactterPubSub {
-  /// Store all the hooks given.
+  /// Stores all the hooks given.
   final Set<ReactterHook> _hooks = {};
 
-  /// Suscribe to all [hooks] given.
+  /// Suscribes to all [hooks] given.
   void listenHooks(List<ReactterHook> hooks) {
     for (final _hook in hooks) {
       if (_hooks.contains(_hook)) {
@@ -46,7 +45,7 @@ class ReactterHookManager with ReactterPubSub {
 
       _hooks.add(_hook);
 
-      _hook.subscribe(publish);
+      _hook.subscribe(PubSubEvent.didUpdate, update);
     }
   }
 }

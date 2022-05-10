@@ -1,30 +1,41 @@
-/// Inject listeners to state
+enum PubSubEvent { willUpdate, didUpdate }
+
+/// Provides a Publish and Subscribe pattern manager
 mixin ReactterPubSub {
-  final List<Function> _subscribers = [];
-  final Map<Function, Function> _unsubscribers = {};
+  /// Stores all subscribe callbacks
+  final Map<PubSubEvent, List<Function>> _subscribers = {};
 
-  void subscribe(Function subscriber) {
-    _subscribers.add(subscriber);
+  /// Stores all unsubscribe callbacks
+  final Map<PubSubEvent, Map<Function, Function>> _unsubscribers = {};
+
+  /// Save a subscribe callback
+  void subscribe(PubSubEvent event, Function subscriber) {
+    _subscribers[event] ??= [];
+    _subscribers[event]?.add(subscriber);
   }
 
-  void unsubscribe(Function subscriber) {
-    _unsubscribers[subscriber]?.call();
-    _subscribers.remove(subscriber);
-    _unsubscribers.remove(subscriber);
+  /// Remove a subscribe callback and invoke unsubscribe callback
+  void unsubscribe(PubSubEvent event, Function subscriber) {
+    _unsubscribers[event]?[subscriber]?.call();
+    _subscribers[event]?.remove(subscriber);
+    _unsubscribers[event]?.remove(subscriber);
   }
 
-  /// Rebuild everytime is called.
-  ///
-  /// Here is when [markAsNeedRebuild] is set when the instance is created.
-  void publish() {
-    for (final _subscriber in _subscribers) {
-      _unsubscribers[_subscriber]?.call();
+  /// First, invokes the subscribed callbacks of the willUpdate event.
+  /// Second, invokes the callback entered by parameter.
+  /// And finally, invokes the subscribed callbacks of the didUpdate event.
+  void update([Function? callback]) {
+    final willUpdateSubscribers = _subscribers[PubSubEvent.willUpdate] ?? [];
+    final didUpdateSubscribers = _subscribers[PubSubEvent.didUpdate] ?? [];
 
-      final _unsubscriber = _subscriber();
+    for (var i = 0; i < willUpdateSubscribers.length; i++) {
+      willUpdateSubscribers[i].call();
+    }
 
-      if (_unsubscriber is Function) {
-        _unsubscribers[_subscriber] = _unsubscriber;
-      }
+    callback?.call();
+
+    for (var i = 0; i < didUpdateSubscribers.length; i++) {
+      didUpdateSubscribers[i].call();
     }
   }
 }

@@ -59,7 +59,7 @@ class Product with UseQuantity {
 }
 
 class Cart {
-  final products = UseState<List<Product>>([], alwaysUpdate: true);
+  final products = UseState<List<Product>>([]);
 
   final total = UseState<double>(0);
 

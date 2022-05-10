@@ -34,11 +34,6 @@ class UserContext extends ReactterContext {
   }
 
   UserContext() {
-    onAwake(() {
-      print("->>> awake");
-      loadData();
-    });
-
     onWillMount(() {
       print("->>> willMount");
     });

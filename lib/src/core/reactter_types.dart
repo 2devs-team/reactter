@@ -7,13 +7,14 @@ typedef FutureVoidCallback = Future<void> Function();
 
 typedef FunctionCallback = void Function()? Function();
 
-typedef InstanceBuilder<T> = T Function();
+typedef ContextBuilder<T> = T Function();
 
 typedef ListenHooks<T> = List<ReactterHook> Function(T instance);
 
 typedef SelectorAspect<T> = bool Function(InheritedElement inheritedElement);
 
-typedef BuildWithChild = Widget Function(BuildContext context, Widget? child);
+typedef InstanceBuilder<T> = Widget Function(
+    T instance, BuildContext context, Widget? child);
 
 typedef WidgetCreator = Widget Function();
 

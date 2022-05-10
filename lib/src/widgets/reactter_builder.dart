@@ -1,6 +1,7 @@
 library reactter;
 
 import 'package:flutter/material.dart';
+import '../core/reactter_types.dart';
 import '../core/reactter_context.dart';
 import 'reactter_provider.dart';
 
@@ -23,7 +24,13 @@ import 'reactter_provider.dart';
 ///   }
 /// )
 /// ```
-class ReactterBuilder<T extends ReactterContext> extends StatelessWidget {
+class ReactterBuilder<T extends ReactterContext?> extends StatelessWidget {
+  /// Id of [T].
+  final String? id;
+
+  /// Watchs specific hooks for re-render
+  final ListenHooks? listenHooks;
+
   /// Provides a widget witch render one time.
   ///
   /// It's expose on [builder] method as third parameter.
@@ -32,24 +39,33 @@ class ReactterBuilder<T extends ReactterContext> extends StatelessWidget {
 
   /// Method which has the render logic
   ///
-  /// Exposes [BuilderContext], instance of [T] and [child] widget as parameters.
+  /// Exposes instance of [T], [BuildContext] and [child] widget as parameters.
   /// and returns a widget.
   @protected
-  final Widget Function(BuildContext context, T instance, Widget? child)
-      builder;
+  final InstanceBuilder<T> builder;
 
   const ReactterBuilder({
     Key? key,
-    required this.builder,
+    this.id,
+    this.listenHooks,
     this.child,
+    required this.builder,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return builder(
-      context,
-      ReactterProvider.contextOf<T>(context),
-      child,
+    return ReactterProvider(
+      contexts: const [],
+      child: child,
+      builder: (context, child) => builder(
+        ReactterProvider.contextOf<T>(
+          context,
+          id: id,
+          listenHooks: listenHooks,
+        ),
+        context,
+        child,
+      ),
     );
   }
 }

@@ -1,11 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'reactter_inherit_provider_scope.dart';
-import '../core/reactter_types.dart';
-import '../engine/reactter_inherit_provider_scope_element.dart';
+import 'reactter_inherit_provider_scope_element.dart';
 
-/// Wrapper a [ReactterInheritedProviderScope].
-///
-/// Need for communicate and search parents and childs.
 abstract class ReactterInheritedProvider extends StatelessWidget {
   /// Provides a widget witch render one time.
   ///
@@ -16,7 +12,7 @@ abstract class ReactterInheritedProvider extends StatelessWidget {
   ///
   /// Exposes [BuilderContext] and [child] widget as parameters.
   /// and returns a widget.
-  final BuildWithChild? builder;
+  final TransitionBuilder? builder;
 
   const ReactterInheritedProvider({
     Key? key,
@@ -30,6 +26,7 @@ abstract class ReactterInheritedProvider extends StatelessWidget {
       builder != null || child != null,
       '$runtimeType must used builder and/or child',
     );
+    bool _isMounted = false;
 
     return ReactterInheritedProviderScope(
       owner: this,
@@ -43,7 +40,19 @@ abstract class ReactterInheritedProvider extends StatelessWidget {
 
                 _inheritedElement.removeDependencies();
 
-                return builder!(context, child);
+                if (_isMounted) {
+                  willUpdate();
+                }
+
+                final _widget = builder!(context, child);
+
+                if (_isMounted) {
+                  didUpdate();
+                }
+
+                _isMounted = true;
+
+                return _widget;
               },
             )
           : child!,
@@ -53,6 +62,10 @@ abstract class ReactterInheritedProvider extends StatelessWidget {
   willMount();
 
   didMount();
+
+  willUpdate();
+
+  didUpdate();
 
   willUnmount();
 }

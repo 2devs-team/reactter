@@ -11,8 +11,9 @@ class _Dependency<T> {
 
 /// Main element who it is in charge to make a rebuild in the view.
 class ReactterInheritedProviderScopeElement extends InheritedElement {
-  ReactterInheritedProviderScopeElement(ReactterInheritedProviderScope widget)
-      : super(widget);
+  ReactterInheritedProviderScopeElement(
+    ReactterInheritedProviderScope widget,
+  ) : super(widget);
 
   bool _updatedShouldNotify = false;
 
@@ -124,7 +125,7 @@ class ReactterInheritedProviderScopeElement extends InheritedElement {
 
   /// Adds instance to [_dependencies] and subscribes [markNeedsBuild]
   void dependOnInstance(ReactterPubSub instance) {
-    instance.subscribe(markNeedsBuild);
+    instance.subscribe(PubSubEvent.didUpdate, markNeedsBuild);
     _dependencies.add(instance);
   }
 
@@ -132,7 +133,7 @@ class ReactterInheritedProviderScopeElement extends InheritedElement {
   void removeDependencies() {
     for (var i = 0; i < _dependencies.length; i++) {
       final _isntance = _dependencies[i];
-      _isntance.unsubscribe(markNeedsBuild);
+      _isntance.unsubscribe(PubSubEvent.didUpdate, markNeedsBuild);
     }
 
     _dependencies.clear();

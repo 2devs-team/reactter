@@ -12,8 +12,22 @@ class CartItem {
 
 class AppContext extends ReactterContext {
   final userName = UseState<String>("Leo");
+  late final flag = UseState(false, this);
 
   AppContext() {
+    print('1. Initialized');
+
+    UseEffect(() {
+      Future.delayed(const Duration(seconds: 1), () {
+        flag.value = !flag.value;
+      });
+    }, [flag], this);
+
+    onWillMount(() => print('2. Before mount'));
+    onDidMount(() => print('3. Mounted'));
+    onWillUpdate(() => print('4. Before update'));
+    onDidUpdate(() => print('5. Updated'));
+    onWillUnmount(() => print('6. Before unmounted'));
     listenHooks([
       userName,
     ]);
@@ -71,7 +85,7 @@ class NestedReactterProvider extends StatelessWidget {
       contexts: [
         UseContext(
           () => AppContext(),
-          init: true,
+          onInit: (inst) => print('on init'),
         ),
         UseContext(
           () => CartContext(),
@@ -85,8 +99,9 @@ class NestedReactterProvider extends StatelessWidget {
           contexts: const [],
           builder: (contextB, _) {
             print('render contextB');
-            final cartContext = contextB.of<CartContext?>();
             final appContext = contextB.of<AppContext>((ctx) => [ctx.userName]);
+
+            final cartContext = contextB.of<CartContext?>();
 
             return Scaffold(
               appBar: AppBar(
@@ -100,6 +115,13 @@ class NestedReactterProvider extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(appContext.userName.value),
+                      ReactterBuilder<AppContext>(
+                        listenHooks: (ctx) => [ctx.flag],
+                        builder: (ctx, _, __) {
+                          print("CHANGE FLAG");
+                          return Text("flag: ${ctx.flag.value}");
+                        },
+                      ),
                       ElevatedButton(
                         onPressed: appContext.changeUserName,
                         child: const Text("Change user name"),

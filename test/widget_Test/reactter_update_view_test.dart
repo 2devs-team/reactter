@@ -25,8 +25,8 @@ void main() {
 }
 
 class UserContext extends ReactterContext {
-  late final name = UseState<String>("Leo", context: this);
-  late final age = UseState<int>(26, context: this);
+  late final name = UseState<String>("Leo", this);
+  late final age = UseState<int>(26, this);
 }
 
 class App extends StatelessWidget {
@@ -35,7 +35,7 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: UseProvider(
+      home: ReactterProvider(
         contexts: [
           UseContext(() => UserContext(), init: true),
         ],

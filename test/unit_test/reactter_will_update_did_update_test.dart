@@ -29,11 +29,11 @@ class User {
   late final lastName = UseState<String>("León");
 
   User() {
-    firstName.didUpdate(changeUserName);
-    lastName.didUpdate(changeUserName);
+    firstName.onDidUpdate(changeUserName);
+    lastName.onDidUpdate(changeUserName);
   }
 
-  changeUserName(String prev, String next) {
+  changeUserName() {
     userName.value = firstName.value + lastName.value;
   }
 }

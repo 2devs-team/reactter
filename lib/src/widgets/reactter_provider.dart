@@ -56,7 +56,6 @@ class ReactterProvider extends ReactterInheritedProvider {
   }
 
   /// Initializes every instance of [contexts]
-  /// and executes it's lifecycle [awake].
   _initialize() {
     for (var i = 0; i < contexts.length; i++) {
       contexts[i].initialize(true);
@@ -66,28 +65,40 @@ class ReactterProvider extends ReactterInheritedProvider {
   /// Executes lifecycle [willMount] from every [ReactterContext]
   @override
   @protected
-  willMount() {
-    for (var i = 0; i < contexts.length; i++) {
-      contexts[i].instance?.executeEvent(EVENT_TYPE.willMount);
-    }
-  }
+  willMount() => _triggerLifeCycleEvent(LifeCycleEvent.willMount);
 
   /// Executes lifecycle [didMount] from every [ReactterContext]
   @override
   @protected
-  didMount() {
-    for (var i = 0; i < contexts.length; i++) {
-      contexts[i].instance?.executeEvent(EVENT_TYPE.didMount);
-    }
-  }
+  didMount() => _triggerLifeCycleEvent(LifeCycleEvent.didMount);
+
+  /// Executes lifecycle [willUpdate] from every [ReactterContext]
+  @override
+  @protected
+  willUpdate() => _triggerLifeCycleEvent(LifeCycleEvent.willUpdate);
+
+  /// Executes lifecycle [didUpdate] from every [ReactterContext]
+  @override
+  @protected
+  didUpdate() => _triggerLifeCycleEvent(LifeCycleEvent.didUpdate);
 
   /// Destroys every instance of [contexts]
   /// and executes it's lifecycle [willUnmount].
   @override
   @protected
   willUnmount() {
+    _triggerLifeCycleEvent(LifeCycleEvent.willUnmount);
+
     for (var i = 0; i < contexts.length; i++) {
       contexts[i].destroy();
+    }
+  }
+
+  void _triggerLifeCycleEvent(LifeCycleEvent event, [bool force = false]) {
+    for (var i = 0; i < contexts.length; i++) {
+      if (force || contexts[i].isRoot) {
+        contexts[i].instance?.executeEvent(event);
+      }
     }
   }
 
@@ -135,6 +146,8 @@ class ReactterProvider extends ReactterInheritedProvider {
       final _inheritedElement = parent.getElementForInheritedWidgetOfExactType<
               ReactterInheritedProviderScope>()
           as ReactterInheritedProviderScopeElement?;
+
+      if (_inheritedElement?.widget.owner is! ReactterProvider) return true;
 
       final _contexts =
           (_inheritedElement?.widget.owner as ReactterProvider?)?.contexts;
