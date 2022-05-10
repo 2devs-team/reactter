@@ -197,14 +197,14 @@ class AppContext extends ReactterContext {
 
 ### Control re-render with `ReactterBuilder`
 
-`ReactterBuilder` does the same functionality as `context.of` but isolates the widget which is affected by re-render.
+`ReactterBuilder` has the same functionality as `context.of` but isolates the widget which is affected by re-render.
 
 ```dart
 ReactterProvider(
   contexts: [
-    UseContext(() => AppContext),
+    UseContext(() => AppContext()),
   ],
-  builder: (context, _) {
+  builder: (context, child) {
     // This builder is re-render when change stateA
     final appContextA = context.of<AppContext>(
       (appContextA) => [appContextA.stateA],

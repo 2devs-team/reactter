@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:flutter/material.dart';
 import 'package:reactter/reactter.dart';
 
@@ -19,15 +21,15 @@ class UseCount extends ReactterHook {
 class Global {
   static final flag = UseState(false);
   static final count = UseCount(0);
+  static final maxCount = UseCount(10);
 
   static final Global _inst = Global._init();
   factory Global() => _inst;
 
   Global._init() {
     UseEffect(
-      () async {
-        await Future.delayed(const Duration(seconds: 1));
-        doCount();
+      () {
+        Future.delayed(const Duration(seconds: 1), doCount);
       },
       [count],
       UseEffect.dispatchEffect,
@@ -39,8 +41,9 @@ class Global {
       flag.value = true;
     }
 
-    if (count.value >= 10) {
+    if (count.value >= maxCount.value) {
       flag.value = false;
+      maxCount.increment();
     }
 
     flag.value ? count.increment() : count.decrement();
@@ -49,7 +52,8 @@ class Global {
 
 class AppContext extends ReactterContext {
   AppContext() {
-    Global(); // Alway invoke Global's factory
+    // Is need to execute Global._init
+    Global();
   }
 
   bool get isOdd => Global.count.value % 2 != 0;
@@ -65,8 +69,6 @@ class GlobalExample extends StatelessWidget {
         UseContext(() => AppContext()),
       ],
       builder: (context, child) {
-        final appContext = context.of<AppContext>((_) => [Global.count]);
-
         return Scaffold(
           appBar: AppBar(
             title: const Text("Global example"),
@@ -75,11 +77,25 @@ class GlobalExample extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(
-                  Global.flag.value ? 'Count increment' : 'Count decrement',
+                ReactterBuilder(
+                  listenHooks: (_) => [Global.flag, Global.maxCount],
+                  builder: (_, context, __) {
+                    print('RENDER FLAG');
+                    return Text(
+                      Global.flag.value
+                          ? 'Count increment 0 to ${Global.maxCount.value}'
+                          : 'Count decrement ${Global.maxCount.value - 1} to 0',
+                    );
+                  },
                 ),
-                Text(
-                  "${Global.count.value} is ${appContext.isOdd ? "odd" : "even"}",
+                ReactterBuilder<AppContext>(
+                  listenHooks: (_) => [Global.count],
+                  builder: (appContext, context, __) {
+                    print('RENDER COUNT');
+                    return Text(
+                      "${Global.count.value} is ${appContext.isOdd ? "odd" : "even"}",
+                    );
+                  },
                 ),
               ],
             ),
