@@ -10,7 +10,7 @@ import 'mixins/reactter_publish_suscription.dart';
 ///
 ///```dart
 /// mixin LoadingMixin on ReactterHookManager {
-///   final loading = UseState(false, context: this);
+///   final loading = UseState(false, this);
 ///
 ///   void loadingToggle() {
 ///     loading.value = !loading.value;

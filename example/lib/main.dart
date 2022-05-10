@@ -1,5 +1,5 @@
 // ignore_for_file: avoid_print
-import 'package:example/testing_cases/nested_use_provider.dart';
+import 'package:example/testing_cases/global_example.dart';
 import 'package:flutter/material.dart';
 import 'package:reactter/reactter.dart';
 
@@ -95,7 +95,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      home: NestedReactterProvider(),
+      home: GlobalExample(),
     );
   }
 }

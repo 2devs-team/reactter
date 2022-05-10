@@ -10,7 +10,7 @@ import 'reactter_hook_manager.dart';
 ///
 ///```dart
 /// class UseToggle extends ReactterHook {
-///   late final _state = UseState(false, context: this);
+///   late final _state = UseState(false, this);
 ///
 ///   bool get value => _state.value;
 ///

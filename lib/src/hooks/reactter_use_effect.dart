@@ -59,9 +59,13 @@ class UseEffect extends ReactterHook {
   ]) : super(context) {
     listenHooks(dependencies);
 
-    if (context == null) {
+    if (context is DispatchEffect || context == null) {
       subscribe(PubSubEvent.willUpdate, _onUnsubscribe);
       subscribe(PubSubEvent.didUpdate, _onSubscribe);
+    }
+
+    if (context is DispatchEffect) {
+      _onSubscribe();
     }
 
     context?.onDidMount(() {
@@ -90,4 +94,16 @@ class UseEffect extends ReactterHook {
   void _onUnsubscribe() {
     _unsubscribeCallback?.call();
   }
+
+  static DispatchEffect get dispatchEffect => DispatchEffect();
+}
+
+class DispatchEffect extends ReactterContext {
+  static final DispatchEffect inst = DispatchEffect._();
+
+  factory DispatchEffect() {
+    return inst;
+  }
+
+  DispatchEffect._();
 }
