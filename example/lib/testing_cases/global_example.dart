@@ -19,7 +19,7 @@ class UseCount extends ReactterHook {
 }
 
 class Global {
-  static final flag = UseState(false);
+  static final reverse = UseState(false);
   static final count = UseCount(0);
   static final maxCount = UseCount(10);
 
@@ -37,23 +37,32 @@ class Global {
   }
 
   static void doCount() {
-    if (count.value <= 0) {
-      flag.value = true;
-    }
-
-    if (count.value >= maxCount.value) {
-      flag.value = false;
+    if (reverse.value && count.value <= 0) {
+      reverse.value = false;
       maxCount.increment();
     }
 
-    flag.value ? count.increment() : count.decrement();
+    if (!reverse.value && count.value >= maxCount.value) {
+      reverse.value = true;
+    }
+
+    reverse.value ? count.decrement() : count.increment();
   }
 }
 
 class AppContext extends ReactterContext {
+  final count = Global.count;
+  final maxCount = Global.maxCount;
+  final reverse = Global.reverse;
+
   AppContext() {
-    // Is need to execute Global._init
+    // It's need to instance it for can execute Global._init
     Global();
+
+    onWillUpdate(() => print("onWillUpdate"));
+    onDidUpdate(() => print("onDidUpdate"));
+
+    listenHooks([count, maxCount, reverse]);
   }
 
   bool get isOdd => Global.count.value % 2 != 0;
@@ -77,19 +86,19 @@ class GlobalExample extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                ReactterBuilder(
-                  listenHooks: (_) => [Global.flag, Global.maxCount],
+                ReactterBuilder<AppContext>(
+                  listenHooks: (_) => [_.reverse, _.maxCount],
                   builder: (_, context, __) {
                     print('RENDER FLAG');
                     return Text(
-                      Global.flag.value
-                          ? 'Count increment 0 to ${Global.maxCount.value}'
-                          : 'Count decrement ${Global.maxCount.value - 1} to 0',
+                      Global.reverse.value
+                          ? 'Count decrement ${Global.maxCount.value} to 0'
+                          : 'Count increment 0 to ${Global.maxCount.value}',
                     );
                   },
                 ),
                 ReactterBuilder<AppContext>(
-                  listenHooks: (_) => [Global.count],
+                  listenHooks: (_) => [_.count],
                   builder: (appContext, context, __) {
                     print('RENDER COUNT');
                     return Text(

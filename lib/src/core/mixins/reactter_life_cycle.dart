@@ -14,31 +14,31 @@ mixin ReactterLifeCycle {
 
   /// Save a callback on [willMount] event.
   ///
-  /// This event will execute before the dependency widget will mount in the tree.
+  /// This event will trigger before the [ReactterContext] instance will mount in the tree by [ReactterProvider].
   void Function() onWillMount(Function callback) =>
       _onLifeCycleEvent(LifeCycleEvent.willMount, callback);
 
   /// Save a callback on [didMount] event.
   ///
-  /// This event will execute after the dependency widget did mount in the tree.
+  /// This event will trigger after the [ReactterContext] instance did mount in the tree by [ReactterProvider].
   void Function() onDidMount(Function callback) =>
       _onLifeCycleEvent(LifeCycleEvent.didMount, callback);
 
   /// Save a callback on [willUpdate] event.
   ///
-  /// This event will execute before the dependency widget will update in the tree.
+  /// This event will trigger before the [ReactterContext] instance will update by any [ReactterHook].
   void Function() onWillUpdate(Function callback) =>
       _onLifeCycleEvent(LifeCycleEvent.willUpdate, callback);
 
   /// Save a callback on [didUpdate] event.
   ///
-  /// This event will execute after the dependency widget did update in the tree.
+  /// This event will trigger after the [ReactterContext] instance did update by any [ReactterHook].
   void Function() onDidUpdate(Function callback) =>
       _onLifeCycleEvent(LifeCycleEvent.didUpdate, callback);
 
   /// Save a callback on [willUnmount] event.
   ///
-  /// This event will execute when the widget removes from the tree.
+  /// This event will trigger before the [ReactterContext] instance will unmount in the tree by [ReactterProvider].
   void Function() onWillUnmount(Function callback) =>
       _onLifeCycleEvent(LifeCycleEvent.willUnmount, callback);
 

@@ -1,5 +1,6 @@
 // ignore_for_file: avoid_print
 import 'package:example/testing_cases/global_example.dart';
+import 'package:example/testing_cases/nested_use_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:reactter/reactter.dart';
 

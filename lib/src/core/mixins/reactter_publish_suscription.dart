@@ -5,9 +5,6 @@ mixin ReactterPubSub {
   /// Stores all subscribe callbacks
   final Map<PubSubEvent, List<Function>> _subscribers = {};
 
-  /// Stores all unsubscribe callbacks
-  final Map<PubSubEvent, Map<Function, Function>> _unsubscribers = {};
-
   /// Save a subscribe callback
   void subscribe(PubSubEvent event, Function subscriber) {
     _subscribers[event] ??= [];
@@ -16,9 +13,7 @@ mixin ReactterPubSub {
 
   /// Remove a subscribe callback and invoke unsubscribe callback
   void unsubscribe(PubSubEvent event, Function subscriber) {
-    _unsubscribers[event]?[subscriber]?.call();
     _subscribers[event]?.remove(subscriber);
-    _unsubscribers[event]?.remove(subscriber);
   }
 
   /// First, invokes the subscribed callbacks of the willUpdate event.

@@ -17,7 +17,7 @@ class ReactterInheritedProviderScopeElement extends InheritedElement {
 
   bool _updatedShouldNotify = false;
 
-  final List<ReactterPubSub> _dependencies = [];
+  final List<Function> _unsubscribers = [];
 
   @override
   ReactterInheritedProviderScope get widget =>
@@ -125,17 +125,19 @@ class ReactterInheritedProviderScopeElement extends InheritedElement {
 
   /// Adds instance to [_dependencies] and subscribes [markNeedsBuild]
   void dependOnInstance(ReactterPubSub instance) {
+    _unsubscribers.add(() {
+      instance.unsubscribe(PubSubEvent.didUpdate, markNeedsBuild);
+    });
+
     instance.subscribe(PubSubEvent.didUpdate, markNeedsBuild);
-    _dependencies.add(instance);
   }
 
   /// Removes instance from [_dependencies] and unsubscribes [markNeedsBuild]
   void removeDependencies() {
-    for (var i = 0; i < _dependencies.length; i++) {
-      final _isntance = _dependencies[i];
-      _isntance.unsubscribe(PubSubEvent.didUpdate, markNeedsBuild);
+    for (var i = 0; i < _unsubscribers.length; i++) {
+      _unsubscribers[i].call();
     }
 
-    _dependencies.clear();
+    _unsubscribers.clear();
   }
 }

@@ -72,16 +72,6 @@ class ReactterProvider extends ReactterInheritedProvider {
   @protected
   didMount() => _triggerLifeCycleEvent(LifeCycleEvent.didMount);
 
-  /// Executes lifecycle [willUpdate] from every [ReactterContext]
-  @override
-  @protected
-  willUpdate() => _triggerLifeCycleEvent(LifeCycleEvent.willUpdate);
-
-  /// Executes lifecycle [didUpdate] from every [ReactterContext]
-  @override
-  @protected
-  didUpdate() => _triggerLifeCycleEvent(LifeCycleEvent.didUpdate);
-
   /// Destroys every instance of [contexts]
   /// and executes it's lifecycle [willUnmount].
   @override

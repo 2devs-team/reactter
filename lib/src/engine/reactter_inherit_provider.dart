@@ -1,4 +1,7 @@
+// ignore_for_file: invalid_use_of_protected_member
+
 import 'package:flutter/widgets.dart';
+import '../core/mixins/reactter_publish_suscription.dart';
 import 'reactter_inherit_provider_scope.dart';
 import 'reactter_inherit_provider_scope_element.dart';
 
@@ -26,7 +29,6 @@ abstract class ReactterInheritedProvider extends StatelessWidget {
       builder != null || child != null,
       '$runtimeType must used builder and/or child',
     );
-    bool _isMounted = false;
 
     return ReactterInheritedProviderScope(
       owner: this,
@@ -40,32 +42,16 @@ abstract class ReactterInheritedProvider extends StatelessWidget {
 
                 _inheritedElement.removeDependencies();
 
-                if (_isMounted) {
-                  willUpdate();
-                }
-
-                final _widget = builder!(context, child);
-
-                if (_isMounted) {
-                  didUpdate();
-                }
-
-                _isMounted = true;
-
-                return _widget;
+                return builder!(context, child);
               },
             )
           : child!,
     );
   }
 
-  willMount();
+  void willMount();
 
-  didMount();
+  void didMount();
 
-  willUpdate();
-
-  didUpdate();
-
-  willUnmount();
+  void willUnmount();
 }
