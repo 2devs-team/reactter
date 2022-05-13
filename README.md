@@ -1,15 +1,16 @@
-A light state management like React syntax.
+**A light and powerful state management like React syntax.**
 
 By using `Reactter` you get:
 
 ## Features
 
-- Use familiarized syntax such as [UseState](#UseState), [UseEffect](#UseEffect), [UseContext](#ReactterProvider-and-UseContext), [Custom hooks](#Custom-hooks) and more.
+- Use familiarized React syntax such as [UseState](#UseState), [UseEffect](#UseEffect), [UseContext](#ReactterProvider-and-UseContext), [Custom hooks](#Custom-hooks) and more.
 - Create custom hooks to reuse functionality.
 - Reduce significantly boilerplate code.
 - Improve code readability.
 - Unidirectional data flow.
 - An easy way to share global information in the application.
+- Control re-render widget tree
 
 ## Usage
 
@@ -24,7 +25,7 @@ class AppContext extends ReactterContext {}
 ```
 
 > **RECOMMENDED:**
-> Name class with `Context` suffix, for easy locatily
+> Name class with `Context` suffix, for easy locatily.
 
 ### Using `UseState` hook
 
@@ -33,7 +34,7 @@ class AppContext extends ReactterContext {}
 > **INFO:**
 > The different with other management state is that not use `Stream`. We know that `Stream` consumes a lot of memory and we had decided to use the simple publish-subscribe pattern.
 
-You can add it on any part of class, with context(`this`) argument(**recommended**):
+You can add it on any part of class, with context(`this`) argument(**RECOMMENDED**):
 
 ```dart
 class AppContext extends ReactterContext {
@@ -54,7 +55,7 @@ class AppContext extends ReactterContext {
 ```
 
 > **NOTE:**
-> If you add `UseState` with `context` argument, not need to add it on `listenHooks`, but is required declarate it as `late`
+> If you add `UseState` with `context` argument, not need to add it on `listenHooks`, but is required declarate it as `late`.
 
 `UseState` exposes `value` property that helps to read and writter its state:
 
@@ -75,6 +76,7 @@ A `UseState` notifies that its state has changed when the previous state is diff
 > **NOTE:**
 > If its state is a `Object`, not detect internal changes, only when states is another `Object`.
 >
+> **NOTE:**
 > If you want to force notify, execute `update` method which `UseState` exposes it.
 
 ### Using `UseEffect` hook
@@ -98,46 +100,60 @@ class AppContext extends ReactterContext {
 
 > **NOTE:**
 > If you don't add `context` argument to `UseEffect`, the `callback` don't execute on lifecycle `willMount`, and the `cleanup` don't execute on lifecycle `willUnmount`.
+>
+> **NOTE:**
+> If you want to execute a `UseEffect` immediately, use `UseEffect.dispatchEffect` instead of the `context` argument.
 
 ### Wrap with `ReactterProvider` and `UseContext`
 
-`ReactterProvider` is a widget that helps exposes the `ReactterContext` which is defined on `UseContext`.
+`ReactterProvider` is a widget that helps exposes the `ReactterContext` that are defined using `UseContext` on `contexts` parameter.
 
 ```dart
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+class MyWidget extends StatelessWidget {
+  const MyWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Reactter example',
-      home: Scaffold(
-        body: ReactterProvider(
-          contexts: [
-            UseContext(() => AppContext()),
-          ],
-          builder: (context, _) {
-            final appContext = context.of<AppContext>();
-            final count = appContext.count.value;
-            final isOdd = appContext.isOdd.value;
-
-            return Text("$count is ${isOdd ? 'odd' : 'even'}");
+    return ReactterProvider(
+      contexts: [
+        UseContext(
+          () => AppContext(),
+        ),
+        UseContext(
+          () => ConfigContext(),
+          id: 'App',
+          onInit: (appConfigContext) {
+            appConfigContext.config.value = 'new state';
           },
         ),
-      ),
+        UseContext(
+          () => ConfigContext(),
+          id: 'User'
+        ),
+      ],
+      builder: (context, _) {
+        final appContext = context.of<AppContext>();
+        final appConfigContext = context.ofId<ConfigContext>('App');
+        final userConfigContext = context.ofId<ConfigContext>('User');
+
+        return [...]
+      },
     );
   }
 }
 ```
 
 > **RECOMMENDED:**
-> Don't use class's constructor with parameters. Use `onInit` method which `UseContext` exposes for access its instance and putin data.
+> Don't use `ReactterContext` class with parameters to prevent conflicts. Instead of it, use `onInit` method which `UseContext` exposes for access its instance and put the data you need.
+>
+> **NOTE:**
+> You can use `id` parameter of `UseContext` for create a different instance of same `ReactterContext` class.
 
 ### Access to `ReactterContext`
 
-Reactter provides additional methods to `BuildContext` for access your `ReactterContext`.
+Reactter provides additional methods to `BuildContext` for access your `ReactterContext`. These are:
 
-- **`context.of`**: Get the `ReactterContext`'s instance specify as type and watch for any state or states defined on first parameter for re-render widget on `BuildContext` scope.
+- **`context.of<T>`**: Get the `ReactterContext` instance of the specified type and watch context's states or states defined on first parameter to control the widget re-render within the `BuildContext` scope.
 
 ```dart
 final watchContext = context.of<WatchContext>();
@@ -146,7 +162,7 @@ final watchHooksContext = context.of<WatchHooksContext>(
 );
 ```
 
-- **`context.ofId`**: Get the `ReactterContext`'s instance specify as type, with the id defined on first parameter and watch for any state or states defined on second parameter for re-render widget on `BuildContext` scope.
+- **`context.ofId<T>`**: Get the `ReactterContext` instance of the specified type and id defined on first parameter and watch context's states or states defined on second parameter to control the widget re-render within the `BuildContext` scope.
 
 ```dart
 final watchIdContext = context.ofId<WatchIdContext>('id');
@@ -156,17 +172,20 @@ final watchHooksIdContext = context.ofId<WatchHooksIdContext>(
 );
 ```
 
-- **`context.ofStatic`**: Get the `ReactterContext`'s instance specify as type.
+- **`context.ofStatic<T>`**: Get the `ReactterContext` instance of the specified type.
 
 ```dart
 final readContext = context.ofStatic<ReadContext>();
 ```
 
-- **`context.ofIdStatic`**: Get the `ReactterContext`'s instance specify as type, with the id defined on first parameter.
+- **`context.ofIdStatic<T>`**: Get the `ReactterContext` instance of the specified type and id defined on first parameter.
 
 ```dart
 final readIdContext = context.ofIdStatic<ReadIdContext>('id');
 ```
+
+> **NOTE:**
+> These methods mentioned above uses `ReactterProvider.contextOf<T>`
 
 ### Lifecycle of `ReactterContext`
 
@@ -186,18 +205,18 @@ class AppContext extends ReactterContext {
 ```
 
 1. **Initialized**: Class's constructor is the first one that is executed after the instance has been created.
-2. **`onWillMount`**: This event will execute before the `ReactterProvider` will mount in the tree.
-3. **`onDidMount`**: This event will execute after the `ReactterProvider` did mount in the tree.
-4. **`onWillUpdate`**: This event will execute after the Widget which depend `BuildContext` that watch `ReactterContext` will update.
-5. **`onDidUpdate`**: This event will execute after the Widget which depend `BuildContext` that watch `ReactterContext` did update.
-6. **`onWillUnmount`**: This event will execute after the `ReactterProvider` will unmount in the tree.
+2. **`onWillMount`**: Will trigger before the `ReactterContext` instance will mount in the tree by `ReactterProvider`.
+3. **`onDidMount`**: Will trigger after the `ReactterContext` instance did mount in the tree by `ReactterProvider`.
+4. **`onWillUpdate`**: Will trigger before the `ReactterContext` instance will update by any `ReactterHook`.
+5. **`onDidUpdate`**: Will trigger after the `ReactterContext` instance did update by any `ReactterHook`.
+6. **`onWillUnmount`**: Will trigger before the `ReactterContext` instance will unmount in the tree by `ReactterProvider`.
 
 > **NOTE:**
 > `UseContext` has `onInit` parameter which is execute between constructor and `onWillMount`, you can use to access to instance and putin data before mount.
 
 ### Control re-render with `ReactterBuilder`
 
-`ReactterBuilder` has the same functionality as `context.of` but isolates the widget which is affected by re-render.
+`ReactterBuilder` has the same functionality as `context.of[...]` but isolates the widget which is affected by re-render.
 
 ```dart
 ReactterProvider(
@@ -215,7 +234,7 @@ ReactterProvider(
         Text("stateA: ${appContextA.stateA.value}"),
         ReactterBuilder<AppContext>(
           listenHooks: (appContextB) => [appContextB.stateB],
-          builder: (_, appContextB, __){
+          builder: (appContextB, _, __){
             // This builder is re-render when change stateB
             return Text("stateB: ${appContextB.stateB.value}");
           },
@@ -227,6 +246,8 @@ ReactterProvider(
 ```
 
 ### Create a `ReactterComponent`
+
+`ReactterComponent` is a `StatelessWidget` class that wrap `render` with `ReactterProvider` and `UseContext`.
 
 ```dart
 class CounterComponent extends ReactterComponent<AppContext> {
@@ -250,6 +271,10 @@ class CounterComponent extends ReactterComponent<AppContext> {
 
 ### Using `UseAsyncState` hook
 
+`UseAsyncState` is a hook with the same functionality as `UseState` but providing a `asyncValue` which it will be obtain when execute `resolve` method.
+
+This is a example:
+
 ```dart
 class AppContext extends ReactterContext {
   late final state = UseAsyncState<String?>(null, _resolveState, this);
@@ -270,6 +295,8 @@ class AppContext extends ReactterContext {
   }
 }
 ```
+
+`UseAsyncState` provides `when` method, which can be used for get a widget depending of it's state, like that:
 
 ```dart
 ReactterProvider(
@@ -294,25 +321,35 @@ ReactterProvider(
 
 ### Custom hook
 
+For create a custom hook, you should be crear a class that extends of `ReactterHook`.
+
+This is a example:
+
 ```dart
 class UseCount extends ReactterHook {
-  final int _initial;
+  bool _count = 0;
 
-  late final _count = UseState(_initial, this);
-
-  int get value => _count.value;
+  int get value => _count;
 
   UseCount(int initial, [ReactterContext? context])
-      : _initial = initial,
+      : _count = initial,
         super(context);
 
-  int increment() => _count.value += 1;
-  int decrement() => _count.value -= 1;
+  int increment() => update(() => _count += 1);
+  int decrement() => update(() => _count -= 1);
 }
 ```
 
+> **RECOMMENDED:**
+> Name class with `Use` preffix, for easy locatily.
+>
+> **NOTE:**
+> `ReactterHook` provides `update` method which notify to `context` that has changed.
+
+and use it like that:
+
 ```dart
-class AppContext extends ReactterHook {
+class AppContext extends ReactterContext {
   late final count = UseCount(0, this);
 
   AppContext() {
@@ -328,11 +365,15 @@ class AppContext extends ReactterHook {
 
 ### Global state
 
+The reactter's hooks can be defined as static for access its as global way:
+
 ```dart
 class Global {
   static final flag = UseState(false);
   static final count = UseCount(0);
 
+  // Create a class factory for run it as singleton way.
+  // This way, the initial logic can be executed.
   static final Global _inst = Global._init();
   factory Global() => _inst;
 
@@ -361,12 +402,15 @@ class Global {
 }
 ```
 
+This is a example that how you could use it:
+
 ```dart
 class AppContext extends ReactterContext {
   late final isOdd = UseState(false, this);
 
   AppContext() {
-    Global(); // Alway invoke Global's factory
+    // It's need to instance it for can execute Global._init
+    Global();
 
     UseEffect((){
       isOdd.value = Global.count.value % 2 != 0;
@@ -375,43 +419,22 @@ class AppContext extends ReactterContext {
 }
 ```
 
-# Roadmap
+> **NOTE:**
+> If you want to execute some logic when initialize the global class you need to use the class factory and then instance it to run as singleton way.
 
-We are working in a documentation page aswell creating Youtube tutorials.
+## Roadmap
 
 We want keeping adding features for `Reactter`, those are some we have in mind order by priority:
 
-**V3**
+### V3
 
-- **Tests**
+- Async context.
 
-- Make `Reactter` easy to test.
+- Make `Reactter` easy for debugging.
 
-**ReactterComponents (new package)**
+- Structure proposal for large projects.
 
-- Buttons (Almost ready for release)
-
-- App Bars
-
-- Bottom Bars
-
-- Snackbars
-
-- Drawers
-
-- Floating actions
-
-- Modals
-
-- Inputs
-
-<br><br>
-
-# WARNING
-
-## **[Reactter](https://github.com/Leoocast/reactter)** has just left development status, you can use it in production with small applications but with caution, we are working to make it more testable and consider all possible situations of state management. The API could changes in the future due the [Roadmap](#Roadmap)
-
-<br>
+- Improve performance and do benchmark.
 
 # Contribute
 
@@ -437,14 +460,10 @@ You can:
 
 Any idea is welcome!
 
-<br><br>
-
 # Authors
 
 - **[Leo Castellanos](https://twitter.com/leoocast10)** - <leoocast.dev@gmail.com>
 
 - **[Carlos León](_blank)** - <carleon.dev@gmail.com>
-
-<br>
 
 ## Copyright (c) 2022 **[2devs.io](https://2devs.io/)**
