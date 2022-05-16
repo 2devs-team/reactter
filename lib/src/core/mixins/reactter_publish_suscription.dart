@@ -16,21 +16,23 @@ mixin ReactterPubSub {
     _subscribers[event]?.remove(subscriber);
   }
 
+  /// Invokes the subscribed callbacks of event given
+  void publish(PubSubEvent event) {
+    final subscribersEvent = _subscribers[event] ?? [];
+
+    for (var i = 0; i < subscribersEvent.length; i++) {
+      subscribersEvent[i].call();
+    }
+  }
+
   /// First, invokes the subscribed callbacks of the willUpdate event.
   /// Second, invokes the callback entered by parameter.
   /// And finally, invokes the subscribed callbacks of the didUpdate event.
   void update([Function? callback]) {
-    final willUpdateSubscribers = _subscribers[PubSubEvent.willUpdate] ?? [];
-    final didUpdateSubscribers = _subscribers[PubSubEvent.didUpdate] ?? [];
-
-    for (var i = 0; i < willUpdateSubscribers.length; i++) {
-      willUpdateSubscribers[i].call();
-    }
+    publish(PubSubEvent.willUpdate);
 
     callback?.call();
 
-    for (var i = 0; i < didUpdateSubscribers.length; i++) {
-      didUpdateSubscribers[i].call();
-    }
+    publish(PubSubEvent.didUpdate);
   }
 }

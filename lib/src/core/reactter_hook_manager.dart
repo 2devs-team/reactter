@@ -38,14 +38,22 @@ class ReactterHookManager with ReactterPubSub {
 
   /// Suscribes to all [hooks] given.
   void listenHooks(List<ReactterHook> hooks) {
-    for (final _hook in hooks) {
-      if (_hooks.contains(_hook)) {
+    for (final hook in hooks) {
+      if (_hooks.contains(hook)) {
         return;
       }
 
-      _hooks.add(_hook);
+      _hooks.add(hook);
 
-      _hook.subscribe(PubSubEvent.didUpdate, update);
+      hook.subscribe(
+        PubSubEvent.willUpdate,
+        () => publish(PubSubEvent.willUpdate),
+      );
+
+      hook.subscribe(
+        PubSubEvent.didUpdate,
+        () => publish(PubSubEvent.didUpdate),
+      );
     }
   }
 }
