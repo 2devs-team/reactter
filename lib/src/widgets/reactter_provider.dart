@@ -101,31 +101,31 @@ class ReactterProvider extends ReactterInheritedProvider {
     SelectorAspect? aspect,
     bool listen = true,
   }) {
-    final _inheritedElement = _inheritedElementOf(context);
-    final _instance = _getInstance<T>(context, id);
+    final inheritedElement = _inheritedElementOf(context);
+    final instance = _getInstance<T>(context, id);
 
-    if (!listen || _instance == null) {
-      return _instance as T;
+    if (!listen || instance == null) {
+      return instance as T;
     }
 
     if (listenHooks != null) {
-      final _hooks = listenHooks(_instance);
+      final hooks = listenHooks(instance);
 
-      for (var i = 0; i < _hooks.length; i++) {
-        _inheritedElement?.dependOnInstance(_hooks[i]);
+      for (var i = 0; i < hooks.length; i++) {
+        inheritedElement?.dependOnInstance(hooks[i]);
       }
     } else {
-      _inheritedElement?.dependOnInstance(_instance);
+      inheritedElement?.dependOnInstance(instance);
     }
 
     if (aspect != null) {
-      context.dependOnInheritedElement(_inheritedElement!, aspect: aspect);
+      context.dependOnInheritedElement(inheritedElement!, aspect: aspect);
     } else {
       context
           .dependOnInheritedWidgetOfExactType<ReactterInheritedProviderScope>();
     }
 
-    return _instance;
+    return instance;
   }
 
   /// Obtain the [instance] of [T] from nearest ancestor [ReactterProvider]
@@ -133,22 +133,22 @@ class ReactterProvider extends ReactterInheritedProvider {
     T? instance;
 
     context.visitAncestorElements((parent) {
-      final _inheritedElement = parent.getElementForInheritedWidgetOfExactType<
+      final inheritedElement = parent.getElementForInheritedWidgetOfExactType<
               ReactterInheritedProviderScope>()
           as ReactterInheritedProviderScopeElement?;
 
-      if (_inheritedElement?.widget.owner is! ReactterProvider) return true;
+      if (inheritedElement?.widget.owner is! ReactterProvider) return true;
 
-      final _contexts =
-          (_inheritedElement?.widget.owner as ReactterProvider?)?.contexts;
+      final contexts =
+          (inheritedElement?.widget.owner as ReactterProvider?)?.contexts;
 
-      if (_contexts == null) return true;
+      if (contexts == null) return true;
 
-      for (var i = 0; i < _contexts.length; i++) {
-        final _useContext = _contexts[i];
+      for (var i = 0; i < contexts.length; i++) {
+        final useContext = contexts[i];
 
-        if (_useContext.instance is T && _useContext.id == id) {
-          instance = _useContext.instance as T?;
+        if (useContext.instance is T && useContext.id == id) {
+          instance = useContext.instance as T?;
           break;
         }
       }

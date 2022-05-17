@@ -85,7 +85,7 @@ class UseFutureExample extends StatelessWidget {
                   height: 15,
                 ),
                 userConsumer.userName.when(
-                  standby: (value) => Text("Standby: " + value),
+                  standby: (value) => Text("Standby: $value"),
                   loading: () => const CircularProgressIndicator(),
                   done: (value) => Text(value),
                   error: (error) => const Text(

@@ -1,7 +1,6 @@
 // ignore_for_file: invalid_use_of_protected_member
 
 import 'package:flutter/widgets.dart';
-import '../core/mixins/reactter_publish_suscription.dart';
 import 'reactter_inherit_provider_scope.dart';
 import 'reactter_inherit_provider_scope_element.dart';
 
@@ -35,12 +34,12 @@ abstract class ReactterInheritedProvider extends StatelessWidget {
       child: builder != null
           ? Builder(
               builder: (context) {
-                final _inheritedElement =
+                final inheritedElement =
                     context.getElementForInheritedWidgetOfExactType<
                             ReactterInheritedProviderScope>()
                         as ReactterInheritedProviderScopeElement;
 
-                _inheritedElement.removeDependencies();
+                inheritedElement.removeDependencies();
 
                 return builder!(context, child);
               },

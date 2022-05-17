@@ -15,9 +15,7 @@ class ReactterInstance<T> {
   int nRunning = 0;
 
   ReactterInstance(this.id);
-  ReactterInstance.withBuilder(this.id, ContextBuilder<T> _builder) {
-    builder = _builder;
-  }
+  ReactterInstance.withBuilder(this.id, this.builder);
 
   @override
 
@@ -30,10 +28,10 @@ class ReactterInstance<T> {
 
   @override
   String toString() {
-    final _id = id != null ? "[id='$id']" : "";
-    final _hashCode = instance != null ? "(${instance.hashCode})" : "";
+    final id = this.id != null ? "[id='${this.id}']" : "";
+    final hashCode = instance != null ? "(${instance.hashCode})" : "";
 
-    return '$type$_id$_hashCode';
+    return '$type$id$hashCode';
   }
 }
 
@@ -59,29 +57,29 @@ class ReactterFactory {
     ContextBuilder<T> builder, [
     String? id,
   ]) {
-    final _instance = ReactterInstance<T>.withBuilder(id, builder);
+    final instance = ReactterInstance<T>.withBuilder(id, builder);
 
-    if (_reactterFactory.instances.contains(_instance)) {
-      Reactter.log('Instance "$_instance" already registered');
+    if (_reactterFactory.instances.contains(instance)) {
+      Reactter.log('Instance "$instance" already registered');
       return false;
     }
 
-    _reactterFactory.instances.add(_instance);
-    Reactter.log('Instance "$_instance" has been registered');
+    _reactterFactory.instances.add(instance);
+    Reactter.log('Instance "$instance" has been registered');
     return true;
   }
 
   /// Remove a builder function from [instances].
   void unregistered<T extends Object>(String? id) {
-    final _instance = ReactterInstance<T>(id);
+    final instance = ReactterInstance<T>(id);
 
-    if (!_reactterFactory.instances.contains(_instance)) {
-      Reactter.log('Instance "$_instance" don\'t exist');
+    if (!_reactterFactory.instances.contains(instance)) {
+      Reactter.log('Instance "$instance" don\'t exist');
       return;
     }
 
-    _reactterFactory.instances.remove(_instance);
-    Reactter.log('Instance "$_instance" has been unregistered');
+    _reactterFactory.instances.remove(instance);
+    Reactter.log('Instance "$instance" has been unregistered');
   }
 
   /// Obtains a instance of [T] given.
@@ -91,26 +89,26 @@ class ReactterFactory {
   /// Creates the instance if is not create but is already registered in [instances]
   T? getInstance<T extends Object>([String? id]) {
     try {
-      final _instanceToFind = ReactterInstance<T>(id);
-      final _instance = _reactterFactory.instances
-              .firstWhere((instance) => instance == _instanceToFind)
+      final instanceToFind = ReactterInstance<T>(id);
+      final instance = _reactterFactory.instances
+              .firstWhere((instance) => instance == instanceToFind)
           as ReactterInstance<T>;
 
-      if (_instance.instance == null) {
-        _instance.instance = _instance.builder?.call();
+      if (instance.instance == null) {
+        instance.instance = instance.builder?.call();
 
         Reactter.log(
-          'Instance "$_instance" has been created',
+          'Instance "$instance" has been created',
         );
       } else {
         Reactter.log(
-          'Instance "$_instance" already created',
+          'Instance "$instance" already created',
         );
       }
 
-      _instance.nRunning += 1;
+      instance.nRunning += 1;
 
-      return _instance.instance;
+      return instance.instance;
     } catch (e) {
       Reactter.log(
         'Builder for instance "$T" is not registered. You should register instance with "Reactter.factory.register<$T>(() => $T())" or "UseContext(() => $T())"',
@@ -124,17 +122,17 @@ class ReactterFactory {
   /// Deletes the instance from [instances] but keep the [builder] in memory.
   void deleted(Object instance) {
     try {
-      final _instance =
+      final instanceFinded =
           _reactterFactory.instances.firstWhere((inst) => inst == instance);
 
-      _instance.nRunning -= 1;
+      instanceFinded.nRunning -= 1;
 
-      if (_instance.nRunning < 1) {
-        final _log = 'Instance "$_instance" has been deleted';
+      if (instanceFinded.nRunning < 1) {
+        final log = 'Instance "$instance" has been deleted';
 
-        _instance.instance = null;
+        instanceFinded.instance = null;
 
-        Reactter.log(_log);
+        Reactter.log(log);
       }
     } catch (e) {
       Reactter.log(

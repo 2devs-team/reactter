@@ -43,7 +43,7 @@ class CounterComponent extends ReactterComponent<AppContext> {
       children: [
         Text("Counter value * 2: ${ctx.counterByTwo.value}"),
         const SizedBox(height: 12),
-        Text("Counter value: " + ctx.counter.value.toString()),
+        Text("Counter value: ${ctx.counter.value}"),
       ],
     );
   }
@@ -85,8 +85,8 @@ class ReactterComponentTest extends StatelessWidget {
                     'resetButton',
                   ),
                   backgroundColor: Colors.red.shade800,
-                  child: const Icon(Icons.clear),
                   onPressed: appContext.reset,
+                  child: const Icon(Icons.clear),
                 ),
               ),
               FloatingActionButton(
@@ -94,8 +94,8 @@ class ReactterComponentTest extends StatelessWidget {
                   //Testing porpuses, Reactter don't need it.
                   'addButton',
                 ),
-                child: const Icon(Icons.add),
                 onPressed: appContext.increment,
+                child: const Icon(Icons.add),
               ),
             ],
           ),

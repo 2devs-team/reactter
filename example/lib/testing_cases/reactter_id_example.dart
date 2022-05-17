@@ -7,8 +7,8 @@ class AppContext extends ReactterContext {
 
   late final counter = UseState<int>(5, this);
 
-  AppContext([_data = "Default"]) {
-    data.value = _data;
+  AppContext([String data = "Default"]) {
+    this.data.value = data;
   }
 
   increment() {
@@ -111,14 +111,14 @@ class ReactterIdExample extends StatelessWidget {
                       children: [
                         FloatingActionButton(
                           backgroundColor: Colors.red.shade800,
-                          child: const Icon(Icons.clear),
                           onPressed: mainContext.reset,
                           mini: true,
+                          child: const Icon(Icons.clear),
                         ),
                         FloatingActionButton(
-                          child: const Icon(Icons.add),
                           onPressed: mainContext.increment,
                           mini: true,
+                          child: const Icon(Icons.add),
                         ),
                       ],
                     ),

@@ -48,12 +48,12 @@ class UseContext<T extends ReactterContext> extends UseContextAbstraction {
   bool isRoot = false;
 
   /// Create the instance defined
-  /// on firts parameter `instanceBuilder` when [UseContext] is called.
+  /// on firts parameter [instanceBuilder] when [UseContext] is called.
   @protected
   final bool init;
 
   /// Invoked when instance defined
-  /// on firts parameter `instanceBuilder` is created
+  /// on firts parameter [instanceBuilder] is created
   @protected
   final void Function(T instance)? onInit;
 
@@ -90,7 +90,7 @@ class UseContext<T extends ReactterContext> extends UseContextAbstraction {
     }
   }
 
-  /// Executes when the `instance` is no longer required
+  /// Executes when the [instance] is no longer required
   @override
   @protected
   destroy() {

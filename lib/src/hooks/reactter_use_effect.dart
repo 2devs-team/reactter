@@ -84,10 +84,10 @@ class UseEffect extends ReactterHook {
   }
 
   void _onSubscribe() {
-    final _returnCallback = callback();
+    final returnCallback = callback();
 
-    if (_returnCallback is Function) {
-      _unsubscribeCallback = _returnCallback;
+    if (returnCallback is Function) {
+      _unsubscribeCallback = returnCallback;
     }
   }
 

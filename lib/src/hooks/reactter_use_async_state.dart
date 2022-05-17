@@ -47,9 +47,9 @@ class UseAsyncState<T> extends UseState<T> {
 
   bool get isLoading => _loading;
   bool _loading = false;
-  set _isLoading(bool _value) {
-    _loading = _value;
-    if (!_value) return;
+  set _isLoading(bool value) {
+    _loading = value;
+    if (!value) return;
     update();
   }
 
@@ -57,22 +57,26 @@ class UseAsyncState<T> extends UseState<T> {
   Object? get error => _errorObject;
   bool _hasError = false;
   Object? _errorObject;
-  set _error(Object _value) {
-    _errorObject = _value;
+  set _error(Object value) {
+    _errorObject = value;
     _hasError = true;
   }
 
   /// Execute [asyncValue] to resolve [value].
-  resolve() async {
+  Future<T?> resolve() async {
     _clear();
     _isLoading = true;
 
     try {
-      final _value = await asyncValue();
+      final value = await asyncValue();
       _isDone = true;
-      value = _value;
+      this.value = value;
+
+      return value;
     } catch (e) {
       _error = e;
+
+      return null;
     } finally {
       _isLoading = false;
     }

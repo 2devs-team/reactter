@@ -1,6 +1,5 @@
 // ignore_for_file: avoid_print
 import 'package:example/testing_cases/global_example.dart';
-import 'package:example/testing_cases/nested_use_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:reactter/reactter.dart';
 
@@ -51,7 +50,7 @@ class ReactterExample extends StatelessWidget {
               children: [
                 Text("Counter value * 2: ${appContext.counterByTwo.value}"),
                 const SizedBox(height: 12),
-                Text("Counter value: " + appContext.counter.value.toString()),
+                Text("Counter value: ${appContext.counter.value}"),
               ],
             ),
           ),
@@ -66,8 +65,8 @@ class ReactterExample extends StatelessWidget {
                     'resetButton',
                   ),
                   backgroundColor: Colors.red.shade800,
-                  child: const Icon(Icons.clear),
                   onPressed: appContext.reset,
+                  child: const Icon(Icons.clear),
                 ),
               ),
               FloatingActionButton(
@@ -75,8 +74,8 @@ class ReactterExample extends StatelessWidget {
                   //Testing porpuses, Reactter don't need it.
                   'addButton',
                 ),
-                child: const Icon(Icons.add),
                 onPressed: appContext.increment,
+                child: const Icon(Icons.add),
               ),
             ],
           ),

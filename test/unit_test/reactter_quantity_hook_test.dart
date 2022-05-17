@@ -44,11 +44,11 @@ void main() {
 mixin UseQuantity {
   final quantity = UseState<int>(0);
 
-  void incrementQuantity(int _quantity) =>
-      quantity.value = quantity.value + _quantity;
+  void incrementQuantity(int quantity) =>
+      this.quantity.value = this.quantity.value + quantity;
 
-  void decrementQuantity(int _quantity) =>
-      quantity.value = quantity.value - _quantity;
+  void decrementQuantity(int quantity) =>
+      this.quantity.value = this.quantity.value - quantity;
 }
 
 class Product with UseQuantity {
