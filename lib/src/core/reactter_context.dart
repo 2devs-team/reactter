@@ -34,12 +34,8 @@ import 'reactter_hook_manager.dart';
 /// ```
 abstract class ReactterContext extends ReactterHookManager
     with ReactterLifeCycle {
-  Function? _unsubscribeOnDidMount;
-  Function? _unsubscribeOnWillUnmount;
-
   ReactterContext() {
-    _unsubscribeOnDidMount = onDidMount(_onDidMount);
-    _unsubscribeOnWillUnmount = onWillUnmount(_onWillUnmount);
+    onDidMount(_onDidMount);
   }
 
   _onDidMount() {
@@ -50,11 +46,4 @@ abstract class ReactterContext extends ReactterHookManager
   _onWillUpdate() => executeEvent(LifeCycleEvent.willUpdate);
 
   _onDidUpdate() => executeEvent(LifeCycleEvent.didUpdate);
-
-  _onWillUnmount() {
-    unsubscribe(PubSubEvent.willUpdate, _onWillUpdate);
-    unsubscribe(PubSubEvent.didUpdate, _onDidUpdate);
-    _unsubscribeOnDidMount?.call();
-    _unsubscribeOnWillUnmount?.call();
-  }
 }
