@@ -24,4 +24,4 @@ typedef WidgetCreatorErrorHandler = Widget Function(Object? error);
 
 typedef LogWriterCallback = void Function(String text, {bool isError});
 
-typedef AsyncFunction<T> = Future<T> Function();
+typedef AsyncFunction<T, A> = Future<T> Function([A args]);

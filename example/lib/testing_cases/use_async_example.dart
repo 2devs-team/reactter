@@ -11,10 +11,9 @@ class Global {
 class UserContext extends ReactterContext {
   late final data = UseState<String?>(null, this);
 
-  late final userName =
-      UseAsyncState<String>("My username", fillUsername, this);
+  late final userName = UseAsyncState("My username", fillUsername, this);
 
-  Future<String> fillUsername() async {
+  Future<String> fillUsername([_]) async {
     await Future.delayed(const Duration(milliseconds: 2000));
 
     print("->>> useState");

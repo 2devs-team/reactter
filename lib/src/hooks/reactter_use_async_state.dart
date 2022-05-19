@@ -29,7 +29,7 @@ import 'reactter_use_state.dart';
 ///   error: (error) => const Text("Unhandled exception: ${error}"),
 /// );
 /// ```
-class UseAsyncState<T> extends UseState<T> {
+class UseAsyncState<T, A> extends UseState<T> {
   UseAsyncState(
     initial,
     this.asyncValue, [
@@ -40,7 +40,7 @@ class UseAsyncState<T> extends UseState<T> {
 
   /// Works as a the [value] initializer.
   /// Need to call [resolve] to execute.
-  final AsyncFunction<T> asyncValue;
+  final AsyncFunction<T, A> asyncValue;
 
   bool get isDone => _isDone;
   bool _isDone = false;
@@ -63,12 +63,18 @@ class UseAsyncState<T> extends UseState<T> {
   }
 
   /// Execute [asyncValue] to resolve [value].
-  Future<T?> resolve() async {
+  Future<T?> resolve([A? arg]) async {
     _clear();
     _isLoading = true;
 
     try {
-      final value = await asyncValue();
+      T value;
+      if (arg == null && null is! A) {
+        value = await asyncValue();
+      } else {
+        value = await asyncValue(arg as A);
+      }
+
       _isDone = true;
       this.value = value;
 
