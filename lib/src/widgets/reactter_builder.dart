@@ -29,7 +29,7 @@ class ReactterBuilder<T extends ReactterContext?> extends StatelessWidget {
   final String? id;
 
   /// Watchs specific hooks for re-render
-  final ListenHooks? listenHooks;
+  final ListenHooks<T>? listenHooks;
 
   /// Provides a widget witch render one time.
   ///
