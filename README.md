@@ -10,7 +10,7 @@ By using `Reactter` you get:
 - Improve code readability.
 - Unidirectional data flow.
 - An easy way to share global information in the application.
-- Control re-render widget tree
+- Control re-render widget tree.
 
 ## Usage
 
@@ -277,24 +277,25 @@ This is a example:
 
 ```dart
 class AppContext extends ReactterContext {
-  late final state = UseAsyncState<String?>(null, _resolveState, this);
+  late final state = UseAsyncState<String?, Data>(null, _resolveState, this);
 
   AppContext() {
     _init();
   }
 
   Future<void> _init() async {
-    // state.value = null;
-    await state.resolve();
-    // state.value = "state resolved by api"
+    await state.resolve(Data(prop: true, prop2: "test"));
+    print("State resolved with: ${state.value}");
   }
 
-  Future<String> _resolveState() async {
-    // api return => "state resolved by api"
-    return await api.getState();
+  Future<String> _resolveState([Data arg]) async {
+    return await api.getState(arg.prop, arg.prop2);
   }
 }
 ```
+
+> **NOTE:**
+> If you want send argument to `asyncValue` method, need to defined a type arg which its send from `resolve` method. Like example shown above, which type argument send is `Data` class.
 
 `UseAsyncState` provides `when` method, which can be used for get a widget depending of it's state, like that:
 
@@ -429,11 +430,8 @@ We want keeping adding features for `Reactter`, those are some we have in mind o
 ### V3
 
 - Async context.
-
 - Make `Reactter` easy for debugging.
-
 - Structure proposal for large projects.
-
 - Improve performance and do benchmark.
 
 # Contribute
@@ -443,19 +441,12 @@ If you want to contribute don't hesitate to create an issue or pull-request in *
 You can:
 
 - Add a new custom hook.
-
 - Add a new widget.
-
 - Add examples.
-
 - Report bugs.
-
 - Report situations difficult to implement.
-
 - Report an unclear error.
-
 - Report unclear documentation.
-
 - Write articles or make videos teaching how to use **[Reactter](https://github.com/Leoocast/reactter)**.
 
 Any idea is welcome!
