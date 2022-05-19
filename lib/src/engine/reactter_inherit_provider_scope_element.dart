@@ -120,6 +120,7 @@ class ReactterInheritedProviderScopeElement extends InheritedElement {
   @override
   void unmount() {
     widget.owner.willUnmount();
+    removeDependencies();
     super.unmount();
   }
 
