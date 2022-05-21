@@ -36,7 +36,10 @@ abstract class ReactterComponent<T extends ReactterContext>
 
     return ReactterProvider(
       contexts: [
-        UseContext<T>(builder!),
+        UseContext<T>(
+          builder!,
+          id: id,
+        ),
       ],
       builder: (context, _) => render(_getContext(context), context),
     );
