@@ -1,10 +1,5 @@
 name: reactter
-description: A light and powerful state management like React syntax.
-  Reduce significantly boilerplate code.
-  Improve code readability.
-  Unidirectional data flow.
-  An easy way to share global information in the application.
-  Control re-render widget tree.
+description: A light, powerful and reactive state management.
 version: 2.0.0-dev.1
 homepage: https://2devs.io
 license: MIT License

@@ -2,7 +2,7 @@
 <img src="https://raw.githubusercontent.com/Leoocast/reactter/documentation/assets/reactter_logo_full.png" height="100" alt="Reactter" />
 </p>
 
-**A light and powerful state management like React syntax.**
+**A light, powerful and reactive state management.**
 
 By using `Reactter` you get:
 
