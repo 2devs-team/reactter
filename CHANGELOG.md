@@ -1,34 +1,70 @@
 # Reactter by [2devs.io](https://2devs.io)
 
-## [2.0.0-dev.1] -  `Dev Release` `2022-04-19`
+## [2.1.0-dev.1] - `Dev Release` `2022-04-24`
 
 ### Changed
-  * Fix some documentation.
-  * `UseEffect` has lifecycle control of the context.
-  * `UseContext` works with unique ids to create unique instances.
-  * Removed equatable from __#Roadmap__.
+
+- **fix(widgets)**: Send `id` for find `ReactterContext` on `ReactterComponent`.
+- **feat(engine)**:: Remove dependencies when `ReactterProvider` unmount.
+- **refactor(core)**: Remove unneccesaries event listeners from `ReactterContext`.
+- **refactor(core)**: `HookManager` subscribe to `willUpdate` and `didUpdate` event.
+- **refactor(core)**: `WillUpdate` and `DidUpdate` event trigger when its `ReactterHook` update.
+- **refactor(engine)**: Manage dependencies of `ReactterPubSub`
+and `lifecycle` of `ReactterContext`.
+- **refactor(widget)**: Performance as the instance of `context` is listen to mark need build.
+- **refacor(widget)**: Fix `ReactterBuilder`.
+- **refactor(core)**: Improve `UseEffect`
+now the return of callback execute when a hook was change
+or `willUnmount` event was invoke.
+- **refactor(core)**: Improve `lifecycle` events
+now it use as subscription.
+
+### Added
+
+- **docs**: Add more documentation.
+- **tests**: Add tests for `hooks` and `Widgets`.
+- **feat(widget)**: Add type on `listenerHooks` of `ReactterBuilder`.
+- **feat(hooks)**: Add argument to `resolve` method of `UseAsyncState`.
+- **feat(hooks)**: Add `lifecycle` `willUpdate` and `didUpdate`.
+- **feat(widget)**: Add `onInit` to `UseContext`.
+
+## [2.0.0-dev.1] - `Dev Release` `2022-04-19`
+
+### Changed
+
+- Fix some documentation.
+- `UseEffect` has lifecycle control of the context.
+- `UseContext` works with unique ids to create unique instances.
+- Removed equatable from **#Roadmap**.
   
 ### Added
-  * Tests.
-  * `ReactterComponent`.
+
+- Tests.
+- `ReactterComponent`.
 
 ## [1.0.1] -  `2022-03-31`
 
 ### Changed
-  * Fix some documentation.
-  * Removed Utils folder from library.
+
+- Fix some documentation.
+- Removed Utils folder from library.
+
 ### Added
-  * Improve performance with primitive loops in functions.
+
+- Improve performance with primitive loops in functions.
 
 ## [1.0.0] - `Official Release` - `2022-03-31`
 
 ### Changed
-  * Fix some documentation.
-  * Package description (was too short).
-  * Remove unused imports in library.
+
+- Fix some documentation.
+- Package description (was too short).
+- Remove unused imports in library.
+
 ### Added
-  * Documentation
-  * 130 points in pub.dev.
+
+- Documentation
+- 130 points in pub.dev.
 
 ## [1.0.0-dev] - `Dev Release` - `2022-03-31`
 
@@ -100,7 +136,7 @@
     }, [firstName, lastName]);
   ```
 
-  **Note**: UseEffect has to be called inside context constructor.
+-*Note**: UseEffect has to be called inside context constructor.
 
 - **Added custom Hooks**: You can create your own hooks with mixin inherit from `ReactterHook`.
 

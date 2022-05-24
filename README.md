@@ -1,5 +1,5 @@
 <p align="center">
-<img src="https://raw.githubusercontent.com/Leoocast/reactter/documentation/assets/reactter_logo_full.png" height="100" alt="Reactter" />
+<img src="https://raw.githubusercontent.com/2devs-team/reactter/develop/assets/reactter_logo_full.png" height="100" alt="Reactter" />
 </p>
 
 **A light, powerful and reactive state management.**
