@@ -1,5 +1,11 @@
 # Reactter by [2devs.io](https://2devs.io)
 
+## [2.1.0-dev.2] - `Dev Release` `2022-04-25`
+
+### Changed
+
+- **docs**: Fix some documentation.
+
 ## [2.1.0-dev] - `Dev Release` `2022-04-24`
 
 ### Changed
@@ -36,7 +42,7 @@ now it use as subscription.
 - `UseEffect` has lifecycle control of the context.
 - `UseContext` works with unique ids to create unique instances.
 - Removed equatable from **#Roadmap**.
-  
+
 ### Added
 
 - Tests.
@@ -70,9 +76,8 @@ now it use as subscription.
 
 ### Changed
 
-- **No need package dependencies**: We decided to remove all dependencies and create a new state management from scratch.  
-
-- **Controller now is Context**: `ReactterController` has been replaced by `ReactterContext`, which are the classes that going to manage our states.  
+- **No need package dependencies**: We decided to remove all dependencies and create a new state management from scratch.
+- **Controller now is Context**: `ReactterController` has been replaced by `ReactterContext`, which are the classes that going to manage our states.
 
   ```dart
     class AppContext extends ReactterContext {}
@@ -181,7 +186,6 @@ now it use as subscription.
     ...
     ),
     userContext.userName.when(
-        
         // Base state
         standby: (value) => Text("Standby: " + value),
         // When is executing the async code
