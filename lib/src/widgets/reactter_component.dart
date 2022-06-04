@@ -1,8 +1,8 @@
 import 'package:flutter/widgets.dart';
 import '../core/reactter_context.dart';
-import '../core/reactter_hook.dart';
 import '../core/reactter_types.dart';
 import '../hooks/reactter_use_context.dart';
+import 'reactter_builder.dart';
 import 'reactter_provider.dart';
 
 /// Provides the functionality of [ReactterProvider] with a [UseContext] of [T],
@@ -21,7 +21,10 @@ abstract class ReactterComponent<T extends ReactterContext>
 
   /// Listen hooks to mark need to build.
   @protected
-  List<ReactterHook> listenHooks(T ctx);
+  ListenHooks<T>? get listenHooks => null;
+
+  /// Invoked when the context instance is created.
+  OnInitContext<T>? get onInit => null;
 
   /// Replace a build method. Provides the instances of [T] and context of [BuildContext].
   @protected
@@ -31,7 +34,11 @@ abstract class ReactterComponent<T extends ReactterContext>
   @override
   Widget build(BuildContext context) {
     if (builder == null) {
-      return render(_getContext(context), context);
+      return ReactterBuilder<T>(
+        id: id,
+        listenHooks: listenHooks,
+        builder: (ctx, context, child) => render(ctx, context),
+      );
     }
 
     return ReactterProvider(
@@ -39,6 +46,7 @@ abstract class ReactterComponent<T extends ReactterContext>
         UseContext<T>(
           builder!,
           id: id,
+          onInit: onInit,
         ),
       ],
       builder: (context, _) => render(_getContext(context), context),

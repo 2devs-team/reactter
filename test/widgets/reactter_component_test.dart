@@ -81,7 +81,7 @@ class ReactterComponentTest extends ReactterComponent<TestContext> {
   get builder => () => TestContext();
 
   @override
-  listenHooks(ctx) => [ctx.stateBool, ctx.stateString];
+  get listenHooks => (ctx) => [ctx.stateBool, ctx.stateString];
 
   @override
   Widget render(TestContext ctx, BuildContext context) {

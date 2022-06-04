@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../reactter.dart';
+import 'reactter_hook.dart';
 
 typedef UpdateCallback<T> = void Function(T newValue, T oldValue);
 
@@ -14,7 +14,7 @@ typedef ListenHooks<T> = List<ReactterHook> Function(T instance);
 typedef SelectorAspect<T> = bool Function(InheritedElement inheritedElement);
 
 typedef InstanceBuilder<T> = Widget Function(
-    T instance, BuildContext context, Widget? child);
+    T inst, BuildContext context, Widget? child);
 
 typedef WidgetCreator = Widget Function();
 
@@ -25,3 +25,5 @@ typedef WidgetCreatorErrorHandler = Widget Function(Object? error);
 typedef LogWriterCallback = void Function(String text, {bool isError});
 
 typedef AsyncFunction<T, A> = Future<T> Function([A args]);
+
+typedef OnInitContext<T> = void Function(T instance);
