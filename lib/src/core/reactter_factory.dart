@@ -1,5 +1,6 @@
 // ignore_for_file: constant_identifier_names, avoid_print
 
+import 'dart:collection';
 import 'dart:ui';
 import 'reactter_types.dart';
 import '../engine/reactter_interface_instance.dart';
@@ -11,8 +12,8 @@ class ReactterInstance<T> {
   ContextBuilder<T>? builder;
   T? instance;
 
-  /// Stores the number of times the instance is used
-  int nRunning = 0;
+  /// Stores the object from which it was instantiated
+  HashSet<Object> fromList = HashSet<Object>();
 
   ReactterInstance(this.id);
   ReactterInstance.withBuilder(this.id, this.builder);
@@ -48,7 +49,8 @@ class ReactterFactory {
   /// Stores all instances.
   ///
   /// This variable is who keep all the states running in memory.
-  List<ReactterInstance> instances = [];
+  HashSet<ReactterInstance> instances = HashSet<ReactterInstance>();
+  // Map<int, ReactterInstance> instances = {};
 
   /// Registers a builder function into to [instances] to create a new instance
   ///
@@ -82,63 +84,77 @@ class ReactterFactory {
     Reactter.log('Instance "$instance" has been unregistered');
   }
 
+  bool existsInstance<T extends Object>([String? id]) {
+    final instanceToFind = ReactterInstance<T>(id);
+
+    return _reactterFactory.instances.lookup(instanceToFind)?.instance != null;
+  }
+
   /// Obtains a instance of [T] given.
   ///
   /// If a [builder] of [T] isn't in [instances] returns `null`
   ///
   /// Creates the instance if is not create but is already registered in [instances]
-  T? getInstance<T extends Object>([String? id]) {
-    try {
-      final instanceToFind = ReactterInstance<T>(id);
-      final instance = _reactterFactory.instances
-              .firstWhere((instance) => instance == instanceToFind)
-          as ReactterInstance<T>;
+  T? getInstance<T extends Object>(String? id, Object from) {
+    final instanceToFind = ReactterInstance<T>(id);
+    final instanceFound = _reactterFactory.instances.lookup(instanceToFind);
 
-      if (instance.instance == null) {
-        instance.instance = instance.builder?.call();
-
-        Reactter.log(
-          'Instance "$instance" has been created',
-        );
-      } else {
-        Reactter.log(
-          'Instance "$instance" already created',
-        );
-      }
-
-      instance.nRunning += 1;
-
-      return instance.instance;
-    } catch (e) {
+    if (instanceFound == null) {
       Reactter.log(
-        'Builder for instance "$T" is not registered. You should register instance with "Reactter.factory.register<$T>(() => $T())" or "UseContext(() => $T())"',
+        'Builder for instance "$instanceToFind" is not registered. You should register instance with "Reactter.factory.register<$T>(() => $T())" or "UseContext(() => $T())"',
         isError: true,
       );
 
       return null;
     }
+
+    if (instanceFound.instance == null) {
+      instanceFound.instance = instanceFound.builder?.call();
+
+      Reactter.log(
+        'Instance "$instanceFound" has been created',
+      );
+    } else {
+      Reactter.log(
+        'Instance "$instanceFound" already created',
+      );
+    }
+
+    if (!instanceFound.fromList.contains(from)) {
+      instanceFound.fromList.add(from);
+    }
+
+    return instanceFound.instance;
   }
 
   /// Deletes the instance from [instances] but keep the [builder] in memory.
-  void deleted(Object instance) {
-    try {
-      final instanceFinded =
-          _reactterFactory.instances.firstWhere((inst) => inst == instance);
+  void deletedInstance<T extends Object>(
+    String? id,
+    Object from, [
+    Function? cbDelete,
+  ]) {
+    final instanceToFind = ReactterInstance<T>(id);
+    final instanceFound = _reactterFactory.instances.lookup(instanceToFind);
 
-      instanceFinded.nRunning -= 1;
-
-      if (instanceFinded.nRunning < 1) {
-        final log = 'Instance "$instance" has been deleted';
-
-        instanceFinded.instance = null;
-
-        Reactter.log(log);
-      }
-    } catch (e) {
-      Reactter.log(
-        'Instance "$instance"(${instance.hashCode}) already deleted',
+    if (instanceFound == null) {
+      return Reactter.log(
+        'Instance "$instanceToFind" already deleted',
         isError: true,
       );
     }
+
+    instanceFound.fromList.remove(from);
+
+    if (instanceFound.fromList.isNotEmpty) {
+      return;
+    }
+
+    cbDelete?.call();
+
+    final log = 'Instance "$instanceFound" has been deleted';
+
+    instanceFound.instance = null;
+
+    Reactter.log(log);
   }
 }
