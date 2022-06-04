@@ -11,7 +11,8 @@ export 'src/core/reactter_context.dart' show ReactterContext;
 // Hooks
 export 'src/hooks/reactter_use_effect.dart' show UseEffect;
 export 'src/hooks/reactter_use_state.dart' show UseState;
-export 'src/hooks/reactter_use_async_state.dart' show UseAsyncState;
+export 'src/hooks/reactter_use_async_state.dart'
+    show UseAsyncState, UseAsyncStateStatus;
 
 // Widgets
 export 'src/widgets/reactter_component.dart' show ReactterComponent;

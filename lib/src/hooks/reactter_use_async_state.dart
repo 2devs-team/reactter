@@ -1,9 +1,18 @@
 library reactter;
 
 import 'package:flutter/material.dart';
-import '../core/reactter_context.dart';
+import '../core/reactter_hook.dart';
+import '../core/reactter_hook_manager.dart';
 import '../core/reactter_types.dart';
+import '../hooks/reactter_use_effect.dart';
 import 'reactter_use_state.dart';
+
+enum UseAsyncStateStatus {
+  standby,
+  loading,
+  done,
+  error,
+}
 
 /// Has the same functionality of [UseState] but providing a [asyncValue]
 /// which sets [value] when [resolve] method is called
@@ -29,79 +38,63 @@ import 'reactter_use_state.dart';
 ///   error: (error) => const Text("Unhandled exception: ${error}"),
 /// );
 /// ```
-class UseAsyncState<T, A> extends UseState<T> {
-  UseAsyncState(
-    initial,
-    this.asyncValue, [
-    ReactterContext? context,
-  ]) : super(initial, context) {
-    context?.listenHooks([this]);
-  }
+class UseAsyncState<T, A> extends ReactterHook {
+  ReactterHookManager? context;
 
   /// Works as a the [value] initializer.
   /// Need to call [resolve] to execute.
   final AsyncFunction<T, A> asyncValue;
 
-  bool get isDone => _isDone;
-  bool _isDone = false;
+  T get value => _value.value;
+  Object? get error => _error.value;
+  UseAsyncStateStatus get status => _status.value;
 
-  bool get isLoading => _loading;
-  bool _loading = false;
-  set _isLoading(bool value) {
-    _loading = value;
-    if (!value) return;
-    update();
-  }
+  final T _initial;
+  late final _value = UseState<T>(_initial, this);
+  late final _error = UseState<Object?>(null, this);
+  late final _status = UseState(UseAsyncStateStatus.standby, this);
 
-  bool get hasError => _hasError;
-  Object? get error => _errorObject;
-  bool _hasError = false;
-  Object? _errorObject;
-  set _error(Object value) {
-    _errorObject = value;
-    _hasError = true;
+  UseAsyncState(
+    initial,
+    this.asyncValue, [
+    this.context,
+  ])  : _initial = initial,
+        super(context) {
+    context?.listenHooks([this]);
+
+    UseEffect(() {
+      _status.value = UseAsyncStateStatus.done;
+    }, [_value]);
+
+    UseEffect(() {
+      if (_error.value != null) {
+        _status.value = UseAsyncStateStatus.error;
+      }
+    }, [_error]);
   }
 
   /// Execute [asyncValue] to resolve [value].
   Future<T?> resolve([A? arg]) async {
-    _clear();
-    _isLoading = true;
+    _status.value = UseAsyncStateStatus.loading;
 
     try {
-      T value;
       if (arg == null && null is! A) {
-        value = await asyncValue();
-      } else {
-        value = await asyncValue(arg as A);
+        return _value.value = await asyncValue();
       }
 
-      _isDone = true;
-      this.value = value;
-
-      return value;
+      return _value.value = await asyncValue(arg as A);
     } catch (e) {
-      _error = e;
+      _error.value = e;
 
       return null;
-    } finally {
-      _isLoading = false;
     }
   }
 
-  /// Clear all state values for correct handling.
-  _clear() {
-    _isDone = false;
-    _loading = false;
-    _hasError = false;
-    _errorObject = null;
-  }
-
   /// Reset [value] to his initial value.
-  @override
   void reset() {
-    _clear();
-    update();
-    super.reset();
+    _value.reset();
+    _error.reset();
+    _status.reset();
   }
 
   /// React when the [value] change and re-render the widget depending of the state.
@@ -127,15 +120,15 @@ class UseAsyncState<T, A> extends UseState<T> {
     WidgetCreatorValue<T>? done,
     WidgetCreatorErrorHandler? error,
   }) {
-    if (hasError) {
-      return error?.call(_errorObject) ?? const SizedBox.shrink();
+    if (status == UseAsyncStateStatus.error) {
+      return error?.call(this.error) ?? const SizedBox.shrink();
     }
 
-    if (isLoading) {
+    if (status == UseAsyncStateStatus.loading) {
       return loading?.call() ?? const SizedBox.shrink();
     }
 
-    if (!isLoading && _isDone) {
+    if (status == UseAsyncStateStatus.done) {
       return done?.call(value) ?? const SizedBox.shrink();
     }
 

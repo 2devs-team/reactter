@@ -1,5 +1,3 @@
-import 'package:flutter/widgets.dart';
-
 import 'reactter_hook_manager.dart';
 
 /// Provides the functionality of [ReactterHookManager].
@@ -41,10 +39,7 @@ import 'reactter_hook_manager.dart';
 /// }
 /// ```
 class ReactterHook extends ReactterHookManager {
-  @protected
-  ReactterHookManager? context;
-
-  ReactterHook(this.context) {
+  ReactterHook(ReactterHookManager? context) {
     context?.listenHooks([this]);
   }
 }

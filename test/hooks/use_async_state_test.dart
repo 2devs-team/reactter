@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:reactter/reactter.dart';
 
 import '../shareds/test_context.dart';
 import '../shareds/use_async_state_builder.dart';
@@ -23,7 +24,7 @@ void main() {
       await stateAsync.resolve(true);
 
       expect(stateAsync.value, "initial");
-      expect(stateAsync.hasError, true);
+      expect(stateAsync.status, UseAsyncStateStatus.error);
       expect(stateAsync.error.toString(), "Exception: has a error");
     });
 
