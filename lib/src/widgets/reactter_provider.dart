@@ -77,10 +77,22 @@ class ReactterProvider extends ReactterInheritedProvider {
   @override
   @protected
   willUnmount() {
-    _triggerLifeCycleEvent(LifeCycleEvent.willUnmount);
-
     for (var i = 0; i < contexts.length; i++) {
-      contexts[i].destroy();
+      contexts[i].disponse(
+        () => contexts[i].instance?.executeEvent(LifeCycleEvent.willUnmount),
+      );
+    }
+  }
+
+  /// TODO: what to do when reload app on development mode
+  /// if has flag development mode, reload instances or mantain instances of contexts??
+  @override
+  @protected
+  didUpdated() {
+    for (var i = 0; i < contexts.length; i++) {
+      contexts[i].disponse(
+        () => contexts[i].instance?.executeEvent(LifeCycleEvent.willUnmount),
+      );
     }
   }
 

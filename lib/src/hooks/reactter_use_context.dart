@@ -17,7 +17,7 @@ abstract class UseContextAbstraction<T extends ReactterContext> {
 
   void initialize([bool init = false]);
 
-  void destroy();
+  void disponse([Function? cbDelete]);
 }
 
 /// Takes a instance of [ReactterContext] class defined
@@ -55,7 +55,7 @@ class UseContext<T extends ReactterContext> extends UseContextAbstraction {
   /// Invoked when instance defined
   /// on firts parameter [instanceBuilder] is created
   @protected
-  final void Function(T instance)? onInit;
+  final OnInitContext<T>? onInit;
 
   /// Contain a instance of [ReactterContext] class
   @override
@@ -68,8 +68,6 @@ class UseContext<T extends ReactterContext> extends UseContextAbstraction {
     this.init = false,
     this.onInit,
   }) : super() {
-    isRoot = Reactter.factory.register<T>(instanceBuilder, id);
-
     initialize(init);
   }
 
@@ -83,7 +81,11 @@ class UseContext<T extends ReactterContext> extends UseContextAbstraction {
       return;
     }
 
-    instance ??= Reactter.factory.getInstance<T>(id);
+    Reactter.factory.register<T>(instanceBuilder, id);
+
+    isRoot = isRoot || !Reactter.factory.existsInstance<T>(id);
+
+    instance ??= Reactter.factory.getInstance<T>(id, this);
 
     if (instance != null) {
       onInit?.call(instance!);
@@ -93,11 +95,11 @@ class UseContext<T extends ReactterContext> extends UseContextAbstraction {
   /// Executes when the [instance] is no longer required
   @override
   @protected
-  destroy() {
+  disponse([cbDelete]) {
     if (instance == null) {
       return;
     }
 
-    Reactter.factory.deleted(instance!);
+    Reactter.factory.deletedInstance<T>(id, this, cbDelete);
   }
 }
