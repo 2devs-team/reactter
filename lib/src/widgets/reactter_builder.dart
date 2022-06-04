@@ -1,6 +1,7 @@
 library reactter;
 
 import 'package:flutter/material.dart';
+import '../engine/reactter_inherit_provider.dart';
 import '../core/reactter_types.dart';
 import '../core/reactter_context.dart';
 import 'reactter_provider.dart';
@@ -24,7 +25,8 @@ import 'reactter_provider.dart';
 ///   }
 /// )
 /// ```
-class ReactterBuilder<T extends ReactterContext?> extends StatelessWidget {
+class ReactterBuilder<T extends ReactterContext?>
+    extends ReactterInheritedProvider {
   /// Id of [T].
   final String? id;
 
@@ -34,38 +36,32 @@ class ReactterBuilder<T extends ReactterContext?> extends StatelessWidget {
   /// Provides a widget witch render one time.
   ///
   /// It's expose on [builder] method as third parameter.
+  @override
   @protected
   final Widget? child;
 
-  /// Method which has the render logic
-  ///
-  /// Exposes instance of [T], [BuildContext] and [child] widget as parameters.
-  /// and returns a widget.
-  @protected
-  final InstanceBuilder<T> builder;
-
-  const ReactterBuilder({
+  ReactterBuilder({
     Key? key,
     this.id,
     this.listenHooks,
     this.child,
-    required this.builder,
-  }) : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    return ReactterProvider(
-      contexts: const [],
-      child: child,
-      builder: (context, child) => builder(
-        ReactterProvider.contextOf<T>(
-          context,
-          id: id,
-          listenHooks: listenHooks,
-        ),
-        context,
-        child,
-      ),
-    );
-  }
+    /// Method which has the render logic
+    ///
+    /// Exposes instance of [T], [BuildContext] and [child] widget as parameters.
+    /// and returns a widget.
+    required InstanceBuilder<T> builder,
+  }) : super(
+          key: key,
+          child: child,
+          builder: (context, child) => builder(
+            ReactterProvider.contextOf<T>(
+              context,
+              id: id,
+              listenHooks: listenHooks,
+            ),
+            context,
+            child,
+          ),
+        );
 }

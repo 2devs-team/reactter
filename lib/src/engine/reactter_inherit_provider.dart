@@ -5,22 +5,27 @@ import 'reactter_inherit_provider_scope.dart';
 import 'reactter_inherit_provider_scope_element.dart';
 
 abstract class ReactterInheritedProvider extends StatelessWidget {
+  final Widget? _child;
+  final TransitionBuilder? _builder;
+
   /// Provides a widget witch render one time.
   ///
   /// It's expose on [builder] method as second parameter.
-  final Widget? child;
+  Widget? get child => _child;
 
   /// Method which has the render logic
   ///
   /// Exposes [BuilderContext] and [child] widget as parameters.
   /// and returns a widget.
-  final TransitionBuilder? builder;
+  TransitionBuilder? get builder => _builder;
 
   const ReactterInheritedProvider({
     Key? key,
-    this.child,
-    this.builder,
-  }) : super(key: key);
+    Widget? child,
+    TransitionBuilder? builder,
+  })  : _child = child,
+        _builder = builder,
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -48,9 +53,11 @@ abstract class ReactterInheritedProvider extends StatelessWidget {
     );
   }
 
-  void willMount();
+  void willMount() {}
 
-  void didMount();
+  void didMount() {}
 
-  void willUnmount();
+  void willUnmount() {}
+
+  void didUpdated() {}
 }
