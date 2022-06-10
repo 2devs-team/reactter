@@ -1,5 +1,25 @@
 # Reactter by [2devs.io](https://2devs.io)
 
+
+## [2.2.0-dev.1] - `Dev Release` `2022-06-10`
+
+### Changed
+
+- **refactory(core,engine,hooks,widget)**: Move subscribe and publish pattern to `ReactterSubscribersManager` class. Can use subscribe and publish pattern with enum type specified.
+- **refactor(core,hooks)**: Remove innecesary code.
+- **fix(hooks,widgets)**: Delete instances of `UseContext` when dispatch updated event on `ReactterProvider`, for prevent has instances duplicated.
+- **refactor(widgets)**: Use `ReactterInheritedProvider` as scope on `ReactterBuilder`.
+- **refactor(engine)**: Remove props innecesary on `ReactterInheritedProvider`.
+- **refactor(core)**: Improve performance how instances manager on `ReactterFactory`.
+- **refactor(widgets)**: Add `ReactterBuilder` as scope when doesn't has builder on `ReactterComponent`.
+- **refactor(hooks)**: Clear code and do code simple on `UseAsyncState`.
+- **refactor(core)**: Remove context property as public on `ReactterHook`.
+
+### Added
+
+- **feat(example)**: add new examples.
+- **docs**: Add badgets, reorder topic, fix examples and improve redacty redaction on README.
+
 ## [2.1.0-dev.2] - `Dev Release` `2022-04-25`
 
 ### Changed
@@ -11,7 +31,7 @@
 ### Changed
 
 - **fix(widgets)**: Send `id` for find `ReactterContext` on `ReactterComponent`.
-- **feat(engine)**:: Remove dependencies when `ReactterProvider` unmount.
+- **feat(engine)**: Remove dependencies when `ReactterProvider` unmount.
 - **refactor(core)**: Remove unneccesaries event listeners from `ReactterContext`.
 - **refactor(core)**: `HookManager` subscribe to `willUpdate` and `didUpdate` event.
 - **refactor(core)**: `WillUpdate` and `DidUpdate` event trigger when its `ReactterHook` update.
