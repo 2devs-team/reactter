@@ -7,6 +7,7 @@ export 'src/engine/reactter_interface_instance.dart';
 export 'src/core/reactter_hook.dart' show ReactterHook;
 export 'src/core/reactter_hook_manager.dart' show ReactterHookManager;
 export 'src/core/reactter_context.dart' show ReactterContext;
+export 'src/core/reactter_subscribers_manager.dart' show ReactterSubscribersManager;
 
 // Hooks
 export 'src/hooks/reactter_use_effect.dart' show UseEffect;

@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'reactter_inherit_provider_scope.dart';
-import '../core/mixins/reactter_publish_suscription.dart';
+import '../core/reactter_hook_manager.dart';
 import '../core/reactter_types.dart';
 
 class _Dependency<T> {
@@ -98,6 +98,7 @@ class ReactterInheritedProviderScopeElement extends InheritedElement {
 
   @override
   void update(ReactterInheritedProviderScope newWidget) {
+    widget.owner.willUpdate();
     _updatedShouldNotify = true;
     super.update(newWidget);
     _updatedShouldNotify = false;
@@ -125,12 +126,10 @@ class ReactterInheritedProviderScopeElement extends InheritedElement {
   }
 
   /// Adds instance to [_dependencies] and subscribes [markNeedsBuild]
-  void dependOnInstance(ReactterPubSub instance) {
-    _unsubscribers.add(() {
-      instance.unsubscribe(PubSubEvent.didUpdate, markNeedsBuild);
-    });
+  void dependOnInstance(ReactterHookManager instance) {
+    final unsubscribe = instance.onDidUpdate(markNeedsBuild);
 
-    instance.subscribe(PubSubEvent.didUpdate, markNeedsBuild);
+    _unsubscribers.add(unsubscribe);
   }
 
   /// Removes instance from [_dependencies] and unsubscribes [markNeedsBuild]

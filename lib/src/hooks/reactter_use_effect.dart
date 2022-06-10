@@ -2,7 +2,6 @@ library reactter;
 
 import 'package:flutter/widgets.dart';
 
-import '../core/mixins/reactter_publish_suscription.dart';
 import '../core/reactter_context.dart';
 import '../core/reactter_hook.dart';
 
@@ -10,13 +9,13 @@ import '../core/reactter_hook.dart';
 ///
 /// The side-effect logic into the [callback] function is executed
 /// when [dependencies] of [ReactterHook] argument has changes
-/// or [context] of [ReactterContext] trigger lifecycle [didMount].
+/// or [context] of [ReactterContext] trigger [didMount] event.
 ///
 /// If the [callback] returns a function,
 /// then [UseEffect] considers this as an `effect cleanup`.
 ///
 /// The `effect cleanup` callback is execute when before [callback] is called
-/// or [context] trigger lifecycle [willUnmount]
+/// or [context] trigger  [willUnmount] event.
 ///
 /// This example produces a [UseEffect], it must be called on [ReactterContext]
 /// constructor:
@@ -59,27 +58,31 @@ class UseEffect extends ReactterHook {
   ]) : super(context) {
     listenHooks(dependencies);
 
-    if (context is DispatchEffect || context == null) {
-      subscribe(PubSubEvent.willUpdate, _onUnsubscribe);
-      subscribe(PubSubEvent.didUpdate, _onSubscribe);
+    _addListeners(context);
+  }
+
+  void _addListeners(ReactterContext? context) {
+    Function? unsubscribeWillUpdate;
+    Function? unsubscribeDidUpdate;
+
+    if (context != null) {
+      _onSubscribe();
     }
 
-    if (context is DispatchEffect) {
-      _onSubscribe();
+    if (context is DispatchEffect || context == null) {
+      unsubscribeWillUpdate = onWillUpdate(_onUnsubscribe);
+      unsubscribeDidUpdate = onDidUpdate(_onSubscribe);
     }
 
     context?.onDidMount(() {
-      _onSubscribe();
-
-      subscribe(PubSubEvent.willUpdate, _onUnsubscribe);
-      subscribe(PubSubEvent.didUpdate, _onSubscribe);
+      unsubscribeWillUpdate = onWillUpdate(_onUnsubscribe);
+      unsubscribeDidUpdate = onDidUpdate(_onSubscribe);
     });
 
     context?.onWillUnmount(() {
       _onUnsubscribe.call();
-
-      unsubscribe(PubSubEvent.willUpdate, _onUnsubscribe);
-      unsubscribe(PubSubEvent.didUpdate, _onSubscribe);
+      unsubscribeWillUpdate?.call();
+      unsubscribeDidUpdate?.call();
     });
   }
 
@@ -91,9 +94,7 @@ class UseEffect extends ReactterHook {
     }
   }
 
-  void _onUnsubscribe() {
-    _unsubscribeCallback?.call();
-  }
+  void _onUnsubscribe() => _unsubscribeCallback?.call();
 
   static DispatchEffect get dispatchEffect => DispatchEffect();
 }

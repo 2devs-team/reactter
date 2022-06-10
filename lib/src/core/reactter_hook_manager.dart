@@ -1,10 +1,11 @@
 library reactter;
 
 import 'reactter_hook.dart';
-import 'mixins/reactter_publish_suscription.dart';
+import 'reactter_subscribers_manager.dart';
 
-/// Provides the functionlatiy of [ReactterPubSub],
-/// and manages the [ReactterHook] witch add from [listenHooks] method.
+enum ReactterHookManagerEvent { willUpdate, didUpdate }
+
+/// Manages the [ReactterHook] witch add from [listenHooks] method.
 ///
 /// This is an example of how to create a custom hook with mixin:
 ///
@@ -32,9 +33,11 @@ import 'mixins/reactter_publish_suscription.dart';
 /// }
 ///```
 ///
-class ReactterHookManager with ReactterPubSub {
+class ReactterHookManager {
   /// Stores all the hooks given.
   final Set<ReactterHook> _hooks = {};
+  final _subscribersManager =
+      ReactterSubscribersManager<ReactterHookManagerEvent>();
 
   /// Suscribes to all [hooks] given.
   void listenHooks(List<ReactterHook> hooks) {
@@ -45,15 +48,39 @@ class ReactterHookManager with ReactterPubSub {
 
       _hooks.add(hook);
 
-      hook.subscribe(
-        PubSubEvent.willUpdate,
-        () => publish(PubSubEvent.willUpdate),
+      hook.onWillUpdate(
+        () => _subscribersManager.publish(ReactterHookManagerEvent.willUpdate),
       );
 
-      hook.subscribe(
-        PubSubEvent.didUpdate,
-        () => publish(PubSubEvent.didUpdate),
+      hook.onDidUpdate(
+        () => _subscribersManager.publish(ReactterHookManagerEvent.didUpdate),
       );
     }
+  }
+
+  /// First, invokes the subscribers callbacks of the willUpdate event.
+  /// Second, invokes the callback given by parameter.
+  /// And finally, invokes the subscribers callbacks of the didUpdate event.
+  void update([Function? callback]) {
+    _subscribersManager.publish(ReactterHookManagerEvent.willUpdate);
+
+    callback?.call();
+
+    _subscribersManager.publish(ReactterHookManagerEvent.didUpdate);
+  }
+
+  /// Register a callback that will be executed when the instance will update
+  Function onWillUpdate(Function callback) {
+    _subscribersManager.subscribe(
+        ReactterHookManagerEvent.willUpdate, callback);
+    return () => _subscribersManager.unsubscribe(
+        ReactterHookManagerEvent.willUpdate, callback);
+  }
+
+  /// Register a callback that will be executed when the instance did update
+  Function onDidUpdate(Function callback) {
+    _subscribersManager.subscribe(ReactterHookManagerEvent.didUpdate, callback);
+    return () => _subscribersManager.unsubscribe(
+        ReactterHookManagerEvent.didUpdate, callback);
   }
 }

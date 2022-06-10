@@ -2,7 +2,7 @@ library reactter;
 
 import 'package:flutter/widgets.dart';
 import '../core/reactter_types.dart';
-import '../core/mixins/reactter_life_cycle.dart';
+import '../core/reactter_life_cycle.dart';
 import '../core/reactter_context.dart';
 import '../engine/reactter_inherit_provider.dart';
 import '../engine/reactter_inherit_provider_scope.dart';
@@ -88,7 +88,7 @@ class ReactterProvider extends ReactterInheritedProvider {
   /// if has flag development mode, reload instances or mantain instances of contexts??
   @override
   @protected
-  didUpdated() {
+  willUpdate() {
     for (var i = 0; i < contexts.length; i++) {
       contexts[i].disponse(
         () => contexts[i].instance?.executeEvent(LifeCycleEvent.willUnmount),

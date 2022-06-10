@@ -1,5 +1,3 @@
-// ignore_for_file: invalid_use_of_protected_member
-
 import 'package:flutter/widgets.dart';
 import 'reactter_inherit_provider_scope.dart';
 import 'reactter_inherit_provider_scope_element.dart';
@@ -59,5 +57,5 @@ abstract class ReactterInheritedProvider extends StatelessWidget {
 
   void willUnmount() {}
 
-  void didUpdated() {}
+  void willUpdate() {}
 }
