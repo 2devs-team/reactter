@@ -1,6 +1,5 @@
 library reactter;
 
-import '../core/mixins/reactter_publish_suscription.dart';
 import '../core/reactter_hook.dart';
 import '../core/reactter_hook_manager.dart';
 
@@ -11,7 +10,7 @@ import '../core/reactter_hook_manager.dart';
 /// and can be set a new [value] with operator `=`.
 ///
 /// When [value] is different to previous state,
-/// [UseState] execute [publish] to notify [context] of [ReactterContext]
+/// [UseState] execute [update] to notify [context] of [ReactterContext]
 /// that has changed and in turn executes [onWillUpdate] and [onDidUpdate]
 ///
 /// This example produces one simple [UseState] :
@@ -30,16 +29,16 @@ import '../core/reactter_hook_manager.dart';
 ///     text.value = "This is a text";
 ///     user.value = User(name: "name");
 ///
-///     // It's need to call [publish] method because mantain the previous state
+///     // It's need to force [update] because mantain the previous state
 ///     // and the [context] not aware that this state has changed
-///     post
-///       ..value.add(
+///     post.update(() {
+///       post.value.add(
 ///           Post(
 ///             user: user.value,
 ///             text: text.value,
-///           )
-///       )
-///       ..publish();
+///           ),
+///         );
+///     });
 ///   }
 /// }
 /// ```
@@ -64,20 +63,6 @@ class UseState<T> extends ReactterHook {
         _value = value;
       });
     }
-  }
-
-  /// Register a callback that will be executed when value state will update
-  void Function() onWillUpdate(void Function() callback) {
-    subscribe(PubSubEvent.willUpdate, callback);
-
-    return () => unsubscribe(PubSubEvent.willUpdate, callback);
-  }
-
-  /// Register a callback that will be executed when value state did update
-  void Function() onDidUpdate(void Function() callback) {
-    subscribe(PubSubEvent.didUpdate, callback);
-
-    return () => unsubscribe(PubSubEvent.didUpdate, callback);
   }
 
   /// Reset the state to initial value

@@ -60,8 +60,6 @@ class UseAsyncState<T, A> extends ReactterHook {
     this.context,
   ])  : _initial = initial,
         super(context) {
-    context?.listenHooks([this]);
-
     UseEffect(() {
       _status.value = UseAsyncStateStatus.done;
     }, [_value]);
