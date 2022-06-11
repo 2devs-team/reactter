@@ -85,9 +85,10 @@ final items = <ListItem>[
     [
       "ReactterBuilder",
       "ReactterContext",
+      "ReactterHook",
       "ReactterProvider",
+      "ReactterSubscribersManager",
       "UseContext",
-      "UseState",
     ],
     const AnimationExample(),
   ),
