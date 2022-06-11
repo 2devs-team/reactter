@@ -1,5 +1,50 @@
 # Reactter by [2devs.io](https://2devs.io)
 
+## [2.3.0] - `Official Release` - `2022-06-11`
+
+### Changed
+
+- **refactor**: Rename `context.of` to `context.watch`.
+- **refactor**: Rename `context.ofId` to `context.watchId`.
+- **refactor**: Rename `context.ofStatic` to `context.read`.
+- **refactor**: Rename `context.ofIdStatic` to `context.readId`.
+- **refactor**: Move subscribe and publish pattern to `ReactterSubscribersManager` class. Can use subscribe and publish pattern with enum type specified.
+- **refactor(core,hooks)**: Remove innecesary code.
+- **fix(hooks,widgets)**: Delete instances of `UseContext` when dispatch updated event on `ReactterProvider`, for prevent has instances duplicated.
+- **refactor(widgets)**: Use `ReactterInheritedProvider` as scope on `ReactterBuilder`.
+- **refactor(engine)**: Remove props innecesary on `ReactterInheritedProvider`.
+- **refactor(core)**: Improve performance how instances manager on `ReactterFactory`.
+- **refactor(widgets)**: Add `ReactterBuilder` as scope when doesn't has builder on `ReactterComponent`.
+- **refactor(hooks)**: Clear code and do code simple on `UseAsyncState`.
+- **refactor(core)**: Remove context property as public on `ReactterHook`.
+- **docs**: Fix some documentation.
+- **feat(engine)**: Remove dependencies when `ReactterProvider` unmount.
+- **refactor(core)**: Remove unneccesaries event listeners from `ReactterContext`.
+- **refactor(core)**: `HookManager` subscribe to `willUpdate` and `didUpdate` event.
+- **refactor(core)**: `WillUpdate` and `DidUpdate` event trigger when its `ReactterHook` update.
+- **refactor(engine)**: Manage dependencies of `ReactterPubSub` and `lifecycle` of `ReactterContext`.
+- **refactor(widget)**: Performance as the instance of `context` is listen to mark need build.
+- **refacor(widget)**: Fix `ReactterBuilder`.
+- **refactor(core)**: Improve `UseEffect`. Now the return of callback execute when a hook was change or `willUnmount` event was invoke.
+- **refactor(core)**: Improve `lifecycle` events. Now it use as subscription.
+- **refactor(hooks, widgets)** - Rename `UseProvide` to `ReactterProvider`.
+
+### Added
+
+- **feat(example)**: Add more example with animation
+- **feat(example)**: Add new examples.
+- **docs**: Add badgets, reorder topic, fix examples and improve redacty redaction on README.
+- **feat(widgets)**: Send `id` for find `ReactterContext` on `ReactterComponent`.
+- **docs**: Add more documentation.
+- **tests**: Add tests for `hooks` and `Widgets`.
+- **feat(widget)**: Add type on `listenerHooks` of `ReactterBuilder`.
+- **feat(hooks)**: Add argument to `resolve` method of `UseAsyncState`.
+- **feat(hooks)**: Add `lifecycle` `willUpdate` and `didUpdate`.
+- **feat(widget)**: Add `onInit` to `UseContext`.
+- **feat(hooks)**: `UseEffect` has lifecycle control of the context.
+- **feat(hook)** `UseContext` works with unique ids to create unique instances.
+- **feat(widget)**: Add `ReactterComponent`.
+
 ## [2.3.0-dev.3] - `Dev Release` `2022-06-11`
 
 ### Changed
@@ -17,7 +62,7 @@
 
 ### Changed
 
-- **refactory(core,engine,hooks,widget)**: Move subscribe and publish pattern to `ReactterSubscribersManager` class. Can use subscribe and publish pattern with enum type specified.
+- **refactor**: Move subscribe and publish pattern to `ReactterSubscribersManager` class. Can use subscribe and publish pattern with enum type specified.
 - **refactor(core,hooks)**: Remove innecesary code.
 - **fix(hooks,widgets)**: Delete instances of `UseContext` when dispatch updated event on `ReactterProvider`, for prevent has instances duplicated.
 - **refactor(widgets)**: Use `ReactterInheritedProvider` as scope on `ReactterBuilder`.
@@ -42,7 +87,6 @@
 
 ### Changed
 
-- **fix(widgets)**: Send `id` for find `ReactterContext` on `ReactterComponent`.
 - **feat(engine)**: Remove dependencies when `ReactterProvider` unmount.
 - **refactor(core)**: Remove unneccesaries event listeners from `ReactterContext`.
 - **refactor(core)**: `HookManager` subscribe to `willUpdate` and `didUpdate` event.
@@ -56,9 +100,11 @@ now the return of callback execute when a hook was change
 or `willUnmount` event was invoke.
 - **refactor(core)**: Improve `lifecycle` events
 now it use as subscription.
+- **refactor(hooks, widgets)** - Rename `UseProvide` to `ReactterProvider`.
 
 ### Added
 
+- **feat(widgets)**: Send `id` for find `ReactterContext` on `ReactterComponent`.
 - **docs**: Add more documentation.
 - **tests**: Add tests for `hooks` and `Widgets`.
 - **feat(widget)**: Add type on `listenerHooks` of `ReactterBuilder`.
@@ -80,7 +126,7 @@ now it use as subscription.
 - Tests.
 - `ReactterComponent`.
 
-## [1.0.1] -  `2022-03-31`
+## [1.0.1] - `Official Release`  `2022-03-31`
 
 ### Changed
 
