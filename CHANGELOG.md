@@ -1,12 +1,17 @@
 # Reactter by [2devs.io](https://2devs.io)
 
+## [2.3.2] - `Official Release` - `2022-06-11`
+
+### Changed
+
+- **fix**: format reactter.dart and remove an unnecesary dart file
+
 ## [2.3.1] - `Official Release` - `2022-06-11`
 
 ### Changed
 
 - **fix(example)**: Fix typo on counter example button.
 - **fix(example)**: Add implement tags on animation example.
-
 
 ## [2.3.0] - `Official Release` - `2022-06-11`
 

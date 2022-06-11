@@ -53,7 +53,7 @@ or add a line like this to your package's `pubspec.yaml`:
 
 ```yaml
   dependencies:
-    reactter: ^2.3.1
+    reactter: ^2.3.2
 ```
 
 Now in your Dart code, you can use:
