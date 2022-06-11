@@ -46,7 +46,7 @@ class CounterExample extends StatelessWidget {
                     const SizedBox(width: 8),
                     ElevatedButton(
                       onPressed: counterCtx.increment,
-                      child: const Text("Increment +*"),
+                      child: const Text("Increment +"),
                     ),
                   ],
                 ),
