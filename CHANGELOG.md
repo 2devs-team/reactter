@@ -1,5 +1,17 @@
 # Reactter by [2devs.io](https://2devs.io)
 
+## [2.3.0-dev.3] - `Dev Release` `2022-06-11`
+
+### Changed
+
+- **refactor**: Rename `context.of` to `context.watch`.
+- **refactor**: Rename `context.ofId` to `context.watchId`.
+- **refactor**: Rename `context.ofStatic` to `context.read`.
+- **refactor**: Rename `context.ofIdStatic` to `context.readId`.
+
+### Added
+
+- **feat(example)**: Add more example with animation
 
 ## [2.2.0-dev.1] - `Dev Release` `2022-06-10`
 
@@ -20,13 +32,13 @@
 - **feat(example)**: add new examples.
 - **docs**: Add badgets, reorder topic, fix examples and improve redacty redaction on README.
 
-## [2.1.0-dev.2] - `Dev Release` `2022-04-25`
+## [2.1.0-dev.2] - `Dev Release` `2022-05-25`
 
 ### Changed
 
 - **docs**: Fix some documentation.
 
-## [2.1.0-dev] - `Dev Release` `2022-04-24`
+## [2.1.0-dev] - `Dev Release` `2022-05-24`
 
 ### Changed
 
@@ -54,7 +66,7 @@ now it use as subscription.
 - **feat(hooks)**: Add `lifecycle` `willUpdate` and `didUpdate`.
 - **feat(widget)**: Add `onInit` to `UseContext`.
 
-## [2.0.0-dev.1] - `Dev Release` `2022-04-19`
+## [2.0.0-dev.1] - `Dev Release` `2022-05-19`
 
 ### Changed
 
