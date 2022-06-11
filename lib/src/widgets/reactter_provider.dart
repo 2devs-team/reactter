@@ -25,7 +25,7 @@ import '../hooks/reactter_use_context.dart';
 ///   ],
 ///   child: Icon(Icons.person),
 ///   builder: (context, child) {
-///     final appContext = context.of<AppContext>();
+///     final appContext = context.watch<AppContext>();
 ///
 ///     return Row(
 ///       children: [
@@ -204,7 +204,7 @@ extension ReactterBuildContextExtension on BuildContext {
   /// Obtain a [instance] of [T] from the nearest ancestor [ReactterProvider],
   /// and subscribe to it or specific hooks put in [listenHooks] parameter.
   ///
-  /// If [T] is nullable and no matching [ReactterContext] are found, [of] will
+  /// If [T] is nullable and no matching [ReactterContext] are found, [watch] will
   /// return `null`.
   ///
   /// If [T] is non-nullable and the [ReactterContext] obtained returned `null`, will
@@ -214,7 +214,7 @@ extension ReactterBuildContextExtension on BuildContext {
   ///
   /// ```dart
   /// Builder(builder: (context) {
-  ///   final appContext = context.of<AppContext?>();
+  ///   final appContext = context.watch<AppContext?>();
   ///
   ///   if (appContext == null) Text('no found');
   ///
@@ -227,7 +227,7 @@ extension ReactterBuildContextExtension on BuildContext {
   ///
   /// ```dart
   /// Builder(builder: (context) {
-  ///   final appContext = context.of<AppContext>(
+  ///   final appContext = context.watch<AppContext>(
   ///     (ctx) => [ctx.stateA, ctx.stateB],
   ///   );
   ///
@@ -240,13 +240,13 @@ extension ReactterBuildContextExtension on BuildContext {
   /// ```dart
   /// ReactterProvider.contextOf<T>(context, listenHooks: listenHooks);
   /// ```
-  T of<T extends ReactterContext?>([ListenHooks<T>? listenHooks]) =>
+  T watch<T extends ReactterContext?>([ListenHooks<T>? listenHooks]) =>
       ReactterProvider.contextOf<T>(this, listenHooks: listenHooks);
 
   /// Obtain a [instance] of [T] with [id] from the nearest ancestor [ReactterProvider],
   /// and subscribe to it or specific hooks put in [listenHooks] parameter.
   ///
-  /// If [T] is nullable and no matching [ReactterContext] are found, [ofId] will
+  /// If [T] is nullable and no matching [ReactterContext] are found, [watchId] will
   /// return `null`.
   ///
   /// If [T] is non-nullable and the [ReactterContext] obtained returned `null`, will
@@ -256,7 +256,7 @@ extension ReactterBuildContextExtension on BuildContext {
   ///
   /// ```dart
   /// Builder(builder: (context) {
-  ///   final appContext = context.ofId<AppContext?>('uniqueId');
+  ///   final appContext = context.watchId<AppContext?>('uniqueId');
   ///
   ///   if (appContext == null) Text('no found');
   ///
@@ -269,7 +269,7 @@ extension ReactterBuildContextExtension on BuildContext {
   ///
   /// ```dart
   /// Builder(builder: (context) {
-  ///   final appContext = context.of<AppContext>(
+  ///   final appContext = context.watchId<AppContext>(
   ///     'uniqueId',
   ///     (ctx) => [ctx.stateA, ctx.stateB],
   ///   );
@@ -283,7 +283,7 @@ extension ReactterBuildContextExtension on BuildContext {
   /// ```dart
   /// ReactterProvider.contextOf<T>(context, id: id, listenHooks: listenHooks);
   /// ```
-  T ofId<T extends ReactterContext?>(
+  T watchId<T extends ReactterContext?>(
     String id, [
     ListenHooks<T>? listenHooks,
   ]) =>
@@ -291,7 +291,7 @@ extension ReactterBuildContextExtension on BuildContext {
 
   /// Obtain a [instance] of [T] from the nearest ancestor [ReactterProvider].
   ///
-  /// If [T] is nullable and no matching [ReactterContext] are found, [ofStatic] will
+  /// If [T] is nullable and no matching [ReactterContext] are found, [read] will
   /// return `null`.
   ///
   /// If [T] is non-nullable and the [ReactterContext] obtained returned `null`, will
@@ -301,7 +301,7 @@ extension ReactterBuildContextExtension on BuildContext {
   ///
   /// ```dart
   /// Builder(builder: (context) {
-  ///   final appContext = context.ofStatic<AppContext?>();
+  ///   final appContext = context.read<AppContext?>();
   ///
   ///   if (appContext == null) Text('no found');
   ///
@@ -314,12 +314,12 @@ extension ReactterBuildContextExtension on BuildContext {
   /// ```dart
   /// ReactterProvider.contextOf<T>(context, listen: false);
   /// ```
-  T ofStatic<T extends ReactterContext?>() =>
+  T read<T extends ReactterContext?>() =>
       ReactterProvider.contextOf<T>(this, listen: false);
 
   /// Obtain a [instance] of [T] with [id] from the nearest ancestor [ReactterProvider].
   ///
-  /// If [T] is nullable and no matching [ReactterContext] are found, [ofIdStatic] will
+  /// If [T] is nullable and no matching [ReactterContext] are found, [readId] will
   /// return `null`.
   ///
   /// If [T] is non-nullable and the [ReactterContext] obtained returned `null`, will
@@ -329,7 +329,7 @@ extension ReactterBuildContextExtension on BuildContext {
   ///
   /// ```dart
   /// Builder(builder: (context) {
-  ///   final appContext = context.ofStatic<AppContext?>('uniqueId');
+  ///   final appContext = context.readId<AppContext?>('uniqueId');
   ///
   ///   if (appContext == null) Text('no found');
   ///
@@ -342,7 +342,7 @@ extension ReactterBuildContextExtension on BuildContext {
   /// ```dart
   /// ReactterProvider.contextOf<T>(context, id: id, listen: false);
   /// ```
-  T ofIdStatic<T extends ReactterContext?>(String id) =>
+  T readId<T extends ReactterContext?>(String id) =>
       ReactterProvider.contextOf<T>(this, id: id, listen: false);
 }
 
@@ -392,7 +392,7 @@ of your choice. There are a few common scenarios:
       ],
       // Will throw a `ReactterContextNotFoundException`, because `context` is associated
       // to the widget that is the parent of `ReactterProvider`.
-      child: Text(context.of<AppContext>().state.value),
+      child: Text(context.watch<AppContext>().state.value),
     ),
   }
   ```
@@ -408,7 +408,7 @@ of your choice. There are a few common scenarios:
       // we use `builder` to obtain a new `BuildContext` that has access to the provider
       builder: (context) {
         // No longer throws
-        return Text(context.of<AppContext>().state.value),
+        return Text(context.watch<AppContext>().state.value),
       }
     ),
   }

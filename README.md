@@ -182,9 +182,9 @@ class MyWidget extends StatelessWidget {
         ),
       ],
       builder: (context, _) {
-        final appContext = context.of<AppContext>();
-        final appConfigContext = context.ofId<ConfigContext>('App');
-        final userConfigContext = context.ofId<ConfigContext>('User');
+        final appContext = context.watch<AppContext>();
+        final appConfigContext = context.watchId<ConfigContext>('App');
+        final userConfigContext = context.watchId<ConfigContext>('User');
 
         return [...]
       },
@@ -193,7 +193,7 @@ class MyWidget extends StatelessWidget {
 }
 ```
 
-*For more information about `context.of[...]` go to [here](#access-to-reacttercontext).*
+*For more information about `context.watch[...]` go to [here](#access-to-reacttercontext).*
 
 > **RECOMMENDED:**
 > Don't use `ReactterContext` class with parameters to prevent conflicts. Instead of it, use `onInit` method which `UseContext` exposes for access its instance and put the data you need.
@@ -212,9 +212,9 @@ ReactterProvider(
   ],
   builder: (context, child) {
     // This builder is render only one time.
-    // But if you use context.of<T> or context.ofId<T> here,
+    // But if you use context.watch<T> or context.watchId<T> here,
     // it forces re-render this builder together ReactterBuilder's builder.
-    final appContext = context.ofStatic<AppContext>();
+    final appContext = context.read<AppContext>();
 
     return Column(
       children: [
@@ -243,39 +243,39 @@ ReactterProvider(
 
 Reactter provides additional methods to `BuildContext` for access your `ReactterContext`. These are:
 
-- [**`context.of<T>`**](https://pub.dev/documentation/reactter/latest/reactter/ReactterBuildContextExtension/of.html): Get the `ReactterContext` instance of the specified type and watch context's states or states defined on first parameter.
+- [**`context.watch<T>`**](https://pub.dev/documentation/reactter/latest/reactter/ReactterBuildContextExtension/watch.html): Get the `ReactterContext` instance of the specified type and watch context's states or states defined on first parameter.
 
 ```dart
-final watchContext = context.of<WatchContext>();
-final watchHooksContext = context.of<WatchHooksContext>(
+final watchContext = context.watch<WatchContext>();
+final watchHooksContext = context.watch<WatchHooksContext>(
   (ctx) => [ctx.stateA, ctx.stateB],
 );
 ```
 
-- [**`context.ofId<T>`**](https://pub.dev/documentation/reactter/latest/reactter/ReactterBuildContextExtension/ofId.html): Get the `ReactterContext` instance of the specified type and id defined on first parameter and watch context's states or states defined on second parameter.
+- [**`context.watchId<T>`**](https://pub.dev/documentation/reactter/latest/reactter/ReactterBuildContextExtension/watchId.html): Get the `ReactterContext` instance of the specified type and id defined on first parameter and watch context's states or states defined on second parameter.
 
 ```dart
-final watchIdContext = context.ofId<WatchIdContext>('id');
-final watchHooksIdContext = context.ofId<WatchHooksIdContext>(
+final watchIdContext = context.watchId<WatchIdContext>('id');
+final watchHooksIdContext = context.watchId<WatchHooksIdContext>(
   'id',
   (ctx) => [ctx.stateA, ctx.stateB],
 );
 ```
 
-- [**`context.ofStatic<T>`**](https://pub.dev/documentation/reactter/latest/reactter/ReactterBuildContextExtension/ofStatic.html): Get the `ReactterContext` instance of the specified type.
+- [**`context.read<T>`**](https://pub.dev/documentation/reactter/latest/reactter/ReactterBuildContextExtension/read.html): Get the `ReactterContext` instance of the specified type.
 
 ```dart
-final readContext = context.ofStatic<ReadContext>();
+final readContext = context.read<ReadContext>();
 ```
 
-- [**`context.ofIdStatic<T>`**](https://pub.dev/documentation/reactter/latest/reactter/ReactterBuildContextExtension/ofIdStatic.html): Get the `ReactterContext` instance of the specified type and id defined on first parameter.
+- [**`context.readId<T>`**](https://pub.dev/documentation/reactter/latest/reactter/ReactterBuildContextExtension/readId.html): Get the `ReactterContext` instance of the specified type and id defined on first parameter.
 
 ```dart
-final readIdContext = context.ofIdStatic<ReadIdContext>('id');
+final readIdContext = context.readId<ReadIdContext>('id');
 ```
 
 > **NOTE:**
-> `context.of<T>` and `context.ofId<T>` watch all or some of the specified `ReactterHook` dependencies and when it will change, re-render widgets in the scope of `ReactterProvider` or `ReactterBuilder`.
+> `context.watch<T>` and `context.watchId<T>` watch all or some of the specified `ReactterHook` dependencies and when it will change, re-render widgets in the scope of `ReactterProvider` or `ReactterBuilder`.
 >
 > **NOTE:**
 > These methods mentioned above uses [`ReactterProvider.contextOf<T>`](https://pub.dev/documentation/reactter/latest/reactter/ReactterProvider/contextOf.html)
@@ -367,7 +367,7 @@ ReactterProvider(
     UseContext(() => AppContext()),
   ],
   builder: (context, child) {
-    final appContext = context.of<AppContext>();
+    final appContext = context.watch<AppContext>();
 
     return appContext.state.when(
       standby: (value) => Text("Standby: " + value),

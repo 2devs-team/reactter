@@ -25,7 +25,7 @@ import 'reactter_hook_manager.dart';
 ///    )
 ///  ],
 ///  builder: (context) {
-///     appContext = context.of<AppContext>();
+///     appContext = context.watch<AppContext>();
 ///
 ///     return Text(appContext.name.value);
 ///   }

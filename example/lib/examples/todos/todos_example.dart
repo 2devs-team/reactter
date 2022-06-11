@@ -14,7 +14,7 @@ class TodosExamples extends StatelessWidget {
         UseContext(() => TodosContext()),
       ],
       builder: (context, _) {
-        final todosCtx = context.ofStatic<TodosContext>();
+        final todosCtx = context.read<TodosContext>();
 
         return Scaffold(
           backgroundColor: Colors.white,

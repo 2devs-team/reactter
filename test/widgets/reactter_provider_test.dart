@@ -14,7 +14,7 @@ void main() {
       await tester.pumpWidget(
         ReactterProviderBuilder(
           builder: (BuildContext context, Widget? child) {
-            instanceObtained = context.ofStatic<TestContext>();
+            instanceObtained = context.read<TestContext>();
 
             return Text("stateString: ${instanceObtained.stateString.value}");
           },
@@ -35,7 +35,7 @@ void main() {
           child: ReactterProvider(
             contexts: const [],
             builder: (BuildContext context, Widget? child) {
-              instanceObtained = context.ofStatic<TestContext?>();
+              instanceObtained = context.read<TestContext?>();
 
               return Text(
                   "stateString: ${instanceObtained?.stateString.value ?? 'not found'}");
@@ -56,7 +56,7 @@ void main() {
       await tester.pumpWidget(
         ReactterProviderBuilder(
           builder: (BuildContext context, Widget? child) {
-            instanceObtained = context.ofIdStatic<TestContext>("uniqueId");
+            instanceObtained = context.readId<TestContext>("uniqueId");
 
             return Text("stateString: ${instanceObtained.stateString.value}");
           },
@@ -77,7 +77,7 @@ void main() {
         ReactterProviderBuilder(
           builder: (BuildContext context, Widget? child) {
             instanceObtained = context
-                .of<TestContext>((ctx) => [ctx.stateString, ctx.stateBool]);
+                .watch<TestContext>((ctx) => [ctx.stateString, ctx.stateBool]);
 
             return Column(
               children: [
@@ -111,7 +111,7 @@ void main() {
       await tester.pumpWidget(
         ReactterProviderBuilder(
           builder: (BuildContext context, Widget? child) {
-            instanceObtained = context.ofId<TestContext>(
+            instanceObtained = context.watchId<TestContext>(
               "uniqueId",
               (ctx) => [ctx.stateString, ctx.stateBool],
             );

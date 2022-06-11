@@ -14,7 +14,7 @@ class CounterExample extends StatelessWidget {
       ],
       builder: (context, _) {
         // final counterCtx = context.read<CounterContext>();
-        final counterCtx = context.ofStatic<CounterContext>();
+        final counterCtx = context.read<CounterContext>();
 
         return Scaffold(
           appBar: AppBar(
@@ -27,7 +27,7 @@ class CounterExample extends StatelessWidget {
                 ReactterBuilder<CounterContext>(
                   builder: (counterCtx, context, child) {
                     // context.watch<CounterContext>();
-                    context.of<CounterContext>();
+                    context.watch<CounterContext>();
 
                     return Text(
                       "${counterCtx.count.value}",

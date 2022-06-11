@@ -23,7 +23,7 @@ class ProductItem extends ReactterComponent<ProductContext> {
   @override
   Widget render(ProductContext ctx, BuildContext context) {
     final stock = product.stockState.value;
-    final cartCtx = context.ofStatic<CartContext>();
+    final cartCtx = context.read<CartContext>();
 
     return ListTile(
       tileColor: color,
@@ -67,5 +67,4 @@ class ProductItem extends ReactterComponent<ProductContext> {
       ),
     );
   }
-
 }

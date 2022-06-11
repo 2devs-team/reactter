@@ -17,7 +17,7 @@ class ApiExample extends StatelessWidget {
         UseContext(() => ApiContext()),
       ],
       builder: (context, child) {
-        final apiContext = context.ofStatic<ApiContext>();
+        final apiContext = context.read<ApiContext>();
 
         return Scaffold(
           appBar: AppBar(

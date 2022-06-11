@@ -14,7 +14,7 @@ class TreeExample extends StatelessWidget {
           UseContext(() => TreeContext()),
         ],
         builder: (context, _) {
-          final treeContext = context.ofStatic<TreeContext>();
+          final treeContext = context.read<TreeContext>();
 
           return Scaffold(
             appBar: AppBar(

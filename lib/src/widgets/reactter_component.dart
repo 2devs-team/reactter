@@ -55,7 +55,7 @@ abstract class ReactterComponent<T extends ReactterContext>
 
   T _getContext(BuildContext context) {
     return id == null
-        ? context.of<T>(listenHooks)
-        : context.ofId<T>(id!, listenHooks);
+        ? context.watch<T>(listenHooks)
+        : context.watchId<T>(id!, listenHooks);
   }
 }
