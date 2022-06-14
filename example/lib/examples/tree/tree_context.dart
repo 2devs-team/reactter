@@ -9,7 +9,7 @@ class TreeContext extends ReactterContext {
 
   void increment() => count.value++;
 
-  void drecrement() => count.value--;
+  void decrement() => count.value--;
 
   void addChild() {
     final child = TreeContext();
