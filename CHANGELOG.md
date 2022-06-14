@@ -1,6 +1,6 @@
 # Reactter by [2devs.io](https://2devs.io)
 
-## [2.3.3] - `Official Release` - `2022-06-13`
+## 2.3.3 - `Official Release` - `2022-06-13`
 
 ### Changed
 
@@ -13,20 +13,20 @@
 
 - **docs**: Add README to example.
 
-## [2.3.2] - `Official Release` - `2022-06-11`
+## 2.3.2 - `Official Release` - `2022-06-11`
 
 ### Changed
 
 - **fix**: format reactter.dart and remove an unnecesary dart file
 
-## [2.3.1] - `Official Release` - `2022-06-11`
+## 2.3.1 - `Official Release` - `2022-06-11`
 
 ### Changed
 
 - **fix(example)**: Fix typo on counter example button.
 - **fix(example)**: Add implement tags on animation example.
 
-## [2.3.0] - `Official Release` - `2022-06-11`
+## 2.3.0 - `Official Release` - `2022-06-11`
 
 ### Changed
 
@@ -71,7 +71,7 @@
 - **feat(hook)** `UseContext` works with unique ids to create unique instances.
 - **feat(widget)**: Add `ReactterComponent`.
 
-## [2.3.0-dev.3] - `Dev Release` `2022-06-11`
+## 2.3.0-dev.3 - `Dev Release` `2022-06-11`
 
 ### Changed
 
@@ -84,7 +84,7 @@
 
 - **feat(example)**: Add more example with animation
 
-## [2.2.0-dev.1] - `Dev Release` `2022-06-10`
+## 2.2.0-dev.1 - `Dev Release` `2022-06-10`
 
 ### Changed
 
@@ -103,13 +103,13 @@
 - **feat(example)**: add new examples.
 - **docs**: Add badgets, reorder topic, fix examples and improve redacty redaction on README.
 
-## [2.1.0-dev.2] - `Dev Release` `2022-05-25`
+## 2.1.0-dev.2 - `Dev Release` `2022-05-25`
 
 ### Changed
 
 - **docs**: Fix some documentation.
 
-## [2.1.0-dev] - `Dev Release` `2022-05-24`
+## 2.1.0-dev - `Dev Release` `2022-05-24`
 
 ### Changed
 
@@ -138,7 +138,7 @@ now it use as subscription.
 - **feat(hooks)**: Add `lifecycle` `willUpdate` and `didUpdate`.
 - **feat(widget)**: Add `onInit` to `UseContext`.
 
-## [2.0.0-dev.1] - `Dev Release` `2022-05-19`
+## 2.0.0-dev.1 - `Dev Release` `2022-05-19`
 
 ### Changed
 
@@ -152,7 +152,7 @@ now it use as subscription.
 - Tests.
 - `ReactterComponent`.
 
-## [1.0.1] - `Official Release`  `2022-03-31`
+## 1.0.1 - `Official Release`  `2022-03-31`
 
 ### Changed
 
@@ -163,7 +163,7 @@ now it use as subscription.
 
 - Improve performance with primitive loops in functions.
 
-## [1.0.0] - `Official Release` - `2022-03-31`
+## 1.0.0 - `Official Release` - `2022-03-31`
 
 ### Changed
 
@@ -176,7 +176,7 @@ now it use as subscription.
 - Documentation
 - 130 points in pub.dev.
 
-## [1.0.0-dev] - `Dev Release` - `2022-03-31`
+## 1.0.0-dev - `Dev Release` - `2022-03-31`
 
 ### Changed
 
@@ -331,7 +331,7 @@ now it use as subscription.
 
     ```
 
-## [0.0.1-dev.4] - `2022-03-19`
+## 0.0.1-dev.4 - `2022-03-19`
 
 ### Added
 
