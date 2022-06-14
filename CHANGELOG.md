@@ -1,5 +1,18 @@
 # Reactter by [2devs.io](https://2devs.io)
 
+## [2.3.3] - `Official Release` - `2022-06-13`
+
+### Changed
+
+- **refactor(core,widget)**: Remove life cycle class and move it to reactter_context.
+- **docs**: Remove assets and change README.
+- **reactor(example)**: Move buttons and fix typo on tree example.
+- **docs(example)**: Change description of some examples.
+
+### Added
+
+- **docs**: Add README to example.
+
 ## [2.3.2] - `Official Release` - `2022-06-11`
 
 ### Changed
