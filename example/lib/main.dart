@@ -54,7 +54,7 @@ final items = <ListItem>[
   ),
   ExampleItem(
     "Tree widget",
-    "Control re-render widget",
+    "Add, remove and hide child widget with counter.",
     [
       "ReactterBuilder",
       "ReactterComponent",
@@ -67,7 +67,7 @@ final items = <ListItem>[
   ),
   ExampleItem(
     "Github Search",
-    "Send request and show request state",
+    "Search user or repository and show info about it.",
     [
       "ReactterBuilder",
       "ReactterContext",
@@ -81,7 +81,7 @@ final items = <ListItem>[
   ),
   ExampleItem(
     "Animate widget",
-    "Use state for animation",
+    "Change size, shape and color.",
     [
       "ReactterBuilder",
       "ReactterContext",
