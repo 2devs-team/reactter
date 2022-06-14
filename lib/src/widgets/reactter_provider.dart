@@ -1,8 +1,9 @@
+// ignore_for_file: invalid_use_of_protected_member
+
 library reactter;
 
 import 'package:flutter/widgets.dart';
 import '../core/reactter_types.dart';
-import '../core/reactter_life_cycle.dart';
 import '../core/reactter_context.dart';
 import '../engine/reactter_inherit_provider.dart';
 import '../engine/reactter_inherit_provider_scope.dart';
