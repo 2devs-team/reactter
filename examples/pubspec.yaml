@@ -1,0 +1,25 @@
+name: examples
+description: Reactter examples
+
+publish_to: "none"
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.17.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  http: ^0.13.4
+  url_launcher: ^6.1.2
+  reactter:
+    path: ../packages/reactter
+  flutter_reactter:
+    path: ../packages/flutter_reactter
+
+dev_dependencies:
+  flutter_lints: ^2.0.0
+
+flutter:
+  uses-material-design: true

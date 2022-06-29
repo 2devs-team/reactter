@@ -5,7 +5,7 @@
 ____
 
 [![Pub Publisher](https://img.shields.io/pub/publisher/reactter?color=013d6d&labelColor=01579b)](https://pub.dev/publishers/2devs.io/packages)
-[![Pub package](https://img.shields.io/pub/v/reactter?color=1d7fac&labelColor=29b6f6&label=pub.dev&logo=flutter)](https://pub.dev/packages/reactter)
+[![Pub package](https://img.shields.io/pub/v/reactter?color=1d7fac&labelColor=29b6f6&label=pub.dev&logo=dart)](https://pub.dev/packages/reactter)
 [![Pub points](https://img.shields.io/pub/points/reactter?color=196959&labelColor=23967F&logo=dart)](https://pub.dev/packages/reactter/score)
 [![MIT License](https://img.shields.io/github/license/2devs-team/reactter?color=a85f00&labelColor=F08700&logoColor=fff&logo=Open%20Source%20Initiative)](https://github.com/2devs-team/reactter/blob/master/LICENSE)
 [![MIT License](https://img.shields.io/static/v1?label=Discord&message=Reactter&color=5a52b3&labelColor=8075FF&logoColor=fff&logo=discord)](https://discord.gg/RDPGyATS5J)
@@ -489,13 +489,13 @@ class AppContext extends ReactterContext {
 ## Resources
 
 - [Documentation](https://pub.dev/documentation/reactter/latest)
-- [Examples](https://github.com/2devs-team/reactter/tree/master/example)
-  - [Counter example](https://github.com/2devs-team/reactter/tree/master/example/lib/examples/counter)
-  - [Todos example](https://github.com/2devs-team/reactter/tree/master/example/lib/examples/todos)
-  - [Shopping cart example](https://github.com/2devs-team/reactter/tree/master/example/lib/examples/shopping_cart)
-  - [Tree widget example](https://github.com/2devs-team/reactter/tree/master/example/lib/examples/tree)
-  - [Git search example](https://github.com/2devs-team/reactter/tree/master/example/lib/examples/api)
-  - [Animate widget example](https://github.com/2devs-team/reactter/tree/master/example/lib/examples/animation)
+- [Examples](https://github.com/2devs-team/reactter/tree/master/examples)
+  - [Counter example](https://github.com/2devs-team/reactter/tree/master/examples/lib/counter)
+  - [Todos example](https://github.com/2devs-team/reactter/tree/master/examples/lib/todos)
+  - [Shopping cart example](https://github.com/2devs-team/reactter/tree/master/examples/lib/shopping_cart)
+  - [Tree widget example](https://github.com/2devs-team/reactter/tree/master/examples/lib/tree)
+  - [Git search example](https://github.com/2devs-team/reactter/tree/master/examples/lib/api)
+  - [Animate widget example](https://github.com/2devs-team/reactter/tree/master/examples/lib/animation)
 
 ## Roadmap
 

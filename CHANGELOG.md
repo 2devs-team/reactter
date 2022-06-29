@@ -1,5 +1,28 @@
 # Reactter by [2devs.io](https://2devs.io)
 
+## 3.0.0-dev - `Dev release` - `2022-06-24`
+
+### Breacking
+
+- **build**: Change structure folder. Now the package was separated into two packages, one for dart(`reactter`) and one for flutter(`flutter_reactter`)
+- **refactor(hooks)**: Type return on `UseAsyncState.when`.
+- **refactor(widget)**: Rename `UseContext` to `ReactterProvider`. `ReactterProvider` is a wrapper widget that scopes a `ReactterContext`.
+- **refactor(widget)**: Rename `ReactterProvider` to `ReactterProviders`. `ReactterProviders` is a wrapper widget that contains nested multiple `ReactterProvider`.
+
+### Changed
+
+- **feat(widget)**: Improve finding `ReactterContext` in the widget tree via the context. Now the operation of finding `ReactterContext` is O(1) and `ReactterContext` using id is O(2).
+
+### Added
+
+- **feat(hooks)**: Add `UseContext` hook. `UseContext` is a hook that gets the instance of `ReactterContext`.
+- **feat(hooks)**: Add `UseEvent` hook. `UseEvent` is a hook that manages events.
+
+### Removed
+
+- **refactor(core)**: Remove variables unnecessary.
+- **refactor(examples)**: Remove code unnecessary.
+
 ## 2.3.3 - `Official Release` - `2022-06-13`
 
 ### Changed
