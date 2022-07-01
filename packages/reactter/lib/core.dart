@@ -12,5 +12,4 @@ part 'core/reactter_hook_manager.dart';
 part 'core/reactter_hook.dart';
 part 'core/reactter_interface.dart';
 part 'core/reactter_log.dart';
-part 'core/reactter_subscribers_manager.dart';
 part 'core/reactter_types.dart';

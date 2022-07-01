@@ -136,14 +136,14 @@ class AnimationOptions<T> {
 
 class UseAnimation<T> extends ReactterHook implements TickerProvider {
   final AnimationOptions<T> options;
-  final ReactterContext? context;
+  final ReactterContext? _context;
 
   late final tween = UseState(options.tween, this);
   late final control = UseState(options.control, this);
   late final duration = UseState(options.duration, this);
   late final curve = UseState(options.curve, this);
 
-  final _subscribersManager = ReactterSubscribersManager<_AnimationStatus>();
+  late final _event = UseEvent.withInstance(this);
 
   late Animation<T> _animation;
   T get value => _animation.value;
@@ -159,20 +159,24 @@ class UseAnimation<T> extends ReactterHook implements TickerProvider {
   var _isControlSetToMirror = false;
   Set<Ticker>? _tickers;
 
-  UseAnimation(this.options, [this.context]) : super(context) {
-    context?.onDidMount((_, __) => _addFrameLimitingUpdater());
+  UseAnimation(this.options, [this._context]) : super(_context) {
+    _context?.onDidMount((_, __) => _addFrameLimitingUpdater());
+    _context?.onWillUnmount((_, __) => _aniController.dispose());
 
-    context?.onWillUnmount((_, __) => _aniController.dispose());
+    UseEvent.withInstance(_context).on(
+      LifeCycleEvent.destroyed,
+      (_, __) => _event.clear(),
+    );
 
     _aniController.addStatusListener(_onAnimationStatus);
 
     _buildAnimation();
 
-    UseEffect(_rebuild, [tween, control, curve], context);
+    UseEffect(_rebuild, [tween, control, curve], _context);
 
     UseEffect(() {
       _aniController.duration = duration.value;
-    }, [duration], context);
+    }, [duration], _context);
   }
 
   void play({Duration? duration}) {
@@ -229,18 +233,16 @@ class UseAnimation<T> extends ReactterHook implements TickerProvider {
     });
   }
 
-  Function onStart(Function callback) {
-    _subscribersManager.subscribe(_AnimationStatus.start, callback);
+  Function onStart(void Function(UseAnimation<T>?, dynamic) callback) {
+    _event.on(_AnimationStatus.start, callback);
 
-    return () =>
-        _subscribersManager.unsubscribe(_AnimationStatus.start, callback);
+    return () => _event.off(_AnimationStatus.start, callback);
   }
 
-  Function onComplete(Function callback) {
-    _subscribersManager.subscribe(_AnimationStatus.completed, callback);
+  Function onComplete(void Function(UseAnimation<T>?, dynamic) callback) {
+    _event.on(_AnimationStatus.completed, callback);
 
-    return () =>
-        _subscribersManager.unsubscribe(_AnimationStatus.completed, callback);
+    return () => _event.off(_AnimationStatus.completed, callback);
   }
 
   @override
@@ -303,14 +305,14 @@ class UseAnimation<T> extends ReactterHook implements TickerProvider {
   void _trackPlaybackStart() {
     if (!_isPlaying) {
       _isPlaying = true;
-      _subscribersManager.publish(_AnimationStatus.start);
+      _event.trigger(_AnimationStatus.start);
     }
   }
 
   void _trackPlaybackComplete() {
     if (_isPlaying) {
       _isPlaying = false;
-      _subscribersManager.publish(_AnimationStatus.completed);
+      _event.trigger(_AnimationStatus.completed);
     }
   }
 
