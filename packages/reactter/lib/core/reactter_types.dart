@@ -4,7 +4,7 @@ typedef ContextBuilder<T> = T Function();
 
 typedef LogWriterCallback = void Function(String text, {bool isError});
 
-typedef AsyncFunction<T, A> = Future<T> Function([A args]);
+typedef AsyncFunction<T, A> = Future<T> Function([A arg]);
 
 typedef WhenValueReturn<T, R> = R Function(T value);
 

@@ -2,7 +2,7 @@ part of '../core.dart';
 
 /// Provides the functionality of [ReactterHookManager].
 ///
-/// Depends on a [ReactterContext] for a listen this hook
+/// Depends on a [ReactterHookManager] for a listen this hook
 ///
 /// This is an example of how to create a custom hook:
 ///
@@ -38,19 +38,24 @@ part of '../core.dart';
 ///   }
 /// }
 /// ```
+///
+/// See also:
+/// - [ReactterHookManager]
 abstract class ReactterHook extends ReactterHookManager {
   ReactterHook(ReactterHookManager? context) {
     context?.listenHooks([this]);
   }
 
   /// First, invokes the subscribers callbacks of the willUpdate event.
+  ///
   /// Second, invokes the callback given by parameter.
+  ///
   /// And finally, invokes the subscribers callbacks of the didUpdate event.
   void update([Function? callback]) {
-    _hookManagerEvent.trigger(ReactterHookManagerEvent.willUpdate, this);
+    _event.trigger(LifeCycleEvent.willUpdate, this);
 
     callback?.call();
 
-    _hookManagerEvent.trigger(ReactterHookManagerEvent.didUpdate, this);
+    _event.trigger(LifeCycleEvent.didUpdate, this);
   }
 }

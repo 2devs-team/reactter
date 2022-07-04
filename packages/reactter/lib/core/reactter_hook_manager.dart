@@ -1,37 +1,46 @@
 part of '../core.dart';
 
-enum ReactterHookManagerEvent { willUpdate, didUpdate }
+enum LifeCycleEvent {
+  /// Event when the instance has registered by ReactterFactory.
+  registered,
 
-/// Manages the [ReactterHook] witch add from [listenHooks] method.
+  /// Event when the instance has unregistered by ReactterFactory.
+  unregistered,
+
+  /// Event when the instance has inicialized.
+  initialized,
+
+  /// Event when the instance will be mount in the widget tree (only it use with flutter).
+  willMount,
+
+  /// Event when the instance did be mount in the widget tree (only it use with flutter).
+  didMount,
+
+  /// Event when any instance's hooks will be update. Event param is a [ReactterHook].
+  willUpdate,
+
+  /// Event when any instance's hooks did be update. Event param is a [ReactterHook].
+  didUpdate,
+
+  /// Event when the instance will be unmount in the widget tree (only it use with flutter).
+  willUnmount,
+
+  /// Event when the instance did be destroyed.
+  destroyed,
+}
+
+/// A hook manager.
 ///
-/// This is an example of how to create a custom hook with mixin:
+/// Use [listenHooks] for watch hooks([ReactterHook])
+/// and notify when it has changed.
 ///
-///```dart
-/// mixin LoadingMixin on ReactterHookManager {
-///   final loading = UseState(false, this);
+/// Exposes two methods [onWillUpdate] and [onDidUpdate]
+/// for subscribe and notify when any hooks has changed.
 ///
-///   void loadingToggle() {
-///     loading.value = !loading.value;
-///   }
-/// }
-///
-/// class AppContext extends ReactterContext with LoadingMixin {
-///   AppContext(){
-///     loadingToggle();
-///     print('loading: ${loading.value}');
-///   }
-/// }
-///
-/// class UseUser extends ReactterHook with LoadingMixin {
-///   UseUser(){
-///     loadingToggle();
-///     print('loading: ${loading.value}');
-///   }
-/// }
-///```
-///
-class ReactterHookManager {
-  late final _hookManagerEvent = UseEvent.withInstance(this);
+/// See also:
+/// - [ReactterHook], a abstract hook that [ReactterHookManager] listen it.
+abstract class ReactterHookManager {
+  late final _event = UseEvent.withInstance(this);
 
   /// Stores all the hooks given.
   final Set<ReactterHook> _hooks = {};
@@ -45,31 +54,45 @@ class ReactterHookManager {
 
       _hooks.add(hook);
 
-      hook.onWillUpdate(
-        (_, hook) => _hookManagerEvent.trigger(
-            ReactterHookManagerEvent.willUpdate, hook),
-      );
+      void onWillUpdate(_, hook) =>
+          _event.trigger(LifeCycleEvent.willUpdate, hook);
 
-      hook.onDidUpdate(
-        (_, hook) =>
-            _hookManagerEvent.trigger(ReactterHookManagerEvent.didUpdate, hook),
-      );
+      void onDidUpdate(_, hook) =>
+          _event.trigger(LifeCycleEvent.didUpdate, hook);
+
+      final offWillUpdate = hook.onWillUpdate(onWillUpdate);
+      final offDidUpdate = hook.onDidUpdate(onDidUpdate);
+
+      _event.on(LifeCycleEvent.destroyed, (_, __) {
+        offWillUpdate();
+        offDidUpdate();
+      });
     }
   }
 
-  /// Register a callback that will be executed when the instance will update
+  /// Save a callback on [LifeCycleEvent.willUpdate] event.
+  ///
+  /// This event will trigger when any hooks of instance [ReactterContext] will be update.
+  ///
+  /// Receives a [ReactterHook] parameter which trigger this event.
   Function onWillUpdate(
-      CallbackEvent<ReactterHookManager, ReactterHook> callback) {
-    _hookManagerEvent.on(ReactterHookManagerEvent.willUpdate, callback);
-    return () =>
-        _hookManagerEvent.off(ReactterHookManagerEvent.willUpdate, callback);
+    CallbackEvent<ReactterHookManager, ReactterHook> callback,
+  ) {
+    _event.on<ReactterHook>(LifeCycleEvent.willUpdate, callback);
+
+    return () => _event.off<ReactterHook>(LifeCycleEvent.willUpdate, callback);
   }
 
-  /// Register a callback that will be executed when the instance did update
+  /// Save a callback on [LifeCycleEvent.didUpdate] event.
+  ///
+  /// This event will trigger when any hooks of instance [ReactterContext] did be update.
+  ///
+  /// Receives a [ReactterHook] parameter which trigger this event.
   Function onDidUpdate(
-      CallbackEvent<ReactterHookManager, ReactterHook> callback) {
-    _hookManagerEvent.on(ReactterHookManagerEvent.didUpdate, callback);
-    return () =>
-        _hookManagerEvent.off(ReactterHookManagerEvent.didUpdate, callback);
+    CallbackEvent<ReactterHookManager, ReactterHook> callback,
+  ) {
+    _event.on(LifeCycleEvent.didUpdate, callback);
+
+    return () => _event.off(LifeCycleEvent.didUpdate, callback);
   }
 }
