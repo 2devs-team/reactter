@@ -35,8 +35,6 @@ enum AnimationControl {
   stop,
 }
 
-enum _AnimationStatus { start, completed }
-
 /// Method extensions on [AnimationController]
 extension _AnimationControllerExtension on AnimationController {
   /// Starts playing the animation in forward direction.
@@ -155,24 +153,14 @@ class UseAnimation<T> extends ReactterHook implements TickerProvider {
   );
 
   var _waitForDelay = true;
-  var _isPlaying = false;
   var _isControlSetToMirror = false;
   Set<Ticker>? _tickers;
 
   UseAnimation(this.options, [this._context]) : super(_context) {
     UseEvent.withInstance(_context)
-      ..on(
-        LifeCycle.didMount,
-        (_, __) => _addFrameLimitingUpdater(),
-      )
-      ..on(
-        LifeCycle.willUnmount,
-        (_, __) => _aniController.dispose(),
-      )
-      ..on(
-        LifeCycle.destroyed,
-        (_, __) => _event.clear(),
-      );
+      ..on(LifeCycle.didMount, (_, __) => _addFrameLimitingUpdater())
+      ..on(LifeCycle.willUnmount, (_, __) => _aniController.dispose())
+      ..on(LifeCycle.destroyed, (_, __) => _event.dispose());
 
     _aniController.addStatusListener(_onAnimationStatus);
 
@@ -239,18 +227,6 @@ class UseAnimation<T> extends ReactterHook implements TickerProvider {
     });
   }
 
-  Function onStart(void Function(UseAnimation<T>?, dynamic) callback) {
-    _event.on(_AnimationStatus.start, callback);
-
-    return () => _event.off(_AnimationStatus.start, callback);
-  }
-
-  Function onComplete(void Function(UseAnimation<T>?, dynamic) callback) {
-    _event.on(_AnimationStatus.completed, callback);
-
-    return () => _event.off(_AnimationStatus.completed, callback);
-  }
-
   @override
   Ticker createTicker(TickerCallback onTick) {
     final result =
@@ -286,13 +262,7 @@ class UseAnimation<T> extends ReactterHook implements TickerProvider {
   void _onAnimationStatus(AnimationStatus status) {
     options.animationStatusListener?.call(status);
 
-    if (status == AnimationStatus.forward ||
-        status == AnimationStatus.reverse) {
-      _trackPlaybackStart();
-    } else if (status == AnimationStatus.dismissed ||
-        status == AnimationStatus.completed) {
-      _trackPlaybackComplete();
-    }
+    _event.trigger(status);
   }
 
   void _rebuild() {
@@ -306,20 +276,6 @@ class UseAnimation<T> extends ReactterHook implements TickerProvider {
           CurveTween(curve: curve.value),
         )
         .animate(_aniController);
-  }
-
-  void _trackPlaybackStart() {
-    if (!_isPlaying) {
-      _isPlaying = true;
-      _event.trigger(_AnimationStatus.start);
-    }
-  }
-
-  void _trackPlaybackComplete() {
-    if (_isPlaying) {
-      _isPlaying = false;
-      _event.trigger(_AnimationStatus.completed);
-    }
   }
 
   void _asyncInitState() async {
@@ -367,7 +323,6 @@ class UseAnimation<T> extends ReactterHook implements TickerProvider {
       return unawaited(_aniController.mirror());
     }
 
-    _trackPlaybackComplete();
     _aniController.stop();
   }
 
