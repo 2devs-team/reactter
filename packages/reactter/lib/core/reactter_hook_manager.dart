@@ -1,6 +1,6 @@
 part of '../core.dart';
 
-enum LifeCycleEvent {
+enum LifeCycle {
   /// Event when the instance has registered by ReactterFactory.
   registered,
 
@@ -54,45 +54,19 @@ abstract class ReactterHookManager {
 
       _hooks.add(hook);
 
-      void onWillUpdate(_, hook) =>
-          _event.trigger(LifeCycleEvent.willUpdate, hook);
+      void onWillUpdate(_, hook) => _event.trigger(LifeCycle.willUpdate, hook);
 
-      void onDidUpdate(_, hook) =>
-          _event.trigger(LifeCycleEvent.didUpdate, hook);
+      void onDidUpdate(_, hook) => _event.trigger(LifeCycle.didUpdate, hook);
 
-      final offWillUpdate = hook.onWillUpdate(onWillUpdate);
-      final offDidUpdate = hook.onDidUpdate(onDidUpdate);
+      UseEvent.withInstance(hook)
+        ..on(LifeCycle.willUpdate, onWillUpdate)
+        ..on(LifeCycle.didUpdate, onDidUpdate);
 
-      _event.on(LifeCycleEvent.destroyed, (_, __) {
-        offWillUpdate();
-        offDidUpdate();
+      _event.one(LifeCycle.destroyed, (_, __) {
+        UseEvent.withInstance(hook)
+          ..off(LifeCycle.willUpdate, onWillUpdate)
+          ..off(LifeCycle.didUpdate, onDidUpdate);
       });
     }
-  }
-
-  /// Save a callback on [LifeCycleEvent.willUpdate] event.
-  ///
-  /// This event will trigger when any hooks of instance [ReactterContext] will be update.
-  ///
-  /// Receives a [ReactterHook] parameter which trigger this event.
-  Function onWillUpdate(
-    CallbackEvent<ReactterHookManager, ReactterHook> callback,
-  ) {
-    _event.on<ReactterHook>(LifeCycleEvent.willUpdate, callback);
-
-    return () => _event.off<ReactterHook>(LifeCycleEvent.willUpdate, callback);
-  }
-
-  /// Save a callback on [LifeCycleEvent.didUpdate] event.
-  ///
-  /// This event will trigger when any hooks of instance [ReactterContext] did be update.
-  ///
-  /// Receives a [ReactterHook] parameter which trigger this event.
-  Function onDidUpdate(
-    CallbackEvent<ReactterHookManager, ReactterHook> callback,
-  ) {
-    _event.on(LifeCycleEvent.didUpdate, callback);
-
-    return () => _event.off(LifeCycleEvent.didUpdate, callback);
   }
 }

@@ -49,10 +49,10 @@ class ReactterFactory {
   /// Registers a builder function into to [instances] to create a new instance
   ///
   /// returns `true` when instance has been registered.
-  bool register<T extends Object?>(
-    ContextBuilder<T> builder, [
+  bool register<T extends Object?>({
+    required ContextBuilder<T> builder,
     String? id,
-  ]) {
+  }) {
     final instance = ReactterInstance<T?>.withBuilder(id, builder);
 
     if (_reactterFactory.instances.contains(instance)) {
@@ -61,13 +61,13 @@ class ReactterFactory {
     }
 
     _reactterFactory.instances.add(instance);
-    UseEvent<T>(id).trigger(LifeCycleEvent.registered);
+    UseEvent<T>(id).trigger(LifeCycle.registered);
     Reactter.log('Instance "$instance" has been registered.');
     return true;
   }
 
   /// Remove a builder function from [instances].
-  void unregistered<T extends Object>(String? id) {
+  void unregister<T extends Object>([String? id]) {
     final instance = ReactterInstance<T?>(id);
 
     if (!_reactterFactory.instances.contains(instance)) {
@@ -76,7 +76,7 @@ class ReactterFactory {
     }
 
     _reactterFactory.instances.remove(instance);
-    UseEvent<T>(id).trigger(LifeCycleEvent.unregistered);
+    UseEvent<T>(id).trigger(LifeCycle.unregistered);
     Reactter.log('Instance "$instance" has been unregistered.');
   }
 
@@ -103,7 +103,10 @@ class ReactterFactory {
   /// If a [builder] of [T] isn't in [instances] returns `null`
   ///
   /// Creates the instance if is not create but is already registered in [instances]
-  T? getInstance<T extends Object?>(String? id, Object ref) {
+  T? getInstance<T extends Object?>({
+    String? id,
+    Object? ref,
+  }) {
     final instanceToFind = ReactterInstance<T?>(id);
     final instanceFound = _reactterFactory.instances.lookup(instanceToFind);
 
@@ -118,18 +121,28 @@ class ReactterFactory {
 
     if (instanceFound.instance == null) {
       instanceFound.instance = instanceFound.builder?.call();
-      UseEvent<T>(id).trigger(LifeCycleEvent.initialized);
+      UseEvent<T>(id).trigger(LifeCycle.initialized);
 
       Reactter.log('Instance "$instanceFound" has been created.');
     } else {
       Reactter.log('Instance "$instanceFound" already created.');
     }
 
-    if (!instanceFound.fromList.contains(ref.hashCode)) {
+    if (ref != null && !instanceFound.fromList.contains(ref.hashCode)) {
       instanceFound.fromList.add(ref.hashCode);
     }
 
     return instanceFound.instance;
+  }
+
+  // Registers and obtains the instance of [T] with or without [id] given.
+  T? createInstance<T extends Object?>({
+    required ContextBuilder<T> builder,
+    String? id,
+    Object? ref,
+  }) {
+    register<T>(builder: builder, id: id);
+    return getInstance<T>(id: id, ref: ref);
   }
 
   /// Deletes the instance from [instances] but keep the [builder] in memory.
@@ -158,9 +171,13 @@ class ReactterFactory {
 
     final log = 'Instance "$instanceFound" has been deleted.';
 
+    if (instanceFound.instance is ReactterContext) {
+      (instanceFound.instance as ReactterContext).dispose();
+    }
+
     instanceFound.instance = null;
 
-    UseEvent<T>(id).trigger(LifeCycleEvent.destroyed);
+    UseEvent<T>(id).trigger(LifeCycle.destroyed);
     UseEvent<T>(id).clear();
 
     Reactter.log(log);

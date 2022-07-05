@@ -6,8 +6,7 @@ export 'core.dart'
         ReactterHook,
         ReactterHookManager,
         ReactterContext,
-        ReactterSubscribersManager,
-        LifeCycleEvent;
+        LifeCycle;
 
 export 'hooks.dart'
     show

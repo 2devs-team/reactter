@@ -74,13 +74,13 @@ class ReactterScopeInheritedElement<T extends ReactterContext?,
     _updateAncestorScopeInheritedElement(parent);
 
     if (_isRoot) {
-      UseEvent.withInstance(_instance).trigger(LifeCycleEvent.willMount);
+      UseEvent.withInstance(_instance).trigger(LifeCycle.willMount);
     }
 
     super.mount(parent, newSlot);
 
     if (_isRoot) {
-      UseEvent.withInstance(_instance).trigger(LifeCycleEvent.didMount);
+      UseEvent.withInstance(_instance).trigger(LifeCycle.didMount);
     }
   }
 
@@ -174,7 +174,7 @@ class ReactterScopeInheritedElement<T extends ReactterContext?,
   @override
   void unmount() {
     if (_isRoot) {
-      UseEvent.withInstance(_instance).trigger(LifeCycleEvent.willUnmount);
+      UseEvent.withInstance(_instance).trigger(LifeCycle.willUnmount);
     }
 
     _event.trigger(InheritedElementStatus.unmount);
@@ -194,9 +194,15 @@ class ReactterScopeInheritedElement<T extends ReactterContext?,
   void dependOnHooks(List<ReactterHook> hooks) {
     for (int i = 0; i < hooks.length; i++) {
       final hook = hooks[i];
-      final unsubscribe = hook.onDidUpdate((_, __) => markNeedsBuild());
 
-      _unsubscribersDependencies.add(unsubscribe);
+      void _onDidUpdate(_, __) => markNeedsBuild();
+
+      UseEvent.withInstance(hook).on(LifeCycle.didUpdate, _onDidUpdate);
+
+      _unsubscribersDependencies.add(
+        () =>
+            UseEvent.withInstance(hook).off(LifeCycle.didUpdate, _onDidUpdate),
+      );
     }
   }
 
@@ -205,9 +211,14 @@ class ReactterScopeInheritedElement<T extends ReactterContext?,
       return;
     }
 
-    final unsubscribe = instance.onDidUpdate((_, __) => markNeedsBuild());
+    void _onDidUpdate(_, __) => markNeedsBuild();
 
-    _unsubscribersDependencies.add(unsubscribe);
+    UseEvent.withInstance(instance).on(LifeCycle.didUpdate, _onDidUpdate);
+
+    _unsubscribersDependencies.add(
+      () => UseEvent.withInstance(instance)
+          .off(LifeCycle.didUpdate, _onDidUpdate),
+    );
   }
 
   /// Unsubscribes dependencies

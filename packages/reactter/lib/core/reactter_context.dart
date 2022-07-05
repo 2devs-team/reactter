@@ -10,23 +10,30 @@ part of '../core.dart';
 /// class AppContext extends ReactterContext {}
 /// ```
 ///
-/// For access to instance anywhere, you need to register
-/// the instance in Reactter using [ReactterFactory]:
+/// For access to instance anywhere, you need to register the instance
+/// using [ReactterFactory]:
 ///
 /// ```dart
-/// Reactter.factory.register<AppContext>(() => AppContex());
+/// Reactter.factory.register<AppContext>(
+///   () => AppContex(),
+/// );
+///
+/// // or
+/// final appContext = Reactter.factory.createInstance<AppContext>(
+///   () => AppContex(),
+/// );
 /// ```
 ///
-/// and get instance:
+/// And later you can get the instance:
 ///
 /// ```dart
-/// final instance = Reactter.factory.getInstance<AppContext>();
+/// final appContext = Reactter.factory.getInstance<AppContext>();
 /// ```
 ///
 /// or using [UseContext] hook:
 ///
 /// ```dart
-/// final instance = UseContext<AppContext>().instance;
+/// final appContext = UseContext<AppContext>().instance;
 /// ```
 ///
 /// If you use flutter, add [`flutter_reactter`](https://pub.dev/packages/flutter_reactter)
@@ -37,30 +44,7 @@ part of '../core.dart';
 /// - [ReactterFactory], a instances manager
 /// - [UseContext], a hook that allowed access to instance of [ReactterContext].
 abstract class ReactterContext extends ReactterHookManager {
-  /// Save a callback on [LifeCycleEvent.willMount] event.
-  ///
-  /// This event will trigger when the instance [ReactterContext]
-  /// will be mount in the widget tree (only it use with flutter)
-  Function onWillMount(CallbackEvent<ReactterHookManager, dynamic> callback) {
-    _event.on(LifeCycleEvent.willMount, callback);
-    return () => _event.off(LifeCycleEvent.willMount, callback);
-  }
-
-  /// Save a callback on [LifeCycleEvent.didMount] event.
-  ///
-  /// This event will trigger when the instance [ReactterContext]
-  /// did be mount in the widget tree (only it use with flutter)
-  Function onDidMount(CallbackEvent<ReactterHookManager, Null> callback) {
-    _event.on(LifeCycleEvent.didMount, callback);
-    return () => _event.off(LifeCycleEvent.didMount, callback);
-  }
-
-  /// Save a callback on [LifeCycleEvent.willUnmount] event.
-  ///
-  /// This event will trigger when the instance [ReactterContext]
-  /// will be unmount in the widget tree (only it use with flutter)
-  Function onWillUnmount(CallbackEvent<ReactterHookManager, Null> callback) {
-    _event.on(LifeCycleEvent.willUnmount, callback);
-    return () => _event.off(LifeCycleEvent.willUnmount, callback);
-  }
+  /// This methods is called for [ReactterFactory]
+  /// when the instance will be destroyed.
+  dispose() {}
 }

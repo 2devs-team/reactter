@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:reactter/reactter.dart';
 
 import 'shareds/test_context.dart';
 
@@ -49,9 +50,12 @@ void main() {
 
       late final int willUpdateValue;
 
-      testContext.stateInt.onWillUpdate((_, __) {
-        willUpdateValue = testContext.stateInt.value;
-      });
+      UseEvent.withInstance(testContext.stateInt).on(
+        LifeCycle.willUpdate,
+        (inst, param) {
+          willUpdateValue = testContext.stateInt.value;
+        },
+      );
 
       testContext.stateInt.value += 1;
 
@@ -65,9 +69,12 @@ void main() {
 
       late final int didUpdateValue;
 
-      testContext.stateInt.onDidUpdate((_, __) {
-        didUpdateValue = testContext.stateInt.value;
-      });
+      UseEvent.withInstance(testContext.stateInt).on(
+        LifeCycle.didUpdate,
+        (inst, param) {
+          didUpdateValue = testContext.stateInt.value;
+        },
+      );
 
       testContext.stateInt.value += 1;
 

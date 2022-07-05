@@ -42,6 +42,7 @@ class UseEffect extends ReactterHook {
   /// Hooks dependencies
   final List<ReactterHook> dependencies;
 
+  late final _event = UseEvent.withInstance(this);
   Function? _unsubscribeCallback;
 
   UseEffect(
@@ -63,20 +64,24 @@ class UseEffect extends ReactterHook {
     }
 
     if (context is DispatchEffect || context == null) {
-      unsubscribeWillUpdate = onWillUpdate(_onUnsubscribe);
-      unsubscribeDidUpdate = onDidUpdate(_onSubscribe);
+      unsubscribeWillUpdate = _onWillUpdate(_onUnsubscribe);
+      unsubscribeDidUpdate = _onDidUpdate(_onSubscribe);
     }
 
-    context?.onDidMount((_, __) {
-      unsubscribeWillUpdate = onWillUpdate(_onUnsubscribe);
-      unsubscribeDidUpdate = onDidUpdate(_onSubscribe);
-    });
-
-    context?.onWillUnmount((_, __) {
-      _onUnsubscribe.call(_, __);
-      unsubscribeWillUpdate?.call();
-      unsubscribeDidUpdate?.call();
-    });
+    UseEvent.withInstance(context)
+      ..on(LifeCycle.willUpdate, (_, __) {
+        unsubscribeWillUpdate = _onWillUpdate(_onUnsubscribe);
+        unsubscribeDidUpdate = _onDidUpdate(_onSubscribe);
+      })
+      ..on(LifeCycle.didMount, (_, __) {
+        unsubscribeWillUpdate = _onWillUpdate(_onUnsubscribe);
+        unsubscribeDidUpdate = _onDidUpdate(_onSubscribe);
+      })
+      ..on(LifeCycle.willUnmount, (_, __) {
+        _onUnsubscribe.call(_, __);
+        unsubscribeWillUpdate?.call();
+        unsubscribeDidUpdate?.call();
+      });
   }
 
   void _onSubscribe(_, __) {
@@ -88,6 +93,22 @@ class UseEffect extends ReactterHook {
   }
 
   void _onUnsubscribe(_, __) => _unsubscribeCallback?.call();
+
+  Function _onWillUpdate(
+    CallbackEvent<ReactterHookManager, ReactterHook> callback,
+  ) {
+    _event.on<ReactterHook>(LifeCycle.willUpdate, callback);
+
+    return () => _event.off<ReactterHook>(LifeCycle.willUpdate, callback);
+  }
+
+  Function _onDidUpdate(
+    CallbackEvent<ReactterHookManager, ReactterHook> callback,
+  ) {
+    _event.on<ReactterHook>(LifeCycle.didUpdate, callback);
+
+    return () => _event.off<ReactterHook>(LifeCycle.didUpdate, callback);
+  }
 
   static DispatchEffect get dispatchEffect => DispatchEffect();
 }

@@ -52,10 +52,10 @@ abstract class ReactterHook extends ReactterHookManager {
   ///
   /// And finally, invokes the subscribers callbacks of the didUpdate event.
   void update([Function? callback]) {
-    _event.trigger(LifeCycleEvent.willUpdate, this);
+    _event.trigger(LifeCycle.willUpdate, this);
 
     callback?.call();
 
-    _event.trigger(LifeCycleEvent.didUpdate, this);
+    _event.trigger(LifeCycle.didUpdate, this);
   }
 }

@@ -119,9 +119,11 @@ class ReactterProvider<T extends ReactterContext>
   bool _existsInstance() => Reactter.factory.existsInstance<T>(_id);
 
   T? _createInstance(Object ref) {
-    Reactter.factory.register<T>(_instanceBuilder, _id);
-
-    final instance = Reactter.factory.getInstance<T>(_id, ref);
+    final instance = Reactter.factory.createInstance<T>(
+      builder: _instanceBuilder,
+      id: _id,
+      ref: ref,
+    );
 
     if (instance != null) {
       _onInit?.call(instance);

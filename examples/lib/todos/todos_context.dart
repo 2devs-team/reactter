@@ -45,7 +45,10 @@ class TodosContext extends ReactterContext {
 
     todos.update(() => todos.value.add(todoContext));
 
-    todoContext.onDidUpdate((_, __) => _didUpdateTodo(todoContext));
+    UseEvent.withInstance(todoContext).on(
+      LifeCycle.didUpdate,
+      (_, __) => _didUpdateTodo(todoContext),
+    );
 
     formKey.currentState!.reset();
     textFocusNode.requestFocus();
