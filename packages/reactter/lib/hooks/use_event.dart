@@ -16,7 +16,9 @@ class UseEvent<T extends Object?> {
 
   UseEvent([String? _id]) : _instance = ReactterInstance<T?>(_id);
 
-  UseEvent.withInstance(T instance) : _instance = instance;
+  UseEvent.withInstance(T instance)
+      : assert(instance != null),
+        _instance = instance;
 
   void on<P>(Enum eventName, CallbackEvent<T, P> callback) {
     UseEvent._subscribers[_instance] ??= HashMap();

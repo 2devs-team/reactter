@@ -68,6 +68,10 @@ class UseEffect extends ReactterHook {
       unsubscribeDidUpdate = _onDidUpdate(_onSubscribe);
     }
 
+    if (context == null) {
+      return;
+    }
+
     UseEvent.withInstance(context)
       ..on(LifeCycle.willUpdate, (_, __) {
         unsubscribeWillUpdate = _onWillUpdate(_onUnsubscribe);
@@ -95,7 +99,7 @@ class UseEffect extends ReactterHook {
   void _onUnsubscribe(_, __) => _unsubscribeCallback?.call();
 
   Function _onWillUpdate(
-    CallbackEvent<ReactterHookManager, ReactterHook> callback,
+    CallbackEvent callback,
   ) {
     _event.on<ReactterHook>(LifeCycle.willUpdate, callback);
 
@@ -103,7 +107,7 @@ class UseEffect extends ReactterHook {
   }
 
   Function _onDidUpdate(
-    CallbackEvent<ReactterHookManager, ReactterHook> callback,
+    CallbackEvent callback,
   ) {
     _event.on<ReactterHook>(LifeCycle.didUpdate, callback);
 
