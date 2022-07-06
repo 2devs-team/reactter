@@ -1,40 +1,82 @@
 part of '../hooks.dart';
 
-/// It's a hook that manages side-effect on [ReactterContext]
+/// A hook that side-effect manager.
 ///
 /// The side-effect logic into the [callback] function is executed
 /// when [dependencies] of [ReactterHook] argument has changes
 /// or [context] of [ReactterContext] trigger [didMount] event.
 ///
+/// ```dart
+/// UseEffect(() {
+///   print("Execute by state changed or 'didMount' event");
+/// }, [state], this);
+/// ```
+///
 /// If the [callback] returns a function,
 /// then [UseEffect] considers this as an `effect cleanup`.
 ///
-/// The `effect cleanup` callback is execute when before [callback] is called
-/// or [context] trigger  [willUnmount] event.
+/// The `effect cleanup` callback is executed, before [callback] is called
+/// or [context] trigger [willUnmount] event:
 ///
-/// This example produces a [UseEffect], it must be called on [ReactterContext]
-/// constructor:
+/// ```dart
+/// UseEffect(() {
+///   print("Execute by 'didMount' event");
+///
+///   return () {
+///     print("Execute by 'willUnmount' event");
+///   };
+/// }, [], this);
+/// ```
+///
+/// **RECOMMENDED**: Use it on [ReactterContext] constructor:
 ///
 /// ```dart
 /// class AppContext extends ReactterContext {
-///   late final name = UseState<String?>(null, this);
-///   late final firstName = UseState("Carlos", this);
-///   late final lastName = UseState("Leon", this);
+///   late final state = UseState(false);
 ///
 ///   AppContext() {
 ///     UseEffect(() {
-///       // name.value = "Carlos Leon" on first time
-///       // name.value = "Leo Cast" after 2 seconds pass
-///       name.value = "${firstName.value} ${lastName.value}";
-///     }, [firstName, lastName], this);
+///       print('state: ${state.value}');
+///     }, [state], this);
 ///
-///     Future.delayed(Duration(seconds: 1), () {
-///       firstName.value = "Leo";
-///       lastName.value = "Cast";
-///     });
+///     Future.delayed(
+///       const Duration(seconds: 1),
+///       () {
+///         state.value = !state.value;
+///       },
+///     );
 ///   }
 /// }
 /// ```
+/// If you need to execute the UseEffect's [callback] inmediately created,
+/// use [DispatchEffect] on [context] parameter:
+///
+/// ```dart
+/// UseEffect(
+///   () => print("Prompt execution or state changed"),
+///   [state],
+///   UseEffect.DispatchEffect,
+/// );
+/// ```
+/// or use mixin [DispatchEffect]:
+///
+/// ```dart
+/// class AppContext extends ReactterContext with DispatchEffect {
+///   AppContext() {
+///     UseEffect(
+///       () => print("Prompt execution or state changed"),
+///       [state], this
+///     );
+///   }
+/// }
+/// ```
+///
+/// If you not put [ReactterContext] on the [context] parameter,
+/// should to call [dispose] method for clear any UseEffect's events.
+///
+/// See also:
+/// - [ReactterContext], is used to react to its [didMount] and [willUnmount] events.
+/// - [ReactterHook], it receives as dependencies.
 class UseEffect extends ReactterHook {
   /// Function to control side-effect and effect cleanup.
   final Function callback;
@@ -42,87 +84,85 @@ class UseEffect extends ReactterHook {
   /// Hooks dependencies
   final List<ReactterHook> dependencies;
 
-  late final _event = UseEvent.withInstance(this);
-  Function? _unsubscribeCallback;
+  final ReactterContext? context;
+
+  static DispatchEffect get dispatchEffect => _DispatchEffect._();
+
+  late final _dependenciesEvent = UseEvent.withInstance(this);
+  Function? _cleanupCallback;
 
   UseEffect(
     this.callback,
     this.dependencies, [
-    ReactterContext? context,
+    this.context,
   ]) : super(context) {
     listenHooks(dependencies);
 
-    _addListeners(context);
-  }
-
-  void _addListeners(ReactterContext? context) {
-    Function? unsubscribeWillUpdate;
-    Function? unsubscribeDidUpdate;
-
-    if (context != null) {
-      _onSubscribe(this, null);
-    }
-
-    if (context is DispatchEffect || context == null) {
-      unsubscribeWillUpdate = _onWillUpdate(_onUnsubscribe);
-      unsubscribeDidUpdate = _onDidUpdate(_onSubscribe);
-    }
-
     if (context == null) {
+      _watchDependencies();
       return;
     }
 
+    if (context is DispatchEffect) {
+      _runCallbackAndWatchDependencies(null, null);
+    }
+
     UseEvent.withInstance(context)
-      ..on(LifeCycle.willUpdate, (_, __) {
-        unsubscribeWillUpdate = _onWillUpdate(_onUnsubscribe);
-        unsubscribeDidUpdate = _onDidUpdate(_onSubscribe);
-      })
-      ..on(LifeCycle.didMount, (_, __) {
-        unsubscribeWillUpdate = _onWillUpdate(_onUnsubscribe);
-        unsubscribeDidUpdate = _onDidUpdate(_onSubscribe);
-      })
-      ..on(LifeCycle.willUnmount, (_, __) {
-        _onUnsubscribe.call(_, __);
-        unsubscribeWillUpdate?.call();
-        unsubscribeDidUpdate?.call();
-      });
+      ..on(LifeCycle.didMount, _runCallbackAndWatchDependencies)
+      ..on(LifeCycle.willUnmount, _runCleanupAndUnwatchDependencies)
+      ..one(LifeCycle.destroyed, (_, __) => dispose());
   }
 
-  void _onSubscribe(_, __) {
-    final returnCallback = callback();
+  void dispose() {
+    _cleanupCallback = null;
+    UseEvent.withInstance(context)
+      ..off(LifeCycle.didMount, _runCallbackAndWatchDependencies)
+      ..off(LifeCycle.willUnmount, _runCleanupAndUnwatchDependencies);
+    _dependenciesEvent.dispose();
+  }
 
-    if (returnCallback is Function) {
-      _unsubscribeCallback = returnCallback;
+  void _runCallbackAndWatchDependencies(_, __) {
+    _runCallback(_, __);
+    _watchDependencies();
+  }
+
+  void _runCleanupAndUnwatchDependencies(_, __) {
+    _runCleanup(_, __);
+    _unwatchDependencies();
+  }
+
+  void _watchDependencies() {
+    _dependenciesEvent.on(LifeCycle.willUpdate, _runCleanup);
+    _dependenciesEvent.on(LifeCycle.didUpdate, _runCallback);
+  }
+
+  void _unwatchDependencies() {
+    _dependenciesEvent.off(LifeCycle.willUpdate, _runCleanup);
+    _dependenciesEvent.off(LifeCycle.didUpdate, _runCallback);
+  }
+
+  void _runCallback(_, __) {
+    final cleanupCallback = callback();
+
+    if (cleanupCallback is Function) {
+      _cleanupCallback = cleanupCallback;
     }
   }
 
-  void _onUnsubscribe(_, __) => _unsubscribeCallback?.call();
-
-  Function _onWillUpdate(
-    CallbackEvent callback,
-  ) {
-    _event.on<ReactterHook>(LifeCycle.willUpdate, callback);
-
-    return () => _event.off<ReactterHook>(LifeCycle.willUpdate, callback);
+  void _runCleanup(_, __) {
+    _cleanupCallback?.call();
+    _cleanupCallback = null;
   }
-
-  Function _onDidUpdate(
-    CallbackEvent callback,
-  ) {
-    _event.on<ReactterHook>(LifeCycle.didUpdate, callback);
-
-    return () => _event.off<ReactterHook>(LifeCycle.didUpdate, callback);
-  }
-
-  static DispatchEffect get dispatchEffect => DispatchEffect();
 }
 
-class DispatchEffect extends ReactterContext {
-  static final DispatchEffect inst = DispatchEffect._();
+mixin DispatchEffect on ReactterContext {}
 
-  factory DispatchEffect() {
+class _DispatchEffect extends ReactterContext with DispatchEffect {
+  static final _DispatchEffect inst = _DispatchEffect._();
+
+  factory _DispatchEffect() {
     return inst;
   }
 
-  DispatchEffect._();
+  _DispatchEffect._();
 }

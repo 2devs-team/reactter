@@ -10,8 +10,8 @@ class MyClass {
 }
 
 void main() {
-  group("UseEffect", () {
-    test("callback should be called when its dependencies has changed", () {
+  group("UseEffect's callback", () {
+    test("should be called when its dependencies has changed", () {
       final testContext = TestContext();
       final stateA = testContext.stateBool;
       final stateB = testContext.stateInt;
@@ -31,7 +31,19 @@ void main() {
       expect(nCalls, 2);
     });
 
-    test("return callback should be called", () {
+    test("should be called with dispatchEffect", () {
+      late final bool isCalled;
+
+      UseEffect(() {
+        isCalled = true;
+      }, [], UseEffect.dispatchEffect);
+
+      expectLater(isCalled, true);
+    });
+  });
+
+  group("UseEffect's cleaup", () {
+    test("should be called before its dependencies has changed", () {
       final testContext = TestContext();
       final stateA = testContext.stateBool;
       final stateB = testContext.stateInt;
@@ -56,17 +68,7 @@ void main() {
       expect(nCalls, 2);
     });
 
-    test("callback should be called with dispatchEffect", () {
-      late final bool isCalled;
-
-      UseEffect(() {
-        isCalled = true;
-      }, [], UseEffect.dispatchEffect);
-
-      expectLater(isCalled, true);
-    });
-
-    test("return callback should be called with dispatchEffect", () {
+    test("should be called with dispatchEffect", () {
       final testContext = TestContext();
       final stateA = testContext.stateBool;
       final stateB = testContext.stateInt;
