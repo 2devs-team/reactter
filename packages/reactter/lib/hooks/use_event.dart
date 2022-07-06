@@ -4,7 +4,7 @@ class UseEvent<T extends Object?> {
   static final HashMap<Object?, HashMap<Enum, Set<Function>>> _subscribers =
       HashMap();
 
-  late Object? _instance;
+  Object? _instance = null;
 
   Object? get instance => _instance is ReactterInstance
       ? Reactter.factory.instances.lookup(_instance)?.instance
@@ -12,7 +12,7 @@ class UseEvent<T extends Object?> {
 
   ReactterInstance? get instanceManager => _instance is ReactterInstance
       ? (_instance as ReactterInstance)
-      : Reactter.factory.findInstance(_instance);
+      : Reactter.find(_instance);
 
   UseEvent([String? _id]) : _instance = ReactterInstance<T?>(_id);
 
@@ -63,9 +63,11 @@ class UseEvent<T extends Object?> {
     }
   }
 
-  void clear() {
+  void dispose() {
     UseEvent._subscribers
       ..remove(instance)
       ..remove(instanceManager);
+
+    _instance = null;
   }
 }

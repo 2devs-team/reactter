@@ -1,6 +1,8 @@
 part of '../core.dart';
 
-class ReactterInterface {
+abstract class _ReactterInterface {}
+
+class ReactterInterface extends _ReactterInterface {
   bool isLogEnable = kDebugMode;
   LogWriterCallback log = defaultLogWriterCallback;
 

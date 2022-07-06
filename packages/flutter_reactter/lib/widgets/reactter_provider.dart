@@ -116,10 +116,10 @@ class ReactterProvider<T extends ReactterContext>
     return ReactterScopeInherited<T, Null>(owner: owner, child: child);
   }
 
-  bool _existsInstance() => Reactter.factory.existsInstance<T>(_id);
+  bool _existsInstance() => Reactter.exists<T>(_id);
 
   T? _createInstance(Object ref) {
-    final instance = Reactter.factory.createInstance<T>(
+    final instance = Reactter.create<T>(
       builder: _instanceBuilder,
       id: _id,
       ref: ref,
@@ -133,7 +133,7 @@ class ReactterProvider<T extends ReactterContext>
   }
 
   void _deleteInstance(Object ref) {
-    Reactter.factory.deletedInstance<T>(_id, ref);
+    Reactter.delete<T>(id: _id, ref: ref);
   }
 
   /// Returns a [instance] of [T]

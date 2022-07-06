@@ -1,19 +1,19 @@
 part of '../core.dart';
 
 enum LifeCycle {
-  /// Event when the instance has registered by ReactterFactory.
+  /// Event when the instance has registered by [ReactterInstanceManager].
   registered,
 
-  /// Event when the instance has unregistered by ReactterFactory.
+  /// Event when the instance has unregistered by [ReactterInstanceManager].
   unregistered,
 
   /// Event when the instance has inicialized.
   initialized,
 
-  /// Event when the instance will be mount in the widget tree (only it use with flutter).
+  /// Event when the instance will be mount in the widget tree (only it use with flutter_reactter).
   willMount,
 
-  /// Event when the instance did be mount in the widget tree (only it use with flutter).
+  /// Event when the instance did be mount in the widget tree (only it use with flutter_reactter).
   didMount,
 
   /// Event when any instance's hooks will be update. Event param is a [ReactterHook].
@@ -22,7 +22,7 @@ enum LifeCycle {
   /// Event when any instance's hooks did be update. Event param is a [ReactterHook].
   didUpdate,
 
-  /// Event when the instance will be unmount in the widget tree (only it use with flutter).
+  /// Event when the instance will be unmount in the widget tree (only it use with flutter_reactter).
   willUnmount,
 
   /// Event when the instance did be destroyed.

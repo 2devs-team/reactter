@@ -11,15 +11,15 @@ part of '../core.dart';
 /// ```
 ///
 /// For access to instance anywhere, you need to register the instance
-/// using [ReactterFactory]:
+/// using [ReactterInstanceManager]:
 ///
 /// ```dart
-/// Reactter.factory.register<AppContext>(
+/// Reactter.register<AppContext>(
 ///   () => AppContex(),
 /// );
 ///
 /// // or
-/// final appContext = Reactter.factory.createInstance<AppContext>(
+/// final appContext = Reactter.create<AppContext>(
 ///   () => AppContex(),
 /// );
 /// ```
@@ -27,7 +27,7 @@ part of '../core.dart';
 /// And later you can get the instance:
 ///
 /// ```dart
-/// final appContext = Reactter.factory.getInstance<AppContext>();
+/// final appContext = Reactter.get<AppContext>();
 /// ```
 ///
 /// or using [UseContext] hook:
@@ -41,10 +41,10 @@ part of '../core.dart';
 ///
 /// See also:
 /// - [ReactterHook], a abstract hook that [ReactterContext] listen it.
-/// - [ReactterFactory], a instances manager
+/// - [ReactterInstanceManager], a instance manager
 /// - [UseContext], a hook that allowed access to instance of [ReactterContext].
 abstract class ReactterContext extends ReactterHookManager {
-  /// This methods is called for [ReactterFactory]
+  /// This methods is called for [ReactterInstanceManager]
   /// when the instance will be destroyed.
   dispose() {}
 }
