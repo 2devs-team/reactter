@@ -70,17 +70,17 @@ class ReactterScopeInheritedElement<T extends ReactterContext?,
       _createInstance();
     }
 
-    _event.trigger(InheritedElementStatus.mount);
+    _event.emit(InheritedElementStatus.mount);
     _updateAncestorScopeInheritedElement(parent);
 
     if (_isRoot) {
-      UseEvent.withInstance(_instance).trigger(LifeCycle.willMount);
+      UseEvent.withInstance(_instance).emit(LifeCycle.willMount);
     }
 
     super.mount(parent, newSlot);
 
     if (_isRoot) {
-      UseEvent.withInstance(_instance).trigger(LifeCycle.didMount);
+      UseEvent.withInstance(_instance).emit(LifeCycle.didMount);
     }
   }
 
@@ -174,10 +174,10 @@ class ReactterScopeInheritedElement<T extends ReactterContext?,
   @override
   void unmount() {
     if (_isRoot) {
-      UseEvent.withInstance(_instance).trigger(LifeCycle.willUnmount);
+      UseEvent.withInstance(_instance).emit(LifeCycle.willUnmount);
     }
 
-    _event.trigger(InheritedElementStatus.unmount);
+    _event.emit(InheritedElementStatus.unmount);
     widget.owner._deleteInstance(this);
     _ancestorScopeInheritedElement = null;
     _instance = null;

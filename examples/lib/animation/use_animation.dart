@@ -262,7 +262,7 @@ class UseAnimation<T> extends ReactterHook implements TickerProvider {
   void _onAnimationStatus(AnimationStatus status) {
     options.animationStatusListener?.call(status);
 
-    _event.trigger(status);
+    _event.emit(status);
   }
 
   void _rebuild() {

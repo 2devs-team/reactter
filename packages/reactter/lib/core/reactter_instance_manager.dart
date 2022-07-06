@@ -18,7 +18,7 @@ extension ReactterInstanceManager on _ReactterInterface {
     }
 
     Reactter.factory.instances.add(instance);
-    UseEvent<T>(id).trigger(LifeCycle.registered);
+    UseEvent<T>(id).emit(LifeCycle.registered);
     Reactter.log('Instance "$instance" has been registered.');
     return true;
   }
@@ -35,7 +35,7 @@ extension ReactterInstanceManager on _ReactterInterface {
     }
 
     Reactter.factory.instances.remove(instance);
-    UseEvent<T>(id).trigger(LifeCycle.unregistered);
+    UseEvent<T>(id).emit(LifeCycle.unregistered);
     Reactter.log('Instance "$instance" has been unregistered.');
     return true;
   }
@@ -76,7 +76,7 @@ extension ReactterInstanceManager on _ReactterInterface {
     }
 
     instanceFound.instance = instanceFound.builder?.call();
-    UseEvent<T>(id).trigger(LifeCycle.initialized);
+    UseEvent<T>(id).emit(LifeCycle.initialized);
     Reactter.log('Instance "$instanceFound" has been created.');
 
     return instanceFound.instance;
@@ -121,7 +121,7 @@ extension ReactterInstanceManager on _ReactterInterface {
     instanceFound.instance = null;
 
     UseEvent<T>(id)
-      ..trigger(LifeCycle.destroyed)
+      ..emit(LifeCycle.destroyed)
       ..dispose();
 
     Reactter.log(log);

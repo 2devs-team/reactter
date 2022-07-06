@@ -54,9 +54,9 @@ abstract class ReactterHookManager {
 
       _hooks.add(hook);
 
-      void onWillUpdate(_, hook) => _event.trigger(LifeCycle.willUpdate, hook);
+      void onWillUpdate(_, hook) => _event.emit(LifeCycle.willUpdate, hook);
 
-      void onDidUpdate(_, hook) => _event.trigger(LifeCycle.didUpdate, hook);
+      void onDidUpdate(_, hook) => _event.emit(LifeCycle.didUpdate, hook);
 
       UseEvent.withInstance(hook)
         ..on(LifeCycle.willUpdate, onWillUpdate)

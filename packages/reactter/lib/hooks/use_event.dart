@@ -49,7 +49,7 @@ class UseEvent<T extends Object?> {
     }
   }
 
-  void trigger(Enum eventName, [dynamic param]) {
+  void emit(Enum eventName, [dynamic param]) {
     final callbacks = HashSet()
       ..addAll(
         UseEvent._subscribers[instance]?[eventName] ?? {},
