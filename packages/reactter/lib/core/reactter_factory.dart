@@ -10,6 +10,9 @@ class ReactterFactory {
 
   ReactterFactory._();
 
-  /// Stores all instances.
+  // All ReactterInstanceManager´s instances
   HashSet<ReactterInstance> instances = HashSet<ReactterInstance>();
+
+  /// All UseEvent's events.
+  HashMap<Object?, HashMap<Enum, Set<Function>>> events = HashMap();
 }
