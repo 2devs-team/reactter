@@ -31,11 +31,11 @@ enum LifeCycle {
 
 /// A hook manager.
 ///
-/// Use [listenHooks] for watch hooks([ReactterHook])
+/// Use [listenHooks] to watch hooks([ReactterHook])
 /// and notify when it has changed.
 ///
 /// Exposes two methods [onWillUpdate] and [onDidUpdate]
-/// for subscribe and notify when any hooks has changed.
+/// to subscribe and notify when any hooks has changed.
 ///
 /// See also:
 /// - [ReactterHook], a abstract hook that [ReactterHookManager] listen it.

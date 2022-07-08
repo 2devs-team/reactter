@@ -8,7 +8,7 @@ class ReactterInstance<T> {
   /// Stores the object from which it was instantiated
   HashSet<int> refs = HashSet<int>();
 
-  ReactterInstance(this.id);
+  ReactterInstance([this.id]);
   ReactterInstance.withBuilder(this.id, this.builder);
 
   /// Is equal with [T] and [id]

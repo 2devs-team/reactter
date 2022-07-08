@@ -15,7 +15,7 @@ class ReactterBuilder<T extends ReactterContext?> extends StatelessWidget {
   /// Id of [T].
   final String? _id;
 
-  /// Watchs specific hooks for re-render
+  /// Watchs specific hooks to re-render
   final ListenHooks<T>? _listenHooks;
 
   const ReactterBuilder({

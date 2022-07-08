@@ -41,7 +41,7 @@ part of '../core.dart';
 ///
 /// See also:
 /// - [ReactterHook], a abstract hook that [ReactterContext] listen it.
-/// - [ReactterInstanceManager], a instance manager
+/// - [ReactterInstanceManager], a instances manager
 /// - [UseContext], a hook that allowed access to instance of [ReactterContext].
 abstract class ReactterContext extends ReactterHookManager {
   /// This methods is called for [ReactterInstanceManager]

@@ -136,7 +136,7 @@ class ReactterProvider<T extends ReactterContext>
     Reactter.delete<T>(id: _id, ref: ref);
   }
 
-  /// Returns a [instance] of [T]
+  /// Returns a [_instance] of [T]
   /// and puts contexts listen to when it should be re-rendered
   static T contextOf<T extends ReactterContext?>(
     BuildContext context, {

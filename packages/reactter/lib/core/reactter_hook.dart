@@ -2,7 +2,7 @@ part of '../core.dart';
 
 /// Provides the functionality of [ReactterHookManager].
 ///
-/// Depends on a [ReactterHookManager] for a listen this hook
+/// Depends on a [ReactterHookManager] to listen this hook
 ///
 /// This is an example of how to create a custom hook:
 ///

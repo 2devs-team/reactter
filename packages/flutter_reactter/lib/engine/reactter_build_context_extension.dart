@@ -1,8 +1,8 @@
 part of '../widgets.dart';
 
-/// Exposes methods to helps to get and listen the [instance] of [ReactterContext].
+/// Exposes methods to helps to get and listen the [_instance] of [ReactterContext].
 extension ReactterBuildContextExtension on BuildContext {
-  /// Obtain a [instance] of [T] from the nearest ancestor [ReactterProvider],
+  /// Obtain a [_instance] of [T] from the nearest ancestor [ReactterProvider],
   /// and subscribe to it or specific hooks put in [listenHooks] parameter.
   ///
   /// If [T] is nullable and no matching [ReactterContext] are found, [watch] will
@@ -44,7 +44,7 @@ extension ReactterBuildContextExtension on BuildContext {
   T watch<T extends ReactterContext?>([ListenHooks<T>? listenHooks]) =>
       ReactterProvider.contextOf<T>(this, listenHooks: listenHooks);
 
-  /// Obtain a [instance] of [T] with [id] from the nearest ancestor [ReactterProvider],
+  /// Obtain a [_instance] of [T] with [id] from the nearest ancestor [ReactterProvider],
   /// and subscribe to it or specific hooks put in [listenHooks] parameter.
   ///
   /// If [T] is nullable and no matching [ReactterContext] are found, [watchId] will
@@ -90,7 +90,7 @@ extension ReactterBuildContextExtension on BuildContext {
   ]) =>
       ReactterProvider.contextOf<T>(this, id: id, listenHooks: listenHooks);
 
-  /// Obtain a [instance] of [T] from the nearest ancestor [ReactterProvider].
+  /// Obtain a [_instance] of [T] from the nearest ancestor [ReactterProvider].
   ///
   /// If [T] is nullable and no matching [ReactterContext] are found, [read] will
   /// return `null`.
@@ -118,7 +118,7 @@ extension ReactterBuildContextExtension on BuildContext {
   T read<T extends ReactterContext?>() =>
       ReactterProvider.contextOf<T>(this, listen: false);
 
-  /// Obtain a [instance] of [T] with [id] from the nearest ancestor [ReactterProvider].
+  /// Obtain a [_instance] of [T] with [id] from the nearest ancestor [ReactterProvider].
   ///
   /// If [T] is nullable and no matching [ReactterContext] are found, [readId] will
   /// return `null`.

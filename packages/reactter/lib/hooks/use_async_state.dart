@@ -7,30 +7,62 @@ enum UseAsyncStateStatus {
   error,
 }
 
-/// Has the same functionality of [UseState] but providing a [asyncValue]
-/// which sets [value] when [resolve] method is called
+/// A hook that manages the state as async way.
 ///
-/// This example produces one simple [UseAsyncState] :
+/// [UseAsyncState] has two types [T] and [A](`UseAsyncState<T, A>`).
+///
+/// [T] is use to define the type of [value]
+/// and [A] is use to define the type of [resolve] argument.
+///
+/// These types can be deferred depending on
+/// the initial [value] and [resolve] method defined.
+///
+/// This example produces one simple [UseAsyncState]:
 ///
 /// ```dart
-/// late final userName = UseAsyncState<String>(
-///   "My username",
-///   () async => await api.getUserName(),
-///   this,
+/// class AppContext extends ReactterContext {
+///   // It's same that: late final asyncState = UseAsyncState<String, String?>(
+///   late final asyncState = UseAsyncState(
+///     "Initial value",
+///     _resolveState,
+///     this,
+///   );
+///
+///   Future<String> _resolveState([String? value = "Default value"]) async {
+///     return Future.delayed(
+///       const Duration(seconds: 1),
+///       () => value,
+///     );
+///   }
+/// }
+/// ```
+///
+/// Use [resolve] method to resolve state
+/// and use [value] getter to get state:
+///
+/// ```dart
+///   // Before changed value: "Initial value"
+///   print('Before changed value: "${appContext.asyncState.value}"');
+///   // Resolve state
+///   await appContext.asyncState.resolve("Resolved value");
+///   // After changed value: "Resolved value"
+///   print('After changed value: "${appContext.asyncState.value}"');
+/// ```
+///
+/// It also has [when] method that returns a new value
+/// depending on the state of the hook:
+///
+/// ```dart
+/// final valueComputed = appContext.asyncState.when<String>(
+///   standby: (value) => "⚓️ Standby: ${value}",
+///   loading: (value) => "⏳ Loading...",
+///   done: (value) => "✅ Resolved: ${value}",
+///   error: (error) => "❌ Error: ${error}",
 /// );
 /// ```
 ///
-/// It also has [when] method that returns a widget depending on the state of the hook.
-/// for example:
-///
-/// ```dart
-/// userContext.userName.when<String>(
-///   standby: (value) => "⚓️ Standby: ${value}",
-///   loading: (value) => "Loading...⏳",
-///   done: (value) => "✅ Resolved: ${value}",
-///   error: (error) => "❌ Error: ${error}",
-/// )
-/// ```
+/// You can use the getters [state] and [error] for more detail
+/// and you could reset the state using [reset] method.
 class UseAsyncState<T, A> extends ReactterHook {
   ReactterHookManager? context;
 
@@ -81,14 +113,7 @@ class UseAsyncState<T, A> extends ReactterHook {
     }
   }
 
-  /// Reset [value] to his initial value.
-  void reset() {
-    _value.reset();
-    _error.reset();
-    _status.reset();
-  }
-
-  /// React when the [value] change and re-render the widget depending of the state.
+  /// Returns a new value of [R] depending on the state of the hook:
   ///
   /// `standby`: When the state has the initial value.
   /// `loading`: When the request for the state is retrieving the value.
@@ -98,18 +123,18 @@ class UseAsyncState<T, A> extends ReactterHook {
   /// For example:
   ///
   /// ```dart
-  /// userContext.userName.when<String>(
+  /// final valueComputed = appContext.asyncState.when<String>(
   ///   standby: (value) => "⚓️ Standby: ${value}",
-  ///   loading: (value) => "Loading...⏳",
+  ///   loading: (value) => "⏳ Loading...",
   ///   done: (value) => "✅ Resolved: ${value}",
   ///   error: (error) => "❌ Error: ${error}",
   /// )
   /// ```
-  W? when<W>({
-    WhenValueReturn<T, W>? standby,
-    WhenValueReturn<T, W>? loading,
-    WhenValueReturn<T, W>? done,
-    WhenErrorReturn<W>? error,
+  R? when<R>({
+    WhenValueReturn<T, R>? standby,
+    WhenValueReturn<T, R>? loading,
+    WhenValueReturn<T, R>? done,
+    WhenErrorReturn<R>? error,
   }) {
     if (status == UseAsyncStateStatus.error) {
       return error?.call(this.error);
@@ -124,5 +149,12 @@ class UseAsyncState<T, A> extends ReactterHook {
     }
 
     return standby?.call(value);
+  }
+
+  /// Reset [value], [status] and [error] to its initial state.
+  void reset() {
+    _value.reset();
+    _error.reset();
+    _status.reset();
   }
 }

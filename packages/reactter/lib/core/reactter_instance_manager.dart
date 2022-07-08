@@ -3,7 +3,7 @@ part of '../core.dart';
 
 /// A instances manager
 extension ReactterInstanceManager on _ReactterInterface {
-  /// Registers a [builder] function into to [instances] for [create] a new instance.
+  /// Registers a [builder] function into to [instances] to [create] a new instance.
   ///
   /// returns `true` when instance has been registered.
   bool register<T extends Object?>({

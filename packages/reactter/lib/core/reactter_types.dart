@@ -1,5 +1,6 @@
 part of '../core.dart';
 
+/// A function to generate the instance of [T]
 typedef ContextBuilder<T> = T Function();
 
 typedef LogWriterCallback = void Function(String text, {bool isError});

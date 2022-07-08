@@ -40,7 +40,7 @@ part of '../hooks.dart';
 ///
 /// See also:
 /// - [ReactterContext], the instance that it returns.
-/// - [ReactterInstanceManager], a instance manager.
+/// - [ReactterInstanceManager], a instances manager.
 /// - [UseEffect], a side-effect manager.
 class UseContext<T extends ReactterContext> extends ReactterHook {
   final String? id;

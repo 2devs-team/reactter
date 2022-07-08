@@ -1,6 +1,6 @@
 part of '../hooks.dart';
 
-/// A hook that side-effect manager.
+/// A hook that manages side-effect.
 ///
 /// The side-effect logic into the [callback] function is executed
 /// when [dependencies] of [ReactterHook] argument has changes
@@ -72,7 +72,7 @@ part of '../hooks.dart';
 /// ```
 ///
 /// If you not put [ReactterContext] on the [context] parameter,
-/// should to call [dispose] method for clear any UseEffect's events.
+/// should to call [dispose] method to clear any UseEffect's events.
 ///
 /// See also:
 /// - [ReactterContext], is used to react to its [didMount] and [willUnmount] events.

@@ -1,6 +1,6 @@
 part of '../hooks.dart';
 
-/// It's a hook that manages state
+/// A hook that manages state.
 ///
 /// Contain a [value] of type [T] which represents the current state.
 /// This [value] is set [initial] state on the firts parameter
@@ -28,8 +28,8 @@ part of '../hooks.dart';
 ///
 ///     // It's need to force [update] because mantain the previous state
 ///     // and the [context] not aware that this state has changed
-///     post.update(() {
-///       post.value.add(
+///     posts.update(() {
+///       posts.value.add(
 ///           Post(
 ///             user: user.value,
 ///             text: text.value,
@@ -39,6 +39,10 @@ part of '../hooks.dart';
 ///   }
 /// }
 /// ```
+///
+/// See also:
+/// - [ReactterContext], a context that contains any logic and allowed react
+/// when any change the [ReactterHook].
 class UseState<T> extends ReactterHook {
   UseState(
     this.initial, [
