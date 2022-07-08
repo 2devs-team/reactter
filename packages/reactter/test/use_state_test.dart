@@ -3,12 +3,6 @@ import 'package:reactter/reactter.dart';
 
 import 'shareds/test_context.dart';
 
-class MyClass {
-  final String prop;
-
-  MyClass(this.prop);
-}
-
 void main() {
   group("UseState", () {
     test("should has a initial value", () {
