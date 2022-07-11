@@ -1,100 +1,46 @@
-// ignore_for_file: invalid_use_of_protected_member, prefer_void_to_null
-
 part of '../widgets.dart';
 
-class ReactterScopeInherited<T extends ReactterContext?, Id extends String?>
-    extends InheritedWidget {
-  const ReactterScopeInherited({
-    Key? key,
-    required this.owner,
-    required Widget child,
-  }) : super(key: key, child: child);
-
-  final ReactterProvider owner;
+/// A generic implementation for [ReactterScope]
+class ReactterScopeInherited extends InheritedWidget {
+  const ReactterScopeInherited({Key? key, required Widget child})
+      : super(key: key, child: child);
 
   @override
-  bool updateShouldNotify(InheritedWidget oldWidget) {
+  bool updateShouldNotify(covariant InheritedWidget oldWidget) {
     return false;
   }
 
   @override
   ReactterScopeInheritedElement createElement() {
-    return ReactterScopeInheritedElement<T, Id>(this);
+    return ReactterScopeInheritedElement(this);
   }
 }
 
-enum InheritedElementStatus { mount, unmount }
-
-class ReactterScopeInheritedElement<T extends ReactterContext?,
-    Id extends String?> extends InheritedElement {
+/// [ReactterScopeInherited]'s Element
+class ReactterScopeInheritedElement extends InheritedElement {
   bool _updatedShouldNotify = false;
-  T? _instance;
-  bool _isRoot = false;
   final List<Function> _unsubscribersDependencies = [];
-  Map<ReactterInstance, ReactterScopeInheritedElement<T, Id>>?
-      _ancestorScopeInheritedElement;
-  late final _event = UseEvent.withInstance(this);
 
-  ReactterScopeInheritedElement(
-    ReactterScopeInherited widget,
-  ) : super(widget) {
-    if (widget.owner._init) {
-      _createInstance();
-    }
-  }
+  ReactterScopeInheritedElement(InheritedWidget widget) : super(widget);
 
   @override
-  ReactterScopeInherited get widget => super.widget as ReactterScopeInherited;
+  Widget build() {
+    _removeDependencies();
+    notifyClients(super.widget as InheritedWidget);
 
-  @override
-  void debugFillProperties(properties) {
-    super.debugFillProperties(properties);
-
-    properties.add(
-      StringProperty('id', widget.owner._id, showName: true),
-    );
-    properties.add(
-      FlagProperty(
-        'isRoot',
-        value: _isRoot,
-        ifTrue: 'true',
-        ifFalse: 'false',
-        showName: true,
-      ),
-    );
-  }
-
-  @override
-  void mount(Element? parent, Object? newSlot) {
-    if (!widget.owner._init) {
-      _createInstance();
-    }
-
-    _event.emit(InheritedElementStatus.mount);
-    _updateAncestorScopeInheritedElement(parent);
-
-    if (_isRoot) {
-      UseEvent.withInstance(_instance).emit(LifeCycle.willMount);
-    }
-
-    super.mount(parent, newSlot);
-
-    if (_isRoot) {
-      UseEvent.withInstance(_instance).emit(LifeCycle.didMount);
-    }
+    return super.build();
   }
 
   @override
   void updateDependencies(Element dependent, Object? aspect) {
     final dependencies = getDependencies(dependent);
     // once subscribed to everything once, it always stays subscribed to everything.
-    if (dependencies != null && dependencies is! _Dependency<T>) {
+    if (dependencies != null && dependencies is! _Dependency) {
       return;
     }
 
-    if (aspect is SelectorAspect<T>) {
-      final selectorDependency =
-          (dependencies ?? _Dependency<T>()) as _Dependency<T>;
+    if (aspect is SelectorAspect) {
+      final selectorDependency = (dependencies ?? _Dependency()) as _Dependency;
 
       if (selectorDependency.shouldClearSelectors) {
         selectorDependency.shouldClearSelectors = false;
@@ -122,7 +68,7 @@ class ReactterScopeInheritedElement<T extends ReactterContext?,
 
     var shouldNotify = false;
     if (dependencies != null) {
-      if (dependencies is _Dependency<T>) {
+      if (dependencies is _Dependency) {
         // select can never be used inside [didChangeDependencies], so if the
         // dependent is already marked as needed build, there is no point
         // in executing the selectors.
@@ -164,32 +110,11 @@ class ReactterScopeInheritedElement<T extends ReactterContext?,
   }
 
   @override
-  Widget build() {
-    _removeDependencies();
-    notifyClients(widget);
-
-    return super.build();
-  }
-
-  @override
   void unmount() {
-    if (_isRoot) {
-      UseEvent.withInstance(_instance).emit(LifeCycle.willUnmount);
-    }
-
-    _event.emit(InheritedElementStatus.unmount);
-    widget.owner._deleteInstance(this);
-    _ancestorScopeInheritedElement = null;
-    _instance = null;
     _removeDependencies();
 
     return super.unmount();
   }
-
-  ReactterScopeInheritedElement<T, Id>? getScopeInheritedElementOfExactId(
-    String id,
-  ) =>
-      _ancestorScopeInheritedElement?[ReactterInstance<T>(id)];
 
   void dependOnHooks(List<ReactterHook> hooks) {
     for (int i = 0; i < hooks.length; i++) {
@@ -206,11 +131,7 @@ class ReactterScopeInheritedElement<T extends ReactterContext?,
     }
   }
 
-  void dependOnInstance(T instance) {
-    if (instance == null) {
-      return;
-    }
-
+  void dependOnInstance(ReactterContext instance) {
     void _onDidUpdate(_, __) => markNeedsBuild();
 
     UseEvent.withInstance(instance).on(LifeCycle.didUpdate, _onDidUpdate);
@@ -228,49 +149,6 @@ class ReactterScopeInheritedElement<T extends ReactterContext?,
     }
 
     _unsubscribersDependencies.clear();
-  }
-
-  void _updateAncestorScopeInheritedElement(Element? parent) {
-    if (Id == Null) return;
-
-    var inheritedElement = parent?.getElementForInheritedWidgetOfExactType<
-            ReactterScopeInherited<T, Id>>()
-        as ReactterScopeInheritedElement<T, Id>?;
-
-    _continueUpdateAncestorScopeInheritedElement(inheritedElement);
-
-    void callback(_, __) {
-      _continueUpdateAncestorScopeInheritedElement(inheritedElement);
-    }
-
-    inheritedElement?._event.one(InheritedElementStatus.mount, callback);
-
-    _event.one(
-      InheritedElementStatus.unmount,
-      (_, __) =>
-          inheritedElement?._event.off(InheritedElementStatus.mount, callback),
-    );
-  }
-
-  void _continueUpdateAncestorScopeInheritedElement(
-    ReactterScopeInheritedElement<T, Id>? parent,
-  ) {
-    if (parent != null && parent._ancestorScopeInheritedElement != null) {
-      _ancestorScopeInheritedElement =
-          HashMap<ReactterInstance, ReactterScopeInheritedElement<T, Id>>.of(
-              parent._ancestorScopeInheritedElement!);
-    } else {
-      _ancestorScopeInheritedElement =
-          HashMap<ReactterInstance, ReactterScopeInheritedElement<T, Id>>();
-    }
-
-    _ancestorScopeInheritedElement![ReactterInstance<T>(widget.owner._id)] =
-        this;
-  }
-
-  void _createInstance() {
-    _isRoot = !widget.owner._existsInstance();
-    _instance = widget.owner._createInstance(this) as T;
   }
 }
 

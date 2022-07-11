@@ -8,4 +8,5 @@ export 'widgets.dart'
         ReactterBuilder,
         ReactterComponent,
         ReactterProvider,
-        ReactterProviders;
+        ReactterProviders,
+        ReactterScope;
