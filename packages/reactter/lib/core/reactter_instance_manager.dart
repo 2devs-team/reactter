@@ -2,7 +2,7 @@
 part of '../core.dart';
 
 /// A instances manager
-extension ReactterInstanceManager on _ReactterInterface {
+extension ReactterInstanceManager on ReactterInterface {
   /// Registers a [builder] function into to [Reactter.factory.instances]
   /// to allows to create the instance with [get].
   ///
