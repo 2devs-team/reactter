@@ -6,23 +6,23 @@ import 'test_context.dart';
 
 class ReactterProviderBuilder extends StatelessWidget {
   final TransitionBuilder builder;
+  final String? id;
 
-  const ReactterProviderBuilder({Key? key, required this.builder})
-      : super(key: key);
+  const ReactterProviderBuilder({
+    Key? key,
+    this.id,
+    required this.builder,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return TestBuilder(
-      child: ReactterProviders(
-        providers: [
-          ReactterProvider(() => TestContext()),
-          ReactterProvider(
-            () => TestContext(),
-            id: 'uniqueId',
-            onInit: (TestContext inst) =>
-                inst.stateString.value = "from uniqueId",
-          ),
-        ],
+      child: ReactterProvider(
+        () => TestContext(),
+        id: id,
+        onInit: id == null
+            ? null
+            : (TestContext inst) => inst.stateString.value = "from uniqueId",
         builder: builder,
       ),
     );

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_reactter/flutter_reactter.dart';
 
-import 'shareds/reactter_provider_builder.dart';
+import 'shareds/reactter_providers_builder.dart';
 import 'shareds/test_builder.dart';
 import 'shareds/test_context.dart';
 
@@ -10,7 +10,7 @@ void main() {
   group("ReactterComponent", () {
     late TestContext instanceObtained;
 
-    testWidgets("should render and get instance", (tester) async {
+    testWidgets("should renders and get instance", (tester) async {
       await tester.pumpWidget(
         TestBuilder(
           child: ReactterComponentTest(
@@ -34,11 +34,11 @@ void main() {
       expect(find.text("stateString: new value"), findsOneWidget);
     });
 
-    testWidgets("should render and get instance by id", (tester) async {
+    testWidgets("should renders and gets instance by id", (tester) async {
       late TestContext instanceObtained;
 
       await tester.pumpWidget(
-        ReactterProviderBuilder(
+        ReactterProvidersBuilder(
           builder: (_, __) {
             return ReactterComponentTest(
               id: "uniqueId",

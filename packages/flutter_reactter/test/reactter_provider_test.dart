@@ -3,12 +3,11 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_reactter/flutter_reactter.dart';
 
 import 'shareds/reactter_provider_builder.dart';
-import 'shareds/test_builder.dart';
 import 'shareds/test_context.dart';
 
 void main() {
   group("ReactterProvider", () {
-    testWidgets("should obtain instance from context", (tester) async {
+    testWidgets("should gets instance from context", (tester) async {
       late TestContext instanceObtained;
 
       await tester.pumpWidget(
@@ -26,34 +25,12 @@ void main() {
       expect(find.text("stateString: initial"), findsOneWidget);
     });
 
-    testWidgets("should obtain null when the instance not found from context",
-        (tester) async {
-      late TestContext? instanceObtained;
-
-      await tester.pumpWidget(
-        TestBuilder(
-          child: Builder(
-            builder: (context) {
-              instanceObtained = context.read<TestContext?>();
-
-              return Text(
-                  "stateString: ${instanceObtained?.stateString.value ?? 'not found'}");
-            },
-          ),
-        ),
-      );
-      await tester.pumpAndSettle();
-
-      expectLater(instanceObtained, null);
-      expect(find.text("stateString: not found"), findsOneWidget);
-    });
-
-    testWidgets("should obtain the instance by id from context",
-        (tester) async {
+    testWidgets("should gets the instance by id from context", (tester) async {
       late TestContext instanceObtained;
 
       await tester.pumpWidget(
         ReactterProviderBuilder(
+          id: "uniqueId",
           builder: (BuildContext context, Widget? child) {
             instanceObtained = context.readId<TestContext>("uniqueId");
 
@@ -68,7 +45,7 @@ void main() {
     });
 
     testWidgets(
-        "should obtain the instance from context and watch hooks to builder re-render",
+        "should gets the instance from context and watch hooks to builder re-render",
         (tester) async {
       late TestContext instanceObtained;
 
@@ -103,12 +80,13 @@ void main() {
     });
 
     testWidgets(
-        "should obtain the instance by id from context and watch hooks to builder re-render",
+        "should gets the instance by id from context and watch hooks to builder re-render",
         (tester) async {
       late TestContext instanceObtained;
 
       await tester.pumpWidget(
         ReactterProviderBuilder(
+          id: "uniqueId",
           builder: (BuildContext context, Widget? child) {
             instanceObtained = context.watchId<TestContext>(
               "uniqueId",

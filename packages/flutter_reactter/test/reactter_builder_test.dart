@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_reactter/flutter_reactter.dart';
 
-import 'shareds/reactter_provider_builder.dart';
+import 'shareds/reactter_providers_builder.dart';
 import 'shareds/test_context.dart';
 
 void main() {
   group("ReactterBuilder", () {
-    testWidgets("should get instance", (tester) async {
+    testWidgets("should gets instance", (tester) async {
       late ReactterContext instanceObtained;
 
       await tester.pumpWidget(
-        ReactterProviderBuilder(
+        ReactterProvidersBuilder(
           builder: (_, __) => ReactterBuilder<TestContext>(
             builder: (instance, context, child) {
               instanceObtained = instance;
@@ -27,11 +27,11 @@ void main() {
       expectLater(instanceObtained, isInstanceOf<TestContext>());
     });
 
-    testWidgets("should get instance with id", (tester) async {
+    testWidgets("should gets instance with id", (tester) async {
       late final ReactterContext instanceObtained;
 
       await tester.pumpWidget(
-        ReactterProviderBuilder(
+        ReactterProvidersBuilder(
           builder: (_, __) => ReactterBuilder<TestContext>(
             id: 'uniqueId',
             builder: (instance, context, child) {
@@ -48,11 +48,11 @@ void main() {
       expectLater(instanceObtained, isInstanceOf<TestContext>());
     });
 
-    testWidgets("should listen hooks", (tester) async {
+    testWidgets("should listens hooks", (tester) async {
       late ReactterContext instanceObtained;
 
       await tester.pumpWidget(
-        ReactterProviderBuilder(
+        ReactterProvidersBuilder(
           builder: (_, __) => ReactterBuilder<TestContext>(
             listenHooks: (instance) => [
               instance.stateString,
