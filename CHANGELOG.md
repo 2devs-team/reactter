@@ -1,27 +1,27 @@
 # Reactter by [2devs.io](https://2devs.io)
 
-## 3.0.0-dev - `Dev release` - `2022-06-24`
+## 3.0.0-dev - `Dev release` - `2022-07-10`
 
 ### Breacking
 
-- **build**: Change structure folder. Now the package was separated into two packages, one for dart(`reactter`) and one for flutter(`flutter_reactter`)
+- **build**: Change structure folder. Now the package was separated into two packages, one for dart only(`reactter`) and one for flutter(`flutter_reactter`).
 - **refactor(hooks)**: Type return on `UseAsyncState.when`.
-- **refactor(widget)**: Rename `UseContext` to `ReactterProvider`. `ReactterProvider` is a wrapper widget that scopes a `ReactterContext`.
+- **refactor(widget)**: Rename `UseContext` to `ReactterProvider`. `ReactterProvider` is a wrapper widget that scopes widget tree with a `ReactterContext`.
 - **refactor(widget)**: Rename `ReactterProvider` to `ReactterProviders`. `ReactterProviders` is a wrapper widget that contains nested multiple `ReactterProvider`.
+- **refactor**: Rename `LifeCycleEvent` to `LifeCycle` and remove event methods(`onWillMount`, `onDidMount`, `onWillUpdate`, `onDidUpdate`, `onWillUnmount`).
+- **refactor(core)**: Move `Reactter.factory.register` to `Reactter.register`, `Reactter.factory.unregistered` to `Reactter.unregister`, `Reactter.factory.existsInstance` to `Reactter.factory.exists`, `Reactter.factory.getInstance` to `Reactter.get`, `Reactter.factory.deletedInstance` to `Reactter.delete`.
+- **refactor(core)**: Remove `ReactterSubscribersManager`.
 
 ### Changed
 
-- **feat(widget)**: Improve finding `ReactterContext` in the widget tree via the context. Now the operation of finding `ReactterContext` is O(1) and `ReactterContext` using id is O(2).
+- **feat(widget)**: Improve finding `ReactterContext` in the widget tree via the `BuildContext`. Now the operation of finding `ReactterContext` is O(1) and `ReactterContext` using id is O(2).
 
 ### Added
 
 - **feat(hooks)**: Add `UseContext` hook. `UseContext` is a hook that gets the instance of `ReactterContext`.
 - **feat(hooks)**: Add `UseEvent` hook. `UseEvent` is a hook that manages events.
-
-### Removed
-
-- **refactor(core)**: Remove variables unnecessary.
-- **refactor(examples)**: Remove code unnecessary.
+- **feat(widgets)**: Add `ReactterScope` widget. `ReactterScope` is a wrapper widget that helps to control re-rendered of widget tree.
+- **refactor(core)**: Add `Reactter.create` and `Reactter.find`.
 
 ## 2.3.3 - `Official Release` - `2022-06-13`
 
