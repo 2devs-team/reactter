@@ -7,7 +7,7 @@ enum UseAsyncStateStatus {
   error,
 }
 
-/// A hook that manages the state as async way.
+/// A [ReactteHook] that manages the state as async way.
 ///
 /// [UseAsyncState] has two types [T] and [A](`UseAsyncState<T, A>`).
 ///
@@ -50,14 +50,14 @@ enum UseAsyncStateStatus {
 /// ```
 ///
 /// It also has [when] method that returns a new value
-/// depending on the state of the hook:
+/// depending of it's state:
 ///
 /// ```dart
 /// final valueComputed = appContext.asyncState.when<String>(
-///   standby: (value) => "⚓️ Standby: ${value}",
+///   standby: (value) => "⚓️ Standby: $value",
 ///   loading: (value) => "⏳ Loading...",
-///   done: (value) => "✅ Resolved: ${value}",
-///   error: (error) => "❌ Error: ${error}",
+///   done: (value) => "✅ Resolved: $value",
+///   error: (error) => "❌ Error: $error",
 /// );
 /// ```
 ///

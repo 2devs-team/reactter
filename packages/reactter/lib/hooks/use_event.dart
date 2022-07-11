@@ -66,7 +66,7 @@ class UseEvent<T extends Object?> {
       ? Reactter.factory.instances.lookup(_instanceReceived)?.instance
       : _instanceReceived;
 
-  ReactterInstance? get _instanceManager =>
+  ReactterInstance? get _reactterInstance =>
       _instanceReceived is ReactterInstance
           ? (_instanceReceived as ReactterInstance)
           : Reactter.find(_instanceReceived);
@@ -122,7 +122,7 @@ class UseEvent<T extends Object?> {
         Reactter.factory.events[_instance]?[eventName] ?? {},
       )
       ..addAll(
-        Reactter.factory.events[_instanceManager]?[eventName] ?? {},
+        Reactter.factory.events[_reactterInstance]?[eventName] ?? {},
       );
 
     for (var callback in callbacks) {
@@ -134,7 +134,7 @@ class UseEvent<T extends Object?> {
   void dispose() {
     Reactter.factory.events
       ..remove(_instance)
-      ..remove(_instanceManager);
+      ..remove(_reactterInstance);
 
     _instanceReceived = null;
   }

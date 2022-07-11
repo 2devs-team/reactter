@@ -7,7 +7,7 @@ enum LifeCycle {
   /// Event when the instance has unregistered by [ReactterInstanceManager].
   unregistered,
 
-  /// Event when the instance has inicialized.
+  /// Event when the instance has inicialized by [ReactterInstanceManager].
   initialized,
 
   /// Event when the instance will be mount in the widget tree (only it use with flutter_reactter).
@@ -25,7 +25,7 @@ enum LifeCycle {
   /// Event when the instance will be unmount in the widget tree (only it use with flutter_reactter).
   willUnmount,
 
-  /// Event when the instance did be destroyed.
+  /// Event when the instance did be destroyed by [ReactterInstanceManager].
   destroyed,
 }
 

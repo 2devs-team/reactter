@@ -1,10 +1,10 @@
 part of '../hooks.dart';
 
-/// A hook that helps to get the context of [ReactterContext] by [T] with or without [id].
+/// A [ReactterHook] that helps to get the context of [ReactterContext] by [T] with or without [id].
 ///
 /// ```dart
-/// final appContext = UseContext<AppContext>();
-/// final appContextWithId = UseContext<AppContext>('uniqueId');
+/// final appContextHook = UseContext<AppContext>();
+/// final appContextWithIdHook = UseContext<AppContext>('uniqueId');
 /// ```
 ///
 /// The context that you need to get, to must be created by [ReactterInstanceManager]:
@@ -18,8 +18,8 @@ part of '../hooks.dart';
 /// You can get instance, using [instance] getter:
 ///
 /// ```dart
-/// final appContext = UseContext<AppContext>();
-/// print(appContext.instance);
+/// final appContextHook = UseContext<AppContext>();
+/// print(appContextHook.instance);
 /// ```
 /// [instance] returns null, when the instance is not found
 /// or it hasn't created yet.
@@ -28,12 +28,12 @@ part of '../hooks.dart';
 /// you need to use the [UseEffect] hook.
 ///
 /// ```dart
-/// final appContext = UseContext<AppContext>(null, this);
-/// print(appContext.instance); // return null
+/// final appContextHook = UseContext<AppContext>(null, this);
+/// print(appContextHook.instance); // return null
 ///
 /// UseEffect(() {
-///   print(appContext.instance); // return instance of AppContext
-/// }, [appContext]);
+///   print(appContextHook.instance); // return instance of AppContext
+/// }, [appContextHook]);
 /// ```
 ///
 /// You should call [dispose] when it's no longer needed.
@@ -55,7 +55,10 @@ class UseContext<T extends ReactterContext> extends ReactterHook {
     return _instance;
   }
 
-  UseContext([this.id, this.context]) : super(context) {
+  UseContext({
+    this.id,
+    this.context,
+  }) : super(context) {
     if (context != null) {
       UseEvent.withInstance(context)
           .one(LifeCycle.destroyed, (_, __) => dispose);

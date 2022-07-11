@@ -1,6 +1,6 @@
 part of '../hooks.dart';
 
-/// A hook that manages state.
+/// A [ReactterHook] that manages a state.
 ///
 /// Contain a [value] of type [T] which represents the current state.
 /// This [value] is set [initial] state on the firts parameter

@@ -1,6 +1,6 @@
 part of '../hooks.dart';
 
-/// A hook that manages side-effect.
+/// A [ReactterHook] that manages side-effect.
 ///
 /// The side-effect logic into the [callback] function is executed
 /// when [dependencies] of [ReactterHook] argument has changes

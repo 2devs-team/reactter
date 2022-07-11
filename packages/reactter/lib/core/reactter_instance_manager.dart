@@ -3,7 +3,8 @@ part of '../core.dart';
 
 /// A instances manager
 extension ReactterInstanceManager on _ReactterInterface {
-  /// Registers a [builder] function into to [instances] to [create] a new instance.
+  /// Registers a [builder] function into to [Reactter.factory.instances]
+  /// to allows to create the instance with [get].
   ///
   /// returns `true` when instance has been registered.
   bool register<T extends Object?>({
@@ -23,7 +24,7 @@ extension ReactterInstanceManager on _ReactterInterface {
     return true;
   }
 
-  /// Remove a builder function from [instances].
+  /// Remove a builder function from [Reactter.factory.instances].
   ///
   /// returns `true` when instance has been unregistered.
   bool unregister<T extends Object>([String? id]) {
@@ -40,9 +41,29 @@ extension ReactterInstanceManager on _ReactterInterface {
     return true;
   }
 
-  /// Creates a instance of [T] with or without [id] given.
+  /// Gets the instance of [T] with or without [id] given.
   ///
-  /// If it's [register]ed, creates the instance and return it, else return `null`.
+  /// If found it, returns it, else returns `null`.
+  T? get<T extends Object?>([String? id]) {
+    final instanceToFind = ReactterInstance<T?>(id);
+    final instanceFound = Reactter.factory.instances.lookup(instanceToFind);
+
+    if (instanceFound == null) {
+      Reactter.log(
+        'Builder for instance "$instanceToFind" is not registered.\n' +
+            'You should register instance with ' +
+            '"Reactter.register<$T>(builder:() => $T())" or ' +
+            '"Reactter.create<$T>(builder: () => $T())".',
+        isError: true,
+      );
+    }
+
+    return instanceFound?.instance;
+  }
+
+  /// Registers, creates and gets the instance of [T] with or without [id] given.
+  ///
+  /// Returns it, else return `null`.
   T? create<T extends Object?>({
     required ContextBuilder<T> builder,
     String? id,
@@ -82,7 +103,7 @@ extension ReactterInstanceManager on _ReactterInterface {
     return instanceFound.instance;
   }
 
-  /// Deletes the instance from [instances] but keep the [builder] function.
+  /// Deletes the instance from [Reactter.factory.instances] but keep the [builder] function.
   ///
   /// Returns `true` when the instance has been deleted.
   bool delete<T extends Object?>({
@@ -127,26 +148,6 @@ extension ReactterInstanceManager on _ReactterInterface {
     Reactter.log(log);
 
     return true;
-  }
-
-  /// Gets the instance of [T] with or without [id] given.
-  ///
-  /// If found it, returns it, else returns `null`.
-  T? get<T extends Object?>([String? id]) {
-    final instanceToFind = ReactterInstance<T?>(id);
-    final instanceFound = Reactter.factory.instances.lookup(instanceToFind);
-
-    if (instanceFound == null) {
-      Reactter.log(
-        'Builder for instance "$instanceToFind" is not registered.\n' +
-            'You should register instance with ' +
-            '"Reactter.register<$T>(builder:() => $T())" or ' +
-            '"Reactter.create<$T>(builder: () => $T())".',
-        isError: true,
-      );
-    }
-
-    return instanceFound?.instance;
   }
 
   /// Get the [ReactterInstance] of [instance] given.
