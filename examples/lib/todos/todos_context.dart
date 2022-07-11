@@ -46,7 +46,7 @@ class TodosContext extends ReactterContext {
     todos.update(() => todos.value.add(todoContext));
 
     UseEvent.withInstance(todoContext).on(
-      LifeCycle.didUpdate,
+      Lifecycle.didUpdate,
       (_, __) => _didUpdateTodo(todoContext),
     );
 

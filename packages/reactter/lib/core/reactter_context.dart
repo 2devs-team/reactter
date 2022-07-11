@@ -1,7 +1,7 @@
 part of '../core.dart';
 
 /// A context that allows to manages the [ReactterHook]s
-/// and provides [LifeCycle] events.
+/// and provides [Lifecycle] events.
 ///
 /// **RECOMMENDED:**
 /// Name class with `Context` suffix, for easy locatily:

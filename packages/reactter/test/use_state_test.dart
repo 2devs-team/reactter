@@ -45,7 +45,7 @@ void main() {
       late final int willUpdateValue;
 
       UseEvent.withInstance(testContext.stateInt).on(
-        LifeCycle.willUpdate,
+        Lifecycle.willUpdate,
         (inst, param) {
           willUpdateValue = testContext.stateInt.value;
         },
@@ -64,7 +64,7 @@ void main() {
       late final int didUpdateValue;
 
       UseEvent.withInstance(testContext.stateInt).on(
-        LifeCycle.didUpdate,
+        Lifecycle.didUpdate,
         (inst, param) {
           didUpdateValue = testContext.stateInt.value;
         },

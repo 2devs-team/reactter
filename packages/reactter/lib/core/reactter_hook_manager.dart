@@ -1,6 +1,6 @@
 part of '../core.dart';
 
-enum LifeCycle {
+enum Lifecycle {
   /// Event when the instance has registered by [ReactterInstanceManager].
   registered,
 
@@ -54,18 +54,18 @@ abstract class ReactterHookManager {
 
       _hooks.add(hook);
 
-      void onWillUpdate(_, hook) => _event.emit(LifeCycle.willUpdate, hook);
+      void onWillUpdate(_, hook) => _event.emit(Lifecycle.willUpdate, hook);
 
-      void onDidUpdate(_, hook) => _event.emit(LifeCycle.didUpdate, hook);
+      void onDidUpdate(_, hook) => _event.emit(Lifecycle.didUpdate, hook);
 
       UseEvent.withInstance(hook)
-        ..on(LifeCycle.willUpdate, onWillUpdate)
-        ..on(LifeCycle.didUpdate, onDidUpdate);
+        ..on(Lifecycle.willUpdate, onWillUpdate)
+        ..on(Lifecycle.didUpdate, onDidUpdate);
 
-      _event.one(LifeCycle.destroyed, (_, __) {
+      _event.one(Lifecycle.destroyed, (_, __) {
         UseEvent.withInstance(hook)
-          ..off(LifeCycle.willUpdate, onWillUpdate)
-          ..off(LifeCycle.didUpdate, onDidUpdate);
+          ..off(Lifecycle.willUpdate, onWillUpdate)
+          ..off(Lifecycle.didUpdate, onDidUpdate);
       });
     }
   }

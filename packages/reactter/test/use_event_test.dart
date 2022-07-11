@@ -88,20 +88,20 @@ void main() {
       late bool isDestroyed;
 
       UseEvent<TestContext>()
-        ..on(LifeCycle.initialized, (inst, __) {
+        ..on(Lifecycle.initialized, (inst, __) {
           instance = inst;
         })
-        ..on<UseState>(LifeCycle.willUpdate, (_, hook) {
+        ..on<UseState>(Lifecycle.willUpdate, (_, hook) {
           willUpdateChecked = true;
           expect(hook, instance?.stateString);
           expect(hook.value, "initial");
         })
-        ..on<UseState>(LifeCycle.didUpdate, (_, hook) {
+        ..on<UseState>(Lifecycle.didUpdate, (_, hook) {
           didUpdateChecked = true;
           expect(hook, instance?.stateString);
           expect(hook.value, "changed");
         })
-        ..on(LifeCycle.destroyed, (_, __) {
+        ..on(Lifecycle.destroyed, (_, __) {
           isDestroyed = true;
         });
 

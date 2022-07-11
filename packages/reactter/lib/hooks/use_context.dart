@@ -61,24 +61,24 @@ class UseContext<T extends ReactterContext> extends ReactterHook {
   }) : super(context) {
     if (context != null) {
       UseEvent.withInstance(context)
-          .one(LifeCycle.destroyed, (_, __) => dispose);
+          .one(Lifecycle.destroyed, (_, __) => dispose);
     }
 
     _getInstance();
 
-    UseEvent<T>(id).on(LifeCycle.destroyed, _onInstance);
+    UseEvent<T>(id).on(Lifecycle.destroyed, _onInstance);
 
     if (instance != null) return;
 
-    UseEvent<T>(id).on(LifeCycle.initialized, _onInstance);
-    UseEvent<T>(id).on(LifeCycle.willMount, _onInstance);
+    UseEvent<T>(id).on(Lifecycle.initialized, _onInstance);
+    UseEvent<T>(id).on(Lifecycle.willMount, _onInstance);
   }
 
   /// Call when this hook is no longer needed.
   dispose() {
-    UseEvent<T>(id).off(LifeCycle.initialized, _onInstance);
-    UseEvent<T>(id).off(LifeCycle.willMount, _onInstance);
-    UseEvent<T>(id).off(LifeCycle.destroyed, _onInstance);
+    UseEvent<T>(id).off(Lifecycle.initialized, _onInstance);
+    UseEvent<T>(id).off(Lifecycle.willMount, _onInstance);
+    UseEvent<T>(id).off(Lifecycle.destroyed, _onInstance);
 
     _instance = null;
     _isDisposed = true;

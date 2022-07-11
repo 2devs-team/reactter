@@ -108,16 +108,16 @@ class UseEffect extends ReactterHook {
     }
 
     UseEvent.withInstance(context)
-      ..on(LifeCycle.didMount, _runCallbackAndWatchDependencies)
-      ..on(LifeCycle.willUnmount, _runCleanupAndUnwatchDependencies)
-      ..one(LifeCycle.destroyed, (_, __) => dispose());
+      ..on(Lifecycle.didMount, _runCallbackAndWatchDependencies)
+      ..on(Lifecycle.willUnmount, _runCleanupAndUnwatchDependencies)
+      ..one(Lifecycle.destroyed, (_, __) => dispose());
   }
 
   void dispose() {
     _cleanupCallback = null;
     UseEvent.withInstance(context)
-      ..off(LifeCycle.didMount, _runCallbackAndWatchDependencies)
-      ..off(LifeCycle.willUnmount, _runCleanupAndUnwatchDependencies);
+      ..off(Lifecycle.didMount, _runCallbackAndWatchDependencies)
+      ..off(Lifecycle.willUnmount, _runCleanupAndUnwatchDependencies);
     _dependenciesEvent.dispose();
   }
 
@@ -132,13 +132,13 @@ class UseEffect extends ReactterHook {
   }
 
   void _watchDependencies() {
-    _dependenciesEvent.on(LifeCycle.willUpdate, _runCleanup);
-    _dependenciesEvent.on(LifeCycle.didUpdate, _runCallback);
+    _dependenciesEvent.on(Lifecycle.willUpdate, _runCleanup);
+    _dependenciesEvent.on(Lifecycle.didUpdate, _runCallback);
   }
 
   void _unwatchDependencies() {
-    _dependenciesEvent.off(LifeCycle.willUpdate, _runCleanup);
-    _dependenciesEvent.off(LifeCycle.didUpdate, _runCallback);
+    _dependenciesEvent.off(Lifecycle.willUpdate, _runCleanup);
+    _dependenciesEvent.off(Lifecycle.didUpdate, _runCallback);
   }
 
   void _runCallback(_, __) {

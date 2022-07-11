@@ -7,7 +7,7 @@ export 'core.dart'
         ReactterHookManager,
         ReactterContext,
         ReactterInstanceManager,
-        LifeCycle;
+        Lifecycle;
 
 export 'hooks.dart'
     show

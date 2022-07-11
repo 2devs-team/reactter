@@ -122,11 +122,11 @@ class ReactterScopeInheritedElement extends InheritedElement {
 
       void _onDidUpdate(_, __) => markNeedsBuild();
 
-      UseEvent.withInstance(hook).on(LifeCycle.didUpdate, _onDidUpdate);
+      UseEvent.withInstance(hook).on(Lifecycle.didUpdate, _onDidUpdate);
 
       _unsubscribersDependencies.add(
         () =>
-            UseEvent.withInstance(hook).off(LifeCycle.didUpdate, _onDidUpdate),
+            UseEvent.withInstance(hook).off(Lifecycle.didUpdate, _onDidUpdate),
       );
     }
   }
@@ -134,11 +134,11 @@ class ReactterScopeInheritedElement extends InheritedElement {
   void dependOnInstance(ReactterContext instance) {
     void _onDidUpdate(_, __) => markNeedsBuild();
 
-    UseEvent.withInstance(instance).on(LifeCycle.didUpdate, _onDidUpdate);
+    UseEvent.withInstance(instance).on(Lifecycle.didUpdate, _onDidUpdate);
 
     _unsubscribersDependencies.add(
       () => UseEvent.withInstance(instance)
-          .off(LifeCycle.didUpdate, _onDidUpdate),
+          .off(Lifecycle.didUpdate, _onDidUpdate),
     );
   }
 

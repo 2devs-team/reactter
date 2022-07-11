@@ -74,20 +74,20 @@ class ReactterProviderInheritedElement<T extends ReactterContext?,
     _loadInheritedElementWithId(parent);
 
     if (_isRoot) {
-      UseEvent.withInstance(_instance).emit(LifeCycle.willMount);
+      UseEvent.withInstance(_instance).emit(Lifecycle.willMount);
     }
 
     super.mount(parent, newSlot);
 
     if (_isRoot) {
-      UseEvent.withInstance(_instance).emit(LifeCycle.didMount);
+      UseEvent.withInstance(_instance).emit(Lifecycle.didMount);
     }
   }
 
   @override
   void unmount() {
     if (_isRoot) {
-      UseEvent.withInstance(_instance).emit(LifeCycle.willUnmount);
+      UseEvent.withInstance(_instance).emit(Lifecycle.willUnmount);
     }
 
     _event.emit(_InheritedElementStatus.unmount);

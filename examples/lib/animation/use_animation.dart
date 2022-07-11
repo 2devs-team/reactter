@@ -158,9 +158,9 @@ class UseAnimation<T> extends ReactterHook implements TickerProvider {
 
   UseAnimation(this.options, [this._context]) : super(_context) {
     UseEvent.withInstance(_context)
-      ..on(LifeCycle.didMount, (_, __) => _addFrameLimitingUpdater())
-      ..on(LifeCycle.willUnmount, (_, __) => _aniController.dispose())
-      ..on(LifeCycle.destroyed, (_, __) => _event.dispose());
+      ..on(Lifecycle.didMount, (_, __) => _addFrameLimitingUpdater())
+      ..on(Lifecycle.willUnmount, (_, __) => _aniController.dispose())
+      ..on(Lifecycle.destroyed, (_, __) => _event.dispose());
 
     _aniController.addStatusListener(_onAnimationStatus);
 
