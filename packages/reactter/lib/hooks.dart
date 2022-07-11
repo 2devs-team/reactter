@@ -1,5 +1,3 @@
-library reactter;
-
 import 'dart:collection';
 import 'core.dart';
 

@@ -1,4 +1,3 @@
-library flutter_reactter;
 
 import 'dart:collection';
 import 'package:flutter/foundation.dart';

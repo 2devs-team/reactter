@@ -17,7 +17,7 @@ class ReactterInstance<T> {
       other is ReactterInstance<T?> && other.id == id;
 
   @override
-  int get hashCode => hashValues(T, id);
+  int get hashCode => Object.hash(T, id);
 
   @override
   String toString() {
