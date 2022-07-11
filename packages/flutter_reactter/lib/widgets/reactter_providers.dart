@@ -1,32 +1,75 @@
 part of '../widgets.dart';
 
-class ReactterProviders extends StatelessWidget implements ReactterScopeWidget {
-  final List<ReactterProviderAbstraction> _providers;
+/// A wrapper [StatelessWidget] that allows to use multiple [ReactterProvider] as nested way.
+///
+/// ```dart
+/// ReactterProviders(
+///   [
+///     ReactterProvider(() => AppContext()),
+///     ReactterProvider(() => AppContext(), id: "uniqueId"),
+///   ],
+///   builder: (context, child) {
+///     final appContext = context.read<AppContext>();
+///     final appContextWithId = context.watchId<AppContext>("uniqueId");
+///     return Column(
+///       children: [
+///         Text("AppContext's state: ${appContext.stateHook.value}"),
+///         Text("appContextWithId's state: ${appContext.stateHook.value}");
+///       ],
+///     );
+///   }
+/// )
+/// ```
+///
+/// If you don't want to rebuild a part of [builder] callback, use the [child]
+/// property, it's more efficient to build that subtree once instead of
+/// rebuilding it on every [ReactterContext] changes.
+///
+/// ```dart
+/// ReactterProviders(
+///   [
+///     ReactterProvider(() => AppContext()),
+///     ReactterProvider(() => AppContext(), id: "uniqueId"),
+///   ],
+///   child: Text("This widget build only once"),
+///   builder: (context, child) {
+///     final appContext = context.read<AppContext>();
+///     final appContextWithId = context.watchId<AppContext>("uniqueId");
+///     return Column(
+///       children: [
+///         child,
+///         Text("AppContext's state: ${appContext.stateHook.value}"),
+///         Text("appContextWithId's state: ${appContext.stateHook.value}");
+///       ],
+///     );
+///   }
+/// )
+/// ```
+class ReactterProviders extends StatelessWidget
+    implements ReactterWrapperWidget {
+  final List<ReactterProviderAbstraction> providers;
 
   /// Provides a widget witch render one time.
   ///
   /// It's expose on [builder] method as second parameter.
-  final Widget? _child;
+  final Widget? child;
 
   /// Method which has the render logic
   ///
   /// Exposes [BuilderContext] and [child] widget as parameters.
   /// and returns a widget.
-  final TransitionBuilder? _builder;
+  final TransitionBuilder? builder;
 
   const ReactterProviders({
-    required List<ReactterProviderAbstraction> providers,
+    required this.providers,
     Key? key,
-    Widget? child,
-    TransitionBuilder? builder,
-  })  : _providers = providers,
-        _child = child,
-        _builder = builder,
-        super(key: key);
+    this.child,
+    this.builder,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return _builder?.call(context, _child) ?? _child!;
+    return builder?.call(context, child) ?? child!;
   }
 
   @override
@@ -36,25 +79,20 @@ class ReactterProviders extends StatelessWidget implements ReactterScopeWidget {
 }
 
 class ReactterProvidersElement extends StatelessElement
-    with ReactterScopeElementMixin {
+    with ReactterWrapperElementMixin<ReactterProviders> {
   /// Creates an element that uses the given widget as its configuration.
   ReactterProvidersElement(ReactterProviders widget) : super(widget);
 
   @override
-  ReactterProviders get widget => super.widget as ReactterProviders;
-
-  final nodes = <ReactterNestedProviderElement>{};
-
-  @override
   Widget build() {
-    ReactterNestedProviders? nestedHook;
+    ReactterNestedWidget? nestedHook;
     var nextNode = parent?.injectedChild ??
         Builder(
           builder: (context) => widget.build(context),
         );
 
-    for (final child in widget._providers.reversed) {
-      nextNode = nestedHook = ReactterNestedProviders(
+    for (final child in widget.providers.reversed) {
+      nextNode = nestedHook = ReactterNestedWidget<ReactterProviders>(
         owner: this,
         wrappedWidget: child,
         injectedChild: nextNode,
@@ -71,7 +109,7 @@ class ReactterProvidersElement extends StatelessElement
           ..injectedChild = nestedHook.injectedChild;
 
         final next = nestedHook.injectedChild;
-        if (next is ReactterNestedProviders) {
+        if (next is ReactterNestedWidget) {
           nestedHook = next;
         } else {
           break;

@@ -1,9 +1,9 @@
-// ignore_for_file: prefer_void_to_null
+// ignore_for_file: prefer_void_to_null, invalid_use_of_protected_member
 
 part of '../widgets.dart';
 
 abstract class ReactterProviderAbstraction<T extends ReactterContext>
-    extends StatelessWidget implements ReactterScopeWidget {
+    extends StatelessWidget implements ReactterWrapperWidget {
   const ReactterProviderAbstraction({Key? key}) : super(key: key);
 
   @override
@@ -12,76 +12,96 @@ abstract class ReactterProviderAbstraction<T extends ReactterContext>
   }
 }
 
+/// A wrapper [StatelessWidget] that provides a [ReactterContext]'s instance of [T]
+/// to widget tree that can be access through the [BuildContext].
+///
+///```dart
+/// ReactterProvider(
+///   () => AppContext(),
+///   builder: (context, child) {
+///     final appContext = context.watch<AppContext>();
+///     return Text("state: ${appContext.stateHook.value}");
+///   },
+/// )
+///```
+///
+/// **IMPORTANT:** Don's use [ReactterContext] with constructor parameters to prevent conflicts.
+/// Instead of it, use [onInit] method to access its instance and put the data you need.
+///
+/// **NOTE:** [ReactteProvider] is a "scoped". So it contains a [ReactterScope]
+/// witch the [builder] callback will be rebuild, when the [ReactterContext] changes.
+/// For this to happen, the [ReactterContext] should put it on listens
+/// for [BuildContext]'s [watch]ers.
+///
+/// If you want to create a different [ReactterContext]'s instance, use [id] parameter.
+///
+/// If you don't want to rebuild a part of [builder] callback, use the [child]
+/// property, it's more efficient to build that subtree once instead of
+/// rebuilding it on every [ReactterContext] changes.
+///
+///```dart
+/// ReactterProvider(
+///   () => AppContext(),
+///   child: Text("This widget build only once"),
+///   builder: (context, child) {
+///     final appContext = context.watch<AppContext>();
+///     return Column(
+///       children: [
+///         Text("state: ${appContext.stateHook.value}"),
+///         child,
+///       ],
+///     );
+///   },
+/// )
+///```
 class ReactterProvider<T extends ReactterContext>
     extends ReactterProviderAbstraction {
   /// Create a instances of [ReactterContext] class
   @protected
-  final ContextBuilder<T> _instanceBuilder;
+  final ContextBuilder<T> instanceBuilder;
 
   /// Id usted to identify the context
-  final String? _id;
+  final String? id;
 
   /// Provides a widget witch render one time.
   ///
   /// It's expose on [builder] method as second parameter.
-  final Widget? _child;
+  final Widget? child;
 
   /// Method which has the render logic
   ///
   /// Exposes [BuilderContext] and [child] widget as parameters.
   /// and returns a widget.
-  final TransitionBuilder? _builder;
+  final TransitionBuilder? builder;
 
   /// Create the instance defined
   /// on firts parameter [_instanceBuilder] when [UseContext] is called.
   @protected
-  final bool _init;
+  final bool init;
 
   /// Invoked when instance defined
   /// on firts parameter [_instanceBuilder] is created
   @protected
-  final OnInitContext<T>? _onInit;
+  final OnInitContext<T>? onInit;
 
   const ReactterProvider(
-    this._instanceBuilder, {
+    this.instanceBuilder, {
     Key? key,
-    String? id,
-    bool init = false,
-    OnInitContext<T>? onInit,
-    Widget? child,
-    TransitionBuilder? builder,
-  })  : _id = id,
-        _init = init,
-        _onInit = onInit,
-        _child = child,
-        _builder = builder,
-        super(key: key);
+    this.id,
+    this.init = false,
+    this.onInit,
+    this.child,
+    this.builder,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return _buildWithChild(context, _child);
+    return _buildWithChild(context, child);
   }
 
   @override
   ReactterProviderElement createElement() {
     return ReactterProviderElement(this);
-  }
-
-  @override
-  void debugFillProperties(properties) {
-    super.debugFillProperties(properties);
-    properties
-      ..add(StringProperty('id', _id, showName: true))
-      ..add(
-        FlagProperty(
-          'init',
-          value: _init,
-          ifTrue: 'true',
-          ifFalse: 'false',
-          showName: true,
-        ),
-      );
-    properties.defaultDiagnosticsTreeStyle = DiagnosticsTreeStyle.shallow;
   }
 
   /// A [build] method that receives an extra `child` parameter.
@@ -93,13 +113,13 @@ class ReactterProvider<T extends ReactterContext>
   Widget _buildWithChild(BuildContext context, Widget? child,
       [WidgetBuilder? afterBuild]) {
     return ReactterProvider._buildScope<T>(
-      id: _id,
+      id: id,
       owner: this,
       child: Builder(
         builder: (context) {
           final injectedChild = child ?? afterBuild?.call(context);
 
-          return _builder?.call(context, injectedChild) ?? injectedChild!;
+          return builder?.call(context, injectedChild) ?? injectedChild!;
         },
       ),
     );
@@ -111,29 +131,35 @@ class ReactterProvider<T extends ReactterContext>
     String? id,
   }) {
     if (id != null) {
-      return ReactterScopeInherited<T, String>(owner: owner, child: child);
+      return ReactterProviderInherited<T, String>(
+        owner: owner,
+        child: ReactterScope(child: child),
+      );
     }
-    return ReactterScopeInherited<T, Null>(owner: owner, child: child);
+    return ReactterProviderInherited<T, Null>(
+      owner: owner,
+      child: ReactterScope(child: child),
+    );
   }
 
-  bool _existsInstance() => Reactter.exists<T>(_id);
+  bool _existsInstance() => Reactter.exists<T>(id);
 
   T? _createInstance(Object ref) {
     final instance = Reactter.create<T>(
-      builder: _instanceBuilder,
-      id: _id,
+      builder: instanceBuilder,
+      id: id,
       ref: ref,
     );
 
     if (instance != null) {
-      _onInit?.call(instance);
+      onInit?.call(instance);
     }
 
     return instance;
   }
 
   void _deleteInstance(Object ref) {
-    Reactter.delete<T>(id: _id, ref: ref);
+    Reactter.delete<T>(id: id, ref: ref);
   }
 
   /// Returns a [_instance] of [T]
@@ -145,42 +171,46 @@ class ReactterProvider<T extends ReactterContext>
     SelectorAspect<T>? aspect,
     bool listen = true,
   }) {
-    final inheritedElement = _getScopeInheritedElement<T>(
+    final scopeInheritedElement = context
+            .getElementForInheritedWidgetOfExactType<ReactterScopeInherited>()
+        as ReactterScopeInheritedElement?;
+
+    final providerInheritedElement = _getProviderInheritedElement<T>(
       context,
       id: id,
       aspect: aspect,
     );
 
-    if (inheritedElement?._instance == null && null is! T) {
+    if (providerInheritedElement?._instance == null && null is! T) {
       throw ReactterContextNotFoundException(T, context.widget.runtimeType);
     }
 
-    final instance = inheritedElement?._instance as T;
+    final instance = providerInheritedElement?._instance as T;
 
     if (!listen || instance == null) {
       return instance;
     }
 
     context.dependOnInheritedElement(
-      inheritedElement!,
+      scopeInheritedElement!,
       aspect: aspect ?? () => {},
     );
 
     if (listenHooks != null) {
       final hooks = listenHooks(instance);
 
-      inheritedElement.dependOnHooks(hooks);
+      scopeInheritedElement.dependOnHooks(hooks);
 
       return instance;
     }
 
-    inheritedElement.dependOnInstance(instance);
+    scopeInheritedElement.dependOnInstance(instance);
 
     return instance;
   }
 
-  static ReactterScopeInheritedElement?
-      _getScopeInheritedElement<T extends ReactterContext?>(
+  static ReactterProviderInheritedElement?
+      _getProviderInheritedElement<T extends ReactterContext?>(
     BuildContext context, {
     String? id,
     SelectorAspect<T>? aspect,
@@ -189,26 +219,23 @@ class ReactterProvider<T extends ReactterContext>
       // O(2)
       final inheritedElementNotSure =
           context.getElementForInheritedWidgetOfExactType<
-                  ReactterScopeInherited<T, String>>()
-              as ReactterScopeInheritedElement<T, String>?;
+                  ReactterProviderInherited<T, String>>()
+              as ReactterProviderInheritedElement<T, String>?;
 
-      return inheritedElementNotSure?.getScopeInheritedElementOfExactId(id);
+      return inheritedElementNotSure?.getInheritedElementOfExactId(id);
     }
 
     // O(1)
     return context.getElementForInheritedWidgetOfExactType<
-            ReactterScopeInherited<T, Null>>()
-        as ReactterScopeInheritedElement<T, Null>?;
+            ReactterProviderInherited<T, Null>>()
+        as ReactterProviderInheritedElement<T, Null>?;
   }
 }
 
 class ReactterProviderElement extends StatelessElement
-    with ReactterScopeElementMixin {
+    with ReactterWrapperElementMixin<ReactterProvider> {
   /// Creates an element that uses the given widget as its configuration.
   ReactterProviderElement(ReactterProviderAbstraction widget) : super(widget);
-
-  @override
-  ReactterProvider get widget => super.widget as ReactterProvider;
 
   @override
   Widget build() {

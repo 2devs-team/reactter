@@ -1,7 +1,21 @@
 part of '../widgets.dart';
 
-/// Provides the functionality of [ReactterProvider] with a [UseContext] of [T],
-/// and exposes the instance of [T] through [render] method.
+/// A abstract [StatelessWidget] class that provides the functionality of [ReactterProvider]
+/// with a [ReactterContext] of [T], and exposes it through [render] method.
+///
+/// ```dart
+/// class App extends ReactterComponent<AppContext> {
+///   const App({Key? key}) : super(key: key);
+///
+///   @override
+///   get builder => () => AppContext();
+///
+///   @override
+///   Widget render(AppContext ctx, BuildContext context) {
+///     return Text("State: ${ctx.stateHook.value}");
+///   }
+/// }
+/// ```
 abstract class ReactterComponent<T extends ReactterContext>
     extends StatelessWidget {
   const ReactterComponent({Key? key}) : super(key: key);
@@ -14,19 +28,24 @@ abstract class ReactterComponent<T extends ReactterContext>
   @protected
   ContextBuilder<T>? get builder => null;
 
-  /// Listen hooks to mark need to build.
+  /// Listens hooks to re-render [render] method.
   @protected
   ListenHooks<T>? get listenHooks => null;
 
-  /// Invoked when the context instance is created.
+  /// Invoked when the [ReactterContext]'s instance is created.
   OnInitContext<T>? get onInit => null;
 
-  /// Replace a build method. Provides the instances of [T] and context of [BuildContext].
+  /// Replaces a build method.
+  ///
+  /// Provides the [ReactterContext]'s instance of [T] along with the [BuildContext].
+  ///
+  /// It should build a Widget based on the current [ReactterContext] changes.
   @protected
   Widget render(T ctx, BuildContext context);
 
   @protected
   @override
+  @mustCallSuper
   Widget build(BuildContext context) {
     if (builder == null) {
       return ReactterBuilder<T>(

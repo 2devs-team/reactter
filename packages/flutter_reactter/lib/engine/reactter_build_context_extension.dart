@@ -1,42 +1,25 @@
 part of '../widgets.dart';
 
-/// Exposes methods to helps to get and listen the [_instance] of [ReactterContext].
+/// Exposes methods to helps to get and listen [ReactterContext]'s instance.
 extension ReactterBuildContextExtension on BuildContext {
-  /// Obtain a [_instance] of [T] from the nearest ancestor [ReactterProvider],
-  /// and subscribe to it or specific hooks put in [listenHooks] parameter.
+  /// Gets the [ReactterContext]'s instance of [T]
+  /// from the closest ancestor of [ReactterProvider] and watch all [ReactterHook]
+  /// or [ReactterHook] defined in first paramater([listenHooks])
+  /// to re-render the widget tree.
   ///
-  /// If [T] is nullable and no matching [ReactterContext] are found, [watch] will
+  /// ```dart
+  /// final appContext = context.watch<AppContext>();
+  /// final appContextWatchHook = context.watch<AppContext>((ctx) => [ctx.stateHook]);
+  /// final appContextNullable = context.wath<AppContext?>();
+  /// ```
+  ///
+  /// If [T] is nullable and no matching [ReactterContext] is found, [watch] will
   /// return `null`.
   ///
   /// If [T] is non-nullable and the [ReactterContext] obtained returned `null`, will
   /// throw [ProviderNullException].
   ///
-  /// This allows widgets to optionally depend on a provider:
-  ///
-  /// ```dart
-  /// Builder(builder: (context) {
-  ///   final appContext = context.watch<AppContext?>();
-  ///
-  ///   if (appContext == null) Text('no found');
-  ///
-  ///   return Text(appContext.state.value);
-  /// }),
-  /// ```
-  ///
-  /// If only need to listen to one or some hooks,
-  /// use [listenHooks] which is first parameter:
-  ///
-  /// ```dart
-  /// Builder(builder: (context) {
-  ///   final appContext = context.watch<AppContext>(
-  ///     (ctx) => [ctx.stateA, ctx.stateB],
-  ///   );
-  ///
-  ///   return Text(appContext.stateA.value);
-  /// }),
-  /// ```
-  ///
-  /// Calling this method is equivalent to calling:
+  /// This method is equivalent to calling:
   ///
   /// ```dart
   /// ReactterProvider.contextOf<T>(context, listenHooks: listenHooks);
@@ -44,73 +27,47 @@ extension ReactterBuildContextExtension on BuildContext {
   T watch<T extends ReactterContext?>([ListenHooks<T>? listenHooks]) =>
       ReactterProvider.contextOf<T>(this, listenHooks: listenHooks);
 
-  /// Obtain a [_instance] of [T] with [id] from the nearest ancestor [ReactterProvider],
-  /// and subscribe to it or specific hooks put in [listenHooks] parameter.
+  /// Gets the [ReactterContext]'s instance of [T]
+  /// from the closest ancestor of [ReactterProvider] and watch all [ReactterHook]
+  /// or [ReactterHook] defined in second paramater([listenHooks])
+  /// to re-render the widget tree.
   ///
-  /// If [T] is nullable and no matching [ReactterContext] are found, [watchId] will
+  /// ```dart
+  /// final appContext = context.watch<AppContext>();
+  /// final appContextWatchHook = context.watch<AppContext>((ctx) => [ctx.stateHook]);
+  /// final appContextNullable = context.wath<AppContext?>();
+  /// ```
+  ///
+  /// If [T] is nullable and no matching [ReactterContext] is found, [watch] will
   /// return `null`.
   ///
   /// If [T] is non-nullable and the [ReactterContext] obtained returned `null`, will
   /// throw [ProviderNullException].
   ///
-  /// This allows widgets to optionally depend on a provider:
+  /// This method is equivalent to calling:
   ///
   /// ```dart
-  /// Builder(builder: (context) {
-  ///   final appContext = context.watchId<AppContext?>('uniqueId');
-  ///
-  ///   if (appContext == null) Text('no found');
-  ///
-  ///   return Text(appContext.state.value);
-  /// }),
+  /// ReactterProvider.contextOf<T>(context, listenHooks: listenHooks);
   /// ```
-  ///
-  /// If only need to listen to one or some hooks,
-  /// use [listenHooks] which is second parameter:
-  ///
-  /// ```dart
-  /// Builder(builder: (context) {
-  ///   final appContext = context.watchId<AppContext>(
-  ///     'uniqueId',
-  ///     (ctx) => [ctx.stateA, ctx.stateB],
-  ///   );
-  ///
-  ///   return Text(appContext.stateA.value);
-  /// }),
-  /// ```
-  ///
-  /// Calling this method is equivalent to calling:
-  ///
-  /// ```dart
-  /// ReactterProvider.contextOf<T>(context, id: id, listenHooks: listenHooks);
-  /// ```
-  T watchId<T extends ReactterContext?>(
-    String id, [
-    ListenHooks<T>? listenHooks,
-  ]) =>
+  T watchId<T extends ReactterContext?>(String id,
+          [ListenHooks<T>? listenHooks]) =>
       ReactterProvider.contextOf<T>(this, id: id, listenHooks: listenHooks);
 
-  /// Obtain a [_instance] of [T] from the nearest ancestor [ReactterProvider].
+  /// Gets the [ReactterContext]'s instance of [T]
+  /// from the closest ancestor of [ReactterProvider].
   ///
-  /// If [T] is nullable and no matching [ReactterContext] are found, [read] will
+  /// ```dart
+  /// final appContext = context.read<AppContext>();
+  /// final appContextNullable = context.read<AppContext?>();
+  /// ```
+  ///
+  /// If [T] is nullable and no matching [ReactterContext] is found, [watch] will
   /// return `null`.
   ///
   /// If [T] is non-nullable and the [ReactterContext] obtained returned `null`, will
   /// throw [ProviderNullException].
   ///
-  /// This allows widgets to optionally depend on a provider:
-  ///
-  /// ```dart
-  /// Builder(builder: (context) {
-  ///   final appContext = context.read<AppContext?>();
-  ///
-  ///   if (appContext == null) Text('no found');
-  ///
-  ///   return Text(appContext.state.value);
-  /// }),
-  /// ```
-  ///
-  /// Calling this method is equivalent to calling:
+  /// This method is equivalent to calling:
   ///
   /// ```dart
   /// ReactterProvider.contextOf<T>(context, listen: false);
@@ -118,27 +75,21 @@ extension ReactterBuildContextExtension on BuildContext {
   T read<T extends ReactterContext?>() =>
       ReactterProvider.contextOf<T>(this, listen: false);
 
-  /// Obtain a [_instance] of [T] with [id] from the nearest ancestor [ReactterProvider].
+  /// Gets the [ReactterContext]'s instance of [T] with [id]
+  /// from the closest ancestor of [ReactterProvider].
   ///
-  /// If [T] is nullable and no matching [ReactterContext] are found, [readId] will
+  /// ```dart
+  /// final appContext = context.readId<AppContext>("uniqueId");
+  /// final appContextNullable = context.read<AppContext?>("uniqueId");
+  /// ```
+  ///
+  /// If [T] is nullable and no matching [ReactterContext] is found, [watch] will
   /// return `null`.
   ///
   /// If [T] is non-nullable and the [ReactterContext] obtained returned `null`, will
   /// throw [ProviderNullException].
   ///
-  /// This allows widgets to optionally depend on a provider:
-  ///
-  /// ```dart
-  /// Builder(builder: (context) {
-  ///   final appContext = context.readId<AppContext?>('uniqueId');
-  ///
-  ///   if (appContext == null) Text('no found');
-  ///
-  ///   return Text(appContext.state.value);
-  /// }),
-  /// ```
-  ///
-  /// Calling this method is equivalent to calling:
+  /// This method is equivalent to calling:
   ///
   /// ```dart
   /// ReactterProvider.contextOf<T>(context, id: id, listen: false);
@@ -147,7 +98,8 @@ extension ReactterBuildContextExtension on BuildContext {
       ReactterProvider.contextOf<T>(this, id: id, listen: false);
 }
 
-/// The error that will be thrown if [ReactterProvider.contextOf] fails to find a [ReactterContext]
+/// The error that will be thrown
+/// if [ReactterProvider.contextOf] fails to find a [ReactterContext]
 /// as an ancestor of the [BuildContext] used.
 class ReactterContextNotFoundException implements Exception {
   /// Create a ProviderNotFound error with the type represented as a String.
@@ -167,18 +119,17 @@ class ReactterContextNotFoundException implements Exception {
     return '''
 Error: Could not find the correct `ReactterProvider<$valueType>` above this `$widgetType` Widget
 
-This happens because you used a `BuildContext` that does not include the `ReactterContext`
-of your choice. There are a few common scenarios:
+This happens because you used a `BuildContext` that does not include the `ReactterContext` of your choice.
+There are a few common scenarios:
 
-- You added a new `ReactterProvider` in your `main.dart` and performed a hot-reload.
-  To fix, perform a hot-restart.
+- You added a new `ReactterProvider` in your `main.dart` and perform a hot-restart.
 
 - The `ReactterContext` you are trying to read is in a different route.
 
-  `ReactterProvider` are "scoped". So if you insert of `ReactterProvider` inside a route, then
+  `ReactterProvider` is a "scoped". So if you insert of `ReactterProvider` inside a route, then
   other routes will not be able to access that `ReactterContext`.
 
-- You used a `BuildContext` that is an ancestor of the provider you are trying to read.
+- You used a `BuildContext` that is an ancestor of the `ReactterProvider` you are trying to read.
 
   Make sure that `$widgetType` is under your `ReactterProvider<$valueType>`.
   This usually happens when you are creating a `ReactterContext` and trying to read it immediately.
@@ -189,8 +140,8 @@ of your choice. There are a few common scenarios:
   Widget build(BuildContext context) {
     return ReactterProvider(
       () => AppContext(),
-      // Will throw a `ReactterContextNotFoundException`, because `context` is associated
-      // to the widget that is the parent of `ReactterProvider`.
+      // Will throw a `ReactterContextNotFoundException`,
+      // because `context` is out of `ReactterProvider`'s scope.
       child: Text(context.watch<AppContext>().state.value),
     ),
   }
