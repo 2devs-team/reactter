@@ -7,20 +7,20 @@ const ID = 'uniqueId';
 
 void main() {
   group("UseContext", () {
-    test("should get instance", () => _testContext());
+    test("should gets instance", () => _testContext());
 
-    test("should get instance by id", () => _testContext(ID));
+    test("should gets instance by id", () => _testContext(ID));
 
-    test("should get instance late", () => _testContextLate());
+    test("should gets instance late", () => _testContextLate());
 
-    test("should get instance by id late", () => _testContextLate(ID));
+    test("should gets instance by id late", () => _testContextLate(ID));
   });
 }
 
 void _testContext([String? id]) {
   Reactter.create(id: id, builder: () => TestContext());
 
-  final testContext = UseContext<TestContext>(id);
+  final testContext = UseContext<TestContext>(id: id);
 
   expect(testContext.instance, isInstanceOf<TestContext>());
 
@@ -32,7 +32,7 @@ void _testContext([String? id]) {
 
 void _testContextLate([String? id]) {
   late final TestContext instance;
-  final testContext = UseContext<TestContext>(id);
+  final testContext = UseContext<TestContext>(id: id);
 
   UseEffect(() {
     if (testContext.instance != null) {

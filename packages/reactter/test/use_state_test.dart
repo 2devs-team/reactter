@@ -17,7 +17,7 @@ void main() {
       expect(testContext.stateClass.value, null);
     });
 
-    test("should change state value", () {
+    test("should changes state value", () {
       final testContext = TestContext();
 
       testContext.stateBool.value = !testContext.stateBool.value;
@@ -37,7 +37,7 @@ void main() {
       expect(testContext.stateClass.value?.prop, "other class");
     });
 
-    test("should notify when will update", () {
+    test("should notifies when will update", () {
       final testContext = TestContext();
 
       testContext.stateInt.value = 1;
@@ -56,7 +56,7 @@ void main() {
       expectLater(willUpdateValue, 1);
     });
 
-    test("should notify when did update", () {
+    test("should notifies when did update", () {
       final testContext = TestContext();
 
       testContext.stateInt.value = 1;

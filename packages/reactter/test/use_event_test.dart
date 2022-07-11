@@ -8,13 +8,13 @@ enum Events { TestEvent }
 
 void main() {
   group("UseEvent", () {
-    test("should add and remove event", () => _testAddAndRemoveEvent());
+    test("should adds and removes event", () => _testAddAndRemoveEvent());
 
-    test("should add and remove event with id",
+    test("should adds and removes event with id",
         () => _testAddAndRemoveEvent("uniqueId"));
 
     test(
-      "should emit and listen event",
+      "should emits and listens event",
       () => _testEmitListenEvent(
         (CallbackEvent<TestContext?, String> callback) =>
             UseEvent<TestContext>().on<String>(Events.TestEvent, callback),
@@ -23,7 +23,7 @@ void main() {
       ),
     );
 
-    test("should emit and listen event with instance", () {
+    test("should emits and listens event with instance", () {
       late TestContext? instance;
       final testContext = Reactter.create(builder: () => TestContext());
 
@@ -48,7 +48,7 @@ void main() {
     });
 
     test(
-      "should emit and listen event only once",
+      "should emits and listens event only once",
       () => _testEmitListenEvent(
         (CallbackEvent<TestContext?, String> callback) =>
             UseEvent<TestContext>().one<String>(Events.TestEvent, callback),
@@ -57,7 +57,7 @@ void main() {
       ),
     );
 
-    test("should emit and listen event only once with instance", () {
+    test("should emits and listens event only once with instance", () {
       late TestContext? instance;
       final testContext = Reactter.create(builder: () => TestContext());
 
@@ -81,7 +81,7 @@ void main() {
       expectLater(instance, testContext);
     });
 
-    test("should listen instance's life-cycle event", () {
+    test("should listens instance's life-cycle event", () {
       late TestContext? instance;
       late bool willUpdateChecked;
       late bool didUpdateChecked;
@@ -163,5 +163,3 @@ void _testEmitListenEvent(
   expectLater(paramReceived, expectParam);
   expect(countEvent, expectCount);
 }
-
-void _testEventWithInstance(Function callback) {}

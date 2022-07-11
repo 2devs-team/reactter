@@ -5,7 +5,7 @@ import 'shareds/test_context.dart';
 
 void main() {
   group("UseAsyncState", () {
-    test("should resolved state", () async {
+    test("should resolves state", () async {
       final testContext = TestContext();
       final stateAsync = testContext.stateAsync;
 
@@ -16,7 +16,7 @@ void main() {
       expect(stateAsync.value, "resolved");
     });
 
-    test("should catch error", () async {
+    test("should catchs error", () async {
       final testContext = TestContext();
       final stateAsync = testContext.stateAsync;
 
@@ -27,7 +27,7 @@ void main() {
       expect(stateAsync.error.toString(), "Exception: has a error");
     });
 
-    test("should reset state", () async {
+    test("should resets state", () async {
       final testContext = TestContext();
       final stateAsync = testContext.stateAsync;
 
@@ -40,7 +40,7 @@ void main() {
       expect(stateAsync.value, "initial");
     });
 
-    test("should get value when", () async {
+    test("should gets value when", () async {
       final testContext = TestContext();
       final stateAsync = testContext.stateAsync;
 
