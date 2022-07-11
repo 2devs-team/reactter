@@ -2,7 +2,6 @@
 
 part of '../core.dart';
 
-
 class ReactterInterface {
   bool isLogEnable = true; //kDebugMode;
   LogWriterCallback log = defaultLogWriterCallback;
