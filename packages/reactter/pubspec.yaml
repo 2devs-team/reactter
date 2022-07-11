@@ -1,12 +1,12 @@
 name: reactter
 description: Reactter is a light, powerful and reactive state management.
-version: 3.0.0-dev
+version: 3.0.0-dev.1
 homepage: https://2devs.io
 license: MIT License
 repository: https://github.com/2devs-team/reactter
 
 environment:
-  sdk: ">=2.12.0 <3.0.0"
+  sdk: ">=2.14.0 <3.0.0"
 
 dev_dependencies:
   flutter_driver:
