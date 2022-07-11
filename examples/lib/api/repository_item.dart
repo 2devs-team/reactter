@@ -54,7 +54,7 @@ class RepositoryItem extends ReactterComponent<RepositoryContext> {
             Badget(
               icon: Icons.star,
               label: "Stars",
-              value: repo.stargazersCount.toString(),
+              value: "${repo.stargazersCount}",
               labelColor: const Color(0xfff7b05b),
               valueColor: const Color(0xffc68d49),
             ),
@@ -62,7 +62,7 @@ class RepositoryItem extends ReactterComponent<RepositoryContext> {
             Badget(
               icon: Icons.visibility_rounded,
               label: "Watching",
-              value: repo.watchersCount.toString(),
+              value: "${repo.watchersCount}",
               labelColor: const Color(0xff23967F),
               valueColor: const Color(0xff196959),
             ),
@@ -70,7 +70,7 @@ class RepositoryItem extends ReactterComponent<RepositoryContext> {
             Badget(
               icon: Icons.call_split,
               label: "Forks",
-              value: repo.forks.toString(),
+              value: "${repo.forks}",
               labelColor: const Color(0xff8075FF),
               valueColor: const Color(0xff5a52b3),
             ),

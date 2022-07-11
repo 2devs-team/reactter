@@ -17,38 +17,37 @@ class AnimationExample extends StatelessWidget {
           ),
           body: Center(
             child: Wrap(
-              runSpacing: 16,
+              spacing: 16,
               alignment: WrapAlignment.center,
+              direction: Axis.vertical,
               children: [
                 SizedBox.square(
                   dimension: 100,
-                  child: ReactterBuilder<AnimationContext>(
-                    listenHooks: (ctx) => [ctx.sizeAnimation],
-                    builder: (aniContext, context, child) {
-                      return Center(
-                        child: Container(
+                  child: Center(
+                    child: ReactterBuilder<AnimationContext>(
+                      listenHooks: (ctx) => [ctx.sizeAnimation],
+                      builder: (aniContext, context, child) {
+                        return Container(
                           width: aniContext.sizeAnimation.value,
                           height: aniContext.sizeAnimation.value,
                           decoration: const BoxDecoration(
                             shape: BoxShape.circle,
                             color: Colors.blue,
                           ),
-                        ),
-                      );
-                    },
+                        );
+                      },
+                    ),
                   ),
                 ),
                 ReactterBuilder<AnimationContext>(
                   listenHooks: (ctx) => [ctx.borderRadiusAnimation],
                   builder: (aniContext, context, child) {
-                    return Center(
-                      child: Container(
-                        width: 100,
-                        height: 100,
-                        decoration: BoxDecoration(
-                          color: Colors.blue,
-                          borderRadius: aniContext.borderRadiusAnimation.value,
-                        ),
+                    return Container(
+                      width: 100,
+                      height: 100,
+                      decoration: BoxDecoration(
+                        color: Colors.blue,
+                        borderRadius: aniContext.borderRadiusAnimation.value,
                       ),
                     );
                   },
@@ -56,26 +55,24 @@ class AnimationExample extends StatelessWidget {
                 ReactterBuilder<AnimationContext>(
                   listenHooks: (ctx) => [ctx.colorAnimation],
                   builder: (aniContext, context, child) {
-                    return Center(
-                      child: Container(
-                        width: 100,
-                        height: 100,
-                        color: aniContext.colorAnimation.value,
-                      ),
+                    return Container(
+                      width: 100,
+                      height: 100,
+                      color: aniContext.colorAnimation.value,
                     );
                   },
                 ),
                 SizedBox.square(
                   dimension: 100,
-                  child: ReactterBuilder<AnimationContext>(
-                    listenHooks: (ctx) => [
-                      ctx.sizeAnimation,
-                      ctx.borderRadiusAnimation,
-                      ctx.colorAnimation
-                    ],
-                    builder: (aniContext, context, child) {
-                      return Center(
-                        child: Container(
+                  child: Center(
+                    child: ReactterBuilder<AnimationContext>(
+                      listenHooks: (ctx) => [
+                        ctx.sizeAnimation,
+                        ctx.borderRadiusAnimation,
+                        ctx.colorAnimation
+                      ],
+                      builder: (aniContext, context, child) {
+                        return Container(
                           width: aniContext.sizeAnimation.value,
                           height: aniContext.sizeAnimation.value,
                           decoration: BoxDecoration(
@@ -83,9 +80,9 @@ class AnimationExample extends StatelessWidget {
                                 aniContext.borderRadiusAnimation.value,
                             color: aniContext.colorAnimation.value,
                           ),
-                        ),
-                      );
-                    },
+                        );
+                      },
+                    ),
                   ),
                 ),
               ],

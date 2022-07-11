@@ -26,8 +26,10 @@ class CounterExample extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                ReactterBuilder<CounterContext>(
-                  builder: (counterCtx, context, child) {
+                ReactterScope(
+                  builder: (context, buttons) {
+                    context.watch<CounterContext>();
+
                     return Text(
                       "${counterCtx.count.value}",
                       style: Theme.of(context).textTheme.headline3,

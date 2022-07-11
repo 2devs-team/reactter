@@ -14,7 +14,7 @@ class TodoItem extends ReactterComponent<TodoContext> {
   final Color? color;
 
   @override
-  get id => todo.hashCode.toString();
+  get id => "${todo.hashCode}";
 
   @override
   get builder => () => todo;

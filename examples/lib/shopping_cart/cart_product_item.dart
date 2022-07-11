@@ -17,7 +17,7 @@ class CartProductItem extends ReactterComponent<ProductContext> {
   }) : super(key: key);
 
   @override
-  get id => product.hashCode.toString();
+  get id => "${product.hashCode}";
 
   @override
   get builder => () => product;

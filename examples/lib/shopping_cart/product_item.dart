@@ -15,7 +15,7 @@ class ProductItem extends ReactterComponent<ProductContext> {
   }) : super(key: key);
 
   @override
-  get id => product.hashCode.toString();
+  get id => "${product.hashCode}";
 
   @override
   get builder => () => product;
@@ -38,7 +38,7 @@ class ProductItem extends ReactterComponent<ProductContext> {
               children: [
                 const Text('In stock: '),
                 Text(
-                  stock.toString(),
+                  "${stock}",
                   style: Theme.of(context).textTheme.caption!.copyWith(
                         fontWeight: FontWeight.bold,
                       ),

@@ -13,7 +13,7 @@ class TreeItem extends ReactterComponent<TreeContext> {
   final TreeContext item;
 
   @override
-  String get id => item.hashCode.toString();
+  String get id => "${item.hashCode}";
 
   @override
   get builder => () => item;

@@ -53,28 +53,28 @@ class UserItem extends ReactterComponent<UserContext> {
           children: [
             Badget(
               label: "Followers",
-              value: user.followers.toString(),
+              value: "${user.followers}",
               labelColor: const Color(0xff01579b),
               valueColor: const Color(0xff013d6d),
             ),
             const SizedBox(width: 8),
             Badget(
               label: "Following",
-              value: user.following.toString(),
+              value: "${user.following}",
               labelColor: const Color(0xff29b6f6),
               valueColor: const Color(0xff1d7fac),
             ),
             const SizedBox(width: 8),
             Badget(
               label: "Repos",
-              value: user.publicRepos.toString(),
+              value: "${user.publicRepos}",
               labelColor: const Color(0xff23967F),
               valueColor: const Color(0xff196959),
             ),
             const SizedBox(width: 8),
             Badget(
               label: "Gists",
-              value: user.publicGists.toString(),
+              value: "${user.publicGists}",
               labelColor: const Color(0xff8075FF),
               valueColor: const Color(0xff5a52b3),
             ),

@@ -39,18 +39,21 @@ class ShoppingCartExample extends StatelessWidget {
                       Positioned(
                         top: -8,
                         right: -8,
-                        child: ReactterBuilder<CartContext>(
-                          listenHooks: (ctx) => [ctx.quantityProducts],
-                          builder: (cartCtx, context, child) {
-                            return CircleAvatar(
-                              backgroundColor: Colors.amber,
-                              radius: 8,
-                              child: Text(
-                                cartCtx.quantityProducts.value.toString(),
-                                style: Theme.of(context).textTheme.caption,
-                              ),
-                            );
-                          },
+                        child: CircleAvatar(
+                          backgroundColor: Colors.amber,
+                          radius: 8,
+                          child: ReactterBuilder<CartContext>(
+                            listenHooks: (ctx) => [ctx.quantityProducts],
+                            builder: (cartCtx, context, child) {
+                              return Text(
+                                "${cartCtx.quantityProducts.value}",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .labelSmall
+                                    ?.copyWith(color: Colors.black87),
+                              );
+                            },
+                          ),
                         ),
                       ),
                     ],
@@ -59,8 +62,9 @@ class ShoppingCartExample extends StatelessWidget {
               ),
             ],
           ),
-          body: ReactterBuilder<ProductsContext>(
-            builder: (productsCtx, context, child) {
+          body: ReactterScope(
+            builder: (context, child) {
+              final productsCtx = context.watch<ProductsContext>();
               final products = productsCtx.products.value;
 
               return ListView.builder(

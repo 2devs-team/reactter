@@ -83,7 +83,7 @@ class ApiExample extends StatelessWidget {
                     error: (_) => const Text("Not found"),
                   ),
                 ),
-              )
+              ),
             ],
           ),
         );

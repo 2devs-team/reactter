@@ -16,9 +16,9 @@ final items = <ListItem>[
     "Counter",
     "Increment and decrement counter",
     [
-      "ReactterBuilder",
       "ReactterContext",
       "ReactterProvider",
+      "ReactterScope",
       "UseContext",
       "UseState",
     ],
@@ -46,6 +46,7 @@ final items = <ListItem>[
       "ReactterComponent",
       "ReactterContext",
       "ReactterProvider",
+      "ReactterScope",
       "UseContext",
       "UseState",
       "UseEffect",
