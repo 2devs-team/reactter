@@ -38,7 +38,7 @@ class ProductItem extends ReactterComponent<ProductContext> {
               children: [
                 const Text('In stock: '),
                 Text(
-                  "${stock}",
+                  "$stock",
                   style: Theme.of(context).textTheme.caption!.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
