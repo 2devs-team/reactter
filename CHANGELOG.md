@@ -1,6 +1,6 @@
 # Reactter by [2devs.io](https://2devs.io)
 
-## 3.0.0-dev.1 - `Dev release` - `2022-07-10`
+## 3.0.0-dev.3 - `Dev release` - `2022-07-11`
 
 ### Breacking
 
