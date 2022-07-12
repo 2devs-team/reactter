@@ -12,7 +12,7 @@ class ShoppingCartExample extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ReactterProviders(
-      providers: [
+      [
         ReactterProvider(() => ProductsContext()),
         ReactterProvider(() => CartContext()),
       ],

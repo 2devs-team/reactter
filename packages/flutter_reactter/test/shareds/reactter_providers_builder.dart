@@ -14,7 +14,7 @@ class ReactterProvidersBuilder extends StatelessWidget {
   Widget build(BuildContext context) {
     return TestBuilder(
       child: ReactterProviders(
-        providers: [
+        [
           ReactterProvider(() => TestContext()),
           ReactterProvider(
             () => TestContext(),

@@ -60,8 +60,8 @@ class ReactterProviders extends StatelessWidget
   /// and returns a widget.
   final TransitionBuilder? builder;
 
-  const ReactterProviders({
-    required this.providers,
+  const ReactterProviders(
+    this.providers, {
     Key? key,
     this.child,
     this.builder,
