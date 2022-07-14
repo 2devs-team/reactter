@@ -18,15 +18,15 @@ void main() {
 }
 
 void _testContext([String? id]) {
-  Reactter.create(id: id, builder: () => TestContext());
+  final context = Reactter.create(id: id, builder: () => TestContext());
 
-  final testContext = UseContext<TestContext>(id: id);
+  final testContext = UseContext<TestContext>(id: id, context: context);
 
   expect(testContext.instance, isInstanceOf<TestContext>());
 
   Reactter
     ..unregister<TestContext>(id)
-    ..delete<TestContext>(id: id);
+    ..delete<TestContext>(id);
   testContext.dispose();
 }
 
@@ -46,6 +46,6 @@ void _testContextLate([String? id]) {
 
   Reactter
     ..unregister<TestContext>(id)
-    ..delete<TestContext>(id: id);
+    ..delete<TestContext>(id);
   testContext.dispose();
 }

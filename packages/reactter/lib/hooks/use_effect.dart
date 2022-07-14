@@ -86,7 +86,7 @@ class UseEffect extends ReactterHook {
 
   final ReactterContext? context;
 
-  static DispatchEffect get dispatchEffect => _DispatchEffect._();
+  static DispatchEffect get dispatchEffect => _DispatchEffect();
 
   late final _dependenciesEvent = UseEvent.withInstance(this);
   Function? _cleanupCallback;

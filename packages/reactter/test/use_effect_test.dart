@@ -40,10 +40,27 @@ void main() {
 
       expectLater(isCalled, true);
     });
+
+    test("should be called after context did mount", () {
+      final testContext = Reactter.create(builder: () => TestContext())!;
+
+      int nCalls = 0;
+
+      UseEffect(() {
+        nCalls += 1;
+      }, [], testContext);
+
+      final event = UseEvent.withInstance(testContext);
+      event.emit(Lifecycle.didMount);
+
+      Reactter.unregister<TestContext>();
+
+      expect(nCalls, 1);
+    });
   });
 
   group("UseEffect's cleaup", () {
-    test("should be called before its dependencies has changed", () {
+    test("should be called after its dependencies has changed", () {
       final testContext = TestContext();
       final stateA = testContext.stateBool;
       final stateB = testContext.stateInt;
@@ -91,6 +108,26 @@ void main() {
       stateC.value = "new value";
 
       expect(nCalls, 3);
+    });
+
+    test("should be called after context will unmount", () {
+      final testContext = Reactter.create(builder: () => TestContext())!;
+
+      int nCalls = 0;
+
+      UseEffect(() {
+        return () {
+          nCalls += 1;
+        };
+      }, [], testContext);
+
+      UseEvent.withInstance(testContext)
+        ..emit(Lifecycle.didMount)
+        ..emit(Lifecycle.willUnmount);
+
+      Reactter.unregister<TestContext>();
+
+      expect(nCalls, 1);
     });
   });
 }

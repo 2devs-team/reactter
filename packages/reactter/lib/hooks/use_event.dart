@@ -60,7 +60,7 @@ part of '../hooks.dart';
 /// See also:
 /// - [ReactterInstanceManager], a instances manager.
 class UseEvent<T extends Object?> {
-  Object? _instanceReceived = null;
+  Object? _instanceReceived;
 
   Object? get _instance => _instanceReceived is ReactterInstance
       ? Reactter.factory.instances.lookup(_instanceReceived)?.instance
@@ -75,7 +75,7 @@ class UseEvent<T extends Object?> {
 
   UseEvent.withInstance(T instance)
       : assert(instance != null),
-        _instanceReceived = instance;
+        _instanceReceived = Reactter.find(instance) ?? instance;
 
   /// Puts on to listen [eventName] event.
   ///
