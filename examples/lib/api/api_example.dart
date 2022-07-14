@@ -15,7 +15,7 @@ class ApiExample extends StatelessWidget {
     return ReactterProvider(
       () => ApiContext(),
       builder: (context, child) {
-        final apiContext = context.read<ApiContext>();
+        final apiContext = context.use<ApiContext>();
 
         return Scaffold(
           appBar: AppBar(

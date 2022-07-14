@@ -53,34 +53,13 @@ extension ReactterBuildContextExtension on BuildContext {
           [ListenHooks<T>? listenHooks]) =>
       ReactterProvider.contextOf<T>(this, id: id, listenHooks: listenHooks);
 
-  /// Gets the [ReactterContext]'s instance of [T]
+  /// Gets the [ReactterContext]'s instance of [T] with/without [id]
   /// from the closest ancestor of [ReactterProvider].
   ///
   /// ```dart
-  /// final appContext = context.read<AppContext>();
-  /// final appContextNullable = context.read<AppContext?>();
-  /// ```
-  ///
-  /// If [T] is nullable and no matching [ReactterContext] is found, [watch] will
-  /// return `null`.
-  ///
-  /// If [T] is non-nullable and the [ReactterContext] obtained returned `null`, will
-  /// throw [ProviderNullException].
-  ///
-  /// This method is equivalent to calling:
-  ///
-  /// ```dart
-  /// ReactterProvider.contextOf<T>(context, listen: false);
-  /// ```
-  T read<T extends ReactterContext?>() =>
-      ReactterProvider.contextOf<T>(this, listen: false);
-
-  /// Gets the [ReactterContext]'s instance of [T] with [id]
-  /// from the closest ancestor of [ReactterProvider].
-  ///
-  /// ```dart
-  /// final appContext = context.readId<AppContext>("uniqueId");
-  /// final appContextNullable = context.read<AppContext?>("uniqueId");
+  /// final appContext = context.use<AppContext>();
+  /// final appContextId = context.use<AppContext>('uniqueId');
+  /// final appContextNullable = context.use<AppContext?>();
   /// ```
   ///
   /// If [T] is nullable and no matching [ReactterContext] is found, [watch] will
@@ -94,7 +73,7 @@ extension ReactterBuildContextExtension on BuildContext {
   /// ```dart
   /// ReactterProvider.contextOf<T>(context, id: id, listen: false);
   /// ```
-  T readId<T extends ReactterContext?>(String id) =>
+  T use<T extends ReactterContext?>([String? id]) =>
       ReactterProvider.contextOf<T>(this, id: id, listen: false);
 }
 

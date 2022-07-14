@@ -13,7 +13,7 @@ void main() {
       await tester.pumpWidget(
         ReactterProviderBuilder(
           builder: (BuildContext context, Widget? child) {
-            instanceObtained = context.read<TestContext>();
+            instanceObtained = context.use<TestContext>();
 
             return Text("stateString: ${instanceObtained.stateString.value}");
           },
@@ -32,7 +32,7 @@ void main() {
         ReactterProviderBuilder(
           id: "uniqueId",
           builder: (BuildContext context, Widget? child) {
-            instanceObtained = context.readId<TestContext>("uniqueId");
+            instanceObtained = context.use<TestContext>("uniqueId");
 
             return Text("stateString: ${instanceObtained.stateString.value}");
           },

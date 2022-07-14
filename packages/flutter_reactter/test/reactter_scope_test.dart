@@ -12,7 +12,7 @@ void main() {
       await tester.pumpWidget(
         ReactterProviderBuilder(
           builder: (BuildContext context, Widget? child) {
-            instanceObtained = context.read<TestContext>();
+            instanceObtained = context.use<TestContext>();
 
             return Column(
               children: [

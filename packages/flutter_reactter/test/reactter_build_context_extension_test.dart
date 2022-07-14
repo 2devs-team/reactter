@@ -14,7 +14,7 @@ void main() {
         TestBuilder(
           child: Builder(
             builder: (context) {
-              instanceObtained = context.read<TestContext?>();
+              instanceObtained = context.use<TestContext?>();
 
               return Text(
                   "stateString: ${instanceObtained?.stateString.value ?? 'not found'}");

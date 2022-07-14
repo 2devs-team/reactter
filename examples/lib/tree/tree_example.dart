@@ -12,7 +12,7 @@ class TreeExample extends StatelessWidget {
     return ReactterProvider(
       () => TreeContext(),
       builder: (context, _) {
-        final treeContext = context.read<TreeContext>();
+        final treeContext = context.use<TreeContext>();
 
         return Scaffold(
           appBar: AppBar(

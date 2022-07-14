@@ -12,7 +12,7 @@ class TodosExamples extends StatelessWidget {
     return ReactterProvider(
       () => TodosContext(),
       builder: (context, _) {
-        final todosCtx = context.read<TodosContext>();
+        final todosCtx = context.use<TodosContext>();
 
         return Scaffold(
           appBar: AppBar(

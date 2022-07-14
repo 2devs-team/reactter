@@ -15,8 +15,8 @@ void main() {
       await tester.pumpWidget(
         ReactterProvidersBuilder(
           builder: (BuildContext context, Widget? child) {
-            instanceObtained = context.read<TestContext>();
-            instanceObtainedWithId = context.readId<TestContext>("uniqueId");
+            instanceObtained = context.use<TestContext>();
+            instanceObtainedWithId = context.use<TestContext>("uniqueId");
 
             return Column(
               children: [

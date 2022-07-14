@@ -16,7 +16,7 @@ class CounterExample extends StatelessWidget {
     return ReactterProvider(
       () => CounterContext(),
       builder: (context, _) {
-        final counterCtx = context.read<CounterContext>();
+        final counterCtx = context.use<CounterContext>();
 
         return Scaffold(
           appBar: AppBar(
