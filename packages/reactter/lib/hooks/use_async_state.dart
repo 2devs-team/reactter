@@ -50,7 +50,7 @@ enum UseAsyncStateStatus {
 /// ```
 ///
 /// It also has [when] method that returns a new value
-/// depending of it's state:
+/// depending on it's state:
 ///
 /// ```dart
 /// final valueComputed = appContext.asyncState.when<String>(

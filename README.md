@@ -9,6 +9,8 @@ ____
 [![Flutter Reactter](https://img.shields.io/pub/v/flutter_reactter?color=1d7fac&labelColor=29b6f6&label=flutter_reactter&logo=flutter)](https://pub.dev/packages/flutter_reactter)
 [![Pub points](https://img.shields.io/pub/points/reactter?color=196959&labelColor=23967F&logo=dart)](https://pub.dev/packages/reactter/score)
 [![MIT License](https://img.shields.io/github/license/2devs-team/reactter?color=a85f00&labelColor=F08700&logoColor=fff&logo=Open%20Source%20Initiative)](https://github.com/2devs-team/reactter/blob/master/LICENSE)
+[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/2devs-team/reactter/Test?logo=github)](https://github.com/2devs-team/reactter/actions)
+![Codecov](https://img.shields.io/codecov/c/github/2devs-team/reactter?logo=codecov)
 
 **A light, powerful and reactive state management.**
 
@@ -193,7 +195,7 @@ Reactter.delete<AppContext>(id: 'uniqueId');
 
 ### Using `UseContext` hook
 
-[`UseContext`](https://pub.dev/documentation/reactter/latest/reactter/UseContext-class.html) is a `ReactterHook` that allows to get `ReactterContext`'s instance when ready.
+[`UseContext`](https://pub.dev/documentation/reactter/latest/reactter/UseContext-class.html) is a `ReactterHook` that allows to get `ReactterContext`'s instance when it's ready.
 
 ```dart
 class AppContext extends ReactterContext {
@@ -248,15 +250,15 @@ UseEvent<AppContext>().emit(Events.SomeEvent, 'Parameter');
 ```
 
 > **IMPORTANT:** Don't forget to remove event using `off` or using `dispose` to remove all instance's events.
-> Failure to do so could increase memory usage or have unexpected behaviors such as events in permanent listening.
+> Failure to do so could increase memory usage or have unexpected behaviors, such as events in permanent listening.
 >
-> **RECOMMENDED:** It you have the instances, use directly with `UseEvent.withInstance(Instance)`.
+> **RECOMMENDED:** If you have the instance, use directly with `UseEvent.withInstance(Instance)`.
 
 ### Using `UseState` hook
 
 [`UseState`](https://pub.dev/documentation/reactter/latest/reactter/UseState-class.html) is a `ReactterHook` that manages a state.
 
-You can add it on any part of class, with context argument(`this`) to put this hook on listen:
+You can add it on any part of class, with the context argument(`this`) to put this hook on listen:
 
 ```dart
 class AppContext extends ReactterContext {
@@ -264,7 +266,7 @@ class AppContext extends ReactterContext {
 }
 ```
 
-or add it on `listenHooks` method which `ReactterContext` exposes it:
+or add it on `listenHooks` method which is exposed by `ReactterContext`:
 
 ```dart
 class AppContext extends ReactterContext {
@@ -278,7 +280,7 @@ class AppContext extends ReactterContext {
 
 > **NOTE:** If you don't add context argument or use `listenHook`, the `ReactterContext` won't be able to react to hook's changes.
 
-`UseState` exposes `value` property that allows to read and writter its state:
+`UseState` exposes `value` property that allows to read and write its state:
 
 ```dart
 class AppContext extends ReactterContext {
@@ -293,40 +295,74 @@ class AppContext extends ReactterContext {
 ```
 
 > **NOTE:** `UseState` notifies that its state has changed when the previous state is different from the current state.
-> If its state is a `Object`, not detect internal changes, only when states is another `Object`.
->
-> **NOTE:**
-> If you want to force notify, execute `update` method which `UseState` exposes it.
+> If its state is a `Object`, not detect internal changes, only when states is setted another `Object`.
+
+If you want to force notify, execute `update` method, which is exposed by `UseState`.
+
+```dart
+class Todo { 
+  String name;
+
+  Todo(this.name);
+}
+
+class AppContext extends ReactterContext {
+  final todoState = UseState(Todo('Do this'), this);
+
+  AppContext() {
+    todoState.update(() {
+      todoState.value.name = 'Do this other';
+    });
+  }
+}
+```
 
 ### Using `UseAsyncState` hook
 
-[`UseAsyncState`](https://pub.dev/documentation/reactter/latest/reactter/UseAsyncState-class.html) is a `ReactterHook` with the same functionality as `UseState` but provides a `asyncValue` which it will be obtain when `resolve` method is executed.
+[`UseAsyncState`](https://pub.dev/documentation/reactter/latest/reactter/UseAsyncState-class.html) is a `ReactterHook` with the same functionality as `UseState` but provides a `asyncValue` method, which will be obtained when `resolve` method is executed.
 
 ```dart
+class TranslateArgs {
+  final String to;
+  final String from;
+  final String text;
+
+  TranslateArgs({ this.to, this.from, this.text });
+}
+
 class AppContext extends ReactterContext {
-  late final asyncState = UseAsyncState<String?, Arguments>(null, _resolveState, this);
+  late final translateState = UseAsyncStates<String, TranslateArgs>(
+    'Hello world',
+    translate,
+    this,
+  );
 
   AppContext() {
     _init();
   }
 
   Future<void> _init() async {
-    await asyncState.resolve(
-      Arguments(prop: true, prop2: "test"),
+    await translateState.resolve(
+      TranslateArgs({
+        to: 'ES',
+        from: 'EN',
+        text: translateState.value,
+      }),
     );
-    print("State resolved with: ${state.value}");
+
+    print("'Hello world' translated to Spanish: '${translateState.value}'");
   }
 
-  Future<String> _resolveState([Arguments args]) async {
-    return await api.getState(args.prop, args.prop2);
+  Future<String> translate([TranslateArgs args]) async {
+    return await api.translate(args);
   }
 }
 ```
 
 > **NOTE:**
-> If you want send argument to `asyncValue` method, need to defined a type arg which its send from `resolve` method. Like example shown above, which type argument send is `Arguments` class.
+> If you want to send argument to `asyncValue` method, need to define a type argument which be send through `resolve` method. Like the example shown above, the argument type send is `TranslateArgs` class.
 
-It also has `when` method that returns a new value depending of it's state:
+It also has `when` method that returns a new value depending on it's state:
 
 ```dart
 final valueComputed = asyncState.when<String>(
@@ -440,7 +476,7 @@ class Global {
   Global._init() {
     UseEffect(
       () async {
-        await Future.delayed(const Duration(seconds:s 1));
+        await Future.delayed(const Duration(seconds: 1));
         doCount();
       },
       [count],
@@ -518,7 +554,7 @@ ReactterProvider(
 > **IMPORTANT:** Don's use `ReactterContext` with constructor parameters to prevent conflicts.
 > Instead use `onInit` method to access its instance and put the data you need.
 >
-> **NOTE:** `ReactteProvider` is a "scoped". So it contains a `ReactterScope` witch the `builder` callback will be rebuild, when the `ReactterContext` changes.
+> **NOTE:** `ReactteProvider` is a "scoped". So it contains a `ReactterScope` which the `builder` callback will be rebuild, when the `ReactterContext` changes.
 > For this to happen, the `ReactterContext` should put it on listens for `BuildContext`'s `watch`ers.
 
 ### Access to `ReactterContext`
@@ -544,16 +580,11 @@ final watchHooksIdContext = context.watchId<WatchHooksIdContext>(
 );
 ```
 
-- [**`context.read`**](https://pub.dev/documentation/flutter_reactter/latest/flutter_reactter/ReactterBuildContextExtension/read.html): Gets the `ReactterContext`'s instance from the closest ancestor of  `ReactterProvider`.
+- [**`context.use`**](https://pub.dev/documentation/flutter_reactter/latest/flutter_reactter/ReactterBuildContextExtension/use.html): Gets the `ReactterContext`'s instance with/without `id` from the closest ancestor of  `ReactterProvider`.
 
 ```dart
-final readContext = context.read<ReadContext>();
-```
-
-- [**`context.readId<T>`**](https://pub.dev/documentation/flutter_reactter/latest/flutter_reactter/ReactterBuildContextExtension/readId.html): Gets the `ReactterContext`'s instance with `id` from the closest ancestor of  `ReactterProvider`
-
-```dart
-final readIdContext = context.readId<ReadIdContext>('id');
+final readContext = context.use<ReadContext>();
+final readIdContext = context.use<ReadIdContext>('id');
 ```
 
 > **NOTE:**
@@ -594,7 +625,7 @@ ReactterBuilder<AppContext>(
 > **NOTE:** `ReactterBuilder` is read-only by default(`listenAllHooks: false`), this means it only renders once.
 > Instead use `listenAllHooks` as `true` or use `listenHooks` with the `ReactterHook`s specific and then the `builder` callback will be rebuild with every `ReactterContext`'s `ReactterHook` changes.
 >
-> **NOTE:** `ReactterBuilder` is a "scoped". So it contains a `ReactterScope` witch the `builder` callback will be rebuild, when the `ReactterContext` changes.
+> **NOTE:** `ReactterBuilder` is a "scoped". So it contains a `ReactterScope` which the `builder` callback will be rebuild, when the `ReactterContext` changes.
 > For this to happen, the `ReactterContext` should put it on listens for `BuildContext`'s `watch`ers.
 
 ### Multiple `ReactterProvider` with `ReactterProviders`
@@ -663,7 +694,7 @@ class CounterComponent extends ReactterComponent<AppContext> {
 
 ## Roadmap
 
-We want keeping adding features for `Reactter`, those are some we have in mind order by priority:
+We want to keeping adding features for `Reactter`, those are some we have in mind order by priority:
 
 - Async context.
 - Structure proposal for large projects.

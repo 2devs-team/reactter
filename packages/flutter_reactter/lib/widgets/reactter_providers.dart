@@ -49,7 +49,7 @@ class ReactterProviders extends StatelessWidget
     implements ReactterWrapperWidget {
   final List<ReactterProviderAbstraction> providers;
 
-  /// Provides a widget witch render one time.
+  /// Provides a widget , which render one time.
   ///
   /// It's expose on [builder] method as second parameter.
   final Widget? child;

@@ -29,7 +29,7 @@ abstract class ReactterProviderAbstraction<T extends ReactterContext>
 /// Instead of it, use [onInit] method to access its instance and put the data you need.
 ///
 /// **NOTE:** [ReactteProvider] is a "scoped". So it contains a [ReactterScope]
-/// witch the [builder] callback will be rebuild, when the [ReactterContext] changes.
+/// which the [builder] callback will be rebuild, when the [ReactterContext] changes.
 /// For this to happen, the [ReactterContext] should put it on listens
 /// for [BuildContext]'s [watch]ers.
 ///
@@ -63,7 +63,7 @@ class ReactterProvider<T extends ReactterContext>
   /// Id usted to identify the context
   final String? id;
 
-  /// Provides a widget witch render one time.
+  /// Provides a widget , which render one time.
   ///
   /// It's expose on [builder] method as second parameter.
   final Widget? child;

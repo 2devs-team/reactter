@@ -15,7 +15,7 @@ part of '../widgets.dart';
 /// **NOTE**: [ReactterBuilder] is read-only by default, this means it only renders once.
 ///
 /// **NOTE:** [ReactterBuilder] is a "scoped". So it contains a [ReactterScope]
-/// witch the [builder] callback will be rebuild, when the `ReactterContext` changes.
+/// which the [builder] callback will be rebuild, when the `ReactterContext` changes.
 /// For this to happen, the [ReactterContext] should put it on listens
 /// for [BuildContext]'s [watch]ers.
 ///
@@ -45,7 +45,7 @@ part of '../widgets.dart';
 /// ```
 ///
 class ReactterBuilder<T extends ReactterContext?> extends StatelessWidget {
-  /// Provides a widget witch render only once.
+  /// Provides a widget , which render only once.
   ///
   /// It's exposes on [builder] callback's second parameter.
   final Widget? child;

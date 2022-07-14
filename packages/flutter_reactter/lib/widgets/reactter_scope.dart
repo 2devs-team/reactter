@@ -35,7 +35,7 @@ part of '../widgets.dart';
 /// ```
 ///
 class ReactterScope extends StatelessWidget {
-  /// Provides a widget witch render one time.
+  /// Provides a widget , which render one time.
   ///
   /// It's expose on [builder] method as second parameter.
   final Widget? child;
