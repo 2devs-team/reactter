@@ -1,27 +1,29 @@
 # Reactter by [2devs.io](https://2devs.io)
 
-## 3.0.0-dev.4
+## 3.0.0
 
 ### Breacking
 
-- **build**: Change structure folder. Now the package was separated into two packages, one for dart only(`reactter`) and one for flutter(`flutter_reactter`).
-- **refactor(hooks)**: Type return on `UseAsyncState.when`.
-- **refactor(widget)**: Rename `UseContext` to `ReactterProvider`. `ReactterProvider` is a wrapper widget that scopes widget tree with a `ReactterContext`.
-- **refactor(widget)**: Rename `ReactterProvider` to `ReactterProviders`. `ReactterProviders` is a wrapper widget that contains nested multiple `ReactterProvider`.
-- **refactor**: Rename `LifeCycleEvent` to `LifeCycle` and remove event methods(`onWillMount`, `onDidMount`, `onWillUpdate`, `onDidUpdate`, `onWillUnmount`).
-- **refactor(core)**: Move `Reactter.factory.register` to `Reactter.register`, `Reactter.factory.unregistered` to `Reactter.unregister`, `Reactter.factory.existsInstance` to `Reactter.factory.exists`, `Reactter.factory.getInstance` to `Reactter.get`, `Reactter.factory.deletedInstance` to `Reactter.delete`.
-- **refactor(core)**: Remove `ReactterSubscribersManager`.
+- **build**: Change structure folder. Now the package was separated into two packages, one for dart only([`reactter`](https://pub.dev/packages/reactter)) and one for flutter([`flutter_reactter`](https://pub.dev/packages/flutter_reactter)).
+- **refactor(hooks)**: Type return on [`UseAsyncState.when`](https://pub.dev/documentation/reactter/3.0.0/reactter/UseAsyncState/when.html).
+- **refactor(widgets)**: Replace [`UseContext`](https://pub.dev/documentation/reactter/2.3.3/reactter/UseContext-class.html) to [`ReactterProvider`](https://pub.dev/documentation/flutter_reactter/3.0.0/widgets/ReactterProvider-class.html).
+- **refactor(widgets)**: Replace [`ReactterProvider`](https://pub.dev/documentation/reactter/2.3.3/reactter/ReactterProvider-class.html) to [`ReactterProviders`](https://pub.dev/documentation/reactter/3.0.0/reactter/ReactterProviders-class.html).
+- **refactor**: Rename `LifeCycleEvent.onWillMount` to `Lifecycle.willMount`,`LifeCycleEvent.onDidMount` to `Lifecycle.didMount`,`LifeCycleEvent.onWillUpdate` to `Lifecycle.willUpdate`,`LifeCycleEvent.onDidUpdate` to `Lifecycle.didUpdate` and `LifeCycleEvent.onWillUnmount` to `Lifecycle.willUnmount`.
+- **refactor(core)**: Move `Reactter.factory.register` to [`Reactter.register`](https://pub.dev/documentation/reactter/3.0.0/core/ReactterInstanceManager/register.html), `Reactter.factory.unregistered` to [`Reactter.unregister`](https://pub.dev/documentation/reactter/3.0.0/core/ReactterInstanceManager/unregister.html), `Reactter.factory.existsInstance` to [`Reactter.factory.exists`](https://pub.dev/documentation/reactter/3.0.0/core/ReactterInstanceManager/exists.html), `Reactter.factory.getInstance` to [`Reactter.get`](https://pub.dev/documentation/reactter/3.0.0/core/ReactterInstanceManager/get.html), `Reactter.factory.deletedInstance` to [`Reactter.delete`](https://pub.dev/documentation/reactter/3.0.0/core/ReactterInstanceManager/delete.html).
+- **refactor(core)**: Replace [`ReactterSubscribersManager`](https://pub.dev/documentation/reactter/2.3.3/reactter/ReactterSubscribersManager-class.html) to [`UseEvent`](https://pub.dev/documentation/reactter/3.0.0/hooks/UseEvent-class.html).
+- **refactor(core)**: Replace [`BuildContext.read`](https://pub.dev/documentation/reactter/2.3.3/reactter/ReactterBuildContextExtension/read.html) and [`BuildContext.readId`](https://pub.dev/documentation/reactter/2.3.3/reactter/ReactterBuildContextExtension/readId.html) to [`BuildContext.use`](https://pub.dev/documentation/flutter_reactter/3.0.0/widgets/ReactterBuildContextExtension/use.html).
 
 ### Changed
 
-- **feat(widget)**: Improve finding `ReactterContext` in the widget tree via the `BuildContext`. Now the operation of finding `ReactterContext` is O(1) and `ReactterContext` using id is O(2).
+- **feat(widgets)**: Improve finding [`ReactterContext`](https://pub.dev/documentation/flutter_reactter/3.0.0/hooks/ReactterContext-class.html) in the widget tree via the [`BuildContext`](https://pub.dev/documentation/flutter_reactter/3.0.0/widgets/ReactterBuildContextExtension.html). Now the operation of finding `ReactterContext` is O(1) and `ReactterContext` using id is O(2).
 
 ### Added
 
-- **feat(hooks)**: Add `UseContext` hook. `UseContext` is a hook that gets the instance of `ReactterContext`.
-- **feat(hooks)**: Add `UseEvent` hook. `UseEvent` is a hook that manages events.
-- **feat(widgets)**: Add `ReactterScope` widget. `ReactterScope` is a wrapper widget that helps to control re-rendered of widget tree.
-- **refactor(core)**: Add `Reactter.create` and `Reactter.find`.
+- **refactor(hooks)**: Add more [`Lifecycle`](https://pub.dev/documentation/reactter/3.0.0/core/Lifecycle.html) events(`Lifecycle.registered`,`Lifecycle.unregistered`,`Lifecycle.registered` and `Lifecycle.destroyed`)
+- **feat(hooks)**: Add [`UseContext`](https://pub.dev/documentation/reactter/3.0.0/hooks/UseContext-class.html) hook.
+- **feat(hooks)**: Add [`UseEvent`](https://pub.dev/documentation/reactter/3.0.0/hooks/UseEvent-class.html) hook.
+- **feat(widgets)**: Add [`ReactterScope`](https://pub.dev/documentation/flutter_reactter/3.0.0/widgets/ReactterScope-class.html) widget.
+- **refactor(core)**: Add [`Reactter.create`](https://pub.dev/documentation/reactter/3.0.0/core/ReactterInstanceManager/create.html) and [`Reactter.find`](https://pub.dev/documentation/reactter/3.0.0/core/ReactterInstanceManager/find.html).
 
 ## 2.3.3
 
