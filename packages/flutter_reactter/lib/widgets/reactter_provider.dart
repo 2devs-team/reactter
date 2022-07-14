@@ -159,7 +159,7 @@ class ReactterProvider<T extends ReactterContext>
   }
 
   void _deleteInstance(Object ref) {
-    Reactter.delete<T>(id: id, ref: ref);
+    Reactter.delete<T>(id, ref);
   }
 
   /// Returns a [_instance] of [T]
