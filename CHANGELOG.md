@@ -1,6 +1,31 @@
 # Reactter by [2devs.io](https://2devs.io)
 
-## [2.3.3] - `Official Release` - `2022-06-13`
+## 3.0.0
+
+### Breacking
+
+- **build**: Change structure folder. Now the package was separated into two packages, one for dart only([`reactter`](https://pub.dev/packages/reactter)) and one for flutter([`flutter_reactter`](https://pub.dev/packages/flutter_reactter)).
+- **refactor(hooks)**: Type return on [`UseAsyncState.when`](https://pub.dev/documentation/reactter/3.0.0/reactter/UseAsyncState/when.html).
+- **refactor(widgets)**: Replace [`UseContext`](https://pub.dev/documentation/reactter/2.3.3/reactter/UseContext-class.html) to [`ReactterProvider`](https://pub.dev/documentation/flutter_reactter/3.0.0/widgets/ReactterProvider-class.html).
+- **refactor(widgets)**: Replace [`ReactterProvider`](https://pub.dev/documentation/reactter/2.3.3/reactter/ReactterProvider-class.html) to [`ReactterProviders`](https://pub.dev/documentation/reactter/3.0.0/reactter/ReactterProviders-class.html).
+- **refactor**: Rename `LifeCycleEvent.onWillMount` to `Lifecycle.willMount`,`LifeCycleEvent.onDidMount` to `Lifecycle.didMount`,`LifeCycleEvent.onWillUpdate` to `Lifecycle.willUpdate`,`LifeCycleEvent.onDidUpdate` to `Lifecycle.didUpdate` and `LifeCycleEvent.onWillUnmount` to `Lifecycle.willUnmount`.
+- **refactor(core)**: Move `Reactter.factory.register` to [`Reactter.register`](https://pub.dev/documentation/reactter/3.0.0/core/ReactterInstanceManager/register.html), `Reactter.factory.unregistered` to [`Reactter.unregister`](https://pub.dev/documentation/reactter/3.0.0/core/ReactterInstanceManager/unregister.html), `Reactter.factory.existsInstance` to [`Reactter.factory.exists`](https://pub.dev/documentation/reactter/3.0.0/core/ReactterInstanceManager/exists.html), `Reactter.factory.getInstance` to [`Reactter.get`](https://pub.dev/documentation/reactter/3.0.0/core/ReactterInstanceManager/get.html), `Reactter.factory.deletedInstance` to [`Reactter.delete`](https://pub.dev/documentation/reactter/3.0.0/core/ReactterInstanceManager/delete.html).
+- **refactor(core)**: Replace [`ReactterSubscribersManager`](https://pub.dev/documentation/reactter/2.3.3/reactter/ReactterSubscribersManager-class.html) to [`UseEvent`](https://pub.dev/documentation/reactter/3.0.0/hooks/UseEvent-class.html).
+- **refactor(core)**: Replace [`BuildContext.read`](https://pub.dev/documentation/reactter/2.3.3/reactter/ReactterBuildContextExtension/read.html) and [`BuildContext.readId`](https://pub.dev/documentation/reactter/2.3.3/reactter/ReactterBuildContextExtension/readId.html) to [`BuildContext.use`](https://pub.dev/documentation/flutter_reactter/3.0.0/widgets/ReactterBuildContextExtension/use.html).
+
+### Changed
+
+- **feat(widgets)**: Improve finding [`ReactterContext`](https://pub.dev/documentation/flutter_reactter/3.0.0/hooks/ReactterContext-class.html) in the widget tree via the [`BuildContext`](https://pub.dev/documentation/flutter_reactter/3.0.0/widgets/ReactterBuildContextExtension.html). Now the operation of finding `ReactterContext` is O(1) and `ReactterContext` using id is O(2).
+
+### Added
+
+- **refactor(hooks)**: Add more [`Lifecycle`](https://pub.dev/documentation/reactter/3.0.0/core/Lifecycle.html) events(`Lifecycle.registered`,`Lifecycle.unregistered`,`Lifecycle.registered` and `Lifecycle.destroyed`)
+- **feat(hooks)**: Add [`UseContext`](https://pub.dev/documentation/reactter/3.0.0/hooks/UseContext-class.html) hook.
+- **feat(hooks)**: Add [`UseEvent`](https://pub.dev/documentation/reactter/3.0.0/hooks/UseEvent-class.html) hook.
+- **feat(widgets)**: Add [`ReactterScope`](https://pub.dev/documentation/flutter_reactter/3.0.0/widgets/ReactterScope-class.html) widget.
+- **refactor(core)**: Add [`Reactter.create`](https://pub.dev/documentation/reactter/3.0.0/core/ReactterInstanceManager/create.html) and [`Reactter.find`](https://pub.dev/documentation/reactter/3.0.0/core/ReactterInstanceManager/find.html).
+
+## 2.3.3
 
 ### Changed
 
@@ -13,20 +38,20 @@
 
 - **docs**: Add README to example.
 
-## [2.3.2] - `Official Release` - `2022-06-11`
+## 2.3.2
 
 ### Changed
 
 - **fix**: format reactter.dart and remove an unnecesary dart file
 
-## [2.3.1] - `Official Release` - `2022-06-11`
+## 2.3.1
 
 ### Changed
 
 - **fix(example)**: Fix typo on counter example button.
 - **fix(example)**: Add implement tags on animation example.
 
-## [2.3.0] - `Official Release` - `2022-06-11`
+## 2.3.0
 
 ### Changed
 
@@ -71,7 +96,7 @@
 - **feat(hook)** `UseContext` works with unique ids to create unique instances.
 - **feat(widget)**: Add `ReactterComponent`.
 
-## [2.3.0-dev.3] - `Dev Release` `2022-06-11`
+## 2.3.0-dev.3
 
 ### Changed
 
@@ -84,7 +109,7 @@
 
 - **feat(example)**: Add more example with animation
 
-## [2.2.0-dev.1] - `Dev Release` `2022-06-10`
+## 2.2.0-dev.1
 
 ### Changed
 
@@ -103,13 +128,13 @@
 - **feat(example)**: add new examples.
 - **docs**: Add badgets, reorder topic, fix examples and improve redacty redaction on README.
 
-## [2.1.0-dev.2] - `Dev Release` `2022-05-25`
+## 2.1.0-dev.2
 
 ### Changed
 
 - **docs**: Fix some documentation.
 
-## [2.1.0-dev] - `Dev Release` `2022-05-24`
+## 2.1.0-dev
 
 ### Changed
 
@@ -138,7 +163,7 @@ now it use as subscription.
 - **feat(hooks)**: Add `lifecycle` `willUpdate` and `didUpdate`.
 - **feat(widget)**: Add `onInit` to `UseContext`.
 
-## [2.0.0-dev.1] - `Dev Release` `2022-05-19`
+## 2.0.0-dev.1
 
 ### Changed
 
@@ -152,7 +177,7 @@ now it use as subscription.
 - Tests.
 - `ReactterComponent`.
 
-## [1.0.1] - `Official Release`  `2022-03-31`
+## 1.0.1
 
 ### Changed
 
@@ -163,7 +188,7 @@ now it use as subscription.
 
 - Improve performance with primitive loops in functions.
 
-## [1.0.0] - `Official Release` - `2022-03-31`
+## 1.0.0
 
 ### Changed
 
@@ -176,7 +201,7 @@ now it use as subscription.
 - Documentation
 - 130 points in pub.dev.
 
-## [1.0.0-dev] - `Dev Release` - `2022-03-31`
+## 1.0.0-dev
 
 ### Changed
 
@@ -331,7 +356,7 @@ now it use as subscription.
 
     ```
 
-## [0.0.1-dev.4] - `2022-03-19`
+## 0.0.1-dev.4
 
 ### Added
 
