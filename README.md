@@ -10,7 +10,7 @@ ____
 [![Pub points](https://img.shields.io/pub/points/reactter?color=196959&labelColor=23967F&logo=dart)](https://pub.dev/packages/reactter/score)
 [![MIT License](https://img.shields.io/github/license/2devs-team/reactter?color=a85f00&labelColor=F08700&logoColor=fff&logo=Open%20Source%20Initiative)](https://github.com/2devs-team/reactter/blob/master/LICENSE)
 [![GitHub Workflow Status](https://img.shields.io/github/workflow/status/2devs-team/reactter/Test?logo=github)](https://github.com/2devs-team/reactter/actions)
-![Codecov](https://img.shields.io/codecov/c/github/2devs-team/reactter?logo=codecov)
+[![Codecov](https://img.shields.io/codecov/c/github/2devs-team/reactter?logo=codecov)](https://app.codecov.io/gh/2devs-team/reactter)
 
 **A light, powerful and reactive state management.**
 
@@ -190,7 +190,7 @@ final appContextWithId = Reactter.create(id: 'uniqueId', build: () => AppContext
 
 ```dart
 Reactter.delete<AppContext>();
-Reactter.delete<AppContext>(id: 'uniqueId');
+Reactter.delete<AppContext>('uniqueId');
 ```
 
 ### Using `UseContext` hook

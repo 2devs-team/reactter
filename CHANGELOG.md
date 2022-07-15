@@ -1,5 +1,22 @@
 # Reactter by [2devs.io](https://2devs.io)
 
+## 3.1.0
+
+### Breacking
+
+- **refactor(core)**: Change `Reactter.delete` named argument to positional argument.
+- **refactor(core)**: Remove selector aspect from `ReactterProvider.of`.
+
+### Changed
+
+- **fix(core)**:  Fix `ReactterInstanceManager`'s get method create instance when instance didn't created yet.
+- **docs**: Fix README documentation.
+- **refactor(engine, widgets)**: Add validations about `child` and `builder` properties.
+
+### Added
+
+- **refactor(tests)**: Add test coverage of 100%.
+
 ## 3.0.0
 
 ### Breacking

@@ -13,10 +13,7 @@ dependencies:
     sdk: flutter
   http: ^0.13.4
   url_launcher: ^6.1.2
-  reactter:
-    path: ../packages/reactter
-  flutter_reactter:
-    path: ../packages/flutter_reactter
+  flutter_reactter: ^3.1.0
 
 dev_dependencies:
   flutter_lints: ^2.0.0

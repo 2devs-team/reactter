@@ -44,10 +44,10 @@ packages:
   flutter_reactter:
     dependency: "direct main"
     description:
-      path: "../packages/flutter_reactter"
-      relative: true
-    source: path
-    version: "3.0.0-dev"
+      name: flutter_reactter
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.1.0"
   flutter_web_plugins:
     dependency: transitive
     description: flutter
@@ -110,12 +110,12 @@ packages:
     source: hosted
     version: "2.1.2"
   reactter:
-    dependency: "direct main"
+    dependency: transitive
     description:
-      path: "../packages/reactter"
-      relative: true
-    source: path
-    version: "3.0.0-dev"
+      name: reactter
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.1.0"
   sky_engine:
     dependency: transitive
     description: flutter
