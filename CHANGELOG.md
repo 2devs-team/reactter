@@ -1,5 +1,9 @@
 # Reactter by [2devs.io](https://2devs.io)
 
+## 3.1.1
+
+- **fix(widgets)**: Fix `child` and `builder` of `ReactterProvider` is not required when use `ReactterProviders`.
+
 ## 3.1.0
 
 ### Breacking
