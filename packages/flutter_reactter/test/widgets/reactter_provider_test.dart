@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_reactter/flutter_reactter.dart';
 
-import 'shareds/reactter_provider_builder.dart';
-import 'shareds/test_context.dart';
+import '../shareds/reactter_provider_builder.dart';
+import '../shareds/test_builder.dart';
+import '../shareds/test_context.dart';
 
 void main() {
   group("ReactterProvider", () {
@@ -19,6 +20,9 @@ void main() {
           },
         ),
       );
+
+      await tester.pumpAndSettle();
+
       await tester.pumpAndSettle();
 
       expectLater(instanceObtained, isInstanceOf<TestContext>());
@@ -115,6 +119,37 @@ void main() {
       instanceObtained.stateBool.value = true;
       await tester.pumpAndSettle();
       expect(find.text("stateBool: true"), findsOneWidget);
+    });
+
+    testWidgets("should shows child", (tester) async {
+      await tester.pumpWidget(
+        TestBuilder(
+          child: ReactterProvider(
+            () => TestContext(),
+            child: const Text("child"),
+          ),
+        ),
+      );
+
+      await tester.pumpAndSettle();
+
+      expect(find.text("child"), findsOneWidget);
+
+      await tester.pumpWidget(
+        TestBuilder(
+          child: ReactterProvider(
+            () => TestContext(),
+            child: const Text("child2"),
+            builder: (context, child) {
+              if (child != null) return child;
+              return const SizedBox.shrink();
+            },
+          ),
+        ),
+      );
+
+      await tester.pumpAndSettle();
+      expect(find.text("child2"), findsOneWidget);
     });
   });
 }

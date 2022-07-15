@@ -76,3 +76,4 @@ build/
 
 # Flutter coverage
 **/lcov.info
+**/coverage

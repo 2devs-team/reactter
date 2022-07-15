@@ -2,8 +2,8 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_reactter/flutter_reactter.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'shareds/reactter_provider_builder.dart';
-import 'shareds/test_context.dart';
+import '../shareds/reactter_provider_builder.dart';
+import '../shareds/test_context.dart';
 
 void main() {
   group("ReactterScope", () {
