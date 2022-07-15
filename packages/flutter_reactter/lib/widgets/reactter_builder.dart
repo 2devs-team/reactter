@@ -72,7 +72,8 @@ class ReactterBuilder<T extends ReactterContext?> extends StatelessWidget {
     this.listenAllHooks = false,
     this.child,
     this.builder,
-  })  : assert(
+  })  : assert(child != null || builder != null),
+        assert(
           (listenAllHooks && listenHooks == null) || !listenAllHooks,
           "Can't use `listenAllHooks` with `listenHooks`",
         ),
@@ -81,7 +82,7 @@ class ReactterBuilder<T extends ReactterContext?> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final inheritedElement =
-        ReactterProvider._getProviderInheritedElement<T>(context, id: id)!;
+        ReactterProvider._getProviderInheritedElement<T>(context, id)!;
 
     return ReactterProvider._buildScope<T>(
       id: id,

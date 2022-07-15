@@ -21,16 +21,13 @@ abstract class ReactterComponent<T extends ReactterContext>
   const ReactterComponent({Key? key}) : super(key: key);
 
   /// Id of [T].
-  @protected
-  String? get id => null;
+  String? get id;
 
   /// How to builder the instance of [T].
-  @protected
-  ContextBuilder<T>? get builder => null;
+  ContextBuilder<T>? get builder;
 
   /// Listens hooks to re-render [render] method.
-  @protected
-  ListenHooks<T>? get listenHooks => null;
+  ListenHooks<T>? get listenHooks;
 
   /// Invoked when the [ReactterContext]'s instance is created.
   OnInitContext<T>? get onInit => null;

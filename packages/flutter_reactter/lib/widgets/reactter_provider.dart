@@ -92,16 +92,12 @@ class ReactterProvider<T extends ReactterContext>
     this.onInit,
     this.child,
     this.builder,
-  }) : super(key: key);
+  })  : assert(child != null || builder != null),
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return _buildWithChild(context, child);
-  }
-
-  @override
-  ReactterProviderElement createElement() {
-    return ReactterProviderElement(this);
   }
 
   /// A [build] method that receives an extra `child` parameter.
@@ -110,14 +106,13 @@ class ReactterProvider<T extends ReactterContext>
   /// passed to the constructor of [SingleChildStatelessWidget].
   /// It may also be called again with a different `child`, without this widget
   /// being recreated.
-  Widget _buildWithChild(BuildContext context, Widget? child,
-      [WidgetBuilder? afterBuild]) {
+  Widget _buildWithChild(BuildContext context, Widget? child) {
     return ReactterProvider._buildScope<T>(
       id: id,
       owner: this,
       child: Builder(
         builder: (context) {
-          final injectedChild = child ?? afterBuild?.call(context);
+          final injectedChild = child;
 
           return builder?.call(context, injectedChild) ?? injectedChild!;
         },
@@ -168,18 +163,14 @@ class ReactterProvider<T extends ReactterContext>
     BuildContext context, {
     String? id,
     ListenHooks<T>? listenHooks,
-    SelectorAspect<T>? aspect,
     bool listen = true,
   }) {
     final scopeInheritedElement = context
             .getElementForInheritedWidgetOfExactType<ReactterScopeInherited>()
         as ReactterScopeInheritedElement?;
 
-    final providerInheritedElement = _getProviderInheritedElement<T>(
-      context,
-      id: id,
-      aspect: aspect,
-    );
+    final providerInheritedElement =
+        _getProviderInheritedElement<T>(context, id);
 
     if (providerInheritedElement?._instance == null && null is! T) {
       throw ReactterContextNotFoundException(T, context.widget.runtimeType);
@@ -191,10 +182,7 @@ class ReactterProvider<T extends ReactterContext>
       return instance;
     }
 
-    context.dependOnInheritedElement(
-      scopeInheritedElement!,
-      aspect: aspect ?? () => {},
-    );
+    context.dependOnInheritedElement(scopeInheritedElement!);
 
     if (listenHooks != null) {
       final hooks = listenHooks(instance);
@@ -211,10 +199,8 @@ class ReactterProvider<T extends ReactterContext>
 
   static ReactterProviderInheritedElement?
       _getProviderInheritedElement<T extends ReactterContext?>(
-    BuildContext context, {
-    String? id,
-    SelectorAspect<T>? aspect,
-  }) {
+          BuildContext context,
+          [String? id]) {
     if (id != null) {
       // O(2)
       final inheritedElementNotSure =
@@ -240,17 +226,7 @@ class ReactterProviderElement extends StatelessElement
   @override
   Widget build() {
     if (parent != null) {
-      Widget afterBuild(context) {
-        final providerParent = parent?.widget.owner.widget;
-
-        return providerParent?.build.call(context) ?? const SizedBox.shrink();
-      }
-
-      return widget._buildWithChild(
-        this,
-        parent?.injectedChild,
-        afterBuild,
-      );
+      return widget._buildWithChild(this, parent?.injectedChild);
     }
 
     return super.build();

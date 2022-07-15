@@ -113,10 +113,10 @@ class ReactterProviderInheritedElement<T extends ReactterContext?,
                 ReactterProviderInherited<T, Id>>()
             as ReactterProviderInheritedElement<T, Id>?;
 
-    _updateInheritedElementWithId(ancestorInheritedElement);
-
     void _onAncestorMount(_, __) =>
         _updateInheritedElementWithId(ancestorInheritedElement);
+
+    _onAncestorMount(null, null);
 
     void _onUnmount(_, __) => ancestorInheritedElement?._event
         .off(_InheritedElementStatus.mount, _onAncestorMount);

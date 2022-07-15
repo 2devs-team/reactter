@@ -65,7 +65,8 @@ class ReactterProviders extends StatelessWidget
     Key? key,
     this.child,
     this.builder,
-  }) : super(key: key);
+  })  : assert(child != null || builder != null),
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {

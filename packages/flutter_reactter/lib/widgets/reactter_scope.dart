@@ -63,15 +63,8 @@ class ReactterScope extends StatelessWidget {
   /// passed to the constructor of [SingleChildStatelessWidget].
   /// It may also be called again with a different `child`, without this widget
   /// being recreated.
-  Widget _buildWithChild(
-    BuildContext context,
-    Widget? child, [
-    WidgetBuilder? afterBuild,
-  ]) {
-    Widget _buildChild() {
-      final injectedChild = child ?? afterBuild?.call(context);
-      return builder?.call(context, injectedChild) ?? injectedChild!;
-    }
+  Widget _buildWithChild(BuildContext context, Widget? child) {
+    Widget _buildChild() => builder?.call(context, child) ?? child!;
 
     return ReactterScopeInherited(
       child: child is Builder
