@@ -92,8 +92,7 @@ class ReactterProvider<T extends ReactterContext>
     this.onInit,
     this.child,
     this.builder,
-  })  : assert(child != null || builder != null),
-        super(key: key);
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -112,9 +111,9 @@ class ReactterProvider<T extends ReactterContext>
       owner: this,
       child: Builder(
         builder: (context) {
-          final injectedChild = child;
+          assert(child != null || builder != null);
 
-          return builder?.call(context, injectedChild) ?? injectedChild!;
+          return builder?.call(context, child) ?? child!;
         },
       ),
     );

@@ -22,12 +22,10 @@ class _ReactterProvidersBuilderState extends State<ReactterProvidersBuilder> {
         ReactterProvider(
           () => TestContext(),
           init: true,
-          child: const Text('test'),
         ),
         ReactterProvider(
           () => TestContext(),
           id: 'uniqueId',
-          child: const Text('test2'),
           onInit: (TestContext inst) =>
               inst.stateString.value = "from uniqueId",
         ),
