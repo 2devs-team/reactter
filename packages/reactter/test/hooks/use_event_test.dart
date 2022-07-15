@@ -2,7 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:reactter/core.dart';
 import 'package:reactter/reactter.dart';
 
-import 'shareds/test_context.dart';
+import '../shareds/test_context.dart';
 
 enum Events { TestEvent }
 

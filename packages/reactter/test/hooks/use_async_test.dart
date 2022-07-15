@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:reactter/reactter.dart';
 
-import 'shareds/test_context.dart';
+import '../shareds/test_context.dart';
 
 void main() {
   group("UseAsyncState", () {
