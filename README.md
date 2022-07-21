@@ -150,7 +150,7 @@ You can put it on listen, using `UseEvent`, for example:
 ```dart
   UseEvent<AppContext>().on<ReactterHook>(
     Lifecycle.didUpdate,
-    (inst, hook) => print("Instance: $inst, hook: $hook),
+    (inst, hook) => print("Instance: $inst, hook: $hook"),
   );
 ```
 
@@ -300,7 +300,7 @@ class AppContext extends ReactterContext {
 If you want to force notify, execute `update` method, which is exposed by `UseState`.
 
 ```dart
-class Todo { 
+class Todo {
   String name;
 
   Todo(this.name);

@@ -44,7 +44,7 @@ Learn how to access to other context and keep its state.
 
 [![Shopping cart example](https://raw.githubusercontent.com/2devs-team/reactter_assets/main/examples/cart_example.gif)](https://github.com/2devs-team/reactter/tree/master/example/lib/examples/shopping_cart)
 
-Implements: `ReactterBuilder`, `ReactterComponent`, `ReactterContext`, `ReactterProvider`, `UseContext`, `UseState`, `UseEffect`.
+Implements: `ReactterBuilder`, `ReactterComponent`, `ReactterContext`, `ReactterProvider`, `ReactterProviders`, `UseContext`, `UseState`, `UseEffect`.
 
 ## Tree widget
 
@@ -74,4 +74,4 @@ Learn how to create a custom hook.
 
 [![Animate widget example](https://raw.githubusercontent.com/2devs-team/reactter_assets/main/examples/animation_example.gif)](https://github.com/2devs-team/reactter/tree/master/example/lib/examples/animation)
 
-Implements: `ReactterBuilder`, `ReactterContext`, `ReactterHook`, `ReactterProvider`, `ReactterSubscribersManager`, `UseContext`.
+Implements: `ReactterBuilder`, `ReactterContext`, `ReactterHook`, `ReactterProvider`, `UseContext`, `UseEvent`.
