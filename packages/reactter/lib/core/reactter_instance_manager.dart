@@ -67,7 +67,13 @@ extension ReactterInstanceManager on ReactterInterface {
   }) {
     register<T>(builder: builder, id: id);
 
-    return _getAndCreateIfNotExtist<T>(id)?.instance;
+    final reactterInstance = _getAndCreateIfNotExtist<T>(id);
+
+    if (ref != null) {
+      reactterInstance?.refs.add(ref.hashCode);
+    }
+
+    return reactterInstance?.instance;
   }
 
   /// Deletes the instance from [Reactter.factory.instances] but keep the [builder] function.
