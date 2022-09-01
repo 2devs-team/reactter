@@ -8,11 +8,6 @@ enum Events { TestEvent }
 
 void main() {
   group("UseEvent", () {
-    test("should adds and removes event", () => _testAddAndRemoveEvent());
-
-    test("should adds and removes event with id",
-        () => _testAddAndRemoveEvent("uniqueId"));
-
     test(
       "should emits and listens event",
       () => _testEmitListenEvent(
@@ -117,24 +112,6 @@ void main() {
       expectLater(isDestroyed, true);
     });
   });
-}
-
-void _testAddAndRemoveEvent([String? id]) {
-  final instanceManager = ReactterInstance<TestContext?>(id);
-
-  void eventCallback(_, __) {}
-
-  UseEvent<TestContext>(id).on(Events.TestEvent, eventCallback);
-
-  expect(
-    Reactter.factory.events[instanceManager]?[Events.TestEvent]
-        ?.contains(eventCallback),
-    true,
-  );
-
-  UseEvent<TestContext>(id).off(Events.TestEvent, eventCallback);
-
-  expect(Reactter.factory.events.isEmpty, true);
 }
 
 void _testEmitListenEvent(

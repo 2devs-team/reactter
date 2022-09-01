@@ -1,5 +1,8 @@
 part of '../hooks.dart';
 
+/// All UseEvent's events.
+HashMap<Object?, HashMap<Enum, Set<Function>>> _events = HashMap();
+
 /// A hook that manages events.
 ///
 /// Allows to handle event of instance wherever.
@@ -63,7 +66,7 @@ class UseEvent<T extends Object?> {
   Object? _instanceReceived;
 
   Object? get _instance => _instanceReceived is ReactterInstance
-      ? Reactter.factory.instances.lookup(_instanceReceived)?.instance
+      ? Reactter.instances.lookup(_instanceReceived)?.instance
       : _instanceReceived;
 
   ReactterInstance? get _reactterInstance =>
@@ -81,9 +84,9 @@ class UseEvent<T extends Object?> {
   ///
   /// When the event is [emit]ted, the [callback] is called.
   void on<P extends dynamic>(Enum eventName, CallbackEvent<T, P> callback) {
-    Reactter.factory.events[_instanceReceived] ??= HashMap();
-    Reactter.factory.events[_instanceReceived]?[eventName] ??= HashSet();
-    Reactter.factory.events[_instanceReceived]?[eventName]?.add(callback);
+    _events[_instanceReceived] ??= HashMap();
+    _events[_instanceReceived]?[eventName] ??= HashSet();
+    _events[_instanceReceived]?[eventName]?.add(callback);
   }
 
   /// Puts on to listen [eventName] event only once.
@@ -103,15 +106,14 @@ class UseEvent<T extends Object?> {
 
   /// Removes the [callback] of [eventName] event.
   void off<P>(Enum eventName, CallbackEvent<T, P> callback) {
-    Reactter.factory.events[_instanceReceived]?[eventName]?.remove(callback);
+    _events[_instanceReceived]?[eventName]?.remove(callback);
 
-    if (Reactter.factory.events[_instanceReceived]?[eventName]?.isEmpty ??
-        false) {
-      Reactter.factory.events[_instanceReceived]?.remove(eventName);
+    if (_events[_instanceReceived]?[eventName]?.isEmpty ?? false) {
+      _events[_instanceReceived]?.remove(eventName);
     }
 
-    if (Reactter.factory.events[_instanceReceived]?.isEmpty ?? false) {
-      Reactter.factory.events.remove(_instanceReceived);
+    if (_events[_instanceReceived]?.isEmpty ?? false) {
+      _events.remove(_instanceReceived);
     }
   }
 
@@ -119,10 +121,10 @@ class UseEvent<T extends Object?> {
   void emit(Enum eventName, [dynamic param]) {
     final callbacks = HashSet()
       ..addAll(
-        Reactter.factory.events[_instance]?[eventName] ?? {},
+        _events[_instance]?[eventName] ?? {},
       )
       ..addAll(
-        Reactter.factory.events[_reactterInstance]?[eventName] ?? {},
+        _events[_reactterInstance]?[eventName] ?? {},
       );
 
     for (var callback in callbacks) {
@@ -132,7 +134,7 @@ class UseEvent<T extends Object?> {
 
   /// Removes all instance's events
   void dispose() {
-    Reactter.factory.events
+    _events
       ..remove(_instance)
       ..remove(_reactterInstance);
 
