@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_reactter/flutter_reactter.dart';
 
 import 'contexts/cart_context.dart';
-import 'contexts/product_context.dart';
+import 'models/product_state.dart';
 
-class CartProductItem extends ReactterComponent<ProductContext> {
-  final ProductContext product;
+class CartProductItem extends StatelessWidget {
+  final ProductState product;
   final int quantity;
   final Color? color;
 
@@ -23,8 +23,7 @@ class CartProductItem extends ReactterComponent<ProductContext> {
   get builder => () => product;
 
   @override
-  Widget render(ProductContext ctx, BuildContext context) {
-    final stock = product.stockState.value;
+  Widget build(BuildContext context) {
     final cartCtx = context.use<CartContext>();
 
     return ListTile(
@@ -77,7 +76,8 @@ class CartProductItem extends ReactterComponent<ProductContext> {
             icon: const Icon(Icons.remove_circle),
           ),
           IconButton(
-            onPressed: stock == 0 ? null : () => cartCtx.addProduct(product),
+            onPressed:
+                product.stock == 0 ? null : () => cartCtx.addProduct(product),
             color: Colors.green.shade400,
             padding: EdgeInsets.zero,
             constraints: const BoxConstraints.tightFor(width: 42),

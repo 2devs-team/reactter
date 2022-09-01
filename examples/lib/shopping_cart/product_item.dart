@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_reactter/flutter_reactter.dart';
 
 import 'contexts/cart_context.dart';
-import 'contexts/product_context.dart';
+import 'models/product_state.dart';
 
-class ProductItem extends ReactterComponent<ProductContext> {
-  final ProductContext product;
+class ProductItem extends StatelessWidget {
+  final ProductState product;
   final Color? color;
 
   const ProductItem({
@@ -15,14 +15,7 @@ class ProductItem extends ReactterComponent<ProductContext> {
   }) : super(key: key);
 
   @override
-  get id => "${product.hashCode}";
-
-  @override
-  get builder => () => product;
-
-  @override
-  Widget render(ProductContext ctx, BuildContext context) {
-    final stock = product.stockState.value;
+  Widget build(BuildContext context) {
     final cartCtx = context.use<CartContext>();
 
     return ListTile(
@@ -31,15 +24,15 @@ class ProductItem extends ReactterComponent<ProductContext> {
         product.name,
         style: Theme.of(context).textTheme.titleLarge,
       ),
-      subtitle: stock == 0
+      subtitle: product.stock == 0
           ? const Text("Sold out")
           : Row(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 const Text('In stock: '),
                 Text(
-                  "$stock",
-                  style: Theme.of(context).textTheme.caption!.copyWith(
+                  "${product.stock}",
+                  style: Theme.of(context).textTheme.caption?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
                 ),
@@ -55,7 +48,8 @@ class ProductItem extends ReactterComponent<ProductContext> {
           const SizedBox(width: 8),
           IconButton(
             color: Colors.green.shade400,
-            onPressed: stock == 0 ? null : () => cartCtx.addProduct(product),
+            onPressed:
+                product.stock == 0 ? null : () => cartCtx.addProduct(product),
             padding: EdgeInsets.zero,
             constraints: const BoxConstraints.tightFor(width: 42),
             splashRadius: 18,

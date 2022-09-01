@@ -13,7 +13,10 @@ class TreeItem extends ReactterComponent<TreeContext> {
   final TreeContext item;
 
   @override
-  String get id => "${item.hashCode}";
+  get id => "${item.hashCode}";
+
+  @override
+  get listenHooks => (_) => [];
 
   @override
   get builder => () => item;
@@ -31,9 +34,10 @@ class TreeItem extends ReactterComponent<TreeContext> {
             id: id,
             listenHooks: (ctx) => [ctx.count],
             builder: (ctx, context, child) {
-              return Text("Count: ${ctx.count.value}");
+              return Text("Count(${ctx.count.value})");
             },
           ),
+          const SizedBox(width: 8),
           IconButton(
             onPressed: ctx.decrement,
             padding: EdgeInsets.zero,
@@ -49,6 +53,14 @@ class TreeItem extends ReactterComponent<TreeContext> {
             splashRadius: 18,
             iconSize: 24,
             icon: const Icon(Icons.add_box_rounded),
+          ),
+          const SizedBox(width: 8),
+          ReactterBuilder<TreeContext>(
+            id: id,
+            listenHooks: (ctx) => [ctx.total],
+            builder: (ctx, context, child) {
+              return Text("Total(${ctx.total.value})");
+            },
           ),
           const Spacer(),
           Text("id: $id"),
@@ -75,8 +87,10 @@ class TreeItem extends ReactterComponent<TreeContext> {
             ),
           ReactterBuilder<TreeContext>(
             id: id,
-            listenHooks: (ctx) => [ctx.hide],
+            listenHooks: (ctx) => [ctx.hide, ctx.children],
             builder: (ctx, context, child) {
+              if (ctx.children.value.isEmpty) return const SizedBox(width: 24);
+
               return IconButton(
                 onPressed: ctx.toggleHide,
                 padding: EdgeInsets.zero,
@@ -96,7 +110,7 @@ class TreeItem extends ReactterComponent<TreeContext> {
       ),
       subtitle: ReactterBuilder<TreeContext>(
         id: id,
-        listenHooks: (ctx) => [ctx.hide],
+        listenHooks: (ctx) => [ctx.hide, ctx.children],
         builder: (ctx, context, child) {
           return ctx.hide.value
               ? const SizedBox()
@@ -107,7 +121,10 @@ class TreeItem extends ReactterComponent<TreeContext> {
                   itemBuilder: (context, index) {
                     final item = ctx.children.value[index];
 
-                    return TreeItem(item: item);
+                    return TreeItem(
+                      key: ObjectKey(item),
+                      item: item,
+                    );
                   },
                 );
         },

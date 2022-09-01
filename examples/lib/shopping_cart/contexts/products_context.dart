@@ -1,20 +1,20 @@
 import 'dart:math';
-import 'package:reactter/reactter.dart';
+import 'package:flutter_reactter/flutter_reactter.dart';
 
-import 'product_context.dart';
+import '../models/product_state.dart';
 
 Random _random = Random();
 
 class ProductsContext extends ReactterContext {
   late final products = UseState(_generateProducts(), this);
 
-  List<ProductContext> _generateProducts() {
+  List<ProductState> _generateProducts() {
     return List.generate(
       26,
-      (index) => ProductContext(
+      (index) => ProductState(
         name: "Product ${String.fromCharCode(index + 65)}",
         price: (_random.nextInt(3000) + 100) + _random.nextDouble(),
-        initialStock: _random.nextInt(20),
+        stock: _random.nextInt(20),
       ),
     );
   }

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-import 'animation/animation_example.dart';
-import 'api/api_example.dart';
-import 'counter/counter_example.dart';
-import 'shopping_cart/shopping_cart_example.dart';
-import 'todos/todos_example.dart';
-import 'tree/tree_example.dart';
+import 'animation/animation_page.dart';
+import 'api/api_page.dart';
+import 'counter/counter_page.dart';
+import 'shopping_cart/shopping_cart_page.dart';
+import 'todos/todos_page.dart';
+import 'tree/tree_page.dart';
 
 Future<void> main() async {
   runApp(const MyApp());
@@ -22,7 +22,7 @@ final items = <ListItem>[
       "UseContext",
       "UseState",
     ],
-    () => const CounterExample(),
+    () => const CounterPage(),
   ),
   ExampleItem(
     "Todos",
@@ -36,7 +36,7 @@ final items = <ListItem>[
       "UseState",
       "UseEffect",
     ],
-    () => const TodosExamples(),
+    () => const TodosPage(),
   ),
   ExampleItem(
     "Shopping Cart",
@@ -50,9 +50,8 @@ final items = <ListItem>[
       "ReactterScope",
       "UseContext",
       "UseState",
-      "UseEffect",
     ],
-    () => const ShoppingCartExample(),
+    () => const ShoppingCartPage(),
   ),
   ExampleItem(
     "Tree widget",
@@ -65,7 +64,7 @@ final items = <ListItem>[
       "UseContext",
       "UseState",
     ],
-    () => const TreeExample(),
+    () => const TreePage(),
   ),
   ExampleItem(
     "Github Search",
@@ -79,7 +78,7 @@ final items = <ListItem>[
       "UseAsyncState",
       "UseState",
     ],
-    () => const ApiExample(),
+    () => const ApiPage(),
   ),
   ExampleItem(
     "Animate widget",
@@ -92,7 +91,7 @@ final items = <ListItem>[
       "UseContext",
       "UseEvent",
     ],
-    () => const AnimationExample(),
+    () => const AnimationPage(),
   ),
 ];
 

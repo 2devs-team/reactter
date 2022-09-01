@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:reactter/reactter.dart';
+import 'package:flutter_reactter/flutter_reactter.dart';
 
 /// Set of instruction you can pass into a [CustomAnimation.control].
 enum AnimationControl {
