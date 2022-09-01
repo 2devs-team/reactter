@@ -57,44 +57,32 @@ Before anything, you need to be aware that Reactter is distributed on two packag
 
 The package of Reactter that you will want to install depends on the project type you are making.
 
-You can refer to the following table to help you decide which package to use:
+Select one of the following options to know how to install it:
 
-| **Project type** | **Packages**         |
-|------------------|------------------|
-| Dart only        | [![Reactter](https://img.shields.io/pub/v/reactter?color=1d7fac&labelColor=29b6f6&label=reactter&logo=dart)](https://pub.dev/packages/reactter)|
-| Flutter          | [![Flutter Reactter](https://img.shields.io/pub/v/flutter_reactter?color=1d7fac&labelColor=29b6f6&label=flutter_reactter&logo=flutter)](https://pub.dev/packages/flutter_reactter)|
+<details close>
+  <summary>
+    <h4 style="display: inline;">Dart only&ensp;</h4>
+    <a href="https://pub.dev/packages/reactter" style="vertical-align: middle;">
+      <img src="https://img.shields.io/pub/v/reactter?color=1d7fac&amp;labelColor=29b6f6&amp;label=reactter&amp;logo=dart" alt="Reactter">
+    </a>
+  </summary>
 
-Once you know what package you want to install, proceed to add the package on your project:
+Add the package on your project.
 
-- With command:
+- Using command:
 
   ```shell
   dart pub add reactter
   ```
 
-  For flutter:
-
-  ```shell
-  flutter pub add flutter_reactter
-  ```
-
-- Or add a line like this into your `pubspec.yaml` file:
+- Or put directly into `pubspec.yaml` file:
 
   ```yaml
     dependencies:
       reactter: #add version here
   ```
 
-  and then run `dart pub get`.
-
-  For flutter:
-
-  ```yaml
-    dependencies:
-      flutter_reactter: #add version here
-  ```
-
-  and then run `flutter pub get`.
+  and run `dart pub get`.
 
 Now in your Dart code, you can use:
 
@@ -102,11 +90,40 @@ Now in your Dart code, you can use:
 import 'package:reactter/reactter.dart';
 ```
 
-for flutter:
+</details>
+
+<details close>
+  <summary>
+    <h4 style="display: inline;">Flutter&ensp;</h4>
+    <a href="https://pub.dev/packages/flutter_reactter"  style="vertical-align: middle;">
+      <img src="https://img.shields.io/pub/v/flutter_reactter?color=1d7fac&amp;labelColor=29b6f6&amp;label=flutter_reactter&amp;logo=flutter" alt="Flutter Reactter">
+    </a>
+  </summary>
+
+Add the package on your project.
+
+- Using command:
+
+  ```shell
+  flutter pub add flutter_reactter
+  ```
+
+- Or put directly into `pubspec.yaml` file:
+
+  ```yaml
+    dependencies:
+      flutter_reactter: #add version here
+  ```
+
+  and run `flutter pub get`.
+
+Now in your Dart code, you can use:
 
 ```dart
 import 'package:flutter_reactter/flutter_reactter.dart';
 ```
+
+</details>
 
 ## Usage
 
@@ -156,7 +173,7 @@ You can put it on listen, using `UseEvent`, for example:
 
 ### Manage instance with `ReactterInstanceManage`
 
-[`ReactterInstanceManager`](https://pub.dev/documentation/reactter/latest/reactter/ReactterInstanceManager.html) is a extension of `Reactter` that exposes some methods to helps to manages instance. These are some methods:
+[`ReactterInstanceManager`](https://pub.dev/documentation/reactter/latest/reactter/ReactterInstanceManager.html) is a instance of `Reactter` that exposes some methods to helps to manages instance. These are some methods:
 
 **`Reactter.register`**: Registers a `builder` function to allows to create the instance using `Reactter.get`.
 
@@ -192,6 +209,9 @@ final appContextWithId = Reactter.create(id: 'uniqueId', build: () => AppContext
 Reactter.delete<AppContext>();
 Reactter.delete<AppContext>('uniqueId');
 ```
+
+> **NOTE:**
+> The registered instances have a global scope. This means that you can access them anywhere in the project just by using `Reactter.get` or through [`UseContext`](https://pub.dev/documentation/reactter/latest/reactter/UseContext-class.html).
 
 ### Using `UseContext` hook
 
@@ -266,7 +286,7 @@ class AppContext extends ReactterContext {
 }
 ```
 
-or add it on `listenHooks` method which is exposed by `ReactterContext`:
+or add it into `listenHooks` method which is exposed by `ReactterContext`:
 
 ```dart
 class AppContext extends ReactterContext {
@@ -280,7 +300,7 @@ class AppContext extends ReactterContext {
 
 > **NOTE:** If you don't add context argument or use `listenHook`, the `ReactterContext` won't be able to react to hook's changes.
 
-`UseState` exposes `value` property that allows to read and write its state:
+`UseState` has `value` property that allows to read and write its state:
 
 ```dart
 class AppContext extends ReactterContext {
@@ -289,7 +309,7 @@ class AppContext extends ReactterContext {
   AppContext() {
     print("Prev state: ${count.value}");
     count.value = 10;
-    print("Current state: ${count.value}")
+    print("Current state: ${count.value}");
   }
 }
 ```
@@ -396,7 +416,7 @@ class AppContext extends ReactterContext {
       return () {
         // Cleanup - Execute Before count state changed or 'willUnmount' event
         print("Cleanup executed");
-      }
+      };
     }, [count], this);
   }
 }
@@ -449,7 +469,7 @@ class AppContext extends ReactterContext {
   AppContext() {
     UseEffect(() {
       Future.delayed(
-        const Duration(secounds: 1),
+        const Duration(seconds: 1),
         count.increment,
       );
 
@@ -474,17 +494,12 @@ class Global {
   factory Global() => _inst;
 
   Global._init() {
-    UseEffect(
-      () async {
-        await Future.delayed(const Duration(seconds: 1));
-        doCount();
-      },
-      [count],
-      UseEffect.dispatchEffect,
-    );
+    UseEffect(() {
+      Future.delayed(const Duration(seconds: 1), changeCount);
+    }, [count], UseEffect.dispatchEffect);
   }
 
-  static void doCount() {
+  static void changeCount() {
     if (count.value <= 0) {
       flag.value = true;
     }
@@ -497,7 +512,7 @@ class Global {
   }
 }
 
-// It's need to create the instance it to be able 
+// It's need to create the instance it to be able
 // to execute Global._init(This executes only once).
 final global = Global();
 ```
@@ -696,9 +711,10 @@ class CounterComponent extends ReactterComponent<AppContext> {
 
 We want to keeping adding features for `Reactter`, those are some we have in mind order by priority:
 
+- Widget to control re-render using only hooks
 - Async context.
 - Structure proposal for large projects.
-- Do benchmarks.
+- Do benchmarks and improve performance.
 
 # Contribute
 
@@ -722,5 +738,3 @@ Any idea is welcome!
 
 - **[Leo Castellanos](https://twitter.com/leoocast10)** - <leoocast.dev@gmail.com>
 - **[Carlos León](_blank)** - <carleon.dev@gmail.com>
-
-## Copyright (c) 2022 **[2devs.io](https://2devs.io)**
