@@ -24,7 +24,7 @@
 
 ### Fixes
 
-- **fix(core)**:  Fix `ReactterInstanceManager`'s get method create instance when instance didn't created yet.
+- **fix(core)**:  Fix `ReactterInstanceManager`'s get method create instance when instance didn't create yet.
 - **refactor(engine, widgets)**: Add validations about `child` and `builder` properties.
 
 ### Enhancements
@@ -75,7 +75,7 @@
 
 ### Fixes
 
-- **fix**: format reactter.dart and remove an unnecesary dart file
+- **fix**: format reactter.dart and remove an unnecessary dart file
 
 ## 2.3.1
 
@@ -94,17 +94,17 @@
 - **refactor**: Rename `context.ofIdStatic` to `context.readId`.
 - **refactor**: Move subscribe and publish pattern to `ReactterSubscribersManager` class. Can use subscribe and publish pattern with enum type specified.
 - **refactor(widgets)**: Use `ReactterInheritedProvider` as scope on `ReactterBuilder`.
-- **refactor(widgets)**: Add `ReactterBuilder` as scope when doesn't has builder on `ReactterComponent`.
+- **refactor(widgets)**: Add `ReactterBuilder` as scope when didn't has builder on `ReactterComponent`.
 - **refactor(core)**: `HookManager` subscribe to `willUpdate` and `didUpdate` event.
 - **refactor(core)**: `WillUpdate` and `DidUpdate` event trigger when its `ReactterHook` update.
 - **refactor(engine)**: Manage dependencies of `ReactterPubSub` and `lifecycle` of `ReactterContext`.
-- **refactor(widget)**: Performance as the instance of `context` is listen to mark need build.
+- **refactor(widget)**: Performance as the instance of `context` is listened to mark need build.
 - **refactor(hooks, widgets)** - Rename `UseProvide` to `ReactterProvider`.
 
 ### Fixes
 
-- **fix(hooks,widgets)**: Delete instances of `UseContext` when dispatch updated event on `ReactterProvider`, for prevent has instances duplicated.
-- **refacor(widget)**: Fix `ReactterBuilder`.
+- **fix(hooks,widgets)**: Delete instances of `UseContext` when dispatch updated event on `ReactterProvider`, to prevent has instances duplicated.
+- **refactor(widget)**: Fix `ReactterBuilder`.
 
 ### Enhancements
 
@@ -118,20 +118,20 @@
 - **feat(widget)**: Add `ReactterComponent`.
 - **refactor(core)**: Remove context property as public on `ReactterHook`.
 - **feat(engine)**: Remove dependencies when `ReactterProvider` unmount.
-- **refactor(core)**: Remove unneccesaries event listeners from `ReactterContext`.
-- **refactor(core,hooks)**: Remove innecesary code.
-- **refactor(engine)**: Remove props innecesary on `ReactterInheritedProvider`.
+- **refactor(core)**: Remove unnecessary event listeners from `ReactterContext`.
+- **refactor(core,hooks)**: Remove unnecessary code.
+- **refactor(engine)**: Remove props unnecessary on `ReactterInheritedProvider`.
 - **refactor(hooks)**: Clear code and do code simple on `UseAsyncState`.
 - **refactor(core)**: Improve performance how instances manager on `ReactterFactory`.
 - **refactor(core)**: Improve `UseEffect`. Now the return of callback execute when a hook was change or `willUnmount` event was invoke.
-- **refactor(core)**: Improve `lifecycle` events. Now it use as subscription.
+- **refactor(core)**: Improve `lifecycle` events. Now it uses as subscription.
 
 ### Internal
 
 - **docs**: Fix some documentation.
 - **feat(example)**: Add more example with animation.
 - **feat(example)**: Add new examples.
-- **docs**: Add badgets, reorder topic, fix examples and improve redacty redaction on README.
+- **docs**: Add badgets, reorder topic, fix examples and improve redaction on README.
 - **docs**: Add more documentation.
 - **tests**: Add tests for `hooks` and `Widgets`.
 

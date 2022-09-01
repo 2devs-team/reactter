@@ -15,7 +15,7 @@ void main() {
           child: Builder(
             builder: (context) {
               try {
-                final widget = ReactterNestedWidget(
+                return ReactterNestedWidget(
                   owner: ReactterProviderElement(
                     ReactterProvider(
                       () => TestContext(),
@@ -27,7 +27,6 @@ void main() {
                     child: const SizedBox.shrink(),
                   ),
                 ).build(context);
-                return const Text("Rendered");
               } catch (e) {
                 hasException = true;
                 return Text(e.toString());

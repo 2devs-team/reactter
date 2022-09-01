@@ -153,7 +153,7 @@ packages:
       name: reactter
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.1.0"
+    version: "3.1.2"
   sky_engine:
     dependency: transitive
     description: flutter

@@ -2,34 +2,45 @@
 part of '../core.dart';
 
 /// A instances manager
-extension ReactterInstanceManager on ReactterInterface {
-  /// Registers a [builder] function into to [Reactter.factory.instances]
+class ReactterInstanceManager {
+  static final _reactterInstanceManager = ReactterInstanceManager._();
+
+  factory ReactterInstanceManager() {
+    return _reactterInstanceManager;
+  }
+
+  ReactterInstanceManager._();
+
+  // All ReactterInstanceManager´s instances
+  HashSet<ReactterInstance> instances = HashSet<ReactterInstance>();
+
+  /// Registers a [builder] function into to [instances]
   /// to allows to create the instance with [get].
   ///
-  /// returns `true` when instance has been registered.
+  /// Returns `true` when instance has been registered.
   bool register<T extends Object?>({
     required ContextBuilder<T> builder,
     String? id,
   }) {
     final instance = ReactterInstance<T?>.withBuilder(id, builder);
 
-    if (Reactter.factory.instances.contains(instance)) {
+    if (_reactterInstanceManager.instances.contains(instance)) {
       Reactter.log('Instance "$instance" already registered.');
       return false;
     }
 
-    Reactter.factory.instances.add(instance);
+    _reactterInstanceManager.instances.add(instance);
     UseEvent<T>(id).emit(Lifecycle.registered);
     Reactter.log('Instance "$instance" has been registered.');
     return true;
   }
 
-  /// Remove a builder function from [Reactter.factory.instances].
+  /// Removes a builder function from [instances].
   ///
-  /// returns `true` when instance has been unregistered.
+  /// Returns `true` when instance has been unregistered.
   bool unregister<T extends Object>([String? id]) {
     final instance = ReactterInstance<T?>(id);
-    final instanceFound = Reactter.factory.instances.lookup(instance);
+    final instanceFound = _reactterInstanceManager.instances.lookup(instance);
 
     if (instanceFound == null) {
       Reactter.log('Instance "$instance" don\'t exist.');
@@ -38,7 +49,7 @@ extension ReactterInstanceManager on ReactterInterface {
 
     _removeInstance<T>(instanceFound);
 
-    Reactter.factory.instances.remove(instance);
+    _reactterInstanceManager.instances.remove(instance);
 
     UseEvent<T>(id)
       ..emit(Lifecycle.unregistered)
@@ -76,12 +87,13 @@ extension ReactterInstanceManager on ReactterInterface {
     return reactterInstance?.instance;
   }
 
-  /// Deletes the instance from [Reactter.factory.instances] but keep the [builder] function.
+  /// Deletes the instance from [instances] but keep the [builder] function.
   ///
   /// Returns `true` when the instance has been deleted.
   bool delete<T extends Object?>([String? id, Object? ref]) {
     final instanceToFind = ReactterInstance<T?>(id);
-    final instanceFound = Reactter.factory.instances.lookup(instanceToFind);
+    final instanceFound =
+        _reactterInstanceManager.instances.lookup(instanceToFind);
 
     if (instanceFound == null || instanceFound.instance == null) {
       Reactter.log(
@@ -112,7 +124,7 @@ extension ReactterInstanceManager on ReactterInterface {
   /// If found it, returns it, else returns `null`.
   ReactterInstance? find(Object? instance) {
     try {
-      return Reactter.factory.instances
+      return _reactterInstanceManager.instances
           .firstWhere((element) => element.instance == instance);
     } catch (e) {
       return null;
@@ -123,14 +135,17 @@ extension ReactterInstanceManager on ReactterInterface {
   bool exists<T extends Object?>([String? id]) {
     final instanceToFind = ReactterInstance<T?>(id);
 
-    return Reactter.factory.instances.lookup(instanceToFind)?.instance != null;
+    return _reactterInstanceManager.instances
+            .lookup(instanceToFind)
+            ?.instance !=
+        null;
   }
 
   ReactterInstance<T?>? _getAndCreateIfNotExtist<T extends Object?>(
       [String? id]) {
     final instanceToFind = ReactterInstance<T?>(id);
-    final instanceFound = Reactter.factory.instances.lookup(instanceToFind)
-        as ReactterInstance<T?>?;
+    final instanceFound = _reactterInstanceManager.instances
+        .lookup(instanceToFind) as ReactterInstance<T?>?;
 
     if (instanceFound == null) {
       Reactter.log(
