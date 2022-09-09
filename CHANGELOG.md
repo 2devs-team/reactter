@@ -1,5 +1,25 @@
 # Reactter by [2devs.io](https://2devs.io)
 
+## 3.2.0
+
+### Enhancements
+
+- **feat(hooks)**: Add [`UseReducer`](https://pub.dev/documentation/reactter/3.2.0/reactter/UseReducer-class.html) hook.
+
+### Breaking
+
+- **refactor(core)**: Replace `ReactterInstanceManager` extension to class.
+
+### Fixes
+
+- **refactor(hooks)**: Move events storage variable.
+
+### Internal
+
+- **refactor(examples)**: Improve examples code.
+- **docs**: Update roadmap.
+- **docs**: Fix some typos and improve documentation.
+
 ## 3.1.2
 
 ### Fixes
