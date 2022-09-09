@@ -61,7 +61,7 @@ enum UseAsyncStateStatus {
 /// );
 /// ```
 ///
-/// You can use the getters [state] and [error] for more detail
+/// You can use the getters [_state] and [error] for more detail
 /// and you could reset the state using [reset] method.
 class UseAsyncState<T, A> extends ReactterHook {
   ReactterHookManager? context;

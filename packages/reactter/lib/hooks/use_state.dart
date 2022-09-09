@@ -2,15 +2,13 @@ part of '../hooks.dart';
 
 /// A [ReactterHook] that manages a state.
 ///
-/// Contain a [value] of type [T] which represents the current state.
-/// This [value] is set [initial] state on the firts parameter
-/// and can be set a new [value] with operator `=`.
+/// Contains a [value] of type [T] which represents the current state.
 ///
 /// When [value] is different to previous state,
 /// [UseState] execute [update] to notify [context] of [ReactterContext]
-/// that has changed and in turn executes [onWillUpdate] and [onDidUpdate]
+/// that has changed and in turn executes [onWillUpdate] and [onDidUpdate].
 ///
-/// This example produces one simple [UseState] :
+/// This example produces one simple [UseState]:
 ///
 /// ```dart
 /// class AppContext extends ReactterContext {

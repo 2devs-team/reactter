@@ -28,13 +28,13 @@ Implements: `ReactterBuilder`, `ReactterContext`, `ReactterProvider`, `UseContex
 
 ## Todos
 
-Add, remove todo to list, mark, unmark todo as completed and filter todo list.
+Add and remove to-do, mark and unmark to-do as done and filter to-do list.
 
-> Learn how to add context dynamic and manage its state.
+> Learn how to use the reducer hook like Redux.
 
 [![Todos example](https://raw.githubusercontent.com/2devs-team/reactter_assets/main/examples/todos_example.gif)](https://github.com/2devs-team/reactter/tree/master/example/lib/examples/todos)
 
-Implements: `ReactterBuilder`, `ReactterComponent`, `ReactterContext`, `ReactterProvider`, `UseContext`, `UseState`, `UseEffect`.
+Implements: `ReactterActionCallable`, `ReactterBuilder`, `ReactterContext`, `ReactterProvider`, `UseReducer`.
 
 ## Shopping cart
 
@@ -44,7 +44,7 @@ Add, remove product to cart and checkout.
 
 [![Shopping cart example](https://raw.githubusercontent.com/2devs-team/reactter_assets/main/examples/cart_example.gif)](https://github.com/2devs-team/reactter/tree/master/example/lib/examples/shopping_cart)
 
-Implements: `ReactterBuilder`, `ReactterComponent`, `ReactterContext`, `ReactterProvider`, `ReactterProviders`, `UseContext`, `UseState`.
+Implements: `ReactterBuilder`, `ReactterComponent`, `ReactterContext`, `ReactterProvider`, `ReactterProviders`, `UseState`.
 
 ## Tree widget
 
@@ -54,7 +54,7 @@ Add, remove and hide child widget with counter.
 
 [![Tree widget example](https://raw.githubusercontent.com/2devs-team/reactter_assets/main/examples/tree_example.gif)](https://github.com/2devs-team/reactter/tree/master/example/lib/examples/tree)
 
-Implements: `ReactterBuilder`, `ReactterComponent`, `ReactterContext`, `ReactterProvider`, `UseContext`, `UseState`.
+Implements: `ReactterBuilder`, `ReactterComponent`, `ReactterContext`, `ReactterProvider`, `UseState`.
 
 ## Github search
 
@@ -64,7 +64,7 @@ Search user or repository and show info about it.
 
 [![Github search example](https://raw.githubusercontent.com/2devs-team/reactter_assets/main/examples/api_example.gif)](https://github.com/2devs-team/reactter/tree/master/example/lib/examples/api)
 
-Implements: `ReactterBuilder`, `ReactterContext`, `ReactterComponent`, `ReactterProvider`, `UseContext`, `UseAsyncState`, `UseState`.
+Implements: `ReactterBuilder`, `ReactterContext`, `ReactterComponent`, `ReactterProvider`, `UseAsyncState`, `UseState`.
 
 ## Animate widget
 
@@ -74,4 +74,4 @@ Change size, shape and color using animations.
 
 [![Animate widget example](https://raw.githubusercontent.com/2devs-team/reactter_assets/main/examples/animation_example.gif)](https://github.com/2devs-team/reactter/tree/master/example/lib/examples/animation)
 
-Implements: `ReactterBuilder`, `ReactterContext`, `ReactterHook`, `ReactterProvider`, `UseContext`, `UseEvent`.
+Implements: `ReactterBuilder`, `ReactterContext`, `ReactterHook`, `ReactterProvider`, `UseEvent`.
