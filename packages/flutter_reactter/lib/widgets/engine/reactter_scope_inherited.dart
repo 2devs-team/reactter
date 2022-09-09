@@ -1,4 +1,4 @@
-part of '../widgets.dart';
+part of '../../widgets.dart';
 
 /// A generic implementation for [ReactterScope]
 class ReactterScopeInherited extends InheritedWidget {

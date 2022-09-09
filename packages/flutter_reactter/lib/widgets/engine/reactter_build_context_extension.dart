@@ -1,4 +1,4 @@
-part of '../widgets.dart';
+part of '../../widgets.dart';
 
 /// Exposes methods to helps to get and listen [ReactterContext]'s instance.
 extension ReactterBuildContextExtension on BuildContext {

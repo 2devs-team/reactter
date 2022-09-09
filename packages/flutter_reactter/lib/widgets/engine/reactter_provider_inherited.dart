@@ -1,4 +1,4 @@
-part of '../widgets.dart';
+part of '../../widgets.dart';
 
 enum _InheritedElementStatus { mount, unmount }
 
