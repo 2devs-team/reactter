@@ -11,9 +11,12 @@ export 'core.dart'
 
 export 'hooks.dart'
     show
+        ReactterAction,
+        ReactterActionCallable,
         UseAsyncState,
         UseAsyncStateStatus,
         UseContext,
         UseEffect,
         UseEvent,
+        UseReducer,
         UseState;
