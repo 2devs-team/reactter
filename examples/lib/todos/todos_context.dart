@@ -1,28 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_reactter/flutter_reactter.dart';
 
-import 'todo_context.dart';
+import 'todos_actions.dart';
+import 'todo_entity.dart';
+import 'todos_store.dart';
 
-enum TodoListType { all, active, completed }
+TodosStore _reducer(TodosStore state, ReactterAction action) =>
+    action is ReactterActionCallable ? action(state) : UnimplementedError();
 
 class TodosContext extends ReactterContext {
   final formKey = GlobalKey<FormState>();
   final textFocusNode = FocusNode();
   final TextEditingController textController = TextEditingController();
 
-  late final todos = UseState(<TodoContext>[], this);
-  late final todoList = UseState(<TodoContext>[], this);
-  late final todoListType = UseState(TodoListType.all, this);
+  late final state = UseReducer<TodosStore>(
+    _reducer,
+    TodosStore(todos: [Todo(title: 'Learn Reactter')]),
+  );
 
-  String _input = "";
-
-  TodosContext() {
-    textController.addListener(() {
-      _input = textController.text;
-    });
-
-    UseEffect(_useEffectTodos, [todos, todoListType], this);
-  }
+  List<Todo> get todosFiltered => getTodosBy(state.value.filterBy);
 
   String? validator(String? value) {
     if (value == null || value.isEmpty) {
@@ -36,56 +32,37 @@ class TodosContext extends ReactterContext {
     return null;
   }
 
+  List<Todo> getTodosBy(TodoListType todoListType) {
+    if (todoListType == TodoListType.pending) {
+      return state.value.todos.where((todo) => !todo.isDone).toList();
+    }
+
+    if (todoListType == TodoListType.done) {
+      return state.value.todos.where((todo) => todo.isDone).toList();
+    }
+
+    return state.value.todos;
+  }
+
   void addTodo() {
     if (!formKey.currentState!.validate()) {
       return;
     }
 
-    final todoContext = TodoContext(title: _input);
+    state.dispatch(AddTodoAction(todo: Todo(title: textController.text)));
 
-    todos.update(() => todos.value.add(todoContext));
+    _resetForm();
+  }
 
-    UseEvent.withInstance(todoContext).on(
-      Lifecycle.didUpdate,
-      (_, __) => _didUpdateTodo(todoContext),
-    );
+  void removeTodo(Todo todo) => state.dispatch(RemoveTodoAction(todo: todo));
 
-    formKey.currentState!.reset();
+  void toggleTodo(Todo todo) => state.dispatch(ToggleTodoAction(todo: todo));
+
+  void filterBy(int index) =>
+      state.dispatch(FilterByAction(todoListType: TodoListType.values[index]));
+
+  void _resetForm() {
+    formKey.currentState?.reset();
     textFocusNode.requestFocus();
-  }
-
-  void showTodosByType(TodoListType type) => todoListType.value = type;
-
-  void _didUpdateTodo(TodoContext todo) {
-    if (todoListType.value == TodoListType.all) {
-      return;
-    }
-
-    final filterCompleted = todoListType.value == TodoListType.completed;
-
-    if (todo.completed.value == !filterCompleted) {
-      todos.update();
-    }
-  }
-
-  void _useEffectTodos() {
-    List<TodoContext> todosFiltered = [];
-
-    if (todoListType.value == TodoListType.all) {
-      todosFiltered = todos.value.toList();
-    } else {
-      final filterCompleted = todoListType.value == TodoListType.completed;
-
-      todosFiltered = todos.value.where((todo) {
-        return todo.completed.value == filterCompleted;
-      }).toList();
-    }
-
-    if (todosFiltered.length == todos.value.length &&
-        todosFiltered.length == todoList.value.length) {
-      return;
-    }
-
-    todoList.value = todosFiltered;
   }
 }

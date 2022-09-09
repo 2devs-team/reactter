@@ -17,12 +17,6 @@ class CartProductItem extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  get id => "${product.hashCode}";
-
-  @override
-  get builder => () => product;
-
-  @override
   Widget build(BuildContext context) {
     final cartCtx = context.use<CartContext>();
 
