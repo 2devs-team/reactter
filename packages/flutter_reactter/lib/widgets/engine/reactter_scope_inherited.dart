@@ -1,6 +1,6 @@
 part of '../../widgets.dart';
 
-/// A generic implementation for [ReactterScope]
+// A generic implementation for [ReactterScope]
 class ReactterScopeInherited extends InheritedWidget {
   const ReactterScopeInherited({Key? key, required Widget child})
       : super(key: key, child: child);
@@ -12,16 +12,19 @@ class ReactterScopeInherited extends InheritedWidget {
 
   @override
   ReactterScopeInheritedElement createElement() {
-    return ReactterScopeInheritedElement(this);
+    return ReactterScopeInheritedElementImp(this);
   }
 }
 
 /// [ReactterScopeInherited]'s Element
-class ReactterScopeInheritedElement extends InheritedElement {
+class ReactterScopeInheritedElementImp extends InheritedElement
+    with ReactterScopeInheritedElement {
+  ReactterScopeInheritedElementImp(InheritedWidget widget) : super(widget);
+}
+
+mixin ReactterScopeInheritedElement on InheritedElement {
   bool _updatedShouldNotify = false;
   final List<Function> _unsubscribersDependencies = [];
-
-  ReactterScopeInheritedElement(InheritedWidget widget) : super(widget);
 
   @override
   Widget build() {

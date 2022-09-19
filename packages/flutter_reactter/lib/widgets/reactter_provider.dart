@@ -127,12 +127,13 @@ class ReactterProvider<T extends ReactterContext>
     if (id != null) {
       return ReactterProviderInherited<T, String>(
         owner: owner,
-        child: ReactterScope(child: child),
+        child: child,
       );
     }
+
     return ReactterProviderInherited<T, Null>(
       owner: owner,
-      child: ReactterScope(child: child),
+      child: child,
     );
   }
 
@@ -164,10 +165,6 @@ class ReactterProvider<T extends ReactterContext>
     ListenHooks<T>? listenHooks,
     bool listen = true,
   }) {
-    final scopeInheritedElement = context
-            .getElementForInheritedWidgetOfExactType<ReactterScopeInherited>()
-        as ReactterScopeInheritedElement?;
-
     final providerInheritedElement =
         _getProviderInheritedElement<T>(context, id);
 
@@ -181,17 +178,17 @@ class ReactterProvider<T extends ReactterContext>
       return instance;
     }
 
-    context.dependOnInheritedElement(scopeInheritedElement!);
+    context.dependOnInheritedElement(providerInheritedElement!);
 
     if (listenHooks != null) {
       final hooks = listenHooks(instance);
 
-      scopeInheritedElement.dependOnHooks(hooks);
+      providerInheritedElement.dependOnHooks(hooks);
 
       return instance;
     }
 
-    scopeInheritedElement.dependOnInstance(instance);
+    providerInheritedElement.dependOnInstance(instance);
 
     return instance;
   }

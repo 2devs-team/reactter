@@ -26,7 +26,8 @@ class ReactterProviderInherited<T extends ReactterContext?, Id extends String?>
 
 /// [ReactterProviderInherited]'s Element
 class ReactterProviderInheritedElement<T extends ReactterContext?,
-    Id extends String?> extends InheritedElement {
+        Id extends String?> extends InheritedElement
+    with ReactterScopeInheritedElement {
   T? _instance;
   bool _isRoot = false;
   Map<ReactterInstance, ReactterProviderInheritedElement<T, Id>>?
