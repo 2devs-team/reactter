@@ -88,7 +88,6 @@ class UseEffect extends ReactterHook {
 
   static DispatchEffect get dispatchEffect => _DispatchEffect();
 
-  late final _dependenciesEvent = UseEvent.withInstance(this);
   Function? _cleanupCallback;
 
   UseEffect(
@@ -107,18 +106,32 @@ class UseEffect extends ReactterHook {
       _runCallbackAndWatchDependencies(null, null);
     }
 
-    UseEvent.withInstance(context)
-      ..on(Lifecycle.didMount, _runCallbackAndWatchDependencies)
-      ..on(Lifecycle.willUnmount, _runCleanupAndUnwatchDependencies)
-      ..one(Lifecycle.destroyed, (_, __) => dispose());
+    Reactter.on(
+      context,
+      Lifecycle.didMount,
+      _runCallbackAndWatchDependencies,
+    );
+    Reactter.on(
+      context,
+      Lifecycle.willUnmount,
+      _runCleanupAndUnwatchDependencies,
+    );
+    Reactter.one(context, Lifecycle.destroyed, (_, __) => dispose());
   }
 
   void dispose() {
     _cleanupCallback = null;
-    UseEvent.withInstance(context)
-      ..off(Lifecycle.didMount, _runCallbackAndWatchDependencies)
-      ..off(Lifecycle.willUnmount, _runCleanupAndUnwatchDependencies);
-    _dependenciesEvent.dispose();
+    Reactter.off(
+      context,
+      Lifecycle.didMount,
+      _runCallbackAndWatchDependencies,
+    );
+    Reactter.off(
+      context,
+      Lifecycle.willUnmount,
+      _runCleanupAndUnwatchDependencies,
+    );
+    Reactter.dispose(this);
   }
 
   void _runCallbackAndWatchDependencies(_, __) {
@@ -132,13 +145,13 @@ class UseEffect extends ReactterHook {
   }
 
   void _watchDependencies() {
-    _dependenciesEvent.on(Lifecycle.willUpdate, _runCleanup);
-    _dependenciesEvent.on(Lifecycle.didUpdate, _runCallback);
+    Reactter.on(this, Lifecycle.willUpdate, _runCleanup);
+    Reactter.on(this, Lifecycle.didUpdate, _runCallback);
   }
 
   void _unwatchDependencies() {
-    _dependenciesEvent.off(Lifecycle.willUpdate, _runCleanup);
-    _dependenciesEvent.off(Lifecycle.didUpdate, _runCallback);
+    Reactter.off(this, Lifecycle.willUpdate, _runCleanup);
+    Reactter.off(this, Lifecycle.didUpdate, _runCallback);
   }
 
   void _runCallback(_, __) {
