@@ -43,8 +43,5 @@ part of '../core.dart';
 /// - [ReactterHook], a abstract hook that [ReactterContext] listen it.
 /// - [ReactterInstanceManager], a instances manager
 /// - [UseContext], a hook that allowed access to instance of [ReactterContext].
-abstract class ReactterContext extends ReactterHookManager {
-  /// This methods is called for [ReactterInstanceManager]
-  /// when the instance will be destroyed.
-  dispose() {}
+abstract class ReactterContext with ReactterHookManager, ReactterNotifyManager {
 }

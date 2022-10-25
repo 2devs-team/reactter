@@ -41,21 +41,19 @@ part of '../core.dart';
 ///
 /// See also:
 /// - [ReactterHookManager]
-abstract class ReactterHook extends ReactterHookManager {
+abstract class ReactterHook
+    with ReactterHookManager, ReactterNotifyManager, ReactterState {
   ReactterHook(ReactterHookManager? context) {
     context?.listenHooks([this]);
   }
 
-  /// First, invokes the subscribers callbacks of the willUpdate event.
-  ///
-  /// Second, invokes the callback given by parameter.
-  ///
-  /// And finally, invokes the subscribers callbacks of the didUpdate event.
-  void update([Function? callback]) {
-    _event.emit(Lifecycle.willUpdate, this);
+  @mustCallSuper
+  FutureOr<void> update([Function? callback]) async {
+    if (_instance is ReactterContext &&
+        (_instance as ReactterContext)._isUpdating) {
+      return await updateAsync(() => callback?.call());
+    }
 
-    callback?.call();
-
-    _event.emit(Lifecycle.didUpdate, this);
+    super.update(() => callback?.call());
   }
 }
