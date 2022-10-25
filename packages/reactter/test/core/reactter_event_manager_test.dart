@@ -13,11 +13,15 @@ const TEST_EVENT_COUNT = 3;
 const TEST_EVENT2_COUNT = 2;
 
 void main() {
-  group("UseEvent", () {
+  group("ReactterEventManager", () {
     test("should listens and emits event", () {
       _testEmitListenEvent(
         (callback) {
-          UseEvent<TestContext>().on(Events.TestEvent, callback);
+          Reactter.on(
+            ReactterInstance<TestContext>(),
+            Events.TestEvent,
+            callback,
+          );
         },
         expectParam: "$TEST_EVENT_PARAM_NAME$TEST_EVENT_COUNT",
         expectCount: TEST_EVENT_COUNT,
@@ -25,7 +29,11 @@ void main() {
 
       _testEmitListenEvent(
         (callback) {
-          UseEvent<TestContext>().on(Events.TestEvent2, callback);
+          Reactter.on(
+            ReactterInstance<TestContext>(),
+            Events.TestEvent2,
+            callback,
+          );
         },
         expectParam: "$TEST_EVENT2_PARAM_NAME$TEST_EVENT2_COUNT",
         expectCount: TEST_EVENT2_COUNT,
@@ -35,7 +43,11 @@ void main() {
     test("should listens and emits event with id", () {
       _testEmitListenEvent(
         (callback) {
-          UseEvent<TestContext>('uniqueId').on(Events.TestEvent, callback);
+          Reactter.on(
+            ReactterInstance<TestContext>('uniqueId'),
+            Events.TestEvent,
+            callback,
+          );
         },
         id: 'uniqueId',
         expectParam: "$TEST_EVENT_PARAM_NAME$TEST_EVENT_COUNT",
@@ -44,7 +56,11 @@ void main() {
 
       _testEmitListenEvent(
         (callback) {
-          UseEvent<TestContext>('uniqueId').on(Events.TestEvent2, callback);
+          Reactter.on(
+            ReactterInstance<TestContext>('uniqueId'),
+            Events.TestEvent2,
+            callback,
+          );
         },
         id: 'uniqueId',
         expectParam: "$TEST_EVENT2_PARAM_NAME$TEST_EVENT2_COUNT",
@@ -58,9 +74,10 @@ void main() {
 
       _testEmitListenEvent(
         (callback) {
-          UseEvent.withInstance(testContext).on<String>(
+          Reactter.on(
+            testContext,
             Events.TestEvent,
-            (inst, param) {
+            (TestContext? inst, String param) {
               instance = inst;
               callback(inst, param);
             },
@@ -79,7 +96,11 @@ void main() {
     test("should listens and emits event only once", () {
       _testEmitListenEvent(
         (callback) {
-          UseEvent<TestContext>().one<String>(Events.TestEvent, callback);
+          Reactter.one(
+            ReactterInstance<TestContext>(),
+            Events.TestEvent,
+            callback,
+          );
         },
         expectParam: "$TEST_EVENT_PARAM_NAME${1}",
         expectCount: 1,
@@ -87,7 +108,11 @@ void main() {
 
       _testEmitListenEvent(
         (callback) {
-          UseEvent<TestContext>().one<String>(Events.TestEvent2, callback);
+          Reactter.one(
+            ReactterInstance<TestContext>(),
+            Events.TestEvent2,
+            callback,
+          );
         },
         expectParam: "$TEST_EVENT2_PARAM_NAME${1}",
         expectCount: 1,
@@ -97,13 +122,26 @@ void main() {
     test("should unlistens event", () {
       _testEmitListenEvent(
         (callback) {
-          UseEvent<TestContext>()
-            ..on(Events.TestEvent, callback)
-            ..off(Events.TestEvent, callback);
-
-          UseEvent<TestContext>()
-            ..on(Events.TestEvent2, callback)
-            ..off(Events.TestEvent2, callback);
+          Reactter.on(
+            ReactterInstance<TestContext>(),
+            Events.TestEvent,
+            callback,
+          );
+          Reactter.off(
+            ReactterInstance<TestContext>(),
+            Events.TestEvent,
+            callback,
+          );
+          Reactter.on(
+            ReactterInstance<TestContext>(),
+            Events.TestEvent2,
+            callback,
+          );
+          Reactter.off(
+            ReactterInstance<TestContext>(),
+            Events.TestEvent2,
+            callback,
+          );
         },
         expectCount: 0,
       );
@@ -112,13 +150,26 @@ void main() {
     test("should unlistens event with id", () {
       _testEmitListenEvent(
         (callback) {
-          UseEvent<TestContext>('uniqueId')
-            ..on(Events.TestEvent, callback)
-            ..off(Events.TestEvent, callback);
-
-          UseEvent<TestContext>('uniqueId')
-            ..on(Events.TestEvent2, callback)
-            ..off(Events.TestEvent2, callback);
+          Reactter.on(
+            ReactterInstance<TestContext>('uniqueId'),
+            Events.TestEvent,
+            callback,
+          );
+          Reactter.off(
+            ReactterInstance<TestContext>('uniqueId'),
+            Events.TestEvent,
+            callback,
+          );
+          Reactter.on(
+            ReactterInstance<TestContext>('uniqueId'),
+            Events.TestEvent2,
+            callback,
+          );
+          Reactter.off(
+            ReactterInstance<TestContext>('uniqueId'),
+            Events.TestEvent2,
+            callback,
+          );
         },
         id: 'uniqueId',
         expectCount: 0,
@@ -131,9 +182,10 @@ void main() {
 
       _testEmitListenEvent(
         (callback) {
-          UseEvent.withInstance(testContext).one<String>(
+          Reactter.one(
+            testContext,
             Events.TestEvent,
-            (inst, param) {
+            (TestContext? inst, String param) {
               instance = inst;
               callback(inst, param);
             },
@@ -149,29 +201,44 @@ void main() {
       expectLater(instance, testContext);
     });
 
-    test("should listens instance's life-cycle event", () {
+    test("should listens instance's life-cycle event", () async {
       late TestContext? instance;
       late bool willUpdateChecked;
       late bool didUpdateChecked;
       late bool isDestroyed;
 
-      UseEvent<TestContext>()
-        ..on(Lifecycle.initialized, (inst, __) {
+      Reactter.on(
+        ReactterInstance<TestContext>(),
+        Lifecycle.initialized,
+        (TestContext? inst, __) {
           instance = inst;
-        })
-        ..on(Lifecycle.willUpdate, (_, UseState hook) {
+        },
+      );
+      Reactter.on(
+        ReactterInstance<TestContext>(),
+        Lifecycle.willUpdate,
+        (TestContext? inst, UseState hook) {
           willUpdateChecked = true;
           expect(hook, instance?.stateString);
           expect(hook.value, "initial");
-        })
-        ..on(Lifecycle.didUpdate, (_, UseState hook) {
+        },
+      );
+      Reactter.on(
+        ReactterInstance<TestContext>(),
+        Lifecycle.didUpdate,
+        (TestContext? inst, UseState hook) {
           didUpdateChecked = true;
           expect(hook, instance?.stateString);
           expect(hook.value, "changed");
-        })
-        ..on(Lifecycle.destroyed, (_, __) {
+        },
+      );
+      Reactter.on(
+        ReactterInstance<TestContext>(),
+        Lifecycle.destroyed,
+        (_, __) {
           isDestroyed = true;
-        });
+        },
+      );
 
       final testContext = Reactter.create(builder: () => TestContext());
       testContext?.stateString.value = "changed";
@@ -202,15 +269,21 @@ void _testEmitListenEvent(
   });
 
   for (var i = 0; i < TEST_EVENT_COUNT; i++) {
-    UseEvent<TestContext>(id)
-        .emit(Events.TestEvent, "$TEST_EVENT_PARAM_NAME${i + 1}");
+    Reactter.emit(
+      ReactterInstance<TestContext>(id),
+      Events.TestEvent,
+      "$TEST_EVENT_PARAM_NAME${i + 1}",
+    );
   }
   for (var i = 0; i < TEST_EVENT2_COUNT; i++) {
-    UseEvent<TestContext>(id)
-        .emit(Events.TestEvent2, "$TEST_EVENT2_PARAM_NAME${i + 1}");
+    Reactter.emit(
+      ReactterInstance<TestContext>(id),
+      Events.TestEvent2,
+      "$TEST_EVENT2_PARAM_NAME${i + 1}",
+    );
   }
 
-  UseEvent<TestContext>(id).dispose();
+  Reactter.dispose(ReactterInstance<TestContext>(id));
 
   if (expectParam != null) {
     expectLater(paramReceived, expectParam);

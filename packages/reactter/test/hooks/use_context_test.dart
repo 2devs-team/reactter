@@ -11,9 +11,14 @@ void main() {
 
     test("should gets instance by id", () => _testContext(ID));
 
-    test("should gets instance late", () => _testContextLate());
+    test("should gets instance late", () async {
+      await _testContextLate();
+    });
 
-    test("should gets instance by id late", () => _testContextLate(ID));
+    test(
+      "should gets instance by id late",
+      () async => _testContextLate(ID),
+    );
   });
 }
 
@@ -30,7 +35,7 @@ void _testContext([String? id]) {
   testContext.dispose();
 }
 
-void _testContextLate([String? id]) {
+Future<void> _testContextLate([String? id]) async {
   late final TestContext instance;
   final testContext = UseContext<TestContext>(id: id);
 
@@ -41,11 +46,10 @@ void _testContextLate([String? id]) {
   }, [testContext]);
 
   Reactter.create(id: id, builder: () => TestContext());
-
-  expectLater(instance, isInstanceOf<TestContext>());
-
   Reactter
     ..unregister<TestContext>(id)
     ..delete<TestContext>(id);
   testContext.dispose();
+
+  expectLater(instance, isInstanceOf<TestContext>());
 }
