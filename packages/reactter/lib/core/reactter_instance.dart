@@ -2,14 +2,34 @@ part of '../core.dart';
 
 class ReactterInstance<T> {
   final String? id;
-  ContextBuilder<T?>? builder;
-  T? instance;
+  ContextBuilder<T?>? _builder;
+
+  T? _instance;
+  T? get instance => _instance;
 
   /// Stores the object from which it was instantiated
   HashSet<int> refs = HashSet<int>();
 
-  ReactterInstance([this.id]);
-  ReactterInstance.withBuilder(this.id, this.builder);
+  // factory ReactterInstance([String? id]) {
+  //   final reactterInstance = ReactterInstance<T>.symbol(id);
+
+  //   final reactterInstanceFound =
+  //       Reactter._instances.lookup(reactterInstance) as ReactterInstance<T>?;
+
+  //   if (reactterInstanceFound != null) {
+  //     return reactterInstanceFound;
+  //   }
+
+  //   Reactter._instances.add(reactterInstance);
+
+  //   return reactterInstance;
+  // }
+
+  // ReactterInstance.symbol(this.id, [this._builder]);
+  ReactterInstance([this.id, this._builder]);
+
+  ReactterInstance? get stored => Reactter._instances[key];
+  String get key => generateKey<T?>(id);
 
   /// Is equal with [T] and [id]
   @override
@@ -25,6 +45,9 @@ class ReactterInstance<T> {
     final id = this.id != null ? "[id='${this.id}']" : "";
     final hashCode = instance != null ? "(${instance.hashCode})" : "";
 
-    return '$type$id$hashCode"';
+    return '$type$id$hashCode';
   }
+
+  static generateKey<T extends Object?>([String? id]) =>
+      "${T.hashCode}${id != null ? '[$id]' : ''}";
 }

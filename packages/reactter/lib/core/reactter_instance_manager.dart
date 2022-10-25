@@ -2,19 +2,10 @@
 part of '../core.dart';
 
 /// A instances manager
-class ReactterInstanceManager {
-  static final _reactterInstanceManager = ReactterInstanceManager._();
+mixin ReactterInstanceManager {
+  final HashMap<String, ReactterInstance> _instances = HashMap();
 
-  factory ReactterInstanceManager() {
-    return _reactterInstanceManager;
-  }
-
-  ReactterInstanceManager._();
-
-  // All ReactterInstanceManager´s instances
-  HashSet<ReactterInstance> instances = HashSet<ReactterInstance>();
-
-  /// Registers a [builder] function into to [instances]
+  /// Registers a [builder] function into to [_instances]
   /// to allows to create the instance with [get].
   ///
   /// Returns `true` when instance has been registered.
@@ -22,40 +13,47 @@ class ReactterInstanceManager {
     required ContextBuilder<T> builder,
     String? id,
   }) {
-    final instance = ReactterInstance<T?>.withBuilder(id, builder);
+    final instanceKey = ReactterInstance.generateKey<T?>(id);
+    var reactterInstance = _instances[instanceKey];
 
-    if (_reactterInstanceManager.instances.contains(instance)) {
-      Reactter.log('Instance "$instance" already registered.');
+    if (reactterInstance?._builder != null) {
+      Reactter.log('Instance "$reactterInstance" already registered.');
       return false;
     }
 
-    _reactterInstanceManager.instances.add(instance);
-    UseEvent<T>(id).emit(Lifecycle.registered);
-    Reactter.log('Instance "$instance" has been registered.');
+    if (reactterInstance == null) {
+      reactterInstance =
+          _instances[instanceKey] = ReactterInstance<T>(id, builder);
+    } else {
+      reactterInstance._builder = builder;
+    }
+
+    Reactter.emit(reactterInstance, Lifecycle.registered);
+    Reactter.log('Instance "$reactterInstance" has been registered.');
     return true;
   }
 
-  /// Removes a builder function from [instances].
+  /// Removes a builder function from [_instances].
   ///
   /// Returns `true` when instance has been unregistered.
   bool unregister<T extends Object>([String? id]) {
-    final instance = ReactterInstance<T?>(id);
-    final instanceFound = _reactterInstanceManager.instances.lookup(instance);
+    final instanceKey = ReactterInstance.generateKey<T?>(id);
+    var reactterInstance = _instances[instanceKey];
 
-    if (instanceFound == null) {
-      Reactter.log('Instance "$instance" don\'t exist.');
+    if (reactterInstance == null) {
+      reactterInstance = ReactterInstance<T>(id);
+      Reactter.log('Instance "$reactterInstance" don\'t exist.');
       return false;
     }
 
-    _removeInstance<T>(instanceFound);
+    _removeInstance<T>(reactterInstance);
 
-    _reactterInstanceManager.instances.remove(instance);
+    Reactter.emit(reactterInstance, Lifecycle.unregistered);
+    Reactter.dispose(reactterInstance);
 
-    UseEvent<T>(id)
-      ..emit(Lifecycle.unregistered)
-      ..dispose();
+    _instances.remove(instanceKey);
 
-    Reactter.log('Instance "$instance" has been unregistered.');
+    Reactter.log('Instance "$reactterInstance" has been unregistered.');
     return true;
   }
 
@@ -87,34 +85,33 @@ class ReactterInstanceManager {
     return reactterInstance?.instance;
   }
 
-  /// Deletes the instance from [instances] but keep the [builder] function.
+  /// Deletes the instance from [_instances] but keep the [_builder] function.
   ///
   /// Returns `true` when the instance has been deleted.
   bool delete<T extends Object?>([String? id, Object? ref]) {
-    final instanceToFind = ReactterInstance<T?>(id);
-    final instanceFound =
-        _reactterInstanceManager.instances.lookup(instanceToFind);
+    final instanceKey = ReactterInstance.generateKey<T?>(id);
+    var reactterInstance = _instances[instanceKey];
 
-    if (instanceFound == null || instanceFound.instance == null) {
+    if (reactterInstance == null || reactterInstance.instance == null) {
+      reactterInstance = ReactterInstance<T>(id);
       Reactter.log(
-        'Instance "$instanceToFind" already deleted.',
+        'Instance "$reactterInstance" already deleted.',
         isError: true,
       );
-
       return false;
     }
 
     if (ref != null) {
-      instanceFound.refs.remove(ref.hashCode);
+      reactterInstance.refs.remove(ref.hashCode);
     }
 
-    if (instanceFound.refs.isNotEmpty) {
+    if (reactterInstance.refs.isNotEmpty) {
       return false;
     }
 
-    _removeInstance<T>(instanceFound);
+    _removeInstance<T>(reactterInstance);
 
-    UseEvent<T>(id).dispose();
+    Reactter.dispose(reactterInstance);
 
     return true;
   }
@@ -124,7 +121,7 @@ class ReactterInstanceManager {
   /// If found it, returns it, else returns `null`.
   ReactterInstance? find(Object? instance) {
     try {
-      return _reactterInstanceManager.instances
+      return _instances.values
           .firstWhere((element) => element.instance == instance);
     } catch (e) {
       return null;
@@ -133,43 +130,83 @@ class ReactterInstanceManager {
 
   /// Valids if the instance of [T] with or without [id] given exists.
   bool exists<T extends Object?>([String? id]) {
-    final instanceToFind = ReactterInstance<T?>(id);
+    final instanceKey = ReactterInstance.generateKey<T?>(id);
 
-    return _reactterInstanceManager.instances
-            .lookup(instanceToFind)
-            ?.instance !=
-        null;
+    return _instances[instanceKey]?.instance != null;
   }
 
-  ReactterInstance<T?>? _getAndCreateIfNotExtist<T extends Object?>(
-      [String? id]) {
-    final instanceToFind = ReactterInstance<T?>(id);
-    final instanceFound = _reactterInstanceManager.instances
-        .lookup(instanceToFind) as ReactterInstance<T?>?;
+  T? instanceOf<T extends Object?>([String? id]) {
+    final instanceKey = ReactterInstance.generateKey<T?>(id);
+    final reactterInstance = _instances[instanceKey] as ReactterInstance<T>?;
 
-    if (instanceFound == null) {
+    return reactterInstance?.instance;
+  }
+
+  ReactterInstance<T?>? _getAndCreateIfNotExtist<T extends Object?>([
+    String? id,
+  ]) {
+    final instanceKey = ReactterInstance.generateKey<T?>(id);
+    var reactterInstance = _instances[instanceKey] as ReactterInstance<T>?;
+
+    if (reactterInstance?._builder == null) {
+      reactterInstance = ReactterInstance<T>(id);
       Reactter.log(
-        'Builder for instance "$instanceToFind" is not registered.\n' +
+        'Builder for instance "$reactterInstance" is not registered.\n' +
             'You should register instance with ' +
             '"Reactter.register<$T>(builder:() => $T())" or ' +
             '"Reactter.create<$T>(builder: () => $T())".',
         isError: true,
       );
 
-      return instanceFound;
+      return reactterInstance;
     }
 
-    if (instanceFound.instance != null) {
-      Reactter.log('Instance "$instanceFound" already created.');
+    if (reactterInstance!.instance != null) {
+      Reactter.log('Instance "$reactterInstance" already created.');
 
-      return instanceFound;
+      return reactterInstance;
     }
 
-    instanceFound.instance = instanceFound.builder?.call();
-    UseEvent<T>(instanceFound.id).emit(Lifecycle.initialized);
-    Reactter.log('Instance "$instanceFound" has been created.');
+    _asignInstanceToSignals(
+      () => reactterInstance?._instance = reactterInstance._builder?.call(),
+    );
 
-    return instanceFound;
+    Reactter.emit(reactterInstance, Lifecycle.initialized);
+    Reactter.log('Instance "$reactterInstance" has been created.');
+
+    return reactterInstance;
+  }
+
+  void _asignInstanceToSignals(Object? Function() buildInstance) {
+    final _isBusy = Reactter._instancesBuilding;
+    final List<Signal> _signalsTemp =
+        _isBusy ? List.from(Reactter._signalsRecollected) : [];
+
+    if (_isBusy) {
+      Reactter._signalsRecollected.clear();
+    }
+
+    Reactter._instancesBuilding = true;
+
+    final instance = buildInstance();
+
+    if (instance is ReactterHookManager) {
+      instance._listenHooks();
+    }
+
+    if (instance != null) {
+      for (final signal in Reactter._signalsRecollected) {
+        signal._attachIt(instance);
+      }
+    }
+
+    Reactter._signalsRecollected.clear();
+
+    if (_isBusy) {
+      Reactter._signalsRecollected.addAll(_signalsTemp);
+    }
+
+    Reactter._instancesBuilding = false;
   }
 
   void _removeInstance<T>(ReactterInstance reactterInstance) {
@@ -179,9 +216,13 @@ class ReactterInstanceManager {
       (reactterInstance.instance as ReactterContext).dispose();
     }
 
-    reactterInstance.instance = null;
+    if (reactterInstance.instance is ReactterHookManager) {
+      (reactterInstance.instance as ReactterHookManager)._unlistenHooks();
+    }
 
-    UseEvent<T>(reactterInstance.id).emit(Lifecycle.destroyed);
+    reactterInstance._instance = null;
+
+    Reactter.emit(reactterInstance, Lifecycle.destroyed);
 
     Reactter.log(log);
   }
