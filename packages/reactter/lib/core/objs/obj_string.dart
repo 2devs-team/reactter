@@ -556,34 +556,6 @@ extension ObjStringNullExt on Obj<String?> {
   /// `String.fromCharCode(this.codeUnitAt(index))`.
   String? operator [](int index) => value?[index];
 
-  /// Creates a new string by concatenating this string with [other].
-  ///
-  /// Example:
-  /// ```dart
-  /// const string = 'dart' + 'lang'; // 'dartlang'
-  /// ```
-  String? operator +(Obj<String> other) {
-    if (value == null) return null;
-    return value! + other.value;
-  }
-
-  /// Creates a new string by concatenating this string with itself a number
-  /// of times.
-  ///
-  /// The result of `str * n` is equivalent to
-  /// `str + str + ...`(n times)`... + str`.
-  ///
-  /// ```dart
-  /// const string = 'Dart';
-  /// final multiplied = string * 3;
-  /// print(multiplied); // 'DartDartDart'
-  /// ```
-  /// Returns an empty string if [times] is zero or negative.
-  String? operator *(int times) {
-    if (value == null) return null;
-    return value! * times;
-  }
-
   /// Returns the 16-bit UTF-16 code unit at the given [index].
   int? codeUnitAt(int index) => value?.codeUnitAt(index);
 
@@ -911,7 +883,8 @@ extension ObjStringNullExt on Obj<String?> {
   /// final result = pigLatin('I have a secret now!');
   /// print(result); // 'Iway avehay away ecretsay ownay!'
   /// ```
-  String? replaceAllMapped(Pattern from, String Function(Match match) replace) =>
+  String? replaceAllMapped(
+          Pattern from, String Function(Match match) replace) =>
       value?.replaceAllMapped(from, replace);
 
   /// Replaces the substring from [start] to [end] with [replacement].
