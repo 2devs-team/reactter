@@ -1,4 +1,3 @@
-import 'dart:collection';
 import 'core.dart';
 
 part 'hooks/use_async_state.dart';
