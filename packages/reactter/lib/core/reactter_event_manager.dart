@@ -50,11 +50,15 @@ mixin ReactterEventManager {
     Enum eventName,
     CallbackEvent<T, P> callback,
   ) {
+    final _eventKey = _getEventKey(instance);
+
+    if (!(_events[_eventKey]?[eventName]?.contains(callback) ?? false)) {
+      return;
+    }
+
     if (instance is ReactterNotifyManager) {
       instance._listenersCount -= 1;
     }
-
-    final _eventKey = _getEventKey(instance);
 
     _events[_eventKey]?[eventName]?.remove(callback);
 
