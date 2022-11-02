@@ -39,8 +39,8 @@ enum Lifecycle {
 ///
 /// See also:
 /// - [ReactterHook], a abstract hook that [ReactterHookManager] listen it.
-abstract class ReactterHookManager {
-  bool _isUpdating = false;
+abstract class ReactterHookManager with ReactterNotifyManager {
+  bool _isCreated = false;
 
   /// Stores all the hooks given.
   final Set<ReactterHook> _hooks = {};
@@ -51,13 +51,15 @@ abstract class ReactterHookManager {
     for (final hook in hooks) {
       hook._attachIt(this);
       _hooks.add(hook);
+
+      if (_isCreated) {
+        Reactter.off(hook, Lifecycle.willUpdate, _onHookWillUpdate);
+        Reactter.off(hook, Lifecycle.didUpdate, _onHookDidUpdate);
+        Reactter.on(hook, Lifecycle.willUpdate, _onHookWillUpdate);
+        Reactter.on(hook, Lifecycle.didUpdate, _onHookDidUpdate);
+      }
     }
   }
-
-  // /// Executes [fnUpdate], and notify the listeners about to update.
-  // void update([Function? callback]) {
-  //   super.update(() => callback?.call());
-  // }
 
   void _listenHooks() {
     for (final hook in _hooks) {
@@ -76,12 +78,16 @@ abstract class ReactterHookManager {
   void _onHookWillUpdate(_, hook) {
     if (_isUpdating) return;
 
+    _isUpdating = true;
+
     Reactter.emit(this, Lifecycle.willUpdate, hook);
   }
 
   void _onHookDidUpdate(_, hook) {
-    if (_isUpdating) return;
+    if (!_isUpdating) return;
 
     Reactter.emit(this, Lifecycle.didUpdate, hook);
+
+    _isUpdating = false;
   }
 }

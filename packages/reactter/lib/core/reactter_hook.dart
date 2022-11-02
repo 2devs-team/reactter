@@ -41,19 +41,18 @@ part of '../core.dart';
 ///
 /// See also:
 /// - [ReactterHookManager]
-abstract class ReactterHook
-    with ReactterHookManager, ReactterNotifyManager, ReactterState {
+abstract class ReactterHook extends ReactterHookManager with ReactterState {
   ReactterHook(ReactterHookManager? context) {
     context?.listenHooks([this]);
   }
 
   @mustCallSuper
-  FutureOr<void> update([Function? callback]) async {
-    if (_instance is ReactterContext &&
-        (_instance as ReactterContext)._isUpdating) {
-      return await updateAsync(() => callback?.call());
-    }
+  void update([Function? callback]) {
+    return super.update(() => callback?.call());
+  }
 
-    super.update(() => callback?.call());
+  @mustCallSuper
+  Future<void> updateAsync([Function? callback]) async {
+    return super.updateAsync(() => callback?.call());
   }
 }
