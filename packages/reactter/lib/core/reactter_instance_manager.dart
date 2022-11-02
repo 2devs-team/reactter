@@ -21,12 +21,8 @@ mixin ReactterInstanceManager {
       return false;
     }
 
-    if (reactterInstance == null) {
-      reactterInstance =
-          _instances[instanceKey] = ReactterInstance<T>(id, builder);
-    } else {
-      reactterInstance._builder = builder;
-    }
+    reactterInstance =
+        _instances[instanceKey] = ReactterInstance<T>(id, builder);
 
     Reactter.emit(reactterInstance, Lifecycle.registered);
     Reactter.log('Instance "$reactterInstance" has been registered.');
@@ -137,9 +133,7 @@ mixin ReactterInstanceManager {
 
   T? instanceOf<T extends Object?>([String? id]) {
     final instanceKey = ReactterInstance.generateKey<T?>(id);
-    final reactterInstance = _instances[instanceKey] as ReactterInstance<T>?;
-
-    return reactterInstance?.instance;
+    return _instances[instanceKey]?.instance;
   }
 
   ReactterInstance<T?>? _getAndCreateIfNotExtist<T extends Object?>([
@@ -192,6 +186,7 @@ mixin ReactterInstanceManager {
 
     if (instance is ReactterHookManager) {
       instance._listenHooks();
+      instance._isCreated = true;
     }
 
     if (instance != null) {
