@@ -43,8 +43,10 @@ class DecrementActionCallable extends ReactterActionCallable<TestStore, int> {
 }
 
 class TestContext extends ReactterContext {
-  late final stateBool = UseState(false, this);
-  late final stateString = UseState("initial", this);
+  final signalString = "initial".signal;
+
+  final stateBool = UseState(false);
+  late final stateString = UseState("initial");
   late final stateInt = UseState(0, this);
   late final stateDouble = UseState(0.0, this);
   late final stateList = UseState([], this);
@@ -52,6 +54,10 @@ class TestContext extends ReactterContext {
   late final stateClass = UseState<TestClass?>(null, this);
   late final stateAsync = UseAsyncState("initial", _resolveStateAsync, this);
   late final stateReduce = UseReducer(_reducer, TestStore(count: 0), this);
+
+  TestContext() {
+    listenHooks([stateBool, stateString]);
+  }
 
   Future<String> _resolveStateAsync([bool throwError = false]) async {
     if (throwError) {
@@ -80,5 +86,13 @@ class TestContext extends ReactterContext {
       default:
         throw UnimplementedError();
     }
+  }
+}
+
+class Test2Context extends ReactterContext {
+  late final testContext = UseContext<TestContext>(context: this);
+
+  Test2Context() {
+    Reactter.create(builder: () => TestContext());
   }
 }

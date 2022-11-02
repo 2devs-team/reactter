@@ -1,4 +1,4 @@
-import 'package:flutter_test/flutter_test.dart';
+import 'package:test/test.dart';
 import 'package:reactter/core.dart';
 
 import '../shareds/test_context.dart';
@@ -58,7 +58,7 @@ void main() {
       Reactter.register(builder: () => TestContext());
 
       instance = Reactter.get<TestContext>();
-      expect(instance, isInstanceOf<TestContext>());
+      expect(instance, isA<TestContext>());
 
       Reactter.unregister<TestContext>();
     });
@@ -70,7 +70,7 @@ void main() {
       Reactter.register(id: 'uniqueId', builder: () => TestContext());
 
       instance = Reactter.get<TestContext>('uniqueId');
-      expect(instance, isInstanceOf<TestContext>());
+      expect(instance, isA<TestContext>());
 
       Reactter.unregister<TestContext>('uniqueId');
     });
@@ -78,7 +78,7 @@ void main() {
     test("should create instance", () async {
       var instance = Reactter.create(builder: () => TestContext(), ref: 'key');
 
-      expect(instance, isInstanceOf<TestContext>());
+      expect(instance, isA<TestContext>());
 
       Reactter.unregister<TestContext>();
     });
@@ -87,7 +87,7 @@ void main() {
       final instance = Reactter.create(
           id: 'uniqueId', builder: () => TestContext(), ref: 'key');
 
-      expect(instance, isInstanceOf<TestContext>());
+      expect(instance, isA<TestContext>());
 
       Reactter.unregister<TestContext>('uniqueId');
     });
@@ -108,7 +108,7 @@ void main() {
       final instance = Reactter.create(
           id: 'uniqueId', builder: () => TestContext(), ref: 'key');
 
-      expect(instance, isInstanceOf<TestContext>());
+      expect(instance, isA<TestContext>());
 
       Reactter.unregister<TestContext>('uniqueId');
     });
@@ -132,9 +132,30 @@ void main() {
       final instance = Reactter.create(builder: () => TestContext());
 
       reactterInstance = Reactter.find(instance);
-      expect(reactterInstance, isInstanceOf<ReactterInstance>());
+      expect(reactterInstance, isA<ReactterInstance>());
 
       Reactter.unregister<TestContext>();
+    });
+
+    test("should get the instance", () async {
+      var instance = Reactter.instanceOf<TestContext>();
+      expect(instance, null);
+
+      Reactter.create(builder: () => TestContext());
+      instance = Reactter.instanceOf<TestContext>();
+      expect(instance, isA<TestContext>());
+      Reactter.unregister<TestContext>();
+    });
+
+    test("should get the instance with id", () async {
+      var instance = Reactter.instanceOf<TestContext>('uniqueId');
+      expect(instance, null);
+
+      Reactter.create(id: 'uniqueId', builder: () => TestContext());
+      instance = Reactter.instanceOf<TestContext>('uniqueId');
+      expect(instance, isA<TestContext>());
+
+      Reactter.unregister<TestContext>('uniqueId');
     });
 
     test("should check if exist the instance", () async {

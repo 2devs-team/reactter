@@ -1,4 +1,4 @@
-import 'package:flutter_test/flutter_test.dart';
+import 'package:test/test.dart';
 import 'package:reactter/reactter.dart';
 
 import '../shareds/test_context.dart';
@@ -11,14 +11,9 @@ void main() {
 
     test("should gets instance by id", () => _testContext(ID));
 
-    test("should gets instance late", () async {
-      await _testContextLate();
-    });
+    test("should gets instance late", () => _testContextLate());
 
-    test(
-      "should gets instance by id late",
-      () async => _testContextLate(ID),
-    );
+    test("should gets instance by id late", () => _testContextLate(ID));
   });
 }
 
@@ -27,7 +22,7 @@ void _testContext([String? id]) {
 
   final testContext = UseContext<TestContext>(id: id, context: context);
 
-  expect(testContext.instance, isInstanceOf<TestContext>());
+  expect(testContext.instance, isA<TestContext>());
 
   Reactter
     ..unregister<TestContext>(id)
@@ -35,7 +30,7 @@ void _testContext([String? id]) {
   testContext.dispose();
 }
 
-Future<void> _testContextLate([String? id]) async {
+void _testContextLate([String? id]) {
   late final TestContext instance;
   final testContext = UseContext<TestContext>(id: id);
 
@@ -51,5 +46,5 @@ Future<void> _testContextLate([String? id]) async {
     ..delete<TestContext>(id);
   testContext.dispose();
 
-  expectLater(instance, isInstanceOf<TestContext>());
+  expectLater(instance, isA<TestContext>());
 }

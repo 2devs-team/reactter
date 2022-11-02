@@ -1,4 +1,4 @@
-import 'package:flutter_test/flutter_test.dart';
+import 'package:test/test.dart';
 import 'package:reactter/core.dart';
 import 'package:reactter/reactter.dart';
 
@@ -72,7 +72,7 @@ void main() {
 
       Reactter.delete<TestContext>();
 
-      expectLater(instance, isInstanceOf<TestContext>());
+      expectLater(instance, isA<TestContext>());
       expectLater(instance, testContext);
     });
 
@@ -145,7 +145,7 @@ void main() {
 
       Reactter.delete<TestContext>();
 
-      expectLater(instance, isInstanceOf<TestContext>());
+      expectLater(instance, isA<TestContext>());
       expectLater(instance, testContext);
     });
 
@@ -178,7 +178,7 @@ void main() {
 
       Reactter.delete<TestContext>();
 
-      expectLater(instance, isInstanceOf<TestContext>());
+      expectLater(instance, isA<TestContext>());
       expectLater(instance, testContext);
       expectLater(willUpdateChecked, true);
       expectLater(didUpdateChecked, true);

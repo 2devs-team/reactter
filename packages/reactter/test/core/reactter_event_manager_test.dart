@@ -1,4 +1,4 @@
-import 'package:flutter_test/flutter_test.dart';
+import 'package:test/test.dart';
 import 'package:reactter/core.dart';
 import 'package:reactter/reactter.dart';
 
@@ -89,7 +89,7 @@ void main() {
 
       Reactter.delete<TestContext>();
 
-      expectLater(instance, isInstanceOf<TestContext>());
+      expectLater(instance, isA<TestContext>());
       expectLater(instance, testContext);
     });
 
@@ -197,60 +197,10 @@ void main() {
 
       Reactter.delete<TestContext>();
 
-      expectLater(instance, isInstanceOf<TestContext>());
+      expectLater(instance, isA<TestContext>());
       expectLater(instance, testContext);
     });
 
-    test("should listens instance's life-cycle event", () async {
-      late TestContext? instance;
-      late bool willUpdateChecked;
-      late bool didUpdateChecked;
-      late bool isDestroyed;
-
-      Reactter.on(
-        ReactterInstance<TestContext>(),
-        Lifecycle.initialized,
-        (TestContext? inst, __) {
-          instance = inst;
-        },
-      );
-      Reactter.on(
-        ReactterInstance<TestContext>(),
-        Lifecycle.willUpdate,
-        (TestContext? inst, UseState hook) {
-          willUpdateChecked = true;
-          expect(hook, instance?.stateString);
-          expect(hook.value, "initial");
-        },
-      );
-      Reactter.on(
-        ReactterInstance<TestContext>(),
-        Lifecycle.didUpdate,
-        (TestContext? inst, UseState hook) {
-          didUpdateChecked = true;
-          expect(hook, instance?.stateString);
-          expect(hook.value, "changed");
-        },
-      );
-      Reactter.on(
-        ReactterInstance<TestContext>(),
-        Lifecycle.destroyed,
-        (_, __) {
-          isDestroyed = true;
-        },
-      );
-
-      final testContext = Reactter.create(builder: () => TestContext());
-      testContext?.stateString.value = "changed";
-
-      Reactter.delete<TestContext>();
-
-      expectLater(instance, isInstanceOf<TestContext>());
-      expectLater(instance, testContext);
-      expectLater(willUpdateChecked, true);
-      expectLater(didUpdateChecked, true);
-      expectLater(isDestroyed, true);
-    });
   });
 }
 
