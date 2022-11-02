@@ -24,7 +24,16 @@ class Obj<T> {
   /// ```
   ///
   bool operator ==(Object other) =>
-      other is T ? value == other : this.hashCode == other.hashCode;
+      other is Obj<T> ? value == other.value : value == other;
+
+  /// Gets and/or sets to [value] like a function
+  T call([T? val]) {
+    if (null is T || val != null) {
+      value = val as T;
+    }
+
+    return value;
+  }
 
   @override
   int get hashCode => super.hashCode;

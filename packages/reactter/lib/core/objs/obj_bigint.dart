@@ -1,3 +1,4 @@
+// coverage:ignore-file
 part of '../../core.dart';
 
 extension ObjBigIntExt on Obj<BigInt> {
@@ -10,20 +11,17 @@ extension ObjBigIntExt on Obj<BigInt> {
   /// Adds [other] to this big integer.
   ///
   /// The result is again a big integer.
-  Obj<BigInt> operator +(Obj<BigInt> other) =>
-      (value + other.value).obj;
+  Obj<BigInt> operator +(Obj<BigInt> other) => (value + other.value).obj;
 
   /// Subtracts [other] from this big integer.
   ///
   /// The result is again a big integer.
-  Obj<BigInt> operator -(Obj<BigInt> other) =>
-      (value - other.value).obj;
+  Obj<BigInt> operator -(Obj<BigInt> other) => (value - other.value).obj;
 
   /// Multiplies [other] by this big integer.
   ///
   /// The result is again a big integer.
-  Obj<BigInt> operator *(Obj<BigInt> other) =>
-      (value * other.value).obj;
+  Obj<BigInt> operator *(Obj<BigInt> other) => (value * other.value).obj;
 
   /// Double division operator.
   ///
@@ -39,8 +37,7 @@ extension ObjBigIntExt on Obj<BigInt> {
   /// print(Obj(BigInt.from(1)) / Obj(BigInt.from(2))); // Obj(0.5)
   /// print(Obj(BigInt.from(1.99999)) / Obj(BigInt.from(2))); // Obj(0.5)
   /// ```
-  Obj<double> operator /(Obj<BigInt> other) =>
-      (value / other.value).obj;
+  Obj<double> operator /(Obj<BigInt> other) => (value / other.value).obj;
 
   /// Truncating integer division operator.
   ///
@@ -59,8 +56,7 @@ extension ObjBigIntExt on Obj<BigInt> {
   /// (-seven).remainder(three); // => -1
   /// seven.remainder(-three);   // => 1
   /// ```
-  Obj<BigInt> operator ~/(Obj<BigInt> other) =>
-      (value ~/ other.value).obj;
+  Obj<BigInt> operator ~/(Obj<BigInt> other) => (value ~/ other.value).obj;
 
   /// Euclidean modulo operator.
   ///
@@ -79,8 +75,7 @@ extension ObjBigIntExt on Obj<BigInt> {
   /// print(Obj(BigInt.from(5)) % Obj(BigInt.from(-)3)); // Obj<BigInt>(2)
   /// print(Obj(BigInt.from(-)5) % Obj(BigInt.from(-)3)); // Obj<BigInt>(1)
   /// ```
-  Obj<BigInt> operator %(Obj<BigInt> other) =>
-      (value % other.value).obj;
+  Obj<BigInt> operator %(Obj<BigInt> other) => (value % other.value).obj;
 
   /// Shift the bits of this integer to the left by [shiftAmount].
   ///
@@ -113,8 +108,7 @@ extension ObjBigIntExt on Obj<BigInt> {
   ///
   /// Of both operands are negative, the result is negative, otherwise
   /// the result is non-negative.
-  Obj<BigInt> operator &(Obj<BigInt> other) =>
-      (value & other.value).obj;
+  Obj<BigInt> operator &(Obj<BigInt> other) => (value & other.value).obj;
 
   /// Bit-wise or operator.
   ///
@@ -124,8 +118,7 @@ extension ObjBigIntExt on Obj<BigInt> {
   ///
   /// If both operands are non-negative, the result is non-negative,
   /// otherwise the result is negative.
-  Obj<BigInt> operator |(Obj<BigInt> other) =>
-      (value | other.value).obj;
+  Obj<BigInt> operator |(Obj<BigInt> other) => (value | other.value).obj;
 
   /// Bit-wise exclusive-or operator.
   ///
@@ -135,8 +128,7 @@ extension ObjBigIntExt on Obj<BigInt> {
   ///
   /// If the operands have the same sign, the result is non-negative,
   /// otherwise the result is negative.
-  Obj<BigInt> operator ^(Obj<BigInt> other) =>
-      (value ^ other.value).obj;
+  Obj<BigInt> operator ^(Obj<BigInt> other) => (value ^ other.value).obj;
 
   /// The bit-wise negate operator.
   ///

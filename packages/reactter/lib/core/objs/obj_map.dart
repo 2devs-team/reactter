@@ -1,3 +1,4 @@
+// coverage:ignore-file
 part of '../../core.dart';
 
 extension ObjMapExt<K, V> on Obj<Map<K, V>> {

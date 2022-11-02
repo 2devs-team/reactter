@@ -1,3 +1,4 @@
+// coverage:ignore-file
 part of '../../core.dart';
 
 extension SignalMapExt<K, V> on Signal<Map<K, V>> {

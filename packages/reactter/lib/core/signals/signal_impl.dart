@@ -30,15 +30,11 @@ class Signal<T> extends Obj<T> with ReactterNotifyManager, ReactterState {
   T call([T? val]) {
     assert(!_isDisposed, "You can call when it's been disposed");
 
-    if (null is T || val != null) {
-      value = val as T;
-    }
-
-    return value;
+    return super(val);
   }
 
   /// Executes [fnUpdate], and notify the listeners about to update.
-  void update(void fnUpdate(value)) {
+  void update(void fnUpdate(T value)) {
     super.update(() => fnUpdate(value));
   }
 

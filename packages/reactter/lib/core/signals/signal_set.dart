@@ -1,3 +1,4 @@
+// coverage:ignore-file
 part of '../../core.dart';
 
 extension SignalSetExt<E> on Signal<Set<E>> {

@@ -1,3 +1,4 @@
+// coverage:ignore-file
 part of '../../core.dart';
 
 extension ObjIterableExt<E> on Obj<Iterable<E>> {
