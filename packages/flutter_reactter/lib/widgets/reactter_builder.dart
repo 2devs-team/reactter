@@ -81,19 +81,13 @@ class ReactterBuilder<T extends ReactterContext?> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ReactterScopeInherited(
-      child: Builder(
-        builder: (context) {
-          final ctx = ReactterProvider.contextOf<T>(
-            context,
-            id: id,
-            listen: listenAllHooks || listenHooks != null,
-            listenHooks: listenHooks,
-          );
-
-          return builder?.call(ctx, context, child) ?? child!;
-        },
-      ),
+    final ctx = ReactterProvider.contextOf<T>(
+      context,
+      id: id,
+      listen: listenAllHooks || listenHooks != null,
+      listenHooks: listenHooks,
     );
+
+    return builder?.call(ctx, context, child) ?? child!;
   }
 }

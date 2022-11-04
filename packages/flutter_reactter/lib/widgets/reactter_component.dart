@@ -29,8 +29,8 @@ abstract class ReactterComponent<T extends ReactterContext>
   /// Listens hooks to re-render [render] method.
   ListenHooks<T>? get listenHooks => null;
 
-  /// Invoked when the [ReactterContext]'s instance is created.
-  OnInitContext<T>? get onInit => null;
+  /// Watchs all hooks to re-render
+  bool get listenAllHooks => false;
 
   /// Replaces a build method.
   ///
@@ -44,23 +44,28 @@ abstract class ReactterComponent<T extends ReactterContext>
   @override
   @mustCallSuper
   Widget build(BuildContext context) {
+    assert(
+      (listenAllHooks && listenHooks == null) || !listenAllHooks,
+      "Can't use `listenAllHooks` with `listenHooks`",
+    );
+
     if (builder == null) {
-      return ReactterBuilder<T>(
-        id: id,
-        listenHooks: listenHooks,
-        builder: (ctx, context, child) => render(ctx, context),
-      );
+      final T instance = _getInstance(context);
+      return render(instance, context);
     }
 
     return ReactterProvider<T>(
       builder!,
       id: id,
-      onInit: onInit,
-      builder: (context, _) => render(_getContext(context), context),
+      builder: (instance, context, _) => render(_getInstance(context), context),
     );
   }
 
-  T _getContext(BuildContext context) {
+  T _getInstance(BuildContext context) {
+    if (listenHooks == null && !listenAllHooks) {
+      return context.use(id);
+    }
+
     return id == null
         ? context.watch<T>(listenHooks)
         : context.watchId<T>(id!, listenHooks);

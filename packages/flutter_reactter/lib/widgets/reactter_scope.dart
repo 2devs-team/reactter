@@ -33,7 +33,6 @@ part of '../widgets.dart';
 ///   },
 /// )
 /// ```
-///
 class ReactterScope extends StatelessWidget {
   /// Provides a widget , which render one time.
   ///
@@ -54,24 +53,6 @@ class ReactterScope extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _buildWithChild(context, child);
-  }
-
-  /// A [build] method that receives an extra `child` parameter.
-  ///
-  /// This method may be called with a `child` different from the parameter
-  /// passed to the constructor of [SingleChildStatelessWidget].
-  /// It may also be called again with a different `child`, without this widget
-  /// being recreated.
-  Widget _buildWithChild(BuildContext context, Widget? child) {
-    Widget _buildChild() => builder?.call(context, child) ?? child!;
-
-    return ReactterScopeInherited(
-      child: child is Builder
-          ? _buildChild()
-          : Builder(
-              builder: (context) => _buildChild(),
-            ),
-    );
+    return builder?.call(context, child) ?? child!;
   }
 }
