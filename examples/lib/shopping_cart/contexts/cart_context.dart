@@ -9,7 +9,7 @@ class CartContext extends ReactterContext {
   late final total = UseState(0.0, this);
 
   void addProduct(ProductState productState) {
-    productState.decrementStock();
+    if (!productState.decreaseStock()) return;
 
     products.update(() {
       final quantity = (products.value[productState] ?? 0) + 1;
@@ -21,7 +21,7 @@ class CartContext extends ReactterContext {
   }
 
   void removeProduct(ProductState productState) {
-    productState.incrementStock();
+    if (!productState.increaseStock()) return;
 
     products.update(() {
       final quantity = (products.value[productState] ?? 0) - 1;
@@ -42,15 +42,20 @@ class CartContext extends ReactterContext {
     }
 
     final quantity = products.value[productState]!;
-    productState.incrementStock(quantity);
+    productState.increaseStock(quantity);
 
     products.update(() {
       products.value.remove(productState);
     });
 
-    quantityProducts.value += quantity;
-    total.value += productState.price * quantity;
+    quantityProducts.value -= quantity;
+    total.value -= productState.price * quantity;
   }
 
-  void checkout() => products.update(products.value.clear);
+  void checkout() {
+    products.update(products.value.clear);
+    productsLen.value = 0;
+    quantityProducts.value = 0;
+    total.value = 0;
+  }
 }

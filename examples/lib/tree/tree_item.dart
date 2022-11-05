@@ -13,7 +13,7 @@ class TreeItem extends ReactterComponent<TreeContext> {
   final TreeContext item;
 
   @override
-  get id => "${item.hashCode}";
+  String get id => "${item.hashCode}";
 
   @override
   get listenHooks => (_) => [];
@@ -22,7 +22,7 @@ class TreeItem extends ReactterComponent<TreeContext> {
   get builder => () => item;
 
   @override
-  Widget render(ctx, context) {
+  Widget render(treeContext, context) {
     return ListTile(
       onTap: () {},
       dense: true,
@@ -30,24 +30,25 @@ class TreeItem extends ReactterComponent<TreeContext> {
       minVerticalPadding: 16,
       title: Row(
         children: [
-          ReactterBuilder<TreeContext>(
-            id: id,
-            listenHooks: (ctx) => [ctx.count],
-            builder: (ctx, context, child) {
-              return Text("Count(${ctx.count.value})");
-            },
-          ),
-          const SizedBox(width: 8),
           IconButton(
-            onPressed: ctx.decrement,
+            onPressed: treeContext.decrease,
             padding: EdgeInsets.zero,
             constraints: const BoxConstraints.tightFor(width: 32),
             splashRadius: 18,
             iconSize: 24,
             icon: const Icon(Icons.indeterminate_check_box_rounded),
           ),
+          const SizedBox(width: 8),
+          Builder(
+            builder: (context) {
+              context.watchId<TreeContext>(id, (ctx) => [ctx.count]);
+
+              return Text("${treeContext.count.value}");
+            },
+          ),
+          const SizedBox(width: 8),
           IconButton(
-            onPressed: ctx.increment,
+            onPressed: treeContext.increase,
             padding: EdgeInsets.zero,
             constraints: const BoxConstraints.tightFor(width: 32),
             splashRadius: 18,
@@ -55,27 +56,27 @@ class TreeItem extends ReactterComponent<TreeContext> {
             icon: const Icon(Icons.add_box_rounded),
           ),
           const SizedBox(width: 8),
-          ReactterBuilder<TreeContext>(
-            id: id,
-            listenHooks: (ctx) => [ctx.total],
-            builder: (ctx, context, child) {
-              return Text("Total(${ctx.total.value})");
+          Builder(
+            builder: (context) {
+              context.watchId<TreeContext>(id, (ctx) => [ctx.total]);
+
+              return Text("Total(${treeContext.total.value})");
             },
           ),
           const Spacer(),
           Text("id: $id"),
           const Spacer(),
           IconButton(
-            onPressed: ctx.addChild,
+            onPressed: treeContext.addChild,
             padding: EdgeInsets.zero,
             constraints: const BoxConstraints.tightFor(width: 32),
             splashRadius: 18,
             iconSize: 24,
             icon: const Icon(Icons.add_circle),
           ),
-          if (ctx.parent != null)
+          if (treeContext.parent != null)
             IconButton(
-              onPressed: ctx.removeFromParent,
+              onPressed: treeContext.removeFromParent,
               padding: EdgeInsets.zero,
               constraints: const BoxConstraints.tightFor(width: 32),
               splashRadius: 18,
@@ -85,48 +86,53 @@ class TreeItem extends ReactterComponent<TreeContext> {
                 child: const Icon(Icons.add_circle),
               ),
             ),
-          ReactterBuilder<TreeContext>(
-            id: id,
-            listenHooks: (ctx) => [ctx.hide, ctx.children],
-            builder: (ctx, context, child) {
-              if (ctx.children.value.isEmpty) return const SizedBox(width: 24);
+          Builder(
+            builder: (context) {
+              context.watchId<TreeContext>(
+                id,
+                (ctx) => [ctx.hide, ctx.children],
+              );
 
-              return IconButton(
-                onPressed: ctx.toggleHide,
-                padding: EdgeInsets.zero,
-                constraints: const BoxConstraints.tightFor(width: 32),
-                splashRadius: 18,
-                iconSize: 24,
-                icon: Transform.rotate(
-                  angle: ctx.hide.value ? -pi : 0,
-                  child: Icon(ctx.hide.value
-                      ? Icons.expand_circle_down_outlined
-                      : Icons.expand_circle_down_rounded),
+              return Visibility(
+                visible: treeContext.children.value.isNotEmpty,
+                child: IconButton(
+                  onPressed: treeContext.toggleHide,
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints.tightFor(width: 32),
+                  splashRadius: 18,
+                  iconSize: 24,
+                  icon: Transform.rotate(
+                    angle: treeContext.hide.value ? -pi : 0,
+                    child: Icon(treeContext.hide.value
+                        ? Icons.expand_circle_down_outlined
+                        : Icons.expand_circle_down_rounded),
+                  ),
                 ),
               );
             },
           ),
         ],
       ),
-      subtitle: ReactterBuilder<TreeContext>(
-        id: id,
-        listenHooks: (ctx) => [ctx.hide, ctx.children],
-        builder: (ctx, context, child) {
-          return ctx.hide.value
-              ? const SizedBox()
-              : ListView.builder(
-                  shrinkWrap: true,
-                  physics: const ClampingScrollPhysics(),
-                  itemCount: ctx.children.value.length,
-                  itemBuilder: (context, index) {
-                    final item = ctx.children.value[index];
+      subtitle: Builder(
+        builder: (context) {
+          context.watchId<TreeContext>(id, (ctx) => [ctx.hide, ctx.children]);
 
-                    return TreeItem(
-                      key: ObjectKey(item),
-                      item: item,
-                    );
-                  },
+          return Visibility(
+            visible: !treeContext.hide.value,
+            child: ListView.builder(
+              shrinkWrap: true,
+              physics: const ClampingScrollPhysics(),
+              itemCount: treeContext.children.value.length,
+              itemBuilder: (context, index) {
+                final item = treeContext.children.value[index];
+
+                return TreeItem(
+                  key: ObjectKey(item),
+                  item: item,
                 );
+              },
+            ),
+          );
         },
       ),
     );

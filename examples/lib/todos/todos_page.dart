@@ -11,11 +11,9 @@ class TodosPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: ReactterProvider(
+      child: ReactterProvider<TodosContext>(
         () => TodosContext(),
-        builder: (context, _) {
-          final todosCtx = context.use<TodosContext>();
-
+        builder: (todosCtx, context, _) {
           return DefaultTabController(
             length: TodoListType.values.length,
             child: Scaffold(
@@ -74,22 +72,24 @@ class TodosPage extends StatelessWidget {
                         const SizedBox(
                           height: 16,
                         ),
-                        ReactterBuilder<TodosContext>(
-                          listenHooks: (ctx) => [ctx.state],
-                          builder: (ctx, context, child) {
+                        Builder(
+                          builder: (context) {
+                            context.watch<TodosContext>((ctx) => [ctx.state]);
+
                             return TabBar(
-                              onTap: (index) => ctx.filterBy(index),
+                              onTap: (index) => todosCtx.filterBy(index),
                               tabs: [
                                 Tab(
-                                  text: "All(${ctx.state.value.todos.length})",
+                                  text:
+                                      "All(${todosCtx.state.value.todos.length})",
                                 ),
                                 Tab(
                                   text:
-                                      "Done(${ctx.getTodosBy(TodoListType.done).length})",
+                                      "Done(${todosCtx.getTodosBy(TodoListType.done).length})",
                                 ),
                                 Tab(
                                   text:
-                                      "Pending(${ctx.getTodosBy(TodoListType.pending).length})",
+                                      "Pending(${todosCtx.getTodosBy(TodoListType.pending).length})",
                                 ),
                               ],
                             );
@@ -99,9 +99,10 @@ class TodosPage extends StatelessWidget {
                     ),
                   ),
                   Expanded(
-                    child: ReactterBuilder<TodosContext>(
-                      listenHooks: (ctx) => [ctx.state],
-                      builder: (todosCtx, context, _) {
+                    child: Builder(
+                      builder: (context) {
+                        context.watch<TodosContext>((ctx) => [ctx.state]);
+
                         final todoList = todosCtx.todosFiltered;
 
                         return SingleChildScrollView(

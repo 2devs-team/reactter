@@ -42,9 +42,12 @@ class ShoppingCartPage extends StatelessWidget {
                         child: CircleAvatar(
                           backgroundColor: Colors.amber,
                           radius: 8,
-                          child: ReactterBuilder<CartContext>(
-                            listenHooks: (ctx) => [ctx.quantityProducts],
-                            builder: (cartCtx, context, child) {
+                          child: Builder(
+                            builder: (context) {
+                              final cartCtx = context.watch<CartContext>(
+                                (ctx) => [ctx.quantityProducts],
+                              );
+
                               return Text(
                                 "${cartCtx.quantityProducts.value}",
                                 style: Theme.of(context)
@@ -62,8 +65,8 @@ class ShoppingCartPage extends StatelessWidget {
               ),
             ],
           ),
-          body: ReactterScope(
-            builder: (context, child) {
+          body: Builder(
+            builder: (context) {
               final productsCtx = context.watch<ProductsContext>();
               final products = productsCtx.products.value;
 

@@ -8,9 +8,9 @@ class AnimationPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ReactterProvider(
+    return ReactterProvider<AnimationContext>(
       () => AnimationContext(),
-      builder: (context, child) {
+      builder: (animationContext, context, child) {
         return Scaffold(
           appBar: AppBar(
             title: const Text("Animation"),
@@ -24,12 +24,15 @@ class AnimationPage extends StatelessWidget {
                 SizedBox.square(
                   dimension: 100,
                   child: Center(
-                    child: ReactterBuilder<AnimationContext>(
-                      listenHooks: (ctx) => [ctx.sizeAnimation],
-                      builder: (aniContext, context, child) {
+                    child: Builder(
+                      builder: (context) {
+                        context.watch<AnimationContext>(
+                          (ctx) => [ctx.sizeAnimation],
+                        );
+
                         return Container(
-                          width: aniContext.sizeAnimation.value,
-                          height: aniContext.sizeAnimation.value,
+                          width: animationContext.sizeAnimation.value,
+                          height: animationContext.sizeAnimation.value,
                           decoration: const BoxDecoration(
                             shape: BoxShape.circle,
                             color: Colors.blue,
@@ -39,46 +42,50 @@ class AnimationPage extends StatelessWidget {
                     ),
                   ),
                 ),
-                ReactterBuilder<AnimationContext>(
-                  listenHooks: (ctx) => [ctx.borderRadiusAnimation],
-                  builder: (aniContext, context, child) {
+                Builder(
+                  builder: (context) {
+                    context.watch<AnimationContext>(
+                      (ctx) => [ctx.borderRadiusAnimation],
+                    );
+
                     return Container(
                       width: 100,
                       height: 100,
                       decoration: BoxDecoration(
                         color: Colors.blue,
-                        borderRadius: aniContext.borderRadiusAnimation.value,
+                        borderRadius:
+                            animationContext.borderRadiusAnimation.value,
                       ),
                     );
                   },
                 ),
-                ReactterBuilder<AnimationContext>(
-                  listenHooks: (ctx) => [ctx.colorAnimation],
-                  builder: (aniContext, context, child) {
+                Builder(
+                  builder: (context) {
+                    context.watch<AnimationContext>(
+                      (ctx) => [ctx.colorAnimation],
+                    );
+
                     return Container(
                       width: 100,
                       height: 100,
-                      color: aniContext.colorAnimation.value,
+                      color: animationContext.colorAnimation.value,
                     );
                   },
                 ),
                 SizedBox.square(
                   dimension: 100,
                   child: Center(
-                    child: ReactterBuilder<AnimationContext>(
-                      listenHooks: (ctx) => [
-                        ctx.sizeAnimation,
-                        ctx.borderRadiusAnimation,
-                        ctx.colorAnimation
-                      ],
-                      builder: (aniContext, context, child) {
+                    child: Builder(
+                      builder: (context) {
+                        context.watch<AnimationContext>();
+
                         return Container(
-                          width: aniContext.sizeAnimation.value,
-                          height: aniContext.sizeAnimation.value,
+                          width: animationContext.sizeAnimation.value,
+                          height: animationContext.sizeAnimation.value,
                           decoration: BoxDecoration(
                             borderRadius:
-                                aniContext.borderRadiusAnimation.value,
-                            color: aniContext.colorAnimation.value,
+                                animationContext.borderRadiusAnimation.value,
+                            color: animationContext.colorAnimation.value,
                           ),
                         );
                       },

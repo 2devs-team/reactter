@@ -9,11 +9,9 @@ class TreePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ReactterProvider(
+    return ReactterProvider<TreeContext>(
       () => TreeContext(),
-      builder: (context, _) {
-        final treeContext = context.use<TreeContext>();
-
+      builder: (treeContext, context, _) {
         return Scaffold(
           appBar: AppBar(
             title: const Text("Tree widget"),
