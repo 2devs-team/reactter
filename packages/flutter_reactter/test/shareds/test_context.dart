@@ -7,6 +7,9 @@ class TestClass {
 }
 
 class TestContext extends ReactterContext {
+  final signalString = "initial".signal;
+  final signalInt = 0.signal;
+
   late final stateBool = UseState(false, this);
   late final stateString = UseState("initial", this);
   late final stateInt = UseState(0, this);

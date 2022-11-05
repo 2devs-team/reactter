@@ -12,26 +12,26 @@ void main() {
 
       await tester.pumpWidget(
         TestBuilder(
-          child: Builder(
-            builder: (context) {
-              try {
-                return ReactterNestedWidget(
-                  owner: ReactterProviderElement(
-                    ReactterProvider(
+          child: TestBuilder(
+            child: Builder(
+              builder: (context) {
+                try {
+                  return ReactterNestedWidget(
+                    owner: ReactterProvider(
+                      () => TestContext(),
+                      child: const SizedBox.shrink(),
+                    ) as ReactterProviderElement,
+                    wrappedWidget: ReactterProvider(
                       () => TestContext(),
                       child: const SizedBox.shrink(),
                     ),
-                  ),
-                  wrappedWidget: ReactterProvider(
-                    () => TestContext(),
-                    child: const SizedBox.shrink(),
-                  ),
-                ).build(context);
-              } catch (e) {
-                hasException = true;
-                return Text(e.toString());
-              }
-            },
+                  ).build(context);
+                } catch (e) {
+                  hasException = true;
+                  return Text(e.toString());
+                }
+              },
+            ),
           ),
         ),
       );

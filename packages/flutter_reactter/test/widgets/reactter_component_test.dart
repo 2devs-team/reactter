@@ -13,15 +13,17 @@ void main() {
     testWidgets("should renders and get instance", (tester) async {
       await tester.pumpWidget(
         TestBuilder(
-          child: ReactterComponentTest(
-            getInstance: (ctx) {
-              instanceObtained = ctx;
-            },
+          child: TestBuilder(
+            child: ReactterComponentTest(
+              getInstance: (ctx) {
+                instanceObtained = ctx;
+              },
+            ),
           ),
         ),
       );
 
-      _testReactterComponent(tester, instanceObtained);
+      _testReactterComponent(tester: tester, instance: instanceObtained);
     });
 
     testWidgets("should renders and gets instance by id", (tester) async {
@@ -42,7 +44,11 @@ void main() {
         ),
       );
 
-      _testReactterComponent(tester, instanceObtained, true);
+      _testReactterComponent(
+        tester: tester,
+        instance: instanceObtained,
+        byId: true,
+      );
     });
 
     testWidgets("should renders and gets instance without builder instance",
@@ -64,7 +70,7 @@ void main() {
         ),
       );
 
-      _testReactterComponent(tester, instanceObtained);
+      _testReactterComponent(tester: tester, instance: instanceObtained);
     });
 
     testWidgets("should renders and gets instance without listen hooks",
@@ -86,30 +92,46 @@ void main() {
         ),
       );
 
-      _testReactterComponent(tester, instanceObtained);
+      _testReactterComponent(
+        tester: tester,
+        instance: instanceObtained,
+        withoutListenHooks: true,
+      );
     });
   });
 }
 
-_testReactterComponent(
-  WidgetTester tester,
-  TestContext instance, [
+_testReactterComponent({
+  required WidgetTester tester,
+  required TestContext instance,
+  bool withoutListenHooks = false,
   bool byId = false,
-]) async {
+}) async {
   await tester.pumpAndSettle();
 
-  expect(find.text("stateBool: false"), findsOneWidget);
-  expect(
-      find.text(byId ? "stateString: from uniqueId" : "stateString: initial"),
-      findsOneWidget);
+  _expectInitial() {
+    expect(find.text("stateBool: false"), findsOneWidget);
+
+    if (byId) {
+      expect(find.text("stateString: from uniqueId"), findsOneWidget);
+    } else {
+      expect(find.text("stateString: initial"), findsOneWidget);
+    }
+  }
+
+  _expectInitial();
 
   instance.stateBool.value = true;
   instance.stateString.value = "new value";
 
   await tester.pumpAndSettle();
 
-  expect(find.text("stateBool: true"), findsOneWidget);
-  expect(find.text("stateString: new value"), findsOneWidget);
+  if (withoutListenHooks) {
+    _expectInitial();
+  } else {
+    expect(find.text("stateBool: true"), findsOneWidget);
+    expect(find.text("stateString: new value"), findsOneWidget);
+  }
 }
 
 class ReactterComponentTest extends StatelessWidget {
@@ -174,12 +196,7 @@ class ReactterComponentTestWithoutId extends ReactterComponent<TestContext> {
   Widget render(TestContext ctx, BuildContext context) {
     getInstance(ctx);
 
-    return Column(
-      children: [
-        Text("stateBool: ${ctx.stateBool.value}"),
-        Text("stateString: ${ctx.stateString.value}"),
-      ],
-    );
+    return _buildWidget(ctx);
   }
 }
 
@@ -203,12 +220,7 @@ class ReactterComponentTestWithoutBuilder
   Widget render(TestContext ctx, BuildContext context) {
     getInstance(ctx);
 
-    return Column(
-      children: [
-        Text("stateBool: ${ctx.stateBool.value}"),
-        Text("stateString: ${ctx.stateString.value}"),
-      ],
-    );
+    return _buildWidget(ctx);
   }
 }
 
@@ -232,12 +244,7 @@ class ReactterComponentTestWithoutListenHooks
   Widget render(TestContext ctx, BuildContext context) {
     getInstance(ctx);
 
-    return Column(
-      children: [
-        Text("stateBool: ${ctx.stateBool.value}"),
-        Text("stateString: ${ctx.stateString.value}"),
-      ],
-    );
+    return _buildWidget(ctx);
   }
 }
 
@@ -254,20 +261,24 @@ class ReactterComponentTestAll extends ReactterComponent<TestContext> {
   final String? id;
 
   @override
-  get builder => () => TestContext();
+  get listenAllHooks => true;
 
   @override
-  get listenHooks => (ctx) => [ctx.stateBool, ctx.stateString];
+  get builder => () => TestContext();
 
   @override
   Widget render(TestContext ctx, BuildContext context) {
     getInstance(ctx);
 
-    return Column(
-      children: [
-        Text("stateBool: ${ctx.stateBool.value}"),
-        Text("stateString: ${ctx.stateString.value}"),
-      ],
-    );
+    return _buildWidget(ctx);
   }
+}
+
+Widget _buildWidget(TestContext ctx) {
+  return Column(
+    children: [
+      Text("stateBool: ${ctx.stateBool.value}"),
+      Text("stateString: ${ctx.stateString.value}"),
+    ],
+  );
 }

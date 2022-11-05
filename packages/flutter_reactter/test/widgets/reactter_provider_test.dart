@@ -12,12 +12,14 @@ void main() {
       late TestContext instanceObtained;
 
       await tester.pumpWidget(
-        ReactterProviderBuilder(
-          builder: (BuildContext context, Widget? child) {
-            instanceObtained = context.use<TestContext>();
+        TestBuilder(
+          child: ReactterProviderBuilder(
+            builder: (_, context, child) {
+              instanceObtained = context.use<TestContext>();
 
-            return Text("stateString: ${instanceObtained.stateString.value}");
-          },
+              return Text("stateString: ${instanceObtained.stateString.value}");
+            },
+          ),
         ),
       );
 
@@ -33,13 +35,15 @@ void main() {
       late TestContext instanceObtained;
 
       await tester.pumpWidget(
-        ReactterProviderBuilder(
-          id: "uniqueId",
-          builder: (BuildContext context, Widget? child) {
-            instanceObtained = context.use<TestContext>("uniqueId");
+        TestBuilder(
+          child: ReactterProviderBuilder(
+            id: "uniqueId",
+            builder: (_, context, child) {
+              instanceObtained = context.use<TestContext>("uniqueId");
 
-            return Text("stateString: ${instanceObtained.stateString.value}");
-          },
+              return Text("stateString: ${instanceObtained.stateString.value}");
+            },
+          ),
         ),
       );
       await tester.pumpAndSettle();
@@ -54,18 +58,21 @@ void main() {
       late TestContext instanceObtained;
 
       await tester.pumpWidget(
-        ReactterProviderBuilder(
-          builder: (BuildContext context, Widget? child) {
-            instanceObtained = context
-                .watch<TestContext>((ctx) => [ctx.stateString, ctx.stateBool]);
+        TestBuilder(
+          child: ReactterProviderBuilder(
+            builder: (_, BuildContext context, Widget? child) {
+              instanceObtained = context.watch<TestContext>(
+                (ctx) => [ctx.stateString, ctx.stateBool],
+              );
 
-            return Column(
-              children: [
-                Text("stateString: ${instanceObtained.stateString.value}"),
-                Text("stateBool: ${instanceObtained.stateBool.value}"),
-              ],
-            );
-          },
+              return Column(
+                children: [
+                  Text("stateString: ${instanceObtained.stateString.value}"),
+                  Text("stateBool: ${instanceObtained.stateBool.value}"),
+                ],
+              );
+            },
+          ),
         ),
       );
       await tester.pumpAndSettle();
@@ -89,21 +96,23 @@ void main() {
       late TestContext instanceObtained;
 
       await tester.pumpWidget(
-        ReactterProviderBuilder(
-          id: "uniqueId",
-          builder: (BuildContext context, Widget? child) {
-            instanceObtained = context.watchId<TestContext>(
-              "uniqueId",
-              (ctx) => [ctx.stateString, ctx.stateBool],
-            );
+        TestBuilder(
+          child: ReactterProviderBuilder(
+            id: "uniqueId",
+            builder: (_, BuildContext context, Widget? child) {
+              instanceObtained = context.watchId<TestContext>(
+                "uniqueId",
+                (ctx) => [ctx.stateString, ctx.stateBool],
+              );
 
-            return Column(
-              children: [
-                Text("stateString: ${instanceObtained.stateString.value}"),
-                Text("stateBool: ${instanceObtained.stateBool.value}"),
-              ],
-            );
-          },
+              return Column(
+                children: [
+                  Text("stateString: ${instanceObtained.stateString.value}"),
+                  Text("stateBool: ${instanceObtained.stateBool.value}"),
+                ],
+              );
+            },
+          ),
         ),
       );
       await tester.pumpAndSettle();
@@ -140,7 +149,7 @@ void main() {
           child: ReactterProvider(
             () => TestContext(),
             child: const Text("child2"),
-            builder: (context, child) {
+            builder: (_, context, child) {
               if (child != null) return child;
               return const SizedBox.shrink();
             },

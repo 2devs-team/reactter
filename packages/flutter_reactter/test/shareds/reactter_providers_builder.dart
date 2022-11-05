@@ -24,10 +24,12 @@ class _ReactterProvidersBuilderState extends State<ReactterProvidersBuilder> {
           init: true,
         ),
         ReactterProvider(
-          () => TestContext(),
+          () {
+            final ctx = TestContext();
+            ctx.stateString.value = "from uniqueId";
+            return ctx;
+          },
           id: 'uniqueId',
-          onInit: (TestContext inst) =>
-              inst.stateString.value = "from uniqueId",
         ),
       ],
       builder: widget.builder,
