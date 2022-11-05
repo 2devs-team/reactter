@@ -65,5 +65,6 @@ class _ReactterWatcherState extends State<ReactterWatcher>
     for (var signal in _signals) {
       Reactter.off(signal, Lifecycle.didUpdate, _onSignalDidUpdate);
     }
+    _signals.clear();
   }
 }
