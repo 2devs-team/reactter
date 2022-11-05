@@ -7,7 +7,7 @@ abstract class ReactterWrapperWidget implements Widget {
 }
 
 /// Mixin to [ReactterWrapperWidget]'s Element
-mixin ReactterWrapperElementMixin<T extends StatelessWidget> on Element {
+mixin ReactterWrapperElementMixin<T extends Widget> on Element {
   ReactterNestedElement? parent;
 
   final nodes = <ReactterNestedElement>{};
