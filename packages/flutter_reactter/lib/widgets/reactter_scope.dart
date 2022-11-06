@@ -1,6 +1,6 @@
 part of '../widgets.dart';
 
-/// A wrapper [StatelessWidget] that helps to control re-rendered of widget tree.
+/// A [StatelessWidget] that helps to control re-builder of widget tree.
 ///
 /// **NOTE:** The [builder] callback will be rebuild, when the [ReactterContext] changes.
 /// For this to happen, the [ReactterContext] should put it on listens
@@ -10,20 +10,22 @@ part of '../widgets.dart';
 /// ReactterScope(
 ///   build: (context, child) {
 ///     final appContext = context.watch<AppContext>();
+///
 ///     return Text("AppContext's state: ${appContext.stateHook.state}");
 ///   }
 /// )
 /// ```
 ///
-/// If you don't want to rebuild a part of [builder] callback, use the [child]
-/// property, it's more efficient to build that subtree once instead of
-/// rebuilding it on every [ReactterContext] changes.
+/// **CONSIDER** Use [child] property to pass a [Widget] that
+/// you want to build it once. The [ReactterScope] pass it through
+/// the [builder] callback, so you can incorporate it into your build:
 ///
 /// ```dart
 /// ReactterScope(
 ///   child: Text("This widget build only once"),
 ///   builder: (context, child) {
 ///     final appContext = context.watch<AppContext>();
+///
 ///     return Column(
 ///       children: [
 ///         Text("state: ${appContext.stateHook.value}"),
