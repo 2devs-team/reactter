@@ -1,6 +1,6 @@
 part of '../widgets.dart';
 
-/// A wrapper [StatelessWidget] that allows to use multiple [ReactterProvider] as nested way.
+/// A [StatelessWidget] that allows to use multiple [ReactterProvider] as nested way.
 ///
 /// ```dart
 /// ReactterProviders(
@@ -11,6 +11,7 @@ part of '../widgets.dart';
 ///   builder: (context, child) {
 ///     final appContext = context.read<AppContext>();
 ///     final appContextWithId = context.watchId<AppContext>("uniqueId");
+///
 ///     return Column(
 ///       children: [
 ///         Text("AppContext's state: ${appContext.stateHook.value}"),
@@ -21,9 +22,9 @@ part of '../widgets.dart';
 /// )
 /// ```
 ///
-/// If you don't want to rebuild a part of [builder] callback, use the [child]
-/// property, it's more efficient to build that subtree once instead of
-/// rebuilding it on every [ReactterContext] changes.
+/// **CONSIDER** Use [child] property to pass a [Widget] that
+/// you want to build it once. The [ReactterProviders] pass it through
+/// the [builder] callback, so you can incorporate it into your build:
 ///
 /// ```dart
 /// ReactterProviders(
@@ -35,6 +36,7 @@ part of '../widgets.dart';
 ///   builder: (context, child) {
 ///     final appContext = context.read<AppContext>();
 ///     final appContextWithId = context.watchId<AppContext>("uniqueId");
+///
 ///     return Column(
 ///       children: [
 ///         child,
