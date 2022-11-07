@@ -133,9 +133,9 @@ There are a few common scenarios:
     return ReactterProvider(
       () => AppContext(),
       // we use `builder` to obtain a new `BuildContext` that has access to the provider
-      builder: (context) {
+      builder: (appContext, context, child) {
         // No longer throws
-        return Text(context.watch<AppContext>().state.value),
+        return Text(appContext.state.value),
       }
     ),
   }
