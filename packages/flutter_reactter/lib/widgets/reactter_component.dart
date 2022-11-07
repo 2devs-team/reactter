@@ -1,7 +1,8 @@
 part of '../widgets.dart';
 
-/// A abstract [StatelessWidget] class that provides the functionality of [ReactterProvider]
-/// with a [ReactterContext] of [T], and exposes it through [render] method.
+/// A abstract [StatelessWidget] class that provides
+/// the functionality of [ReactterProvider] with a [ReactterContext] of [T],
+/// and exposes it through [render] method.
 ///
 /// ```dart
 /// class App extends ReactterComponent<AppContext> {
@@ -16,11 +17,56 @@ part of '../widgets.dart';
 ///   }
 /// }
 /// ```
+///
+/// If you don't use [builder] getter, the instance of [T] is not created
+/// and is instead tried to be found it in the nearest ancestor
+/// where it was created.
+///
+/// Use [id] getter to create or find a instances of [T] with an identify:
+///
+/// ```dart
+/// class App extends ReactterComponent<AppContext> {
+///   @override
+///   get id => "uniqueId";
+///   ...
+/// }
+/// ```
+///
+/// Use [listenHooks] getter to listen hooks, and when it changed,
+/// [ReactterComponent]'s [render] re-built:
+///
+/// ```dart
+/// class App extends ReactterComponent<AppContext> {
+///   @override
+///   get listenHooks => (ctx) => [ctx.stateA, ctx.stateB];
+///   ...
+/// }
+/// ```
+///
+/// Use [listenAllHooks] getter as true to listen all hooks, and when it changed,
+/// [ReactterComponent]'s [render] re-built:
+///
+/// ```dart
+/// class App extends ReactterComponent<AppContext> {
+///   @override
+///   get listenAllHook => true;
+///   ...
+/// }
+/// ```
+///
+/// **CONSIDER:** Dont's use [ReactterContext] with constructor parameters
+/// to prevent conflicts.
+///
+/// See also:
+///
+/// * [ReactterProvider], a [StatelessWidget] that provides a [ReactterContext]'s instance of [T]
+/// to widget tree that can be access through the [BuildContext].
+/// * [ReactterContext], a base-class that allows to manages the [ReactterHook]s.
 abstract class ReactterComponent<T extends ReactterContext>
     extends StatelessWidget {
   const ReactterComponent({Key? key}) : super(key: key);
 
-  /// Id of [T].
+  /// Id for instance of [T].
   String? get id => null;
 
   /// How to builder the instance of [T].
