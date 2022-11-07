@@ -2,6 +2,8 @@
 
 part of '../widgets.dart';
 
+/// An abstract class that extends [InheritedWidget] and implements
+/// [ReactterWrapperWidget].
 abstract class ReactterProviderAbstraction<T extends ReactterContext>
     extends InheritedWidget implements ReactterWrapperWidget {
   const ReactterProviderAbstraction({
@@ -12,48 +14,84 @@ abstract class ReactterProviderAbstraction<T extends ReactterContext>
   ReactterProviderElement createElement();
 }
 
-/// A wrapper [StatelessWidget] that provides a [ReactterContext]'s instance of [T]
+/// A [StatelessWidget] that provides a [ReactterContext]'s instance of [T]
 /// to widget tree that can be access through the [BuildContext].
 ///
 ///```dart
-/// ReactterProvider(
+/// ReactterProvider<AppContext>(
 ///   () => AppContext(),
-///   builder: (context, child) {
-///     final appContext = context.watch<AppContext>();
-///     return Text("state: ${appContext.stateHook.value}");
+///   builder: (appContext, context, child) {
+///     return Text("StateA: ${appContext.stateA.value}");
 ///   },
 /// )
 ///```
 ///
-/// **IMPORTANT:** Don's use [ReactterContext] with constructor parameters to prevent conflicts.
-/// Instead of it, use [onInit] method to access its instance and put the data you need.
+/// Use [id] property for create a different instances of [ReactterContext].
 ///
-/// **NOTE:** [ReactteProvider] is a "scoped". So it contains a [ReactterScope]
-/// which the [builder] callback will be rebuild, when the [ReactterContext] changes.
-/// For this to happen, the [ReactterContext] should put it on listens
-/// for [BuildContext]'s [watch]ers.
+/// **CONSIDER:** Dont's use [ReactterContext] with constructor parameters
+/// to prevent conflicts.
 ///
-/// If you want to create a different [ReactterContext]'s instance, use [id] parameter.
-///
-/// If you don't want to rebuild a part of [builder] callback, use the [child]
-/// property, it's more efficient to build that subtree once instead of
-/// rebuilding it on every [ReactterContext] changes.
+/// **CONSIDER** Use [child] property to pass a [Widget] that
+/// you want to build it once. The [ReactterProvider] pass it through
+/// the [builder] callback, so you can incorporate it into your build:
 ///
 ///```dart
-/// ReactterProvider(
+/// ReactterProvider<AppContext>(
 ///   () => AppContext(),
 ///   child: Text("This widget build only once"),
 ///   builder: (context, child) {
 ///     final appContext = context.watch<AppContext>();
+///
 ///     return Column(
 ///       children: [
-///         Text("state: ${appContext.stateHook.value}"),
+///         Text("state: ${appContext.stateA.value}"),
 ///         child,
 ///       ],
 ///     );
 ///   },
 /// )
 ///```
+///
+/// **NOTE:** [ReactterProvider] is a "scoped". This mean that [ReactterProvider]
+/// exposes the [ReactterContext] defined on first parameter([InstanceBuilder])
+/// through the [BuildContext] in the widget subtree:
+///
+///```dart
+/// ReactterProvider<AppContext>(
+///   () => AppContext(),
+///   builder: (appContext, context, child) {
+///     return OtherWidget();
+///   }
+/// );
+///
+/// class OtherWidget extends StatelessWidget {
+///   ...
+///   Widget build(context) {
+///      final appContext = context.use<AppContext>();
+///
+///      return Column(
+///       children: [
+///         Text("StateA: ${appContext.stateA.value}"),
+///         Builder(
+///           builder: (context){
+///             context.watch<AppContext>((ctx) => [ctx.stateB]);
+///
+///             return Text("StateB: ${appContext.stateB.value}");
+///           },
+///         ),
+///       ],
+///     );
+///   }
+/// }
+///```
+///
+/// In the above example, stateA remains static while the [Builder] is rebuilt
+/// according to the changes in stateB. Because the [Builder]'s context kept in
+/// watch of stateB.
+///
+/// See also:
+///
+/// * [ReactterContext], a base-class that allows to manages the [ReactterHook]s.
 class ReactterProvider<T extends ReactterContext>
     extends ReactterProviderAbstraction {
   final String? id;
@@ -81,7 +119,11 @@ class ReactterProvider<T extends ReactterContext>
     this.init = false,
     Widget? child,
     this.builder,
-  }) : super(key: key, child: child ?? const _UndefinedWidget());
+  }) : super(
+          key: key,
+          // `child` is required because the super class is a InheritedWidget.
+          child: child ?? const _UndefinedWidget(),
+        );
 
   Widget build(BuildContext context) {
     return _buildWithChild(child is _UndefinedWidget ? null : child);
@@ -92,6 +134,9 @@ class ReactterProvider<T extends ReactterContext>
     return ReactterProviderElement<T>(widget: this, id: id);
   }
 
+  /// This is a hack to save it and find it with the `id` distinction
+  /// in `_inheritedWidgets` of `Element` using the helper functions
+  /// of `BuildContext` like `getElementForInheritedWidgetOfExactType`.
   @override
   Type get runtimeType {
     Type getType<TT>() => TT;
@@ -121,8 +166,8 @@ class ReactterProvider<T extends ReactterContext>
     );
   }
 
-  /// Returns a [_instance] of [T]
-  /// and puts contexts listen to when it should be re-rendered
+  /// Returns an instance of [T]
+  /// and sets the `BuildContext` to listen for when it should be re-rendered.
   static T contextOf<T extends ReactterContext?>(
     BuildContext context, {
     String? id,
@@ -142,6 +187,9 @@ class ReactterProvider<T extends ReactterContext>
       return instance;
     }
 
+    /// A way to tell the `BuildContext` that it should be re-rendered
+    /// when the `ReactterInstance` or the `ReactterHook`s that are being listened
+    /// change.
     context.dependOnInheritedElement(
       providerInheritedElement!,
       aspect: ReactterDependency<T?>(
@@ -155,13 +203,14 @@ class ReactterProvider<T extends ReactterContext>
   }
 
   /// Returns the `ReactterProviderElement` of the `ReactterProvider` that is
-  /// closest to the `BuildContext` that is passed in args.
+  /// closest to the `BuildContext` that was passed as arguments.
   static ReactterProviderElement?
       _getProviderInheritedElement<T extends ReactterContext?>(
-          BuildContext context,
-          [String? id]) {
+    BuildContext context, [
+    String? id,
+  ]) {
+    // To find it with id, is O(2) complexity(O(1)*2)
     if (id != null) {
-      // O(2)
       final inheritedElementNotSure =
           context.getElementForInheritedWidgetOfExactType<
               _ReactterProviderKey<T, String>>() as ReactterProviderElement<T>?;
@@ -169,7 +218,7 @@ class ReactterProvider<T extends ReactterContext>
       return inheritedElementNotSure?.getInheritedElementOfExactId(id);
     }
 
-    // O(1)
+    // To find it without id, is O(1) complexity
     return context.getElementForInheritedWidgetOfExactType<
         _ReactterProviderKey<T, Null>>() as ReactterProviderElement<T>?;
   }
@@ -180,6 +229,8 @@ class ReactterProvider<T extends ReactterContext>
   }
 }
 
+/// `ReactterProviderElement` is a class that manages the lifecycle of the `ReactterInstance` and
+/// provides the `ReactterInstance` to its descendants
 class ReactterProviderElement<T extends ReactterContext?>
     extends InheritedElement
     with ReactterWrapperElementMixin, ReactterScopeElementMixin {
