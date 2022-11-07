@@ -1,5 +1,7 @@
 part of '../../widgets.dart';
 
+/// A class that holds a reference to a state or an instance, and it can add and remove listeners
+/// to the state or instance
 class ReactterDependency<T> {
   final String? _id;
   Object? _instance;
@@ -16,7 +18,8 @@ class ReactterDependency<T> {
         _states = states;
 
   void _addListener(
-      CallbackEvent<ReactterHookManager, ReactterState> callback) {
+    CallbackEvent<ReactterHookManager, ReactterState> callback,
+  ) {
     if (_states != null) {
       for (final state in _states!) {
         Reactter.on(state, Lifecycle.didUpdate, callback);
