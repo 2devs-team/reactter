@@ -1,5 +1,7 @@
 part of '../../widgets.dart';
 
+/// A mixin that helps to manages dependencies
+/// and notify when should be updated its dependencies.
 mixin ReactterScopeElementMixin on InheritedElement {
   bool _updatedShouldNotify = false;
   final HashSet<Object> _instanceOrStatesDirty = HashSet();
