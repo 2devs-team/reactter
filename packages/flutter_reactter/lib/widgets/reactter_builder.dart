@@ -1,33 +1,31 @@
 part of '../widgets.dart';
 
-/// A wrapper [StatelessWidget] that gets the [ReactterContext]'s instance of [T]
-/// from the closest ancestor of [ReactterProvider]
-/// and exposes it through the first parameter of [builder] callback.
+/// A [StatelessWidget] that gets the [ReactterContext]'s instance of [T]
+/// from the closest ancestor of [ReactterProvider] and exposes it through
+/// the first parameter of [builder] callback.
 ///
 /// ```dart
 /// ReactterBuilder<AppContext>(
 ///   builder: (appContext, context, child) {
-///     return Text("state: ${appContext.stateHook.value}");
+///     return Text("state: ${appContext.stateA.value}");
 ///   },
 /// )
 /// ```
 ///
-/// **NOTE**: [ReactterBuilder] is read-only by default, this means it only renders once.
+/// **NOTE**: [ReactterBuilder] is read-only by default, this means it
+/// only renders once.
 ///
-/// **NOTE:** [ReactterBuilder] is a "scoped". So it contains a [ReactterScope]
-/// which the [builder] callback will be rebuild, when the `ReactterContext` changes.
-/// For this to happen, the [ReactterContext] should put it on listens
-/// for [BuildContext]'s [watch]ers.
+/// Use [id] property to find a instances of [T] with an identify.
 ///
-/// If you want to listen for all [ReactterContext]'s changes
-/// to re-render [builder] callback, use [listenAllHooks] property as `true`.
+/// Use [listenHooks] property to listen hooks, and when it changed,
+/// [ReactterBuilder]'s [builder] callback re-built.
 ///
-/// If you want to listen for some [ReactterContext]'s [ReactterHook]
-/// to re-render [builder] callback, use [listenHooks].
+/// Use [listenAllHooks] property as true to listen all hooks, and when
+/// it changed, [ReactterBuilder]'s [builder] callback re-built.
 ///
-/// If you don't want to rebuild a part of [builder] callback, use the [child]
-/// property, it's more efficient to build that subtree once instead of
-/// rebuilding it on every [ReactterContext] changes.
+/// **CONSIDER** Use [child] property to pass a [Widget] that
+/// you want to build it once. The [ReactterBuilder] pass it through
+/// the [builder] callback, so you can incorporate it into your build:
 ///
 /// ```dart
 /// ReactterBuilder<AppContext>(
@@ -43,6 +41,13 @@ part of '../widgets.dart';
 ///   },
 /// )
 /// ```
+///
+/// See also:
+///
+/// * [ReactterProvider], a [StatelessWidget] that provides a
+/// [ReactterContext]'s instance of [T] to widget tree that can be access
+/// through the [BuildContext].
+/// * [ReactterContext], a base-class that allows to manages the [ReactterHook]s.
 ///
 class ReactterBuilder<T extends ReactterContext?> extends StatelessWidget {
   /// Provides a widget , which render only once.
