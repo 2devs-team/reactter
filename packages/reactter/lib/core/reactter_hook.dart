@@ -1,8 +1,8 @@
 part of '../core.dart';
 
-/// Provides the functionality of [ReactterHookManager].
-///
-/// Depends on a [ReactterHookManager] to listen this hook
+/// An abstract-class to provides the functionality of [ReactterHookManager]
+/// and is added as a dependency of another [ReactterHookManager]
+/// behaving as a state.
 ///
 /// This is an example of how to create a custom hook:
 ///
@@ -40,7 +40,8 @@ part of '../core.dart';
 /// ```
 ///
 /// See also:
-/// - [ReactterHookManager]
+///
+/// * [ReactterHookManager], a abstract-class to manager hooks([ReactterHook]).
 abstract class ReactterHook extends ReactterHookManager with ReactterState {
   ReactterHook(ReactterHookManager? context) {
     context?.listenHooks([this]);
