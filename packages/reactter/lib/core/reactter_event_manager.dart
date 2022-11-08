@@ -1,7 +1,7 @@
 // ignore_for_file: constant_identifier_names, avoid_print
 part of '../core.dart';
 
-/// A event manager
+/// A mixin-class to provides the ability to manager events
 mixin ReactterEventManager {
   /// Event's store.
   HashMap<String, HashMap<Enum, HashSet<Function>>> _events = HashMap();
@@ -88,6 +88,7 @@ mixin ReactterEventManager {
     }
   }
 
+  /// Trigger [eventName] event with or without the [param] given as async way.
   Future<void> emitAsync(
     Object? instance,
     Enum eventName, [
