@@ -27,7 +27,6 @@ void _testContext([String? id]) {
   Reactter
     ..unregister<TestContext>(id)
     ..delete<TestContext>(id);
-  testContext.dispose();
 }
 
 void _testContextLate([String? id]) {
@@ -44,7 +43,6 @@ void _testContextLate([String? id]) {
   Reactter
     ..unregister<TestContext>(id)
     ..delete<TestContext>(id);
-  testContext.dispose();
 
   expectLater(instance, isA<TestContext>());
 }

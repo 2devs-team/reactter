@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_null_comparison
+
 import 'package:reactter/reactter.dart';
 import 'package:test/test.dart';
 

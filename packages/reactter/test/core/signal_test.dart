@@ -96,11 +96,9 @@ void main() {
     test("should be able to used on ReactterContext", () {
       late final willUpdateChecked;
       late final didUpdateChecked;
-      late final destroyedChecked;
 
-      Reactter.register(builder: () => TestContext());
-
-      final testContext = Reactter.get<TestContext>()!;
+      final testContext =
+          Reactter.create<TestContext>(builder: () => TestContext())!;
       final signalString = testContext.signalString;
 
       expect(signalString(), "initial");
@@ -117,11 +115,9 @@ void main() {
       expectLater(willUpdateChecked, true);
       expectLater(didUpdateChecked, true);
 
-      Reactter.one(signalString, Lifecycle.destroyed, (_, __) {
-        destroyedChecked = true;
-      });
-
-      Reactter.delete<TestContext>();
+      Reactter
+        ..unregister<TestContext>()
+        ..delete<TestContext>();
 
       expect(
         () => signalString("throw a assertion error"),
