@@ -1,5 +1,6 @@
 part of '../core.dart';
 
+/// A mixin-class Provides the ability to notify listeners when the state changes.
 mixin ReactterNotifyManager {
   bool _isDisposed = false;
   bool _isUpdating = false;
@@ -75,11 +76,6 @@ mixin ReactterNotifyManager {
   /// Called when this object is removed
   @mustCallSuper
   void dispose() {
-    _dispose();
-  }
-
-  @mustCallSuper
-  void _dispose() {
     _isDisposed = true;
   }
 }
