@@ -1,5 +1,6 @@
 part of '../core.dart';
 
+/// A mixin-class to provides features of a state
 mixin ReactterState on ReactterNotifyManager {
   bool _shouldNotifyInstance = false;
 
@@ -30,6 +31,8 @@ mixin ReactterState on ReactterNotifyManager {
       Reactter.off(_instance, Lifecycle.destroyed, _onInstanceDestroyed);
     }
     _instance = null;
+
+    Reactter.dispose(this);
   }
 
   void _notify(Enum event) {
@@ -46,10 +49,5 @@ mixin ReactterState on ReactterNotifyManager {
     if (_shouldNotifyInstance) {
       await Reactter.emitAsync(_instance!, event, this);
     }
-  }
-
-  void _dispose() {
-    Reactter.dispose(this);
-    super._dispose();
   }
 }
