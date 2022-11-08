@@ -29,16 +29,13 @@ enum Lifecycle {
   destroyed,
 }
 
-/// A hook manager.
+/// A abstract-class to manager hooks([ReactterHook]).
 ///
-/// Use [listenHooks] to watch hooks([ReactterHook])
-/// and notify when it has changed.
-///
-/// Exposes two methods [_onHookWillUpdate] and [_onHookDidUpdate]
-/// to subscribe and notify when any hooks has changed.
+/// Use [listenHooks] to watch [ReactterHook]s and notify when it has changed.
 ///
 /// See also:
-/// - [ReactterHook], a abstract hook that [ReactterHookManager] listen it.
+///
+/// * [ReactterHook], a abstract hook that [ReactterHookManager] listen it.
 abstract class ReactterHookManager with ReactterNotifyManager {
   bool _isCreated = false;
 
