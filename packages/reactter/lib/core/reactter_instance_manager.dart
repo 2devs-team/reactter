@@ -1,7 +1,7 @@
 // ignore_for_file: constant_identifier_names, avoid_print
 part of '../core.dart';
 
-/// A instances manager
+/// A mixin-class to provides the ability to manager instances.
 mixin ReactterInstanceManager {
   final HashMap<String, ReactterInstance> _instances = HashMap();
 
