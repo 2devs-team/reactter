@@ -525,7 +525,6 @@ extension ObjStringExt on Obj<String> {
   /// ```
   /// This function uses the language independent Unicode mapping and thus only
   /// works in some languages.
-  // TODO(floitsch): document better. (See EcmaScript for description).
   String toLowerCase() => value.toLowerCase();
 
   /// Converts all characters in this string to upper case.
@@ -537,7 +536,6 @@ extension ObjStringExt on Obj<String> {
   /// ```
   /// This function uses the language independent Unicode mapping and thus only
   /// works in some languages.
-  // TODO(floitsch): document better. (See EcmaScript for description).
   String toUpperCase() => value.toUpperCase();
 }
 
@@ -1044,7 +1042,6 @@ extension ObjStringNullExt on Obj<String?> {
   /// ```
   /// This function uses the language independent Unicode mapping and thus only
   /// works in some languages.
-  // TODO(floitsch): document better. (See EcmaScript for description).
   String? toLowerCase() => value?.toLowerCase();
 
   /// Converts all characters in this string to upper case.
@@ -1056,6 +1053,5 @@ extension ObjStringNullExt on Obj<String?> {
   /// ```
   /// This function uses the language independent Unicode mapping and thus only
   /// works in some languages.
-  // TODO(floitsch): document better. (See EcmaScript for description).
   String? toUpperCase() => value?.toUpperCase();
 }

@@ -1,5 +1,43 @@
 part of '../../core.dart';
 
+/// A base-class that can be used to store a value of [T].
+///
+/// You can create a new [Obj]:
+///
+/// ```dart
+/// // usign `.obj` extension
+/// final strObj = "initial value".obj;
+/// final intObj = 0.obj;
+/// final userObj = User().obj;
+///
+/// // or usign the constructor class
+/// final strObj = Obj<String>("initial value");
+/// final intObj = Obj<int>(0);
+/// final userObj = Obj<User>(User());
+/// ```
+///
+/// You can get the [value]:
+///
+/// ```dart
+/// // usign a `value` getter
+/// print(strObj.value);
+///
+/// // or using the callable
+/// print(strObj());
+///
+/// // or using `toString` implicit
+/// print("$strObj");
+/// ```
+///
+/// You can set a new [value]:
+///
+/// ```dart
+/// // usign a `value` setter
+/// strObj.value = "change value";
+///
+/// // or using the callable
+/// strObj("change value");
+/// ```
 class Obj<T> {
   T value;
 
@@ -43,9 +81,12 @@ class Obj<T> {
 }
 
 extension ObjNullExt<T> on Obj<T?> {
+  /// Returns a new `Obj<T>` with the value of the current `Obj<T?>`
+  /// if it's not null.
   Obj<T> get notNull => Obj<T>(value!);
 }
 
 extension ObjGenericTypeExt<T> on T {
+  /// Allows you to call `.obj` on any object.
   Obj<T> get obj => Obj<T>(this);
 }
