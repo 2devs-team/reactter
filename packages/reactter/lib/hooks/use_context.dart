@@ -86,13 +86,18 @@ class UseContext<T extends ReactterContext> extends ReactterHook {
   }
 
   /// Call when this hook is no longer needed.
-  dispose() {
+  void dispose() {
     Reactter.off(ReactterInstance<T>(id), Lifecycle.initialized, _onInstance);
     Reactter.off(ReactterInstance<T>(id), Lifecycle.willMount, _onInstance);
     Reactter.off(ReactterInstance<T>(id), Lifecycle.destroyed, _onInstance);
 
-    _instance = null;
+    update(() {
+      _instance = null;
+    });
+
     _isDisposed = true;
+
+    super.dispose();
   }
 
   void _getInstance() {
@@ -102,6 +107,8 @@ class UseContext<T extends ReactterContext> extends ReactterHook {
   }
 
   void _onInstance(inst, param) {
+    if (_isDisposed) return;
+
     update(() {
       _instance = inst;
     });

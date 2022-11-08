@@ -131,7 +131,8 @@ class UseEffect extends ReactterHook {
       Lifecycle.willUnmount,
       _runCleanupAndUnwatchDependencies,
     );
-    Reactter.dispose(this);
+
+    super.dispose();
   }
 
   void _runCallbackAndWatchDependencies(_, __) {
