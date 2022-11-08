@@ -1,5 +1,6 @@
 part of '../core.dart';
 
+/// A singleton instance of [T]
 class ReactterInstance<T> {
   final String? id;
   ContextBuilder<T?>? _builder;
@@ -12,7 +13,10 @@ class ReactterInstance<T> {
 
   ReactterInstance([this.id, this._builder]);
 
+  /// A getter that returns the stored instance of [T].
   ReactterInstance? get stored => Reactter._instances[key];
+
+  /// Generating a unique key for a given object [T] and optional `id`
   String get key => generateKey<T?>(id);
 
   @override
@@ -24,6 +28,7 @@ class ReactterInstance<T> {
     return '$type$id$hashCode';
   }
 
+  /// It generates a unique key for a given object [T] and optional `id`
   static generateKey<T extends Object?>([String? id]) =>
       "${T.hashCode}${id != null ? '[$id]' : ''}";
 }
