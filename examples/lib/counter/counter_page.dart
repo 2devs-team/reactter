@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_reactter/flutter_reactter.dart';
 
-class CounterPage extends StatelessWidget {
-  CounterPage({Key? key}) : super(key: key);
+final count = 0.signal;
+void increase() => count.value++;
+void decrease() => count.value--;
 
-  final count = 0.signal;
-  void increase() => count.value += 1;
-  void decrease() => count.value -= 1;
+class CounterPage extends StatelessWidget {
+  const CounterPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -29,15 +29,15 @@ class CounterPage extends StatelessWidget {
             const SizedBox(height: 16),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: [
+              children: const [
                 ElevatedButton(
                   onPressed: decrease,
-                  child: const Text(" - Decrease"),
+                  child: Text(" - Decrease"),
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 ElevatedButton(
                   onPressed: increase,
-                  child: const Text("Increase +"),
+                  child: Text("Increase +"),
                 ),
               ],
             ),
