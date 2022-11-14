@@ -35,6 +35,12 @@ part of '../widgets.dart';
 ///   },
 /// )
 /// ```
+///
+/// See also:
+///
+/// * [ReactterContext], a base-class that allows to manages the [ReactterHook]s.
+@Deprecated(
+    "Use any Widget that exposes the ContextBuilder like `Build` instead.")
 class ReactterScope extends StatelessWidget {
   /// Provides a widget , which render one time.
   ///
