@@ -16,7 +16,7 @@ class TreeItem extends ReactterComponent<TreeContext> {
   String get id => "${item.hashCode}";
 
   @override
-  get listenHooks => (_) => [];
+  get listenStates => (_) => [];
 
   @override
   get builder => () => item;

@@ -32,24 +32,24 @@ part of '../widgets.dart';
 /// }
 /// ```
 ///
-/// Use [listenHooks] getter to listen hooks, and when it changed,
+/// Use [listenStates] getter to listen states, and when it changed,
 /// [ReactterComponent]'s [render] re-built:
 ///
 /// ```dart
 /// class App extends ReactterComponent<AppContext> {
 ///   @override
-///   get listenHooks => (ctx) => [ctx.stateA, ctx.stateB];
+///   get listenStates => (ctx) => [ctx.stateA, ctx.stateB];
 ///   ...
 /// }
 /// ```
 ///
-/// Use [listenAllHooks] getter as true to listen all hooks, and when it changed,
+/// Use [listenAll] getter as true to listen all states, and when it changed,
 /// [ReactterComponent]'s [render] re-built:
 ///
 /// ```dart
 /// class App extends ReactterComponent<AppContext> {
 ///   @override
-///   get listenAllHook => true;
+///   get listenAll => true;
 ///   ...
 /// }
 /// ```
@@ -72,10 +72,18 @@ abstract class ReactterComponent<T extends ReactterContext>
   /// How to builder the instance of [T].
   ContextBuilder<T>? get builder => null;
 
-  /// Listens hooks to re-render [render] method.
+  /// Listens states to re-build [render] method.
+  ListenStates<T>? get listenStates => null;
+
+  /// Watchs all states to re-build
+  bool get listenAll => false;
+
+  /// Listens hooks to re-build [render] method.
+  @Deprecated("Use`listenStates` instead.")
   ListenHooks<T>? get listenHooks => null;
 
-  /// Watchs all hooks to re-render
+  /// Watchs all hooks to re-build
+  @Deprecated("Use `listenAll` instead.")
   bool get listenAllHooks => false;
 
   /// Replaces a build method.
@@ -91,8 +99,10 @@ abstract class ReactterComponent<T extends ReactterContext>
   @mustCallSuper
   Widget build(BuildContext context) {
     assert(
-      (listenAllHooks && listenHooks == null) || !listenAllHooks,
-      "Can't use `listenAllHooks` with `listenHooks`",
+      ((listenAll || listenAllHooks) &&
+              (listenStates ?? listenHooks) == null) ||
+          !(listenAll || listenAllHooks),
+      "Can't use `listenAll` with `listenStates`",
     );
 
     if (builder == null) {
@@ -108,12 +118,13 @@ abstract class ReactterComponent<T extends ReactterContext>
   }
 
   T _getInstance(BuildContext context) {
-    if (listenHooks == null && !listenAllHooks) {
+    if ((listenStates ?? listenHooks) == null &&
+        !(listenAll || listenAllHooks)) {
       return context.use(id);
     }
 
     return id == null
-        ? context.watch<T>(listenHooks)
-        : context.watchId<T>(id!, listenHooks);
+        ? context.watch<T>(listenStates ?? listenHooks)
+        : context.watchId<T>(id!, listenStates ?? listenHooks);
   }
 }

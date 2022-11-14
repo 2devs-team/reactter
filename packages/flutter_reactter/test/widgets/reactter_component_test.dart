@@ -82,7 +82,7 @@ void main() {
           child: ReactterProvidersBuilder(
             builder: (_, __) {
               return ReactterComponentTest(
-                withoutListenHooks: true,
+                withoutListenStates: true,
                 getInstance: (ctx) {
                   instanceObtained = ctx;
                 },
@@ -95,7 +95,7 @@ void main() {
       _testReactterComponent(
         tester: tester,
         instance: instanceObtained,
-        withoutListenHooks: true,
+        withoutListenStates: true,
       );
     });
   });
@@ -104,7 +104,7 @@ void main() {
 _testReactterComponent({
   required WidgetTester tester,
   required TestContext instance,
-  bool withoutListenHooks = false,
+  bool withoutListenStates = false,
   bool byId = false,
 }) async {
   await tester.pumpAndSettle();
@@ -126,7 +126,7 @@ _testReactterComponent({
 
   await tester.pumpAndSettle();
 
-  if (withoutListenHooks) {
+  if (withoutListenStates) {
     _expectInitial();
   } else {
     expect(find.text("stateBool: true"), findsOneWidget);
@@ -140,11 +140,11 @@ class ReactterComponentTest extends StatelessWidget {
     this.id,
     required this.getInstance,
     this.withoutBuilder = false,
-    this.withoutListenHooks = false,
+    this.withoutListenStates = false,
   }) : super(key: key);
 
   final bool withoutBuilder;
-  final bool withoutListenHooks;
+  final bool withoutListenStates;
 
   final String? id;
   final void Function(TestContext ctx) getInstance;
@@ -158,8 +158,8 @@ class ReactterComponentTest extends StatelessWidget {
       );
     }
 
-    if (withoutListenHooks) {
-      return ReactterComponentTestWithoutListenHooks(
+    if (withoutListenStates) {
+      return ReactterComponentTestWithoutListenStates(
         id: id,
         getInstance: getInstance,
       );
@@ -190,7 +190,7 @@ class ReactterComponentTestWithoutId extends ReactterComponent<TestContext> {
   get builder => () => TestContext();
 
   @override
-  get listenHooks => (ctx) => [ctx.stateBool, ctx.stateString];
+  get listenStates => (ctx) => [ctx.stateBool, ctx.stateString];
 
   @override
   Widget render(TestContext ctx, BuildContext context) {
@@ -214,7 +214,7 @@ class ReactterComponentTestWithoutBuilder
   final String? id;
 
   @override
-  get listenHooks => (ctx) => [ctx.stateBool, ctx.stateString];
+  get listenStates => (ctx) => [ctx.stateBool, ctx.stateString];
 
   @override
   Widget render(TestContext ctx, BuildContext context) {
@@ -224,9 +224,9 @@ class ReactterComponentTestWithoutBuilder
   }
 }
 
-class ReactterComponentTestWithoutListenHooks
+class ReactterComponentTestWithoutListenStates
     extends ReactterComponent<TestContext> {
-  const ReactterComponentTestWithoutListenHooks({
+  const ReactterComponentTestWithoutListenStates({
     Key? key,
     this.id,
     required this.getInstance,
@@ -261,7 +261,7 @@ class ReactterComponentTestAll extends ReactterComponent<TestContext> {
   final String? id;
 
   @override
-  get listenAllHooks => true;
+  get listenAll => true;
 
   @override
   get builder => () => TestContext();

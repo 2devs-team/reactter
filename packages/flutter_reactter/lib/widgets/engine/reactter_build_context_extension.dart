@@ -4,7 +4,7 @@ part of '../../widgets.dart';
 extension ReactterBuildContextExtension on BuildContext {
   /// Gets the [ReactterContext]'s instance of [T]
   /// from the closest ancestor of [ReactterProvider] and watch all [ReactterHook]
-  /// or [ReactterHook] defined in first paramater([listenHooks])
+  /// or [ReactterHook] defined in first paramater([listenStates])
   /// to re-render the widget tree.
   ///
   /// ```dart
@@ -22,14 +22,14 @@ extension ReactterBuildContextExtension on BuildContext {
   /// This method is equivalent to calling:
   ///
   /// ```dart
-  /// ReactterProvider.contextOf<T>(context, listenHooks: listenHooks);
+  /// ReactterProvider.contextOf<T>(context, listenStates: listenStates);
   /// ```
-  T watch<T extends ReactterContext?>([ListenHooks<T>? listenHooks]) =>
-      ReactterProvider.contextOf<T>(this, listenHooks: listenHooks);
+  T watch<T extends ReactterContext?>([ListenStates<T>? listenStates]) =>
+      ReactterProvider.contextOf<T>(this, listenStates: listenStates);
 
   /// Gets the [ReactterContext]'s instance of [T]
   /// from the closest ancestor of [ReactterProvider] and watch all [ReactterHook]
-  /// or [ReactterHook] defined in second paramater([listenHooks])
+  /// or [ReactterHook] defined in second paramater([listenStates])
   /// to re-render the widget tree.
   ///
   /// ```dart
@@ -47,11 +47,13 @@ extension ReactterBuildContextExtension on BuildContext {
   /// This method is equivalent to calling:
   ///
   /// ```dart
-  /// ReactterProvider.contextOf<T>(context, listenHooks: listenHooks);
+  /// ReactterProvider.contextOf<T>(context, listenStates: listenStates);
   /// ```
-  T watchId<T extends ReactterContext?>(String id,
-          [ListenHooks<T>? listenHooks]) =>
-      ReactterProvider.contextOf<T>(this, id: id, listenHooks: listenHooks);
+  T watchId<T extends ReactterContext?>(
+    String id, [
+    ListenStates<T>? listenStates,
+  ]) =>
+      ReactterProvider.contextOf<T>(this, id: id, listenStates: listenStates);
 
   /// Gets the [ReactterContext]'s instance of [T] with/without [id]
   /// from the closest ancestor of [ReactterProvider].

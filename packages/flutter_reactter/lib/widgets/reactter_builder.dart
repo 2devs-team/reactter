@@ -17,10 +17,10 @@ part of '../widgets.dart';
 ///
 /// Use [id] property to find a instances of [T] with an identify.
 ///
-/// Use [listenHooks] property to listen hooks, and when it changed,
+/// Use [listenStates] property to listen states, and when it changed,
 /// [ReactterBuilder]'s [builder] callback re-built.
 ///
-/// Use [listenAllHooks] property as true to listen all hooks, and when
+/// Use [listenAll] property as true to listen all states, and when
 /// it changed, [ReactterBuilder]'s [builder] callback re-built.
 ///
 /// **CONSIDER** Use [child] property to pass a [Widget] that
@@ -29,7 +29,7 @@ part of '../widgets.dart';
 ///
 /// ```dart
 /// ReactterBuilder<AppContext>(
-///   listenAllHooks: true,
+///   listenAll: true,
 ///   child: Text("This widget build only once"),
 ///   builder: (appContext, context, child) {
 ///     return Column(
@@ -64,23 +64,35 @@ class ReactterBuilder<T extends ReactterContext?> extends StatelessWidget {
   /// Id of [T].
   final String? id;
 
-  /// Watchs all hooks to re-render
+  /// Watchs specific states to re-build
+  final ListenStates<T>? listenStates;
+
+  /// Watchs all states to re-build
+  final bool listenAll;
+
+  /// Watchs all hooks to re-build
+  @Deprecated("Use `listenAll` instead.")
   final bool listenAllHooks;
 
-  /// Watchs specific hooks to re-render
+  /// Watchs specific hooks to re-build
+  @Deprecated("Use `listenStates` instead.")
   final ListenHooks<T>? listenHooks;
 
   const ReactterBuilder({
     Key? key,
     this.id,
+    this.listenStates,
+    this.listenAll = false,
     this.listenHooks,
     this.listenAllHooks = false,
     this.child,
     this.builder,
   })  : assert(child != null || builder != null),
         assert(
-          (listenAllHooks && listenHooks == null) || !listenAllHooks,
-          "Can't use `listenAllHooks` with `listenHooks`",
+          ((listenAll || listenAllHooks) &&
+                  (listenStates ?? listenHooks) == null) ||
+              !(listenAll || listenAllHooks),
+          "Can't use `listenAll` with `listenStates`",
         ),
         super(key: key);
 
@@ -89,7 +101,9 @@ class ReactterBuilder<T extends ReactterContext?> extends StatelessWidget {
     final ctx = ReactterProvider.contextOf<T>(
       context,
       id: id,
-      listen: listenAllHooks || listenHooks != null,
+      listen: (listenAll || listenAllHooks) ||
+          (listenStates ?? listenHooks) != null,
+      listenStates: listenStates,
       listenHooks: listenHooks,
     );
 

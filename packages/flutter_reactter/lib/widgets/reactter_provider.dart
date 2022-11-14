@@ -171,7 +171,8 @@ class ReactterProvider<T extends ReactterContext>
   static T contextOf<T extends ReactterContext?>(
     BuildContext context, {
     String? id,
-    ListenHooks<T>? listenHooks,
+    ListenStates<T>? listenStates,
+    @Deprecated("Use `ListenStates` instead.") ListenHooks<T>? listenHooks,
     bool listen = true,
   }) {
     final providerInheritedElement =
@@ -194,8 +195,8 @@ class ReactterProvider<T extends ReactterContext>
       providerInheritedElement!,
       aspect: ReactterDependency<T?>(
         id: id,
-        instance: listenHooks != null ? null : instance,
-        states: listenHooks?.call(instance).toSet(),
+        instance: (listenStates ?? listenHooks) != null ? null : instance,
+        states: (listenStates ?? listenHooks)?.call(instance).toSet(),
       ),
     );
 

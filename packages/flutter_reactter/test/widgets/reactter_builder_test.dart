@@ -22,7 +22,7 @@ void main() {
               renderOutCount += 1;
 
               return ReactterBuilder<TestContext>(
-                listenHooks: (ctx) => [ctx.stateString],
+                listenStates: (ctx) => [ctx.stateString],
                 builder: (instance, context, child) {
                   instanceObtained = instance;
                   renderInCount += 1;
@@ -96,7 +96,7 @@ void main() {
         TestBuilder(
           child: ReactterProviderBuilder(
             builder: (instance, _, __) => ReactterBuilder<TestContext>(
-              listenHooks: (instance) => [
+              listenStates: (instance) => [
                 instance.stateString,
                 instance.stateInt,
               ],
