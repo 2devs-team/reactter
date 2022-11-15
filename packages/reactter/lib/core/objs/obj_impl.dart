@@ -1,6 +1,6 @@
 part of '../../core.dart';
 
-/// A base-class that can be used to store a value of [T].
+/// A base-class that store a value of [T].
 ///
 /// You can create a new [Obj]:
 ///
@@ -9,7 +9,6 @@ part of '../../core.dart';
 /// final strObj = "initial value".obj;
 /// final intObj = 0.obj;
 /// final userObj = User().obj;
-///
 /// // or usign the constructor class
 /// final strObj = Obj<String>("initial value");
 /// final intObj = Obj<int>(0);
@@ -21,12 +20,10 @@ part of '../../core.dart';
 /// ```dart
 /// // usign a `value` getter
 /// print(strObj.value);
-///
 /// // or using the callable
 /// print(strObj());
-///
 /// // or using `toString` implicit
-/// print("$strObj");
+/// print("$intObj");
 /// ```
 ///
 /// You can set a new [value]:
@@ -34,7 +31,6 @@ part of '../../core.dart';
 /// ```dart
 /// // usign a `value` setter
 /// strObj.value = "change value";
-///
 /// // or using the callable
 /// strObj("change value");
 /// ```

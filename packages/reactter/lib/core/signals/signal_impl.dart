@@ -1,7 +1,7 @@
 part of '../../core.dart';
 
-/// A base-class that can be used to store a value of [T]
-/// and notify the listeners when the value is updated.
+/// A base-class that store a value of [T] and notify the listeners
+/// when the value is updated.
 ///
 /// You can create a new [Signal]:
 ///
@@ -10,7 +10,6 @@ part of '../../core.dart';
 /// final strSignal = "initial value".signal;
 /// final intSignal = 0.signal;
 /// final userSignal = User().signal;
-///
 /// // or usign the constructor class
 /// final strSignal = Signal<String>("initial value");
 /// final intSignal = Signal<int>(0);
@@ -22,12 +21,10 @@ part of '../../core.dart';
 /// ```dart
 /// // usign a `value` getter
 /// print(strSignal.value);
-///
 /// // or using the callable
 /// print(strSignal());
-///
 /// // or using `toString` implicit
-/// print("$strSignal");
+/// print("$intSignal");
 /// ```
 ///
 /// You can set a new [value]:
@@ -35,7 +32,6 @@ part of '../../core.dart';
 /// ```dart
 /// // usign a `value` setter
 /// strSignal.value = "change value";
-///
 /// // or using the callable
 /// strSignal("change value");
 /// ```
@@ -57,6 +53,20 @@ part of '../../core.dart';
 /// );
 /// ```
 ///
+/// Use `update` method to notify changes after run a set of instructions:
+///
+/// ```dart
+/// userSignal.update((user) {
+///   user.firstname = "Leo";
+///   user.lastname = "Leon";
+/// });
+/// ```
+///
+/// Use `refresh` method to force to notify changes.
+///
+/// ```dart
+/// userSignal.refresh();
+/// ```
 ///
 /// If you use flutter, add [`flutter_reactter`](https://pub.dev/packages/flutter_reactter)
 /// package on your dependencies and use its Widgets.
