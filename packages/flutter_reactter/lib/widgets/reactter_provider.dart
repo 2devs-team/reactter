@@ -172,6 +172,7 @@ class ReactterProvider<T extends ReactterContext>
     BuildContext context, {
     String? id,
     ListenStates<T>? listenStates,
+    // ignore: deprecated_member_use_from_same_package
     @Deprecated("Use `ListenStates` instead.") ListenHooks<T>? listenHooks,
     bool listen = true,
   }) {

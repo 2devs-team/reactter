@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use_from_same_package
+
 part of '../widgets.dart';
 
 /// A [StatelessWidget] that gets the [ReactterContext]'s instance of [T]

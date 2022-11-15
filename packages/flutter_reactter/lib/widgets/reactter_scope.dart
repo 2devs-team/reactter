@@ -1,3 +1,4 @@
+// coverage:ignore-file
 part of '../widgets.dart';
 
 /// A [StatelessWidget] that helps to control re-builder of widget tree.
