@@ -35,7 +35,7 @@ part of '../widgets.dart';
 ///
 /// ```dart
 /// ReactterWatcher(
-///   child: Column(
+///   child: Row(
 ///     children: [
 ///       ElevatedButton(
 ///         onPressed: () => signal.value += 1,
@@ -52,7 +52,7 @@ part of '../widgets.dart';
 ///       children: [
 ///         Text("Count: $count"),
 ///         Text("Toggle is: $toggle"),
-///         child, // Column with 2 buttons
+///         child, // Row with 2 buttons
 ///       ],
 ///     );
 ///   },
