@@ -60,6 +60,8 @@ class Obj<T> {
   bool operator ==(Object other) =>
       other is Obj<T> ? value == other.value : value == other;
 
+  int get hashCode => Object.hash(super.hashCode, super.hashCode);
+
   /// Gets and/or sets to [value] like a function
   T call([T? val]) {
     if (null is T || val != null) {
@@ -70,16 +72,16 @@ class Obj<T> {
   }
 
   @override
-  int get hashCode => super.hashCode;
-
-  @override
   String toString() => value.toString();
 }
 
 extension ObjNullExt<T> on Obj<T?> {
   /// Returns a new `Obj<T>` with the value of the current `Obj<T?>`
   /// if it's not null.
-  Obj<T> get notNull => Obj<T>(value!);
+  Obj<T> get notNull {
+    assert(value != null);
+    return Obj<T>(value as T);
+  }
 }
 
 extension ObjGenericTypeExt<T> on T {
