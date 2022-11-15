@@ -162,13 +162,13 @@ mixin ReactterEventManager {
     Object? instance,
     Enum eventName,
   ) {
-    if (_events.length == 0) {
+    if (_events.isEmpty) {
       return null;
     }
 
     final eventCallbacks = _events[_getEventKey(instance, eventName)];
 
-    if (eventCallbacks?.length == 0) {
+    if (eventCallbacks?.isEmpty ?? false) {
       return null;
     }
 
