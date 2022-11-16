@@ -20,7 +20,10 @@ mixin ReactterNotifyManager {
   void update(covariant Function fnUpdate) {
     assert(!_isDisposed, "You can update when it's been disposed");
 
-    if (_isUpdating) return fnUpdate();
+    if (_isUpdating) {
+      fnUpdate();
+      return;
+    }
 
     _isUpdating = true;
 
@@ -36,7 +39,10 @@ mixin ReactterNotifyManager {
   Future<void> updateAsync(covariant Function fnUpdate) async {
     assert(!_isDisposed, "You can update when it's been disposed");
 
-    if (_isUpdating) return await fnUpdate();
+    if (_isUpdating) {
+      await fnUpdate();
+      return;
+    }
 
     _isUpdating = true;
 

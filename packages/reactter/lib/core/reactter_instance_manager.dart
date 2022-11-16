@@ -185,7 +185,7 @@ mixin ReactterInstanceManager {
     final instance = buildInstance();
 
     if (instance is ReactterHookManager) {
-      instance._listenHooks();
+      instance._listenStates();
       instance._isCreated = true;
     }
 

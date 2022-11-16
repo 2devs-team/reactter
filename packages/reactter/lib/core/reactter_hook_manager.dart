@@ -40,14 +40,14 @@ abstract class ReactterHookManager with ReactterNotifyManager {
   bool _isCreated = false;
 
   /// Stores all the hooks given.
-  final Set<ReactterHook> _hooks = {};
+  final Set<ReactterHook> _states = {};
 
   /// Suscribes to all [hooks] given.
   @mustCallSuper
   void listenHooks(List<ReactterHook> hooks) {
     for (final hook in hooks) {
       hook._attachIt(this);
-      _hooks.add(hook);
+      _states.add(hook);
 
       if (_isCreated) {
         Reactter.off(hook, Lifecycle.willUpdate, _onHookWillUpdate);
@@ -58,17 +58,17 @@ abstract class ReactterHookManager with ReactterNotifyManager {
     }
   }
 
-  void _listenHooks() {
-    for (final hook in _hooks) {
-      Reactter.on(hook, Lifecycle.willUpdate, _onHookWillUpdate);
-      Reactter.on(hook, Lifecycle.didUpdate, _onHookDidUpdate);
+  void _listenStates() {
+    for (final state in _states) {
+      Reactter.on(state, Lifecycle.willUpdate, _onHookWillUpdate);
+      Reactter.on(state, Lifecycle.didUpdate, _onHookDidUpdate);
     }
   }
 
   void _unlistenHooks() {
-    for (final hook in _hooks) {
-      Reactter.off(hook, Lifecycle.willUpdate, _onHookWillUpdate);
-      Reactter.off(hook, Lifecycle.didUpdate, _onHookDidUpdate);
+    for (final state in _states) {
+      Reactter.off(state, Lifecycle.willUpdate, _onHookWillUpdate);
+      Reactter.off(state, Lifecycle.didUpdate, _onHookDidUpdate);
     }
   }
 
