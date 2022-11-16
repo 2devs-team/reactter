@@ -14,3 +14,5 @@ typedef WhenErrorReturn<R> = R Function(Object? value);
 typedef CallbackEvent<T extends Object?, P> = void Function(T? inst, P param);
 
 typedef Reducer<T> = T Function(T state, ReactterAction action);
+
+typedef EventEmit<T> = void Function(Enum eventName, [dynamic param]);

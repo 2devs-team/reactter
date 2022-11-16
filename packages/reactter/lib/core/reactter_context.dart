@@ -1,6 +1,6 @@
 part of '../core.dart';
 
-/// A context that allows to manages the [ReactterHook]s
+/// A abstract-class that allows to manages the [ReactterHook]s
 /// and provides [Lifecycle] events.
 ///
 /// **RECOMMENDED:**
@@ -14,14 +14,10 @@ part of '../core.dart';
 /// using [ReactterInstanceManager]:
 ///
 /// ```dart
-/// Reactter.register<AppContext>(
-///   () => AppContex(),
-/// );
+/// Reactter.register<AppContext>(() => AppContex());
 ///
 /// // or
-/// final appContext = Reactter.create<AppContext>(
-///   () => AppContex(),
-/// );
+/// final appContext = Reactter.create<AppContext>(() => AppContex());
 /// ```
 ///
 /// And later you can get the instance:
@@ -40,11 +36,8 @@ part of '../core.dart';
 /// package on your dependencies and use its Widgets.
 ///
 /// See also:
-/// - [ReactterHook], a abstract hook that [ReactterContext] listen it.
-/// - [ReactterInstanceManager], a instances manager
-/// - [UseContext], a hook that allowed access to instance of [ReactterContext].
-abstract class ReactterContext extends ReactterHookManager {
-  /// This methods is called for [ReactterInstanceManager]
-  /// when the instance will be destroyed.
-  dispose() {}
-}
+///
+/// * [ReactterHook], a abstract hook that [ReactterContext] listen it.
+/// * [ReactterInstanceManager], a instances manager
+/// * [UseContext], a hook that allowed access to instance of [ReactterContext].
+abstract class ReactterContext extends ReactterHookManager {}

@@ -1,10 +1,59 @@
-# Reactter by [2devs.io](https://2devs.io)
+# Reactter
+## 4.0.0
+
+### Enhancements
+
+- **feat(core)**: Add [`Obj`](https://pub.dev/documentation/reactter/4.0.0/core/Obj-class.html).
+- **feat(core)**: Add [`Signal`](https://pub.dev/documentation/reactter/4.0.0/core/Obj-class.html).
+- **feat(core)**: Add [`ReactterSignalProxy`](https://pub.dev/documentation/reactter/4.0.0/core/ReactterSignalProxy-mixin.html) mixin.
+- **feat(core)**: Add [`ReactterNotifyManager`](https://pub.dev/documentation/reactter/4.0.0/core/ReactterNotifyManager-mixin.html) mixin.
+- **feat(core)**: Add [`ReactterState`](https://pub.dev/documentation/reactter/4.0.0/core/ReactterState-mixin.html) mixin.
+- **refactor(core,hooks)**: Manage event separate from `UseEvent` hook.
+- **perf(core)**: Improve to manage instances.
+- **perf(core)**: Improve to manage state.
+- **perf(widgets,core)**: Improve performance on `ReactterProvider`.
+Now there is no need to use `ReactterComponent` or `ReactterBuilder`. The instance can be accessed directly from the context(`BuildContext`) and just the part belonging to the context is re-built.
+- **feat(widgets)**: Add [`ReactterWatcher`](https://pub.dev/documentation/reactter_flutter/4.0.0/widgets/ReactterWatcher-class.html).
+You can use the `Signal` variable in `ReactterWatcher` and react when it changed for `ReactterWatcher`'s widgets rebuild.
+
+### Breaking
+
+- **refactor(core)**: Remove `typedef` innecesary.
+- **refactor(hooks)**: Fix dispose of `UseContext` and `UseEffect`.
+- **build(widgets)**: Mark `ReactterScope` as deprecated. Use any Widget that exposes the `BuildContext` like `Build`, `StatelessWidget` or `StatefulWidget` instead.
+- **build(widgets)**: Mark `listenHooks` and `listenAllHooks` as deprecated. Use `listenStates` and `listenAll` instead.
+- **refactor(widgets)**: Remove `onInit` from `ReactteProvider` and `ReactterComponent`.
+- **refactor(widget)**: Add `ReactterContext` argument in `builder` of `ReactterProvider`.
+
+### Fixes
+
+- **fix(core)**: Don't allow increasing listeners count, if event don't exist.
+- **fix(widgets)**: Clear previous signals saved.
+- **fix(core)**: Remove one callback using off method and was changed how to storage event.
+
+### Internal
+
+- **test**: Refactor test and add event manager test.
+- **refactor(test)**: Fix test and add new tests.
+- **build(engine)**: Rename some files.
+- **refactor(test)**: Fix test and add `ReactterWatcher` test.
+- **refactor(examples)**: Improve examples code and add calculator example.
+- **doc**: Fix documentation and add new documentation.
+- **test(core,hooks)**: Fix dispose on some tests.
+- **refactor(examples)**: Do counter more simple.
+
+## 3.2.1-dev.2
+
+### Enhancements
+
+- **refactor(engine)**: Use `ReactterScopeInheritedElement` as mixin on `ReactterProviderInheritedElement`.
+- **perf(widget)**: Improve `ReactterBuilder` performance.
 
 ## 3.2.0
 
 ### Enhancements
 
-- **feat(hooks)**: Add [`UseReducer`](https://pub.dev/documentation/reactter/3.2.0/reactter/UseReducer-class.html) hook.
+- **feat(hooks)**: Add [`UseReducer`](https://pub.dev/documentation/reactter/3.2.0/hooks/UseReducer-class.html) hook.
 
 ### Breaking
 

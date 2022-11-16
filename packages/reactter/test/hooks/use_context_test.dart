@@ -1,4 +1,4 @@
-import 'package:flutter_test/flutter_test.dart';
+import 'package:test/test.dart';
 import 'package:reactter/reactter.dart';
 
 import '../shareds/test_context.dart';
@@ -22,12 +22,11 @@ void _testContext([String? id]) {
 
   final testContext = UseContext<TestContext>(id: id, context: context);
 
-  expect(testContext.instance, isInstanceOf<TestContext>());
+  expect(testContext.instance, isA<TestContext>());
 
   Reactter
     ..unregister<TestContext>(id)
     ..delete<TestContext>(id);
-  testContext.dispose();
 }
 
 void _testContextLate([String? id]) {
@@ -41,11 +40,9 @@ void _testContextLate([String? id]) {
   }, [testContext]);
 
   Reactter.create(id: id, builder: () => TestContext());
-
-  expectLater(instance, isInstanceOf<TestContext>());
-
   Reactter
     ..unregister<TestContext>(id)
     ..delete<TestContext>(id);
-  testContext.dispose();
+
+  expectLater(instance, isA<TestContext>());
 }

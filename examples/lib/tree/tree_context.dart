@@ -12,9 +12,9 @@ class TreeContext extends ReactterContext {
     UseEffect(_calculateTotal, [count, children]);
   }
 
-  void increment() => count.value++;
+  void increase() => count.value++;
 
-  void decrement() => count.value--;
+  void decrease() => count.value--;
 
   void addChild() {
     final child = TreeContext();

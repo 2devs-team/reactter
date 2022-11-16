@@ -76,22 +76,15 @@ void main() {
       expect(find.text("Provider stateString: initial"), findsOneWidget);
       expect(find.text("Provider2 stateString: changed"), findsOneWidget);
 
-      tester.element(find.bySubtype<ReactterProvider>().first)
-        ..deactivate()
-        ..activate();
-
-      final reactterProviderInheritedElement = tester.element(
-        find
-            .descendant(
-              of: find.bySubtype<ReactterProvider>(),
-              matching: find.bySubtype<ReactterProviderInherited>(),
-            )
-            .first,
-      );
+      final reactterProviderInheritedElement =
+          tester.element(find.bySubtype<ReactterProvider>().first)
+            ..deactivate()
+            ..activate();
 
       final diagnostic = reactterProviderInheritedElement
           .toDiagnosticsNode()
           .toTimelineArguments();
+
       expect(diagnostic['id'], "null");
       expect(diagnostic['isRoot'], "true");
     });

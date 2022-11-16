@@ -47,7 +47,7 @@ packages:
       path: "../packages/flutter_reactter"
       relative: true
     source: path
-    version: "3.1.2"
+    version: "3.2.1-dev.2"
   flutter_web_plugins:
     dependency: transitive
     description: flutter
@@ -115,7 +115,7 @@ packages:
       path: "../packages/reactter"
       relative: true
     source: path
-    version: "3.2.0-dev.2"
+    version: "3.2.0"
   sky_engine:
     dependency: transitive
     description: flutter

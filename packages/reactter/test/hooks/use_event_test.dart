@@ -1,29 +1,63 @@
-import 'package:flutter_test/flutter_test.dart';
+import 'package:test/test.dart';
 import 'package:reactter/core.dart';
 import 'package:reactter/reactter.dart';
 
 import '../shareds/test_context.dart';
 
-enum Events { TestEvent }
+enum Events { TestEvent, TestEvent2 }
+
+const TEST_EVENT_PARAM_NAME = 'TestEventParam';
+const TEST_EVENT2_PARAM_NAME = 'TestEvent2Param';
+
+const TEST_EVENT_COUNT = 3;
+const TEST_EVENT2_COUNT = 2;
 
 void main() {
   group("UseEvent", () {
-    test(
-      "should emits and listens event",
-      () => _testEmitListenEvent(
-        (CallbackEvent<TestContext?, String> callback) =>
-            UseEvent<TestContext>().on<String>(Events.TestEvent, callback),
-        "withParam3",
-        3,
-      ),
-    );
+    test("should listens and emits event", () {
+      _testEmitListenEvent(
+        (callback) {
+          UseEvent<TestContext>().on(Events.TestEvent, callback);
+        },
+        expectParam: "$TEST_EVENT_PARAM_NAME$TEST_EVENT_COUNT",
+        expectCount: TEST_EVENT_COUNT,
+      );
 
-    test("should emits and listens event with instance", () {
+      _testEmitListenEvent(
+        (callback) {
+          UseEvent<TestContext>().on(Events.TestEvent2, callback);
+        },
+        expectParam: "$TEST_EVENT2_PARAM_NAME$TEST_EVENT2_COUNT",
+        expectCount: TEST_EVENT2_COUNT,
+      );
+    });
+
+    test("should listens and emits event with id", () {
+      _testEmitListenEvent(
+        (callback) {
+          UseEvent<TestContext>('uniqueId').on(Events.TestEvent, callback);
+        },
+        id: 'uniqueId',
+        expectParam: "$TEST_EVENT_PARAM_NAME$TEST_EVENT_COUNT",
+        expectCount: TEST_EVENT_COUNT,
+      );
+
+      _testEmitListenEvent(
+        (callback) {
+          UseEvent<TestContext>('uniqueId').on(Events.TestEvent2, callback);
+        },
+        id: 'uniqueId',
+        expectParam: "$TEST_EVENT2_PARAM_NAME$TEST_EVENT2_COUNT",
+        expectCount: TEST_EVENT2_COUNT,
+      );
+    });
+
+    test("should listens and emits event with instance", () {
       late TestContext? instance;
       final testContext = Reactter.create(builder: () => TestContext());
 
       _testEmitListenEvent(
-        (CallbackEvent<TestContext?, String> callback) {
+        (callback) {
           UseEvent.withInstance(testContext).on<String>(
             Events.TestEvent,
             (inst, param) {
@@ -32,32 +66,71 @@ void main() {
             },
           );
         },
-        "withParam3",
-        3,
+        expectParam: "$TEST_EVENT_PARAM_NAME$TEST_EVENT_COUNT",
+        expectCount: TEST_EVENT_COUNT,
       );
 
       Reactter.delete<TestContext>();
 
-      expectLater(instance, isInstanceOf<TestContext>());
+      expectLater(instance, isA<TestContext>());
       expectLater(instance, testContext);
     });
 
-    test(
-      "should emits and listens event only once",
-      () => _testEmitListenEvent(
-        (CallbackEvent<TestContext?, String> callback) =>
-            UseEvent<TestContext>().one<String>(Events.TestEvent, callback),
-        "withParam1",
-        1,
-      ),
-    );
+    test("should listens and emits event only once", () {
+      _testEmitListenEvent(
+        (callback) {
+          UseEvent<TestContext>().one<String>(Events.TestEvent, callback);
+        },
+        expectParam: "$TEST_EVENT_PARAM_NAME${1}",
+        expectCount: 1,
+      );
 
-    test("should emits and listens event only once with instance", () {
+      _testEmitListenEvent(
+        (callback) {
+          UseEvent<TestContext>().one<String>(Events.TestEvent2, callback);
+        },
+        expectParam: "$TEST_EVENT2_PARAM_NAME${1}",
+        expectCount: 1,
+      );
+    });
+
+    test("should unlistens event", () {
+      _testEmitListenEvent(
+        (callback) {
+          UseEvent<TestContext>()
+            ..on(Events.TestEvent, callback)
+            ..off(Events.TestEvent, callback);
+
+          UseEvent<TestContext>()
+            ..on(Events.TestEvent2, callback)
+            ..off(Events.TestEvent2, callback);
+        },
+        expectCount: 0,
+      );
+    });
+
+    test("should unlistens event with id", () {
+      _testEmitListenEvent(
+        (callback) {
+          UseEvent<TestContext>('uniqueId')
+            ..on(Events.TestEvent, callback)
+            ..off(Events.TestEvent, callback);
+
+          UseEvent<TestContext>('uniqueId')
+            ..on(Events.TestEvent2, callback)
+            ..off(Events.TestEvent2, callback);
+        },
+        id: 'uniqueId',
+        expectCount: 0,
+      );
+    });
+
+    test("should listens and emits event only once with instance", () {
       late TestContext? instance;
       final testContext = Reactter.create(builder: () => TestContext());
 
       _testEmitListenEvent(
-        (CallbackEvent<TestContext?, String> callback) {
+        (callback) {
           UseEvent.withInstance(testContext).one<String>(
             Events.TestEvent,
             (inst, param) {
@@ -66,13 +139,13 @@ void main() {
             },
           );
         },
-        "withParam1",
-        1,
+        expectParam: "$TEST_EVENT_PARAM_NAME${1}",
+        expectCount: 1,
       );
 
       Reactter.delete<TestContext>();
 
-      expectLater(instance, isInstanceOf<TestContext>());
+      expectLater(instance, isA<TestContext>());
       expectLater(instance, testContext);
     });
 
@@ -86,12 +159,12 @@ void main() {
         ..on(Lifecycle.initialized, (inst, __) {
           instance = inst;
         })
-        ..on<UseState>(Lifecycle.willUpdate, (_, hook) {
+        ..on(Lifecycle.willUpdate, (_, UseState hook) {
           willUpdateChecked = true;
           expect(hook, instance?.stateString);
           expect(hook.value, "initial");
         })
-        ..on<UseState>(Lifecycle.didUpdate, (_, hook) {
+        ..on(Lifecycle.didUpdate, (_, UseState hook) {
           didUpdateChecked = true;
           expect(hook, instance?.stateString);
           expect(hook.value, "changed");
@@ -105,7 +178,7 @@ void main() {
 
       Reactter.delete<TestContext>();
 
-      expectLater(instance, isInstanceOf<TestContext>());
+      expectLater(instance, isA<TestContext>());
       expectLater(instance, testContext);
       expectLater(willUpdateChecked, true);
       expectLater(didUpdateChecked, true);
@@ -115,28 +188,33 @@ void main() {
 }
 
 void _testEmitListenEvent(
-  Function(CallbackEvent<TestContext?, String> callback) eventCb,
-  String expectParam,
-  int expectCount,
-) {
+  Function(CallbackEvent<TestContext?, String> callback) eventCb, {
+  String? id,
+  required int expectCount,
+  String? expectParam,
+}) {
   late String? paramReceived;
   int countEvent = 0;
 
-  eventCb(
-    (instance, param) {
-      paramReceived = param;
-      countEvent += 1;
-    },
-  );
+  eventCb((instance, param) {
+    paramReceived = param;
+    countEvent += 1;
+  });
 
-  UseEvent<TestContext>()
-    ..emit(Events.TestEvent, "withParam1")
-    ..emit(Events.TestEvent, "withParam2")
-    ..emit(Events.TestEvent, "withParam3")
-    ..dispose();
+  for (var i = 0; i < TEST_EVENT_COUNT; i++) {
+    UseEvent<TestContext>(id)
+        .emit(Events.TestEvent, "$TEST_EVENT_PARAM_NAME${i + 1}");
+  }
+  for (var i = 0; i < TEST_EVENT2_COUNT; i++) {
+    UseEvent<TestContext>(id)
+        .emit(Events.TestEvent2, "$TEST_EVENT2_PARAM_NAME${i + 1}");
+  }
 
-  Reactter.delete<TestContext>();
+  UseEvent<TestContext>(id).dispose();
 
-  expectLater(paramReceived, expectParam);
+  if (expectParam != null) {
+    expectLater(paramReceived, expectParam);
+  }
+
   expect(countEvent, expectCount);
 }

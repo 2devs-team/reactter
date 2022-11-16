@@ -1,6 +1,7 @@
+// coverage:ignore-file
 part of '../widgets.dart';
 
-/// A wrapper [StatelessWidget] that helps to control re-rendered of widget tree.
+/// A [StatelessWidget] that helps to control re-builder of widget tree.
 ///
 /// **NOTE:** The [builder] callback will be rebuild, when the [ReactterContext] changes.
 /// For this to happen, the [ReactterContext] should put it on listens
@@ -10,20 +11,22 @@ part of '../widgets.dart';
 /// ReactterScope(
 ///   build: (context, child) {
 ///     final appContext = context.watch<AppContext>();
+///
 ///     return Text("AppContext's state: ${appContext.stateHook.state}");
 ///   }
 /// )
 /// ```
 ///
-/// If you don't want to rebuild a part of [builder] callback, use the [child]
-/// property, it's more efficient to build that subtree once instead of
-/// rebuilding it on every [ReactterContext] changes.
+/// **CONSIDER** Use [child] property to pass a [Widget] that
+/// you want to build it once. The [ReactterScope] pass it through
+/// the [builder] callback, so you can incorporate it into your build:
 ///
 /// ```dart
 /// ReactterScope(
 ///   child: Text("This widget build only once"),
 ///   builder: (context, child) {
 ///     final appContext = context.watch<AppContext>();
+///
 ///     return Column(
 ///       children: [
 ///         Text("state: ${appContext.stateHook.value}"),
@@ -34,6 +37,11 @@ part of '../widgets.dart';
 /// )
 /// ```
 ///
+/// See also:
+///
+/// * [ReactterContext], a base-class that allows to manages the [ReactterHook]s.
+@Deprecated(
+    "Use any Widget that exposes the `ContextBuilder` like `Build`, `StatelessWidget` or `StatefulWidget` instead.")
 class ReactterScope extends StatelessWidget {
   /// Provides a widget , which render one time.
   ///
@@ -54,24 +62,6 @@ class ReactterScope extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _buildWithChild(context, child);
-  }
-
-  /// A [build] method that receives an extra `child` parameter.
-  ///
-  /// This method may be called with a `child` different from the parameter
-  /// passed to the constructor of [SingleChildStatelessWidget].
-  /// It may also be called again with a different `child`, without this widget
-  /// being recreated.
-  Widget _buildWithChild(BuildContext context, Widget? child) {
-    Widget _buildChild() => builder?.call(context, child) ?? child!;
-
-    return ReactterScopeInherited(
-      child: child is Builder
-          ? _buildChild()
-          : Builder(
-              builder: (context) => _buildChild(),
-            ),
-    );
+    return builder?.call(context, child) ?? child!;
   }
 }

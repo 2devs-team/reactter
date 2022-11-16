@@ -16,8 +16,10 @@ class ReactterNestedWidget<W extends StatelessWidget> extends StatelessWidget {
   @override
   ReactterNestedElement createElement() => ReactterNestedElement(this);
 
+  // coverage:ignore-start
   @override
   Widget build(BuildContext context) => throw StateError('handled internally');
+  // coverage:ignore-end
 }
 
 /// [ReactterNestedWidget]'s Element

@@ -17,12 +17,20 @@ class ProductState extends Product {
     stockState.value = initialStock;
   }
 
-  void incrementStock([int quantity = 1]) => stockState.value += quantity;
+  bool increaseStock([int quantity = 1]) {
+    if (stockState.value > initialStock) return false;
 
-  void decrementStock([int quantity = 1]) {
-    if (stockState.value < 1) return;
+    stockState.value += quantity;
+
+    return true;
+  }
+
+  bool decreaseStock([int quantity = 1]) {
+    if (stockState.value < 1) return false;
 
     stockState.value -= quantity;
+
+    return true;
   }
 }
 

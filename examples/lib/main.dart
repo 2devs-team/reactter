@@ -1,3 +1,4 @@
+import 'package:examples/calculator/calculator_page.dart';
 import 'package:flutter/material.dart';
 
 import 'animation/animation_page.dart';
@@ -14,21 +15,29 @@ Future<void> main() async {
 final items = <ListItem>[
   ExampleItem(
     "Counter",
-    "Increment and decrement counter",
+    "Increase and decrease the counter",
+    [
+      "ReactterWatcher",
+      "Signal",
+    ],
+    () => CounterPage(),
+  ),
+  ExampleItem(
+    "Calculator",
+    "Performs simple arithmetic operations on numbers",
     [
       "ReactterContext",
       "ReactterProvider",
-      "ReactterScope",
-      "UseState",
+      "ReactterWatcher",
+      "Signal",
     ],
-    () => const CounterPage(),
+    () => const CalculatorPage(),
   ),
   ExampleItem(
     "Todos",
     "Add and remove to-do, mark and unmark to-do as done and filter to-do list",
     [
       "ReactterActionCallable",
-      "ReactterBuilder",
       "ReactterContext",
       "ReactterProvider",
       "UseReducer",
@@ -39,7 +48,6 @@ final items = <ListItem>[
     "Shopping Cart",
     "Add, remove product to cart and checkout",
     [
-      "ReactterBuilder",
       "ReactterComponent",
       "ReactterContext",
       "ReactterProvider",
@@ -53,7 +61,6 @@ final items = <ListItem>[
     "Tree widget",
     "Add, remove and hide child widget with counter.",
     [
-      "ReactterBuilder",
       "ReactterComponent",
       "ReactterContext",
       "ReactterProvider",
@@ -65,7 +72,6 @@ final items = <ListItem>[
     "Github Search",
     "Search user or repository and show info about it.",
     [
-      "ReactterBuilder",
       "ReactterContext",
       "ReactterComponent",
       "ReactterProvider",
@@ -78,7 +84,6 @@ final items = <ListItem>[
     "Animate widget",
     "Change size, shape and color.",
     [
-      "ReactterBuilder",
       "ReactterContext",
       "ReactterHook",
       "ReactterProvider",

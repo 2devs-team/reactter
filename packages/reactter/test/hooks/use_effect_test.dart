@@ -1,4 +1,4 @@
-import 'package:flutter_test/flutter_test.dart';
+import 'package:test/test.dart';
 import 'package:reactter/reactter.dart';
 
 import '../shareds/test_context.dart';
@@ -50,8 +50,7 @@ void main() {
         nCalls += 1;
       }, [], testContext);
 
-      final event = UseEvent.withInstance(testContext);
-      event.emit(Lifecycle.didMount);
+      Reactter.emit(testContext, Lifecycle.didMount);
 
       Reactter.unregister<TestContext>();
 
@@ -121,9 +120,8 @@ void main() {
         };
       }, [], testContext);
 
-      UseEvent.withInstance(testContext)
-        ..emit(Lifecycle.didMount)
-        ..emit(Lifecycle.willUnmount);
+      Reactter.emit(testContext, Lifecycle.didMount);
+      Reactter.emit(testContext, Lifecycle.willUnmount);
 
       Reactter.unregister<TestContext>();
 

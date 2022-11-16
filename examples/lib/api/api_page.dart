@@ -12,11 +12,9 @@ class ApiPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ReactterProvider(
+    return ReactterProvider<ApiContext>(
       () => ApiContext(),
-      builder: (context, child) {
-        final apiContext = context.use<ApiContext>();
-
+      builder: (apiContext, context, child) {
         return Scaffold(
           appBar: AppBar(
             title: const Text("Github search"),
@@ -71,18 +69,21 @@ class ApiPage extends StatelessWidget {
                   ],
                 ),
               ),
-              ReactterBuilder<ApiContext>(
-                listenHooks: (ctx) => [ctx.entity],
-                builder: (apiContext, context, child) => Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: apiContext.entity.when<Widget>(
-                    loading: (_) => const CircularProgressIndicator(),
-                    done: (entity) => entity is User
-                        ? UserItem(user: entity)
-                        : RepositoryItem(repository: entity as Repository),
-                    error: (_) => const Text("Not found"),
-                  ),
-                ),
+              Builder(
+                builder: (context) {
+                  context.watch<ApiContext>((ctx) => [ctx.entity]);
+
+                  return Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: apiContext.entity.when<Widget>(
+                      loading: (_) => const CircularProgressIndicator(),
+                      done: (entity) => entity is User
+                          ? UserItem(user: entity)
+                          : RepositoryItem(repository: entity as Repository),
+                      error: (_) => const Text("Not found"),
+                    ),
+                  );
+                },
               ),
             ],
           ),

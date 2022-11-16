@@ -12,14 +12,15 @@ class CartPage extends ReactterComponent<CartContext> {
   get builder => () => CartContext();
 
   @override
-  Widget render(ctx, context) {
+  Widget render(cartCtx, context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text("My cart"),
       ),
-      body: ReactterBuilder<CartContext>(
-        listenHooks: (ctx) => [ctx.productsLen],
-        builder: (cartCtx, context, child) {
+      body: Builder(
+        builder: (context) {
+          context.watch<CartContext>((ctx) => [ctx.products]);
+
           final products = cartCtx.products.value;
 
           return products.isEmpty
@@ -47,9 +48,11 @@ class CartPage extends ReactterComponent<CartContext> {
                 );
         },
       ),
-      bottomNavigationBar: ReactterBuilder<CartContext>(
-        listenHooks: (ctx) => [ctx.total, ctx.quantityProducts],
-        builder: (cartCtx, context, child) {
+      bottomNavigationBar: Builder(
+        builder: (context) {
+          context
+              .watch<CartContext>((ctx) => [ctx.total, ctx.quantityProducts]);
+
           final products = cartCtx.products.value;
           final quantityProducts = cartCtx.quantityProducts.value;
           final total = cartCtx.total.value;

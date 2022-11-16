@@ -12,10 +12,7 @@ class RepositoryItem extends ReactterComponent<RepositoryContext> {
   final Repository repository;
 
   @override
-  get builder => () => RepositoryContext();
-
-  @override
-  get onInit => (ctx) => ctx.repository.value = repository;
+  get builder => () => RepositoryContext()..repository.value = repository;
 
   @override
   Widget render(RepositoryContext ctx, BuildContext context) {

@@ -29,44 +29,62 @@ enum Lifecycle {
   destroyed,
 }
 
-/// A hook manager.
+/// A abstract-class to manager hooks([ReactterHook]).
 ///
-/// Use [listenHooks] to watch hooks([ReactterHook])
-/// and notify when it has changed.
-///
-/// Exposes two methods [onWillUpdate] and [onDidUpdate]
-/// to subscribe and notify when any hooks has changed.
+/// Use [listenHooks] to watch [ReactterHook]s and notify when it has changed.
 ///
 /// See also:
-/// - [ReactterHook], a abstract hook that [ReactterHookManager] listen it.
-abstract class ReactterHookManager {
-  late final _event = UseEvent.withInstance(this);
+///
+/// * [ReactterHook], a abstract hook that [ReactterHookManager] listen it.
+abstract class ReactterHookManager with ReactterNotifyManager {
+  bool _isCreated = false;
 
   /// Stores all the hooks given.
-  final Set<ReactterHook> _hooks = {};
+  final Set<ReactterHook> _states = {};
 
   /// Suscribes to all [hooks] given.
+  @mustCallSuper
   void listenHooks(List<ReactterHook> hooks) {
     for (final hook in hooks) {
-      if (_hooks.contains(hook)) {
-        return;
+      hook._attachIt(this);
+      _states.add(hook);
+
+      if (_isCreated) {
+        Reactter.off(hook, Lifecycle.willUpdate, _onHookWillUpdate);
+        Reactter.off(hook, Lifecycle.didUpdate, _onHookDidUpdate);
+        Reactter.on(hook, Lifecycle.willUpdate, _onHookWillUpdate);
+        Reactter.on(hook, Lifecycle.didUpdate, _onHookDidUpdate);
       }
-
-      _hooks.add(hook);
-
-      void onWillUpdate(_, hook) => _event.emit(Lifecycle.willUpdate, hook);
-
-      void onDidUpdate(_, hook) => _event.emit(Lifecycle.didUpdate, hook);
-
-      UseEvent.withInstance(hook)
-        ..on(Lifecycle.willUpdate, onWillUpdate)
-        ..on(Lifecycle.didUpdate, onDidUpdate);
-
-      _event.one(Lifecycle.destroyed, (_, __) {
-        UseEvent.withInstance(hook)
-          ..off(Lifecycle.willUpdate, onWillUpdate)
-          ..off(Lifecycle.didUpdate, onDidUpdate);
-      });
     }
+  }
+
+  void _listenStates() {
+    for (final state in _states) {
+      Reactter.on(state, Lifecycle.willUpdate, _onHookWillUpdate);
+      Reactter.on(state, Lifecycle.didUpdate, _onHookDidUpdate);
+    }
+  }
+
+  void _unlistenHooks() {
+    for (final state in _states) {
+      Reactter.off(state, Lifecycle.willUpdate, _onHookWillUpdate);
+      Reactter.off(state, Lifecycle.didUpdate, _onHookDidUpdate);
+    }
+  }
+
+  void _onHookWillUpdate(_, hook) {
+    if (_isUpdating) return;
+
+    _isUpdating = true;
+
+    Reactter.emit(this, Lifecycle.willUpdate, hook);
+  }
+
+  void _onHookDidUpdate(_, hook) {
+    if (!_isUpdating) return;
+
+    Reactter.emit(this, Lifecycle.didUpdate, hook);
+
+    _isUpdating = false;
   }
 }

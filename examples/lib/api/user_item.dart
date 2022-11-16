@@ -12,10 +12,7 @@ class UserItem extends ReactterComponent<UserContext> {
   final User user;
 
   @override
-  get builder => () => UserContext();
-
-  @override
-  get onInit => (ctx) => ctx.user.value = user;
+  get builder => () => UserContext()..user.value = user;
 
   @override
   Widget render(UserContext ctx, BuildContext context) {

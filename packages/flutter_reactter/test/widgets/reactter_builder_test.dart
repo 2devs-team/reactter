@@ -2,12 +2,48 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_reactter/flutter_reactter.dart';
 
+import '../shareds/reactter_provider_builder.dart';
 import '../shareds/reactter_providers_builder.dart';
 import '../shareds/test_builder.dart';
 import '../shareds/test_context.dart';
 
 void main() {
   group("ReactterBuilder", () {
+    testWidgets("should re-render only its builder", (tester) async {
+      late TestContext instanceObtained;
+      int renderOutCount = 0;
+      int renderInCount = 0;
+
+      await tester.pumpWidget(
+        TestBuilder(
+          child: ReactterProviderBuilder(
+            builder: (_, context, __) {
+              context.watch<TestContext>((x) => []);
+              renderOutCount += 1;
+
+              return ReactterBuilder<TestContext>(
+                listenStates: (ctx) => [ctx.stateString],
+                builder: (instance, context, child) {
+                  instanceObtained = instance;
+                  renderInCount += 1;
+                  return Text(instance.stateString.value);
+                },
+              );
+            },
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      instanceObtained.stateString.value = "other value";
+
+      await tester.pumpAndSettle();
+
+      expect(renderOutCount, 1);
+      expect(renderInCount, 2);
+      expect(find.text("other value"), findsOneWidget);
+    });
+
     testWidgets("should gets instance", (tester) async {
       late ReactterContext instanceObtained;
 
@@ -58,9 +94,9 @@ void main() {
 
       await tester.pumpWidget(
         TestBuilder(
-          child: ReactterProvidersBuilder(
-            builder: (_, __) => ReactterBuilder<TestContext>(
-              listenHooks: (instance) => [
+          child: ReactterProviderBuilder(
+            builder: (instance, _, __) => ReactterBuilder<TestContext>(
+              listenStates: (instance) => [
                 instance.stateString,
                 instance.stateInt,
               ],
@@ -101,8 +137,8 @@ void main() {
     testWidgets("should shows child", (tester) async {
       await tester.pumpWidget(
         TestBuilder(
-          child: ReactterProvidersBuilder(
-            builder: (_, __) => const ReactterBuilder<TestContext>(
+          child: ReactterProviderBuilder(
+            builder: (_, __, ___) => const ReactterBuilder<TestContext>(
               child: Text('child'),
             ),
           ),
@@ -114,8 +150,8 @@ void main() {
 
       await tester.pumpWidget(
         TestBuilder(
-          child: ReactterProvidersBuilder(
-            builder: (_, __) => ReactterBuilder<TestContext>(
+          child: ReactterProviderBuilder(
+            builder: (_, __, ___) => ReactterBuilder<TestContext>(
               child: const Text('child2'),
               builder: (instance, context, child) {
                 return Column(
