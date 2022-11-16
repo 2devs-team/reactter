@@ -123,7 +123,10 @@ class Signal<T> extends Obj<T> with ReactterNotifyManager, ReactterState {
 extension SignalNullExt<T> on Signal<T?> {
   /// Returns a new `Signal<T>` with the value of the current `Signal<T?>`
   /// if it's not null.
-  Signal<T> get notNull => Signal<T>(value!);
+  Signal<T> get notNull {
+    assert(value != null);
+    return Signal<T>(value as T);
+  }
 }
 
 extension SignalGenericTypeExt<T> on T {
