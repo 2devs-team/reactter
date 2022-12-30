@@ -33,7 +33,7 @@ class TodosContext extends ReactterContext {
   }
 
   List<Todo> getTodosBy(TodoListType todoListType) {
-    if (todoListType == TodoListType.pending) {
+    if (todoListType == TodoListType.todo) {
       return state.value.todos.where((todo) => !todo.isDone).toList();
     }
 

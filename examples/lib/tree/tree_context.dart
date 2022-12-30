@@ -1,14 +1,23 @@
 import 'package:flutter_reactter/flutter_reactter.dart';
 
 class TreeContext extends ReactterContext {
-  TreeContext? parent;
+  final TreeContext? parent;
 
   late final count = UseState(0, this);
   late final total = UseState(0, this);
   late final children = UseState(<TreeContext>[], this);
   late final hide = UseState(false, this);
 
-  TreeContext() {
+  TreeContext([this.parent]) {
+    if (parent != null) {
+      UseEffect(() {
+        UseEvent.withInstance(this).on(
+          Lifecycle.didUpdate,
+          (_, __) => parent?._calculateTotal(),
+        );
+      }, [], this);
+    }
+
     UseEffect(_calculateTotal, [count, children]);
   }
 
@@ -17,14 +26,8 @@ class TreeContext extends ReactterContext {
   void decrease() => count.value--;
 
   void addChild() {
-    final child = TreeContext();
-    child.parent = this;
-
+    final child = TreeContext(this);
     children.update(() => children.value.add(child));
-
-    UseEvent.withInstance(child)
-        .on(Lifecycle.didUpdate, (_, __) => _calculateTotal());
-
     hide.value = false;
   }
 

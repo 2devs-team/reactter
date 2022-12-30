@@ -1,35 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_reactter/flutter_reactter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'badget.dart';
-import 'contexts/repository_context.dart';
 import 'models/repository.dart';
 
-class RepositoryItem extends ReactterComponent<RepositoryContext> {
+class RepositoryItem extends StatelessWidget {
   const RepositoryItem({Key? key, required this.repository}) : super(key: key);
 
   final Repository repository;
 
   @override
-  get builder => () => RepositoryContext()..repository.value = repository;
-
-  @override
-  Widget render(RepositoryContext ctx, BuildContext context) {
-    final repo = ctx.repository.value;
-
-    if (repo == null) return const SizedBox.shrink();
-
+  Widget build(BuildContext context) {
     return Column(
       children: [
         CircleAvatar(
           radius: 42,
           backgroundColor: Colors.transparent,
-          backgroundImage: NetworkImage(repo.owner.avatarUrl),
+          backgroundImage: NetworkImage(repository.owner.avatarUrl),
         ),
         GestureDetector(
           child: Text(
-            repo.fullName,
+            repository.fullName,
             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                   decoration: TextDecoration.underline,
                   fontWeight: FontWeight.bold,
@@ -37,13 +28,14 @@ class RepositoryItem extends ReactterComponent<RepositoryContext> {
                 ),
           ),
           onTap: () async {
-            final url = Uri.parse(repo.htmlUrl);
+            final url = Uri.parse(repository.htmlUrl);
             if (await canLaunchUrl(url)) {
               launchUrl(url);
             }
           },
         ),
-        Text(repo.description, style: Theme.of(context).textTheme.bodyLarge),
+        Text(repository.description,
+            style: Theme.of(context).textTheme.bodyLarge),
         const SizedBox(height: 16),
         Row(
           mainAxisSize: MainAxisSize.min,
@@ -51,7 +43,7 @@ class RepositoryItem extends ReactterComponent<RepositoryContext> {
             Badget(
               icon: Icons.star,
               label: "Stars",
-              value: "${repo.stargazersCount}",
+              value: "${repository.stargazersCount}",
               labelColor: const Color(0xfff7b05b),
               valueColor: const Color(0xffc68d49),
             ),
@@ -59,7 +51,7 @@ class RepositoryItem extends ReactterComponent<RepositoryContext> {
             Badget(
               icon: Icons.visibility_rounded,
               label: "Watching",
-              value: "${repo.watchersCount}",
+              value: "${repository.watchersCount}",
               labelColor: const Color(0xff23967F),
               valueColor: const Color(0xff196959),
             ),
@@ -67,7 +59,7 @@ class RepositoryItem extends ReactterComponent<RepositoryContext> {
             Badget(
               icon: Icons.call_split,
               label: "Forks",
-              value: "${repo.forks}",
+              value: "${repository.forks}",
               labelColor: const Color(0xff8075FF),
               valueColor: const Color(0xff5a52b3),
             ),

@@ -1,6 +1,6 @@
 import 'todo_entity.dart';
 
-enum TodoListType { all, done, pending }
+enum TodoListType { all, done, todo }
 
 class TodosStore {
   final List<Todo> todos;

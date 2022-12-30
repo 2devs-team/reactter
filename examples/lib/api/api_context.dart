@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_reactter/flutter_reactter.dart';
 
-import '../models/repository.dart';
-import '../models/user.dart';
+import 'models/repository.dart';
+import 'models/user.dart';
 
 class ApiContext extends ReactterContext {
   final formKey = GlobalKey<FormState>();
