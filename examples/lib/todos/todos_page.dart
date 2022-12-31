@@ -51,9 +51,7 @@ class TodosPage extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            const SizedBox(
-                              width: 16,
-                            ),
+                            const SizedBox(width: 16),
                             ElevatedButton(
                               onPressed: todosCtx.addTodo,
                               child: Padding(
@@ -69,9 +67,7 @@ class TodosPage extends StatelessWidget {
                             ),
                           ],
                         ),
-                        const SizedBox(
-                          height: 16,
-                        ),
+                        const SizedBox(height: 16),
                         Builder(
                           builder: (context) {
                             context.watch<TodosContext>((ctx) => [ctx.state]);
@@ -89,7 +85,7 @@ class TodosPage extends StatelessWidget {
                                 ),
                                 Tab(
                                   text:
-                                      "Pending(${todosCtx.getTodosBy(TodoListType.pending).length})",
+                                      "To-Do(${todosCtx.getTodosBy(TodoListType.todo).length})",
                                 ),
                               ],
                             );
@@ -101,9 +97,9 @@ class TodosPage extends StatelessWidget {
                   Expanded(
                     child: Builder(
                       builder: (context) {
-                        context.watch<TodosContext>((ctx) => [ctx.state]);
-
-                        final todoList = todosCtx.todosFiltered;
+                        final todoList = context
+                            .watch<TodosContext>((ctx) => [ctx.state])
+                            .todosFiltered;
 
                         return SingleChildScrollView(
                           child: ListView.builder(

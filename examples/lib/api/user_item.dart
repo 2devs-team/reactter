@@ -1,25 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_reactter/flutter_reactter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'badget.dart';
-import 'contexts/user_context.dart';
 import 'models/user.dart';
 
-class UserItem extends ReactterComponent<UserContext> {
+class UserItem extends StatelessWidget {
   const UserItem({Key? key, required this.user}) : super(key: key);
 
   final User user;
 
   @override
-  get builder => () => UserContext()..user.value = user;
-
-  @override
-  Widget render(UserContext ctx, BuildContext context) {
-    final user = ctx.user.value;
-
-    if (user == null) return const SizedBox.shrink();
-
+  Widget build(BuildContext context) {
     return Column(
       children: [
         CircleAvatar(

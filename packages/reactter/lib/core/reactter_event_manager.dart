@@ -1,4 +1,4 @@
-// ignore_for_file: constant_identifier_names, avoid_print
+// ignore_for_file: constant_identifier_names
 part of '../core.dart';
 
 /// A mixin-class to provides the ability to manager events
@@ -16,7 +16,7 @@ mixin ReactterEventManager {
     CallbackEvent<T, P> callback,
   ) {
     if (instance is ReactterNotifyManager) {
-      instance._listenersCount += 1;
+      instance._addListener();
     }
 
     final _eventKey = _getEventKey(instance, eventName);
@@ -62,7 +62,7 @@ mixin ReactterEventManager {
     }
 
     if (instance is ReactterNotifyManager) {
-      instance._listenersCount -= 1;
+      instance._removeListener();
     }
 
     _events[_eventKey]?.remove(callback);
@@ -78,11 +78,10 @@ mixin ReactterEventManager {
     Enum eventName, [
     dynamic param,
   ]) {
-    final _callbacks = _getCallbacks(instance, eventName);
-
-    if (_callbacks == null) return;
-
-    final callbacks = {..._callbacks};
+    final callbacks = {
+      ...?_events[_getEventKey(instance, eventName)],
+      ...?_events["${instance.hashCode}.${eventName.hashCode}"],
+    };
 
     for (var callback in callbacks) {
       callback(_getInstance(instance), param);
@@ -95,11 +94,10 @@ mixin ReactterEventManager {
     Enum eventName, [
     dynamic param,
   ]) async {
-    final _callbacks = _getCallbacks(instance, eventName);
-
-    if (_callbacks == null) return;
-
-    final callbacks = {..._callbacks};
+    final callbacks = {
+      ...?_events[_getEventKey(instance, eventName)],
+      ...?_events["${instance.hashCode}.${eventName.hashCode}"],
+    };
 
     await Future.wait(
       callbacks.map(
@@ -127,6 +125,13 @@ mixin ReactterEventManager {
     _events.removeWhere(
       (key, value) => key.startsWith(instanceKeyWithDot),
     );
+    _oneCallbacks.removeWhere(
+      (key, value) => key.startsWith(instanceKeyWithDot),
+    );
+
+    if (instance is ReactterNotifyManager) {
+      instance._removeAllListeners();
+    }
   }
 
   String _getInstanceKey(Object? instance) {
@@ -134,8 +139,7 @@ mixin ReactterEventManager {
       return instance.stored?.key ?? instance.key;
     }
 
-    final reactterInstance = Reactter.find(instance);
-    return reactterInstance?.key ?? "${instance.hashCode}";
+    return Reactter.find(instance)?.key ?? "${instance.hashCode}";
   }
 
   /// Returns a combination of the instance key, the event name key,
@@ -145,34 +149,15 @@ mixin ReactterEventManager {
     Enum eventName, [
     Function? callback,
   ]) {
-    final instanceKey = _getInstanceKey(instance);
-    final eventNameKey = "${eventName.hashCode}";
-
-    if (callback != null) {
-      return "$instanceKey.$eventNameKey.${callback.hashCode}";
+    if (callback == null) {
+      return "${_getInstanceKey(instance)}.${eventName.hashCode}";
     }
 
-    return "$instanceKey.$eventNameKey";
+    return "${_getInstanceKey(instance)}.${eventName.hashCode}.${callback.hashCode}";
   }
 
-  Object? _getInstance(Object? instance) =>
-      instance is ReactterInstance ? instance.stored?.instance : instance;
-
-  HashSet<Function>? _getCallbacks(
-    Object? instance,
-    Enum eventName,
-  ) {
-    if (_events.isEmpty) {
-      return null;
-    }
-
-    final eventCallbacks = _events[_getEventKey(instance, eventName)];
-
-    if (eventCallbacks?.isEmpty ?? false) {
-      return null;
-    }
-
-    return eventCallbacks;
+  Object? _getInstance(Object? instance) {
+    return instance is ReactterInstance ? instance.stored?.instance : instance;
   }
 
   void _oneOff<T, P>(

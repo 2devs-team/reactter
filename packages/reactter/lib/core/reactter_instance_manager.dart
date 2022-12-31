@@ -3,9 +3,10 @@ part of '../core.dart';
 
 /// A mixin-class to provides the ability to manager instances.
 mixin ReactterInstanceManager {
-  final HashMap<String, ReactterInstance> _instances = HashMap();
+  final HashMap<String, ReactterInstance> _instancesByKey = HashMap();
+  final HashMap<Object, ReactterInstance> _instancesCreated = HashMap();
 
-  /// Registers a [builder] function into to [_instances]
+  /// Registers a [builder] function into to [_instancesByKey]
   /// to allows to create the instance with [get].
   ///
   /// Returns `true` when instance has been registered.
@@ -14,7 +15,7 @@ mixin ReactterInstanceManager {
     String? id,
   }) {
     final instanceKey = ReactterInstance.generateKey<T?>(id);
-    var reactterInstance = _instances[instanceKey];
+    var reactterInstance = _instancesByKey[instanceKey];
 
     if (reactterInstance?._builder != null) {
       Reactter.log('Instance "$reactterInstance" already registered.');
@@ -22,19 +23,19 @@ mixin ReactterInstanceManager {
     }
 
     reactterInstance =
-        _instances[instanceKey] = ReactterInstance<T>(id, builder);
+        _instancesByKey[instanceKey] = ReactterInstance<T>(id, builder);
 
     Reactter.emit(reactterInstance, Lifecycle.registered);
     Reactter.log('Instance "$reactterInstance" has been registered.');
     return true;
   }
 
-  /// Removes a builder function from [_instances].
+  /// Removes a builder function from [_instancesByKey].
   ///
   /// Returns `true` when instance has been unregistered.
   bool unregister<T extends Object>([String? id]) {
     final instanceKey = ReactterInstance.generateKey<T?>(id);
-    var reactterInstance = _instances[instanceKey];
+    var reactterInstance = _instancesByKey[instanceKey];
 
     if (reactterInstance == null) {
       reactterInstance = ReactterInstance<T>(id);
@@ -47,7 +48,7 @@ mixin ReactterInstanceManager {
     Reactter.emit(reactterInstance, Lifecycle.unregistered);
     Reactter.dispose(reactterInstance);
 
-    _instances.remove(instanceKey);
+    _instancesByKey.remove(instanceKey);
 
     Reactter.log('Instance "$reactterInstance" has been unregistered.');
     return true;
@@ -81,12 +82,12 @@ mixin ReactterInstanceManager {
     return reactterInstance?.instance;
   }
 
-  /// Deletes the instance from [_instances] but keep the [_builder] function.
+  /// Deletes the instance from [_instancesByKey] but keep the [_builder] function.
   ///
   /// Returns `true` when the instance has been deleted.
   bool delete<T extends Object?>([String? id, Object? ref]) {
     final instanceKey = ReactterInstance.generateKey<T?>(id);
-    var reactterInstance = _instances[instanceKey];
+    var reactterInstance = _instancesByKey[instanceKey];
 
     if (reactterInstance == null || reactterInstance.instance == null) {
       reactterInstance = ReactterInstance<T>(id);
@@ -115,32 +116,25 @@ mixin ReactterInstanceManager {
   /// Get the [ReactterInstance] of [instance] given.
   ///
   /// If found it, returns it, else returns `null`.
-  ReactterInstance? find(Object? instance) {
-    try {
-      return _instances.values
-          .firstWhere((element) => element.instance == instance);
-    } catch (e) {
-      return null;
-    }
-  }
+  ReactterInstance? find(Object? instance) => _instancesCreated[instance];
 
   /// Valids if the instance of [T] with or without [id] given exists.
   bool exists<T extends Object?>([String? id]) {
     final instanceKey = ReactterInstance.generateKey<T?>(id);
 
-    return _instances[instanceKey]?.instance != null;
+    return _instancesByKey[instanceKey]?.instance != null;
   }
 
   T? instanceOf<T extends Object?>([String? id]) {
     final instanceKey = ReactterInstance.generateKey<T?>(id);
-    return _instances[instanceKey]?.instance;
+    return _instancesByKey[instanceKey]?.instance;
   }
 
   ReactterInstance<T?>? _getAndCreateIfNotExtist<T extends Object?>([
     String? id,
   ]) {
     final instanceKey = ReactterInstance.generateKey<T?>(id);
-    var reactterInstance = _instances[instanceKey] as ReactterInstance<T>?;
+    var reactterInstance = _instancesByKey[instanceKey] as ReactterInstance<T>?;
 
     if (reactterInstance?._builder == null) {
       reactterInstance = ReactterInstance<T>(id);
@@ -161,9 +155,7 @@ mixin ReactterInstanceManager {
       return reactterInstance;
     }
 
-    _asignInstanceToSignals(
-      () => reactterInstance?._instance = reactterInstance._builder?.call(),
-    );
+    _asignInstanceToSignals<T>(reactterInstance);
 
     Reactter.emit(reactterInstance, Lifecycle.initialized);
     Reactter.log('Instance "$reactterInstance" has been created.');
@@ -171,7 +163,7 @@ mixin ReactterInstanceManager {
     return reactterInstance;
   }
 
-  void _asignInstanceToSignals(Object? Function() buildInstance) {
+  void _asignInstanceToSignals<T>(ReactterInstance reactterInstance) {
     final _isBusy = Reactter._instancesBuilding;
     final List<Signal> _signalsTemp =
         _isBusy ? List.from(Reactter._signalsRecollected) : [];
@@ -182,7 +174,7 @@ mixin ReactterInstanceManager {
 
     Reactter._instancesBuilding = true;
 
-    final instance = buildInstance();
+    final instance = _createInstance<T>(reactterInstance);
 
     if (instance is ReactterHookManager) {
       instance._listenStates();
@@ -204,6 +196,16 @@ mixin ReactterInstanceManager {
     Reactter._instancesBuilding = false;
   }
 
+  T _createInstance<T>(ReactterInstance reactterInstance) {
+    reactterInstance._instance = reactterInstance._builder?.call();
+
+    if (reactterInstance._instance != null) {
+      _instancesCreated[reactterInstance._instance!] = reactterInstance;
+    }
+
+    return reactterInstance._instance;
+  }
+
   void _removeInstance<T>(ReactterInstance reactterInstance) {
     final log = 'Instance "$reactterInstance" has been deleted.';
 
@@ -214,6 +216,8 @@ mixin ReactterInstanceManager {
     if (reactterInstance.instance is ReactterHookManager) {
       (reactterInstance.instance as ReactterHookManager)._unlistenHooks();
     }
+
+    _instancesCreated.remove(reactterInstance.instance);
 
     reactterInstance._instance = null;
 

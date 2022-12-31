@@ -20,7 +20,7 @@ final items = <ListItem>[
       "ReactterWatcher",
       "Signal",
     ],
-    () => CounterPage(),
+    () => const CounterPage(),
   ),
   ExampleItem(
     "Calculator",
@@ -73,10 +73,8 @@ final items = <ListItem>[
     "Search user or repository and show info about it.",
     [
       "ReactterContext",
-      "ReactterComponent",
       "ReactterProvider",
       "UseAsyncState",
-      "UseState",
     ],
     () => const ApiPage(),
   ),

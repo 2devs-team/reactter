@@ -26,6 +26,11 @@ void main() {
 
     test("should notifies when its value is changed", () {
       final signal = "initial".signal;
+
+      signal.updateAsync((value) {
+        signal("change value before listen");
+      });
+
       late final willUpdateChecked;
       late final didUpdateChecked;
 

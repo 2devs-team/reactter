@@ -49,11 +49,11 @@ abstract class ReactterHook extends ReactterHookManager with ReactterState {
 
   @mustCallSuper
   void update([Function? callback]) {
-    return super.update(() => callback?.call());
+    return super.update(callback ?? () {});
   }
 
   @mustCallSuper
   Future<void> updateAsync([Function? callback]) async {
-    return super.updateAsync(() => callback?.call());
+    return super.updateAsync(callback ?? () {});
   }
 }

@@ -3,7 +3,6 @@ part of '../../widgets.dart';
 /// A class that holds a reference to a state or an instance, and it can add and remove listeners
 /// to the state or instance
 class ReactterDependency<T> {
-  final String? _id;
   Object? _instance;
   final Set<ReactterState>? _states;
 
@@ -13,7 +12,6 @@ class ReactterDependency<T> {
     Set<ReactterState>? states,
   })  : assert((instance != null && states == null) ||
             (states != null && instance == null)),
-        _id = id,
         _instance = instance,
         _states = states;
 
@@ -67,12 +65,4 @@ class ReactterDependency<T> {
       Reactter.off(_instance, Lifecycle.didUpdate, callback);
     }
   }
-
-  /// Is equal with [T] and [_id]
-  @override
-  bool operator ==(Object other) =>
-      other is ReactterDependency<T?> && other._id == _id;
-
-  @override
-  int get hashCode => Object.hash(T, _id);
 }

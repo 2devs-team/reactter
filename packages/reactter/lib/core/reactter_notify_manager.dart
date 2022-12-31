@@ -4,23 +4,15 @@ part of '../core.dart';
 mixin ReactterNotifyManager {
   bool _isDisposed = false;
   bool _isUpdating = false;
-  bool _shouldNotifyListeners = false;
-
-  /// Increments when this is subscribes to `Lifecycle.willUpdate` or
-  /// `Lifecycle.didUpdate` event.
-  int _count = 0;
-  int get _listenersCount => _count;
-  set _listenersCount(int val) {
-    _count = val;
-    _shouldNotifyListeners = _listenersCount > 0;
-  }
+  bool _hasListeners = false;
+  int _listenersCount = 0;
 
   /// Executes [fnUpdate], and notify the listeners about to update.
   @mustCallSuper
   void update(covariant Function fnUpdate) {
     assert(!_isDisposed, "You can update when it's been disposed");
 
-    if (_isUpdating) {
+    if (!_hasListeners || _isUpdating) {
       fnUpdate();
       return;
     }
@@ -39,9 +31,8 @@ mixin ReactterNotifyManager {
   Future<void> updateAsync(covariant Function fnUpdate) async {
     assert(!_isDisposed, "You can update when it's been disposed");
 
-    if (_isUpdating) {
-      await fnUpdate();
-      return;
+    if (!_hasListeners || _isUpdating) {
+      return await fnUpdate();
     }
 
     _isUpdating = true;
@@ -67,21 +58,28 @@ mixin ReactterNotifyManager {
     _isUpdating = false;
   }
 
-  void _notify(Enum event) {
-    if (_shouldNotifyListeners) {
-      Reactter.emit(this, event, this);
-    }
-  }
-
-  Future<void> _notifyAsync(Enum event) async {
-    if (_shouldNotifyListeners) {
-      Reactter.emitAsync(this, event, this);
-    }
-  }
-
   /// Called when this object is removed
   @mustCallSuper
-  void dispose() {
-    _isDisposed = true;
+  void dispose() => _isDisposed = true;
+
+  void _notify(Enum event) => Reactter.emit(this, event, this);
+
+  Future<void> _notifyAsync(Enum event) async {
+    return Reactter.emitAsync(this, event, this);
+  }
+
+  void _addListener() {
+    _listenersCount++;
+    _hasListeners = true;
+  }
+
+  void _removeListener() {
+    _listenersCount--;
+    _hasListeners = _listenersCount == 0;
+  }
+
+  void _removeAllListeners() {
+    _listenersCount = 0;
+    _hasListeners = false;
   }
 }
