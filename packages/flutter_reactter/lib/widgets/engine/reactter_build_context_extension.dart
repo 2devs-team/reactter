@@ -24,8 +24,9 @@ extension ReactterBuildContextExtension on BuildContext {
   /// ```dart
   /// ReactterProvider.contextOf<T>(context, listenStates: listenStates);
   /// ```
-  T watch<T extends ReactterContext?>([ListenStates<T>? listenStates]) =>
-      ReactterProvider.contextOf<T>(this, listenStates: listenStates);
+  T watch<T extends ReactterContext?>([ListenStates<T>? listenStates]) {
+    return ReactterProvider.contextOf<T>(this, listenStates: listenStates);
+  }
 
   /// Gets the [ReactterContext]'s instance of [T]
   /// from the closest ancestor of [ReactterProvider] and watch all [ReactterHook]
@@ -52,8 +53,13 @@ extension ReactterBuildContextExtension on BuildContext {
   T watchId<T extends ReactterContext?>(
     String id, [
     ListenStates<T>? listenStates,
-  ]) =>
-      ReactterProvider.contextOf<T>(this, id: id, listenStates: listenStates);
+  ]) {
+    return ReactterProvider.contextOf<T>(
+      this,
+      id: id,
+      listenStates: listenStates,
+    );
+  }
 
   /// Gets the [ReactterContext]'s instance of [T] with/without [id]
   /// from the closest ancestor of [ReactterProvider].
@@ -75,8 +81,9 @@ extension ReactterBuildContextExtension on BuildContext {
   /// ```dart
   /// ReactterProvider.contextOf<T>(context, id: id, listen: false);
   /// ```
-  T use<T extends ReactterContext?>([String? id]) =>
-      ReactterProvider.contextOf<T>(this, id: id, listen: false);
+  T use<T extends ReactterContext?>([String? id]) {
+    return ReactterProvider.contextOf<T>(this, id: id, listen: false);
+  }
 }
 
 /// The error that will be thrown

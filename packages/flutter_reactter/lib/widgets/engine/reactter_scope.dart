@@ -5,7 +5,7 @@ part of '../../widgets.dart';
 mixin ReactterScopeElementMixin on InheritedElement {
   bool _updatedShouldNotify = false;
   final HashSet<Object> _instanceOrStatesDirty = HashSet();
-  final HashSet<Element> _dependents = HashSet();
+  final HashMap<Element, Object?> _dependents = HashMap<Element, Object?>();
 
   @override
   void update(InheritedWidget newWidget) {
@@ -30,49 +30,48 @@ mixin ReactterScopeElementMixin on InheritedElement {
   }
 
   @override
+  Object? getDependencies(Element dependent) => _dependents[dependent];
+
+  @override
   void updateDependencies(Element dependent, Object? aspect) {
     if (aspect is! ReactterDependency) {
       return;
     }
 
-    final dependenciesCurrent = getDependencies(dependent);
+    final dependencyOrigin = getDependencies(dependent);
 
-    if (dependenciesCurrent != null &&
-        dependenciesCurrent is! Set<ReactterDependency>) {
+    if (dependencyOrigin != null && dependencyOrigin is! ReactterDependency) {
       return;
     }
 
-    final dependencies = (dependenciesCurrent ?? <ReactterDependency>{})
-        as Set<ReactterDependency>;
-    final dependencyFound = dependencies.lookup(aspect);
+    final dependency = (dependencyOrigin ?? aspect) as ReactterDependency;
 
-    if (dependencyFound == null) {
-      dependencies.add(aspect);
-      aspect._addListener(_markNeedsNotifyDependents);
-      return setDependencies(dependent, dependencies);
+    if (dependencyOrigin == null) {
+      dependency._addListener(_markNeedsNotifyDependents);
+      return setDependencies(dependent, dependency);
     }
 
     if (aspect._instance != null) {
-      dependencyFound._addInstanceAndListener(
+      dependency._addInstanceAndListener(
         aspect._instance,
         _markNeedsNotifyDependents,
       );
-      return setDependencies(dependent, dependencies);
+      return setDependencies(dependent, dependency);
     }
 
     if (aspect._states != null) {
-      dependencyFound._addStatesAndListener(
+      dependency._addStatesAndListener(
         aspect._states!,
         _markNeedsNotifyDependents,
       );
-      return setDependencies(dependent, dependencies);
+      return setDependencies(dependent, dependency);
     }
   }
 
   @override
   void setDependencies(Element dependent, Object? value) {
-    if (value is Set<ReactterDependency>) {
-      _dependents.add(dependent);
+    if (value is ReactterDependency) {
+      _dependents[dependent] = value;
     }
 
     super.setDependencies(dependent, value);
@@ -86,41 +85,23 @@ mixin ReactterScopeElementMixin on InheritedElement {
 
   @override
   void notifyDependent(InheritedWidget oldWidget, Element dependent) {
-    var shouldNotify = false;
-    final dependencies = getDependencies(dependent);
+    // select can never be used inside `didChangeDependencies`, so if the
+    // dependent is already marked as needed build, there is no point
+    // in executing the selectors.
+    if (dependent.dirty) return;
 
-    if (dependencies != null) {
-      if (dependencies is Set<ReactterDependency>) {
-        // select can never be used inside `didChangeDependencies`, so if the
-        // dependent is already marked as needed build, there is no point
-        // in executing the selectors.
-        if (dependent.dirty) {
-          return;
-        }
+    final dependency = getDependencies(dependent);
 
-        forDependecies:
-        for (final dependency in dependencies) {
-          shouldNotify = _instanceOrStatesDirty.contains(dependency._instance);
-
-          if (shouldNotify) break forDependecies;
-
-          if (dependency._states != null) {
-            for (final state in dependency._states!) {
-              shouldNotify = _instanceOrStatesDirty.contains(state);
-
-              if (shouldNotify) break forDependecies;
-            }
-          }
-        }
-      } else {
-        shouldNotify = true;
-      }
-    }
-
-    if (shouldNotify) {
+    if (dependency is! ReactterDependency ||
+        _hasInstanceOrStatesDirty(dependency)) {
       dependent.didChangeDependencies();
       _removeDependencies(dependent);
     }
+  }
+
+  bool _hasInstanceOrStatesDirty(ReactterDependency dependency) {
+    return _instanceOrStatesDirty.contains(dependency._instance) ||
+        dependency._states?.any(_instanceOrStatesDirty.contains) == true;
   }
 
   void _markNeedsNotifyDependents(Object? instanceOrState, _) {
@@ -130,21 +111,24 @@ mixin ReactterScopeElementMixin on InheritedElement {
   }
 
   void _removeDependents() {
-    for (final dependent in _dependents) {
-      _removeDependencies(dependent);
+    for (final dependent in _dependents.keys) {
+      _removeDependenciesListener(dependent);
     }
+
+    _dependents.clear();
   }
 
   void _removeDependencies(Element dependent) {
-    final dependencies = getDependencies(dependent);
-
-    if (dependencies is! Set<ReactterDependency>) return;
-
-    for (final dependency in dependencies) {
-      dependency._removeListener(_markNeedsNotifyDependents);
-    }
-
-    super.setDependencies(dependent, null);
+    _removeDependenciesListener(dependent);
+    setDependencies(dependent, null);
     _dependents.remove(dependent);
+  }
+
+  void _removeDependenciesListener(Element dependent) {
+    final dependency = getDependencies(dependent);
+
+    if (dependency is! ReactterDependency) return;
+
+    dependency._removeListener(_markNeedsNotifyDependents);
   }
 }
