@@ -1,4 +1,21 @@
 # Reactter
+
+## 4.1.0
+
+### Enhancements
+
+- **perf(core)**: Improve performance for changing states.
+- **perf(engine)**: Improve management for context dependencies.
+
+### Fixes
+
+- **fix(core)**: Remove the callbacks of one events when the instance will be disposed.
+
+### Internal
+
+- **refactor(example)**: Improve examples and fix some bugs.
+- **doc**: Fix documentation.
+
 ## 4.0.0
 
 ### Enhancements
