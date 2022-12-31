@@ -50,8 +50,6 @@ abstract class ReactterHookManager with ReactterNotifyManager {
       _states.add(hook);
 
       if (_isCreated) {
-        Reactter.off(hook, Lifecycle.willUpdate, _onHookWillUpdate);
-        Reactter.off(hook, Lifecycle.didUpdate, _onHookDidUpdate);
         Reactter.on(hook, Lifecycle.willUpdate, _onHookWillUpdate);
         Reactter.on(hook, Lifecycle.didUpdate, _onHookDidUpdate);
       }

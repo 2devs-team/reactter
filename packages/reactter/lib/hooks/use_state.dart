@@ -58,14 +58,10 @@ class UseState<T> extends ReactterHook {
   /// Set value state
   set value(T value) {
     if (value != _value || value.hashCode != _value.hashCode) {
-      update(() {
-        _value = value;
-      });
+      update(() => _value = value);
     }
   }
 
   /// Reset the state to initial value
-  void reset() {
-    value = initial;
-  }
+  void reset() => value = initial;
 }
