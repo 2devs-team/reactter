@@ -44,11 +44,6 @@ extension _AnimationControllerExtension on AnimationController {
   ///
   /// Returns a [TickerFuture] that completes when the animation ends or
   /// get canceled.
-  ///
-  /// Example: (using [supercharged](https://pub.dev/packages/supercharged))
-  /// ```dart
-  /// controller.play(5.seconds);
-  /// ```
   TickerFuture play({Duration? duration}) {
     this.duration = duration ?? this.duration;
     return forward();
@@ -61,11 +56,6 @@ extension _AnimationControllerExtension on AnimationController {
   ///
   /// Returns a [TickerFuture] that completes when the animation ends or
   /// get canceled.
-  ///
-  /// Example: (using [supercharged](https://pub.dev/packages/supercharged))
-  /// ```dart
-  /// controller.playReverse(5.seconds);
-  /// ```
   TickerFuture playReverse({Duration? duration}) {
     this.duration = duration ?? this.duration;
     return reverse();
@@ -80,11 +70,6 @@ extension _AnimationControllerExtension on AnimationController {
   ///
   /// Returns a [TickerFuture] that only completes when the animation gets
   /// canceled.
-  ///
-  /// Example: (using [supercharged](https://pub.dev/packages/supercharged))
-  /// ```dart
-  /// controller.loop(5.seconds);
-  /// ```
   TickerFuture loop({Duration? duration}) {
     this.duration = duration ?? this.duration;
     return repeat();
@@ -99,11 +84,6 @@ extension _AnimationControllerExtension on AnimationController {
   ///
   /// Returns a [TickerFuture] that only completes when the animation gets
   /// canceled.
-  ///
-  /// Example: (using [supercharged](https://pub.dev/packages/supercharged))
-  /// ```dart
-  /// controller.mirror(5.seconds);
-  /// ```
   TickerFuture mirror({Duration? duration}) {
     this.duration = duration ?? this.duration;
     return repeat(reverse: true);
@@ -143,6 +123,9 @@ class UseAnimation<T> extends ReactterHook implements TickerProvider {
 
   late final _event = UseEvent.withInstance(this);
 
+  bool _waitForDelay = true;
+  bool _isControlSetToMirror = false;
+  Set<Ticker>? _tickers;
   late Animation<T> _animation;
   T get value => _animation.value;
 
@@ -151,10 +134,6 @@ class UseAnimation<T> extends ReactterHook implements TickerProvider {
     duration: duration.value,
     vsync: this,
   );
-
-  var _waitForDelay = true;
-  var _isControlSetToMirror = false;
-  Set<Ticker>? _tickers;
 
   UseAnimation(this.options, [this._context]) : super(_context) {
     UseEvent.withInstance(_context)
@@ -166,71 +145,60 @@ class UseAnimation<T> extends ReactterHook implements TickerProvider {
 
     _buildAnimation();
 
-    UseEffect(_rebuild, [tween, control, curve], _context);
+    UseEffect(
+      _rebuild,
+      [tween, control, curve],
+      _context,
+    );
 
-    UseEffect(() {
-      _aniController.duration = duration.value;
-    }, [duration], _context);
+    UseEffect(
+      () => _aniController.duration = duration.value,
+      [duration],
+      _context,
+    );
   }
 
   void play({Duration? duration}) {
     this.duration.value = duration ?? this.duration.value;
-
-    control.update(() {
-      control.value = AnimationControl.play;
-    });
+    control.update(() => control.value = AnimationControl.play);
   }
 
   void playReverse({Duration? duration}) {
     this.duration.value = duration ?? this.duration.value;
-
-    control.update(() {
-      control.value = AnimationControl.playReverse;
-    });
+    control.update(() => control.value = AnimationControl.playReverse);
   }
 
   void playFromStart({Duration? duration}) {
     this.duration.value = duration ?? this.duration.value;
-
-    control.update(() {
-      control.value = AnimationControl.playFromStart;
-    });
+    control.update(() => control.value = AnimationControl.playFromStart);
   }
 
   void playReverseFromEnd({Duration? duration}) {
     this.duration.value = duration ?? this.duration.value;
-
-    control.update(() {
-      control.value = AnimationControl.playReverseFromEnd;
-    });
+    control.update(() => control.value = AnimationControl.playReverseFromEnd);
   }
 
   void loop({Duration? duration}) {
     this.duration.value = duration ?? this.duration.value;
-
-    control.update(() {
-      control.value = AnimationControl.loop;
-    });
+    control.update(() => control.value = AnimationControl.loop);
   }
 
   void mirror({Duration? duration}) {
     this.duration.value = duration ?? this.duration.value;
-
-    control.update(() {
-      control.value = AnimationControl.mirror;
-    });
+    control.update(() => control.value = AnimationControl.mirror);
   }
 
   void stop() {
-    control.update(() {
-      control.value = AnimationControl.stop;
-    });
+    control.update(() => control.value = AnimationControl.stop);
   }
 
   @override
   Ticker createTicker(TickerCallback onTick) {
-    final result =
-        _AnimationTicker(onTick, this, debugLabel: 'created by $this');
+    final result = _AnimationTicker(
+      onTick,
+      this,
+      debugLabel: 'created by $this',
+    );
 
     _tickers ??= <_AnimationTicker>{};
     _tickers!.add(result);
