@@ -58,6 +58,7 @@ abstract class ReactterHookManager with ReactterNotifyManager {
 
   void _listenStates() {
     for (final state in _states) {
+      state._isDisposed = false;
       Reactter.on(state, Lifecycle.willUpdate, _onHookWillUpdate);
       Reactter.on(state, Lifecycle.didUpdate, _onHookDidUpdate);
     }

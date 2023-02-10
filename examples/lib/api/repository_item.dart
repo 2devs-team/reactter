@@ -34,8 +34,10 @@ class RepositoryItem extends StatelessWidget {
             }
           },
         ),
-        Text(repository.description,
-            style: Theme.of(context).textTheme.bodyLarge),
+        Text(
+          repository.description,
+          style: Theme.of(context).textTheme.bodyLarge,
+        ),
         const SizedBox(height: 16),
         Row(
           mainAxisSize: MainAxisSize.min,

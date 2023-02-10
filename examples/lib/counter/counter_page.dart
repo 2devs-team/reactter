@@ -19,10 +19,10 @@ class CounterPage extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             ReactterWatcher(
-              builder: (context, child) {
+              builder: (_, __) {
                 return Text(
                   "$count",
-                  style: Theme.of(context).textTheme.headline3,
+                  style: Theme.of(context).textTheme.displaySmall,
                 );
               },
             ),
@@ -32,12 +32,12 @@ class CounterPage extends StatelessWidget {
               children: const [
                 ElevatedButton(
                   onPressed: decrease,
-                  child: Text(" - Decrease"),
+                  child: Text("–"),
                 ),
                 SizedBox(width: 8),
                 ElevatedButton(
                   onPressed: increase,
-                  child: Text("Increase +"),
+                  child: Text("+"),
                 ),
               ],
             ),

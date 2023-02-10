@@ -15,83 +15,98 @@ enum ActionCalculator {
   number,
 }
 
-class CalculatorContext extends ReactterContext {
-  late final operations = {
-    ActionCalculator.add: (double first, double second) => first + second,
-    ActionCalculator.subtract: (double first, double second) => first - second,
-    ActionCalculator.multiply: (double first, double second) => first * second,
-    ActionCalculator.divide: (double first, double second) => first / second,
-  };
+final mathOperationActions = {
+  ActionCalculator.add: (double first, double second) => first + second,
+  ActionCalculator.subtract: (double first, double second) => first - second,
+  ActionCalculator.multiply: (double first, double second) => first * second,
+  ActionCalculator.divide: (double first, double second) => first / second,
+};
 
+class CalculatorContext extends ReactterContext {
   double? first, second;
   ActionCalculator? lastAction;
 
-  final operation = Signal<ActionCalculator?>(null);
+  final mathOperation = Signal<ActionCalculator?>(null);
   final result = "0".signal;
 
   void executeAction(ActionCalculator action, [int? value]) {
-    if (action == ActionCalculator.clear) {
-      first = null;
-      second = null;
-      operation(null);
-      result("0");
-      lastAction = action;
-      return;
-    }
+    final isMathOperator = mathOperationActions.keys.contains(action);
+    final isMathOperatorLastAction =
+        mathOperationActions.keys.contains(lastAction);
+    final isEqualLastAction = lastAction == ActionCalculator.equal;
 
-    final isOperator = operations.keys.contains(action);
-    final isOperatorLastAction = operations.keys.contains(lastAction);
+    lastAction = action;
 
-    if (isOperator && !isOperatorLastAction) {
-      first = double.tryParse(result());
-      operation(action);
-      lastAction = action;
-      return;
-    }
-
-    if (action == ActionCalculator.equal) {
-      if (first == null || operation == null) return;
-
-      second = double.parse(result());
-
-      final fnOperation = operations[operation()]!;
-
-      result(formatValue(fnOperation(first!, second!)));
-      lastAction = action;
-      return;
+    if (isMathOperator && !isMathOperatorLastAction) {
+      return _saveNumberAndOperation(action);
     }
 
     if (action == ActionCalculator.porcentage) {
-      result(formatValue(double.parse(result()) / 100));
-      lastAction = action;
-      return;
+      return _calculatePercentage();
     }
 
     if (action == ActionCalculator.sign) {
-      result(formatValue(double.parse(result()) * -1));
-      lastAction = action;
-      return;
+      return _changeSign();
     }
 
     if (action == ActionCalculator.point) {
-      if (result().contains(".")) return;
-
-      result("$result.");
-      lastAction = action;
-      return;
+      return _addPoint();
     }
 
-    if (isOperatorLastAction || lastAction == ActionCalculator.equal) {
-      result(formatValue((value ?? 0.0).toDouble()));
-      lastAction = action;
-      return;
+    if (action == ActionCalculator.equal) {
+      return _resolve();
     }
 
-    result(formatValue(double.tryParse("$result$value") ?? 0));
-    lastAction = action;
+    if (action == ActionCalculator.clear) {
+      return _clear();
+    }
+
+    if (isMathOperatorLastAction || isEqualLastAction) {
+      _resetResult();
+    }
+
+    result(_formatValue(double.tryParse("$result$value") ?? 0));
   }
 
-  String formatValue(double value) {
+  void _saveNumberAndOperation(ActionCalculator action) {
+    first = double.tryParse(result.value);
+    mathOperation(action);
+  }
+
+  void _calculatePercentage() {
+    result(_formatValue(double.parse(result.value) / 100));
+  }
+
+  void _changeSign() {
+    result(_formatValue(double.parse(result.value) * -1));
+  }
+
+  void _addPoint() {
+    if (result.value.contains(".")) return;
+    result("$result.");
+  }
+
+  void _resolve() {
+    if (first == null || mathOperation == null) return;
+
+    second = double.parse(result.value);
+
+    final mathOperationAction = mathOperationActions[mathOperation.value];
+    final resultOfOperation = mathOperationAction?.call(first!, second!);
+
+    result(_formatValue(resultOfOperation ?? 0));
+  }
+
+  void _clear() {
+    first = null;
+    second = null;
+    mathOperation.value = null;
+    _resetResult();
+  }
+
+  void _resetResult() => result(_formatValue(0.0));
+
+  String _formatValue(double value) {
     return value.truncateToDouble() == value
         ? value.toStringAsFixed(0)
         : "$value";

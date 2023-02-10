@@ -19,6 +19,8 @@ class AnimationPage extends StatelessWidget {
             child: Wrap(
               spacing: 16,
               alignment: WrapAlignment.center,
+              runAlignment: WrapAlignment.center,
+              crossAxisAlignment: WrapCrossAlignment.center,
               direction: Axis.vertical,
               children: [
                 SizedBox.square(

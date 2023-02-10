@@ -73,6 +73,8 @@ class TodosPage extends StatelessWidget {
                             context.watch<TodosContext>((ctx) => [ctx.state]);
 
                             return TabBar(
+                              labelColor:
+                                  Theme.of(context).textTheme.bodyLarge?.color,
                               onTap: (index) => todosCtx.filterBy(index),
                               tabs: [
                                 Tab(

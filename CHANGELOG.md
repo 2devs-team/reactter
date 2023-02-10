@@ -1,5 +1,19 @@
 # Reactter
 
+## 4.1.1-dev
+
+### Fixes
+
+- **fix(core)**: Fix predispose all hook states.
+
+### Internal
+
+- **refactor(example)**: Minor changes in some examples.
+- **refactor(example)**: Improve code and design of tree example.
+- **refactor(example)**: Improve code of calculator example.
+- **refactor(example)**: Improve code of animation example.
+- **doc**: Add link to examples using zapp
+
 ## 4.1.0
 
 ### Enhancements

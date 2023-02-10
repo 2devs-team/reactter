@@ -101,6 +101,8 @@ class Signal<T> extends Obj<T> with ReactterNotifyManager, ReactterState {
   }
 
   /// Gets and/or sets to [value] like a function
+  /// This method doesn't allow setting its value to null.
+  /// If you need to set null as value, use `.value = null`.
   T call([T? val]) {
     assert(!_isDisposed, "You can call when it's been disposed");
 

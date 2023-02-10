@@ -66,7 +66,7 @@ void main() {
 
 Clean and easy!
 
-See more examples [here](https://github.com/2devs-team/reactter/tree/master/examples)!
+See more examples [here](https://zapp.run/github/2devs-team/reactter/tree/master/examples)!
 
 ## Contents
 

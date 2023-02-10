@@ -120,17 +120,18 @@ class MyApp extends StatelessWidget {
                           builder: (context) => (item as ExampleItem).view(),
                         ),
                       ),
-              contentPadding:
-                  const EdgeInsets.symmetric(vertical: 8, horizontal: 16)
-                      .copyWith(top: item is HeadingItem ? 16 : 8),
+              contentPadding: const EdgeInsets.symmetric(
+                vertical: 8,
+                horizontal: 16,
+              ).copyWith(
+                top: item is HeadingItem ? 16 : 8,
+              ),
               title: item.buildTitle(context),
               subtitle: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   item.buildSubtitle(context),
-                  const SizedBox(
-                    height: 4,
-                  ),
+                  const SizedBox(height: 4),
                   item.buildTags(context),
                 ],
               ),
@@ -163,7 +164,7 @@ class HeadingItem implements ListItem {
   Widget buildTitle(BuildContext context) {
     return Text(
       heading,
-      style: Theme.of(context).textTheme.headline5,
+      style: Theme.of(context).textTheme.displaySmall,
     );
   }
 
@@ -202,8 +203,8 @@ class ExampleItem implements ListItem {
               tag,
               style: Theme.of(context)
                   .textTheme
-                  .caption!
-                  .copyWith(color: Colors.blue),
+                  .bodySmall
+                  ?.copyWith(color: Colors.blue),
             ),
           )
           .toList(),
