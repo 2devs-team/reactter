@@ -8,6 +8,8 @@ class TreeContext extends ReactterContext {
   late final children = UseState(<TreeContext>[], this);
   late final hide = UseState(false, this);
 
+  String get path => "${parent?.path ?? ''} > $hashCode";
+
   TreeContext([this.parent]) {
     if (parent != null) {
       UseEffect(() {
