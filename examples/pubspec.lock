@@ -47,7 +47,7 @@ packages:
       name: flutter_reactter
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.1.0"
+    version: "4.1.1"
   flutter_web_plugins:
     dependency: transitive
     description: flutter
@@ -115,7 +115,7 @@ packages:
       name: reactter
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.1.0"
+    version: "4.1.1"
   sky_engine:
     dependency: transitive
     description: flutter
