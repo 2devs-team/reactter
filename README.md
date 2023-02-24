@@ -66,7 +66,7 @@ void main() {
 
 Clean and easy!
 
-See more examples [here](https://zapp.run/github/2devs-team/reactter/tree/master/examples)!
+See more examples [here](https://zapp.run/pub/flutter_reactter)!
 
 ## Contents
 
@@ -954,15 +954,10 @@ class CounterComponent extends ReactterComponent<AppContext> {
 
 ## Resources
 
-- [Documentation](https://pub.dev/documentation/reactter/latest)
-- [Examples](https://github.com/2devs-team/reactter/tree/master/examples)
-  - [Counter example](https://github.com/2devs-team/reactter/tree/master/examples/lib/counter)
-  - [Calculator example](https://github.com/2devs-team/reactter/tree/master/examples/lib/calculator)
-  - [Todos example](https://github.com/2devs-team/reactter/tree/master/examples/lib/todos)
-  - [Shopping cart example](https://github.com/2devs-team/reactter/tree/master/examples/lib/shopping_cart)
-  - [Tree widget example](https://github.com/2devs-team/reactter/tree/master/examples/lib/tree)
-  - [Git search example](https://github.com/2devs-team/reactter/tree/master/examples/lib/api)
-  - [Animate widget example](https://github.com/2devs-team/reactter/tree/master/examples/lib/animation)
+- Documentation
+  - [Reactter](https://pub.dev/documentation/reactter/latest)
+  - [Flutter Reactter](https://pub.dev/documentation/flutter_reactter/latest)
+- [Examples](https://github.com/2devs-team/reactter/tree/master/packages/flutter_reactter/example)
 
 ## Roadmap
 
