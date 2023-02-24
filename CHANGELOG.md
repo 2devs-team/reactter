@@ -1,6 +1,12 @@
 # Reactter
 
-## 4.1.1-dev
+## 4.1.2
+
+### Internal
+
+- **build**: Move `examples` folder  to `packages/flutter_reactter/example`.
+
+## 4.1.1
 
 ### Fixes
 
