@@ -2,26 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter_reactter/flutter_reactter.dart';
 
 import 'cart_product_item.dart';
-import 'contexts/cart_context.dart';
+import 'controllers/cart_controller.dart';
 import 'models/product_state.dart';
 
-class CartPage extends ReactterComponent<CartContext> {
+class CartPage extends ReactterComponent<CartController> {
   const CartPage({Key? key}) : super(key: key);
 
   @override
-  get builder => () => CartContext();
+  get builder => () => CartController();
 
   @override
-  Widget render(cartCtx, context) {
+  Widget render(cartController, context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text("My cart"),
       ),
       body: Builder(
         builder: (context) {
-          context.watch<CartContext>((ctx) => [ctx.products]);
+          context.watch<CartController>((inst) => [inst.products]);
 
-          final products = cartCtx.products.value;
+          final products = cartController.products.value;
 
           return products.isEmpty
               ? Center(
@@ -50,12 +50,13 @@ class CartPage extends ReactterComponent<CartContext> {
       ),
       bottomNavigationBar: Builder(
         builder: (context) {
-          context
-              .watch<CartContext>((ctx) => [ctx.total, ctx.quantityProducts]);
+          context.watch<CartController>(
+            (inst) => [inst.total, inst.quantityProducts],
+          );
 
-          final products = cartCtx.products.value;
-          final quantityProducts = cartCtx.quantityProducts.value;
-          final total = cartCtx.total.value;
+          final products = cartController.products.value;
+          final quantityProducts = cartController.quantityProducts.value;
+          final total = cartController.total.value;
 
           return BottomSheet(
             onClosing: () {},
@@ -84,7 +85,8 @@ class CartPage extends ReactterComponent<CartContext> {
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
-                      onPressed: products.isNotEmpty ? cartCtx.checkout : null,
+                      onPressed:
+                          products.isNotEmpty ? cartController.checkout : null,
                       child: Padding(
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         child: Text(

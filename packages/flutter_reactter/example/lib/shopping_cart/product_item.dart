@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_reactter/flutter_reactter.dart';
 
-import 'contexts/cart_context.dart';
+import 'controllers/cart_controller.dart';
 import 'models/product_state.dart';
 
 class ProductItem extends StatelessWidget {
@@ -16,7 +16,7 @@ class ProductItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cartCtx = context.use<CartContext>();
+    final cartController = context.use<CartController>();
 
     return ListTile(
       tileColor: color,
@@ -48,8 +48,9 @@ class ProductItem extends StatelessWidget {
           const SizedBox(width: 8),
           IconButton(
             color: Colors.green.shade400,
-            onPressed:
-                product.stock == 0 ? null : () => cartCtx.addProduct(product),
+            onPressed: product.stock == 0
+                ? null
+                : () => cartController.addProduct(product),
             padding: EdgeInsets.zero,
             constraints: const BoxConstraints.tightFor(width: 42),
             splashRadius: 18,

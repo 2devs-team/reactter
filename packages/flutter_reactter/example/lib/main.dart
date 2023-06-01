@@ -26,7 +26,6 @@ final items = <ListItem>[
     "Calculator",
     "Performs simple arithmetic operations on numbers",
     [
-      "ReactterContext",
       "ReactterProvider",
       "ReactterWatcher",
       "Signal",
@@ -38,7 +37,6 @@ final items = <ListItem>[
     "Add and remove to-do, mark and unmark to-do as done and filter to-do list",
     [
       "ReactterActionCallable",
-      "ReactterContext",
       "ReactterProvider",
       "UseReducer",
     ],
@@ -49,10 +47,8 @@ final items = <ListItem>[
     "Add, remove product to cart and checkout",
     [
       "ReactterComponent",
-      "ReactterContext",
       "ReactterProvider",
       "ReactterProviders",
-      "ReactterScope",
       "UseState",
     ],
     () => const ShoppingCartPage(),
@@ -62,8 +58,8 @@ final items = <ListItem>[
     "Add, remove and hide child widget with counter.",
     [
       "ReactterComponent",
-      "ReactterContext",
       "ReactterProvider",
+      "UseEffect",
       "UseState",
     ],
     () => const TreePage(),
@@ -72,7 +68,6 @@ final items = <ListItem>[
     "Github Search",
     "Search user or repository and show info about it.",
     [
-      "ReactterContext",
       "ReactterProvider",
       "UseAsyncState",
     ],
@@ -82,9 +77,9 @@ final items = <ListItem>[
     "Animate widget",
     "Change size, shape and color.",
     [
-      "ReactterContext",
       "ReactterHook",
       "ReactterProvider",
+      "UseEffect",
       "UseEvent",
     ],
     () => const AnimationPage(),

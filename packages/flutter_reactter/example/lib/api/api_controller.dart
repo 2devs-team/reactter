@@ -7,17 +7,16 @@ import 'package:flutter_reactter/flutter_reactter.dart';
 import 'models/repository.dart';
 import 'models/user.dart';
 
-class ApiContext extends ReactterContext {
+class ApiController {
   final formKey = GlobalKey<FormState>();
   final textFocusNode = FocusNode();
   final TextEditingController textController = TextEditingController();
 
-  late final entity =
-      UseAsyncState<Object?, String>(null, _resolveEntity, this);
+  late final entity = UseAsyncState<Object?, String>(null, _resolveEntity);
 
   String _input = "";
 
-  ApiContext() {
+  ApiController() {
     textController.addListener(() {
       _input = textController.text;
     });

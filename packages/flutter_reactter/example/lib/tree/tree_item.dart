@@ -2,16 +2,16 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_reactter/flutter_reactter.dart';
 
-import 'tree_context.dart';
+import 'tree_node.dart';
 
-class TreeItem extends ReactterComponent<TreeContext> {
+class TreeItem extends ReactterComponent<TreeNode> {
   const TreeItem({
     Key? key,
     required this.item,
     this.isLastChild = false,
   }) : super(key: key);
 
-  final TreeContext item;
+  final TreeNode item;
   final bool isLastChild;
 
   @override
@@ -51,7 +51,7 @@ class TreeItem extends ReactterComponent<TreeContext> {
                       alignment: Alignment.centerRight,
                       child: Text(
                         id,
-                        style: Theme.of(context).textTheme.bodySmall,
+                        style: Theme.of(context).textTheme.caption,
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
@@ -77,20 +77,78 @@ class TreeItem extends ReactterComponent<TreeContext> {
   }
 
   Future<void> openDialog(BuildContext context) {
-    final treeContext = context.use<TreeContext>(id);
+    final treeNode = context.use<TreeNode>(id);
 
     return showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text("Path of item[id='$id']"),
-          content: Text(treeContext.path),
+          title: Text("About item[id='$id']"),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text("path:"),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      treeNode.path,
+                      style: Theme.of(context).textTheme.caption,
+                      maxLines: 3,
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  const Text("children:"),
+                  const SizedBox(width: 8),
+                  Text(
+                    "${treeNode.children.value.length}",
+                    style: Theme.of(context).textTheme.caption,
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  const Text("count:"),
+                  const SizedBox(width: 8),
+                  Text(
+                    "${treeNode.count.value}",
+                    style: Theme.of(context).textTheme.caption,
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  const Text("childrenTotal:"),
+                  const SizedBox(width: 8),
+                  Text(
+                    "${treeNode.childrenTotal.value}",
+                    style: Theme.of(context).textTheme.caption,
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  const Text("total(count + childrenTotal):"),
+                  const SizedBox(width: 8),
+                  Text(
+                    "${treeNode.total}",
+                    style: Theme.of(context).textTheme.caption,
+                  ),
+                ],
+              ),
+            ],
+          ),
         );
       },
     );
   }
 
-  Positioned buildTreeLine(TreeContext treeContext) {
+  Widget buildTreeLine(TreeNode treeContext) {
     return Positioned(
       top: 0,
       bottom: 0,
@@ -108,13 +166,13 @@ class TreeItem extends ReactterComponent<TreeContext> {
             ),
             Builder(
               builder: (context) {
-                final treeContext = context.watchId<TreeContext>(
+                final treeNode = context.watchId<TreeNode>(
                   id,
-                  (ctx) => [ctx.children],
+                  (inst) => [inst.children],
                 );
 
                 return SizedBox(
-                  width: treeContext.children.value.isEmpty ? 42 : 6,
+                  width: treeNode.children.value.isEmpty ? 42 : 6,
                   height: 36,
                   child: const Divider(
                     height: 2,
@@ -129,15 +187,15 @@ class TreeItem extends ReactterComponent<TreeContext> {
     );
   }
 
-  Builder buildChildrenList() {
+  Widget buildChildrenList() {
     return Builder(
       builder: (context) {
-        final treeContext = context.watchId<TreeContext>(
+        final treeNode = context.watchId<TreeNode>(
           id,
-          (ctx) => [ctx.hide, ctx.children],
+          (inst) => [inst.hide, inst.children],
         );
-        final children = treeContext.children.value;
-        final hide = treeContext.hide.value;
+        final children = treeNode.children.value;
+        final hide = treeNode.hide.value;
         final itemLast = children.isNotEmpty ? children.last : null;
 
         return ListView.builder(
@@ -159,39 +217,39 @@ class TreeItem extends ReactterComponent<TreeContext> {
     );
   }
 
-  Builder buildCountLabel() {
+  Widget buildCountLabel() {
     return Builder(
       builder: (context) {
-        final treeContext = context.watchId<TreeContext>(
+        final treeNode = context.watchId<TreeNode>(
           id,
-          (ctx) => [ctx.count, ctx.total],
+          (inst) => [inst.count, inst.childrenTotal],
         );
 
         return Text(
-          "${treeContext.count.value} (${treeContext.total.value})",
+          "${treeNode.count.value} (${treeNode.total})",
         );
       },
     );
   }
 
-  Builder buildAddButton() {
+  Widget buildAddButton() {
     return Builder(
       builder: (context) {
-        final treeContext = context.watchId<TreeContext>(
+        final treeNode = context.watchId<TreeNode>(
           id,
-          (ctx) => [ctx.hide, ctx.children],
+          (inst) => [inst.hide, inst.children],
         );
 
-        if (treeContext.children.value.isEmpty) {
+        if (treeNode.children.value.isEmpty) {
           return const SizedBox(width: 36);
         }
 
         return Button(
           icon: Transform.rotate(
-            angle: treeContext.hide.value ? -pi / 2 : 0,
+            angle: treeNode.hide.value ? -pi / 2 : 0,
             child: const Icon(Icons.expand_circle_down_rounded),
           ),
-          onPressed: treeContext.toggleHide,
+          onPressed: treeNode.toggleHide,
         );
       },
     );

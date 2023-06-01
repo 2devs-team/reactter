@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_reactter/flutter_reactter.dart';
 
 import 'cart_page.dart';
-import 'contexts/cart_context.dart';
-import 'contexts/products_context.dart';
+import 'controllers/cart_controller.dart';
+import 'controllers/products_controller.dart';
 import 'product_item.dart';
 
 class ShoppingCartPage extends StatelessWidget {
@@ -13,8 +13,8 @@ class ShoppingCartPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return ReactterProviders(
       [
-        ReactterProvider(() => ProductsContext()),
-        ReactterProvider(() => CartContext()),
+        ReactterProvider(() => ProductsController()),
+        ReactterProvider(() => CartController()),
       ],
       builder: (context, child) {
         return Scaffold(
@@ -44,12 +44,13 @@ class ShoppingCartPage extends StatelessWidget {
                           radius: 8,
                           child: Builder(
                             builder: (context) {
-                              final cartCtx = context.watch<CartContext>(
-                                (ctx) => [ctx.quantityProducts],
+                              final cartController =
+                                  context.watch<CartController>(
+                                (inst) => [inst.quantityProducts],
                               );
 
                               return Text(
-                                "${cartCtx.quantityProducts.value}",
+                                "${cartController.quantityProducts.value}",
                                 style: Theme.of(context)
                                     .textTheme
                                     .labelSmall
@@ -67,15 +68,16 @@ class ShoppingCartPage extends StatelessWidget {
           ),
           body: Builder(
             builder: (context) {
-              final productsCtx = context.watch<ProductsContext>();
-              final products = productsCtx.products.value;
+              final productsInst = context.watch<ProductsController>();
+              final products = productsInst.products.value;
 
               return ListView.builder(
                 itemCount: products.length,
                 itemBuilder: (context, index) {
                   final product = products[index];
 
-                  context.watch<ProductsContext>((_) => [product.stockState]);
+                  context
+                      .watch<ProductsController>((_) => [product.stockState]);
 
                   return ProductItem(
                     key: ObjectKey(product),

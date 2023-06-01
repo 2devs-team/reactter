@@ -114,12 +114,11 @@ class AnimationOptions<T> {
 
 class UseAnimation<T> extends ReactterHook implements TickerProvider {
   final AnimationOptions<T> options;
-  final ReactterContext? _context;
 
-  late final tween = UseState(options.tween, this);
-  late final control = UseState(options.control, this);
-  late final duration = UseState(options.duration, this);
-  late final curve = UseState(options.curve, this);
+  late final tween = UseState(options.tween);
+  late final control = UseState(options.control);
+  late final duration = UseState(options.duration);
+  late final curve = UseState(options.curve);
 
   late final _event = UseEvent.withInstance(this);
 
@@ -135,26 +134,30 @@ class UseAnimation<T> extends ReactterHook implements TickerProvider {
     vsync: this,
   );
 
-  UseAnimation(this.options, [this._context]) : super(_context) {
-    UseEvent.withInstance(_context)
+  UseAnimation(this.options) {
+    _aniController.addStatusListener(_onAnimationStatus);
+    _buildAnimation();
+  }
+
+  @override
+  void attachTo(Object instance) {
+    super.attachTo(instance);
+
+    UseEvent.withInstance(instance)
       ..on(Lifecycle.didMount, (_, __) => _addFrameLimitingUpdater())
       ..on(Lifecycle.willUnmount, (_, __) => _aniController.dispose())
       ..on(Lifecycle.destroyed, (_, __) => _event.dispose());
 
-    _aniController.addStatusListener(_onAnimationStatus);
-
-    _buildAnimation();
-
     UseEffect(
       _rebuild,
       [tween, control, curve],
-      _context,
+      instance,
     );
 
     UseEffect(
       () => _aniController.duration = duration.value,
       [duration],
-      _context,
+      instance,
     );
   }
 

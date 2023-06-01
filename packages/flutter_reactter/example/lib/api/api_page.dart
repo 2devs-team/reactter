@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_reactter/flutter_reactter.dart';
 
-import 'api_context.dart';
+import 'api_controller.dart';
 import 'models/repository.dart';
 import 'models/user.dart';
 import 'repository_item.dart';
@@ -12,9 +12,9 @@ class ApiPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ReactterProvider<ApiContext>(
-      () => ApiContext(),
-      builder: (apiContext, context, child) {
+    return ReactterProvider<ApiController>(
+      () => ApiController(),
+      builder: (apiController, context, child) {
         return Scaffold(
           appBar: AppBar(
             title: const Text("Github search"),
@@ -31,17 +31,17 @@ class ApiPage extends StatelessWidget {
                       children: [
                         Expanded(
                           child: Form(
-                            key: apiContext.formKey,
+                            key: apiController.formKey,
                             child: TextFormField(
-                              controller: apiContext.textController,
-                              validator: apiContext.validator,
+                              controller: apiController.textController,
+                              validator: apiController.validator,
                               autovalidateMode:
                                   AutovalidateMode.onUserInteraction,
                               textCapitalization: TextCapitalization.sentences,
                               autofocus: true,
-                              focusNode: apiContext.textFocusNode,
+                              focusNode: apiController.textFocusNode,
                               maxLength: 150,
-                              onFieldSubmitted: (_) => apiContext.search(),
+                              onFieldSubmitted: (_) => apiController.search(),
                               decoration: const InputDecoration(
                                 labelText:
                                     'Type a username or company name or repository name("2devs-team/reactter")',
@@ -52,7 +52,7 @@ class ApiPage extends StatelessWidget {
                         Material(
                           color: Colors.transparent,
                           child: IconButton(
-                            onPressed: apiContext.search,
+                            onPressed: apiController.search,
                             padding: EdgeInsets.zero,
                             constraints: const BoxConstraints.tightFor(
                               width: 62,
@@ -71,11 +71,11 @@ class ApiPage extends StatelessWidget {
               ),
               Builder(
                 builder: (context) {
-                  context.watch<ApiContext>((ctx) => [ctx.entity]);
+                  context.watch<ApiController>((inst) => [inst.entity]);
 
                   return Padding(
                     padding: const EdgeInsets.all(16),
-                    child: apiContext.entity.when<Widget>(
+                    child: apiController.entity.when<Widget>(
                       loading: (_) => const CircularProgressIndicator(),
                       done: (entity) => entity is User
                           ? UserItem(user: entity)

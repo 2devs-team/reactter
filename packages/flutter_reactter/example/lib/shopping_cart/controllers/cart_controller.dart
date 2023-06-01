@@ -2,11 +2,11 @@ import 'package:flutter_reactter/flutter_reactter.dart';
 
 import '../models/product_state.dart';
 
-class CartContext extends ReactterContext {
-  late final products = UseState<Map<ProductState, int>>({}, this);
-  late final productsLen = UseState(0, this);
-  late final quantityProducts = UseState(0, this);
-  late final total = UseState(0.0, this);
+class CartController {
+  final products = UseState<Map<ProductState, int>>({});
+  final productsLen = UseState(0);
+  final quantityProducts = UseState(0);
+  final total = UseState(0.0);
 
   void addProduct(ProductState productState) {
     if (!productState.decreaseStock()) return;

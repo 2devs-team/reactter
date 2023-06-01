@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_reactter/flutter_reactter.dart';
 
 import 'todo_item.dart';
-import 'todos_context.dart';
+import 'todos_controller.dart';
 import 'todos_store.dart';
 
 class TodosPage extends StatelessWidget {
@@ -11,9 +11,9 @@ class TodosPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: ReactterProvider<TodosContext>(
-        () => TodosContext(),
-        builder: (todosCtx, context, _) {
+      child: ReactterProvider<TodosController>(
+        () => TodosController(),
+        builder: (todosController, context, _) {
           return DefaultTabController(
             length: TodoListType.values.length,
             child: Scaffold(
@@ -33,18 +33,19 @@ class TodosPage extends StatelessWidget {
                           children: [
                             Expanded(
                               child: Form(
-                                key: todosCtx.formKey,
+                                key: todosController.formKey,
                                 child: TextFormField(
-                                  controller: todosCtx.textController,
-                                  validator: todosCtx.validator,
+                                  controller: todosController.textController,
+                                  validator: todosController.validator,
                                   autovalidateMode:
                                       AutovalidateMode.onUserInteraction,
                                   textCapitalization:
                                       TextCapitalization.sentences,
                                   autofocus: true,
-                                  focusNode: todosCtx.textFocusNode,
+                                  focusNode: todosController.textFocusNode,
                                   maxLength: 50,
-                                  onFieldSubmitted: (_) => todosCtx.addTodo(),
+                                  onFieldSubmitted: (_) =>
+                                      todosController.addTodo(),
                                   decoration: const InputDecoration(
                                     labelText: 'What needs to be done?',
                                   ),
@@ -53,7 +54,7 @@ class TodosPage extends StatelessWidget {
                             ),
                             const SizedBox(width: 16),
                             ElevatedButton(
-                              onPressed: todosCtx.addTodo,
+                              onPressed: todosController.addTodo,
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Text(
@@ -70,24 +71,25 @@ class TodosPage extends StatelessWidget {
                         const SizedBox(height: 16),
                         Builder(
                           builder: (context) {
-                            context.watch<TodosContext>((ctx) => [ctx.state]);
+                            context
+                                .watch<TodosController>((inst) => [inst.state]);
 
                             return TabBar(
                               labelColor:
                                   Theme.of(context).textTheme.bodyLarge?.color,
-                              onTap: (index) => todosCtx.filterBy(index),
+                              onTap: (index) => todosController.filterBy(index),
                               tabs: [
                                 Tab(
                                   text:
-                                      "All(${todosCtx.state.value.todos.length})",
+                                      "All(${todosController.state.value.todos.length})",
                                 ),
                                 Tab(
                                   text:
-                                      "Done(${todosCtx.getTodosBy(TodoListType.done).length})",
+                                      "Done(${todosController.getTodosBy(TodoListType.done).length})",
                                 ),
                                 Tab(
                                   text:
-                                      "To-Do(${todosCtx.getTodosBy(TodoListType.todo).length})",
+                                      "To-Do(${todosController.getTodosBy(TodoListType.todo).length})",
                                 ),
                               ],
                             );
@@ -100,7 +102,7 @@ class TodosPage extends StatelessWidget {
                     child: Builder(
                       builder: (context) {
                         final todoList = context
-                            .watch<TodosContext>((ctx) => [ctx.state])
+                            .watch<TodosController>((inst) => [inst.state])
                             .todosFiltered;
 
                         return SingleChildScrollView(

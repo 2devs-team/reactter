@@ -5,7 +5,7 @@ import 'product.dart';
 class ProductState extends Product {
   int get initialStock => super.stock;
 
-  late final stockState = UseState(0);
+  final stockState = UseState(0);
   @override
   get stock => stockState.value;
 

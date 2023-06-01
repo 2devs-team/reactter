@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_reactter/flutter_reactter.dart';
 
-import 'contexts/cart_context.dart';
+import 'controllers/cart_controller.dart';
 import 'models/product_state.dart';
 
 class CartProductItem extends StatelessWidget {
@@ -18,7 +18,7 @@ class CartProductItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cartCtx = context.use<CartContext>();
+    final cartController = context.use<CartController>();
 
     return ListTile(
       tileColor: color,
@@ -52,7 +52,7 @@ class CartProductItem extends StatelessWidget {
           ),
           const SizedBox(width: 8),
           IconButton(
-            onPressed: () => cartCtx.deleteProduct(product),
+            onPressed: () => cartController.deleteProduct(product),
             color: Colors.red.shade400,
             padding: EdgeInsets.zero,
             constraints: const BoxConstraints.tightFor(width: 42),
@@ -61,7 +61,7 @@ class CartProductItem extends StatelessWidget {
             icon: const Icon(Icons.delete),
           ),
           IconButton(
-            onPressed: () => cartCtx.removeProduct(product),
+            onPressed: () => cartController.removeProduct(product),
             color: Colors.red.shade400,
             padding: EdgeInsets.zero,
             constraints: const BoxConstraints.tightFor(width: 42),
@@ -71,7 +71,7 @@ class CartProductItem extends StatelessWidget {
           ),
           IconButton(
             onPressed:
-                product.stock == 0 ? null : () => cartCtx.addProduct(product),
+                product.stock == 0 ? null : () => cartController.addProduct(product),
             color: Colors.green.shade400,
             padding: EdgeInsets.zero,
             constraints: const BoxConstraints.tightFor(width: 42),

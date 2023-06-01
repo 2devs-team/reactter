@@ -5,8 +5,8 @@ import '../models/product_state.dart';
 
 Random _random = Random();
 
-class ProductsContext extends ReactterContext {
-  late final products = UseState(_generateProducts(), this);
+class ProductsController {
+  late final products = UseState(_generateProducts());
 
   List<ProductState> _generateProducts() {
     return List.generate(

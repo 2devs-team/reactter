@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_reactter/flutter_reactter.dart';
 
-import 'tree_context.dart';
+import 'tree_node.dart';
 import 'tree_item.dart';
 
 class TreePage extends StatelessWidget {
@@ -9,8 +9,8 @@ class TreePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ReactterProvider<TreeContext>(
-      () => TreeContext(),
+    return ReactterProvider<TreeNode>(
+      () => TreeNode(),
       builder: (treeContext, context, _) {
         return Scaffold(
           appBar: AppBar(

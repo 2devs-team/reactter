@@ -2,16 +2,16 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_reactter/flutter_reactter.dart';
-import 'calculator_context.dart';
+import 'calculator_controller.dart';
 
 class CalculatorPage extends StatelessWidget {
   const CalculatorPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return ReactterProvider<CalculatorContext>(
-      () => CalculatorContext(),
-      builder: (calculatorCtx, context, child) {
+    return ReactterProvider<CalculatorController>(
+      () => CalculatorController(),
+      builder: (calculatorController, context, child) {
         return Scaffold(
           appBar: AppBar(
             title: const Text('Calculator'),
@@ -26,7 +26,7 @@ class CalculatorPage extends StatelessWidget {
                       padding: const EdgeInsets.all(10.0),
                       alignment: Alignment.bottomRight,
                       child: Text(
-                        "${calculatorCtx.result}",
+                        "${calculatorController.result}",
                         style: const TextStyle(
                           fontSize: 48,
                           fontWeight: FontWeight.w200,
@@ -40,27 +40,31 @@ class CalculatorPage extends StatelessWidget {
                 children: [
                   CalculatorButton.secondary(
                     value: "C",
-                    onPressed: () =>
-                        calculatorCtx.executeAction(ActionCalculator.clear),
+                    onPressed: () => calculatorController.executeAction(
+                      ActionCalculator.clear,
+                    ),
                   ),
                   CalculatorButton.secondary(
                     value: "+/–",
-                    onPressed: () =>
-                        calculatorCtx.executeAction(ActionCalculator.sign),
+                    onPressed: () => calculatorController.executeAction(
+                      ActionCalculator.sign,
+                    ),
                   ),
                   CalculatorButton.secondary(
                     value: "%",
-                    onPressed: () => calculatorCtx
-                        .executeAction(ActionCalculator.porcentage),
+                    onPressed: () => calculatorController.executeAction(
+                      ActionCalculator.porcentage,
+                    ),
                   ),
                   ReactterWatcher(
                     builder: (_, __) {
                       return CalculatorButton.primary(
                         value: "÷",
-                        isSelected: calculatorCtx.mathOperation ==
+                        isSelected: calculatorController.mathOperation ==
                             ActionCalculator.divide,
-                        onPressed: () => calculatorCtx
-                            .executeAction(ActionCalculator.divide),
+                        onPressed: () => calculatorController.executeAction(
+                          ActionCalculator.divide,
+                        ),
                       );
                     },
                   ),
@@ -70,27 +74,34 @@ class CalculatorPage extends StatelessWidget {
                 children: [
                   CalculatorButton.tertiary(
                     value: "7",
-                    onPressed: () =>
-                        calculatorCtx.executeAction(ActionCalculator.number, 7),
+                    onPressed: () => calculatorController.executeAction(
+                      ActionCalculator.number,
+                      7,
+                    ),
                   ),
                   CalculatorButton.tertiary(
                     value: "8",
-                    onPressed: () =>
-                        calculatorCtx.executeAction(ActionCalculator.number, 8),
+                    onPressed: () => calculatorController.executeAction(
+                      ActionCalculator.number,
+                      8,
+                    ),
                   ),
                   CalculatorButton.tertiary(
                     value: "9",
-                    onPressed: () =>
-                        calculatorCtx.executeAction(ActionCalculator.number, 9),
+                    onPressed: () => calculatorController.executeAction(
+                      ActionCalculator.number,
+                      9,
+                    ),
                   ),
                   ReactterWatcher(
                     builder: (_, __) {
                       return CalculatorButton.primary(
                         value: "×",
-                        isSelected: calculatorCtx.mathOperation ==
+                        isSelected: calculatorController.mathOperation ==
                             ActionCalculator.multiply,
-                        onPressed: () => calculatorCtx
-                            .executeAction(ActionCalculator.multiply),
+                        onPressed: () => calculatorController.executeAction(
+                          ActionCalculator.multiply,
+                        ),
                       );
                     },
                   ),
@@ -100,27 +111,34 @@ class CalculatorPage extends StatelessWidget {
                 children: [
                   CalculatorButton.tertiary(
                     value: "4",
-                    onPressed: () =>
-                        calculatorCtx.executeAction(ActionCalculator.number, 4),
+                    onPressed: () => calculatorController.executeAction(
+                      ActionCalculator.number,
+                      4,
+                    ),
                   ),
                   CalculatorButton.tertiary(
                     value: "5",
-                    onPressed: () =>
-                        calculatorCtx.executeAction(ActionCalculator.number, 5),
+                    onPressed: () => calculatorController.executeAction(
+                      ActionCalculator.number,
+                      5,
+                    ),
                   ),
                   CalculatorButton.tertiary(
                     value: "6",
-                    onPressed: () =>
-                        calculatorCtx.executeAction(ActionCalculator.number, 6),
+                    onPressed: () => calculatorController.executeAction(
+                      ActionCalculator.number,
+                      6,
+                    ),
                   ),
                   ReactterWatcher(
                     builder: (_, __) {
                       return CalculatorButton.primary(
                         value: "–",
-                        isSelected: calculatorCtx.mathOperation ==
+                        isSelected: calculatorController.mathOperation ==
                             ActionCalculator.subtract,
-                        onPressed: () => calculatorCtx
-                            .executeAction(ActionCalculator.subtract),
+                        onPressed: () => calculatorController.executeAction(
+                          ActionCalculator.subtract,
+                        ),
                       );
                     },
                   ),
@@ -130,27 +148,34 @@ class CalculatorPage extends StatelessWidget {
                 children: [
                   CalculatorButton.tertiary(
                     value: "1",
-                    onPressed: () =>
-                        calculatorCtx.executeAction(ActionCalculator.number, 1),
+                    onPressed: () => calculatorController.executeAction(
+                      ActionCalculator.number,
+                      1,
+                    ),
                   ),
                   CalculatorButton.tertiary(
                     value: "2",
-                    onPressed: () =>
-                        calculatorCtx.executeAction(ActionCalculator.number, 2),
+                    onPressed: () => calculatorController.executeAction(
+                      ActionCalculator.number,
+                      2,
+                    ),
                   ),
                   CalculatorButton.tertiary(
                     value: "3",
-                    onPressed: () =>
-                        calculatorCtx.executeAction(ActionCalculator.number, 3),
+                    onPressed: () => calculatorController.executeAction(
+                      ActionCalculator.number,
+                      3,
+                    ),
                   ),
                   ReactterWatcher(
                     builder: (_, __) {
                       return CalculatorButton.primary(
                         value: "+",
-                        isSelected:
-                            calculatorCtx.mathOperation == ActionCalculator.add,
-                        onPressed: () =>
-                            calculatorCtx.executeAction(ActionCalculator.add),
+                        isSelected: calculatorController.mathOperation ==
+                            ActionCalculator.add,
+                        onPressed: () => calculatorController.executeAction(
+                          ActionCalculator.add,
+                        ),
                       );
                     },
                   ),
@@ -161,18 +186,23 @@ class CalculatorPage extends StatelessWidget {
                   CalculatorButton.tertiary(
                     flex: 2,
                     value: "0",
-                    onPressed: () =>
-                        calculatorCtx.executeAction(ActionCalculator.number, 0),
+                    onPressed: () => calculatorController.executeAction(
+                      ActionCalculator.number,
+                      0,
+                    ),
                   ),
                   CalculatorButton.tertiary(
                     value: ".",
-                    onPressed: () =>
-                        calculatorCtx.executeAction(ActionCalculator.point, 1),
+                    onPressed: () => calculatorController.executeAction(
+                      ActionCalculator.point,
+                      1,
+                    ),
                   ),
                   CalculatorButton.primary(
                     value: "=",
-                    onPressed: () =>
-                        calculatorCtx.executeAction(ActionCalculator.equal),
+                    onPressed: () => calculatorController.executeAction(
+                      ActionCalculator.equal,
+                    ),
                   ),
                 ],
               ),
@@ -196,7 +226,7 @@ class CalculatorButton extends StatelessWidget {
     required this.value,
     this.isSelected = false,
     this.onPressed,
-  })  : isSmall = true,
+  })  : isSmall = false,
         flex = 1,
         color = Colors.amberAccent.shade700,
         super(key: key);
@@ -216,7 +246,7 @@ class CalculatorButton extends StatelessWidget {
     required this.value,
     this.flex = 1,
     this.onPressed,
-  })  : isSmall = true,
+  })  : isSmall = false,
         isSelected = false,
         color = Colors.grey.shade700,
         super(key: key);
@@ -236,15 +266,10 @@ class CalculatorButton extends StatelessWidget {
           ),
           child: Text(
             value,
-            style: isSmall
-                ? Theme.of(context)
-                    .textTheme
-                    .headlineSmall
-                    ?.copyWith(color: Colors.white)
-                : Theme.of(context)
-                    .textTheme
-                    .headlineMedium
-                    ?.copyWith(color: Colors.white),
+            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                  color: Colors.white,
+                  fontSize: isSmall ? 16 : null,
+                ),
           ),
         ),
       ),

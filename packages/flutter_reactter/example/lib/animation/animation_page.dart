@@ -29,7 +29,7 @@ class AnimationPage extends StatelessWidget {
                     child: Builder(
                       builder: (context) {
                         context.watch<AnimationContext>(
-                          (ctx) => [ctx.sizeAnimation],
+                          (inst) => [inst.sizeAnimation],
                         );
 
                         return Container(
@@ -47,7 +47,7 @@ class AnimationPage extends StatelessWidget {
                 Builder(
                   builder: (context) {
                     context.watch<AnimationContext>(
-                      (ctx) => [ctx.borderRadiusAnimation],
+                      (inst) => [inst.borderRadiusAnimation],
                     );
 
                     return Container(
@@ -64,7 +64,7 @@ class AnimationPage extends StatelessWidget {
                 Builder(
                   builder: (context) {
                     context.watch<AnimationContext>(
-                      (ctx) => [ctx.colorAnimation],
+                      (inst) => [inst.colorAnimation],
                     );
 
                     return Container(
