@@ -1,5 +1,31 @@
 # Reactter
 
+## 5.0.0-dev.1
+
+### Breaking
+
+- **refactor(engine, widgets, core, hooks, test)**: Delete `ReactterContext` and `ReactterHookManager` and remove all about it.
+- **refactor(widgets, test)**: Replace `ReactterContextNotFoundException` to `ReactterInstanceNotFoundException`.
+- **refactor(widgets, test)**: Remove `listenAllHooks` property from `ReactterComponent`, use `listenAll`.
+- **refactor(widgets, test)**: Remove `listenHooks` property from `ReactterComponent` and `ReactterProvider.contextOf`, use `listenStates`.
+- **refactor(hooks, test)**: Remove `context` property from `UseAsyncState`, `UseContext`, `UseEvent`, `UseReducer` and `UseState`.
+- **refactor(hooks, test)**: Remove type `ReactterAction`, `type` is String.
+- **refactor(core, widgets, test)**: Delete `ReactterBuilder` and `ReactterScope`, replace to `build`, `StatelessWidget`, `StatefulWidget` or any Widget that expose `BuildContext`.
+
+### Enhancements
+
+- **feat(core)**: Add [`attachTo`](https://pub.dev/documentation/reactter/5.0.0/core/ReactterState/attachTo.html), [`detachTo`](https://pub.dev/documentation/reactter/5.0.0/core/ReactterState/detachTo.html) and [`createState`](https://pub.dev/documentation/reactter/5.0.0/core/ReactterState/createState.html) methods to `ReactterState`.
+
+### Fixes
+
+- **refactor(core)**: Fix `hasListener` no depend of `ReactterNotifyManager`.
+
+### Internal
+
+- **refactor, doc(example)**: Adjust to new changes.
+- **doc**: Change documentation to better readability and adjut to new changes.
+
+
 ## 4.1.2
 
 ### Internal
