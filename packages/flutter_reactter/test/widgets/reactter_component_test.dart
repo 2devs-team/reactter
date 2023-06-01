@@ -109,7 +109,7 @@ _testReactterComponent({
 }) async {
   await tester.pumpAndSettle();
 
-  _expectInitial() {
+  void expectInitial() {
     expect(find.text("stateBool: false"), findsOneWidget);
 
     if (byId) {
@@ -119,7 +119,7 @@ _testReactterComponent({
     }
   }
 
-  _expectInitial();
+  expectInitial();
 
   instance.stateBool.value = true;
   instance.stateString.value = "new value";
@@ -127,7 +127,7 @@ _testReactterComponent({
   await tester.pumpAndSettle();
 
   if (withoutListenStates) {
-    _expectInitial();
+    expectInitial();
   } else {
     expect(find.text("stateBool: true"), findsOneWidget);
     expect(find.text("stateString: new value"), findsOneWidget);

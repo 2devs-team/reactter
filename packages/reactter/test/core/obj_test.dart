@@ -1,4 +1,4 @@
-// ignore_for_file: unnecessary_null_comparison
+// ignore_for_file: unnecessary_null_comparison, unrelated_type_equality_checks
 
 import 'package:reactter/reactter.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -11,17 +11,17 @@ void main() {
       final objBool = true.obj;
       expect(objBool, isA<Obj<bool>>());
       expect(objBool.value, true);
-      expect("${objBool}", true.toString());
+      expect("$objBool", true.toString());
 
       final objInt = 1.obj;
       expect(objInt, isA<Obj<int>>());
       expect(objInt.value, 1);
-      expect("${objInt}", 1.toString());
+      expect("$objInt", 1.toString());
 
       final objDouble = 1.2.obj;
       expect(objDouble, isA<Obj<double>>());
       expect(objDouble.value, 1.2);
-      expect("${objDouble}", 1.2.toString());
+      expect("$objDouble", 1.2.toString());
 
       final objString = "test".obj;
       expect(objString, isA<Obj<String>>());
@@ -30,22 +30,22 @@ void main() {
       final objList = ["test"].obj;
       expect(objList, isA<Obj<List<String>>>());
       expect(objList.value.first, "test");
-      expect("${objList}", ["test"].toString());
+      expect("$objList", ["test"].toString());
 
       final objMap = {"test": 1}.obj;
       expect(objMap, isA<Obj<Map<String, int>>>());
       expect(objMap["test"], 1);
-      expect("${objMap}", {"test": 1}.toString());
+      expect("$objMap", {"test": 1}.toString());
 
       final objAnother = TestClass("test").obj;
       expect(objAnother, isA<Obj<TestClass>>());
       expect(objAnother.value.prop, "test");
-      expect("${objAnother}", TestClass("test").toString());
+      expect("$objAnother", TestClass("test").toString());
 
       final objNull = Obj<TestClass?>(null);
       expect(objNull, isA<Obj<TestClass?>>());
       expect(objNull.value, null);
-      expect("${objNull}", null.toString());
+      expect("$objNull", null.toString());
     });
 
     test("should set a new value", () {
