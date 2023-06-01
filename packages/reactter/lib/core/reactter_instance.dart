@@ -29,7 +29,15 @@ class ReactterInstance<T> {
   }
 
   /// It generates a unique key for a given object [T] and optional `id`
-  static generateKey<T extends Object?>([String? id]) {
+  static String generateKey<T extends Object?>([String? id]) {
     return "${T.hashCode}${id != null ? '[$id]' : ''}";
+  }
+
+  static String getInstanceKey(Object? instance) {
+    if (instance is ReactterInstance) {
+      return instance.stored?.key ?? instance.key;
+    }
+
+    return Reactter.find(instance)?.key ?? "${instance.hashCode}";
   }
 }

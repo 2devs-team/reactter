@@ -1,11 +1,46 @@
 part of '../core.dart';
 
-/// A mixin-class Provides the ability to notify listeners when the state changes.
+enum Lifecycle {
+  /// This event is triggered when the [ReactterInstanceManager] registers the instance.
+  registered,
+
+  /// This event is triggered when the [ReactterInstanceManager] unregisters the instance.
+  unregistered,
+
+  /// This event is triggered when the [ReactterInstanceManager] initializes the instance.
+  initialized,
+
+  /// This event(exclusive to `flutter_reactter`) happens when the instance is going to be mounted in the widget tree.
+  willMount,
+
+  /// This event(exclusive to `flutter_reactter`) happens after the instance has been successfully mounted in the widget tree.
+  didMount,
+
+  /// This event is triggered anytime the instance's state is about to be updated. The event parameter is a [ReactterState].
+  willUpdate,
+
+  /// This event is triggered anytime the instance's state has been updated. The event parameter is a [ReactterState].
+  didUpdate,
+
+  /// This event(exclusive to `flutter_reactter`) happens when the instance is about to be unmounted from the widget tree.
+  willUnmount,
+
+  /// This event is triggered when the [ReactterInstanceManager] destroys the instance.
+  destroyed,
+}
+
+/// A mixin-class that provides methods for notifying listeners
+/// about updates to an object's state.
+///
+/// It includes methods for updating the state, refreshing the state,
+/// disposing of the object, and adding/removing listeners.
+///
+/// It also includes methods for notifying listeners
+/// synchronously and asynchronously.
 mixin ReactterNotifyManager {
   bool _isDisposed = false;
   bool _isUpdating = false;
-  bool _hasListeners = false;
-  int _listenersCount = 0;
+  bool get _hasListeners => Reactter._hasListeners(this);
 
   /// Executes [fnUpdate], and notify the listeners about to update.
   @mustCallSuper
@@ -66,20 +101,5 @@ mixin ReactterNotifyManager {
 
   Future<void> _notifyAsync(Enum event) async {
     return Reactter.emitAsync(this, event, this);
-  }
-
-  void _addListener() {
-    _listenersCount++;
-    _hasListeners = true;
-  }
-
-  void _removeListener() {
-    _listenersCount--;
-    _hasListeners = _listenersCount == 0;
-  }
-
-  void _removeAllListeners() {
-    _listenersCount = 0;
-    _hasListeners = false;
   }
 }

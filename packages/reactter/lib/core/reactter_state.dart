@@ -11,8 +11,7 @@ mixin ReactterState on ReactterNotifyManager {
 
   bool get _hasListeners {
     return super._hasListeners ||
-        (_instance is ReactterNotifyManager &&
-            (_instance as ReactterNotifyManager)._hasListeners);
+        (_instance != null && Reactter._hasListeners(_instance));
   }
 
   /// Adds the current state to a list if instances of the Reactter class are being built.
