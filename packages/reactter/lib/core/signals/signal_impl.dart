@@ -94,10 +94,7 @@ class Signal<T> extends Obj<T> with ReactterNotifyManager, ReactterState {
   Signal(T initial)
       : _value = initial,
         super(initial) {
-    /// Sure that the signals are collected when the instance is created.
-    if (Reactter._instancesBuilding) {
-      Reactter._signalsRecollected.add(this);
-    }
+    createState();
   }
 
   /// Gets and/or sets to [value] like a function

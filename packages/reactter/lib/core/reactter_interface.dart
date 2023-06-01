@@ -6,7 +6,7 @@ class _ReactterInterface with ReactterInstanceManager, ReactterEventManager {
   static final _reactterInterface = _ReactterInterface._();
   ReactterSignalProxy? signalProxy;
   bool _instancesBuilding = false;
-  final _signalsRecollected = <Signal>[];
+  final _statesRecollected = <ReactterState>[];
 
   factory _ReactterInterface() {
     return _reactterInterface;

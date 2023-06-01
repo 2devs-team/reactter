@@ -1,21 +1,17 @@
 part of '../core.dart';
 
-/// An abstract-class to provides the functionality of [ReactterHookManager]
-/// and is added as a dependency of another [ReactterHookManager]
-/// behaving as a state.
+/// An abstract-class that provides the functionality of [ReactterNotifyManager]
+/// and [ReactterState].
 ///
 /// This is an example of how to create a custom hook:
 ///
 ///```dart
 /// class UseToggle extends ReactterHook {
-///   late final _state = UseState(false, this);
+///   final _state = UseState(false);
 ///
 ///   bool get value => _state.value;
 ///
-///   UseToggle(
-///     bool initial,
-///     [ReactterContext? context],
-///   ): super(context) {
+///   UseToggle(bool initial) {
 ///     _state.value = initial;
 ///   }
 ///
@@ -26,8 +22,8 @@ part of '../core.dart';
 /// and use it like this:
 ///
 ///```dart
-/// class AppContext extends ReactterContext {
-///   late final state = UseToggle(false, this);
+/// class AppController {
+///   final state = UseToggle(false);
 ///
 ///   UserContext() {
 ///     print('initial value: ${state.value}');
@@ -41,17 +37,21 @@ part of '../core.dart';
 ///
 /// See also:
 ///
-/// * [ReactterHookManager], a abstract-class to manager hooks([ReactterHook]).
-abstract class ReactterHook extends ReactterHookManager with ReactterState {
-  ReactterHook(ReactterHookManager? context) {
-    context?.listenHooks([this]);
+/// * [ReactterNotifyManager], provides methods that notify listeners
+/// about [ReactterHook] changes.
+/// * [ReactterState], adds state management features to [ReactterHook].
+abstract class ReactterHook with ReactterNotifyManager, ReactterState {
+  ReactterHook() {
+    createState();
   }
 
+  /// Executes [callback], and notify the listeners about to update.
   @mustCallSuper
   void update([Function? callback]) {
     return super.update(callback ?? () {});
   }
 
+  /// Executes [callback], and notify the listeners about to update as async way.
   @mustCallSuper
   Future<void> updateAsync([Function? callback]) async {
     return super.updateAsync(callback ?? () {});
