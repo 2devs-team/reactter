@@ -85,8 +85,8 @@ void main() {
           .toDiagnosticsNode()
           .toTimelineArguments();
 
-      expect(diagnostic['id'], "null");
-      expect(diagnostic['isRoot'], "true");
+      expect(diagnostic?['id'], "null");
+      expect(diagnostic?['isRoot'], "true");
     });
   });
 }
