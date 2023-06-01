@@ -1,6 +1,13 @@
 # Reactter
 
-## 5.0.0-dev.1
+## 5.0.1
+
+### Internal
+
+- **fix(test)**: Change dependencies for test coverage.
+- **fix(test)**: Fix some info about code validator.
+
+## 5.0.0
 
 ### Breaking
 
@@ -24,7 +31,6 @@
 
 - **refactor, doc(example)**: Adjust to new changes.
 - **doc**: Change documentation to better readability and adjut to new changes.
-
 
 ## 4.1.2
 
