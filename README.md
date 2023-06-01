@@ -12,19 +12,20 @@ ____
 [![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/2devs-team/reactter/dart.yml?branch=master)](https://github.com/2devs-team/reactter/actions)
 [![Codecov](https://img.shields.io/codecov/c/github/2devs-team/reactter?logo=codecov)](https://app.codecov.io/gh/2devs-team/reactter)
 
-**A light, powerful and reactive state management.**
+**A light, powerful and quick Reactive State Management, Dependency Injection and Event Management.**
 
 ## Features
 
-- ⚡️ **Build for speed**.
-- 📏 **Reduce boilerplate code** significantly.
+- ⚡️ Build for **speed**.
+- ⚖️ Super **lightweight**([🥇 See benchmarks](https://github.com/CarLeonDev/state_managements#memory-size)).
+- 📏 **Reduce boilerplate code** significantly([🥇 See benchmarks](https://github.com/CarLeonDev/state_managements#lines-number)).
 - 📝 **Improve code readability**.
-- 🪃 **Unidirectional** data flow.
-- ☢️ **Reactive state** using [Signal](#using-signal).
-- ♻️ **Reuse state** creating [custom hooks](#custom-hook-with-reactterhook).
+- 💧 **Adaptable** to any architecture.
+- ☢️ **Reactive state** using [Signal](#signal).
+- ♻️ **Reuse state** creating [custom hooks](#custom-hooks).
 - 🪄 **No configuration** necessary.
 - 🎮 **Total control** to re-render widget tree.
-- 💙 **Flutter or Dart only**, you can use in any Dart project.
+- 💙 **Dart or Flutter**, supports the latest version of Dart.
 
 Let's see a small and simple example:
 
@@ -71,31 +72,27 @@ See more examples [here](https://zapp.run/pub/flutter_reactter)!
 ## Contents
 
 - [Quickstart](#quickstart)
-- [Usage](#usage)
-  - [Create a `ReactterContext`](#create-a-reacttercontext)
-  - [Lifecycle of `ReactterContext`](#lifecycle-of-reacttercontext)
+- [About Reactter](#about-reactter)
+- [State management](#state-management)
+  - [Signal](#signal)
+  - [UseState](#usestate)
+  - [Different between Signal and UseState](#different-between-signal-and-usestate)
+  - [UseAsyncState](#useasyncstate)
+  - [UseReducer](#usereducer)
+  - [Custom hooks](#custom-hooks)
+- [Dependency injection](#dependency-injection)
   - [Shortcuts to manage instances](#shortcuts-to-manage-instances)
+  - [UseContext](#usecontext)
+  - [ReactterProvider](#reactterprovider) (`flutter_reactter`)
+  - [ReactterProviders](#reactterproviders) (`flutter_reactter`)
+  - [ReactterComponent](#reacttercomponent) (`flutter_reactter`)
+- [LifeCycle and event management](#lifecycle-and-event-management)
   - [Shortcuts to manage events](#shortcuts-to-manage-events)
-  - [Using `UseContext` hook](#using-usecontext-hook)
-  - [Using `UseEvent` hook](#using-useevent-hook)
-  - [Using `Signal`](#using-signal)
-  - [Using `UseState` hook](#using-usestate-hook)
-  - [Different between `UseState` and `Signal`](#different-between-usestate-and-signal)
-  - [Using `UseAsyncState` hook](#using-useasyncstate-hook)
-  - [Using `UseReducer` hook](#using-usereducer-hook)
-  - [Using `UseEffect` hook](#using-useeffect-hook)
-  - [Custom hook with `ReactterHook`](#custom-hook-with-reactterhook)
-- [Usage with `flutter_reactter`](#usage-with-flutter_reactter)
-  - [Wrap with `ReactterProvider`](#wrap-with-reactterprovider)
-  - [Access to `ReactterContext`](#access-to-reacttercontext)
-  - [React to `Signal`s with `ReactterWatcher`](#react-to-signals-with-reactterwatcher)
-  - [Control re-render with `ReactterBuilder`](#control-re-render-with-reactterbuilder)
-  - [Mutiple `ReactterProvider` with `ReactterProviders`](#multiple-reactterprovider-with-reactterproviders)
-  - [Create a `ReactterComponent`](#create-a-reacttercomponent)
+  - [UseEvent](#useevent)
+  - [UseEffect](#useeffect)
+  - [ReactterWatcher](#reactterwatcher) (`flutter_reactter`)
+  - [BuildContext extension](#buildcontext-extension) (`flutter_reactter`)
 - [Resources](#resources)
-  - Documentation
-  - Examples
-- [Roadmap](#roadmap)
 - [Contribute](#contribute)
 - [Authors](#authors)
 
@@ -175,227 +172,46 @@ import 'package:flutter_reactter/flutter_reactter.dart';
 
 </details>
 
-## Usage
+## About Reactter
 
-### Create a `ReactterContext`
+Reactter is a light and powerful solution for Dart and Flutter. It is composed of three main concepts that can be used together to create maintainable and scalable applications, which are:
 
-[`ReactterContext`](https://pub.dev/documentation/reactter/latest/core/ReactterContext-class.html) is a abstract class that allows to manages [`ReactterHook`](https://pub.dev/documentation/reactter/latest/core/ReactterHook-class.html) and provides life-cycle events.
+- [State management](#state-management)
+- [Dependency injection](#dependency-injection)
+- [Event management](#lifecycle-and-event-management)
 
-You can use it's functionalities, creating a class that extends it:
+## State management
 
-```dart
-class AppContext extends ReactterContext {}
-```
+In Reactter, state is understood as any object that extends[`ReactterState`](https://pub.dev/documentation/reactter/latest/core/ReactterState-mixin.html), which gives it features such as being able to store one or more values and to notify of its changes.
 
-You can use the [shortcuts to manage instances](#shortcuts-to-manage-instances) or [using `UseContext` hook](#using-usecontext-hook) to access it.
+Reactter offers the following several state managers:
 
-> **RECOMMENDED:**
-> Name class with `Context` suffix, for easy locatily.
-
-> **NOTE:**
-> In flutter, using [`ReactterProvider`](https://pub.dev/documentation/flutter_reactter/latest/widgets/ReactterProvider-class.html), it's a way to share the state between widgets without having to explicitly pass a property through every level of the tree.
-
-### Lifecycle of `ReactterContext`
-
-`ReactterContext` has the following [Lifecycle](https://pub.dev/documentation/reactter/latest/core/Lifecycle.html) events:
-
-- **`Lifecycle.registered`**: Event when the instance has registered by `ReactterInstanceManager`.
-
-- **`Lifecycle.unregistered`**: Event when the instance has unregistered by `ReactterInstanceManager`.
-
-- **`Lifecycle.inicialized`**: Event when the instance has inicialized by `ReactterInstanceManager`.
-
-- **`Lifecycle.willMount`**: Event when the instance will be mount in the widget tree (it use with `flutter_reactter` only).
-
-- **`Lifecycle.didMount`**: Event when the instance did be mount in the widget tree (it use with `flutter_reactter` only).
-
-- **`Lifecycle.willUpdate`**: Event when any instance's states will be update. Event param is a `ReactterState`.
-
-- **`Lifecycle.didUpdate`**: Event when any instance's states did be update. Event param is a `ReactterState`.
-
-- **`Lifecycle.willUnmount`**: Event when the instance will be unmount in the widget tree(it use with `flutter_reactter` only).
-
-- **`Lifecycle.destroyed`**: Event when the instance did be destroyed by `ReactterInstanceManager`.
-
-You can use the [shortcuts](#shortcuts-to-manage-events) or [`UseEvent` hook](#using-useevent-hook) to listen to these events.
-
-### Shortcuts to manage instances
-
-Reactter provides a some shortcuts to manage instances, these are:
-
-- **`Reactter.register`**: Registers a `builder` function to allows to create the instance using `Reactter.get`.
-
-  ```dart
-  Reactter.register(builder: () => AppContext());
-  Reactter.register(id: "uniqueId", builder: () => AppContext());
-  ```
-
-- **`Reactter.unregister`**: Removes the `builder` function to avoid create the instance.
-
-  ```dart
-  Reactter.unregister<AppContext>();
-  Reactter.unregister<AppContext>("uniqueId");
-  ```
-
-- **`Reactter.get`**: Gets the previously instance created or creates a new instance from the `build` registered using `reactter.register`.
-
-  ```dart
-  final appContext = Reactter.get<AppContext>();
-  final appContextWithId = Reactter.get<AppContext>(id: 'uniqueId');
-  ```
-
-- **`Reactter.create`**: Registers, creates and gets the instance directly.
-
-  ```dart
-  final appContext = Reactter.create(builder: () => AppContext());
-  final appContextWithId = Reactter.create(id: 'uniqueId', builder: () => AppContext());
-  ```
-
-- **`Reactter.delete`**: Deletes the instance but still keep the `builder` function.
-
-  ```dart
-  Reactter.delete<AppContext>();
-  Reactter.delete<AppContext>('uniqueId');
-  ```
+- [Signal](#signal)
+- [UseState](#usestate)
+- [UseAsyncState](#useasyncstate)
+- [UseReducer](#usereducer)
 
 > **NOTE:**
-> The registered instances have a global scope. This means that you can access them anywhere in the project just by using `Reactter.get` or through [`UseContext`](https://pub.dev/documentation/reactter/latest/hooks/UseContext-class.html).
-
-### Shortcuts to manage events
-
-Reactter provides a some shortcuts to manage events, these are:
-
-- **`Reactter.on`**: Puts on to listen event. When the event is emitted, the `callback` is called:
-
-  ```dart
-  void _onDidUpdate(inst, state) {
-    print("Instance: $inst, state: $state");
-  }
-
-  final appContext = Reactter.get<AppContext>();
-  Reactter.on(appContext, Lifecycle.didUpdate, _onDidUpdate);
-  // or
-  Reactter.on(ReactterInstance<AppContext>(), Lifecycle.didUpdate, _onDidUpdate);
-  ```
-
-- **`Reactter.one`**: Puts on to listen event only once. When the event is emitted, the `callback` is called and after removes event.
-
-  ```dart
-  void _onDestroyed(inst, _) {
-    print("$inst was destroyed.");
-  }
-
-  Reactter.one(appContext, Lifecycle.destroyed, _onDestroyed);
-  // or
-  Reactter.one(ReactterInstance<AppContext>(), Lifecycle.destroyed, _onDestroyed);
-  ````
-
-- **`Reactter.off`**: Removes the `callback` of event.
-
-  ```dart
-  Reactter.off(appContext, Lifecycle.didUpdate, _onDidUpdate);
-  // or
-  Reactter.off(ReactterInstance<AppContext>(), Lifecycle.didUpdate, _onDidUpdate);
-  ```
-
-- **`Reactter.emit`**: Trigger event with or without the `param` given.
-
-  ```dart
-  Reactter.emit(appContext, CustomEnum.EventName, "test param");
-  // or
-  Reactter.emit(ReactterInstance<AppContext>(), CustomEnum.EventName, "test param");
-  ```
-
-- **`Reactter.emitAsync`**: Trigger event with or without the `param` given as async way.
-
-  ```dart
-  await Reactter.emitAsync(appContext, CustomEnum.EventName, "test param");
-  // or
-  await Reactter.emitAsync(ReactterInstance<AppContext>(), CustomEnum.EventName, "test param");
-  ```
-
-> **NOTE:**
-> The `ReactterInstance` helps to find the instance for event. This instance must have been created earlier in the Reactter context.
+> The hooks (also known as [`ReactterHook`](https://pub.dev/documentation/reactter/latest/core/ReactterHook-class.html)) are named with the prefix `Use` according to convention.
 >
 > **RECOMMENDED:**
-> Use the instance directly on event methods for optimal performance.
+> See also [different between Signal and UseState](#different-between-signal-and-usestate) and about [custom hooks](#custom-hooks).
 
-### Using `UseContext` hook
+### Signal
 
-[`UseContext`](https://pub.dev/documentation/reactter/latest/hooks/UseContext-class.html) is a `ReactterHook` that allows to get `ReactterContext`'s instance when it's ready.
+[`Signal`](https://pub.dev/documentation/reactter/latest/core/Signal-class.html) is an object (that extends [`ReactterState`](https://pub.dev/documentation/reactter/latest/core/ReactterState-mixin.html)) which has a `value` and notifies about its changes.
 
-```dart
-class AppContext extends ReactterContext {
-  late final otherContextHook = UseContext<OtherContext>(context: this);
-  // late final otherContextHookWithId = UseContext<OtherContext>(id: "uniqueId", context: this);
-  late otherContext = otherContext.instance;
-
-  AppContext() {
-    UseEffect(() {
-      otherContext = otherContextHook.instance;
-    }, [otherContextHook]);
-  }
-}
-```
-
-> **NOTE:** If you're not sure that you got the instance from the beginning, you need to use the `UseEffect` as shown in the example above.
->
-> **NOTE:** The context that you need to get, must be created by [`ReactterInstanceManager`](https://pub.dev/documentation/reactter/latest/core/ReactterInstanceManager-mixin.html).
-
-### Using `UseEvent` hook
-
-[`UseEvent`](https://pub.dev/documentation/reactter/latest/hooks/UseEvent-class.html) is a `ReactterHook` that manages events.
-
-You can listen to event using `on` method:
+It can be initialized using the extension `.signal`:
 
 ```dart
-enum Events { SomeEvent };
-
-void _onSomeEvent(inst, param) {
-  print("$inst's Events.SomeEvent emitted with param: $param.");
-}
-
-UseEvent<AppContext>().on(Events.SomeEvent, _onSomeEvent);
-```
-
-Use `off` method to stop listening event:
-
-```dart
-UseEvent<AppContext>().off(Events.SomeEvent, _onSomeEvent);
-```
-
-If you want to listen event only once, use `one` method:
-
-```dart
-UseEvent<AppContext>().one(Events.SomeEvent, _onSomeEvent);
-```
-
-And use `emit` method to trigger event:
-
-```dart
-UseEvent<AppContext>().emit(Events.SomeEvent, 'Parameter');
-```
-
-> **IMPORTANT:** Don't forget to remove event using `off` or using `dispose` to remove all instance's events.
-> Failure to do so could increase memory usage or have unexpected behaviors, such as events in permanent listening.
->
-> **RECOMMENDED:** If you have the instance, use directly with `UseEvent.withInstance(<instance>)` for optimal performance.
-
-### Using `Signal`
-
-[`Signal`](https://pub.dev/documentation/reactter/latest/core/Signal-class.html) is a class that store a `value` of any type and notify the listeners when the `value` is updated.
-
-> **NOTE:**
-> In flutter, using [`ReactterWatcher`](https://pub.dev/documentation/flutter_reactter/latest/widgets/ReactterWatcher-class.html), it's a way to keep the widgets automatically updates, accessing the value of signal reactively.
-
-You can create a new `Signal`, like so:
-
-```dart
-// usign `.signal` extension
 final strSignal = "initial value".signal;
 final intSignal = 0.signal;
 final userSignal = User().signal;
-// or usign the constructor class
+```
+
+or using the constructor class `Signal<Type>(InitialValue)`:
+
+```dart
 final strSignal = Signal<String>("initial value");
 final intSignal = Signal<int>(0);
 final userSignal = Signal<User>(User());
@@ -408,38 +224,39 @@ intSignal.value = 10;
 print("Current state: ${intSignal.value}");
 ```
 
-Or you can use it as a callable function:
+or also can use the callable function:
 
 ```dart
 intSignal(10);
 print("Current state: ${intSignal()}");
 ```
 
-Also, you can use `toString` implict to access its state:
+or simply use `.toString()` implicit to get its `value` as String:
 
 ```dart
-print("Current state: ${intSignal}");
+print("Current state: $intSignal");
 ```
 
-> **NOTE:** `Signal` notifies that its state has changed when the previous state is different from the current state.
-> If its state is a `Object`, not detect internal changes, only when states is setted another `Object`.
+> **NOTE:**
+> `Signal` notifies that its `value` has changed when the previous `value` is different from the current `value`.
+> If its `value` is a `Object`, not detect internal changes, only when `value` is setted another `Object`.
 
-If you want to notify changes after run a set of instructions, use `update` method:
+Use `update` method to notify changes after run a set of instructions:
 
 ```dart
 userSignal.update((user) {
-  user.firstname = "Leo";
-  user.lastname = "Leon";
+  user.firstname = "Firstname";
+  user.lastname = "Lastname";
 });
 ```
 
-If you want to force to notify changes, use `refresh` method.
+Use `refresh` method to force to notify changes.
 
 ```dart
 userSignal.refresh();
 ```
 
-When `value` is changed, the `Signal` will emitted the following events:
+When `value` is changed, the `Signal` will emitted the following events(learn about it [here](#lifecycle-and-event-management)):
 
 - `Lifecycle.willUpdate` event is triggered before the `value` change or `update`, `refresh` methods have been invoked.
 - `Lifecicle.didUpdate` event is triggered after the `value` change or `update`, `refresh` methods have been invoked.
@@ -448,39 +265,28 @@ When `value` is changed, the `Signal` will emitted the following events:
 > When you do any arithmetic operation between two `Signal`s, its return a `Obj`, for example: `1.signal + 2.signal` return `3.obj`.
 > A [`Obj`](https://pub.dev/documentation/reactter/latest/core/Obj-class.html) is like a `Signal` without reactive functionality, but you can convert it to `Signal` using `.toSignal`.
 
-### Using `UseState` hook
+> **NOTE:**
+> In flutter, using [`ReactterWatcher`](https://pub.dev/documentation/flutter_reactter/latest/widgets/ReactterWatcher-class.html), it's a way to keep the widgets automatically updates, accessing the value of signal reactively.
 
-[`UseState`](https://pub.dev/documentation/reactter/latest/hooks/UseState-class.html) is a `ReactterHook` that manages a state.
+### UseState
 
-You can declarate it into the class, with the context argument(`this`) to put this hook on listen, like so:
+[`UseState`](https://pub.dev/documentation/reactter/latest/hooks/UseState-class.html) is a hook([`ReactterHook`](https://pub.dev/documentation/reactter/latest/core/ReactterHook-class.html)) that allows to declare state variables and manipulate its `value`, which in turn notifies about its changes.
 
-```dart
-class AppContext extends ReactterContext {
-  late final count = UseState(0, this);
-}
-```
-
-Or add it using the `listenHooks` method, which is exposed by `ReactterContext`:
+It can be declared inside a class, like this:
 
 ```dart
-class AppContext extends ReactterContext {
+class CounterController {
   final count = UseState(0);
-
-  AppContext() {
-    listenHooks([count]);
-  }
 }
 ```
-
-> **NOTE:** If you don't add context argument or use `listenHooks`, the `ReactterContext` won't be able to react to hook's changes.
 
 `UseState` has `value` property that allows to read and write its state:
 
 ```dart
-class AppContext extends ReactterContext {
-  late final count = UseState(0, this);
+class CounterController {
+  final count = UseState(0);
 
-  AppContext() {
+  CounterController() {
     print("Prev state: ${count.value}");
     count.value = 10;
     print("Current state: ${count.value}");
@@ -488,79 +294,79 @@ class AppContext extends ReactterContext {
 }
 ```
 
-> **NOTE:** `UseState` notifies that its state has changed when the previous state is different from the current state.
-> If its state is a `Object`, not detect internal changes, only when states is setted another `Object`.
+> **NOTE:**
+> `UseState` notifies that its `value` has changed when the previous `value` is different from the current `value`.
+> If its `value` is a `Object`, not detect internal changes, only when `value` is setted another `Object`.
 
-If you want to notify changes after run a set of instructions, use `update` method:
+Use `update` method to notify changes after run a set of instructions:
 
 ```dart
-userState.update(() {
-  userState.value.firstname = "Leo";
-  userState.value.lastname = "Leon";
+userState.update((user) {
+  user.firstname = "Firstname";
+  user.lastname = "Lastname";
 });
 ```
 
-If you want to force to notify changes, use `refresh` method.
+Use `refresh` method to force to notify changes.
 
 ```dart
 userState.refresh();
 ```
 
-When `value` is changed, the `UseState` will emitted the following events:
+When `value` is changed, the `UseState` will emitted the following events(learn about it [here](#lifecycle-and-event-management)):
 
 - `Lifecycle.willUpdate` event is triggered before the `value` change or `update`, `refresh` methods have been invoked.
 - `Lifecicle.didUpdate` event is triggered after the `value` change or `update`, `refresh` methods have been invoked.
 
-### Different between `UseState` and `Signal`
+### Different between Signal and UseState
 
 Both `UseState` and `Signal` represent a state(`ReactterState`). But there are a few featues that are different between them.
 
-`UseState` is a `ReactterHook`. This means that it doesn't work outside of `ReactterContext`. Instead a `Signal` can work both outside and inside a `ReactterContext`. This is good for maintaining a global state or internal state if you use it into a `ReactterContext`.
+`UseState` is a `ReactterHook`, therefore unlike a `Signal`, it can be extended and given new capabilities.
+Use of the `value` attribute is required each time `UseState` reads or writes its state. However, `Signal` eliminates the need for it, making the code easier to understand.
 
-With `UseState` is necessary use `value` property every time for read or write its state. But with `Signal` it is not necessary, improving code readability.
-
-In Flutter, to use `UseState` you need to provide its `ReactterContext` to the Widget tree, with `ReactterProvider` or `ReactterComponent` and access it through of `BuildContext`. With `Signal` use `ReactterWatcher` only, it's very simple.
+In Flutter, when you want to use `UseState`, you must expose the containing parent class to the widget tree through a `ReactterProvider` or `ReactterComponent` and access it using `BuildContext`. Instead, with `Signal` which is reactive, you simply use `ReactterWatcher`.
 
 But it is not all advantages for `Signal`, although it is good for global states and for improving code readability, it is prone to antipatterns and makes debugging difficult(This will be improved in the following versions).
 
-The decision between which one to use is yours. You can use one or both without them getting in the way. And you can even replace a `UseState` with a `Signal` into a `ReactterContext`.
+The decision between which one to use is yours. You can use one or both without them getting in the way. And you can even replace a `UseState` with a `Signal` at any time.
 
-### Using `UseAsyncState` hook
+### UseAsyncState
 
-[`UseAsyncState`](https://pub.dev/documentation/reactter/latest/hooks/UseAsyncState-class.html) is a `ReactterHook` with the same functionality as `UseState` but provides a `asyncValue` method, which will be obtained when `resolve` method is executed.
+[`UseAsyncState`](https://pub.dev/documentation/reactter/latest/hooks/UseAsyncState-class.html) is a hook([`ReactterHook`](https://pub.dev/documentation/reactter/latest/core/ReactterHook-class.html)) with the same feature as [`UseState`](#usestate) but provides a `asyncValue` method, which will be obtained when `resolve` method is executed.
+
+This is an translate example:
 
 ```dart
 class TranslateArgs {
-  final String to;
-  final String from;
   final String text;
+  final String from;
+  final String to;
 
-  TranslateArgs({ this.to, this.from, this.text });
+  TranslateArgs({ this.text, this.from, this.to, });
 }
 
-class AppContext extends ReactterContext {
-  late final translateState = UseAsyncStates<String, TranslateArgs>(
-    'Hello world',
+class TranslateController {
+  final translateState = UseAsyncStates<String?, TranslateArgs>(
+    null,
     translate
   );
 
-  AppContext() {
-    _init();
-  }
-
-  Future<void> _init() async {
-    await translateState.resolve(
+  TranslateController() {
+    translateState.resolve(
       TranslateArgs({
-        to: 'ES',
+        text: 'Hello world',
         from: 'EN',
-        text: translateState.value,
+        to: 'ES',
       }),
-    );
+    ).then((_) {
+      print("'Hello world' translated to Spanish: '${translateState.value}'");
+    });
 
-    print("'Hello world' translated to Spanish: '${translateState.value}'");
   }
 
   Future<String> translate([TranslateArgs args]) async {
+    // this is fake code, which simulates a request to API
     return await api.translate(args);
   }
 }
@@ -569,10 +375,10 @@ class AppContext extends ReactterContext {
 > **NOTE:**
 > If you want to send argument to `asyncValue` method, need to define a type argument which be send through `resolve` method. Like the example shown above, the argument type send is `TranslateArgs` class.
 
-It also has `when` method that returns a new value depending on it's state:
+Use `when` method to returns a computed value depending on it's state:
 
 ```dart
-final valueComputed = asyncState.when<String>(
+final computedValue = asyncState.when<String>(
   standby: (value) => "⚓️ Standby: $value",
   loading: (value) => "⏳ Loading...",
   done: (value) => "✅ Resolved: $value",
@@ -580,28 +386,32 @@ final valueComputed = asyncState.when<String>(
 );
 ```
 
-### Using `UseReducer` hook
+When `value` is changed, the `UseAsynState` will emitted the following events(learn about it [here](#lifecycle-and-event-management)):
 
-[`UseReducer`](https://pub.dev/documentation/reactter/latest/hooks/UseReducer-class.html) is a `ReactterHook` that manages state using reducer method. An alternative to `UseState`.
+- `Lifecycle.willUpdate` event is triggered before the `value` change or `update`, `refresh` methods have been invoked.
+- `Lifecicle.didUpdate` event is triggered after the `value` change or `update`, `refresh` methods have been invoked.
+
+### UseReducer
+
+[`UseReducer`](https://pub.dev/documentation/reactter/latest/hooks/UseReducer-class.html)  is a hook([`ReactterHook`](https://pub.dev/documentation/reactter/latest/core/ReactterHook-class.html)) that manages state using reducer method. An alternative to [`UseState`](#usestate).
 
 > **RECOMMENDED:**
 > `UseReducer` is usually preferable to `UseState` when you have complex state logic that involves multiple sub-values or when the next state depends on the previous one.
 
-`UseReducer` accepts three arguments:
+`UseReducer` accepts two arguments:
 
  ```dart
-  UseReducer(<reducer>, <initialState>, <context>);
+  UseReducer(<reducer>, <initialState>);
  ```
 
 - The `reducer` method contains your custom state logic that calculates the new state using current state, and actions.
 - The `initialState` is a unique value of any type with which you initialize the state.
-- The `context` represents any instance of the `ReactterContext` which is notified of any change in state.
 
 `UseReducer` exposes a `dispatch` method that allows to invoke the `reducer` method sending a `ReactterAction`.
 
 The current state can be access through `value` property.
 
-Here's the counter example:
+Here's the counter example using `UseReducer`:
 
  ```dart
 class Store {
@@ -610,7 +420,7 @@ class Store {
   Store({this.count = 0});
 }
 
-Store _reducer(Store state, ReactterAction<String, int?> action) {
+Store reducer(Store state, ReactterAction<int?> action) {
   switch (action.type) {
     case 'INCREMENT':
       return Store(count: state.count + (action.payload ?? 1));
@@ -621,20 +431,20 @@ Store _reducer(Store state, ReactterAction<String, int?> action) {
   }
 }
 
-class AppContext extends ReactterContext {
-  late final state = UseReducer(_reducer, Store(count: 0), this);
+class CounterController {
+  final useCounter = UseReducer(reducer, Store(count: 0));
 
-  AppContext() {
-    print("count: ${state.value.count}"); // count: 0;
-    state.dispatch(ReactterAction(type: 'INCREMENT', payload: 2));
-    print("count: ${state.value.count}"); // count: 2;
-    state.dispatch(ReactterAction(type: 'DECREMENT'));
-    print("count: ${state.value.count}"); // count: 1;
+  CounterController() {
+    print("count: ${useCounter.value.count}"); // count: 0;
+    useCounter.dispatch(ReactterAction(type: 'INCREMENT', payload: 2));
+    print("count: ${useCounter.value.count}"); // count: 2;
+    useCounter.dispatch(ReactterAction(type: 'DECREMENT'));
+    print("count: ${useCounter.value.count}"); // count: 1;
   }
 }
  ```
 
-Also, you can create the actions as a callable class, extending from `ReactterActionCallable` and use them like this:
+The actions can be created as a callable class, extending from [`ReactterActionCallable`](https://pub.dev/documentation/reactter/latest/hooks/ReactterActionCallable-class.html) and used as follows:
 
 ```dart
 class Store {
@@ -657,67 +467,30 @@ class DecrementAction extends ReactterActionCallable<Store, int> {
   Store call(Store state) => Store(count: state.count - payload);
 }
 
-Store _reducer(Store state, ReactterAction action) =>
+Store reducer(Store state, ReactterAction action) =>
   action is ReactterActionCallable ? action(state) : UnimplementedError();
 
-class AppContext extends ReactterContext {
-  late final state = UseReducer(_reducer , Store(count: 0), this);
+class CounterController {
+  final useCounter = UseReducer(reducer , Store(count: 0));
 
-  AppContext() {
-    print("count: ${state.value.count}"); // count: 0;
-    state.dispatch(IncrementAction(quantity: 2));
-    print("count: ${state.value.count}"); // count: 2;
-    state.dispatch(DecrementAction());
-    print("count: ${state.value.count}"); // count: 1;
+  CounterController() {
+    print("count: ${useCounter.value.count}"); // count: 0;
+    useCounter.dispatch(IncrementAction(quantity: 2));
+    print("count: ${useCounter.value.count}"); // count: 2;
+    useCounter.dispatch(DecrementAction());
+    print("count: ${useCounter.value.count}"); // count: 1;
   }
 }
 ```
 
-### Using `UseEffect` hook
+When `value` is changed, the `UseReducer` will emitted the following events(learn about it [here](#lifecycle-and-event-management)):
 
-[`UseEffect`](https://pub.dev/documentation/reactter/latest/hooks/UseEffect-class.html) is a `ReactterHook` that manages side-effect.
+- `Lifecycle.willUpdate` event is triggered before the `value` change or `update`, `refresh` methods have been invoked.
+- `Lifecicle.didUpdate` event is triggered after the `value` change or `update`, `refresh` methods have been invoked.
 
-You can add it on constructor of class:
+### Custom hooks
 
-```dart
-class AppContext extends ReactterContext {
-  late final count = UseState(0, this);
-
-  AppContext() {
-    UseEffect((){
-      // Execute by count state changed or 'didMount' event
-      print("Count: ${count.value}");
-
-      Future.delayed(
-        const Duration(seconds: 1),
-        () => count.value += 1,
-      );
-
-      return () {
-        // Cleanup - Execute before count state changed or 'willUnmount' event
-        print("Cleanup executed");
-      };
-    }, [count], this);
-  }
-}
-```
-
-If you want to execute a `UseEffect` immediately, use `UseEffect.dispatchEffect` instead of the `context` argument:
-
-```dart
-UseEffect(
-  () => print("Excute immediately or by hook's changes"),
-  [someState],
-  UseEffect.dispatchEffect
-);
-```
-
-> **NOTE:**
-> If you don't add `context` argument to `UseEffect`, the `callback` don't execute on lifecycle `didMount`, and the `cleanup` don't execute on lifecycle `willUnmount`(theses lifecycle events are used with `flutter_reactter` only).
-
-### Custom hook with `ReactterHook`
-
-[`ReactterHook`](https://pub.dev/documentation/reactter/latest/core/ReactterHook-class.html) is a abstract class that allows to create a Custom Hook.
+Custom hooks are classes that extend [`ReactterHook`](https://pub.dev/documentation/reactter/latest/core/ReactterHook-class.html) that follow a special naming convention with the `use` prefix and can contain state logic, effects or any other custom code.
 
 There are several advantages to using Custom Hooks:
 
@@ -733,114 +506,386 @@ class UseCount extends ReactterHook {
 
   int get value => _count;
 
-  UseCount(int initial, [ReactterContext? context])
-      : _count = initial,
-        super(context);
+  UseCount(int initial) : _count = initial;
 
   void increment() => update(() => _count += 1);
   void decrement() => update(() => _count -= 1);
 }
 ```
 
-> **RECOMMENDED:**
-> Name class with `Use` preffix, for easy locatily.
->
 > **NOTE:**
-> `ReactterHook` provides `update` method which notify to `context` that has changed.
+> `ReactterHook` provides `update` method which notifies about its changed.
 
-and use it like that:
+You can then call that custom hook from anywhere in the code and get access to its shared logic:
 
 ```dart
-class AppContext extends ReactterContext {
-  late final count = UseCount(0, this);
+class AppController {
+  final count = UseCount(0);
 
-  AppContext() {
+  AppController() {
+    Timer.periodic(Duration(seconds: 1), (_) => count.increment());
+
+    // Tracking of changes via a useEffect
     UseEffect(() {
-      Future.delayed(
-        const Duration(seconds: 1),
-        count.increment,
-      );
-
-      print("Count: ${count.value}");
+      print("UseEffect | Count: ${count.value}");
     }, [count], this);
   }
 }
 ```
 
-## Usage with `flutter_reactter`
+## Dependency injection
 
-### Wrap with `ReactterProvider`
+With Reactter, you can create, delete and access the desired object from a single location([`ReactterInstanceManager`](https://pub.dev/documentation/reactter/latest/core/ReactterInstanceManager-mixin.html)), and you can do it from anywhere in the code, thanks to reactter's dependency injection system.
 
-[`ReactterProvider`](https://pub.dev/documentation/flutter_reactter/latest/widgets/ReactterProvider-class.html) is a wrapper `StatelessWidget` that provides a
-`ReactterContext`'s instance to widget tree that can be access through the `BuildContext`.
+Dependency injection offers several benefits. It promotes the principle of inversion of control, where the control over object creation and management is delegated to Reactter. This improves code modularity, reusability, and testability.It also simplifies the code by removing the responsibility of creating dependencies from individual classes, making them more focused on their core functionality.
+
+Reactter offers the following several instance managers:
+
+- [Shorcuts to manage instances](#shortcuts-to-manage-instances)
+- [UseContext](#usecontext)
+- [ReactterProvider](#reactterprovider)
+- [ReactterProviders](#reactterproviders)
+- [ReactterComponent](#reacttercomponent)
+
+### Shortcuts to manage instances
+
+Reactter offers several convenient shortcuts for managing instances:
+
+- **`Reactter.register`**: This method registers a `builder` function, enabling the creation of an instance using `Reactter.get`.
+
+  ```dart
+  Reactter.register(builder: () => AppController());
+  Reactter.register(id: "uniqueId", builder: () => AppController());
+  ```
+
+- **`Reactter.unregister`**: This method removes the `builder` function, preventing the creation of the instance.
+
+  ```dart
+  Reactter.unregister<AppController>();
+  Reactter.unregister<AppController>("uniqueId");
+  ```
+
+- **`Reactter.get`**: This method retrieves a previously created instance or creates a new instance from the `build` registered with `reactter.register`.
+
+  ```dart
+  final appController = Reactter.get<AppController>();
+  final appControllerWithId = Reactter.get<AppController>(id: 'uniqueId');
+  ```
+
+- **`Reactter.create`**: This method registers, creates and retrieves the instance directly.
+
+  ```dart
+  final appController = Reactter.create(builder: () => AppController());
+  final appControllerWithId = Reactter.create(id: 'uniqueId', builder: () => AppController());
+  ```
+
+- **`Reactter.delete`**: This method deletes the instance but keep the `builder` function.
+
+  ```dart
+  Reactter.delete<AppController>();
+  Reactter.delete<AppController>('uniqueId');
+  ```
+
+> **NOTE:**
+> These methods mentioned above are exposed by [`ReactterInstanceManager`](<https://pub.dev/documentation/reactter/latest/core/ReactterInstanceManager-mixin.html>).
+>
+> **NOTE:**
+> The scope of the registered instances is global.
+> This indicates that using `Reactter.get` or [`UseContext`](#usecontext) will allow you to access them from anywhere in the project.
+
+### UseContext
+
+[`UseContext`](https://pub.dev/documentation/reactter/latest/hooks/UseContext-class.html) is a hook([`ReactterHook`](https://pub.dev/documentation/reactter/latest/core/ReactterHook-class.html)) that allows to get the `T` instance with/without `id` from dependency store when it's ready.
 
 ```dart
-ReactterProvider<AppContext>(
-  () => AppContext(),
-  builder: (appContext, context, child) {
-    context.watch<AppContext>();
-    return Text("count: ${appContext.count.value}");
+class AppController {
+  final useAuthController = UseContext<AuthController>();
+  // final useOtherControllerWithId = UseContext<OtherController>("UniqueId");
+
+  AuthController? authController = useAuthController.instance;
+
+  AppController() {
+    UseEffect(() {
+      authController = useAuthController.instance;
+    }, [useAuthController]);
+  }
+}
+```
+
+Use `instance` getter to get the `T` instance.
+
+Use [`UseEffect`](#useeffect) hook as shown in the example above, to wait for the `instance` to be created.
+
+> **NOTE:**
+> The instance that you need to get, must be created by [`Dependency injection`](#dependency-injection) before.
+
+### ReactterProvider
+
+[`ReactterProvider`](https://pub.dev/documentation/flutter_reactter/latest/widgets/ReactterProvider-class.html) is a Widget (exclusive of `flutter_reactter`) that hydrates from an `T` instance to the Widget tree. The `T` instance can be access through methods [BuildContext extension](#buildcontext-extension):
+
+```dart
+ReactterProvider<CounterController>(
+  () => CounterController(),
+  builder: (counterController, context, child) {
+    context.watch<CounterController>();
+    // `context.watch` watches any CounterController changes for rebuild
+    return Text("count: ${counterController.count.value}");
   },
 )
 ```
 
-If you want to create a different `ReactterContext`'s instance, use `id` parameter.
+Uses `id` property to identify the `T` instance.
+
+Use `child` property to pass a Widget which to be built once only.
+It will be sent through the `builder` callback, so you can incorporate it into your build.
+
+> **RECOMMENDED:**
+> Dont's use Object with constructor parameters to prevent conflicts.
+>
+> **NOTE:** `ReactteProvider` is a "scoped". So, the `builder` callback will be rebuild, when the instance changes or any `ReactterState` specified using the watch methods of [BuildContext extension](#buildcontext-extension).
+
+### ReactterProviders
+
+[`ReactterProviders`](https://pub.dev/documentation/flutter_reactter/latest/widgets/ReactterProviders-class.html) is a Widget (exclusive of `flutter_reactter`) that allows to use multiple [`ReactterProvider`](#reactterprovider) as nested way.
 
 ```dart
-ReactterProvider<AppContext>(
-  () => AppContext(),
-  id: "uniqueId",
-  builder: (appContext, context, child) {
-    context.watchId<AppContext>("uniqueId");
-    return Text("count: ${appContext.count.value}");
+ReactterProviders(
+  [
+    ReactterProvider(
+      () => AppController(),
+    ),
+    ReactterProvider(
+      () => ConfigContext(),
+      id: 'App',
+    ),
+    ReactterProvider(
+      () => ConfigContext(),
+        id: 'Dashboard'
+    ),
+  ],
+  builder: (context, child) {
+    final appController = context.use<AppController>();
+    final appConfigContext = context.use<ConfigContext>('App');
+    final dashboardConfigContext = context.use<ConfigContext>('Dashboard');
+    ...
   },
 )
 ```
 
-> **IMPORTANT:** Dont's use `ReactterContext` with constructor parameters to prevent conflicts.
+> **RECOMMENDED:**
+> Dont's use Object with constructor parameters to prevent conflicts.
 >
-> **NOTE:** `ReactteProvider` is a "scoped". So, the `builder` callback will be rebuild, when the `ReactterContext` changes or any `ReactterHook` specified.
-> For this to happen, the `ReactterContext` should put it on listens for `BuildContext`'s `watch`ers.
+> **NOTE:** `ReactteProviders` is a "scoped". So, the `builder` callback will be rebuild, when the instance changes or any `ReactterState` specified using the watch methods of [BuildContext extension](#buildcontext-extension).
 
-### Access to `ReactterContext`
+### ReactterComponent
 
-Reactter provides additional methods to `BuildContext` to access your `ReactterContext`. These are following:
-
-- **`context.watch`**: Gets the `ReactterContext`'s instance from the closest ancestor of  `ReactterProvider` and watch all `ReactterHook` or `ReactterHook` defined in first paramater.
+[`ReactterComponent`](https://pub.dev/documentation/flutter_reactter/latest/widgets/ReactterComponent-class.html) is a Widget (exclusive of `flutter_reactter`) that provides [`ReactterProvider`](#reactterprovider) features, whose `T` instance defined is exposing trough render method.
 
 ```dart
-final watchContext = context.watch<WatchContext>();
-final watchHooksContext = context.watch<WatchHooksContext>(
-  (ctx) => [ctx.stateA, ctx.stateB],
+class CounterComponent extends ReactterComponent<CounterController> {
+  const CounterComponent({Key? key}) : super(key: key);
+
+  @override
+  get builder => () => CounterController();
+
+  @override
+  void listenStates(counterController) => [counterController.count];
+
+  @override
+  Widget render(counterController, context) {
+    return Text("Count: ${counterController.count.value}");
+  }
+}
+```
+
+Use `builder` getter to define the instance creating method.
+
+> **NOTE:**
+> If you don't use `builder` getter, the `T` instance is not created and instead tried to be found it in the nearest ancestor where it was created.
+>
+> **RECOMMENDED:**
+> Dont's use Object with constructor parameters to prevent conflicts.
+
+Use `id` getter to identify the `T` instance:
+
+Use `listenStates` getter to define the states and with its changes rebuild the Widget tree defined in `render` method.
+
+Use `listenAll` getter as `true` to listen all the `T` instance changes to rebuild the Widget tree defined in `render` method.
+
+## LifeCycle and event management
+
+In Reactter, the states([`ReactterState`](#state-management)) and the instances (managed by the [`dependency injection`](#dependency-injection)) contain different stages, also known as [`LifeCycle`](https://pub.dev/documentation/reactter/latest/core/Lifecycle.html). This lifecycle's linked events are as follows:
+
+- **`Lifecycle.registered`**: This event is triggered when the instance has been registered.
+- **`Lifecycle.unregistered`**: This event is triggered when the instance is no longer registered.
+- **`Lifecycle.initialized`**: This event is triggered when the instance has been initialized.
+- **`Lifecycle.willMount`**: This event(exclusive of `flutter_reactter`) happens when the instance is going to be mounted in the widget tree.
+- **`Lifecycle.didMount`**: This event(exclusive of `flutter_reactter`) happens after the instance has been successfully mounted in the widget tree.
+- **`Lifecycle.willUpdate`**: This event is triggered anytime the instance's state is about to be updated. The event parameter is a `ReactterState`.
+- **`Lifecycle.didUpdate`**: This event is triggered anytime the instance's state has been updated. The event parameter is a `ReactterState`.
+- **`Lifecycle.willUnmount`**: This event(exclusive of `flutter_reactter`) happens when the instance is about to be unmounted from the widget tree.
+- **`Lifecycle.destroyed`**: This event is triggered when the instance has been destroyed.
+
+Reactter offers the following several event managers:
+
+- [Shortcuts to manage events](#shortcuts-to-manage-instances)
+- [UseEvent](#useevent)
+- [UseEffect](#useeffect)
+- [ReactterWatcher](#reactterwatcher)
+- [BuildContext extension](#buildcontext-extension)
+
+### Shortcuts to manage events
+
+Reactter offers several convenient shortcuts for managing events:
+
+- **`Reactter.on(<Object inst>, <enum event>, <Fuction callback>)`**: Turns on the listen event. When the event(`enum`) of instance(`Object`) is emitted, the `callback` is called:
+
+  ```dart
+  void onDidUpdate(inst, state) => print("Instance: $inst, state: $state");
+
+  final appController = Reactter.get<AppController>();
+  Reactter.on(appController, Lifecycle.didUpdate, onDidUpdate);
+  // or
+  Reactter.on(ReactterInstance<AppController>(), Lifecycle.didUpdate, onDidUpdate);
+  ```
+
+- **`Reactter.one(<Object inst>, <enum event>, <Fuction callback>)`**: Turns on the listen event for only once. After the event(`enum`) of instance(`Object`) is emitted, the `callback` is called and ended.
+
+  ```dart
+  void onDidUpdate(inst, state) => print("Instance: $inst, state: $state");
+
+  final appController = Reactter.get<AppController>();
+  Reactter.on(appController, Lifecycle.didUpdate, onDidUpdate);
+  // or
+  Reactter.on(ReactterInstance<AppController>(), Lifecycle.didUpdate, onDidUpdate);
+  ````
+
+- **`Reactter.off(<Object inst>, <enum event>, <Fuction callback>)`**: Removes the `callback` from event(`enum`) of instance(`Object`).
+
+  ```dart
+  Reactter.off(appController, Lifecycle.didUpdate, onDidUpdate);
+  // or
+  Reactter.off(ReactterInstance<AppController>(), Lifecycle.didUpdate, onDidUpdate);
+  ```
+
+- **`Reactter.emit(<Object inst>, <enum event>, <dynamic param>)`**: Triggers an event(`enum`) of instance(`Object`) with or without the `param` given.
+
+  ```dart
+  Reactter.emit(appController, CustomEnum.EventName, "test param");
+  // or
+  Reactter.emit(ReactterInstance<AppController>(), CustomEnum.EventName, "test param");
+  ```
+
+- **`Reactter.emitAsync(<Object inst>, <enum event>, <dynamic param>)`**: Triggers an event(`enum`) of instance(`Object`) with or without the `param` given as async way.
+
+  ```dart
+  await Reactter.emitAsync(appController, CustomEnum.EventName, "test param");
+  // or
+  await Reactter.emitAsync(ReactterInstance<AppController>(), CustomEnum.EventName, "test param");
+  ```
+
+> **NOTE:**
+> These methods mentioned above are exposed by [`ReactterEventManager`](<https://pub.dev/documentation/reactter/latest/core/ReactterEventManager-mixin.html>).
+>
+> **NOTE:**
+> The `ReactterInstance` helps to find the instance for event.
+>
+> **RECOMMENDED:**
+> Use the instance directly on event methods for optimal performance.
+
+### UseEvent
+
+[`UseEvent`](https://pub.dev/documentation/reactter/latest/hooks/UseEvent-class.html) is a hook([`ReactterHook`](https://pub.dev/documentation/reactter/latest/core/ReactterHook-class.html)) that allows to manager events.
+
+Use `on` method to listen for instance's event:
+
+```dart
+enum Events { SomeEvent };
+
+void onSomeEvent(inst, param) {
+  print("$inst's Events.SomeEvent emitted with param: $param.");
+}
+
+UseEvent<AppController>().on(Events.SomeEvent, onSomeEvent);
+```
+
+Use `off` method to stop listening instance's event:
+
+```dart
+UseEvent<AppController>().off(Events.SomeEvent, onSomeEvent);
+```
+
+Use `one` method to listen for instance's event once:
+
+```dart
+UseEvent<AppController>().one(Events.SomeEvent, onSomeEvent);
+```
+
+Use `emit` method to trigger a instance's event:
+
+```dart
+UseEvent<AppController>().emit(Events.SomeEvent, 'Parameter');
+```
+
+> **IMPORTANT:** Don't forget to remove event using `off` or using `dispose` to remove all instance's events.
+> Failure to do so could increase memory usage or have unexpected behaviors, such as events in permanent listening.
+>
+> **RECOMMENDED:** If you have the instance, use directly with `UseEvent.withInstance(<instance>)` for optimal performance.
+
+### UseEffect
+
+[`UseEffect`](https://pub.dev/documentation/reactter/latest/hooks/UseEffect-class.html) is a hook([`ReactterHook`](https://pub.dev/documentation/reactter/latest/core/ReactterHook-class.html)) that allows to manager side-effect.
+
+```dart
+UseEffect(
+  <<Function cleanup> Function callback>,
+  <ReactterState dependencies>[],
+  <Object instance>,
+)
+```
+
+The side-effect logic into the `callback` function is executed when `dependencies`(List of `ReactterState`) argument changes or `instance`(Object) trigger `LifeCycle.didMount` event.
+
+If the `callback` returns a function, then `UseEffect` considers this as an `effect cleanup`.
+The `cleanup` callback is executed, before `callback` is called or `instance`(Object) trigger `LifeCycle.willUnmount` event:
+
+Let's see an example with a counter that increments every second:
+
+```dart
+class AppController {
+  final count = UseState(0);
+
+  AppController() {
+    UseEffect((){
+      // Execute by count state changed or 'LifeCycle.didMount' event
+      print("Count: ${count.value}");
+      Future.delayed(const Duration(seconds: 1), () => count.value += 1);
+
+      return () {
+        // Cleanup - Execute before count state changed or 'LifeCycle.willUnmount' event
+        print("Cleanup executed");
+      };
+    }, [count], this);
+  }
+}
+```
+
+Use `UseEffect.dispatchEffect` instead of instance argument to execute a `UseEffect` immediately.
+
+```dart
+UseEffect(
+  () => print("Excute immediately or by hook changes"),
+  [someState],
+  UseEffect.dispatchEffect
 );
 ```
 
-- **`context.watchId`**: Gets the `ReactterContext`'s instance with `id` from the closest ancestor of  `ReactterProvider` and watch all `ReactterHook` or `ReactterHook` defined in second paramater.
-
-```dart
-final watchIdContext = context.watchId<WatchIdContext>('id');
-final watchHooksIdContext = context.watchId<WatchHooksIdContext>(
-  'id',
-  (ctx) => [ctx.stateA, ctx.stateB],
-);
-```
-
-- **`context.use`**: Gets the `ReactterContext`'s instance with/without `id` from the closest ancestor of  `ReactterProvider`.
-
-```dart
-final readContext = context.use<ReadContext>();
-final readIdContext = context.use<ReadIdContext>('id');
-```
-
 > **NOTE:**
-> These methods mentioned above uses [`ReactterProvider.contextOf`](https://pub.dev/documentation/flutter_reactter/latest/widgets/ReactterProvider/contextOf.html)
->
-> **NOTE:**
-> `context.watch` and `context.watchId` watch all or some of the specified `ReactterHook` dependencies and when it will change, re-render widgets in the scope of `ReactterProviders`, `ReactterBuilder` or any Widget that exposes the `BuildContext` like `Build`, `StatelessWidget`, `StatefulWidget`.
+> If you don't add `instance` argument to `UseEffect`, the `callback` don't execute on lifecycle `didMount`, and the `cleanup` don't execute on lifecycle `willUnmount` (theses `LifeCycle` events are used with `flutter_reactter` only).
 
-### React to `Signal`s with `ReactterWatcher`
+### ReactterWatcher
 
-[`ReactterWatcher`](https://pub.dev/documentation/flutter_reactter/latest/widgets/ReactterWatcher-class.html) is a `Statefulwidget` that listens for `Signal`s and re-build when any `Signal` is changed.
+[`ReactterWatcher`](https://pub.dev/documentation/flutter_reactter/latest/widgets/ReactterWatcher-class.html) is a Widget (exclusive of `flutter_reactter`) that allows to listen all `Signal`s contained in `builder` property and rebuilt the Widget when it changes:
 
 ```dart
 final count = 0.signal;
@@ -849,10 +894,11 @@ final flag = false.signal;
 void increase() => count.value += 1;
 void toggle() => flag(!flag.value);
 
-class Example extends StatelessWidget {
+class App extends StatelessWidget {
   ...
   Widget build(context) {
     return ReactterWatcher(
+      // This widget is rendered once only and passed through the `builder` method.
       child: Row(
         children: const [
           ElevatedButton(
@@ -866,12 +912,12 @@ class Example extends StatelessWidget {
         ],
       ),
       builder: (context, child) {
-        // This rebuild the widget tree when `count` or `flag` are updated.
+        // Rebuilds the Widget tree returned when `count` or `flag` are updated.
         return Column(
           children: [
             Text("Count: $count"),
             Text("Flag is: $flag"),
-            // This takes the widget from the `child` property in each rebuild.
+            // Takes the Widget from the `child` property in each rebuild.
             child,
           ],
         );
@@ -881,76 +927,48 @@ class Example extends StatelessWidget {
 }
 ```
 
-### Control re-render with `ReactterBuilder`
+### BuildContext extension
 
-[`ReactterBuilder`](https://pub.dev/documentation/flutter_reactter/latest/widgets/ReactterBuilder-class.html) is a `StatelessWidget` that  to to get the `ReactterContext`'s instance from the closest ancestor of `ReactterProvider` and exposes it through the first parameter of `builder` callback.
+Reactter provides additional methods through `BuildContext` to access to instance. These are following:
+
+- **`context.watch`**: Gets the `T` instance from `ReactterProvider`'s nearest ancestor and watches any instance changes or `ReactterState` changes declared in first paramater.
 
 ```dart
-ReactterBuilder<AppContext>(
-  listenAll: true,
-  builder: (appContext, context, child) {
-    return Text("Count: ${appContext.count.value}");
-  },
-)
+// watches any `AppController` changes
+final appController = context.watch<AppController>();
+// watches the states changes declared in first paramater.
+final appController = context.watch<AppController>(
+  (inst) => [inst.stateA, inst.stateB],
+);
 ```
 
-> **NOTE:** `ReactterBuilder` is read-only by default(`listenAll: false`), this means it only renders once.
-> Instead use `listenAll` as `true` or use `listenStates` with the `ReactterHook`s specific and then the `builder` callback will be rebuild with every `ReactterContext`'s `ReactterHook` changes.
+- **`context.watchId`**: Gets the `T` instance by `id` from `ReactterProvider`'s nearest ancestor and watches instance changes or `ReactterState` changes declared in second paramater.
+
+```dart
+// watches any `ResourceController` by `id` changes
+final resourceController = context.watchId<ResourceController>('UniqueId');
+// watches the states changes declared in second paramater.
+final resourceController = context.watchId<ResourceController>(
+  'UniqueId',
+  (inst) => [inst.stateA, inst.stateB],
+);
+```
+
+- **`context.use`**: Gets the `T` instance with/without `id` from `ReactterProvider`'s nearest ancestor.
+
+```dart
+final appController = context.use<AppController>();
+final resourceController = context.use<ResourceController>('UniqueId');
+```
+
+> **NOTE:**
+> These methods mentioned above uses [`ReactterProvider.contextOf`](https://pub.dev/documentation/flutter_reactter/latest/widgets/ReactterProvider/contextOf.html)
 >
-> **NOTE:** `ReactterBuilder` is a "scoped". So, the `builder` callback will be rebuild, when the `ReactterContext` changes or any `ReactterHook` specified.
-> For this to happen, the `ReactterContext` should put it on listens for `BuildContext`'s `watch`ers.
-
-### Multiple `ReactterProvider` with `ReactterProviders`
-
-[`ReactterProviders`](https://pub.dev/documentation/flutter_reactter/latest/widgets/ReactterProviders-class.html) is a wrapper `StatelessWidget` that allows to use multiple `ReactterProvider` as nested way.
-
-```dart
-ReactterProviders(
-  [
-    ReactterProvider(
-      () => AppContext(),
-    ),
-    ReactterProvider(
-      () => ConfigContext(),
-      id: 'App',
-    ),
-    ReactterProvider(
-      () => ConfigContext(),
-        id: 'User'
-    ),
-  ],
-  builder: (context, child) {
-    final appContext = context.watch<AppContext>();
-    final appConfigContext = context.watchId<ConfigContext>('App');
-    final userConfigContext = context.watchId<ConfigContext>('User');
-    ...
-  },
-)
-```
-
-### Create a `ReactterComponent`
-
-[`ReactterComponent`](https://pub.dev/documentation/flutter_reactter/latest/widgets/ReactterComponent-class.html) is a abstract `StatelessWidget` class that provides the functionality of `ReactterProvider` with a `ReactterContext` and exposes it through `render` method.
-
-```dart
-class CounterComponent extends ReactterComponent<AppContext> {
-  const CounterComponent({Key? key}) : super(key: key);
-
-  @override
-  get builder => () => AppContext();
-
-  @override
-  get id => 'uniqueId';
-
-  @override
-  listenStates(appContext) => [appContext.stateA];
-
-  @override
-  Widget render(appContext, context) {
-    return Text("StateA: ${appContext.stateA.value}");
-  }
-}
-```
+> **NOTE:**
+> `context.watch` and `context.watchId` watch all or some of the specified [`ReactterState`](https://pub.dev/documentation/reactter/latest/core/ReactterState-mixin.html) dependencies, when any it will changes, re-built the Widgets tree in the scope of [`ReactterProvider`](#reactterprovider), [`ReactterComponent`](#reacttercomponent) or any Widget that exposes the `BuildContext` like `Build`, `StatelessWidget`, `StatefulWidget`.
+>
+> **NOTE:**
+> A [`ReactterState`](#state-management) can be a [`Signal`](#signal) or [`ReactterHook`](https://pub.dev/documentation/reactter/latest/core/ReactterHook-class.html) (like [`UseState`](#usestate), [`UseAsynState`](#useasyncstate), [`UseReducer`](#usereducer) or another [Custom hooks](#custom-hooks)).
 
 ## Resources
 
@@ -959,15 +977,7 @@ class CounterComponent extends ReactterComponent<AppContext> {
   - [Flutter Reactter](https://pub.dev/documentation/flutter_reactter/latest)
 - [Examples](https://github.com/2devs-team/reactter/tree/master/packages/flutter_reactter/example)
 
-## Roadmap
-
-We want to keeping adding features for `Reactter`, those are some we have in mind order by priority:
-
-- Widget to control re-render using only hooks.
-- Async context.
-- Do benchmarks and improve performance.
-
-# Contribute
+## Contribute
 
 If you want to contribute don't hesitate to create an [issue](https://github.com/2devs-team/reactter/issues/new) or [pull-request](https://github.com/2devs-team/reactter/pulls) in **[Reactter repository](https://github.com/2devs-team/reactter).**
 
@@ -986,7 +996,7 @@ You can:
 
 Any idea is welcome!
 
-# Authors
+## Authors
 
 - **[Carlos León](https://twitter.com/CarLeonDev)** - <carleon.dev@gmail.com>
 - **[Leo Castellanos](https://twitter.com/leoocast10)** - <leoocast.dev@gmail.com>
