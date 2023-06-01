@@ -1,8 +1,42 @@
 part of '../hooks.dart';
 
-class ReactterAction<T, P> {
-  final T type;
-  final P payload;
+/// A representation of an event that describes something
+/// that happened in the application.
+///
+/// A [ReactterAction] is composed of two properties:
+///
+/// - The [type] property, which provides this action a name that is descriptive.
+/// - The [payload] property, which contain an action object type of [T]
+///  that can provide additional information about what happened.
+///
+/// A typical [ReactterAction] might look like this:
+///
+/// ```dart
+/// class AddTodoAction extends ReactterAction<String> {
+///   AddTodoAction(String payload)
+///     : super(
+///         type: 'todos/todoAdded',
+///         payload: payload,
+///       );
+/// }
+/// ```
+/// and use with [UseReducer] `dispatch`, like:
+///
+/// ```dart
+/// // Consult `UseReducer` for more information about `reducer` and `store`.
+/// final state = UseReducer(reducer, store);
+/// state.dispatch(AddTodoAction('Todo this'));
+/// ```
+///
+/// See also:
+///
+/// * [UseReducer], a [ReactterHook] that manages state using [reducer] method.
+class ReactterAction<T> {
+  // Provides this action a name that is descriptive.
+  final String type;
+  // An action object type of [T] that can provide
+  // additional information about what happened
+  final T payload;
 
   ReactterAction({
     required this.type,
@@ -10,10 +44,53 @@ class ReactterAction<T, P> {
   });
 }
 
-abstract class ReactterActionCallable<T, P> extends ReactterAction<String, P> {
-  ReactterActionCallable({required String type, required P payload})
-      : super(type: type, payload: payload);
+/// A abstract class of [ReactterAction] that may be called using a [call] method.
+///
+/// Example:
+///
+/// ```dart
+/// class AddTodoAction extends ReactterActionCallable<Store, String> {
+///   AddTodoAction(String payload)
+///     : super(
+///         type: 'todos/todoAdded',
+///         payload: payload,
+///       );
+///
+///   Store call(state) {
+///     return state.copyWith(
+///       todos: state.todos..add(payload),
+///     );
+///   }
+/// }
+///
+/// Store _reducer(Store state, ReactterAction action) =>
+///   action is ReactterActionCallable ? action(state) : UnimplementedError()
+///
+/// final state = UseReducer(_reducer, Store());
+///
+/// state.dispatch(AddTodoAction('Todo this'));
+/// ```
+///
+/// See also:
+///
+/// * [ReactterAction], a representation of an event that describes something
+/// that happened in the application.
+/// * [UseReducer], a [ReactterHook] that manages state using [reducer] method.
+abstract class ReactterActionCallable<T, P> extends ReactterAction<P> {
+  ReactterActionCallable({
+    required String type,
+    required P payload,
+  }) : super(
+          type: type,
+          payload: payload,
+        );
 
+  /// This method is called when the action is dispatched and is responsible
+  /// for updating the state based on the action's payload.
+  ///
+  /// Takes a parameter of type [T] (which represents the current state)
+  /// and returns a value of type [T] (which represents the new state after
+  /// the action has been applied).
   T call(T state);
 }
 
@@ -26,7 +103,7 @@ abstract class ReactterActionCallable<T, P> extends ReactterAction<String, P> {
 /// Contains a [value] of type [T] which represents the current state.
 ///
 /// When [value] is different to previous state,
-/// [UseReducer] execute [update] to notify [context] of [ReactterContext]
+/// [UseReducer] execute [update] to notify to container instance
 /// that has changed and in turn executes [onWillUpdate] and [onDidUpdate].
 ///
 /// Example:
@@ -49,10 +126,10 @@ abstract class ReactterActionCallable<T, P> extends ReactterAction<String, P> {
 ///    }
 ///  }
 ///
-/// class AppContext extends ReactterContext {
-///   late final state = UseReducer(_reducer, Store(count: 0), this);
+/// class AppController {
+///   late final state = UseReducer(_reducer, Store(count: 0));
 ///
-///   AppContext() {
+///   AppController() {
 ///     print("count: ${state.value.count}"); // count: 0;
 ///     state.dispatch(ReactterAction(type: 'increment', payload: 2));
 ///     print("count: ${state.value.count}"); // count: 2;
@@ -61,9 +138,7 @@ abstract class ReactterActionCallable<T, P> extends ReactterAction<String, P> {
 ///   }
 /// }
 /// ```
-/// See also:
-/// - [ReactterContext], a context that contains any logic and allowed react
-/// when any change the [ReactterHook].
+///
 class UseReducer<T> extends ReactterHook {
   late final UseState<T> _state;
 
@@ -74,14 +149,13 @@ class UseReducer<T> extends ReactterHook {
 
   UseReducer(
     this.reducer,
-    T initialState, [
-    ReactterHookManager? context,
-  ])  : _state = UseState<T>(initialState),
-        super(context) {
+    T initialState,
+  ) : _state = UseState<T>(initialState) {
     UseEffect(update, [_state]);
   }
 
   /// Receives a [ReactterAction] and sends it to [reducer] method for resolved
-  dispatch<A extends ReactterAction>(A action) =>
-      _state.value = reducer(_state.value, action);
+  void dispatch<A extends ReactterAction>(A action) {
+    _state.value = reducer(_state.value, action);
+  }
 }

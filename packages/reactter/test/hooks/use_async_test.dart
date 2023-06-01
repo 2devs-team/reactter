@@ -1,13 +1,13 @@
 import 'package:test/test.dart';
 import 'package:reactter/reactter.dart';
 
-import '../shareds/test_context.dart';
+import '../shareds/test_controllers.dart';
 
 void main() {
   group("UseAsyncState", () {
     test("should resolves state", () async {
-      final testContext = TestContext();
-      final stateAsync = testContext.stateAsync;
+      final testController = TestController();
+      final stateAsync = testController.stateAsync;
 
       expect(stateAsync.value, "initial");
 
@@ -17,8 +17,8 @@ void main() {
     });
 
     test("should catchs error", () async {
-      final testContext = TestContext();
-      final stateAsync = testContext.stateAsync;
+      final testController = TestController();
+      final stateAsync = testController.stateAsync;
 
       await stateAsync.resolve(true);
 
@@ -28,8 +28,8 @@ void main() {
     });
 
     test("should resets state", () async {
-      final testContext = TestContext();
-      final stateAsync = testContext.stateAsync;
+      final testController = TestController();
+      final stateAsync = testController.stateAsync;
 
       await stateAsync.resolve();
 
@@ -41,8 +41,8 @@ void main() {
     });
 
     test("should gets value when", () async {
-      final testContext = TestContext();
-      final stateAsync = testContext.stateAsync;
+      final testController = TestController();
+      final stateAsync = testController.stateAsync;
 
       final s1 = stateAsync.when<String>(standby: (value) => value);
       expect(s1, "initial");

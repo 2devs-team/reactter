@@ -1,7 +1,7 @@
 import 'package:reactter/reactter.dart';
 import 'package:test/test.dart';
 
-import '../shareds/test_context.dart';
+import '../shareds/test_controllers.dart';
 
 void main() {
   group("Signal", () {
@@ -98,20 +98,20 @@ void main() {
       expectLater(didUpdateChecked, true);
     });
 
-    test("should be able to used on ReactterContext", () {
+    test("should be able to used on instance", () {
       late final willUpdateChecked;
       late final didUpdateChecked;
 
-      final testContext =
-          Reactter.create<TestContext>(builder: () => TestContext())!;
-      final signalString = testContext.signalString;
+      final testController =
+          Reactter.create<TestController>(builder: () => TestController())!;
+      final signalString = testController.signalString;
 
       expect(signalString(), "initial");
 
-      Reactter.one(testContext, Lifecycle.willUpdate, (_, __) {
+      Reactter.one(testController, Lifecycle.willUpdate, (_, __) {
         willUpdateChecked = true;
       });
-      Reactter.one(testContext, Lifecycle.didUpdate, (_, __) {
+      Reactter.one(testController, Lifecycle.didUpdate, (_, __) {
         didUpdateChecked = true;
       });
 
@@ -121,8 +121,8 @@ void main() {
       expectLater(didUpdateChecked, true);
 
       Reactter
-        ..unregister<TestContext>()
-        ..delete<TestContext>();
+        ..unregister<TestController>()
+        ..delete<TestController>();
 
       expect(
         () => signalString("throw a assertion error"),

@@ -4,18 +4,18 @@ import 'package:flutter_reactter/flutter_reactter.dart';
 
 import '../shareds/reactter_provider_builder.dart';
 import '../shareds/test_builder.dart';
-import '../shareds/test_context.dart';
+import '../shareds/test_controller.dart';
 
 void main() {
   group("ReactterProvider", () {
     testWidgets("should gets instance from context", (tester) async {
-      late TestContext instanceObtained;
+      late TestController instanceObtained;
 
       await tester.pumpWidget(
         TestBuilder(
           child: ReactterProviderBuilder(
             builder: (_, context, child) {
-              instanceObtained = context.use<TestContext>();
+              instanceObtained = context.use<TestController>();
 
               return Text("stateString: ${instanceObtained.stateString.value}");
             },
@@ -27,19 +27,19 @@ void main() {
 
       await tester.pumpAndSettle();
 
-      expectLater(instanceObtained, isInstanceOf<TestContext>());
+      expectLater(instanceObtained, isInstanceOf<TestController>());
       expect(find.text("stateString: initial"), findsOneWidget);
     });
 
     testWidgets("should gets the instance by id from context", (tester) async {
-      late TestContext instanceObtained;
+      late TestController instanceObtained;
 
       await tester.pumpWidget(
         TestBuilder(
           child: ReactterProviderBuilder(
             id: "uniqueId",
             builder: (_, context, child) {
-              instanceObtained = context.use<TestContext>("uniqueId");
+              instanceObtained = context.use<TestController>("uniqueId");
 
               return Text("stateString: ${instanceObtained.stateString.value}");
             },
@@ -48,21 +48,21 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expectLater(instanceObtained, isInstanceOf<TestContext>());
+      expectLater(instanceObtained, isInstanceOf<TestController>());
       expect(find.text("stateString: from uniqueId"), findsOneWidget);
     });
 
     testWidgets(
         "should gets the instance from context and watch hooks to builder re-render",
         (tester) async {
-      late TestContext instanceObtained;
+      late TestController instanceObtained;
 
       await tester.pumpWidget(
         TestBuilder(
           child: ReactterProviderBuilder(
             builder: (_, BuildContext context, Widget? child) {
-              instanceObtained = context.watch<TestContext>(
-                (ctx) => [ctx.stateString, ctx.stateBool],
+              instanceObtained = context.watch<TestController>(
+                (inst) => [inst.stateString, inst.stateBool],
               );
 
               return Column(
@@ -77,7 +77,7 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expectLater(instanceObtained, isInstanceOf<TestContext>());
+      expectLater(instanceObtained, isInstanceOf<TestController>());
       expect(find.text("stateString: initial"), findsOneWidget);
       expect(find.text("stateBool: false"), findsOneWidget);
 
@@ -93,16 +93,16 @@ void main() {
     testWidgets(
         "should gets the instance by id from context and watch hooks to builder re-render",
         (tester) async {
-      late TestContext instanceObtained;
+      late TestController instanceObtained;
 
       await tester.pumpWidget(
         TestBuilder(
           child: ReactterProviderBuilder(
             id: "uniqueId",
             builder: (_, BuildContext context, Widget? child) {
-              instanceObtained = context.watchId<TestContext>(
+              instanceObtained = context.watchId<TestController>(
                 "uniqueId",
-                (ctx) => [ctx.stateString, ctx.stateBool],
+                (inst) => [inst.stateString, inst.stateBool],
               );
 
               return Column(
@@ -117,7 +117,7 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expectLater(instanceObtained, isInstanceOf<TestContext>());
+      expectLater(instanceObtained, isInstanceOf<TestController>());
       expect(find.text("stateString: from uniqueId"), findsOneWidget);
       expect(find.text("stateBool: false"), findsOneWidget);
 
@@ -134,7 +134,7 @@ void main() {
       await tester.pumpWidget(
         TestBuilder(
           child: ReactterProvider(
-            () => TestContext(),
+            () => TestController(),
             child: const Text("child"),
           ),
         ),
@@ -147,7 +147,7 @@ void main() {
       await tester.pumpWidget(
         TestBuilder(
           child: ReactterProvider(
-            () => TestContext(),
+            () => TestController(),
             child: const Text("child2"),
             builder: (_, context, child) {
               if (child != null) return child;

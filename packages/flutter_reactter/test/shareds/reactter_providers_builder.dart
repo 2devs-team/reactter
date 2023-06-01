@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_reactter/flutter_reactter.dart';
 
-import 'test_context.dart';
+import 'test_controller.dart';
 
 class ReactterProvidersBuilder extends StatefulWidget {
   final TransitionBuilder builder;
@@ -20,14 +20,14 @@ class _ReactterProvidersBuilderState extends State<ReactterProvidersBuilder> {
     return ReactterProviders(
       [
         ReactterProvider(
-          () => TestContext(),
+          () => TestController(),
           init: true,
         ),
         ReactterProvider(
           () {
-            final ctx = TestContext();
-            ctx.stateString.value = "from uniqueId";
-            return ctx;
+            final inst = TestController();
+            inst.stateString.value = "from uniqueId";
+            return inst;
           },
           id: 'uniqueId',
         ),

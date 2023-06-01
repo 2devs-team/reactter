@@ -5,20 +5,20 @@ part of '../hooks.dart';
 /// Contains a [value] of type [T] which represents the current state.
 ///
 /// When [value] is different to previous state,
-/// [UseState] execute [update] to notify [context] of [ReactterContext]
+/// [UseState] execute [update] to notify container instance
 /// that has changed and in turn executes [onWillUpdate] and [onDidUpdate].
 ///
 /// This example produces one simple [UseState]:
 ///
 /// ```dart
-/// class AppContext extends ReactterContext {
+/// class AppController {
 ///   late final likesCount = UseState(0, this);
 ///   late final followed = UseState(false, this);
 ///   late final text = UseState("", this);
 ///   late final user = UseState<User?>(null, this);
 ///   late final posts = UseState(<Post>[], this);
 ///
-///   AppContext() {
+///   AppController() {
 ///     likesCount.value += 1;
 ///     followed.value = followed.value!;
 ///     text.value = "This is a text";
@@ -38,14 +38,8 @@ part of '../hooks.dart';
 /// }
 /// ```
 ///
-/// See also:
-/// - [ReactterContext], a context that contains any logic and allowed react
-/// when any change the [ReactterHook].
 class UseState<T> extends ReactterHook {
-  UseState(
-    this.initial, [
-    ReactterHookManager? context,
-  ]) : super(context);
+  UseState(this.initial);
 
   /// The initial value in state.
   T initial;

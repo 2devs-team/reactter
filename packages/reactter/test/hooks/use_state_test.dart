@@ -1,135 +1,135 @@
 import 'package:test/test.dart';
 import 'package:reactter/reactter.dart';
 
-import '../shareds/test_context.dart';
+import '../shareds/test_controllers.dart';
 
 void main() {
   group("UseState", () {
     test("should has a initial value", () {
-      final testContext =
-          Reactter.create<TestContext>(builder: () => TestContext())!;
+      final testController =
+          Reactter.create<TestController>(builder: () => TestController())!;
 
-      expect(testContext.stateBool.value, false);
-      expect(testContext.stateString.value, "initial");
-      expect(testContext.stateInt.value, 0);
-      expect(testContext.stateDouble.value, 0.0);
-      expect(testContext.stateList.value.isEmpty, true);
-      expect(testContext.stateMap.value.isEmpty, true);
-      expect(testContext.stateClass.value, null);
+      expect(testController.stateBool.value, false);
+      expect(testController.stateString.value, "initial");
+      expect(testController.stateInt.value, 0);
+      expect(testController.stateDouble.value, 0.0);
+      expect(testController.stateList.value.isEmpty, true);
+      expect(testController.stateMap.value.isEmpty, true);
+      expect(testController.stateClass.value, null);
 
-      Reactter.delete<TestContext>();
+      Reactter.delete<TestController>();
     });
 
     test("should changes state value", () {
-      final testContext =
-          Reactter.create<TestContext>(builder: () => TestContext())!;
+      final testController =
+          Reactter.create<TestController>(builder: () => TestController())!;
 
-      testContext.stateBool.value = !testContext.stateBool.value;
-      testContext.stateString.value = "new value";
-      testContext.stateInt.value += 2;
-      testContext.stateDouble.value -= 2;
-      testContext.stateList.value = [1, 2, 3];
-      testContext.stateMap.value = {"x": 1, "y": 2, "z": 3};
-      testContext.stateClass.value = TestClass("other class");
+      testController.stateBool.value = !testController.stateBool.value;
+      testController.stateString.value = "new value";
+      testController.stateInt.value += 2;
+      testController.stateDouble.value -= 2;
+      testController.stateList.value = [1, 2, 3];
+      testController.stateMap.value = {"x": 1, "y": 2, "z": 3};
+      testController.stateClass.value = TestClass("other class");
 
-      expect(testContext.stateBool.value, true);
-      expect(testContext.stateString.value, "new value");
-      expect(testContext.stateInt.value, 2);
-      expect(testContext.stateDouble.value, -2);
-      expect(testContext.stateList.value.length, 3);
-      expect(testContext.stateMap.value.length, 3);
-      expect(testContext.stateClass.value?.prop, "other class");
+      expect(testController.stateBool.value, true);
+      expect(testController.stateString.value, "new value");
+      expect(testController.stateInt.value, 2);
+      expect(testController.stateDouble.value, -2);
+      expect(testController.stateList.value.length, 3);
+      expect(testController.stateMap.value.length, 3);
+      expect(testController.stateClass.value?.prop, "other class");
 
-      Reactter.delete<TestContext>();
+      Reactter.delete<TestController>();
     });
 
     test("should notifies when will update", () {
-      final testContext =
-          Reactter.create<TestContext>(builder: () => TestContext())!;
+      final testController =
+          Reactter.create<TestController>(builder: () => TestController())!;
 
-      testContext.stateInt.value = 1;
+      testController.stateInt.value = 1;
 
       late final int willUpdateValue;
 
       Reactter.one(
-        testContext.stateInt,
+        testController.stateInt,
         Lifecycle.willUpdate,
         (inst, param) {
-          willUpdateValue = testContext.stateInt.value;
+          willUpdateValue = testController.stateInt.value;
         },
       );
 
-      testContext.stateInt.value += 1;
+      testController.stateInt.value += 1;
 
       expectLater(willUpdateValue, 1);
 
-      Reactter.delete<TestContext>();
+      Reactter.delete<TestController>();
     });
 
     test("should notifies when did update", () async {
-      final testContext =
-          Reactter.create<TestContext>(builder: () => TestContext())!;
+      final testController =
+          Reactter.create<TestController>(builder: () => TestController())!;
 
-      testContext.stateInt.value = 1;
+      testController.stateInt.value = 1;
 
       int didUpdateValue = 0;
 
       Reactter.one(
-        testContext.stateInt,
+        testController.stateInt,
         Lifecycle.didUpdate,
         (inst, param) {
-          didUpdateValue = testContext.stateInt.value;
+          didUpdateValue = testController.stateInt.value;
         },
       );
 
-      testContext.stateInt.value += 1;
+      testController.stateInt.value += 1;
 
       expectLater(didUpdateValue, 2);
 
       Reactter.one(
-        testContext.stateInt,
+        testController.stateInt,
         Lifecycle.didUpdate,
         (inst, param) {
-          didUpdateValue = testContext.stateInt.value;
+          didUpdateValue = testController.stateInt.value;
         },
       );
 
-      testContext.update(
-        () => testContext.stateInt.update(() {
-          testContext.stateInt.value = 3;
+      testController.update(
+        () => testController.stateInt.update(() {
+          testController.stateInt.value = 3;
         }),
       );
 
       await Future.microtask(() {});
 
-      expectLater(testContext.stateInt.value, 3);
+      expectLater(testController.stateInt.value, 3);
 
-      Reactter.delete<TestContext>();
+      Reactter.delete<TestController>();
     });
 
     test("should be updated as async way", () async {
-      final testContext =
-          Reactter.create<TestContext>(builder: () => TestContext())!;
+      final testController =
+          Reactter.create<TestController>(builder: () => TestController())!;
 
-      testContext.stateInt.value = 1;
+      testController.stateInt.value = 1;
 
       late final int didUpdateValue;
 
       Reactter.one(
-        testContext.stateInt,
+        testController.stateInt,
         Lifecycle.didUpdate,
         (inst, param) {
-          didUpdateValue = testContext.stateInt.value;
+          didUpdateValue = testController.stateInt.value;
         },
       );
 
-      await testContext.stateInt.updateAsync(() {
-        return Future.microtask(() => testContext.stateInt.value += 1);
+      await testController.stateInt.updateAsync(() {
+        return Future.microtask(() => testController.stateInt.value += 1);
       });
 
       expectLater(didUpdateValue, 2);
 
-      Reactter.delete<TestContext>();
+      Reactter.delete<TestController>();
     });
   });
 }

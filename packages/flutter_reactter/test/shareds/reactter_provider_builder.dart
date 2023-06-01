@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_reactter/flutter_reactter.dart';
 
-import 'test_context.dart';
+import 'test_controller.dart';
 
 class ReactterProviderBuilder extends StatelessWidget {
-  final InstanceBuilder<TestContext> builder;
+  final InstanceBuilder<TestController> builder;
   final String? id;
 
   const ReactterProviderBuilder({
@@ -17,11 +17,11 @@ class ReactterProviderBuilder extends StatelessWidget {
   Widget build(BuildContext context) {
     return ReactterProvider(
       () {
-        final ctx = TestContext();
+        final inst = TestController();
         if (id != null) {
-          ctx.stateString.value = "from uniqueId";
+          inst.stateString.value = "from uniqueId";
         }
-        return ctx;
+        return inst;
       },
       id: id,
       builder: builder,

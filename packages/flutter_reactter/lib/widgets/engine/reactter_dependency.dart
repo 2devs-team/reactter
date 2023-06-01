@@ -16,7 +16,7 @@ class ReactterDependency<T> {
         _states = states;
 
   void _addListener(
-    CallbackEvent<ReactterHookManager, ReactterState> callback,
+    CallbackEvent<Object, ReactterState> callback,
   ) {
     if (_states != null) {
       for (final state in _states!) {
@@ -31,7 +31,7 @@ class ReactterDependency<T> {
 
   void _addStatesAndListener(
     Set<ReactterState> states,
-    CallbackEvent<ReactterHookManager, ReactterState> callback,
+    CallbackEvent<Object, ReactterState> callback,
   ) {
     for (final state in states) {
       if (_states?.contains(state) == true) continue;
@@ -43,7 +43,7 @@ class ReactterDependency<T> {
 
   void _addInstanceAndListener(
     Object? instance,
-    CallbackEvent<ReactterHookManager, ReactterState> callback,
+    CallbackEvent<Object, ReactterState> callback,
   ) {
     if (_instance != null) return;
 
@@ -53,7 +53,7 @@ class ReactterDependency<T> {
   }
 
   void _removeListener(
-    CallbackEvent<ReactterHookManager, ReactterState> callback,
+    CallbackEvent<Object, ReactterState> callback,
   ) {
     if (_states != null) {
       for (final state in _states!) {

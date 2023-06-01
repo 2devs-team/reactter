@@ -20,13 +20,9 @@ enum UseAsyncStateStatus {
 /// This example produces one simple [UseAsyncState]:
 ///
 /// ```dart
-/// class AppContext extends ReactterContext {
+/// class AppController {
 ///   // It's same that: late final asyncState = UseAsyncState<String, String?>(
-///   late final asyncState = UseAsyncState(
-///     "Initial value",
-///     _resolveState,
-///     this,
-///   );
+///   final asyncState = UseAsyncState("Initial value", _resolveState);
 ///
 ///   Future<String> _resolveState([String? value = "Default value"]) async {
 ///     return Future.delayed(
@@ -42,18 +38,18 @@ enum UseAsyncStateStatus {
 ///
 /// ```dart
 ///   // Before changed value: "Initial value"
-///   print('Before changed value: "${appContext.asyncState.value}"');
+///   print('Before changed value: "${appController.asyncState.value}"');
 ///   // Resolve state
-///   await appContext.asyncState.resolve("Resolved value");
+///   await appController.asyncState.resolve("Resolved value");
 ///   // After changed value: "Resolved value"
-///   print('After changed value: "${appContext.asyncState.value}"');
+///   print('After changed value: "${appController.asyncState.value}"');
 /// ```
 ///
 /// It also has [when] method that returns a new value
 /// depending on it's state:
 ///
 /// ```dart
-/// final valueComputed = appContext.asyncState.when<String>(
+/// final valueComputed = appController.asyncState.when<String>(
 ///   standby: (value) => "⚓️ Standby: $value",
 ///   loading: (value) => "⏳ Loading...",
 ///   done: (value) => "✅ Resolved: $value",
@@ -61,11 +57,9 @@ enum UseAsyncStateStatus {
 /// );
 /// ```
 ///
-/// You can use the getters [_state] and [error] for more detail
-/// and you could reset the state using [reset] method.
+/// Its status may be obtained using the getters [value] and [error],
+/// and restore it to its [initial] state using the [reset] method.
 class UseAsyncState<T, A> extends ReactterHook {
-  ReactterHookManager? context;
-
   /// Works as a the [value] initializer.
   /// Need to call [resolve] to execute.
   final AsyncFunction<T, A> asyncValue;
@@ -75,16 +69,15 @@ class UseAsyncState<T, A> extends ReactterHook {
   UseAsyncStateStatus get status => _status.value;
 
   final T _initial;
-  late final _value = UseState<T>(_initial, this);
-  late final _error = UseState<Object?>(null, this);
-  late final _status = UseState(UseAsyncStateStatus.standby, this);
+  late final _value = UseState<T>(_initial);
+  late final _error = UseState<Object?>(null);
+  late final _status = UseState(UseAsyncStateStatus.standby);
 
   UseAsyncState(
-    initial,
-    this.asyncValue, [
-    this.context,
-  ])  : _initial = initial,
-        super(context) {
+    T initial,
+    this.asyncValue,
+  )   : _initial = initial,
+        super() {
     UseEffect(() {
       _status.value = UseAsyncStateStatus.done;
     }, [_value]);
@@ -123,7 +116,7 @@ class UseAsyncState<T, A> extends ReactterHook {
   /// For example:
   ///
   /// ```dart
-  /// final valueComputed = appContext.asyncState.when<String>(
+  /// final valueComputed = appController.asyncState.when<String>(
   ///   standby: (value) => "⚓️ Standby: ${value}",
   ///   loading: (value) => "⏳ Loading...",
   ///   done: (value) => "✅ Resolved: ${value}",
@@ -151,7 +144,7 @@ class UseAsyncState<T, A> extends ReactterHook {
     return standby?.call(value);
   }
 
-  /// Reset [value], [status] and [error] to its initial state.
+  /// Reset [value], [status] and [error] to its [initial] state.
   void reset() {
     _value.reset();
     _error.reset();

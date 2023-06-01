@@ -3,8 +3,8 @@ part of '../hooks.dart';
 /// A [ReactterHook] that manages side-effect.
 ///
 /// The side-effect logic into the [callback] function is executed
-/// when [dependencies] of [ReactterHook] argument has changes
-/// or [context] of [ReactterContext] trigger [didMount] event.
+/// when [dependencies] of [ReactterState] argument has changes
+/// or [instance] trigger [LifeCycle.didMount] event.
 ///
 /// ```dart
 /// UseEffect(() {
@@ -16,7 +16,7 @@ part of '../hooks.dart';
 /// then [UseEffect] considers this as an `effect cleanup`.
 ///
 /// The `effect cleanup` callback is executed, before [callback] is called
-/// or [context] trigger [willUnmount] event:
+/// or [context] trigger [LifeCycle.willUnmount] event:
 ///
 /// ```dart
 /// UseEffect(() {
@@ -28,13 +28,13 @@ part of '../hooks.dart';
 /// }, [], this);
 /// ```
 ///
-/// **RECOMMENDED**: Use it on [ReactterContext] constructor:
+/// **RECOMMENDED**: Use it on Object constructor:
 ///
 /// ```dart
-/// class AppContext extends ReactterContext {
+/// class AppController {
 ///   late final state = UseState(false);
 ///
-///   AppContext() {
+///   AppController() {
 ///     UseEffect(() {
 ///       print('state: ${state.value}');
 ///     }, [state], this);
@@ -48,8 +48,10 @@ part of '../hooks.dart';
 ///   }
 /// }
 /// ```
+///
 /// If you need to execute the UseEffect's [callback] inmediately created,
 /// use [DispatchEffect] on [context] parameter:
+///
 ///
 /// ```dart
 /// UseEffect(
@@ -61,8 +63,8 @@ part of '../hooks.dart';
 /// or use mixin [DispatchEffect]:
 ///
 /// ```dart
-/// class AppContext extends ReactterContext with DispatchEffect {
-///   AppContext() {
+/// class AppController with DispatchEffect {
+///   AppController() {
 ///     UseEffect(
 ///       () => print("Prompt execution or state changed"),
 ///       [state], this
@@ -71,32 +73,37 @@ part of '../hooks.dart';
 /// }
 /// ```
 ///
-/// If you not put [ReactterContext] on the [context] parameter,
+/// If you not put instance on the [context] parameter,
 /// should to call [dispose] method to clear any UseEffect's events.
 ///
 /// See also:
-/// - [ReactterContext], is used to react to its [didMount] and [willUnmount] events.
-/// - [ReactterHook], it receives as dependencies.
+///
+/// * [ReactterState], it receives as dependencies.
 class UseEffect extends ReactterHook {
   /// Function to control side-effect and effect cleanup.
   final Function callback;
 
-  /// Hooks dependencies
-  final List<ReactterHook> dependencies;
+  /// It's used to store the states as dependencies of [UseEffect].
+  final List<ReactterState> dependencies;
 
-  final ReactterContext? context;
+  /// It's used to specify the context in which the [UseEffect] hook is being used.
+  /// If a context is provided, the [UseEffect] hook will listen
+  /// for the `LifeCycle.didMount` and `LifeCycle.willUnmount` events of the [context]
+  /// and execute the [callback] function accordingly. If no context is provided,
+  /// the hook will simply watch for changes in the specified `dependencies`.
+  final Object? context;
 
   static DispatchEffect get dispatchEffect => _DispatchEffect();
 
   Function? _cleanupCallback;
 
+  bool _isUpdating = false;
+
   UseEffect(
     this.callback,
     this.dependencies, [
     this.context,
-  ]) : super(context) {
-    listenHooks(dependencies);
-
+  ]) : super() {
     if (context == null) {
       _watchDependencies();
       return;
@@ -119,8 +126,11 @@ class UseEffect extends ReactterHook {
     Reactter.one(context, Lifecycle.destroyed, (_, __) => dispose());
   }
 
+  /// Used to clean up resources and memory used by an object before it is
+  /// removed from memory.
   void dispose() {
     _cleanupCallback = null;
+
     Reactter.off(
       context,
       Lifecycle.didMount,
@@ -146,16 +156,24 @@ class UseEffect extends ReactterHook {
   }
 
   void _watchDependencies() {
-    Reactter.on(this, Lifecycle.willUpdate, _runCleanup);
-    Reactter.on(this, Lifecycle.didUpdate, _runCallback);
+    for (final dependency in dependencies) {
+      Reactter.on(dependency, Lifecycle.willUpdate, _runCleanup);
+      Reactter.on(dependency, Lifecycle.didUpdate, _runCallback);
+    }
   }
 
   void _unwatchDependencies() {
-    Reactter.off(this, Lifecycle.willUpdate, _runCleanup);
-    Reactter.off(this, Lifecycle.didUpdate, _runCallback);
+    for (final dependency in dependencies) {
+      Reactter.off(dependency, Lifecycle.willUpdate, _runCleanup);
+      Reactter.off(dependency, Lifecycle.didUpdate, _runCallback);
+    }
   }
 
   void _runCallback(_, __) {
+    if (_isUpdating) return;
+
+    _isUpdating = true;
+
     final cleanupCallback = callback();
 
     if (cleanupCallback is Function) {
@@ -164,14 +182,17 @@ class UseEffect extends ReactterHook {
   }
 
   void _runCleanup(_, __) {
+    if (!_isUpdating) return;
+
+    _isUpdating = false;
     _cleanupCallback?.call();
     _cleanupCallback = null;
   }
 }
 
-mixin DispatchEffect on ReactterContext {}
+mixin DispatchEffect {}
 
-class _DispatchEffect extends ReactterContext with DispatchEffect {
+class _DispatchEffect with DispatchEffect {
   static final _DispatchEffect inst = _DispatchEffect._();
 
   factory _DispatchEffect() {

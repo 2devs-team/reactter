@@ -1,71 +1,77 @@
-// ignore_for_file: deprecated_member_use_from_same_package
-
 part of '../widgets.dart';
 
-/// A abstract [StatelessWidget] class that provides
-/// the functionality of [ReactterProvider] with a [ReactterContext] of [T],
-/// and exposes it through [render] method.
+/// A abstract [StatelessWidget] class that provides [ReactterProvider] features,
+/// whose [T] instance defined is exposing trough [render] method.
 ///
 /// ```dart
-/// class App extends ReactterComponent<AppContext> {
+/// class App extends ReactterComponent<AppController> {
 ///   const App({Key? key}) : super(key: key);
 ///
 ///   @override
-///   get builder => () => AppContext();
+///   get builder => () => AppController();
 ///
 ///   @override
-///   Widget render(AppContext ctx, BuildContext context) {
-///     return Text("State: ${ctx.stateHook.value}");
+///   Widget render(AppController inst, BuildContext context) {
+///     return Text("State: ${inst.stateHook.value}");
 ///   }
 /// }
 /// ```
 ///
-/// If you don't use [builder] getter, the instance of [T] is not created
-/// and is instead tried to be found it in the nearest ancestor
-/// where it was created.
-///
-/// Use [id] getter to create or find a instances of [T] with an identify:
+/// Use [builder] getter to define the instance creating method.
 ///
 /// ```dart
-/// class App extends ReactterComponent<AppContext> {
+/// class App extends ReactterComponent<AppController> {
+///   @override
+///   get builder => () => AppController();
+///   ...
+/// }
+/// ```
+///
+/// > **NOTE:**
+/// > If you don't use [builder] getter, the [T] instance is not created
+/// and instead tried to be found it in the nearest ancestor
+/// where it was created.
+///
+/// Use [id] getter to identify the [T] instance:
+///
+/// ```dart
+/// class App extends ReactterComponent<AppController> {
 ///   @override
 ///   get id => "uniqueId";
 ///   ...
 /// }
 /// ```
 ///
-/// Use [listenStates] getter to listen states, and when it changed,
-/// [ReactterComponent]'s [render] re-built:
+/// Use [listenStates] getter to define the states
+/// and with its changes rebuild the Widget tree defined in [render] method.
 ///
 /// ```dart
-/// class App extends ReactterComponent<AppContext> {
+/// class App extends ReactterComponent<AppController> {
 ///   @override
-///   get listenStates => (ctx) => [ctx.stateA, ctx.stateB];
+///   get listenStates => (inst) => [inst.stateA, inst.stateB];
 ///   ...
 /// }
 /// ```
 ///
-/// Use [listenAll] getter as true to listen all states, and when it changed,
-/// [ReactterComponent]'s [render] re-built:
+/// Use [listenAll] getter as `true` to listen all the [T] instance changes
+/// to rebuild the Widget tree defined in [render] method.
 ///
 /// ```dart
-/// class App extends ReactterComponent<AppContext> {
+/// class App extends ReactterComponent<AppController> {
 ///   @override
 ///   get listenAll => true;
 ///   ...
 /// }
 /// ```
 ///
-/// **CONSIDER:** Dont's use [ReactterContext] with constructor parameters
-/// to prevent conflicts.
+/// > **RECOMMENDED:**
+/// > Dont's use Object with constructor parameters to prevent conflicts.
 ///
 /// See also:
 ///
-/// * [ReactterProvider], a [StatelessWidget] that provides a [ReactterContext]'s instance of [T]
+/// * [ReactterProvider], a [StatelessWidget] that provides a [T] instance
 /// to widget tree that can be access through the [BuildContext].
-/// * [ReactterContext], a base-class that allows to manages the [ReactterHook]s.
-abstract class ReactterComponent<T extends ReactterContext>
-    extends StatelessWidget {
+abstract class ReactterComponent<T extends Object> extends StatelessWidget {
   const ReactterComponent({Key? key}) : super(key: key);
 
   /// Id for instance of [T].
@@ -80,30 +86,20 @@ abstract class ReactterComponent<T extends ReactterContext>
   /// Watchs all states to re-build
   bool get listenAll => false;
 
-  /// Listens hooks to re-build [render] method.
-  @Deprecated("Use`listenStates` instead.")
-  ListenHooks<T>? get listenHooks => null;
-
-  /// Watchs all hooks to re-build
-  @Deprecated("Use `listenAll` instead.")
-  bool get listenAllHooks => false;
-
   /// Replaces a build method.
   ///
-  /// Provides the [ReactterContext]'s instance of [T] along with the [BuildContext].
+  /// Provides the [T] instance along with the [BuildContext].
   ///
-  /// It should build a Widget based on the current [ReactterContext] changes.
+  /// It should build a Widget based on the current [T] instance changes.
   @protected
-  Widget render(T ctx, BuildContext context);
+  Widget render(T inst, BuildContext context);
 
   @protected
   @override
   @mustCallSuper
   Widget build(BuildContext context) {
     assert(
-      ((listenAll || listenAllHooks) &&
-              (listenStates ?? listenHooks) == null) ||
-          !(listenAll || listenAllHooks),
+      !listenAll || listenStates == null,
       "Can't use `listenAll` with `listenStates`",
     );
 
@@ -120,13 +116,12 @@ abstract class ReactterComponent<T extends ReactterContext>
   }
 
   T _getInstance(BuildContext context) {
-    if ((listenStates ?? listenHooks) == null &&
-        !(listenAll || listenAllHooks)) {
+    if (!listenAll && listenStates == null) {
       return context.use(id);
     }
 
     return id == null
-        ? context.watch<T>(listenStates ?? listenHooks)
-        : context.watchId<T>(id!, listenStates ?? listenHooks);
+        ? context.watch<T>(listenStates)
+        : context.watchId<T>(id!, listenStates);
   }
 }

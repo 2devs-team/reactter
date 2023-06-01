@@ -4,19 +4,19 @@ import 'package:flutter_reactter/flutter_reactter.dart';
 
 import '../shareds/reactter_providers_builder.dart';
 import '../shareds/test_builder.dart';
-import '../shareds/test_context.dart';
+import '../shareds/test_controller.dart';
 
 void main() {
   group("ReactterComponent", () {
-    late TestContext instanceObtained;
+    late TestController instanceObtained;
 
     testWidgets("should renders and get instance", (tester) async {
       await tester.pumpWidget(
         TestBuilder(
           child: TestBuilder(
             child: ReactterComponentTest(
-              getInstance: (ctx) {
-                instanceObtained = ctx;
+              getInstance: (inst) {
+                instanceObtained = inst;
               },
             ),
           ),
@@ -27,7 +27,7 @@ void main() {
     });
 
     testWidgets("should renders and gets instance by id", (tester) async {
-      late TestContext instanceObtained;
+      late TestController instanceObtained;
 
       await tester.pumpWidget(
         TestBuilder(
@@ -35,8 +35,8 @@ void main() {
             builder: (_, __) {
               return ReactterComponentTest(
                 id: "uniqueId",
-                getInstance: (ctx) {
-                  instanceObtained = ctx;
+                getInstance: (inst) {
+                  instanceObtained = inst;
                 },
               );
             },
@@ -53,7 +53,7 @@ void main() {
 
     testWidgets("should renders and gets instance without builder instance",
         (tester) async {
-      late TestContext instanceObtained;
+      late TestController instanceObtained;
 
       await tester.pumpWidget(
         TestBuilder(
@@ -61,8 +61,8 @@ void main() {
             builder: (_, __) {
               return ReactterComponentTest(
                 withoutBuilder: true,
-                getInstance: (ctx) {
-                  instanceObtained = ctx;
+                getInstance: (inst) {
+                  instanceObtained = inst;
                 },
               );
             },
@@ -75,7 +75,7 @@ void main() {
 
     testWidgets("should renders and gets instance without listen hooks",
         (tester) async {
-      late TestContext instanceObtained;
+      late TestController instanceObtained;
 
       await tester.pumpWidget(
         TestBuilder(
@@ -83,8 +83,8 @@ void main() {
             builder: (_, __) {
               return ReactterComponentTest(
                 withoutListenStates: true,
-                getInstance: (ctx) {
-                  instanceObtained = ctx;
+                getInstance: (inst) {
+                  instanceObtained = inst;
                 },
               );
             },
@@ -103,7 +103,7 @@ void main() {
 
 _testReactterComponent({
   required WidgetTester tester,
-  required TestContext instance,
+  required TestController instance,
   bool withoutListenStates = false,
   bool byId = false,
 }) async {
@@ -147,7 +147,7 @@ class ReactterComponentTest extends StatelessWidget {
   final bool withoutListenStates;
 
   final String? id;
-  final void Function(TestContext ctx) getInstance;
+  final void Function(TestController inst) getInstance;
 
   @override
   build(context) {
@@ -178,84 +178,84 @@ class ReactterComponentTest extends StatelessWidget {
   }
 }
 
-class ReactterComponentTestWithoutId extends ReactterComponent<TestContext> {
+class ReactterComponentTestWithoutId extends ReactterComponent<TestController> {
   const ReactterComponentTestWithoutId({
     Key? key,
     required this.getInstance,
   }) : super(key: key);
 
-  final void Function(TestContext ctx) getInstance;
+  final void Function(TestController inst) getInstance;
 
   @override
-  get builder => () => TestContext();
+  get builder => () => TestController();
 
   @override
-  get listenStates => (ctx) => [ctx.stateBool, ctx.stateString];
+  get listenStates => (inst) => [inst.stateBool, inst.stateString];
 
   @override
-  Widget render(TestContext ctx, BuildContext context) {
-    getInstance(ctx);
+  Widget render(TestController inst, BuildContext context) {
+    getInstance(inst);
 
-    return _buildWidget(ctx);
+    return _buildWidget(inst);
   }
 }
 
 class ReactterComponentTestWithoutBuilder
-    extends ReactterComponent<TestContext> {
+    extends ReactterComponent<TestController> {
   const ReactterComponentTestWithoutBuilder({
     Key? key,
     this.id,
     required this.getInstance,
   }) : super(key: key);
 
-  final void Function(TestContext ctx) getInstance;
+  final void Function(TestController inst) getInstance;
 
   @override
   final String? id;
 
   @override
-  get listenStates => (ctx) => [ctx.stateBool, ctx.stateString];
+  get listenStates => (inst) => [inst.stateBool, inst.stateString];
 
   @override
-  Widget render(TestContext ctx, BuildContext context) {
-    getInstance(ctx);
+  Widget render(TestController inst, BuildContext context) {
+    getInstance(inst);
 
-    return _buildWidget(ctx);
+    return _buildWidget(inst);
   }
 }
 
 class ReactterComponentTestWithoutListenStates
-    extends ReactterComponent<TestContext> {
+    extends ReactterComponent<TestController> {
   const ReactterComponentTestWithoutListenStates({
     Key? key,
     this.id,
     required this.getInstance,
   }) : super(key: key);
 
-  final void Function(TestContext ctx) getInstance;
+  final void Function(TestController inst) getInstance;
 
   @override
   final String? id;
 
   @override
-  get builder => () => TestContext();
+  get builder => () => TestController();
 
   @override
-  Widget render(TestContext ctx, BuildContext context) {
-    getInstance(ctx);
+  Widget render(TestController inst, BuildContext context) {
+    getInstance(inst);
 
-    return _buildWidget(ctx);
+    return _buildWidget(inst);
   }
 }
 
-class ReactterComponentTestAll extends ReactterComponent<TestContext> {
+class ReactterComponentTestAll extends ReactterComponent<TestController> {
   const ReactterComponentTestAll({
     Key? key,
     this.id,
     required this.getInstance,
   }) : super(key: key);
 
-  final void Function(TestContext ctx) getInstance;
+  final void Function(TestController inst) getInstance;
 
   @override
   final String? id;
@@ -264,21 +264,21 @@ class ReactterComponentTestAll extends ReactterComponent<TestContext> {
   get listenAll => true;
 
   @override
-  get builder => () => TestContext();
+  get builder => () => TestController();
 
   @override
-  Widget render(TestContext ctx, BuildContext context) {
-    getInstance(ctx);
+  Widget render(TestController inst, BuildContext context) {
+    getInstance(inst);
 
-    return _buildWidget(ctx);
+    return _buildWidget(inst);
   }
 }
 
-Widget _buildWidget(TestContext ctx) {
+Widget _buildWidget(TestController inst) {
   return Column(
     children: [
-      Text("stateBool: ${ctx.stateBool.value}"),
-      Text("stateString: ${ctx.stateString.value}"),
+      Text("stateBool: ${inst.stateBool.value}"),
+      Text("stateString: ${inst.stateString.value}"),
     ],
   );
 }

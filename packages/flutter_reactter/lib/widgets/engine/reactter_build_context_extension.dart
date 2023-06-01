@@ -1,56 +1,54 @@
 part of '../../widgets.dart';
 
-/// Exposes methods to helps to get and listen [ReactterContext]'s instance.
+/// Exposes methods to helps to get and listen the Object instance.
 extension ReactterBuildContextExtension on BuildContext {
-  /// Gets the [ReactterContext]'s instance of [T]
-  /// from the closest ancestor of [ReactterProvider] and watch all [ReactterHook]
-  /// or [ReactterHook] defined in first paramater([listenStates])
-  /// to re-render the widget tree.
+  /// Gets the [T] instance from the closest ancestor of [ReactterProvider]
+  /// and watches instance changes or [ReactterState] defined
+  /// in first paramater([listenStates]) to re-render the Widget tree.
   ///
   /// ```dart
-  /// final appContext = context.watch<AppContext>();
-  /// final appContextWatchHook = context.watch<AppContext>((ctx) => [ctx.stateHook]);
-  /// final appContextNullable = context.wath<AppContext?>();
+  /// final appController = context.watch<AppController>();
+  /// final appControllerWatchState = context.watch<AppController>((inst) => [inst.stateA]);
+  /// final appControllerNullable = context.wath<AppController?>();
   /// ```
   ///
-  /// If [T] is nullable and no matching [ReactterContext] is found, [watch] will
-  /// return `null`.
+  /// If [T] is nullable and no matching instance is found,
+  /// [watch] will return `null`.
   ///
-  /// If [T] is non-nullable and the [ReactterContext] obtained returned `null`, will
-  /// throw [ProviderNullException].
+  /// If [T] is non-nullable and the instance obtained returned `null`,
+  /// will throw [ProviderNullException].
   ///
   /// This method is equivalent to calling:
   ///
   /// ```dart
   /// ReactterProvider.contextOf<T>(context, listenStates: listenStates);
   /// ```
-  T watch<T extends ReactterContext?>([ListenStates<T>? listenStates]) {
+  T watch<T extends Object?>([ListenStates<T>? listenStates]) {
     return ReactterProvider.contextOf<T>(this, listenStates: listenStates);
   }
 
-  /// Gets the [ReactterContext]'s instance of [T]
-  /// from the closest ancestor of [ReactterProvider] and watch all [ReactterHook]
-  /// or [ReactterHook] defined in second paramater([listenStates])
-  /// to re-render the widget tree.
+  /// Gets the [T] instance by [id] from the closest ancestor of [ReactterProvider]
+  /// and watches instance changes or [ReactterState] defined
+  /// in second paramater([listenStates]) to re-render the Widget tree.
   ///
   /// ```dart
-  /// final appContext = context.watch<AppContext>();
-  /// final appContextWatchHook = context.watch<AppContext>((ctx) => [ctx.stateHook]);
-  /// final appContextNullable = context.wath<AppContext?>();
+  /// final appController = context.watchId<AppController>("UniqueId");
+  /// final appControllerWatchHook = context.watchId<AppController>("UniqueId", (inst) => [inst.stateA]);
+  /// final appControllerNullable = context.wathId<AppController?>("UniqueId");
   /// ```
   ///
-  /// If [T] is nullable and no matching [ReactterContext] is found, [watch] will
-  /// return `null`.
+  /// If [T] is nullable and no matching instance is found,
+  /// [watchId] will return `null`.
   ///
-  /// If [T] is non-nullable and the [ReactterContext] obtained returned `null`, will
-  /// throw [ProviderNullException].
+  /// If [T] is non-nullable and the instance obtained returned `null`,
+  /// will throw [ProviderNullException].
   ///
   /// This method is equivalent to calling:
   ///
   /// ```dart
-  /// ReactterProvider.contextOf<T>(context, listenStates: listenStates);
+  /// ReactterProvider.contextOf<T>(context, id: id, listenStates: listenStates);
   /// ```
-  T watchId<T extends ReactterContext?>(
+  T watchId<T extends Object?>(
     String id, [
     ListenStates<T>? listenStates,
   ]) {
@@ -61,37 +59,35 @@ extension ReactterBuildContextExtension on BuildContext {
     );
   }
 
-  /// Gets the [ReactterContext]'s instance of [T] with/without [id]
+  /// Gets the [T] instance with/without [id]
   /// from the closest ancestor of [ReactterProvider].
   ///
   /// ```dart
-  /// final appContext = context.use<AppContext>();
-  /// final appContextId = context.use<AppContext>('uniqueId');
-  /// final appContextNullable = context.use<AppContext?>();
+  /// final appController = context.use<AppController>();
+  /// final appControllerId = context.use<AppController>('uniqueId');
+  /// final appControllerNullable = context.use<AppController?>();
   /// ```
   ///
-  /// If [T] is nullable and no matching [ReactterContext] is found, [watch] will
-  /// return `null`.
+  /// If [T] is nullable and no matching instance is found,
+  /// [use] will return `null`.
   ///
-  /// If [T] is non-nullable and the [ReactterContext] obtained returned `null`, will
-  /// throw [ProviderNullException].
+  /// If [T] is non-nullable and the instance obtained returned `null`,
+  /// will throw [ProviderNullException].
   ///
   /// This method is equivalent to calling:
   ///
   /// ```dart
   /// ReactterProvider.contextOf<T>(context, id: id, listen: false);
   /// ```
-  T use<T extends ReactterContext?>([String? id]) {
+  T use<T extends Object?>([String? id]) {
     return ReactterProvider.contextOf<T>(this, id: id, listen: false);
   }
 }
 
-/// The error that will be thrown
-/// if [ReactterProvider.contextOf] fails to find a [ReactterContext]
-/// as an ancestor of the [BuildContext] used.
-class ReactterContextNotFoundException implements Exception {
-  /// Create a ProviderNotFound error with the type represented as a String.
-  ReactterContextNotFoundException(
+/// The error that will be thrown if [ReactterProvider.contextOf] fails
+/// to find the instance from ancestor of the [BuildContext] used.
+class ReactterInstanceNotFoundException implements Exception {
+  ReactterInstanceNotFoundException(
     this.valueType,
     this.widgetType,
   );
@@ -107,44 +103,44 @@ class ReactterContextNotFoundException implements Exception {
     return '''
 Error: Could not find the correct `ReactterProvider<$valueType>` above this `$widgetType` Widget
 
-This happens because you used a `BuildContext` that does not include the `ReactterContext` of your choice.
+This happens because you used a `BuildContext` that does not include the instance of your choice.
 There are a few common scenarios:
 
 - You added a new `ReactterProvider` in your `main.dart` and perform a hot-restart.
 
-- The `ReactterContext` you are trying to read is in a different route.
+- The instance you are trying to read is in a different route.
 
   `ReactterProvider` is a "scoped". So if you insert of `ReactterProvider` inside a route, then
-  other routes will not be able to access that `ReactterContext`.
+  other routes will not be able to access that instance.
 
 - You used a `BuildContext` that is an ancestor of the `ReactterProvider` you are trying to read.
 
   Make sure that `$widgetType` is under your `ReactterProvider<$valueType>`.
-  This usually happens when you are creating a `ReactterContext` and trying to read it immediately.
+  This usually happens when you are creating a instance and trying to read it immediately.
 
   For example, instead of:
 
   ```
   Widget build(BuildContext context) {
     return ReactterProvider(
-      () => AppContext(),
-      // Will throw a `ReactterContextNotFoundException`,
+      () => AppController(),
+      // Will throw a `ReactterInstanceNotFoundException`,
       // because `context` is out of `ReactterProvider`'s scope.
-      child: Text(context.watch<AppContext>().state.value),
+      child: Text(context.watch<AppController>().state.value),
     ),
   }
   ```
 
-  consider using `builder` like so:
+  Try to use `builder` propery of `ReactterProvider` to access the instance inmedately as it created, like so:
 
   ```
   Widget build(BuildContext context) {
     return ReactterProvider(
-      () => AppContext(),
+      () => AppController(),
       // we use `builder` to obtain a new `BuildContext` that has access to the provider
-      builder: (appContext, context, child) {
+      builder: (appController, context, child) {
         // No longer throws
-        return Text(appContext.state.value),
+        return Text(appController.state.value),
       }
     ),
   }

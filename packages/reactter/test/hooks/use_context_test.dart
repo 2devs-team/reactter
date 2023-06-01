@@ -1,48 +1,48 @@
 import 'package:test/test.dart';
 import 'package:reactter/reactter.dart';
 
-import '../shareds/test_context.dart';
+import '../shareds/test_controllers.dart';
 
 const ID = 'uniqueId';
 
 void main() {
   group("UseContext", () {
-    test("should gets instance", () => _testContext());
+    test("should gets instance", () => _testController());
 
-    test("should gets instance by id", () => _testContext(ID));
+    test("should gets instance by id", () => _testController(ID));
 
-    test("should gets instance late", () => _testContextLate());
+    test("should gets instance late", () => _testControllerLate());
 
-    test("should gets instance by id late", () => _testContextLate(ID));
+    test("should gets instance by id late", () => _testControllerLate(ID));
   });
 }
 
-void _testContext([String? id]) {
-  final context = Reactter.create(id: id, builder: () => TestContext());
+void _testController([String? id]) {
+  Reactter.create(id: id, builder: () => TestController());
 
-  final testContext = UseContext<TestContext>(id: id, context: context);
+  final testController = UseContext<TestController>(id);
 
-  expect(testContext.instance, isA<TestContext>());
+  expect(testController.instance, isA<TestController>());
 
   Reactter
-    ..unregister<TestContext>(id)
-    ..delete<TestContext>(id);
+    ..unregister<TestController>(id)
+    ..delete<TestController>(id);
 }
 
-void _testContextLate([String? id]) {
-  late final TestContext instance;
-  final testContext = UseContext<TestContext>(id: id);
+void _testControllerLate([String? id]) {
+  late final TestController instance;
+  final testController = UseContext<TestController>(id);
 
   UseEffect(() {
-    if (testContext.instance != null) {
-      instance = testContext.instance!;
+    if (testController.instance != null) {
+      instance = testController.instance!;
     }
-  }, [testContext]);
+  }, [testController]);
 
-  Reactter.create(id: id, builder: () => TestContext());
+  Reactter.create(id: id, builder: () => TestController());
   Reactter
-    ..unregister<TestContext>(id)
-    ..delete<TestContext>(id);
+    ..unregister<TestController>(id)
+    ..delete<TestController>(id);
 
-  expectLater(instance, isA<TestContext>());
+  expectLater(instance, isA<TestController>());
 }

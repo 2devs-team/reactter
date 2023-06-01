@@ -1,50 +1,51 @@
 part of '../hooks.dart';
 
-/// A [ReactterHook] that helps to get the context of [ReactterContext] by [T] with or without [id].
+/// A [ReactterHook]  that allows to get the [T] instance with/without [id]
+/// from dependency store when it's ready.
 ///
 /// ```dart
-/// final appContextHook = UseContext<AppContext>();
-/// final appContextWithIdHook = UseContext<AppContext>('uniqueId');
+/// final useAppController = UseContext<AppController>();
+/// final useOtherControllerWithId = UseContext<OtherController>('uniqueId');
 /// ```
 ///
-/// The context that you need to get, to must be created by [ReactterInstanceManager]:
+/// The [T] instance that you need to get, to must be created by [ReactterInstanceManager]:
 ///
 /// ```dart
-/// Reactter.create<AppContext>(() => AppContex());
+/// Reactter.create<AppController>(() => AppContex());
 /// ```
 ///
 /// or created by [ReactterProvider] of [`flutter_reactter`](https://pub.dev/packages/flutter_reactter)
 ///
-/// You can get instance, using [instance] getter:
+/// Use [instance] getter to get the [T] instance:
 ///
 /// ```dart
-/// final appContextHook = UseContext<AppContext>();
-/// print(appContextHook.instance);
+/// final useAppController = UseContext<AppController>();
+/// print(useAppController.instance);
 /// ```
-/// [instance] returns null, when the instance is not found
+/// > **NOTE:**
+/// > [instance] returns null, when the [T] instance is not found
 /// or it hasn't created yet.
 ///
-/// To wait for the [instance] to be created,
-/// you need to use the [UseEffect] hook.
+/// Use [UseEffect] hook to wait for the [instance] to be created.
 ///
 /// ```dart
-/// final appContextHook = UseContext<AppContext>(null, this);
-/// print(appContextHook.instance); // return null
+/// final useAppController = UseContext<AppController>(context: this);
+/// print(useAppController.instance); // return null
 ///
 /// UseEffect(() {
-///   print(appContextHook.instance); // return instance of AppContext
-/// }, [appContextHook]);
+///   print(useAppController.instance); // return instance of AppController
+/// }, [useAppController]);
 /// ```
 ///
-/// You should call [dispose] when it's no longer needed.
+/// > **IMPORTANT**
+/// > You should call [dispose] when it's no longer needed.
 ///
 /// See also:
-/// - [ReactterContext], the instance that it returns.
-/// - [ReactterInstanceManager], a instances manager.
-/// - [UseEffect], a side-effect manager.
-class UseContext<T extends ReactterContext> extends ReactterHook {
+///
+/// * [ReactterInstanceManager], a instances manager.
+/// * [UseEffect], a side-effect manager.
+class UseContext<T extends Object> extends ReactterHook {
   final String? id;
-  final ReactterContext? context;
 
   bool _isDisposed = false;
 
@@ -55,38 +56,32 @@ class UseContext<T extends ReactterContext> extends ReactterHook {
     return _instance;
   }
 
-  UseContext({
-    this.id,
-    this.context,
-  }) : super(context) {
-    if (context != null) {
-      Reactter.one(context, Lifecycle.destroyed, (_, __) => dispose);
-    }
-
+  UseContext([this.id]) {
     _getInstance();
 
-    Reactter.on(
-      ReactterInstance<T>(id),
-      Lifecycle.destroyed,
-      _onInstance,
-    );
+    Reactter.on(ReactterInstance<T>(id), Lifecycle.destroyed, _onInstance);
 
     if (instance != null) return;
 
-    Reactter.on(
-      ReactterInstance<T>(id),
-      Lifecycle.initialized,
-      _onInstance,
-    );
-    Reactter.on(
-      ReactterInstance<T>(id),
-      Lifecycle.willMount,
-      _onInstance,
-    );
+    Reactter.on(ReactterInstance<T>(id), Lifecycle.initialized, _onInstance);
+    Reactter.on(ReactterInstance<T>(id), Lifecycle.willMount, _onInstance);
+  }
+
+  @override
+  void attachTo(Object instance) {
+    super.attachTo(instance);
+    Reactter.one(instance, Lifecycle.destroyed, _onParentDestroyed);
+  }
+
+  void detachTo(Object instance) {
+    Reactter.off(instance, Lifecycle.destroyed, _onParentDestroyed);
+    super.detachTo(instance);
   }
 
   /// Call when this hook is no longer needed.
   void dispose() {
+    if (_isDisposed) return;
+
     Reactter.off(ReactterInstance<T>(id), Lifecycle.initialized, _onInstance);
     Reactter.off(ReactterInstance<T>(id), Lifecycle.willMount, _onInstance);
     Reactter.off(ReactterInstance<T>(id), Lifecycle.destroyed, _onInstance);
@@ -113,4 +108,6 @@ class UseContext<T extends ReactterContext> extends ReactterHook {
       _instance = inst;
     });
   }
+
+  void _onParentDestroyed(_, __) => dispose();
 }

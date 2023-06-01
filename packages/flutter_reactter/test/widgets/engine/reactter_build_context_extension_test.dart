@@ -5,12 +5,11 @@ import 'package:flutter_test/flutter_test.dart';
 import '../../shareds/reactter_provider_builder.dart';
 import '../../shareds/reactter_providers_builder.dart';
 import '../../shareds/test_builder.dart';
-import '../../shareds/test_context.dart';
+import '../../shareds/test_controller.dart';
 
 void main() {
   group("ReactterBuildContextExtension", () {
-    testWidgets(
-        "should throw exception when ReactterContext's instance not found",
+    testWidgets("should throw exception when instance not found",
         (tester) async {
       bool hasException = false;
 
@@ -19,7 +18,7 @@ void main() {
           child: Builder(
             builder: (context) {
               try {
-                context.use<TestContext>();
+                context.use<TestController>();
                 return const Text("Rendered");
               } catch (e) {
                 hasException = true;
@@ -35,18 +34,18 @@ void main() {
       expect(find.text("Rendered"), findsNothing);
     });
 
-    testWidgets("should gets null when ReactterContext's instance not found",
-        (tester) async {
-      late TestContext? instanceObtained;
+    testWidgets("should gets null when instance not found", (tester) async {
+      late TestController? instanceObtained;
 
       await tester.pumpWidget(
         TestBuilder(
           child: Builder(
             builder: (context) {
-              instanceObtained = context.use<TestContext?>();
+              instanceObtained = context.use<TestController?>();
 
               return Text(
-                  "stateString: ${instanceObtained?.stateString.value ?? 'not found'}");
+                "stateString: ${instanceObtained?.stateString.value ?? 'not found'}",
+              );
             },
           ),
         ),
@@ -57,14 +56,14 @@ void main() {
       expect(find.text("stateString: not found"), findsOneWidget);
     });
 
-    testWidgets("should watch ReactterContext's instance", (tester) async {
-      late TestContext instanceObtained;
+    testWidgets("should watch instance changes", (tester) async {
+      late TestController instanceObtained;
 
       await tester.pumpWidget(
         TestBuilder(
           child: ReactterProviderBuilder(
             builder: (_, context, __) {
-              instanceObtained = context.watch<TestContext>();
+              instanceObtained = context.watch<TestController>();
 
               return Text("stateString: ${instanceObtained.stateString.value}");
             },
@@ -73,7 +72,7 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expectLater(instanceObtained, isInstanceOf<TestContext>());
+      expectLater(instanceObtained, isInstanceOf<TestController>());
       expect(find.text("stateString: initial"), findsOneWidget);
 
       instanceObtained.stateString.value = "new value";
@@ -82,15 +81,16 @@ void main() {
       expect(find.text("stateString: new value"), findsOneWidget);
     });
 
-    testWidgets("should watch ReactterContext's hooks", (tester) async {
-      late TestContext instanceObtained;
+    testWidgets("should watch instance's states", (tester) async {
+      late TestController instanceObtained;
 
       await tester.pumpWidget(
         TestBuilder(
           child: ReactterProviderBuilder(
             builder: (_, context, __) {
-              instanceObtained =
-                  context.watch<TestContext>((ctx) => [ctx.stateInt]);
+              instanceObtained = context.watch<TestController>(
+                (inst) => [inst.stateInt],
+              );
 
               return Column(
                 children: [
@@ -104,7 +104,7 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expectLater(instanceObtained, isInstanceOf<TestContext>());
+      expectLater(instanceObtained, isInstanceOf<TestController>());
       expect(find.text("stateString: initial"), findsOneWidget);
       expect(find.text("stateInt: 0"), findsOneWidget);
 
@@ -122,24 +122,24 @@ void main() {
     });
 
     testWidgets(
-        "should watch multiple ReactterContext's hooks, using different context.watch",
+        "should watch multiple instance's states, using different context.watch",
         (tester) async {
-      late TestContext instanceObtained;
-      late TestContext instanceObtainedWithId;
+      late TestController instanceObtained;
+      late TestController instanceObtainedWithId;
 
       await tester.pumpWidget(
         TestBuilder(
           child: ReactterProvidersBuilder(
             builder: (context, _) {
-              instanceObtained = context.use<TestContext>();
-              instanceObtainedWithId = context.use<TestContext>('uniqueId');
+              instanceObtained = context.use<TestController>();
+              instanceObtainedWithId = context.use<TestController>('uniqueId');
 
               return Column(
                 children: [
                   Builder(builder: (context) {
                     // any change of any hooks without id
-                    context.watch<TestContext>((ctx) => [ctx.stateString]);
-                    context.watch<TestContext>();
+                    context.watch<TestController>((inst) => [inst.stateString]);
+                    context.watch<TestController>();
 
                     return Column(
                       children: [
@@ -154,9 +154,9 @@ void main() {
                   }),
                   Builder(builder: (context) {
                     // only change of stateString with id
-                    context.watchId<TestContext>(
+                    context.watchId<TestController>(
                       'uniqueId',
-                      (ctx) => [ctx.stateString],
+                      (inst) => [inst.stateString],
                     );
 
                     return Text(
@@ -166,9 +166,9 @@ void main() {
                   Builder(
                     builder: (context) {
                       // any change of stateInt
-                      context.watch<TestContext>((ctx) => [ctx.stateInt]);
-                      context.watch<TestContext>(
-                        (ctx) => [instanceObtainedWithId.stateInt],
+                      context.watch<TestController>((inst) => [inst.stateInt]);
+                      context.watch<TestController>(
+                        (inst) => [instanceObtainedWithId.stateInt],
                       );
 
                       return Column(
@@ -189,11 +189,13 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expectLater(instanceObtained, isInstanceOf<TestContext>());
-      expectLater(instanceObtainedWithId, isInstanceOf<TestContext>());
+      expectLater(instanceObtained, isInstanceOf<TestController>());
+      expectLater(instanceObtainedWithId, isInstanceOf<TestController>());
 
       expect(
-          find.text("stateStringByIdDontWatch: from uniqueId"), findsOneWidget);
+        find.text("stateStringByIdDontWatch: from uniqueId"),
+        findsOneWidget,
+      );
       expect(find.text("stateString: initial"), findsOneWidget);
       expect(find.text("stateStringById: from uniqueId"), findsOneWidget);
       expect(find.text("stateIntById: 0"), findsOneWidget);
@@ -203,7 +205,9 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(
-          find.text("stateStringByIdDontWatch: from uniqueId"), findsOneWidget);
+        find.text("stateStringByIdDontWatch: from uniqueId"),
+        findsOneWidget,
+      );
       expect(find.text("stateString: new value"), findsOneWidget);
       expect(find.text("stateStringById: from uniqueId"), findsOneWidget);
       expect(find.text("stateIntById: 0"), findsOneWidget);

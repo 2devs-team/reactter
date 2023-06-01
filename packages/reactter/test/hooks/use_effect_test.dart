@@ -1,7 +1,7 @@
 import 'package:test/test.dart';
 import 'package:reactter/reactter.dart';
 
-import '../shareds/test_context.dart';
+import '../shareds/test_controllers.dart';
 
 class MyClass {
   final String prop;
@@ -12,9 +12,9 @@ class MyClass {
 void main() {
   group("UseEffect's callback", () {
     test("should be called when its dependencies has changed", () {
-      final testContext = TestContext();
-      final stateA = testContext.stateBool;
-      final stateB = testContext.stateInt;
+      final testController = TestController();
+      final stateA = testController.stateBool;
+      final stateB = testController.stateInt;
 
       int nCalls = 0;
 
@@ -42,17 +42,17 @@ void main() {
     });
 
     test("should be called after context did mount", () {
-      final testContext = Reactter.create(builder: () => TestContext())!;
+      final testController = Reactter.create(builder: () => TestController())!;
 
       int nCalls = 0;
 
       UseEffect(() {
         nCalls += 1;
-      }, [], testContext);
+      }, [], testController);
 
-      Reactter.emit(testContext, Lifecycle.didMount);
+      Reactter.emit(testController, Lifecycle.didMount);
 
-      Reactter.unregister<TestContext>();
+      Reactter.unregister<TestController>();
 
       expect(nCalls, 1);
     });
@@ -60,10 +60,10 @@ void main() {
 
   group("UseEffect's cleaup", () {
     test("should be called after its dependencies has changed", () {
-      final testContext = TestContext();
-      final stateA = testContext.stateBool;
-      final stateB = testContext.stateInt;
-      final stateC = testContext.stateString;
+      final testController = TestController();
+      final stateA = testController.stateBool;
+      final stateB = testController.stateInt;
+      final stateC = testController.stateString;
 
       int nCalls = 0;
 
@@ -85,10 +85,10 @@ void main() {
     });
 
     test("should be called with dispatchEffect", () {
-      final testContext = TestContext();
-      final stateA = testContext.stateBool;
-      final stateB = testContext.stateInt;
-      final stateC = testContext.stateString;
+      final testController = TestController();
+      final stateA = testController.stateBool;
+      final stateB = testController.stateInt;
+      final stateC = testController.stateString;
 
       int nCalls = 0;
 
@@ -110,7 +110,7 @@ void main() {
     });
 
     test("should be called after context will unmount", () {
-      final testContext = Reactter.create(builder: () => TestContext())!;
+      final testController = Reactter.create(builder: () => TestController())!;
 
       int nCalls = 0;
 
@@ -118,12 +118,38 @@ void main() {
         return () {
           nCalls += 1;
         };
-      }, [], testContext);
+      }, [], testController);
 
-      Reactter.emit(testContext, Lifecycle.didMount);
-      Reactter.emit(testContext, Lifecycle.willUnmount);
+      Reactter.emit(testController, Lifecycle.didMount);
+      Reactter.emit(testController, Lifecycle.willUnmount);
 
-      Reactter.unregister<TestContext>();
+      Reactter.unregister<TestController>();
+
+      expect(nCalls, 1);
+    });
+
+    test("should be called after context will unmount with dependencies", () {
+      final testController = Reactter.create(builder: () => TestController())!;
+      final stateA = testController.stateBool;
+      final stateB = testController.stateInt;
+      final stateC = testController.stateString;
+
+      int nCalls = 0;
+
+      UseEffect(
+        () {
+          return () {
+            nCalls += 1;
+          };
+        },
+        [stateA, stateB, stateC],
+        testController,
+      );
+
+      Reactter.emit(testController, Lifecycle.didMount);
+      Reactter.emit(testController, Lifecycle.willUnmount);
+
+      Reactter.unregister<TestController>();
 
       expect(nCalls, 1);
     });

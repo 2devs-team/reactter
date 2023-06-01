@@ -5,17 +5,17 @@ part of '../widgets.dart';
 /// ```dart
 /// ReactterProviders(
 ///   [
-///     ReactterProvider(() => AppContext()),
-///     ReactterProvider(() => AppContext(), id: "uniqueId"),
+///     ReactterProvider(() => AppController()),
+///     ReactterProvider(() => AppController(), id: "uniqueId"),
 ///   ],
 ///   builder: (context, child) {
-///     final appContext = context.read<AppContext>();
-///     final appContextWithId = context.watchId<AppContext>("uniqueId");
+///     final appController = context.read<AppController>();
+///     final appControllerWithId = context.watchId<AppController>("uniqueId");
 ///
 ///     return Column(
 ///       children: [
-///         Text("AppContext's state: ${appContext.stateHook.value}"),
-///         Text("appContextWithId's state: ${appContext.stateHook.value}");
+///         Text("AppController's state: ${appController.stateHook.value}"),
+///         Text("appControllerWithId's state: ${appController.stateHook.value}");
 ///       ],
 ///     );
 ///   }
@@ -29,19 +29,19 @@ part of '../widgets.dart';
 /// ```dart
 /// ReactterProviders(
 ///   [
-///     ReactterProvider(() => AppContext()),
-///     ReactterProvider(() => AppContext(), id: "uniqueId"),
+///     ReactterProvider(() => AppController()),
+///     ReactterProvider(() => AppController(), id: "uniqueId"),
 ///   ],
 ///   child: Text("This widget build only once"),
 ///   builder: (context, child) {
-///     final appContext = context.read<AppContext>();
-///     final appContextWithId = context.watchId<AppContext>("uniqueId");
+///     final appController = context.read<AppController>();
+///     final appControllerWithId = context.watchId<AppController>("uniqueId");
 ///
 ///     return Column(
 ///       children: [
 ///         child,
-///         Text("AppContext's state: ${appContext.stateHook.value}"),
-///         Text("appContextWithId's state: ${appContext.stateHook.value}");
+///         Text("AppController's state: ${appController.stateHook.value}"),
+///         Text("appControllerWithId's state: ${appController.stateHook.value}");
 ///       ],
 ///     );
 ///   }

@@ -12,12 +12,12 @@ class TestStore {
   TestStore({this.count = 0});
 }
 
-class IncrementAction extends ReactterAction<String, int> {
+class IncrementAction extends ReactterAction<int> {
   IncrementAction({int quantity = 1})
       : super(type: 'INCREMENT', payload: quantity);
 }
 
-class DecrementAction extends ReactterAction<String, int> {
+class DecrementAction extends ReactterAction<int> {
   DecrementAction({int quantity = 1})
       : super(type: 'DECREMENT', payload: quantity);
 }
@@ -42,21 +42,23 @@ class DecrementActionCallable extends ReactterActionCallable<TestStore, int> {
   }
 }
 
-class TestContext extends ReactterContext {
+final stateExt = UseState(null);
+
+class TestController with ReactterNotifyManager {
   final signalString = "initial".signal;
 
   final stateBool = UseState(false);
-  late final stateString = UseState("initial");
-  late final stateInt = UseState(0, this);
-  late final stateDouble = UseState(0.0, this);
-  late final stateList = UseState([], this);
-  late final stateMap = UseState({}, this);
-  late final stateClass = UseState<TestClass?>(null, this);
-  late final stateAsync = UseAsyncState("initial", _resolveStateAsync, this);
-  late final stateReduce = UseReducer(_reducer, TestStore(count: 0), this);
+  final stateString = UseState("initial");
+  final stateInt = UseState(0);
+  final stateDouble = UseState(0.0);
+  final stateList = UseState([]);
+  final stateMap = UseState({});
+  final stateClass = UseState<TestClass?>(null);
+  late final stateAsync = UseAsyncState("initial", _resolveStateAsync);
+  late final stateReduce = UseReducer(_reducer, TestStore(count: 0));
 
-  TestContext() {
-    listenHooks([stateBool, stateString]);
+  TestController() {
+    stateExt.attachTo(this); // for coverage
   }
 
   Future<String> _resolveStateAsync([bool throwError = false]) async {
@@ -89,10 +91,22 @@ class TestContext extends ReactterContext {
   }
 }
 
-class Test2Context extends ReactterContext {
-  late final testContext = UseContext<TestContext>(context: this);
+final testControllerExt = UseContext<TestController>();
 
-  Test2Context() {
-    Reactter.create(builder: () => TestContext());
+class Test2Controller {
+  final testController = UseContext<TestController>();
+
+  Test2Controller() {
+    testControllerExt.attachTo(this); // for coverage
+    Reactter.create(builder: () => TestController());
+  }
+}
+
+class Test3Controller {
+  final test2Controller = UseContext<Test2Controller>();
+
+  Test3Controller() {
+    testControllerExt.attachTo(this); // for coverage
+    Reactter.create(builder: () => Test2Controller());
   }
 }

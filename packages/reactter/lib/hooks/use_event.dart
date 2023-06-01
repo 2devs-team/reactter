@@ -6,20 +6,20 @@ part of '../hooks.dart';
 /// Using it with the instance directly:
 ///
 /// ```dart
-/// UseEvent.withInstance(appContext);
+/// UseEvent.withInstance(appController);
 /// ```
 ///
 /// or using it with [T] instance
 /// that it to has been registed with [ReactterInstanceManager]:
 ///
 /// ```dart
-/// UseEvent<AppContext>();
+/// UseEvent<AppController>();
 /// ```
 ///
 /// if it has a [id]:
 ///
 /// ```dart
-/// UseEvent<AppContext>('uniqueId');
+/// UseEvent<AppController>('uniqueId');
 /// ```
 ///
 /// You can listen to event using [on] method:
@@ -31,25 +31,25 @@ part of '../hooks.dart';
 ///   print("$inst's Events.SomeEvent emitted with param: $param.");
 /// }
 ///
-/// UseEvent<AppContext>().on(Events.SomeEvent, _onSomeEvent);
+/// UseEvent<AppController>().on(Events.SomeEvent, _onSomeEvent);
 /// ```
 ///
 /// use [off] method to stop listening event:
 ///
 /// ```dart
-/// UseEvent<AppContext>().off(Events.SomeEvent, _onSomeEvent);
+/// UseEvent<AppController>().off(Events.SomeEvent, _onSomeEvent);
 /// ```
 ///
 /// If you want to listen to event only once, use [one] method:
 ///
 /// ```dart
-/// UseEvent<AppContext>().one(Events.SomeEvent, _onSomeEvent);
+/// UseEvent<AppController>().one(Events.SomeEvent, _onSomeEvent);
 /// ```
 ///
 /// And use [emit] method to trigger event:
 ///
 /// ```dart
-/// UseEvent<AppContext>().emit(Events.SomeEvent, 'Parameter');
+/// UseEvent<AppController>().emit(Events.SomeEvent, 'Parameter');
 /// ```
 ///
 /// **IMPORTANT**: Don't forget to remove event using [off]
@@ -58,7 +58,8 @@ part of '../hooks.dart';
 /// or have unexpected behaviors such as events in permanent listening.
 ///
 /// See also:
-/// - [ReactterInstanceManager], a instances manager.
+///
+/// * [ReactterInstanceManager], a instances manager.
 class UseEvent<T extends Object?> {
   final Object? _instanceReceived;
 

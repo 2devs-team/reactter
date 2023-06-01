@@ -3,7 +3,7 @@ import 'package:flutter_reactter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../shareds/test_builder.dart';
-import '../../shareds/test_context.dart';
+import '../../shareds/test_controller.dart';
 
 void main() {
   group("ReactterNestedWidget", () {
@@ -18,11 +18,11 @@ void main() {
                 try {
                   return ReactterNestedWidget(
                     owner: ReactterProvider(
-                      () => TestContext(),
+                      () => TestController(),
                       child: const SizedBox.shrink(),
                     ) as ReactterProviderElement,
                     wrappedWidget: ReactterProvider(
-                      () => TestContext(),
+                      () => TestController(),
                       child: const SizedBox.shrink(),
                     ),
                   ).build(context);

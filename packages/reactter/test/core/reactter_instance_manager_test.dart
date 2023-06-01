@@ -1,178 +1,180 @@
 import 'package:test/test.dart';
 import 'package:reactter/core.dart';
 
-import '../shareds/test_context.dart';
+import '../shareds/test_controllers.dart';
 
 void main() {
   group("ReactterInstanceManager", () {
     test("should register instance", () async {
-      bool registered = Reactter.register(builder: () => TestContext());
+      bool registered = Reactter.register(builder: () => TestController());
       expect(registered, true);
 
-      registered = Reactter.register(builder: () => TestContext());
+      registered = Reactter.register(builder: () => TestController());
       expect(registered, false);
 
-      Reactter.unregister<TestContext>();
+      Reactter.unregister<TestController>();
     });
 
     test("should register instance with id", () async {
       bool registered = Reactter.register(
         id: 'uniqueId',
-        builder: () => TestContext(),
+        builder: () => TestController(),
       );
       expect(registered, true);
 
       registered = Reactter.register(
         id: 'uniqueId',
-        builder: () => TestContext(),
+        builder: () => TestController(),
       );
       expect(registered, false);
 
-      Reactter.unregister<TestContext>('uniqueId');
+      Reactter.unregister<TestController>('uniqueId');
     });
 
     test("should unregister instance", () async {
-      Reactter.register(builder: () => TestContext());
+      Reactter.register(builder: () => TestController());
 
-      bool unregistered = Reactter.unregister<TestContext>();
+      bool unregistered = Reactter.unregister<TestController>();
       expect(unregistered, true);
 
-      unregistered = Reactter.unregister<TestContext>();
+      unregistered = Reactter.unregister<TestController>();
       expect(unregistered, false);
     });
 
     test("should unregister instance with id", () async {
-      Reactter.register(id: 'uniqueId', builder: () => TestContext());
+      Reactter.register(id: 'uniqueId', builder: () => TestController());
 
-      bool unregistered = Reactter.unregister<TestContext>('uniqueId');
+      bool unregistered = Reactter.unregister<TestController>('uniqueId');
       expect(unregistered, true);
 
-      unregistered = Reactter.unregister<TestContext>('uniqueId');
+      unregistered = Reactter.unregister<TestController>('uniqueId');
       expect(unregistered, false);
     });
 
     test("should get instance", () async {
-      var instance = Reactter.get<TestContext>();
+      var instance = Reactter.get<TestController>();
       expect(instance, null);
 
-      Reactter.register(builder: () => TestContext());
+      Reactter.register(builder: () => TestController());
 
-      instance = Reactter.get<TestContext>();
-      expect(instance, isA<TestContext>());
+      instance = Reactter.get<TestController>();
+      expect(instance, isA<TestController>());
 
-      Reactter.unregister<TestContext>();
+      Reactter.unregister<TestController>();
     });
 
     test("should get instance with id", () async {
-      var instance = Reactter.get<TestContext>('uniqueId');
+      var instance = Reactter.get<TestController>('uniqueId');
       expect(instance, null);
 
-      Reactter.register(id: 'uniqueId', builder: () => TestContext());
+      Reactter.register(id: 'uniqueId', builder: () => TestController());
 
-      instance = Reactter.get<TestContext>('uniqueId');
-      expect(instance, isA<TestContext>());
+      instance = Reactter.get<TestController>('uniqueId');
+      expect(instance, isA<TestController>());
 
-      Reactter.unregister<TestContext>('uniqueId');
+      Reactter.unregister<TestController>('uniqueId');
     });
 
     test("should create instance", () async {
-      var instance = Reactter.create(builder: () => TestContext(), ref: 'key');
+      var instance =
+          Reactter.create(builder: () => TestController(), ref: 'key');
 
-      expect(instance, isA<TestContext>());
+      expect(instance, isA<TestController>());
 
-      Reactter.unregister<TestContext>();
+      Reactter.unregister<TestController>();
     });
 
     test("should create instance with id", () async {
       final instance = Reactter.create(
-          id: 'uniqueId', builder: () => TestContext(), ref: 'key');
+          id: 'uniqueId', builder: () => TestController(), ref: 'key');
 
-      expect(instance, isA<TestContext>());
+      expect(instance, isA<TestController>());
 
-      Reactter.unregister<TestContext>('uniqueId');
+      Reactter.unregister<TestController>('uniqueId');
     });
 
     test("should delete instance", () async {
-      Reactter.create(builder: () => TestContext(), ref: 'key');
+      Reactter.create(builder: () => TestController(), ref: 'key');
 
-      bool isDeleted = Reactter.delete<TestContext>(null, 'key');
+      bool isDeleted = Reactter.delete<TestController>(null, 'key');
       expect(isDeleted, true);
 
-      isDeleted = Reactter.delete<TestContext>(null, 'key');
+      isDeleted = Reactter.delete<TestController>(null, 'key');
       expect(isDeleted, false);
 
-      Reactter.unregister<TestContext>('uniqueId');
+      Reactter.unregister<TestController>('uniqueId');
     });
 
     test("should create instance with id", () async {
       final instance = Reactter.create(
-          id: 'uniqueId', builder: () => TestContext(), ref: 'key');
+          id: 'uniqueId', builder: () => TestController(), ref: 'key');
 
-      expect(instance, isA<TestContext>());
+      expect(instance, isA<TestController>());
 
-      Reactter.unregister<TestContext>('uniqueId');
+      Reactter.unregister<TestController>('uniqueId');
     });
 
     test("should delete instance with id", () async {
-      Reactter.create(id: 'uniqueId', builder: () => TestContext(), ref: 'key');
+      Reactter.create(
+          id: 'uniqueId', builder: () => TestController(), ref: 'key');
 
-      bool isDeleted = Reactter.delete<TestContext>('uniqueId', 'key');
+      bool isDeleted = Reactter.delete<TestController>('uniqueId', 'key');
       expect(isDeleted, true);
 
-      isDeleted = Reactter.delete<TestContext>('uniqueId', 'key');
+      isDeleted = Reactter.delete<TestController>('uniqueId', 'key');
       expect(isDeleted, false);
 
-      Reactter.unregister<TestContext>('uniqueId');
+      Reactter.unregister<TestController>('uniqueId');
     });
 
     test("should find instance", () async {
-      var reactterInstance = Reactter.find(TestContext());
+      var reactterInstance = Reactter.find(TestController());
       expect(reactterInstance, null);
 
-      final instance = Reactter.create(builder: () => TestContext());
+      final instance = Reactter.create(builder: () => TestController());
 
       reactterInstance = Reactter.find(instance);
       expect(reactterInstance, isA<ReactterInstance>());
 
-      Reactter.unregister<TestContext>();
+      Reactter.unregister<TestController>();
     });
 
     test("should get the instance", () async {
-      var instance = Reactter.instanceOf<TestContext>();
+      var instance = Reactter.instanceOf<TestController>();
       expect(instance, null);
 
-      Reactter.create(builder: () => TestContext());
-      instance = Reactter.instanceOf<TestContext>();
-      expect(instance, isA<TestContext>());
-      Reactter.unregister<TestContext>();
+      Reactter.create(builder: () => TestController());
+      instance = Reactter.instanceOf<TestController>();
+      expect(instance, isA<TestController>());
+      Reactter.unregister<TestController>();
     });
 
     test("should get the instance with id", () async {
-      var instance = Reactter.instanceOf<TestContext>('uniqueId');
+      var instance = Reactter.instanceOf<TestController>('uniqueId');
       expect(instance, null);
 
-      Reactter.create(id: 'uniqueId', builder: () => TestContext());
-      instance = Reactter.instanceOf<TestContext>('uniqueId');
-      expect(instance, isA<TestContext>());
+      Reactter.create(id: 'uniqueId', builder: () => TestController());
+      instance = Reactter.instanceOf<TestController>('uniqueId');
+      expect(instance, isA<TestController>());
 
-      Reactter.unregister<TestContext>('uniqueId');
+      Reactter.unregister<TestController>('uniqueId');
     });
 
     test("should check if exist the instance", () async {
-      bool isExistInstance = Reactter.exists<TestContext>();
+      bool isExistInstance = Reactter.exists<TestController>();
       expect(isExistInstance, false);
 
-      Reactter.create(builder: () => TestContext());
-      isExistInstance = Reactter.exists<TestContext>();
+      Reactter.create(builder: () => TestController());
+      isExistInstance = Reactter.exists<TestController>();
       expect(isExistInstance, true);
     });
 
     test("should check if exist the instance with id", () async {
-      bool isExistInstance = Reactter.exists<TestContext>('uniqueId');
+      bool isExistInstance = Reactter.exists<TestController>('uniqueId');
       expect(isExistInstance, false);
 
-      Reactter.create(id: 'uniqueId', builder: () => TestContext());
-      isExistInstance = Reactter.exists<TestContext>('uniqueId');
+      Reactter.create(id: 'uniqueId', builder: () => TestController());
+      isExistInstance = Reactter.exists<TestController>('uniqueId');
       expect(isExistInstance, true);
     });
   });

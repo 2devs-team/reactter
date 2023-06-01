@@ -4,14 +4,14 @@ import 'package:flutter_test/flutter_test.dart';
 
 import '../shareds/reactter_providers_builder.dart';
 import '../shareds/test_builder.dart';
-import '../shareds/test_context.dart';
+import '../shareds/test_controller.dart';
 
 void main() {
   group("ReactterProviders", () {
     testWidgets("should gets instance form different ReactterProvider",
         (tester) async {
-      late TestContext instanceObtained;
-      late TestContext instanceObtainedWithId;
+      late TestController instanceObtained;
+      late TestController instanceObtainedWithId;
       const key = Key('uniqueKey');
       const key2 = Key('uniqueKey2');
 
@@ -20,8 +20,8 @@ void main() {
           child: ReactterProvidersBuilder(
             key: key,
             builder: (BuildContext context, Widget? child) {
-              instanceObtained = context.use<TestContext>();
-              instanceObtainedWithId = context.use<TestContext>("uniqueId");
+              instanceObtained = context.use<TestController>();
+              instanceObtainedWithId = context.use<TestController>("uniqueId");
 
               return Column(
                 children: [
@@ -34,7 +34,7 @@ void main() {
                   ReactterProvidersBuilder(
                     key: key2,
                     builder: (context, child) {
-                      context.watch<TestContext>();
+                      context.watch<TestController>();
 
                       return Text(
                         "Provider2 stateString: ${instanceObtained.stateString.value}",
@@ -54,13 +54,13 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text("child"), findsOneWidget);
-      expectLater(instanceObtained, isInstanceOf<TestContext>());
+      expectLater(instanceObtained, isInstanceOf<TestController>());
       expect(
         find.text("Provider stateString: initial"),
         findsOneWidget,
       );
 
-      expectLater(instanceObtainedWithId, isInstanceOf<TestContext>());
+      expectLater(instanceObtainedWithId, isInstanceOf<TestController>());
       expect(
         find.text("ProviderWithId stateString: from uniqueId"),
         findsOneWidget,
