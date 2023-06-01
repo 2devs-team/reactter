@@ -1,4 +1,4 @@
-import 'package:test/test.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:reactter/reactter.dart';
 
 import '../shareds/test_controllers.dart';
@@ -22,9 +22,12 @@ void main() {
       expect(testController.stateReduce.value.count, 3);
 
       expect(
-        () => testController.stateReduce
-            .dispatch(ReactterAction(type: 'undefined', payload: 'undefined')),
-        throwsA(isA<UnimplementedError>()),
+        () => testController.stateReduce.dispatch(
+          ReactterAction(type: 'undefined', payload: 'undefined'),
+        ),
+        throwsA(
+          isA<UnimplementedError>(),
+        ),
       );
     });
 
