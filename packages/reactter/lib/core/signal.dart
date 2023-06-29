@@ -1,4 +1,8 @@
-part of '../../core.dart';
+part of '../core.dart';
+
+/// This enumeration is used to represent different events that can occur when
+/// getting or setting the value of a `Signal` object.
+enum SignalEvent { onGetValue, onSetValue }
 
 /// A base-class that store a value of [T] and notify the listeners
 /// when the value is updated.
@@ -74,27 +78,39 @@ part of '../../core.dart';
 /// See also:
 ///
 /// * [Obj], a base-class that can be used to store a value of [T].
-class Signal<T> extends Obj<T> with ReactterNotifyManager, ReactterState {
-  T _value;
+class Signal<T> extends Obj<T> with ReactterState {
+  Signal(T initial) : super(initial) {
+    createState();
+  }
+
+  bool _shouldGetValueNotify = true;
+  bool _shouldSetValueNotify = true;
 
   /// Returns the [value] of the signal.
   T get value {
-    Reactter.signalProxy?.addSignal(this);
-    return _value;
+    if (_shouldGetValueNotify) {
+      _shouldGetValueNotify = false;
+      Reactter.emit(Signal, SignalEvent.onGetValue, this);
+      _shouldGetValueNotify = true;
+    }
+
+    return super.value;
   }
 
   /// Updates the [value] of the signal
   /// and notifies the observers when changes occur.
   set value(T val) {
-    if (_value == val) return;
+    if (super.value == val) return;
 
-    update((_) => _value = val);
-  }
+    update((_) {
+      super.value = val;
 
-  Signal(T initial)
-      : _value = initial,
-        super(initial) {
-    createState();
+      if (!_shouldSetValueNotify) return;
+
+      _shouldSetValueNotify = false;
+      Reactter.emit(Signal, SignalEvent.onSetValue, this);
+      _shouldSetValueNotify = true;
+    });
   }
 
   /// Gets and/or sets to [value] like a function

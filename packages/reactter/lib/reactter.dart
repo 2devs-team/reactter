@@ -28,6 +28,7 @@ export 'core.dart'
         ObjSetNullExt,
         ObjStringExt,
         ObjStringNullExt,
+        SignalEvent,
         Signal,
         SignalGenericTypeExt,
         SignalListExt,
@@ -41,7 +42,6 @@ export 'core.dart'
         Reactter,
         ReactterHook,
         ReactterInstanceManager,
-        ReactterSignalProxy,
         ReactterState;
 
 export 'hooks.dart'

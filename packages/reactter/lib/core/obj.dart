@@ -1,4 +1,4 @@
-part of '../../core.dart';
+part of '../core.dart';
 
 /// A base-class that store a value of [T].
 ///
@@ -47,14 +47,15 @@ class Obj<T> {
   /// Examples:
   /// ```dart
   /// final obj = Obj(0);
-  /// final obj2 = Obj(0);
-  /// final obj3 = obj;
+  /// final obj2 = Obj(1);
+  /// final obj3 = obj(0);
+  /// final objCopy = obj;
   ///
   /// print(obj == 0); // true
   /// print(obj == 1); // false
-  /// print(obj == obj); // true
   /// print(obj == obj2); // false
   /// print(obj == obj3); // true
+  /// print(obj == objCopy); // true
   /// ```
   ///
   bool operator ==(Object other) =>

@@ -84,21 +84,25 @@ class ReactterWatcher extends StatefulWidget {
   State<ReactterWatcher> createState() => _ReactterWatcherState();
 }
 
-class _ReactterWatcherState extends State<ReactterWatcher>
-    with ReactterSignalProxy {
+class _ReactterWatcherState extends State<ReactterWatcher> {
   final Set<Signal> _signals = {};
+
+  static _ReactterWatcherState? _currentState;
 
   @override
   Widget build(BuildContext context) {
     _clearSignals();
 
-    ReactterSignalProxy? signalProxyPrev = Reactter.signalProxy;
-    Reactter.signalProxy = this;
+    final prevState = _currentState;
+
+    _currentState = this;
+    Reactter.on(Signal, SignalEvent.onGetValue, _onGetValue);
 
     final widgetBuit =
         widget.builder?.call(context, widget.child) ?? widget.child!;
 
-    Reactter.signalProxy = signalProxyPrev;
+    _currentState = prevState;
+    Reactter.off(Signal, SignalEvent.onGetValue, _onGetValue);
 
     return widgetBuit;
   }
@@ -106,17 +110,17 @@ class _ReactterWatcherState extends State<ReactterWatcher>
   @override
   void dispose() {
     _clearSignals();
+    Reactter.off(Signal, SignalEvent.onGetValue, _onGetValue);
     super.dispose();
   }
 
-  @override
-  void addSignal(Signal signal) {
-    Reactter.signalProxy = null;
-    if (!_signals.contains(signal)) {
-      Reactter.one(signal, Lifecycle.didUpdate, _onSignalDidUpdate);
-      _signals.add(signal);
+  _onGetValue(_, Signal signal) {
+    if (_currentState != this || _signals.contains(signal)) {
+      return;
     }
-    Reactter.signalProxy = this;
+
+    Reactter.one(signal, Lifecycle.didUpdate, _onSignalDidUpdate);
+    _signals.add(signal);
   }
 
   void _onSignalDidUpdate(_, __) => setState(() {});

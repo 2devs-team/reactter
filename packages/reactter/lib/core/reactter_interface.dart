@@ -4,7 +4,7 @@ part of '../core.dart';
 
 class _ReactterInterface with ReactterInstanceManager, ReactterEventManager {
   static final _reactterInterface = _ReactterInterface._();
-  ReactterSignalProxy? signalProxy;
+
   bool _instancesBuilding = false;
   final _statesRecollected = <ReactterState>[];
 
