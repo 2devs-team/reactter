@@ -227,8 +227,8 @@ mixin ReactterInstanceManager {
 
     _instancesCreated.remove(reactterInstance.instance);
 
-    if (reactterInstance.instance is ReactterNotifyManager) {
-      (reactterInstance.instance as ReactterNotifyManager).dispose();
+    if (reactterInstance.instance is ReactterState) {
+      (reactterInstance.instance as ReactterState).dispose();
     }
 
     reactterInstance._instance = null;

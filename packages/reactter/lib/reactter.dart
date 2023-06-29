@@ -41,7 +41,6 @@ export 'core.dart'
         Reactter,
         ReactterHook,
         ReactterInstanceManager,
-        ReactterNotifyManager,
         ReactterSignalProxy,
         ReactterState;
 

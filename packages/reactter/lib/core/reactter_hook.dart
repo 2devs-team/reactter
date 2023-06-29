@@ -40,7 +40,7 @@ part of '../core.dart';
 /// * [ReactterNotifyManager], provides methods that notify listeners
 /// about [ReactterHook] changes.
 /// * [ReactterState], adds state management features to [ReactterHook].
-abstract class ReactterHook with ReactterNotifyManager, ReactterState {
+abstract class ReactterHook with ReactterState {
   ReactterHook() {
     createState();
   }

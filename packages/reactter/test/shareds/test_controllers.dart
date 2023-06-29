@@ -44,7 +44,7 @@ class DecrementActionCallable extends ReactterActionCallable<TestStore, int> {
 
 final stateExt = UseState(null);
 
-class TestController with ReactterNotifyManager {
+class TestController with ReactterState {
   final signalString = "initial".signal;
 
   final stateBool = UseState(false);
