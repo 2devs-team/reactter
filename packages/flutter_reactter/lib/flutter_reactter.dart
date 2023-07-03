@@ -2,13 +2,6 @@ library flutter_reactter;
 
 export 'package:reactter/reactter.dart';
 
-export 'core.dart' show InstanceBuilder, ListenStates, SelectorAspect;
-
-export 'widgets.dart'
-    show
-        ReactterBuildContextExtension,
-        ReactterComponent,
-        ReactterConsumer,
-        ReactterProvider,
-        ReactterProviders,
-        ReactterWatcher;
+export 'src/extensions.dart';
+export 'src/types.dart';
+export 'src/widgets.dart';

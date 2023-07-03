@@ -1,10 +1,11 @@
-part of '../../widgets.dart';
+part of '../framework.dart';
 
 /// A mixin that helps to manages dependencies
 /// and notify when should be updated its dependencies.
 mixin ReactterScopeElementMixin on InheritedElement {
   bool _updatedShouldNotify = false;
   final HashSet<Object> _instanceOrStatesDirty = HashSet();
+  HashSet<Object> get instanceOrStatesDirty => _instanceOrStatesDirty;
   final HashMap<Element, Object?> _dependents = HashMap<Element, Object?>();
 
   @override

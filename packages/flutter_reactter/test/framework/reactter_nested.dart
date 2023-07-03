@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_reactter/widgets.dart';
+import 'package:flutter_reactter/src/framework.dart';
+import 'package:flutter_reactter/src/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import '../../shareds/test_builder.dart';
-import '../../shareds/test_controller.dart';
+import '../shareds/test_builder.dart';
+import '../shareds/test_controller.dart';
 
 void main() {
   group("ReactterNestedWidget", () {

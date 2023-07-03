@@ -11,6 +11,7 @@ abstract class ReactterProviderAbstraction<T extends Object>
     required Widget child,
   }) : super(key: key, child: child);
 
+  @override
   ReactterProviderElement createElement();
 }
 
@@ -288,7 +289,7 @@ class ReactterProviderElement<T extends Object?> extends InheritedElement
 
   @override
   Widget build() {
-    if (_instanceOrStatesDirty.isNotEmpty) {
+    if (instanceOrStatesDirty.isNotEmpty) {
       notifyClients(widget);
 
       return _widget!;

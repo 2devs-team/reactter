@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_reactter/flutter_reactter.dart';
+import 'package:flutter_reactter/src/types.dart';
 
 import 'test_controller.dart';
 

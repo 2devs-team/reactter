@@ -1,4 +1,6 @@
-part of '../core.dart';
+import 'package:flutter/widgets.dart';
+
+import 'internals.dart';
 
 typedef SelectorAspect<T> = bool Function(InheritedElement inheritedElement);
 

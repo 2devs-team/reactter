@@ -1,125 +1,133 @@
 import 'package:flutter/widgets.dart';
-import 'package:flutter_reactter/flutter_reactter.dart';
+import 'package:flutter_reactter/src/extensions.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import '../../shareds/reactter_provider_builder.dart';
-import '../../shareds/reactter_providers_builder.dart';
-import '../../shareds/test_builder.dart';
-import '../../shareds/test_controller.dart';
+import '../shareds/reactter_provider_builder.dart';
+import '../shareds/reactter_providers_builder.dart';
+import '../shareds/test_builder.dart';
+import '../shareds/test_controller.dart';
 
 void main() {
   group("ReactterBuildContextExtension", () {
-    testWidgets("should throw exception when instance not found",
-        (tester) async {
-      bool hasException = false;
-
-      await tester.pumpWidget(
-        TestBuilder(
-          child: Builder(
-            builder: (context) {
-              try {
+    testWidgets(
+      "should throw exception when instance not found",
+      (tester) async {
+        await tester.pumpWidget(
+          TestBuilder(
+            child: Builder(
+              builder: (context) {
                 context.use<TestController>();
                 return const Text("Rendered");
-              } catch (e) {
-                hasException = true;
-                return Text(e.toString());
-              }
-            },
+              },
+            ),
           ),
-        ),
-      );
-      await tester.pumpAndSettle();
+        );
+        await tester.pumpAndSettle();
 
-      expectLater(hasException, true);
-      expect(find.text("Rendered"), findsNothing);
-    });
+        expect(
+          tester.takeException(),
+          isInstanceOf<ReactterInstanceNotFoundException>(),
+        );
+        expect(find.text("Rendered"), findsNothing);
+      },
+    );
 
-    testWidgets("should gets null when instance not found", (tester) async {
-      late TestController? instanceObtained;
+    testWidgets(
+      "should gets null when instance not found",
+      (tester) async {
+        late TestController? instanceObtained;
 
-      await tester.pumpWidget(
-        TestBuilder(
-          child: Builder(
-            builder: (context) {
-              instanceObtained = context.use<TestController?>();
+        await tester.pumpWidget(
+          TestBuilder(
+            child: Builder(
+              builder: (context) {
+                instanceObtained = context.use<TestController?>();
 
-              return Text(
-                "stateString: ${instanceObtained?.stateString.value ?? 'not found'}",
-              );
-            },
+                return Text(
+                  "stateString: ${instanceObtained?.stateString.value ?? 'not found'}",
+                );
+              },
+            ),
           ),
-        ),
-      );
-      await tester.pumpAndSettle();
+        );
+        await tester.pumpAndSettle();
 
-      expectLater(instanceObtained, null);
-      expect(find.text("stateString: not found"), findsOneWidget);
-    });
+        expectLater(instanceObtained, null);
+        expect(find.text("stateString: not found"), findsOneWidget);
+      },
+    );
 
-    testWidgets("should watch instance changes", (tester) async {
-      late TestController instanceObtained;
+    testWidgets(
+      "should watch instance changes",
+      (tester) async {
+        late TestController instanceObtained;
 
-      await tester.pumpWidget(
-        TestBuilder(
-          child: ReactterProviderBuilder(
-            builder: (_, context, __) {
-              instanceObtained = context.watch<TestController>();
+        await tester.pumpWidget(
+          TestBuilder(
+            child: ReactterProviderBuilder(
+              builder: (_, context, __) {
+                instanceObtained = context.watch<TestController>();
 
-              return Text("stateString: ${instanceObtained.stateString.value}");
-            },
+                return Text(
+                    "stateString: ${instanceObtained.stateString.value}");
+              },
+            ),
           ),
-        ),
-      );
-      await tester.pumpAndSettle();
+        );
+        await tester.pumpAndSettle();
 
-      expectLater(instanceObtained, isInstanceOf<TestController>());
-      expect(find.text("stateString: initial"), findsOneWidget);
+        expectLater(instanceObtained, isInstanceOf<TestController>());
+        expect(find.text("stateString: initial"), findsOneWidget);
 
-      instanceObtained.stateString.value = "new value";
-      await tester.pumpAndSettle();
+        instanceObtained.stateString.value = "new value";
+        await tester.pumpAndSettle();
 
-      expect(find.text("stateString: new value"), findsOneWidget);
-    });
+        expect(find.text("stateString: new value"), findsOneWidget);
+      },
+    );
 
-    testWidgets("should watch instance's states", (tester) async {
-      late TestController instanceObtained;
+    testWidgets(
+      "should watch instance's states",
+      (tester) async {
+        late TestController instanceObtained;
 
-      await tester.pumpWidget(
-        TestBuilder(
-          child: ReactterProviderBuilder(
-            builder: (_, context, __) {
-              instanceObtained = context.watch<TestController>(
-                (inst) => [inst.stateInt],
-              );
+        await tester.pumpWidget(
+          TestBuilder(
+            child: ReactterProviderBuilder(
+              builder: (_, context, __) {
+                instanceObtained = context.watch<TestController>(
+                  (inst) => [inst.stateInt],
+                );
 
-              return Column(
-                children: [
-                  Text("stateString: ${instanceObtained.stateString.value}"),
-                  Text("stateInt: ${instanceObtained.stateInt.value}"),
-                ],
-              );
-            },
+                return Column(
+                  children: [
+                    Text("stateString: ${instanceObtained.stateString.value}"),
+                    Text("stateInt: ${instanceObtained.stateInt.value}"),
+                  ],
+                );
+              },
+            ),
           ),
-        ),
-      );
-      await tester.pumpAndSettle();
+        );
+        await tester.pumpAndSettle();
 
-      expectLater(instanceObtained, isInstanceOf<TestController>());
-      expect(find.text("stateString: initial"), findsOneWidget);
-      expect(find.text("stateInt: 0"), findsOneWidget);
+        expectLater(instanceObtained, isInstanceOf<TestController>());
+        expect(find.text("stateString: initial"), findsOneWidget);
+        expect(find.text("stateInt: 0"), findsOneWidget);
 
-      instanceObtained.stateString.value = "new value";
-      await tester.pumpAndSettle();
+        instanceObtained.stateString.value = "new value";
+        await tester.pumpAndSettle();
 
-      expect(find.text("stateString: initial"), findsOneWidget);
-      expect(find.text("stateInt: 0"), findsOneWidget);
+        expect(find.text("stateString: initial"), findsOneWidget);
+        expect(find.text("stateInt: 0"), findsOneWidget);
 
-      instanceObtained.stateInt.value += 2;
-      await tester.pumpAndSettle();
+        instanceObtained.stateInt.value += 2;
+        await tester.pumpAndSettle();
 
-      expect(find.text("stateString: new value"), findsOneWidget);
-      expect(find.text("stateInt: 2"), findsOneWidget);
-    });
+        expect(find.text("stateString: new value"), findsOneWidget);
+        expect(find.text("stateInt: 2"), findsOneWidget);
+      },
+    );
 
     testWidgets(
         "should watch multiple instance's states, using different context.watch",
@@ -137,7 +145,7 @@ void main() {
               return Column(
                 children: [
                   Builder(builder: (context) {
-                    // any change of any hooks without id
+                    // any change of any states without id
                     context.watch<TestController>((inst) => [inst.stateString]);
                     context.watch<TestController>();
 

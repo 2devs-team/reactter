@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_reactter/widgets.dart';
+import 'package:flutter_reactter/src/extensions.dart';
+import 'package:flutter_reactter/src/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../shareds/reactter_providers_builder.dart';

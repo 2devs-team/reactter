@@ -83,7 +83,7 @@ abstract class ReactterComponent<T extends Object> extends StatelessWidget {
   /// Listens states to re-build [render] method.
   ListenStates<T>? get listenStates => null;
 
-  /// Watchs all states to re-build
+  /// Watchs all states to re-build [render] method.
   bool get listenAll => false;
 
   /// Replaces a build method.

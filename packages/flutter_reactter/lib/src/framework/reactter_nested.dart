@@ -1,4 +1,4 @@
-part of '../../widgets.dart';
+part of '../framework.dart';
 
 /// Organizes the widget as nested way
 class ReactterNestedWidget<W extends StatelessWidget> extends StatelessWidget {

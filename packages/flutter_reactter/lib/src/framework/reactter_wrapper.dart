@@ -1,4 +1,4 @@
-part of '../../widgets.dart';
+part of '../framework.dart';
 
 /// Abstract class to implementing a wrapper widget
 abstract class ReactterWrapperWidget implements Widget {
