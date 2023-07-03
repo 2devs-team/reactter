@@ -32,11 +32,11 @@ Implements: `ReactterWatcher`, `Signal`.
 
 Performs simple arithmetic operations on numbers
 
-> Learn how to use multiple signal.
+> Learn how to provide and consume a instance.
 
 [![Counter example](https://raw.githubusercontent.com/2devs-team/reactter_assets/main/examples/calculator_example.png)](https://github.com/2devs-team/reactter/tree/master/packages/flutter_reactter/example/lib/calculator)
 
-Implements: `ReactterProvider`, `ReactterWatcher`, `Signal`.
+Implements: `BuildContext.use`, `ReactterConsumer`, `ReactterProvider`, `Signal`.
 
 ## Todos
 
@@ -56,7 +56,7 @@ Add, remove product to cart and checkout.
 
 [![Shopping cart example](https://raw.githubusercontent.com/2devs-team/reactter_assets/main/examples/cart_example.gif)](https://github.com/2devs-team/reactter/tree/master/packages/flutter_reactter/example/lib/shopping_cart)
 
-Implements: `ReactterComponent`, `ReactterProvider`, `ReactterProviders`, `UseState`.
+Implements: `BuildContext.watch`, `ReactterComponent`, `ReactterProvider`, `ReactterProviders`, `UseState`.
 
 ## Tree widget
 
@@ -66,7 +66,7 @@ Add, remove and hide child widget with counter.
 
 [![Tree widget example](https://raw.githubusercontent.com/2devs-team/reactter_assets/main/examples/tree_example.gif)](https://github.com/2devs-team/reactter/tree/master/packages/flutter_reactter/example/lib/tree)
 
-Implements: `ReactterComponent`, `ReactterProvider`, `UseEffect`, `UseState`.
+Implements: `BuildContext.use`, `BuildContext.watchId`, `ReactterComponent`, `ReactterProvider`, `UseEffect`, `UseState`.
 
 ## Github search
 

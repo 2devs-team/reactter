@@ -4,7 +4,7 @@ import 'package:flutter_reactter/flutter_reactter.dart';
 import 'cart_page.dart';
 import 'controllers/cart_controller.dart';
 import 'controllers/products_controller.dart';
-import 'product_item.dart';
+import 'widgets/product_item.dart';
 
 class ShoppingCartPage extends StatelessWidget {
   const ShoppingCartPage({Key? key}) : super(key: key);

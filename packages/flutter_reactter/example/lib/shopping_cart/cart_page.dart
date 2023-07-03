@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_reactter/flutter_reactter.dart';
 
-import 'cart_product_item.dart';
+import 'widgets/cart_product_item.dart';
 import 'controllers/cart_controller.dart';
 import 'models/product_state.dart';
 

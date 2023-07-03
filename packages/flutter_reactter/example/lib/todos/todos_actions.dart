@@ -1,7 +1,7 @@
 import 'package:flutter_reactter/flutter_reactter.dart';
 
-import 'todo_entity.dart';
-import 'todos_store.dart';
+import 'models/todo.dart';
+import 'stores/todos_store.dart';
 
 class AddTodoAction extends ReactterActionCallable<TodosStore, Todo> {
   final Todo todo;

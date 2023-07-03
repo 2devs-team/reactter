@@ -1,4 +1,4 @@
-import 'todo_entity.dart';
+import '../models/todo.dart';
 
 enum TodoListType { all, done, todo }
 

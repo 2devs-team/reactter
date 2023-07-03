@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_reactter/flutter_reactter.dart';
 
-import 'todos_actions.dart';
-import 'todo_entity.dart';
-import 'todos_store.dart';
+import '../todos_actions.dart';
+import '../models/todo.dart';
+import '../stores/todos_store.dart';
 
 TodosStore _reducer(TodosStore state, ReactterAction action) =>
     action is ReactterActionCallable ? action(state) : UnimplementedError();

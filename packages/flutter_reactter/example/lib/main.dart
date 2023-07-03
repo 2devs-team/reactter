@@ -26,8 +26,9 @@ final items = <ListItem>[
     "Calculator",
     "Performs simple arithmetic operations on numbers",
     [
+      "BuilContext.use",
+      "ReactterConsumer",
       "ReactterProvider",
-      "ReactterWatcher",
       "Signal",
     ],
     () => const CalculatorPage(),
@@ -46,6 +47,7 @@ final items = <ListItem>[
     "Shopping Cart",
     "Add, remove product to cart and checkout",
     [
+      "BuilContext.watch",
       "ReactterComponent",
       "ReactterProvider",
       "ReactterProviders",
@@ -57,6 +59,8 @@ final items = <ListItem>[
     "Tree widget",
     "Add, remove and hide child widget with counter.",
     [
+      "BuilContext.use",
+      "BuilContext.watchId",
       "ReactterComponent",
       "ReactterProvider",
       "UseEffect",
@@ -95,7 +99,52 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData.light(),
       darkTheme: ThemeData.dark().copyWith(
-        toggleableActiveColor: ThemeData.dark().colorScheme.primary,
+        checkboxTheme: CheckboxThemeData(
+          fillColor: MaterialStateProperty.resolveWith<Color?>(
+              (Set<MaterialState> states) {
+            if (states.contains(MaterialState.disabled)) {
+              return null;
+            }
+            if (states.contains(MaterialState.selected)) {
+              return ThemeData.dark().colorScheme.primary;
+            }
+            return null;
+          }),
+        ),
+        radioTheme: RadioThemeData(
+          fillColor: MaterialStateProperty.resolveWith<Color?>(
+              (Set<MaterialState> states) {
+            if (states.contains(MaterialState.disabled)) {
+              return null;
+            }
+            if (states.contains(MaterialState.selected)) {
+              return ThemeData.dark().colorScheme.primary;
+            }
+            return null;
+          }),
+        ),
+        switchTheme: SwitchThemeData(
+          thumbColor: MaterialStateProperty.resolveWith<Color?>(
+              (Set<MaterialState> states) {
+            if (states.contains(MaterialState.disabled)) {
+              return null;
+            }
+            if (states.contains(MaterialState.selected)) {
+              return ThemeData.dark().colorScheme.primary;
+            }
+            return null;
+          }),
+          trackColor: MaterialStateProperty.resolveWith<Color?>(
+              (Set<MaterialState> states) {
+            if (states.contains(MaterialState.disabled)) {
+              return null;
+            }
+            if (states.contains(MaterialState.selected)) {
+              return ThemeData.dark().colorScheme.primary;
+            }
+            return null;
+          }),
+        ),
       ),
       home: Scaffold(
         appBar: AppBar(

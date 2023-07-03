@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_reactter/flutter_reactter.dart';
 
-import 'controllers/cart_controller.dart';
-import 'models/product_state.dart';
+import '../controllers/cart_controller.dart';
+import '../models/product_state.dart';
 
 class CartProductItem extends StatelessWidget {
   final ProductState product;

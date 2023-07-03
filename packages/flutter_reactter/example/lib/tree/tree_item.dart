@@ -51,7 +51,7 @@ class TreeItem extends ReactterComponent<TreeNode> {
                       alignment: Alignment.centerRight,
                       child: Text(
                         id,
-                        style: Theme.of(context).textTheme.caption,
+                        style: Theme.of(context).textTheme.bodySmall,
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
@@ -95,7 +95,7 @@ class TreeItem extends ReactterComponent<TreeNode> {
                   Expanded(
                     child: Text(
                       treeNode.path,
-                      style: Theme.of(context).textTheme.caption,
+                      style: Theme.of(context).textTheme.bodySmall,
                       maxLines: 3,
                     ),
                   ),
@@ -107,7 +107,7 @@ class TreeItem extends ReactterComponent<TreeNode> {
                   const SizedBox(width: 8),
                   Text(
                     "${treeNode.children.value.length}",
-                    style: Theme.of(context).textTheme.caption,
+                    style: Theme.of(context).textTheme.bodySmall,
                   ),
                 ],
               ),
@@ -117,7 +117,7 @@ class TreeItem extends ReactterComponent<TreeNode> {
                   const SizedBox(width: 8),
                   Text(
                     "${treeNode.count.value}",
-                    style: Theme.of(context).textTheme.caption,
+                    style: Theme.of(context).textTheme.bodySmall,
                   ),
                 ],
               ),
@@ -127,7 +127,7 @@ class TreeItem extends ReactterComponent<TreeNode> {
                   const SizedBox(width: 8),
                   Text(
                     "${treeNode.childrenTotal.value}",
-                    style: Theme.of(context).textTheme.caption,
+                    style: Theme.of(context).textTheme.bodySmall,
                   ),
                 ],
               ),
@@ -137,7 +137,7 @@ class TreeItem extends ReactterComponent<TreeNode> {
                   const SizedBox(width: 8),
                   Text(
                     "${treeNode.total}",
-                    style: Theme.of(context).textTheme.caption,
+                    style: Theme.of(context).textTheme.bodySmall,
                   ),
                 ],
               ),

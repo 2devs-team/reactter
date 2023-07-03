@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_reactter/flutter_reactter.dart';
 
 final count = 0.signal;
+
 void increase() => count.value++;
 void decrease() => count.value--;
 
@@ -27,9 +28,9 @@ class CounterPage extends StatelessWidget {
               },
             ),
             const SizedBox(height: 16),
-            Row(
+            const Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
+              children: [
                 ElevatedButton(
                   onPressed: decrease,
                   child: Text("–"),

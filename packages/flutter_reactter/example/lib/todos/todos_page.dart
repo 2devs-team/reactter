@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_reactter/flutter_reactter.dart';
 
-import 'todo_item.dart';
-import 'todos_controller.dart';
-import 'todos_store.dart';
+import 'widgets/todo_item.dart';
+import 'controllers/todos_controller.dart';
+import 'stores/todos_store.dart';
 
 class TodosPage extends StatelessWidget {
   const TodosPage({Key? key}) : super(key: key);

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_reactter/flutter_reactter.dart';
 
-import 'api_controller.dart';
+import 'controllers/api_controller.dart';
 import 'models/repository.dart';
 import 'models/user.dart';
-import 'repository_item.dart';
-import 'user_item.dart';
+import 'widgets/repository_item.dart';
+import 'widgets/user_item.dart';
 
 class ApiPage extends StatelessWidget {
   const ApiPage({Key? key}) : super(key: key);

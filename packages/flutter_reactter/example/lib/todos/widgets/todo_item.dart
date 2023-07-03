@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_reactter/flutter_reactter.dart';
 
-import 'todos_controller.dart';
-import 'todo_entity.dart';
+import '../controllers/todos_controller.dart';
+import '../models/todo.dart';
 
 class TodoItem extends StatelessWidget {
   final Todo todo;
