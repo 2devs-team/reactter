@@ -10,6 +10,7 @@ part 'widgets/engine/reactter_nested.dart';
 part 'widgets/engine/reactter_scope.dart';
 part 'widgets/engine/reactter_wrapper.dart';
 part 'widgets/reactter_component.dart';
+part 'widgets/reactter_consumer.dart';
 part 'widgets/reactter_provider.dart';
 part 'widgets/reactter_providers.dart';
 part 'widgets/reactter_watcher.dart';

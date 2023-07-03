@@ -8,6 +8,7 @@ export 'widgets.dart'
     show
         ReactterBuildContextExtension,
         ReactterComponent,
+        ReactterConsumer,
         ReactterProvider,
         ReactterProviders,
         ReactterWatcher;
