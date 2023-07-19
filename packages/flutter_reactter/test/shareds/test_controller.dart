@@ -6,6 +6,16 @@ class TestClass {
   TestClass(this.prop);
 }
 
+Future<String> _resolveStateAsync([bool throwError = false]) async {
+  if (throwError) {
+    throw Exception("has a error");
+  }
+
+  await Future.delayed(const Duration(microseconds: 1));
+
+  return "resolved";
+}
+
 class TestController {
   final signalString = "initial".signal;
   final signalInt = 0.signal;
@@ -17,16 +27,5 @@ class TestController {
   final stateList = UseState([]);
   final stateMap = UseState({});
   final stateClass = UseState<TestClass?>(null);
-
-  late final stateAsync = UseAsyncState("initial", _resolveStateAsync);
-
-  Future<String> _resolveStateAsync([bool throwError = false]) async {
-    if (throwError) {
-      throw Exception("has a error");
-    }
-
-    await Future.delayed(const Duration(microseconds: 1));
-
-    return "resolved";
-  }
+  final stateAsync = UseAsyncState("initial", _resolveStateAsync);
 }
