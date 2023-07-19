@@ -17,7 +17,7 @@ extension ReactterStateListExtension<E extends ReactterState> on List<E> {
   ///   ),
   /// );
   /// ```
-  List<ReactterState> when(
+  List<UseCompute> when(
     dynamic Function() condition, [
     dynamic Function()? condition2,
     dynamic Function()? condition3,
