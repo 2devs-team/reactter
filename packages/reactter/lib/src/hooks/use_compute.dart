@@ -7,32 +7,34 @@ part of '../hooks.dart';
 /// This example produces one simple [UseCompute]:
 /// ```dart
 /// class AppController {
-///   final numA = UseState(1);
-///   final numB = UseState(7);
-///   final numClamp = UseCompute(
-///     () => (numA + numB).clamp(10, 15),
-///     [numA, numB],
+///   final stateA = UseState(1);
+///   final stateB = UseState(7);
+///   late final computeState = UseCompute(
+///     () => (stateA + stateB).clamp(10, 15),
+///     [stateA, stateB],
 ///   );
 ///
 ///   AppController() {
-///     print(numClamp.value); // 10;
+///     print(computeState.value); // 10;
 ///
 ///     UseEffect((){
-///       print(numClamp.value);
+///       print(computeState.value);
 ///       // will print: 11, 15, 11
-///     }, [numClamp]);
+///     }, [computeState]);
 ///
-///     numA.value += 1; // numClamp doesn't change, its value is 10
-///     numB.value += 2; // numClamp changes, its value is 11
-///     numA.value += 4; // numClamp changes, its value is 15
-///     numB.value += 8; // numClamp doesn't change, its value is 15
-///     numA.value -= 8; // numClamp doesn't change, its value is 15
-///     numB.value -= 4; // numClamp changes, its value is 11
+///     stateA.value += 1; // numClamp doesn't change, its value is 10
+///     stateB.value += 2; // numClamp changes, its value is 11
+///     stateA.value += 4; // numClamp changes, its value is 15
+///     stateB.value += 8; // numClamp doesn't change, its value is 15
+///     stateA.value -= 8; // numClamp doesn't change, its value is 15
+///     stateB.value -= 4; // numClamp changes, its value is 11
 ///   }
 /// }
 /// ```
 ///
 class UseCompute<T> extends ReactterHook {
+  final $ = ReactterHook.$register;
+
   late T _valueComputed;
   final T Function() compute;
   final List<ReactterState> dependencies;

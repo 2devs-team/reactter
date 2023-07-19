@@ -50,14 +50,14 @@ part of '../hooks.dart';
 /// ```
 ///
 /// If you need to execute the UseEffect's [callback] inmediately created,
-/// use [DispatchEffect] on [context] parameter:
+/// use [dispatchEffect] on [context] parameter:
 ///
 ///
 /// ```dart
 /// UseEffect(
 ///   () => print("Prompt execution or state changed"),
 ///   [state],
-///   UseEffect.DispatchEffect,
+///   UseEffect.dispatchEffect,
 /// );
 /// ```
 /// or use mixin [DispatchEffect]:
@@ -67,7 +67,8 @@ part of '../hooks.dart';
 ///   AppController() {
 ///     UseEffect(
 ///       () => print("Prompt execution or state changed"),
-///       [state], this
+///       [state],
+///       this,
 ///     );
 ///   }
 /// }
@@ -80,6 +81,14 @@ part of '../hooks.dart';
 ///
 /// * [ReactterState], it receives as dependencies.
 class UseEffect extends ReactterHook {
+  Function? _cleanupCallback;
+  bool _isUpdating = false;
+  bool _initialized = false;
+
+  final $ = ReactterHook.$register;
+
+  static DispatchEffect get dispatchEffect => _DispatchEffect();
+
   /// Function to control side-effect and effect cleanup.
   final Function callback;
 
@@ -89,41 +98,93 @@ class UseEffect extends ReactterHook {
   /// It's used to specify the context in which the [UseEffect] hook is being used.
   /// If a context is provided, the [UseEffect] hook will listen
   /// for the `LifeCycle.didMount` and `LifeCycle.willUnmount` events of the [context]
-  /// and execute the [callback] function accordingly. If no context is provided,
+  /// and execute the [callback] method accordingly. If no context is provided,
   /// the hook will simply watch for changes in the specified `dependencies`.
   final Object? context;
-
-  static DispatchEffect get dispatchEffect => _DispatchEffect();
-
-  Function? _cleanupCallback;
-
-  bool _isUpdating = false;
 
   UseEffect(
     this.callback,
     this.dependencies, [
     this.context,
-  ]) : super() {
+  ]) {
+    _initialized = true;
+
     if (context == null) {
       _watchDependencies();
       return;
     }
 
     if (context is DispatchEffect) {
-      _runCallbackAndWatchDependencies(null, null);
+      _runCallbackAndWatchDependencies();
+      return;
     }
 
+    if (Reactter.isInstancesBuilding) return;
+
+    if (instanceAttached != null) {
+      _analyzeInstanceAttached();
+      return;
+    }
+
+    final instance = _getInstance(context);
+
+    if (instance != null) {
+      attachTo(instance);
+      return;
+    }
+
+    _watchDependencies();
+  }
+
+  void attachTo(Object instance) {
+    super.attachTo(instance);
+
+    if (!_initialized) return;
+
+    _analyzeInstanceAttached();
+  }
+
+  void _analyzeInstanceAttached() {
+    if (instanceAttached == null) return;
+
+    if (instanceAttached is DispatchEffect) {
+      _runCallbackAndWatchDependencies();
+      return;
+    }
+
+    _watchInstanceAttached();
+  }
+
+  void detachInstance() {
+    _unwatchInstanceAttached();
+
+    super.detachInstance();
+  }
+
+  void _watchInstanceAttached() {
     Reactter.on(
-      context,
+      instanceAttached,
       Lifecycle.didMount,
       _runCallbackAndWatchDependencies,
     );
     Reactter.on(
-      context,
+      instanceAttached,
       Lifecycle.willUnmount,
       _runCleanupAndUnwatchDependencies,
     );
-    Reactter.one(context, Lifecycle.destroyed, (_, __) => dispose());
+  }
+
+  void _unwatchInstanceAttached() {
+    Reactter.off(
+      instanceAttached,
+      Lifecycle.didMount,
+      _runCallbackAndWatchDependencies,
+    );
+    Reactter.off(
+      instanceAttached,
+      Lifecycle.willUnmount,
+      _runCleanupAndUnwatchDependencies,
+    );
   }
 
   /// Used to clean up resources and memory used by an object before it is
@@ -131,26 +192,18 @@ class UseEffect extends ReactterHook {
   void dispose() {
     _cleanupCallback = null;
 
-    Reactter.off(
-      context,
-      Lifecycle.didMount,
-      _runCallbackAndWatchDependencies,
-    );
-    Reactter.off(
-      context,
-      Lifecycle.willUnmount,
-      _runCleanupAndUnwatchDependencies,
-    );
+    _unwatchInstanceAttached();
+    _unwatchDependencies();
 
     super.dispose();
   }
 
-  void _runCallbackAndWatchDependencies(_, __) {
+  void _runCallbackAndWatchDependencies([_, __]) {
     _runCallback(_, __);
     _watchDependencies();
   }
 
-  void _runCleanupAndUnwatchDependencies(_, __) {
+  void _runCleanupAndUnwatchDependencies([_, __]) {
     _runCleanup(_, __);
     _unwatchDependencies();
   }
@@ -188,12 +241,18 @@ class UseEffect extends ReactterHook {
     _cleanupCallback?.call();
     _cleanupCallback = null;
   }
+
+  Object? _getInstance(Object? instance) {
+    return instance is ReactterState && Reactter.find(instance) == null
+        ? _getInstance(instance.instanceAttached)
+        : instance;
+  }
 }
 
-mixin DispatchEffect {}
+abstract class DispatchEffect {}
 
 class _DispatchEffect with DispatchEffect {
-  static final _DispatchEffect inst = _DispatchEffect._();
+  static final inst = _DispatchEffect._();
 
   factory _DispatchEffect() {
     return inst;

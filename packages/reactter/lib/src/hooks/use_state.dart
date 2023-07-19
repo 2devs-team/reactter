@@ -39,6 +39,8 @@ part of '../hooks.dart';
 /// ```
 ///
 class UseState<T> extends ReactterHook {
+  final $ = ReactterHook.$register;
+
   UseState(this.initial);
 
   /// The initial value in state.

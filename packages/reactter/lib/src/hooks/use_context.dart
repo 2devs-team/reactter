@@ -45,69 +45,44 @@ part of '../hooks.dart';
 /// * [ReactterInstanceManager], a instances manager.
 /// * [UseEffect], a side-effect manager.
 class UseContext<T extends Object> extends ReactterHook {
-  final String? id;
+  final $ = ReactterHook.$register;
 
   bool _isDisposed = false;
-
   T? _instance;
+
   T? get instance {
     assert(!_isDisposed);
-
     return _instance;
   }
 
+  final String? id;
+
   UseContext([this.id]) {
-    _getInstance();
-
-    Reactter.on(ReactterInstance<T>(id), Lifecycle.destroyed, _onInstance);
-
-    if (instance != null) return;
+    update(() => _instance = Reactter.get<T>(id));
 
     Reactter.on(ReactterInstance<T>(id), Lifecycle.initialized, _onInstance);
     Reactter.on(ReactterInstance<T>(id), Lifecycle.willMount, _onInstance);
-  }
-
-  @override
-  void attachTo(Object instance) {
-    super.attachTo(instance);
-    Reactter.one(instance, Lifecycle.destroyed, _onParentDestroyed);
-  }
-
-  void detachTo(Object instance) {
-    Reactter.off(instance, Lifecycle.destroyed, _onParentDestroyed);
-    super.detachTo(instance);
+    Reactter.on(ReactterInstance<T>(id), Lifecycle.destroyed, _onInstance);
   }
 
   /// Call when this hook is no longer needed.
   void dispose() {
     if (_isDisposed) return;
 
+    _isDisposed = true;
+
     Reactter.off(ReactterInstance<T>(id), Lifecycle.initialized, _onInstance);
     Reactter.off(ReactterInstance<T>(id), Lifecycle.willMount, _onInstance);
     Reactter.off(ReactterInstance<T>(id), Lifecycle.destroyed, _onInstance);
 
-    update(() {
-      _instance = null;
-    });
-
-    _isDisposed = true;
+    update(() => _instance = null);
 
     super.dispose();
-  }
-
-  void _getInstance() {
-    update(() {
-      _instance = Reactter.get<T>(id);
-    });
   }
 
   void _onInstance(inst, param) {
     if (_isDisposed) return;
 
-    update(() {
-      _instance = inst;
-    });
+    update(() => _instance = inst);
   }
-
-  void _onParentDestroyed(_, __) => dispose();
 }

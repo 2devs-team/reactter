@@ -60,33 +60,39 @@ enum UseAsyncStateStatus {
 /// Its status may be obtained using the getters [value] and [error],
 /// and restore it to its [initial] state using the [reset] method.
 class UseAsyncState<T, A> extends ReactterHook {
-  /// Works as a the [value] initializer.
-  /// Need to call [resolve] to execute.
-  final AsyncFunction<T, A> asyncValue;
+  final $ = ReactterHook.$register;
+
+  final UseState<T> _value;
+  final _error = UseState<Object?>(null);
+  final _status = UseState(UseAsyncStateStatus.standby);
 
   T get value => _value.value;
   Object? get error => _error.value;
   UseAsyncStateStatus get status => _status.value;
 
-  final T _initial;
-  late final _value = UseState<T>(_initial);
-  late final _error = UseState<Object?>(null);
-  late final _status = UseState(UseAsyncStateStatus.standby);
+  /// Works as a the [value] initializer.
+  /// Need to call [resolve] to execute.
+  final AsyncFunction<T, A> asyncValue;
 
   UseAsyncState(
     T initial,
     this.asyncValue,
-  )   : _initial = initial,
-        super() {
-    UseEffect(() {
-      _status.value = UseAsyncStateStatus.done;
-    }, [_value]);
+  ) : _value = UseState(initial) {
+    UseEffect(
+      () {
+        _status.value = UseAsyncStateStatus.done;
+      },
+      [_value],
+    );
 
-    UseEffect(() {
-      if (_error.value != null) {
-        _status.value = UseAsyncStateStatus.error;
-      }
-    }, [_error]);
+    UseEffect(
+      () {
+        if (_error.value != null) {
+          _status.value = UseAsyncStateStatus.error;
+        }
+      },
+      [_error],
+    );
   }
 
   /// Execute [asyncValue] to resolve [value].
