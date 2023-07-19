@@ -58,7 +58,7 @@ class ReactterConsumer<T extends Object?> extends StatelessWidget {
     this.listenStates,
     this.listenAll = false,
     this.child,
-    this.builder,
+    required this.builder,
   }) : super(key: key);
 
   /// This identifier can be used to differentiate
@@ -81,7 +81,7 @@ class ReactterConsumer<T extends Object?> extends StatelessWidget {
   ///
   /// This callback function is responsible for building the widget tree
   /// based on the obtained instance and the provided child widget.
-  final InstanceBuilder<T>? builder;
+  final InstanceBuilder<T> builder;
 
   @override
   Widget build(BuildContext context) {
@@ -89,18 +89,16 @@ class ReactterConsumer<T extends Object?> extends StatelessWidget {
       !listenAll || listenStates == null,
       "Can't use `listenAll` with `listenStates`",
     );
-    assert(child != null || builder != null);
 
-    return builder?.call(
-          ReactterProvider.contextOf<T>(
-            context,
-            id: id,
-            listen: listenAll || listenStates != null,
-            listenStates: listenStates,
-          ),
-          context,
-          child,
-        ) ??
-        child!;
+    return builder(
+      ReactterProvider.contextOf<T>(
+        context,
+        id: id,
+        listen: listenAll || listenStates != null,
+        listenStates: listenStates,
+      ),
+      context,
+      child,
+    );
   }
 }
