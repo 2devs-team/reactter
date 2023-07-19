@@ -184,21 +184,18 @@ mixin ReactterInstanceManager {
 
   /// Creates an instance of a generic type and attaches it to [ReactterState].
   void _createInstanceAndAttachToStates<T>(ReactterInstance reactterInstance) {
-    final _isBusy = Reactter._instancesBuilding;
-    final List<ReactterState> _statesTemp =
-        _isBusy ? List.from(Reactter._statesRecollected) : [];
+    final _isBusy = Reactter.isInstancesBuilding;
+    final _statesTemp = [if (_isBusy) ...Reactter._statesRecollected];
+
+    Reactter.isInstancesBuilding = true;
 
     if (_isBusy) Reactter._statesRecollected.clear();
-
-    Reactter._instancesBuilding = true;
 
     final instance = _createInstance<T>(reactterInstance);
 
     if (instance != null) {
-      final states = List.from(Reactter._statesRecollected);
-
-      for (final state in states) {
-        state.attachTo(instance);
+      for (final state in [...Reactter._statesRecollected]) {
+        if (state.instanceAttached == null) state.attachTo(instance);
       }
     }
 
@@ -206,7 +203,7 @@ mixin ReactterInstanceManager {
 
     if (_isBusy) Reactter._statesRecollected.addAll(_statesTemp);
 
-    Reactter._instancesBuilding = false;
+    Reactter.isInstancesBuilding = false;
   }
 
   /// Creates an instance of a given type using a [ReactterInstance].

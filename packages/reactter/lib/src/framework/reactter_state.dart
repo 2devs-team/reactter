@@ -6,19 +6,27 @@ part of '../framework.dart';
 /// the state, notifying listeners of state changes, and disposing of the state
 /// object when it is no longer needed.
 abstract class ReactterState {
+  static Object? _instanceToAttach;
+
   /// The instance where it was created
-  Object? _instance;
+  Object? _instanceAttached;
   bool _isDisposed = false;
-  bool get isDisposed => _isDisposed;
   bool _isUpdating = false;
+
+  Object? get instanceAttached => _instanceAttached;
+  bool get isDisposed => _isDisposed;
   bool get _hasListeners =>
       Reactter._hasListeners(this) ||
-      (_instance != null && Reactter._hasListeners(_instance));
+      (_instanceAttached != null && Reactter._hasListeners(_instanceAttached));
 
   /// Adds the current state to a list if instances of the Reactter class are being built.
   @mustCallSuper
   void createState() {
-    if (Reactter._instancesBuilding) {
+    if (_instanceToAttach != null) {
+      attachTo(_instanceToAttach!);
+    }
+
+    if (Reactter.isInstancesBuilding) {
       Reactter._statesRecollected.add(this);
     }
   }
@@ -26,19 +34,24 @@ abstract class ReactterState {
   /// Attaches an object instance to this state.
   @mustCallSuper
   void attachTo(Object instance) {
-    if (_instance != null && _instance != instance) detachTo(_instance!);
+    // if (_instanceAttached != null) return;
+    assert(
+      _instanceAttached == null,
+      "Can't attach a new instance because an instance is already.\n"
+      "Use `detachInstance` method, if you want to attach a new instance.",
+    );
 
     Reactter.one(instance, Lifecycle.destroyed, _onInstanceDestroyed);
-
-    _instance = instance;
+    _instanceAttached = instance;
   }
 
   /// Detaches an object instance to this state.
   @mustCallSuper
-  void detachTo(Object instance) {
-    Reactter.off(instance, Lifecycle.destroyed, _onInstanceDestroyed);
+  void detachInstance() {
+    if (_instanceAttached == null) return;
 
-    _instance = null;
+    Reactter.off(_instanceAttached, Lifecycle.destroyed, _onInstanceDestroyed);
+    _instanceAttached = null;
   }
 
   /// Executes [fnUpdate], and notify the listeners about to update.
@@ -97,10 +110,15 @@ abstract class ReactterState {
   void dispose() {
     _isDisposed = true;
 
-    if (_instance != null) {
-      Reactter.off(_instance, Lifecycle.destroyed, _onInstanceDestroyed);
+    if (_instanceAttached != null) {
+      Reactter.off(
+        _instanceAttached,
+        Lifecycle.destroyed,
+        _onInstanceDestroyed,
+      );
+
+      _instanceAttached = null;
     }
-    _instance = null;
 
     Reactter.dispose(this);
   }
@@ -111,16 +129,16 @@ abstract class ReactterState {
   void _notify(Enum event) {
     Reactter.emit(this, event, this);
 
-    if (_instance != null) {
-      Reactter.emit(_instance!, event, this);
+    if (_instanceAttached != null) {
+      Reactter.emit(_instanceAttached!, event, this);
     }
   }
 
   Future<void> _notifyAsync(Enum event) async {
     await Reactter.emitAsync(this, event, this);
 
-    if (_instance != null) {
-      await Reactter.emitAsync(_instance!, event, this);
+    if (_instanceAttached != null) {
+      await Reactter.emitAsync(_instanceAttached!, event, this);
     }
   }
 }
