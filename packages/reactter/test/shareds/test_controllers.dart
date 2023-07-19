@@ -42,62 +42,61 @@ class DecrementActionCallable extends ReactterActionCallable<TestStore, int> {
   }
 }
 
-final stateExt = UseState(null);
+Future<String> _resolveStateAsync([bool throwError = false]) async {
+  if (throwError) {
+    throw Exception("has a error");
+  }
+
+  await Future.delayed(const Duration(microseconds: 1));
+
+  return "resolved";
+}
+
+TestStore _reducer(TestStore state, ReactterAction action) {
+  if (action is ReactterActionCallable) {
+    return action(state);
+  }
+
+  switch (action.type) {
+    case 'INCREMENT':
+      return TestStore(
+        count: state.count + (action.payload as int),
+      );
+    case 'DECREMENT':
+      return TestStore(
+        count: state.count - (action.payload as int),
+      );
+    default:
+      throw UnimplementedError();
+  }
+}
 
 class TestController with ReactterState {
   final signalString = "initial".signal;
 
-  final stateBool = UseState(false);
+  late final stateBool = UseState(false);
   final stateString = UseState("initial");
   final stateInt = UseState(0);
   final stateDouble = UseState(0.0);
   final stateList = UseState([]);
   final stateMap = UseState({});
   final stateClass = UseState<TestClass?>(null);
-  late final stateAsync = UseAsyncState("initial", _resolveStateAsync);
-  late final stateReduce = UseReducer(_reducer, TestStore(count: 0));
+  final stateAsync = UseAsyncState("initial", _resolveStateAsync);
+  final stateReduce = UseReducer(_reducer, TestStore(count: 0));
 
-  TestController() {
-    stateExt.attachTo(this); // for coverage
-  }
-
-  Future<String> _resolveStateAsync([bool throwError = false]) async {
-    if (throwError) {
-      throw Exception("has a error");
-    }
-
-    await Future.delayed(const Duration(microseconds: 1));
-
-    return "resolved";
-  }
-
-  TestStore _reducer(TestStore state, ReactterAction action) {
-    if (action is ReactterActionCallable) {
-      return action(state);
-    }
-
-    switch (action.type) {
-      case 'INCREMENT':
-        return TestStore(
-          count: state.count + (action.payload as int),
-        );
-      case 'DECREMENT':
-        return TestStore(
-          count: state.count - (action.payload as int),
-        );
-      default:
-        throw UnimplementedError();
-    }
-  }
+  late final stateCompute = Reactter.lazy(
+    () => UseCompute(
+      () => (stateInt.value + stateDouble.value).clamp(5, 10),
+      [stateInt, stateDouble],
+    ),
+    this,
+  );
 }
-
-final testControllerExt = UseContext<TestController>();
 
 class Test2Controller {
   final testController = UseContext<TestController>();
 
   Test2Controller() {
-    testControllerExt.attachTo(this); // for coverage
     Reactter.create(builder: () => TestController());
   }
 }
@@ -106,7 +105,8 @@ class Test3Controller {
   final test2Controller = UseContext<Test2Controller>();
 
   Test3Controller() {
-    testControllerExt.attachTo(this); // for coverage
     Reactter.create(builder: () => Test2Controller());
   }
 }
+
+final test3Controller = UseContext<Test3Controller>();

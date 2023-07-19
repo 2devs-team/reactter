@@ -3,13 +3,18 @@ import 'package:reactter/reactter.dart';
 
 import '../shareds/test_controllers.dart';
 
-class MyClass {
-  final String prop;
-
-  MyClass(this.prop);
-}
-
 void main() {
+  test("UseEffect should detach previous instance", () {
+    final testController = Reactter.create(builder: () => TestController());
+    final uEffect = UseEffect(() {}, [], testController);
+
+    expect(uEffect.instanceAttached, isA<TestController>());
+
+    uEffect.detachInstance();
+
+    expect(uEffect.instanceAttached, isNull);
+  });
+
   group("UseEffect's callback", () {
     test("should be called when its dependencies has changed", () {
       final testController = TestController();
@@ -41,8 +46,8 @@ void main() {
       expectLater(isCalled, true);
     });
 
-    test("should be called after context did mount", () {
-      final testController = Reactter.create(builder: () => TestController())!;
+    test("should be called after instance did mount", () {
+      final testController = Reactter.create(builder: () => TestController());
 
       int nCalls = 0;
 
@@ -50,11 +55,62 @@ void main() {
         nCalls += 1;
       }, [], testController);
 
+      expect(nCalls, 0);
+
       Reactter.emit(testController, Lifecycle.didMount);
 
-      Reactter.unregister<TestController>();
+      expect(nCalls, 1);
+
+      Reactter.delete<TestController>();
+    });
+
+    test("should be called with DispatchEffect when it initialized later", () {
+      final testController = Reactter.create(builder: () => TestController());
+      int nCalls = 0;
+
+      late final uEffect = Reactter.lazy(
+        () {
+          return UseEffect(
+            () {
+              nCalls += 1;
+            },
+            [],
+            testController,
+          );
+        },
+        UseEffect.dispatchEffect,
+      );
+
+      expect(nCalls, 0);
+      expect(uEffect, isA<UseEffect>());
+      expect(uEffect.instanceAttached, isNot(isA<TestController>()));
+      expect(nCalls, 1);
+
+      Reactter.delete<TestController>();
+    });
+
+    test("shouldn't be called by instance that was not registered", () {
+      final testController = TestController();
+      int nCalls = 0;
+
+      final uEffect = UseEffect(
+        () {
+          nCalls += 1;
+        },
+        [testController.stateString, testController.stateInt],
+        testController,
+      );
+
+      expect(uEffect.instanceAttached, isNull);
+      expect(nCalls, 0);
+
+      testController.stateString.value = 'other value';
 
       expect(nCalls, 1);
+
+      testController.stateInt.value += 1;
+
+      expect(nCalls, 2);
     });
   });
 

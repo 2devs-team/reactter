@@ -59,16 +59,67 @@ void main() {
     });
 
     test("should be created as nested way", () {
-      final test3Controller =
-          Reactter.create(builder: () => Test3Controller())!;
-      late final test2Controller = test3Controller.test2Controller.instance;
-      late final testController = test2Controller?.testController.instance;
+      expect(
+        test3Controller.instance,
+        isNull,
+      );
+      expect(
+        test3Controller.instance?.test2Controller.instance,
+        isNull,
+      );
+      expect(
+        test3Controller
+            .instance?.test2Controller.instance?.testController.instance,
+        isNull,
+      );
 
-      expectLater(testControllerExt.instance, isA<TestController>());
-      expectLater(test2Controller, isA<Test2Controller>());
-      expectLater(testController, isA<TestController>());
+      Reactter.create(builder: () => Test3Controller());
+
+      expect(
+        test3Controller.instance,
+        isA<Test3Controller>(),
+      );
+      expect(
+        test3Controller.instance?.test2Controller.instance,
+        isA<Test2Controller>(),
+      );
+      expect(
+        test3Controller
+            .instance?.test2Controller.instance?.testController.instance,
+        isA<TestController>(),
+      );
 
       Reactter.delete<Test2Controller>();
+
+      expect(
+        test3Controller.instance,
+        isA<Test3Controller>(),
+      );
+      expect(
+        test3Controller.instance?.test2Controller.instance,
+        isNull,
+      );
+      expect(
+        test3Controller
+            .instance?.test2Controller.instance?.testController.instance,
+        isNull,
+      );
+
+      Reactter.delete<Test3Controller>();
+
+      expect(
+        test3Controller.instance,
+        isNull,
+      );
+      expect(
+        test3Controller.instance?.test2Controller.instance,
+        isNull,
+      );
+      expect(
+        test3Controller
+            .instance?.test2Controller.instance?.testController.instance,
+        isNull,
+      );
     });
   });
 }
