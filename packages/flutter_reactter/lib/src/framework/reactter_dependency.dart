@@ -59,7 +59,7 @@ class ReactterDependency<T> {
       for (final state in _states!) {
         Reactter.off(state, Lifecycle.didUpdate, callback);
 
-        if (state is UseCompute) {
+        if (state is UseCompute && state.instanceAttached == null) {
           state.dispose();
         }
       }
