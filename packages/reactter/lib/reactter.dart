@@ -1,6 +1,7 @@
 library reactter;
 
-export 'src/framework.dart' show Reactter, ReactterHook, ReactterState;
+export 'src/framework.dart'
+    show Reactter, ReactterHook, ReactterState, ReactterInstance;
 export 'src/hooks.dart';
 export 'src/lifecycle.dart';
 export 'src/objs.dart';
