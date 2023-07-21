@@ -5,6 +5,7 @@ import 'package:reactter_lint/src/rules/hook_name_convention.dart';
 import 'package:reactter_lint/src/rules/invalid_hook_position.dart';
 import 'package:reactter_lint/src/rules/invalid_hook_register.dart';
 
+/// The function creates an instance of the _ReactterLinter class and returns it as a PluginBase object.
 PluginBase createPlugin() => _ReactterLinter();
 
 /// The _ReactterLinter class is a plugin base for linting in Dart.
