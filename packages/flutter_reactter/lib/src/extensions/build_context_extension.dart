@@ -140,6 +140,7 @@ There are a few common scenarios:
       // we use `builder` to obtain a new `BuildContext` that has access to the provider
       builder: (appController, context, child) {
         // No longer throws
+        context.watch<AppController>();
         return Text(appController.state.value),
       }
     ),
