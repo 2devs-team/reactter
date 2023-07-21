@@ -1,5 +1,51 @@
 # Reactter
 
+## 5.1.0
+
+### Enhancements
+
+- **feat(framework):** Implement hook register.
+  - Add hook register logic for attaching `ReactterState` defined into `ReactterHook`.
+  - Refactor hooks to implement hook register.
+- **feat(framework):** Add `lazy` method and make `isInstanceBuilding` variable as public.
+- **feat(extensions):** Add `ReactterStateListExtension` with `when` method.
+- **feat(hooks):** Add `UseCompute` hook.
+- **feat(widget, test):** Add `ReactterConsumer` widget.
+
+### Internal
+
+- **build(example):** Use `reactter_lint`.
+- **build(widgets):** Remove unnecesary import.
+- **doc:** Fix `ReactterInstanceNotFoundException` documentation.
+- **refactor(framework):** Export `ReactterInstance`.
+- **doc(example):** Add and remove some concepts from main.
+- **refactor(example):** Remove late keyword form some hooks.
+- **refactor(example):** Implement play and stop animation.
+- **refactor(framework):** Rename `_RegisterHook` to `HookRegister`.
+- **test:** Add `ReactterStateListExtension` test and other adjustments.
+- **refactor(widgets):** Make `ReactterConsumer.builder` required.
+- **fix(framework):** Add instance attached validation before `UseCompute` is disponsed.
+- **refactor(extensions):** Use `UseCompute` type on `when` method.
+- **test:** Add `UseCompute` test and other adjustments.
+- **build(example):** Change folder structure.
+- **build:** Change folder structure for `flutter_reactter` package.
+  - Move all files to `src`.
+  - Rename `ReactterTypes` to `types`.
+  - `engine` was separated into `extensions`, `framework` and `types`.
+  - Change folder structure of `test`.
+- **build:** Change folder structure for `reactter` package.
+  - Move all files to `src`.
+  - Rename `ReactterTypes` to `types`.
+  - `core` was separated into `framework`, `objs`, `signals`, `lifecycle`, `types`.
+  - Change folder structure of `test`.
+- **refactor(core, widgets):** Implement Reactter event to Signal generic.
+  - Remove `ReactterSignalProxy`.
+  - Move `Obj`, `Signal` to other folder.
+  - Refactor `ReactterWatcher` to the new changes.
+- **refactor(core):** Remove `ReactterNotifyManager`.
+  - `ReactterNotifyManager` is no longer used, all its methods were moved to `ReactterState`.
+  - `Lifecycle` enum was move to new file(`lifecycle.dart`).
+
 ## 5.0.1
 
 ### Internal
