@@ -7,6 +7,7 @@ import 'package:reactter_lint/src/rules/invalid_hook_register.dart';
 
 PluginBase createPlugin() => _ReactterLinter();
 
+/// The _ReactterLinter class is a plugin base for linting in Dart.
 class _ReactterLinter extends PluginBase {
   @override
   List<LintRule> getLintRules(CustomLintConfigs configs) {

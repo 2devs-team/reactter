@@ -8,6 +8,8 @@ import 'package:reactter_lint/src/extensions.dart';
 import 'package:reactter_lint/src/helpers.dart';
 import 'package:reactter_lint/src/types.dart';
 
+/// The InvalidHookPosition class is a DartLintRule that detects and reports invalid hook positions in
+/// code.
 class InvalidHookPosition extends DartLintRule {
   const InvalidHookPosition() : super(code: _code);
 
@@ -24,7 +26,6 @@ class InvalidHookPosition extends DartLintRule {
     required CustomLintContext context,
     required Function(Declaration node, Element element) onInvalid,
   }) {
-
     context.registry.addClassDeclaration((node) {
       final declaredElement = node.declaredElement;
 

@@ -7,6 +7,7 @@ import 'package:custom_lint_builder/custom_lint_builder.dart';
 import 'package:reactter_lint/src/consts.dart';
 import 'package:reactter_lint/src/types.dart';
 
+/// The HookNameConvention class is a DartLintRule that enforces a specific naming convention for hooks.
 class HookNameConvention extends DartLintRule {
   const HookNameConvention() : super(code: _code);
 
@@ -65,6 +66,7 @@ class HookNameConvention extends DartLintRule {
   }
 }
 
+/// The _HookNameFix class is a Dart fix that helps with fixing hook names.
 class _HookNameFix extends DartFix {
   @override
   void run(

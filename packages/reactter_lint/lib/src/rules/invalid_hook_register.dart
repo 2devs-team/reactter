@@ -8,6 +8,7 @@ import 'package:reactter_lint/src/consts.dart';
 import 'package:reactter_lint/src/helpers.dart';
 import 'package:reactter_lint/src/types.dart';
 
+/// The InvalidHookRegister class is a DartLintRule that detects and reports invalid hook registrations.
 class InvalidHookRegister extends DartLintRule {
   const InvalidHookRegister() : super(code: _code);
 
@@ -72,6 +73,8 @@ class InvalidHookRegister extends DartLintRule {
   }
 }
 
+/// The `_HookRegisterFix` class is a Dart fix that performs a specific action related to hook
+/// registration.
 class _HookRegisterFix extends DartFix {
   @override
   void run(

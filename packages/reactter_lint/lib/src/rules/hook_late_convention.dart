@@ -6,6 +6,8 @@ import 'package:custom_lint_builder/custom_lint_builder.dart';
 import 'package:reactter_lint/src/extensions.dart';
 import 'package:reactter_lint/src/types.dart';
 
+/// The `HookLateConvention` class is a DartLint rule that enforces a specific naming convention for
+/// hooks.
 class HookLateConvention extends DartLintRule {
   const HookLateConvention() : super(code: _code);
 
@@ -70,6 +72,8 @@ class HookLateConvention extends DartLintRule {
   }
 }
 
+/// The `_HookLateFix` class is a Dart fix that provides a solution for a specific issue related to late
+/// variables.
 class _HookLateFix extends DartFix {
   @override
   void run(
