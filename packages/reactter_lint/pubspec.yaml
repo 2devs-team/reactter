@@ -1,6 +1,6 @@
 name: reactter_lint
 description: Reactter_lint is an analytics tool for Reactter that helps developers to encourage good coding practices and preventing frequent problems.
-version: 0.0.1
+version: 0.0.2
 homepage: https://2devs.io
 license: MIT License
 repository: https://github.com/2devs-team/reactter
