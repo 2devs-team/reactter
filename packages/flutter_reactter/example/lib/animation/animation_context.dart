@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_reactter/flutter_reactter.dart';
 import 'use_animation.dart';
 
 class AnimationContext {
@@ -62,4 +63,34 @@ class AnimationContext {
       curve: Curves.easeInOut,
     ),
   );
+
+  late final isAllAnimationsPlaying = Reactter.lazy(() {
+    return UseCompute(
+      () {
+        return [
+          sizeAnimation.control,
+          borderRadiusAnimation.control,
+          colorAnimation.control,
+        ].every((control) => control.value != AnimationControl.stop);
+      },
+      [
+        sizeAnimation.control,
+        borderRadiusAnimation.control,
+        colorAnimation.control,
+      ],
+    );
+  }, this);
+
+  void togglePlayAllAnimations() {
+    if (isAllAnimationsPlaying.value) {
+      sizeAnimation.stop();
+      borderRadiusAnimation.stop();
+      colorAnimation.stop();
+      return;
+    }
+
+    sizeAnimation.mirror();
+    borderRadiusAnimation.mirror();
+    colorAnimation.mirror();
+  }
 }

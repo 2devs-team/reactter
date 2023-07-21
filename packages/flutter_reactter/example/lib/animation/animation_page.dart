@@ -18,32 +18,11 @@ class AnimationPage extends StatelessWidget {
           body: Center(
             child: Wrap(
               spacing: 16,
-              alignment: WrapAlignment.center,
-              runAlignment: WrapAlignment.center,
+              runSpacing: 16,
+              alignment: WrapAlignment.spaceEvenly,
               crossAxisAlignment: WrapCrossAlignment.center,
-              direction: Axis.vertical,
+              direction: Axis.horizontal,
               children: [
-                SizedBox.square(
-                  dimension: 100,
-                  child: Center(
-                    child: Builder(
-                      builder: (context) {
-                        context.watch<AnimationContext>(
-                          (inst) => [inst.sizeAnimation],
-                        );
-
-                        return Container(
-                          width: animationContext.sizeAnimation.value,
-                          height: animationContext.sizeAnimation.value,
-                          decoration: const BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.blue,
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                ),
                 Builder(
                   builder: (context) {
                     context.watch<AnimationContext>(
@@ -60,6 +39,24 @@ class AnimationPage extends StatelessWidget {
                       ),
                     );
                   },
+                ),
+                SizedBox.square(
+                  dimension: 100,
+                  child: Center(
+                    child: Builder(
+                      builder: (context) {
+                        context.watch<AnimationContext>(
+                          (inst) => [inst.sizeAnimation],
+                        );
+
+                        return Container(
+                          width: animationContext.sizeAnimation.value,
+                          height: animationContext.sizeAnimation.value,
+                          color: Colors.red,
+                        );
+                      },
+                    ),
+                  ),
                 ),
                 Builder(
                   builder: (context) {
@@ -85,9 +82,9 @@ class AnimationPage extends StatelessWidget {
                           width: animationContext.sizeAnimation.value,
                           height: animationContext.sizeAnimation.value,
                           decoration: BoxDecoration(
+                            color: animationContext.colorAnimation.value,
                             borderRadius:
                                 animationContext.borderRadiusAnimation.value,
-                            color: animationContext.colorAnimation.value,
                           ),
                         );
                       },
@@ -95,6 +92,22 @@ class AnimationPage extends StatelessWidget {
                   ),
                 ),
               ],
+            ),
+          ),
+          floatingActionButton: FloatingActionButton(
+            onPressed: animationContext.togglePlayAllAnimations,
+            child: Builder(
+              builder: (context) {
+                context.watch<AnimationContext>(
+                  (inst) => [inst.isAllAnimationsPlaying],
+                );
+
+                if (animationContext.isAllAnimationsPlaying.value) {
+                  return const Icon(Icons.pause);
+                }
+
+                return const Icon(Icons.play_arrow);
+              },
             ),
           ),
         );

@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_reactter/flutter_reactter.dart';
 
-/// Set of instruction you can pass into a [CustomAnimation.control].
+/// Defines different control options for playing an animation. Each option
+/// represents a specific behavior for the animation playback:
 enum AnimationControl {
   /// Plays the animation from the current position to the end.
   play,
@@ -21,14 +22,10 @@ enum AnimationControl {
   playReverseFromEnd,
 
   /// Endlessly plays the animation from the start to the end.
-  /// Make sure to utilize [CustomAnimation.child] since a permanent
-  /// animation eats up performance.
   loop,
 
   /// Endlessly plays the animation from the start to the end, then
   /// it plays reverse to the start, then forward again and so on.
-  /// Make sure to utilize [CustomAnimation.child] since a permanent
-  /// animation eats up performance.
   mirror,
 
   /// Stops the animation at the current position.
@@ -86,7 +83,22 @@ extension _AnimationControllerExtension on AnimationController {
   /// canceled.
   TickerFuture mirror({Duration? duration}) {
     this.duration = duration ?? this.duration;
-    return repeat(reverse: true);
+
+    stopMirror();
+    addStatusListener(_tickMirror);
+
+    return _tickMirror(status);
+  }
+
+  void stopMirror() => removeStatusListener(_tickMirror);
+
+  TickerFuture _tickMirror(AnimationStatus status) {
+    if (status == AnimationStatus.completed ||
+        status == AnimationStatus.reverse) {
+      return reverse();
+    }
+
+    return forward();
   }
 }
 
@@ -113,52 +125,55 @@ class AnimationOptions<T> {
 }
 
 class UseAnimation<T> extends ReactterHook implements TickerProvider {
-  final AnimationOptions<T> options;
+  @override
+  final $ = ReactterHook.$register;
 
-  late final tween = UseState(options.tween);
-  late final control = UseState(options.control);
-  late final duration = UseState(options.duration);
-  late final curve = UseState(options.curve);
-
-  late final _event = UseEvent.withInstance(this);
+  late final tween = Reactter.lazy(() => UseState(options.tween), this);
+  late final control = Reactter.lazy(() => UseState(options.control), this);
+  late final duration = Reactter.lazy(() => UseState(options.duration), this);
+  late final curve = Reactter.lazy(() => UseState(options.curve), this);
 
   bool _waitForDelay = true;
-  bool _isControlSetToMirror = false;
   Set<Ticker>? _tickers;
   late Animation<T> _animation;
-  T get value => _animation.value;
-
-  late final _aniController = AnimationController(
+  late final _animationController = AnimationController(
     value: options.startPosition,
     duration: duration.value,
     vsync: this,
   );
 
+  T get value => _animation.value;
+  AnimationController get animationController => _animationController;
+
+  final AnimationOptions<T> options;
+
   UseAnimation(this.options) {
-    _aniController.addStatusListener(_onAnimationStatus);
+    _animationController.addStatusListener(_onAnimationStatus);
     _buildAnimation();
-  }
 
-  @override
-  void attachTo(Object instance) {
-    super.attachTo(instance);
-
-    UseEvent.withInstance(instance)
-      ..on(Lifecycle.didMount, (_, __) => _addFrameLimitingUpdater())
-      ..on(Lifecycle.willUnmount, (_, __) => _aniController.dispose())
-      ..on(Lifecycle.destroyed, (_, __) => _event.dispose());
+    UseEffect(
+      _addFrameLimitingUpdater,
+      [],
+      this,
+    );
 
     UseEffect(
       _rebuild,
       [tween, control, curve],
-      instance,
+      this,
     );
 
     UseEffect(
-      () => _aniController.duration = duration.value,
+      () => _animationController.duration = duration.value,
       [duration],
-      instance,
+      this,
     );
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
   }
 
   void play({Duration? duration}) {
@@ -213,13 +228,13 @@ class UseAnimation<T> extends ReactterHook implements TickerProvider {
     final fps = options.fps;
 
     if (fps == null) {
-      return _aniController.addListener(update);
+      return _animationController.addListener(update);
     }
 
     var lastUpdateEmitted = DateTime(1970);
     final frameTimeMs = (1000 / fps).floor();
 
-    _aniController.addListener(() {
+    _animationController.addListener(() {
       final now = DateTime.now();
 
       if (lastUpdateEmitted
@@ -231,9 +246,14 @@ class UseAnimation<T> extends ReactterHook implements TickerProvider {
   }
 
   void _onAnimationStatus(AnimationStatus status) {
-    options.animationStatusListener?.call(status);
+    // final isMirror = control.value == AnimationControl.mirror;
 
-    _event.emit(status);
+    // if (isMirror) {
+    //   unawaited(_aniController.mirror());
+    // }
+
+    options.animationStatusListener?.call(status);
+    Reactter.emit(this, status);
   }
 
   void _rebuild() {
@@ -243,14 +263,12 @@ class UseAnimation<T> extends ReactterHook implements TickerProvider {
 
   void _buildAnimation() {
     _animation = tween.value
-        .chain(
-          CurveTween(curve: curve.value),
-        )
-        .animate(_aniController);
+        .chain(CurveTween(curve: curve.value))
+        .animate(_animationController);
   }
 
   void _asyncInitState() async {
-    if (_waitForDelay == true && options.delay != Duration.zero) {
+    if (_waitForDelay && options.delay != Duration.zero) {
       await Future<void>.delayed(options.delay);
     }
 
@@ -265,36 +283,32 @@ class UseAnimation<T> extends ReactterHook implements TickerProvider {
     }
 
     if (control.value == AnimationControl.play) {
-      return unawaited(_aniController.play());
+      return unawaited(_animationController.play());
     }
 
     if (control.value == AnimationControl.playReverse) {
-      return unawaited(_aniController.playReverse());
+      return unawaited(_animationController.playReverse());
     }
 
     if (control.value == AnimationControl.playFromStart) {
-      return unawaited(_aniController.forward(from: 0.0));
+      return unawaited(_animationController.forward(from: 0.0));
     }
 
     if (control.value == AnimationControl.playReverseFromEnd) {
-      return unawaited(_aniController.reverse(from: 1.0));
+      return unawaited(_animationController.reverse(from: 1.0));
     }
 
     if (control.value == AnimationControl.loop) {
-      return unawaited(_aniController.loop());
+      return unawaited(_animationController.loop());
     }
 
     if (control.value == AnimationControl.mirror) {
-      if (_isControlSetToMirror) {
-        _isControlSetToMirror = false;
-        return;
-      }
-
-      _isControlSetToMirror = true;
-      return unawaited(_aniController.mirror());
+      return unawaited(_animationController.mirror());
     }
 
-    _aniController.stop();
+    _animationController.stop();
+
+    _animationController.stopMirror();
   }
 
   void _removeTicker(_AnimationTicker ticker) {
