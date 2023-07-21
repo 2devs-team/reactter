@@ -51,12 +51,12 @@ abstract class ReactterHook with ReactterState {
   /// Like so:
   ///
   /// `final $ = ReactterHook.$register;`
-  _RegisterHook get $;
+  _HookRegister get $;
 
-  /// This getter allows access to the [_RegisterHook] instance
+  /// This getter allows access to the [_HookRegister] instance
   /// which is responsible for registering a [ReactterHook]
   /// and attaching previously collected states to it.
-  static _RegisterHook get $register => _RegisterHook();
+  static _HookRegister get $register => _HookRegister();
 
   ReactterHook() {
     $._register(this);
@@ -78,7 +78,7 @@ abstract class ReactterHook with ReactterState {
 
 /// It is responsible for registering a [ReactterHook] and attaching previously
 /// collected states to it.
-class _RegisterHook {
+class _HookRegister {
   bool _isRegistered = false;
 
   final _prevStatesRecollected = _getAndCleanStatesRecollected();
