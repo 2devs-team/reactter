@@ -24,13 +24,6 @@ class InvalidHookPosition extends DartLintRule {
     required CustomLintContext context,
     required Function(Declaration node, Element element) onInvalid,
   }) {
-    Element? getElementFromDeclaration(Declaration node) {
-      if (node is FieldDeclaration) {
-        return node.fields.variables.first.declaredElement;
-      }
-
-      return node.declaredElement;
-    }
 
     context.registry.addClassDeclaration((node) {
       final declaredElement = node.declaredElement;
@@ -44,11 +37,11 @@ class InvalidHookPosition extends DartLintRule {
       if (hookRegisterNode == null) return;
 
       final hooks = node.members.whereType<FieldDeclaration>().where((node) {
-        final element = node.fields.variables.first.declaredElement;
+        final element = getElementFromDeclaration(node);
 
         if (element == null) return false;
 
-        return reactterHookType.isAssignableFromType(element.type);
+        return reactterHookType.isAssignableFrom(element);
       }).toList();
 
       for (final hook in hooks) {

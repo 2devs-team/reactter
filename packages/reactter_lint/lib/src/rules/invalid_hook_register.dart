@@ -28,14 +28,6 @@ class InvalidHookRegister extends DartLintRule {
     required CustomLintContext context,
     required Function(Declaration node, Element element) onInvalid,
   }) {
-    Element? getElementFromDeclaration(Declaration node) {
-      if (node is FieldDeclaration) {
-        return node.fields.variables.first.declaredElement;
-      }
-
-      return node.declaredElement;
-    }
-
     context.registry.addClassDeclaration((node) {
       final declaredElement = node.declaredElement;
 

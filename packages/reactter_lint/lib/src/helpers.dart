@@ -1,4 +1,5 @@
 import 'package:analyzer/dart/ast/ast.dart';
+import 'package:analyzer/dart/element/element.dart';
 import 'package:reactter_lint/src/consts.dart';
 
 bool isHookRegister(Declaration node) {
@@ -12,4 +13,12 @@ bool isHookRegister(Declaration node) {
   }
 
   return false;
+}
+
+Element? getElementFromDeclaration(Declaration node) {
+  if (node is FieldDeclaration) {
+    return node.fields.variables.first.declaredElement;
+  }
+
+  return node.declaredElement;
 }
