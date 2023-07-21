@@ -10,9 +10,8 @@ import '../models/user.dart';
 class ApiController {
   final formKey = GlobalKey<FormState>();
   final textFocusNode = FocusNode();
-  final TextEditingController textController = TextEditingController();
-
-  late final entity = UseAsyncState<Object?, String>(null, _resolveEntity);
+  final textController = TextEditingController();
+  final entity = UseAsyncState(null, _resolveEntity);
 
   String _input = "";
 
@@ -34,7 +33,7 @@ class ApiController {
     entity.resolve(_input);
   }
 
-  Future<Object?> _resolveEntity([String query = ""]) async {
+  static Future<Object?> _resolveEntity([String query = ""]) async {
     final queryPath = query.split("/");
 
     if (queryPath.length > 1) {
@@ -44,7 +43,7 @@ class ApiController {
     return await _getUser(query);
   }
 
-  Future<User> _getUser(String query) async {
+  static Future<User> _getUser(String query) async {
     final response =
         await http.get(Uri.parse('https://api.github.com/users/$query'));
 
@@ -55,7 +54,7 @@ class ApiController {
     }
   }
 
-  Future<Repository> _getRepository(String owner, String repo) async {
+  static Future<Repository> _getRepository(String owner, String repo) async {
     final response =
         await http.get(Uri.parse('https://api.github.com/repos/$owner/$repo'));
 

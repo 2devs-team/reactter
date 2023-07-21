@@ -6,9 +6,9 @@ import '../models/product_state.dart';
 Random _random = Random();
 
 class ProductsController {
-  late final products = UseState(_generateProducts());
+  final products = UseState(_generateProducts());
 
-  List<ProductState> _generateProducts() {
+  static List<ProductState> _generateProducts() {
     return List.generate(
       26,
       (index) => ProductState(
