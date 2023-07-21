@@ -1,5 +1,11 @@
 # Reactter
 
+## 5.1.1-dev.1
+
+### Fixes
+
+- **fix(hooks):** Don't attach instance when `UseEffect` doesn't have `context`.
+
 ## 5.1.0
 
 ### Enhancements
