@@ -137,6 +137,8 @@ class UseEffect extends ReactterHook {
   }
 
   void attachTo(Object instance) {
+    if (context == null) return;
+
     super.attachTo(instance);
 
     if (!_initialized) return;
