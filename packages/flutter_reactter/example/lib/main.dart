@@ -27,6 +27,7 @@ final items = <ListItem>[
     "Performs simple arithmetic operations on numbers",
     [
       "BuilContext.use",
+      "List<ReactterState>.when",
       "ReactterConsumer",
       "ReactterProvider",
       "Signal",
@@ -83,8 +84,9 @@ final items = <ListItem>[
     [
       "ReactterHook",
       "ReactterProvider",
+      "UseCompute",
       "UseEffect",
-      "UseEvent",
+      "UseState",
     ],
     () => const AnimationPage(),
   ),
