@@ -1,6 +1,18 @@
 # Reactter
 
-## 5.1.1-dev.1
+## 5.1.2
+
+### Fixes
+
+- **refactor(hooks):** Add const to `ReactterAction` and `ReactterActionCallable`.
+
+### Internal
+
+- **doc:** Change ROADMAP.
+- **refactor(example):** Improve code and fix some issues.
+- **refactor(example):** Remove `const` keyword for zapp compatibility.
+
+## 5.1.1
 
 ### Fixes
 
