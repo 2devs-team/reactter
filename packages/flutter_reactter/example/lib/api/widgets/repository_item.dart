@@ -5,9 +5,9 @@ import 'badget.dart';
 import '../models/repository.dart';
 
 class RepositoryItem extends StatelessWidget {
-  const RepositoryItem({Key? key, required this.repository}) : super(key: key);
-
   final Repository repository;
+
+  const RepositoryItem({Key? key, required this.repository}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

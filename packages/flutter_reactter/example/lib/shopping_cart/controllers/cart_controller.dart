@@ -3,8 +3,7 @@ import 'package:flutter_reactter/flutter_reactter.dart';
 import '../models/product_state.dart';
 
 class CartController {
-  final products = UseState<Map<ProductState, int>>({});
-  final productsLen = UseState(0);
+  final products = UseState(<ProductState, int>{});
   final quantityProducts = UseState(0);
   final total = UseState(0.0);
 
@@ -54,7 +53,6 @@ class CartController {
 
   void checkout() {
     products.update(products.value.clear);
-    productsLen.value = 0;
     quantityProducts.value = 0;
     total.value = 0;
   }

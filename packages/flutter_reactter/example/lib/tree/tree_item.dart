@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_renaming_method_parameters
+
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_reactter/flutter_reactter.dart';

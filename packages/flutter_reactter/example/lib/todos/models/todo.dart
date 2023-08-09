@@ -2,7 +2,7 @@ class Todo {
   final String title;
   final bool isDone;
 
-  Todo({
+  const Todo({
     required this.title,
     this.isDone = false,
   });

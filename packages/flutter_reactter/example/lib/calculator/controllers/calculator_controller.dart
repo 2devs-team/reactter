@@ -1,5 +1,3 @@
-// ignore_for_file: unnecessary_null_comparison
-
 import 'package:flutter_reactter/flutter_reactter.dart';
 
 enum ActionCalculator {

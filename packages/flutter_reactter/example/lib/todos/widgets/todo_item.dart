@@ -25,7 +25,7 @@ class TodoItem extends StatelessWidget {
       controlAffinity: ListTileControlAffinity.leading,
       title: Text(
         todo.title,
-        style: Theme.of(context).textTheme.bodyText2?.copyWith(
+        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
               decoration: todo.isDone ? TextDecoration.lineThrough : null,
             ),
       ),

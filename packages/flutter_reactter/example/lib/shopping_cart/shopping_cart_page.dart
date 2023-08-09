@@ -42,13 +42,9 @@ class ShoppingCartPage extends StatelessWidget {
                         child: CircleAvatar(
                           backgroundColor: Colors.amber,
                           radius: 8,
-                          child: Builder(
-                            builder: (context) {
-                              final cartController =
-                                  context.watch<CartController>(
-                                (inst) => [inst.quantityProducts],
-                              );
-
+                          child: ReactterConsumer<CartController>(
+                            listenStates: (inst) => [inst.quantityProducts],
+                            builder: (cartController, _, __) {
                               return Text(
                                 "${cartController.quantityProducts.value}",
                                 style: Theme.of(context)
@@ -66,25 +62,27 @@ class ShoppingCartPage extends StatelessWidget {
               ),
             ],
           ),
-          body: Builder(
-            builder: (context) {
-              final productsInst = context.watch<ProductsController>();
-              final products = productsInst.products.value;
+          body: ReactterConsumer<ProductsController>(
+            listenStates: (inst) => [inst.products],
+            builder: (productsController, _, __) {
+              final products = productsController.products.value;
 
               return ListView.builder(
                 itemCount: products.length,
                 itemBuilder: (context, index) {
                   final product = products[index];
 
-                  context
-                      .watch<ProductsController>((_) => [product.stockState]);
-
-                  return ProductItem(
-                    key: ObjectKey(product),
-                    product: product,
-                    color: index % 2 == 0
-                        ? Theme.of(context).hoverColor
-                        : Theme.of(context).cardColor,
+                  return ReactterConsumer<ProductsController>(
+                    listenStates: (_) => [product.stockState],
+                    builder: (_, __, ___) {
+                      return ProductItem(
+                        key: ObjectKey(product),
+                        product: product,
+                        color: index % 2 == 0
+                            ? Theme.of(context).hoverColor
+                            : Theme.of(context).cardColor,
+                      );
+                    },
                   );
                 },
               );

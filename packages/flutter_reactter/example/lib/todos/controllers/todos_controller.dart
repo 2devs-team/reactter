@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_reactter/flutter_reactter.dart';
 
-import '../todos_actions.dart';
+import '../actions/add_todo_action.dart';
+import '../actions/filter_action.dart';
+import '../actions/remove_todo_action.dart';
+import '../actions/toggle_todo_action.dart';
 import '../models/todo.dart';
 import '../stores/todos_store.dart';
 
@@ -11,18 +14,24 @@ TodosStore _reducer(TodosStore state, ReactterAction action) =>
 class TodosController {
   final formKey = GlobalKey<FormState>();
   final textFocusNode = FocusNode();
-  final TextEditingController textController = TextEditingController();
+  final textController = TextEditingController();
 
   final state = UseReducer<TodosStore>(
     _reducer,
-    TodosStore(
+    const TodosStore(
       todos: [
         Todo(title: 'Learn Reactter'),
       ],
     ),
   );
 
-  List<Todo> get todosFiltered => getTodosBy(state.value.filterBy);
+  late final todosFiltered = Reactter.lazy(
+    () => UseCompute(
+      () => getTodosBy(state.value.filterBy),
+      [state],
+    ),
+    this,
+  );
 
   List<Todo> getTodosBy(TodoListType todoListType) {
     if (todoListType == TodoListType.todo) {
@@ -65,12 +74,8 @@ class TodosController {
     state.dispatch(ToggleTodoAction(todo: todo));
   }
 
-  void filterBy(int index) {
-    state.dispatch(
-      FilterByAction(
-        todoListType: TodoListType.values[index],
-      ),
-    );
+  void filterBy(TodoListType todoListType) {
+    state.dispatch(FilterAction(todoListType: todoListType));
   }
 
   void _resetForm() {

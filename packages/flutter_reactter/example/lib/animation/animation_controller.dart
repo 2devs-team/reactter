@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_reactter/flutter_reactter.dart';
+
 import 'use_animation.dart';
 
-class AnimationContext {
+class AnimationController {
   final sizeAnimation = UseAnimation<double>(
     AnimationOptions(
       tween: Tween(begin: 10, end: 100),

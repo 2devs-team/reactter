@@ -3,22 +3,22 @@ import 'package:flutter_reactter/flutter_reactter.dart';
 import 'product.dart';
 
 class ProductState extends Product {
-  int get initialStock => super.stock;
+  late final stockState = Reactter.lazy(
+    () => UseState(super.stock),
+    this,
+  );
 
-  final stockState = UseState(0);
   @override
-  get stock => stockState.value;
+  int get stock => stockState.value;
 
   ProductState({
     required super.name,
     required super.price,
     required super.stock,
-  }) {
-    stockState.value = initialStock;
-  }
+  });
 
   bool increaseStock([int quantity = 1]) {
-    if (stockState.value > initialStock) return false;
+    if (stockState.value > stockState.initial) return false;
 
     stockState.value += quantity;
 
@@ -35,8 +35,10 @@ class ProductState extends Product {
 }
 
 String formatCurrency(double value) {
-  final valueFormatted =
-      value.toStringAsFixed(2).replaceAll(RegExp(r'\B(?=(\d{3})+(?!\d))'), ',');
+  final valueFormatted = value.toStringAsFixed(2).replaceAll(
+        RegExp(r'\B(?=(\d{3})+(?!\d))'),
+        ',',
+      );
 
   return "\$$valueFormatted";
 }

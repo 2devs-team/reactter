@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
 
 class Badget extends StatelessWidget {
+  final String label;
+  final String value;
+  final Color labelColor;
+  final Color valueColor;
+  final IconData? icon;
+
   const Badget({
     Key? key,
     required this.label,
@@ -10,20 +16,14 @@ class Badget extends StatelessWidget {
     this.icon,
   }) : super(key: key);
 
-  final String label;
-  final String value;
-  final Color labelColor;
-  final Color valueColor;
-  final IconData? icon;
-
   @override
   Widget build(BuildContext context) {
     return Container(
+      clipBehavior: Clip.hardEdge,
       decoration: BoxDecoration(
         color: labelColor,
         borderRadius: BorderRadius.circular(4),
       ),
-      clipBehavior: Clip.hardEdge,
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [

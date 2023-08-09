@@ -1,7 +1,8 @@
-import 'package:examples/calculator/widgets/button.dart';
-import 'package:examples/calculator/controllers/calculator_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_reactter/flutter_reactter.dart';
+
+import 'button.dart';
+import '../controllers/calculator_controller.dart';
 
 final actionLabel = {
   ActionCalculator.add: '+',
@@ -29,7 +30,7 @@ class CalculatorActionButton extends StatelessWidget {
     final isMathOperation = mathOperationMethods.keys.contains(action);
     final label = actionLabel[action] ?? 'N/A';
 
-    onPressed() => calculatorController.executeAction(action);
+    void onPressed() => calculatorController.executeAction(action);
 
     if (isMathOperation) {
       checkIsSelected() => calculatorController.mathOperation.value == action;

@@ -1,6 +1,16 @@
 import 'user.dart';
 
 class Repository {
+  final int id;
+  final String name;
+  final String fullName;
+  final String description;
+  final String htmlUrl;
+  final User owner;
+  final int? stargazersCount;
+  final int? watchersCount;
+  final int? forks;
+
   Repository({
     required this.id,
     required this.name,
@@ -12,16 +22,6 @@ class Repository {
     this.watchersCount = 0,
     this.forks = 0,
   });
-
-  int id;
-  String name;
-  String fullName;
-  String description;
-  String htmlUrl;
-  User owner;
-  int? stargazersCount;
-  int? watchersCount;
-  int? forks;
 
   factory Repository.fromJson(Map<String, dynamic> json) => Repository(
         id: json["id"],

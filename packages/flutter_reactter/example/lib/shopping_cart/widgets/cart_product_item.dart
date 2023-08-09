@@ -32,7 +32,7 @@ class CartProductItem extends StatelessWidget {
           const Text('Price: '),
           Text(
             formatCurrency(product.price),
-            style: Theme.of(context).textTheme.caption!.copyWith(
+            style: Theme.of(context).textTheme.bodySmall!.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
           ),
@@ -52,32 +52,33 @@ class CartProductItem extends StatelessWidget {
           ),
           const SizedBox(width: 8),
           IconButton(
-            onPressed: () => cartController.deleteProduct(product),
             color: Colors.red.shade400,
             padding: EdgeInsets.zero,
             constraints: const BoxConstraints.tightFor(width: 42),
             splashRadius: 18,
             iconSize: 24,
             icon: const Icon(Icons.delete),
+            onPressed: () => cartController.deleteProduct(product),
           ),
           IconButton(
-            onPressed: () => cartController.removeProduct(product),
             color: Colors.red.shade400,
             padding: EdgeInsets.zero,
             constraints: const BoxConstraints.tightFor(width: 42),
             splashRadius: 18,
             iconSize: 24,
             icon: const Icon(Icons.remove_circle),
+            onPressed: () => cartController.removeProduct(product),
           ),
           IconButton(
-            onPressed:
-                product.stock == 0 ? null : () => cartController.addProduct(product),
             color: Colors.green.shade400,
             padding: EdgeInsets.zero,
             constraints: const BoxConstraints.tightFor(width: 42),
             splashRadius: 18,
             iconSize: 24,
             icon: const Icon(Icons.add_circle),
+            onPressed: product.stock == 0
+                ? null
+                : () => cartController.addProduct(product),
           ),
         ],
       ),

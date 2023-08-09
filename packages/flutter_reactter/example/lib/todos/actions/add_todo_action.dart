@@ -6,7 +6,7 @@ import '../stores/todos_store.dart';
 class AddTodoAction extends ReactterActionCallable<TodosStore, Todo> {
   final Todo todo;
 
-  AddTodoAction({
+  const AddTodoAction({
     required this.todo,
   }) : super(
           type: 'ADD_TODO',
@@ -16,7 +16,7 @@ class AddTodoAction extends ReactterActionCallable<TodosStore, Todo> {
   @override
   TodosStore call(TodosStore state) {
     return state.copyWith(
-      todos: state.todos..add(todo),
+      todos: [todo, ...state.todos],
     );
   }
 }

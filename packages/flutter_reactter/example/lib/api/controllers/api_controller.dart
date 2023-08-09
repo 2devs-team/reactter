@@ -13,13 +13,6 @@ class ApiController {
   final textController = TextEditingController();
   final entity = UseAsyncState(null, _resolveEntity);
 
-  String _input = "";
-
-  ApiController() {
-    textController.addListener(() {
-      _input = textController.text;
-    });
-  }
 
   String? validator(String? value) {
     if (value == null || value.isEmpty) {
@@ -30,7 +23,7 @@ class ApiController {
   }
 
   void search() async {
-    entity.resolve(_input);
+    entity.resolve(textController.text);
   }
 
   static Future<Object?> _resolveEntity([String query = ""]) async {

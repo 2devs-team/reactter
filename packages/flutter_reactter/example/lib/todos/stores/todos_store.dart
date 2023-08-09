@@ -6,7 +6,7 @@ class TodosStore {
   final List<Todo> todos;
   final TodoListType filterBy;
 
-  TodosStore({
+  const TodosStore({
     required this.todos,
     this.filterBy = TodoListType.all,
   });

@@ -35,20 +35,20 @@ class TodosPage extends StatelessWidget {
                               child: Form(
                                 key: todosController.formKey,
                                 child: TextFormField(
-                                  controller: todosController.textController,
-                                  validator: todosController.validator,
+                                  autofocus: true,
                                   autovalidateMode:
                                       AutovalidateMode.onUserInteraction,
-                                  textCapitalization:
-                                      TextCapitalization.sentences,
-                                  autofocus: true,
-                                  focusNode: todosController.textFocusNode,
-                                  maxLength: 50,
-                                  onFieldSubmitted: (_) =>
-                                      todosController.addTodo(),
                                   decoration: const InputDecoration(
                                     labelText: 'What needs to be done?',
                                   ),
+                                  maxLength: 50,
+                                  textCapitalization:
+                                      TextCapitalization.sentences,
+                                  controller: todosController.textController,
+                                  focusNode: todosController.textFocusNode,
+                                  validator: todosController.validator,
+                                  onFieldSubmitted: (_) =>
+                                      todosController.addTodo(),
                                 ),
                               ),
                             ),
@@ -61,7 +61,7 @@ class TodosPage extends StatelessWidget {
                                   "Add",
                                   style: Theme.of(context)
                                       .textTheme
-                                      .headline6!
+                                      .titleLarge!
                                       .copyWith(color: Colors.white),
                                 ),
                               ),
@@ -69,29 +69,32 @@ class TodosPage extends StatelessWidget {
                           ],
                         ),
                         const SizedBox(height: 16),
-                        Builder(
-                          builder: (context) {
-                            context
-                                .watch<TodosController>((inst) => [inst.state]);
+                        ReactterConsumer<TodosController>(
+                          listenStates: (inst) => [inst.state],
+                          builder: (_, __, ___) {
+                            final allCount = todosController
+                                .getTodosBy(TodoListType.all)
+                                .length;
+                            final doneCount = todosController
+                                .getTodosBy(TodoListType.done)
+                                .length;
+                            final todoCount = todosController
+                                .getTodosBy(TodoListType.todo)
+                                .length;
 
                             return TabBar(
                               labelColor:
                                   Theme.of(context).textTheme.bodyLarge?.color,
-                              onTap: (index) => todosController.filterBy(index),
                               tabs: [
-                                Tab(
-                                  text:
-                                      "All(${todosController.state.value.todos.length})",
-                                ),
-                                Tab(
-                                  text:
-                                      "Done(${todosController.getTodosBy(TodoListType.done).length})",
-                                ),
-                                Tab(
-                                  text:
-                                      "To-Do(${todosController.getTodosBy(TodoListType.todo).length})",
-                                ),
+                                Tab(text: "All($allCount)"),
+                                Tab(text: "Done($doneCount)"),
+                                Tab(text: "To-Do($todoCount)"),
                               ],
+                              onTap: (index) {
+                                todosController.filterBy(
+                                  TodoListType.values[index],
+                                );
+                              },
                             );
                           },
                         ),
@@ -99,30 +102,25 @@ class TodosPage extends StatelessWidget {
                     ),
                   ),
                   Expanded(
-                    child: Builder(
-                      builder: (context) {
-                        final todoList = context
-                            .watch<TodosController>((inst) => [inst.state])
-                            .todosFiltered;
+                    child: ReactterConsumer<TodosController>(
+                      listenStates: (inst) => [inst.todosFiltered],
+                      builder: (todosController, _, __) {
+                        final todosFiltered =
+                            todosController.todosFiltered.value;
 
-                        return SingleChildScrollView(
-                          child: ListView.builder(
-                            shrinkWrap: true,
-                            reverse: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemCount: todoList.length,
-                            itemBuilder: (context, index) {
-                              final todo = todoList[index];
+                        return ListView.builder(
+                          itemCount: todosFiltered.length,
+                          itemBuilder: (context, index) {
+                            final todo = todosFiltered[index];
 
-                              return TodoItem(
-                                key: ObjectKey(todo),
-                                todo: todo,
-                                color: index % 2 == 0
-                                    ? Theme.of(context).hoverColor
-                                    : Theme.of(context).cardColor,
-                              );
-                            },
-                          ),
+                            return TodoItem(
+                              key: ObjectKey(todo),
+                              todo: todo,
+                              color: index % 2 == 0
+                                  ? Theme.of(context).hoverColor
+                                  : Theme.of(context).cardColor,
+                            );
+                          },
                         );
                       },
                     ),

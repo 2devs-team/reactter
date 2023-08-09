@@ -5,7 +5,7 @@ import '../stores/todos_store.dart';
 class FilterAction extends ReactterActionCallable<TodosStore, TodoListType> {
   final TodoListType todoListType;
 
-  FilterAction({
+  const FilterAction({
     required this.todoListType,
   }) : super(
           type: 'FILTER_BY',

@@ -14,8 +14,10 @@ dependencies:
   flutter_reactter: ^5.1.2-dev.2
 
 dev_dependencies:
-  flutter_lints: ^2.0.0
+  flutter_lints: ^2.0.2
   reactter_lint: ^0.0.3
+  flutter_test:
+    sdk: flutter
 
 flutter:
   uses-material-design: true

@@ -1,4 +1,4 @@
-include: package:reactter_lint/analysis_options.yaml
+include: package:flutter_lints/flutter.yaml
 
 analyzer:
   plugins:

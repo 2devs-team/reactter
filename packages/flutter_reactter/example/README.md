@@ -38,16 +38,6 @@ Performs simple arithmetic operations on numbers
 
 Implements: `BuildContext.use`, `ReactterConsumer`, `ReactterProvider`, `Signal`.
 
-## Todos
-
-Add and remove to-do, mark and unmark to-do as done and filter to-do list.
-
-> Learn how to use the reducer hook like Redux.
-
-[![Todos example](https://raw.githubusercontent.com/2devs-team/reactter_assets/main/examples/todos_example.gif)](https://github.com/2devs-team/reactter/tree/master/packages/flutter_reactter/example/lib/todos)
-
-Implements: `ReactterActionCallable`, `ReactterProvider`, `UseReducer`.
-
 ## Shopping cart
 
 Add, remove product to cart and checkout.
@@ -56,7 +46,7 @@ Add, remove product to cart and checkout.
 
 [![Shopping cart example](https://raw.githubusercontent.com/2devs-team/reactter_assets/main/examples/cart_example.gif)](https://github.com/2devs-team/reactter/tree/master/packages/flutter_reactter/example/lib/shopping_cart)
 
-Implements: `BuildContext.watch`, `ReactterComponent`, `ReactterProvider`, `ReactterProviders`, `UseState`.
+Implements: `ReactterComponent`, `ReactterConsumer`, `ReactterProvider`, `ReactterProviders`, `UseState`.
 
 ## Tree widget
 
@@ -76,7 +66,17 @@ Search user or repository and show info about it.
 
 [![Github search example](https://raw.githubusercontent.com/2devs-team/reactter_assets/main/examples/api_example.gif)](https://github.com/2devs-team/reactter/tree/master/packages/flutter_reactter/example/lib/api)
 
-Implements: `ReactterComponent`, `ReactterProvider`, `UseAsyncState`, `UseState`.
+Implements: `ReactterConsumer`, `ReactterProvider`, `UseAsyncState`, `UseState`.
+
+## Todos
+
+Add and remove to-do, mark and unmark to-do as done and filter to-do list.
+
+> Learn how to use the reducer hook like Redux.
+
+[![Todos example](https://raw.githubusercontent.com/2devs-team/reactter_assets/main/examples/todos_example.gif)](https://github.com/2devs-team/reactter/tree/master/packages/flutter_reactter/example/lib/todos)
+
+Implements: `Reactter.lazy`, `ReactterActionCallable`, `ReactterConsumer`, `ReactterProvider`, `UseCompute`, `UseReducer`.
 
 ## Animate widget
 
@@ -86,4 +86,4 @@ Change size, shape and color using animations.
 
 [![Animate widget example](https://raw.githubusercontent.com/2devs-team/reactter_assets/main/examples/animation_example.gif)](https://github.com/2devs-team/reactter/tree/master/packages/flutter_reactter/example/lib/animation)
 
-Implements: `ReactterHook`, `ReactterProvider`, `UseEffect`, `UseEvent`.
+Implements: `ReactterConsumer`, `ReactterHook`, `ReactterProvider`, `UseEffect`, `UseEvent`.

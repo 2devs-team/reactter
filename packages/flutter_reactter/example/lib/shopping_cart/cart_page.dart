@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_renaming_method_parameters
+
 import 'package:flutter/material.dart';
 import 'package:flutter_reactter/flutter_reactter.dart';
 
@@ -17,91 +19,103 @@ class CartPage extends ReactterComponent<CartController> {
       appBar: AppBar(
         title: const Text("My cart"),
       ),
-      body: Builder(
-        builder: (context) {
-          context.watch<CartController>((inst) => [inst.products]);
-
+      body: ReactterConsumer<CartController>(
+        listenStates: (inst) => [inst.products],
+        builder: (_, __, ___) {
           final products = cartController.products.value;
 
-          return products.isEmpty
-              ? Center(
-                  child: Text(
-                    "Your cart is empty!",
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
-                )
-              : ListView.builder(
-                  itemCount: products.length,
-                  itemBuilder: (context, index) {
-                    final product = products.keys.elementAt(index);
-                    final quantity = products.values.elementAt(index);
+          if (products.isEmpty) {
+            return Center(
+              child: Text(
+                "Your cart is empty!",
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+            );
+          }
 
-                    return CartProductItem(
-                      key: ObjectKey(product),
-                      product: product,
-                      quantity: quantity,
-                      color: index % 2 == 0
-                          ? Theme.of(context).hoverColor
-                          : Theme.of(context).cardColor,
-                    );
-                  },
-                );
-        },
-      ),
-      bottomNavigationBar: Builder(
-        builder: (context) {
-          context.watch<CartController>(
-            (inst) => [inst.total, inst.quantityProducts],
-          );
+          return ListView.builder(
+            itemCount: products.length,
+            itemBuilder: (context, index) {
+              final product = products.keys.elementAt(index);
+              final quantity = products.values.elementAt(index);
 
-          final products = cartController.products.value;
-          final quantityProducts = cartController.quantityProducts.value;
-          final total = cartController.total.value;
-
-          return BottomSheet(
-            onClosing: () {},
-            elevation: 16,
-            enableDrag: false,
-            builder: (BuildContext context) {
-              return Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Text(
-                          "Total(x$quantityProducts): ",
-                          style: Theme.of(context).textTheme.titleMedium,
-                        ),
-                        Text(
-                          formatCurrency(total),
-                          style: Theme.of(context).textTheme.titleLarge,
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed:
-                          products.isNotEmpty ? cartController.checkout : null,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        child: Text(
-                          "Checkout",
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleLarge!
-                              .copyWith(color: Colors.white),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+              return CartProductItem(
+                key: ObjectKey(product),
+                product: product,
+                quantity: quantity,
+                color: index % 2 == 0
+                    ? Theme.of(context).hoverColor
+                    : Theme.of(context).cardColor,
               );
             },
+          );
+        },
+      ),
+      bottomNavigationBar: BottomSheet(
+        onClosing: () {},
+        elevation: 16,
+        enableDrag: false,
+        builder: (context) {
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    ReactterConsumer<CartController>(
+                      listenStates: (inst) => [inst.quantityProducts],
+                      builder: (_, __, ___) {
+                        final quantityProducts =
+                            cartController.quantityProducts.value;
+
+                        return Text(
+                          "Total(x$quantityProducts): ",
+                          style: Theme.of(context).textTheme.titleMedium,
+                        );
+                      },
+                    ),
+                    ReactterConsumer<CartController>(
+                      listenStates: (inst) => [inst.total],
+                      builder: (_, __, ___) {
+                        final total = cartController.total.value;
+
+                        return Text(
+                          formatCurrency(total),
+                          style: Theme.of(context).textTheme.titleLarge,
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                width: double.infinity,
+                child: ReactterConsumer<CartController>(
+                  listenStates: (inst) => [inst.products],
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    child: Text(
+                      "Checkout",
+                      style: Theme.of(context)
+                          .textTheme
+                          .titleLarge!
+                          .copyWith(color: Colors.white),
+                    ),
+                  ),
+                  builder: (_, __, child) {
+                    final products = cartController.products.value;
+
+                    return ElevatedButton(
+                      onPressed:
+                          products.isNotEmpty ? cartController.checkout : null,
+                      child: child,
+                    );
+                  },
+                ),
+              ),
+            ],
           );
         },
       ),

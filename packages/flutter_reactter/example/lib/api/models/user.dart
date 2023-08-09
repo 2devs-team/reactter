@@ -1,4 +1,14 @@
 class User {
+  final int id;
+  final String login;
+  final String avatarUrl;
+  final String htmlUrl;
+  final String type;
+  final int? followers;
+  final int? following;
+  final int? publicRepos;
+  final int? publicGists;
+
   User({
     required this.id,
     required this.login,
@@ -10,16 +20,6 @@ class User {
     this.publicRepos = 0,
     this.publicGists = 0,
   });
-
-  int id;
-  String login;
-  String avatarUrl;
-  String htmlUrl;
-  String type;
-  int? followers;
-  int? following;
-  int? publicRepos;
-  int? publicGists;
 
   factory User.fromJson(Map<String, dynamic> json) => User(
         id: json["id"],

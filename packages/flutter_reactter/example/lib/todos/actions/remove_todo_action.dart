@@ -6,7 +6,7 @@ import '../stores/todos_store.dart';
 class RemoveTodoAction extends ReactterActionCallable<TodosStore, Todo> {
   final Todo todo;
 
-  RemoveTodoAction({
+  const RemoveTodoAction({
     required this.todo,
   }) : super(
           type: 'REMOVE_TODO',

@@ -33,35 +33,35 @@ class ApiPage extends StatelessWidget {
                           child: Form(
                             key: apiController.formKey,
                             child: TextFormField(
-                              controller: apiController.textController,
-                              validator: apiController.validator,
+                              autofocus: true,
                               autovalidateMode:
                                   AutovalidateMode.onUserInteraction,
-                              textCapitalization: TextCapitalization.sentences,
-                              autofocus: true,
-                              focusNode: apiController.textFocusNode,
-                              maxLength: 150,
-                              onFieldSubmitted: (_) => apiController.search(),
                               decoration: const InputDecoration(
-                                labelText:
-                                    'Type a username or company name or repository name("2devs-team/reactter")',
+                                labelText: 'Type a username or company name or'
+                                    ' repository name("2devs-team/reactter")',
                               ),
+                              textCapitalization: TextCapitalization.sentences,
+                              maxLength: 150,
+                              controller: apiController.textController,
+                              focusNode: apiController.textFocusNode,
+                              validator: apiController.validator,
+                              onFieldSubmitted: (_) => apiController.search(),
                             ),
                           ),
                         ),
                         Material(
                           color: Colors.transparent,
                           child: IconButton(
-                            onPressed: apiController.search,
-                            padding: EdgeInsets.zero,
                             constraints: const BoxConstraints.tightFor(
                               width: 62,
                               height: 62,
                             ),
-                            splashRadius: 24,
-                            iconSize: 32,
                             color: Colors.blueAccent,
                             icon: const Icon(Icons.search),
+                            iconSize: 32,
+                            padding: EdgeInsets.zero,
+                            splashRadius: 24,
+                            onPressed: apiController.search,
                           ),
                         ),
                       ],
@@ -69,10 +69,9 @@ class ApiPage extends StatelessWidget {
                   ],
                 ),
               ),
-              Builder(
-                builder: (context) {
-                  context.watch<ApiController>((inst) => [inst.entity]);
-
+              ReactterConsumer<ApiController>(
+                listenStates: (inst) => [inst.entity],
+                builder: (_, __, ___) {
                   return Padding(
                     padding: const EdgeInsets.all(16),
                     child: apiController.entity.when<Widget>(

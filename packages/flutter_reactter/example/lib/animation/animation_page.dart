@@ -1,16 +1,16 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide AnimationController;
 import 'package:flutter_reactter/flutter_reactter.dart';
 
-import 'animation_context.dart';
+import 'animation_controller.dart';
 
 class AnimationPage extends StatelessWidget {
   const AnimationPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return ReactterProvider<AnimationContext>(
-      () => AnimationContext(),
-      builder: (animationContext, context, child) {
+    return ReactterProvider<AnimationController>(
+      () => AnimationController(),
+      builder: (animationController, context, child) {
         return Scaffold(
           appBar: AppBar(
             title: const Text("Animation"),
@@ -23,86 +23,73 @@ class AnimationPage extends StatelessWidget {
               crossAxisAlignment: WrapCrossAlignment.center,
               direction: Axis.horizontal,
               children: [
-                Builder(
-                  builder: (context) {
-                    context.watch<AnimationContext>(
-                      (inst) => [inst.borderRadiusAnimation],
-                    );
-
+                ReactterConsumer<AnimationController>(
+                  listenStates: (inst) => [inst.borderRadiusAnimation],
+                  builder: (_, __, ___) {
                     return Container(
                       width: 100,
                       height: 100,
                       decoration: BoxDecoration(
                         color: Colors.blue,
                         borderRadius:
-                            animationContext.borderRadiusAnimation.value,
+                            animationController.borderRadiusAnimation.value,
                       ),
                     );
                   },
                 ),
-                SizedBox.square(
-                  dimension: 100,
-                  child: Center(
-                    child: Builder(
-                      builder: (context) {
-                        context.watch<AnimationContext>(
-                          (inst) => [inst.sizeAnimation],
-                        );
-
-                        return Container(
-                          width: animationContext.sizeAnimation.value,
-                          height: animationContext.sizeAnimation.value,
-                          color: Colors.red,
-                        );
-                      },
-                    ),
+                Container(
+                  width: 100,
+                  height: 100,
+                  alignment: Alignment.center,
+                  child: ReactterConsumer<AnimationController>(
+                    listenStates: (inst) => [inst.sizeAnimation],
+                    builder: (_, __, ___) {
+                      return Container(
+                        width: animationController.sizeAnimation.value,
+                        height: animationController.sizeAnimation.value,
+                        color: Colors.red,
+                      );
+                    },
                   ),
                 ),
-                Builder(
-                  builder: (context) {
-                    context.watch<AnimationContext>(
-                      (inst) => [inst.colorAnimation],
-                    );
-
+                ReactterConsumer<AnimationController>(
+                  listenStates: (inst) => [inst.colorAnimation],
+                  builder: (_, __, ___) {
                     return Container(
                       width: 100,
                       height: 100,
-                      color: animationContext.colorAnimation.value,
+                      color: animationController.colorAnimation.value,
                     );
                   },
                 ),
-                SizedBox.square(
-                  dimension: 100,
-                  child: Center(
-                    child: Builder(
-                      builder: (context) {
-                        context.watch<AnimationContext>();
-
-                        return Container(
-                          width: animationContext.sizeAnimation.value,
-                          height: animationContext.sizeAnimation.value,
-                          decoration: BoxDecoration(
-                            color: animationContext.colorAnimation.value,
-                            borderRadius:
-                                animationContext.borderRadiusAnimation.value,
-                          ),
-                        );
-                      },
-                    ),
+                Container(
+                  width: 100,
+                  height: 100,
+                  alignment: Alignment.center,
+                  child: ReactterConsumer<AnimationController>(
+                    listenAll: true,
+                    builder: (_, __, ___) {
+                      return Container(
+                        width: animationController.sizeAnimation.value,
+                        height: animationController.sizeAnimation.value,
+                        decoration: BoxDecoration(
+                          color: animationController.colorAnimation.value,
+                          borderRadius:
+                              animationController.borderRadiusAnimation.value,
+                        ),
+                      );
+                    },
                   ),
                 ),
               ],
             ),
           ),
           floatingActionButton: FloatingActionButton(
-            onPressed: animationContext.togglePlayAllAnimations,
-            child: Builder(
-              builder: (context) {
-                context.watch<AnimationContext>(
-                  (inst) => [inst.isAllAnimationsPlaying],
-                );
-
-                if (animationContext.isAllAnimationsPlaying.value) {
+            onPressed: animationController.togglePlayAllAnimations,
+            child: ReactterConsumer<AnimationController>(
+              listenStates: (inst) => [inst.isAllAnimationsPlaying],
+              builder: (_, __, ___) {
+                if (animationController.isAllAnimationsPlaying.value) {
                   return const Icon(Icons.pause);
                 }
 

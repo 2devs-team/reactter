@@ -6,7 +6,7 @@ import '../stores/todos_store.dart';
 class ToggleTodoAction extends ReactterActionCallable<TodosStore, Todo> {
   final Todo todo;
 
-  ToggleTodoAction({required this.todo})
+  const ToggleTodoAction({required this.todo})
       : super(
           type: 'TOGGLE_TODO',
           payload: todo,
@@ -15,11 +15,10 @@ class ToggleTodoAction extends ReactterActionCallable<TodosStore, Todo> {
   @override
   TodosStore call(TodosStore state) {
     final index = state.todos.indexOf(todo);
+    final todos = List<Todo>.from(state.todos);
 
-    state.todos.replaceRange(index, index + 1, [
-      todo.copyWith(isDone: !todo.isDone),
-    ]);
+    todos[index] = todo.copyWith(isDone: !todo.isDone);
 
-    return state.copyWith();
+    return state.copyWith(todos: todos);
   }
 }

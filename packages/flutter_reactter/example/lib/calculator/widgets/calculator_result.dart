@@ -1,9 +1,10 @@
-import 'package:examples/calculator/controllers/calculator_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_reactter/flutter_reactter.dart';
 
+import '../controllers/calculator_controller.dart';
+
 class CalculatorResult extends StatelessWidget {
-  const CalculatorResult({super.key});
+  const CalculatorResult({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

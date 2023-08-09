@@ -5,9 +5,9 @@ import 'badget.dart';
 import '../models/user.dart';
 
 class UserItem extends StatelessWidget {
-  const UserItem({Key? key, required this.user}) : super(key: key);
-
   final User user;
+
+  const UserItem({Key? key, required this.user}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

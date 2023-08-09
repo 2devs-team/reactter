@@ -1,7 +1,8 @@
-import 'package:examples/calculator/widgets/button.dart';
-import 'package:examples/calculator/controllers/calculator_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_reactter/flutter_reactter.dart';
+
+import 'button.dart';
+import '../controllers/calculator_controller.dart';
 
 class CalculatorNumberButton extends StatelessWidget {
   const CalculatorNumberButton({Key? key, required this.number})

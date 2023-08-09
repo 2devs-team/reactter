@@ -1,18 +1,14 @@
-import 'package:examples/calculator/calculator_page.dart';
 import 'package:flutter/material.dart';
 
 import 'animation/animation_page.dart';
 import 'api/api_page.dart';
+import 'calculator/calculator_page.dart';
 import 'counter/counter_page.dart';
 import 'shopping_cart/shopping_cart_page.dart';
 import 'todos/todos_page.dart';
 import 'tree/tree_page.dart';
 
-Future<void> main() async {
-  runApp(const MyApp());
-}
-
-final items = <ListItem>[
+final items = [
   ExampleItem(
     "Counter",
     "Increase and decrease the counter",
@@ -35,21 +31,11 @@ final items = <ListItem>[
     () => const CalculatorPage(),
   ),
   ExampleItem(
-    "Todos",
-    "Add and remove to-do, mark and unmark to-do as done and filter to-do list",
-    [
-      "ReactterActionCallable",
-      "ReactterProvider",
-      "UseReducer",
-    ],
-    () => const TodosPage(),
-  ),
-  ExampleItem(
     "Shopping Cart",
     "Add, remove product to cart and checkout",
     [
-      "BuilContext.watch",
       "ReactterComponent",
+      "ReactterConsumer",
       "ReactterProvider",
       "ReactterProviders",
       "UseState",
@@ -73,15 +59,31 @@ final items = <ListItem>[
     "Github Search",
     "Search user or repository and show info about it.",
     [
+      "ReactterConsumer",
       "ReactterProvider",
       "UseAsyncState",
     ],
     () => const ApiPage(),
   ),
   ExampleItem(
+    "Todos",
+    "Add and remove to-do, mark and unmark to-do as done and filter to-do list",
+    [
+      "Reactter.lazy",
+      "ReactterActionCallable",
+      "ReactterConsumer",
+      "ReactterProvider",
+      "UseCompute",
+      "UseReducer",
+    ],
+    () => const TodosPage(),
+  ),
+  ExampleItem(
     "Animate widget",
     "Change size, shape and color.",
     [
+      "Reactter.lazy",
+      "ReactterConsumer",
       "ReactterHook",
       "ReactterProvider",
       "UseCompute",
@@ -92,6 +94,62 @@ final items = <ListItem>[
   ),
 ];
 
+final darkTheme = ThemeData.dark().copyWith(
+  checkboxTheme: ThemeData.dark().checkboxTheme.copyWith(
+    fillColor: MaterialStateProperty.resolveWith<Color?>(
+      (Set<MaterialState> states) {
+        if (states.contains(MaterialState.disabled)) {
+          return null;
+        }
+        if (states.contains(MaterialState.selected)) {
+          return ThemeData.dark().colorScheme.primary;
+        }
+        return null;
+      },
+    ),
+  ),
+  radioTheme: RadioThemeData(
+    fillColor:
+        MaterialStateProperty.resolveWith<Color?>((Set<MaterialState> states) {
+      if (states.contains(MaterialState.disabled)) {
+        return null;
+      }
+      if (states.contains(MaterialState.selected)) {
+        return ThemeData.dark().colorScheme.primary;
+      }
+      return null;
+    }),
+  ),
+  switchTheme: SwitchThemeData(
+    thumbColor: MaterialStateProperty.resolveWith<Color?>(
+      (Set<MaterialState> states) {
+        if (states.contains(MaterialState.disabled)) {
+          return null;
+        }
+        if (states.contains(MaterialState.selected)) {
+          return ThemeData.dark().colorScheme.primary;
+        }
+        return null;
+      },
+    ),
+    trackColor: MaterialStateProperty.resolveWith<Color?>(
+      (Set<MaterialState> states) {
+        if (states.contains(MaterialState.disabled)) {
+          return null;
+        }
+        if (states.contains(MaterialState.selected)) {
+          return ThemeData.dark().colorScheme.primary;
+        }
+        return null;
+      },
+    ),
+  ),
+);
+
+Future<void> main() async {
+  runApp(const MyApp());
+}
+
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
@@ -100,54 +158,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData.light(),
-      darkTheme: ThemeData.dark().copyWith(
-        checkboxTheme: CheckboxThemeData(
-          fillColor: MaterialStateProperty.resolveWith<Color?>(
-              (Set<MaterialState> states) {
-            if (states.contains(MaterialState.disabled)) {
-              return null;
-            }
-            if (states.contains(MaterialState.selected)) {
-              return ThemeData.dark().colorScheme.primary;
-            }
-            return null;
-          }),
-        ),
-        radioTheme: RadioThemeData(
-          fillColor: MaterialStateProperty.resolveWith<Color?>(
-              (Set<MaterialState> states) {
-            if (states.contains(MaterialState.disabled)) {
-              return null;
-            }
-            if (states.contains(MaterialState.selected)) {
-              return ThemeData.dark().colorScheme.primary;
-            }
-            return null;
-          }),
-        ),
-        switchTheme: SwitchThemeData(
-          thumbColor: MaterialStateProperty.resolveWith<Color?>(
-              (Set<MaterialState> states) {
-            if (states.contains(MaterialState.disabled)) {
-              return null;
-            }
-            if (states.contains(MaterialState.selected)) {
-              return ThemeData.dark().colorScheme.primary;
-            }
-            return null;
-          }),
-          trackColor: MaterialStateProperty.resolveWith<Color?>(
-              (Set<MaterialState> states) {
-            if (states.contains(MaterialState.disabled)) {
-              return null;
-            }
-            if (states.contains(MaterialState.selected)) {
-              return ThemeData.dark().colorScheme.primary;
-            }
-            return null;
-          }),
-        ),
-      ),
+      darkTheme: darkTheme,
       home: Scaffold(
         appBar: AppBar(
           title: const Text("Reactter Examples"),
@@ -156,22 +167,16 @@ class MyApp extends StatelessWidget {
           itemCount: items.length,
           itemBuilder: (BuildContext context, int index) {
             final item = items[index];
+            final onTap = item is HeadingItem
+                ? null
+                : () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => (item).view(),
+                      ),
+                    );
 
             return ListTile(
-              onTap: item is HeadingItem
-                  ? null
-                  : () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => (item as ExampleItem).view(),
-                        ),
-                      ),
-              contentPadding: const EdgeInsets.symmetric(
-                vertical: 8,
-                horizontal: 16,
-              ).copyWith(
-                top: item is HeadingItem ? 16 : 8,
-              ),
               title: item.buildTitle(context),
               subtitle: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -181,6 +186,13 @@ class MyApp extends StatelessWidget {
                   item.buildTags(context),
                 ],
               ),
+              contentPadding: const EdgeInsets.symmetric(
+                vertical: 8,
+                horizontal: 16,
+              ).copyWith(
+                top: item is HeadingItem ? 16 : 8,
+              ),
+              onTap: onTap,
             );
           },
         ),
@@ -204,13 +216,13 @@ abstract class ListItem {
 class HeadingItem implements ListItem {
   final String heading;
 
-  HeadingItem(this.heading);
+  const HeadingItem(this.heading);
 
   @override
   Widget buildTitle(BuildContext context) {
     return Text(
       heading,
-      style: Theme.of(context).textTheme.displaySmall,
+      style: Theme.of(context).textTheme.titleLarge,
     );
   }
 
@@ -228,10 +240,11 @@ class ExampleItem implements ListItem {
   final List<String> tags;
   final Widget Function() view;
 
-  ExampleItem(this.sender, this.body, this.tags, this.view);
+  const ExampleItem(this.sender, this.body, this.tags, this.view);
 
   @override
-  Widget buildTitle(BuildContext context) => Text(sender);
+  Widget buildTitle(BuildContext context) =>
+      Text(sender, style: Theme.of(context).textTheme.titleMedium);
 
   @override
   Widget buildSubtitle(BuildContext context) => Text(body);
@@ -243,17 +256,15 @@ class ExampleItem implements ListItem {
     return Wrap(
       direction: Axis.horizontal,
       spacing: 4,
-      children: tags
-          .map<Widget>(
-            (tag) => Text(
-              tag,
-              style: Theme.of(context)
-                  .textTheme
-                  .bodySmall
-                  ?.copyWith(color: Colors.blue),
-            ),
-          )
-          .toList(),
+      runSpacing: 4,
+      children: tags.map<Widget>(
+        (tag) {
+          return Chip(
+            labelStyle: Theme.of(context).textTheme.labelMedium,
+            label: Text(tag),
+          );
+        },
+      ).toList(),
     );
   }
 }

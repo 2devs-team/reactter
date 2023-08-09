@@ -32,7 +32,7 @@ class ProductItem extends StatelessWidget {
                 const Text('In stock: '),
                 Text(
                   "${product.stock}",
-                  style: Theme.of(context).textTheme.caption?.copyWith(
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
                 ),
@@ -48,14 +48,14 @@ class ProductItem extends StatelessWidget {
           const SizedBox(width: 8),
           IconButton(
             color: Colors.green.shade400,
-            onPressed: product.stock == 0
-                ? null
-                : () => cartController.addProduct(product),
             padding: EdgeInsets.zero,
             constraints: const BoxConstraints.tightFor(width: 42),
             splashRadius: 18,
             iconSize: 24,
             icon: const Icon(Icons.add_shopping_cart),
+            onPressed: product.stock == 0
+                ? null
+                : () => cartController.addProduct(product),
           ),
         ],
       ),
