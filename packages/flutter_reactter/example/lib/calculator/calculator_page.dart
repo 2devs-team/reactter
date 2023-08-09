@@ -18,7 +18,7 @@ class CalculatorPage extends StatelessWidget {
           appBar: AppBar(
             title: const Text('Calculator'),
           ),
-          body: const Column(
+          body: Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               CalculatorResult(),

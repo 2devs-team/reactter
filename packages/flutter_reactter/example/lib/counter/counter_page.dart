@@ -28,7 +28,7 @@ class CounterPage extends StatelessWidget {
               },
             ),
             const SizedBox(height: 16),
-            const Row(
+            Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 ElevatedButton(
