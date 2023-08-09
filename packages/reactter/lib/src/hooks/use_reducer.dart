@@ -38,7 +38,7 @@ class ReactterAction<T> {
   // additional information about what happened
   final T payload;
 
-  ReactterAction({
+  const ReactterAction({
     required this.type,
     required this.payload,
   });
@@ -77,7 +77,7 @@ class ReactterAction<T> {
 /// that happened in the application.
 /// * [UseReducer], a [ReactterHook] that manages state using [reducer] method.
 abstract class ReactterActionCallable<T, P> extends ReactterAction<P> {
-  ReactterActionCallable({
+  const ReactterActionCallable({
     required String type,
     required P payload,
   }) : super(
