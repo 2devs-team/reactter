@@ -3,10 +3,6 @@
 
 We want to keeping adding features for `Reactter`, those are some we have in mind order by priority:
 
-- Widget to control re-render using only hooks
-- Async context.
-- Structure proposal for large projects.
-- Do benchmarks and improve performance.
 - Improve performance and do benchmark.
 
 # Contribute
