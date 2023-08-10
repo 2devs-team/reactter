@@ -76,7 +76,7 @@ See more examples [here](https://zapp.run/pub/flutter_reactter)!
 - [State management](#state-management)
   - [Signal](#signal)
   - [UseState](#usestate)
-  - [Different between Signal and UseState](#different-between-signal-and-usestate)
+  - [Difference between Signal and UseState](#difference-between-signal-and-usestate)
   - [UseAsyncState](#useasyncstate)
   - [UseReducer](#usereducer)
   - [UseCompute](#usecompute)
@@ -102,7 +102,7 @@ See more examples [here](https://zapp.run/pub/flutter_reactter)!
 
 Before anything, you need to be aware that Reactter is distributed on two packages, with slightly different usage.
 
-The package of Reactter that you will want to install depends on the project type you are making.
+The package of Reactter that you will want to install depends on the type of project you are working on.
 
 Select one of the following options to know how to install it:
 
@@ -176,7 +176,7 @@ import 'package:flutter_reactter/flutter_reactter.dart';
 
 And it is recommended to use
 [![Reactter Lint](https://img.shields.io/pub/v/reactter_lint?color=1d7fac&labelColor=29b6f6&label=reactter_lint&logo=dart)](https://pub.dev/packages/reactter_lint)
-which will help to encourage good coding practices and preventing frequent problems using the Reactter convensions.
+which will help to encourage good coding practices and prevent frequent problems using the Reactter convensions.
 
 If you use Visual Studio Code, it is a good idea to use [Reactter Snippets](
 https://marketplace.visualstudio.com/items?itemName=CarLeonDev.reacttersnippets) for improving productivity.
@@ -191,7 +191,7 @@ Reactter is a light and powerful solution for Dart and Flutter. It is composed o
 
 ## State management
 
-In Reactter, state is understood as any object that extends[`ReactterState`](https://pub.dev/documentation/reactter/latest/reactter/ReactterState-class.html), which gives it features such as being able to store one or more values and to notify of its changes.
+In Reactter, state is understood as any object that extends [`ReactterState`](https://pub.dev/documentation/reactter/latest/reactter/ReactterState-class.html), which gives it features such as being able to store one or more values and to notify of its changes.
 
 Reactter offers the following several state managers:
 
@@ -205,7 +205,7 @@ Reactter offers the following several state managers:
 > The hooks (also known as [`ReactterHook`](https://pub.dev/documentation/reactter/latest/reactter/ReactterHook-class.html)) are named with the prefix `Use` according to convention.
 >
 > **RECOMMENDED:**
-> See also [different between Signal and UseState](#different-between-signal-and-usestate) and about [custom hooks](#custom-hooks).
+> See also [difference between Signal and UseState](#difference-between-signal-and-usestate) and about [custom hooks](#custom-hooks).
 
 ### Signal
 
@@ -227,7 +227,7 @@ final intSignal = Signal<int>(0);
 final userSignal = Signal<User>(User());
 ```
 
-`Signal` has `value` property that allows to read and write its state:
+`Signal` has a `value` property that allows to read and write its state:
 
 ```dart
 intSignal.value = 10;
@@ -249,7 +249,7 @@ print("Current state: $intSignal");
 
 > **NOTE:**
 > `Signal` notifies that its `value` has changed when the previous `value` is different from the current `value`.
-> If its `value` is a `Object`, not detect internal changes, only when `value` is setted another `Object`.
+> If its `value` is an `Object`, it does not detect internal changes, only when `value` is setted to another `Object`.
 
 Use `update` method to notify changes after run a set of instructions:
 
@@ -266,17 +266,17 @@ Use `refresh` method to force to notify changes.
 userSignal.refresh();
 ```
 
-When `value` is changed, the `Signal` will emitted the following events(learn about it [here](#lifecycle-and-event-management)):
+When `value` has changed, the `Signal` will emit the following events(learn about it [here](#lifecycle-and-event-management)):
 
 - `Lifecycle.willUpdate` event is triggered before the `value` change or `update`, `refresh` methods have been invoked.
-- `Lifecicle.didUpdate` event is triggered after the `value` change or `update`, `refresh` methods have been invoked.
+- `Lifecycle.didUpdate` event is triggered after the `value` change or `update`, `refresh` methods have been invoked.
 
 > **NOTE:**
-> When you do any arithmetic operation between two `Signal`s, its return a `Obj`, for example: `1.signal + 2.signal` return `3.obj`.
-> A [`Obj`](https://pub.dev/documentation/reactter/latest/reactter/Obj-class.html) is like a `Signal` without reactive functionality, but you can convert it to `Signal` using `.toSignal`.
+> When you do any arithmetic operation between two `Signal`s, it returns an `Obj`, for example: `1.signal + 2.signal` returns `3.obj`.
+> An [`Obj`](https://pub.dev/documentation/reactter/latest/reactter/Obj-class.html) is like a `Signal` without reactive functionality, but you can convert it to `Signal` using `.toSignal`.
 
 > **NOTE:**
-> In flutter, using [`ReactterWatcher`](https://pub.dev/documentation/flutter_reactter/latest/flutter_reactter/ReactterWatcher-class.html), it's a way to keep the widgets automatically updates, accessing the value of signal reactively.
+> In flutter, using [`ReactterWatcher`](https://pub.dev/documentation/flutter_reactter/latest/flutter_reactter/ReactterWatcher-class.html), is a way to keep the widgets automatically updates, accessing the value of signal reactively.
 
 ### UseState
 
@@ -290,7 +290,7 @@ class CounterController {
 }
 ```
 
-`UseState` has `value` property that allows to read and write its state:
+`UseState` has a `value` property that allows to read and write its state:
 
 ```dart
 class CounterController {
@@ -306,7 +306,7 @@ class CounterController {
 
 > **NOTE:**
 > `UseState` notifies that its `value` has changed when the previous `value` is different from the current `value`.
-> If its `value` is a `Object`, not detect internal changes, only when `value` is setted another `Object`.
+> If its `value` is an `Object`, it does not detect internal changes, only when `value` is setted to another `Object`.
 
 Use `update` method to notify changes after run a set of instructions:
 
@@ -323,29 +323,29 @@ Use `refresh` method to force to notify changes.
 userState.refresh();
 ```
 
-When `value` is changed, the `UseState` will emitted the following events(learn about it [here](#lifecycle-and-event-management)):
+When `value` has changed, the `UseState` will emitted the following events(learn about it [here](#lifecycle-and-event-management)):
 
 - `Lifecycle.willUpdate` event is triggered before the `value` change or `update`, `refresh` methods have been invoked.
-- `Lifecicle.didUpdate` event is triggered after the `value` change or `update`, `refresh` methods have been invoked.
+- `Lifecycle.didUpdate` event is triggered after the `value` change or `update`, `refresh` methods have been invoked.
 
-### Different between Signal and UseState
+### Difference between Signal and UseState
 
-Both `UseState` and `Signal` represent a state(`ReactterState`). But there are a few featues that are different between them.
+Both `UseState` and `Signal` represent a state (`ReactterState`). But there are a few features that are different between them.
 
 `UseState` is a `ReactterHook`, therefore unlike a `Signal`, it can be extended and given new capabilities.
 Use of the `value` attribute is required each time `UseState` reads or writes its state. However, `Signal` eliminates the need for it, making the code easier to understand.
 
 In Flutter, when you want to use `UseState`, you must expose the containing parent class to the widget tree through a `ReactterProvider` or `ReactterComponent` and access it using `BuildContext`. Instead, with `Signal` which is reactive, you simply use `ReactterWatcher`.
 
-But it is not all advantages for `Signal`, although it is good for global states and for improving code readability, it is prone to antipatterns and makes debugging difficult(This will be improved in the following versions).
+But it is not all advantages for `Signal`, although it is good for global states and for improving code readability, it is prone to antipatterns and makes debugging difficult (This will be improved in the following versions).
 
 The decision between which one to use is yours. You can use one or both without them getting in the way. And you can even replace a `UseState` with a `Signal` at any time.
 
 ### UseAsyncState
 
-[`UseAsyncState`](https://pub.dev/documentation/reactter/latest/reactter/UseAsyncState-class.html) is a hook([`ReactterHook`](https://pub.dev/documentation/reactter/latest/reactter/ReactterHook-class.html)) with the same feature as [`UseState`](#usestate) but provides a `asyncValue` method, which will be obtained when `resolve` method is executed.
+[`UseAsyncState`](https://pub.dev/documentation/reactter/latest/reactter/UseAsyncState-class.html) is a hook ([`ReactterHook`](https://pub.dev/documentation/reactter/latest/reactter/ReactterHook-class.html)) with the same feature as [`UseState`](#usestate) but provides an `asyncValue` method, which will be obtained when `resolve` method is executed.
 
-This is an translate example:
+This is a translate example:
 
 ```dart
 class TranslateArgs {
@@ -382,9 +382,9 @@ class TranslateController {
 ```
 
 > **NOTE:**
-> If you want to send argument to `asyncValue` method, need to define a type argument which be send through `resolve` method. Like the example shown above, the argument type send is `TranslateArgs` class.
+> If you want to send arguments to the `asyncValue` method, you need to define an argument type which will be send through the `resolve` method. Like the example shown above, the argument type sent is `TranslateArgs` class.
 
-Use `when` method to returns a computed value depending on it's state:
+Use the `when` method to return a computed value depending on it's state:
 
 ```dart
 final computedValue = asyncState.when<String>(
@@ -395,17 +395,17 @@ final computedValue = asyncState.when<String>(
 );
 ```
 
-When `value` is changed, the `UseAsynState` will emitted the following events(learn about it [here](#lifecycle-and-event-management)):
+When `value` has changed, the `UseAsyncState` will emit the following events (learn about it [here](#lifecycle-and-event-management)):
 
 - `Lifecycle.willUpdate` event is triggered before the `value` change or `update`, `refresh` methods have been invoked.
-- `Lifecicle.didUpdate` event is triggered after the `value` change or `update`, `refresh` methods have been invoked.
+- `Lifecycle.didUpdate` event is triggered after the `value` change or `update`, `refresh` methods have been invoked.
 
 ### UseReducer
 
 [`UseReducer`](https://pub.dev/documentation/reactter/latest/reactter/UseReducer-class.html) is a hook([`ReactterHook`](https://pub.dev/documentation/reactter/latest/reactter/ReactterHook-class.html)) that manages state using reducer method. An alternative to [`UseState`](#usestate).
 
 > **RECOMMENDED:**
-> `UseReducer` is usually preferable to `UseState` when you have complex state logic that involves multiple sub-values or when the next state depends on the previous one.
+> `UseReducer` is usually preferable over `UseState` when you have complex state logic that involves multiple sub-values or when the next state depends on the previous one.
 
 `UseReducer` accepts two arguments:
 
@@ -414,11 +414,11 @@ When `value` is changed, the `UseAsynState` will emitted the following events(le
  ```
 
 - The `reducer` method contains your custom state logic that calculates the new state using current state, and actions.
-- The `initialState` is a unique value of any type with which you initialize the state.
+- The `initialState` is a unique value of any type that you use to initialize the state.
 
-`UseReducer` exposes a `dispatch` method that allows to invoke the `reducer` method sending a `ReactterAction`.
+`UseReducer` exposes a `dispatch` method that allows you to invoke the `reducer` method sending a `ReactterAction`.
 
-The current state can be access through `value` property.
+The current state can be accessed through the `value` property.
 
 Here's the counter example using `UseReducer`:
 
@@ -492,10 +492,10 @@ class CounterController {
 }
 ```
 
-When `value` is changed, the `UseReducer` will emitted the following events(learn about it [here](#lifecycle-and-event-management)):
+When `value` has changed, the `UseReducer` will emit the following events (learn about it [here](#lifecycle-and-event-management)):
 
 - `Lifecycle.willUpdate` event is triggered before the `value` change or `update`, `refresh` methods have been invoked.
-- `Lifecicle.didUpdate` event is triggered after the `value` change or `update`, `refresh` methods have been invoked.
+- `Lifecycle.didUpdate` event is triggered after the `value` change or `update`, `refresh` methods have been invoked.
 
 ### UseCompute
 
@@ -532,18 +532,18 @@ class AppController {
 }
 ```
 
-`UseCompute` has `value` property which represent the computed value.
+`UseCompute` has a `value` property which represents the computed value.
 
 > **NOTE:**
 > `UseCompute` notifies that its `value` has changed when the previous `value` is different from the current `value`.
 
-When `value` is changed, the `UseState` will emitted the following events(learn about it [here](#lifecycle-and-event-management)):
+When `value` has changed, the `UseState` will emit the following events (learn about it [here](#lifecycle-and-event-management)):
 
 - `Lifecycle.willUpdate` event is triggered before the `value` change or `update`, `refresh` methods have been invoked.
-- `Lifecicle.didUpdate` event is triggered after the `value` change or `update`, `refresh` methods have been invoked.
+- `Lifecycle.didUpdate` event is triggered after the `value` change or `update`, `refresh` methods have been invoked.
 
 > **NOTE:**
-> `UseCompute` is read-only, it's mean that its value cannot be changed,  except by invoking the `UseCompute` method.
+> `UseCompute` is read-only, meaning that its value cannot be changed, except by invoking the `UseCompute` method.
 
 ### Custom hooks
 
@@ -572,11 +572,11 @@ class UseCount extends ReactterHook {
 ```
 
 > **IMPORTANT:**
-> For creating a `ReactterHook`, it must be registered by adding the following line:
+> To create a `ReactterHook`, you need to register it by adding the following line:
 > `final $ = ReactterHook.$register;`
 >
 > **NOTE:**
-> `ReactterHook` provides `update` method which notifies about its changed.
+> `ReactterHook` provides an `update` method which notifies about its changes.
 
 You can then call that custom hook from anywhere in the code and get access to its shared logic:
 
@@ -601,7 +601,7 @@ class AppController {
 
 With Reactter, you can create, delete and access the desired object from a single location, and you can do it from anywhere in the code, thanks to reactter's dependency injection system.
 
-Dependency injection offers several benefits. It promotes the principle of inversion of control, where the control over object creation and management is delegated to Reactter. This improves code modularity, reusability, and testability.It also simplifies the code by removing the responsibility of creating dependencies from individual classes, making them more focused on their core functionality.
+Dependency injection offers several benefits. It promotes the principle of inversion of control, where the control over object creation and management is delegated to Reactter. This improves code modularity, reusability, and testability. It also simplifies the code by removing the responsibility of creating dependencies from individual classes, making them more focused on their core functionality.
 
 Reactter offers the following several instance managers:
 
@@ -643,7 +643,7 @@ Reactter offers several convenient shortcuts for managing instances:
   final appControllerWithId = Reactter.create(id: 'uniqueId', builder: () => AppController());
   ```
 
-- **`Reactter.delete`**: This method deletes the instance but keep the `builder` function.
+- **`Reactter.delete`**: This method deletes the instance but keeps the `builder` function.
 
   ```dart
   Reactter.delete<AppController>();
@@ -656,7 +656,7 @@ Reactter offers several convenient shortcuts for managing instances:
 
 ### UseContext
 
-[`UseContext`](https://pub.dev/documentation/reactter/latest/reactter/UseContext-class.html) is a hook([`ReactterHook`](https://pub.dev/documentation/reactter/latest/reactter/ReactterHook-class.html)) that allows to get the `T` instance with/without `id` from dependency store when it's ready.
+[`UseContext`](https://pub.dev/documentation/reactter/latest/reactter/UseContext-class.html) is a hook([`ReactterHook`](https://pub.dev/documentation/reactter/latest/reactter/ReactterHook-class.html)) that allows to get the `T` instance with/without `id` from the dependency store when it's ready.
 
 ```dart
 class AppController {
@@ -682,7 +682,7 @@ Use [`UseEffect`](#useeffect) hook as shown in the example above, to wait for th
 
 ### ReactterProvider
 
-[`ReactterProvider`](https://pub.dev/documentation/flutter_reactter/latest/flutter_reactter/ReactterProvider-class.html) is a Widget (exclusive of `flutter_reactter`) that hydrates from an `T` instance to the Widget tree. The `T` instance can be access through methods [BuildContext extension](#buildcontext-extension):
+[`ReactterProvider`](https://pub.dev/documentation/flutter_reactter/latest/flutter_reactter/ReactterProvider-class.html) is a Widget (exclusive of `flutter_reactter`) that hydrates from an `T` instance to the Widget tree. The `T` instance can be accessed through methods [BuildContext extension](#buildcontext-extension):
 
 ```dart
 ReactterProvider<CounterController>(
@@ -697,17 +697,17 @@ ReactterProvider<CounterController>(
 
 Uses `id` property to identify the `T` instance.
 
-Use `child` property to pass a Widget which to be built once only.
+Use the `child` property to pass a Widgetthat will be built only once.
 It will be sent through the `builder` method, so you can incorporate it into your build.
 
 > **RECOMMENDED:**
-> Dont's use Object with constructor parameters to prevent conflicts.
+> Don't use Object with constructor parameters to prevent conflicts.
 >
-> **NOTE:** `ReactteProvider` is a "scoped". So, the `builder` method will be rebuild, when the instance changes or any `ReactterState` specified using the watch methods of [BuildContext extension](#buildcontext-extension).
+> **NOTE:** `ReactteProvider` is "scoped". So, the `builder` method will be rebuild when the instance or any `ReactterState` specified using the watch methods of [BuildContext extension](#buildcontext-extension) changes.
 
 ### ReactterProviders
 
-[`ReactterProviders`](https://pub.dev/documentation/flutter_reactter/latest/flutter_reactter/ReactterProviders-class.html) is a Widget (exclusive of `flutter_reactter`) that allows to use multiple [`ReactterProvider`](#reactterprovider) as nested way.
+[`ReactterProviders`](https://pub.dev/documentation/flutter_reactter/latest/flutter_reactter/ReactterProviders-class.html) is a Widget (exclusive of `flutter_reactter`) that allows to use multiple [`ReactterProvider`](#reactterprovider) in a nested way.
 
 ```dart
 ReactterProviders(
@@ -734,13 +734,13 @@ ReactterProviders(
 ```
 
 > **RECOMMENDED:**
-> Dont's use Object with constructor parameters to prevent conflicts.
+> Don't use Object with constructor parameters to prevent conflicts.
 >
-> **NOTE:** `ReactteProviders` is a "scoped". So, the `builder` method will be rebuild, when the instance changes or any `ReactterState` specified using the watch methods of [BuildContext extension](#buildcontext-extension).
+> **NOTE:** `ReactteProviders` is "scoped". So, the `builder` method will be rebuild, when the instance or any `ReactterState` specified using the watch methods of [BuildContext extension](#buildcontext-extension) changes.
 
 ### ReactterComponent
 
-[`ReactterComponent`](https://pub.dev/documentation/flutter_reactter/latest/widgets/ReactterComponent-class.html) is a Widget (exclusive of `flutter_reactter`) that provides [`ReactterProvider`](#reactterprovider) features, whose `T` instance defined is exposing trough render method.
+[`ReactterComponent`](https://pub.dev/documentation/flutter_reactter/latest/widgets/ReactterComponent-class.html) is a Widget (exclusive of `flutter_reactter`) that provides [`ReactterProvider`](#reactterprovider) features, whose `T` instance defined is exposed trough render method.
 
 ```dart
 class CounterComponent extends ReactterComponent<CounterController> {
@@ -762,20 +762,19 @@ class CounterComponent extends ReactterComponent<CounterController> {
 Use `builder` getter to define the instance creating method.
 
 > **NOTE:**
-> If you don't use `builder` getter, the `T` instance is not created and instead tried to be found it in the nearest ancestor where it was created.
->
+> If you don't use `builder` getter, the instance `T` is not created. Instead, an attempt will be made to locate it within the closest ancestor where it was initially created.
 > **RECOMMENDED:**
-> Dont's use Object with constructor parameters to prevent conflicts.
+> Don't use Object with constructor parameters to prevent conflicts.
 
 Use `id` getter to identify the `T` instance:
 
-Use `listenStates` getter to define the states and with its changes rebuild the Widget tree defined in `render` method.
+Use `listenStates` getter to define the states and with its changes rebuild the Widget tree defined in the `render` method.
 
-Use `listenAll` getter as `true` to listen all the `T` instance changes to rebuild the Widget tree defined in `render` method.
+Use `listenAll` getter as `true` to listen to all the `T` instance changes to rebuild the Widget tree defined in the `render` method.
 
 ## LifeCycle and event management
 
-In Reactter, the states([`ReactterState`](#state-management)) and the instances (managed by the [`dependency injection`](#dependency-injection)) contain different stages, also known as [`LifeCycle`](https://pub.dev/documentation/reactter/latest/reactter/Lifecycle.html). This lifecycle's linked events are as follows:
+In Reactter, the states ([`ReactterState`](#state-management)) and the instances (managed by the [`dependency injection`](#dependency-injection)) contain different stages, also known as [`LifeCycle`](https://pub.dev/documentation/reactter/latest/reactter/Lifecycle.html). This lifecycles linked events are as follows:
 
 - **`Lifecycle.registered`**: This event is triggered when the instance has been registered.
 - **`Lifecycle.unregistered`**: This event is triggered when the instance is no longer registered.
@@ -854,9 +853,9 @@ Reactter offers several convenient shortcuts for managing events:
 
 ### UseEvent
 
-[`UseEvent`](https://pub.dev/documentation/reactter/latest/reactter/UseEvent-class.html) is a hook([`ReactterHook`](https://pub.dev/documentation/reactter/latest/reactter/ReactterHook-class.html)) that allows to manager events.
+[`UseEvent`](https://pub.dev/documentation/reactter/latest/reactter/UseEvent-class.html) is a hook ([`ReactterHook`](https://pub.dev/documentation/reactter/latest/reactter/ReactterHook-class.html)) that allows to manager events.
 
-Use `on` method to listen for instance's event:
+Use the `on` method to listen for instance's event:
 
 ```dart
 enum Events { SomeEvent };
@@ -868,19 +867,19 @@ void onSomeEvent(inst, param) {
 UseEvent<AppController>().on(Events.SomeEvent, onSomeEvent);
 ```
 
-Use `off` method to stop listening instance's event:
+Use the `off` method to stop listening to instance's event:
 
 ```dart
 UseEvent<AppController>().off(Events.SomeEvent, onSomeEvent);
 ```
 
-Use `one` method to listen for instance's event once:
+Use the `one` method to listen for instance's event once:
 
 ```dart
 UseEvent<AppController>().one(Events.SomeEvent, onSomeEvent);
 ```
 
-Use `emit` method to trigger a instance's event:
+Use the `emit` method to trigger an instance event:
 
 ```dart
 UseEvent<AppController>().emit(Events.SomeEvent, 'Parameter');
@@ -889,11 +888,11 @@ UseEvent<AppController>().emit(Events.SomeEvent, 'Parameter');
 > **IMPORTANT:** Don't forget to remove event using `off` or using `dispose` to remove all instance's events.
 > Failure to do so could increase memory usage or have unexpected behaviors, such as events in permanent listening.
 >
-> **RECOMMENDED:** If you have the instance, use directly with `UseEvent.withInstance(<instance>)` for optimal performance.
+> **RECOMMENDED:** If you have the instance, use it directly with `UseEvent.withInstance(<instance>)` for optimal performance.
 
 ### UseEffect
 
-[`UseEffect`](https://pub.dev/documentation/reactter/latest/reactter/UseEffect-class.html) is a hook([`ReactterHook`](https://pub.dev/documentation/reactter/latest/reactter/ReactterHook-class.html)) that allows to manager side-effect.
+[`UseEffect`](https://pub.dev/documentation/reactter/latest/reactter/UseEffect-class.html) is a hook([`ReactterHook`](https://pub.dev/documentation/reactter/latest/reactter/ReactterHook-class.html)) that allows to manage side-effect.
 
 ```dart
 UseEffect(
@@ -903,7 +902,7 @@ UseEffect(
 )
 ```
 
-The side-effect logic into the `callback` function is executed when `dependencies`(List of `ReactterState`) argument changes or `instance`(Object) trigger `LifeCycle.didMount` event.
+The side-effect logic into the `callback` function is executed when `dependencies` (List of `ReactterState`) argument changes or `instance` (Object) trigger `LifeCycle.didMount` event.
 
 If the `callback` returns a function, then `UseEffect` considers this as an `effect cleanup`.
 The `cleanup` callback is executed, before `callback` is called or `instance`(Object) trigger `LifeCycle.willUnmount` event:
@@ -940,12 +939,11 @@ UseEffect(
 ```
 
 > **NOTE:**
-> If you don't add `instance` argument to `UseEffect`, the `callback` don't execute on lifecycle `didMount`, and the `cleanup` don't execute on lifecycle `willUnmount` (theses `LifeCycle` events are used with `flutter_reactter` only).
+> If you don't add an `instance` argument to `UseEffect`, the `callback` won't execute on lifecycle `didMount`, and the `cleanup` won't execute on lifecycle `willUnmount` (theses `LifeCycle` events are used with `flutter_reactter` only).
 
 ### ReactterConsumer
 
-[`ReactterConsumer`](https://pub.dev/documentation/flutter_reactter/latest/flutter_reactter/ReactterConsumer-class.html) is a Widget (exclusive of `flutter_reactter`) that allows to access the `T` instance from `ReactterProvider`'s nearest ancestor and can listen all or specified states
-to rebuild the Widget when theses changes occur:
+[`ReactterConsumer`](https://pub.dev/documentation/flutter_reactter/latest/flutter_reactter/ReactterConsumer-class.html) is a Widget (exclusive of `flutter_reactter`) that allows to access the `T` instance from `ReactterProvider`'s nearest ancestor and can listen all or specified states to rebuild the Widget when theses changes occur:
 
 ```dart
 class SomeWidget extends StatelessWidget {
