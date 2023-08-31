@@ -13,4 +13,5 @@ part 'framework/reactter_instance_manager.dart';
 part 'framework/reactter_instance.dart';
 part 'framework/reactter_interface.dart';
 part 'framework/reactter_log.dart';
+part 'framework/reactter_memo.dart';
 part 'framework/reactter_state.dart';
