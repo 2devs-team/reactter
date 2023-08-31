@@ -12,7 +12,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  reactter: ^5.1.2
+  reactter:
+    path: ../reactter
 
 dev_dependencies:
   flutter_driver:
