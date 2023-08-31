@@ -11,7 +11,7 @@ void main() {
 
       expect(stateAsync.value, "initial");
 
-      await stateAsync.resolve();
+      await stateAsync.resolve(Arg(false));
 
       expect(stateAsync.value, "resolved");
     });
@@ -20,7 +20,7 @@ void main() {
       final testController = TestController();
       final stateAsync = testController.stateAsync;
 
-      await stateAsync.resolve(true);
+      await stateAsync.resolve(Arg(true));
 
       expect(stateAsync.value, "initial");
       expect(stateAsync.status, UseAsyncStateStatus.error);
@@ -31,7 +31,7 @@ void main() {
       final testController = TestController();
       final stateAsync = testController.stateAsync;
 
-      await stateAsync.resolve();
+      await stateAsync.resolve(Arg(false));
 
       expect(stateAsync.value, "resolved");
 
@@ -47,17 +47,17 @@ void main() {
       final s1 = stateAsync.when<String>(standby: (value) => value);
       expect(s1, "initial");
 
-      stateAsync.resolve();
+      stateAsync.resolve(Arg(false));
 
       final s2 = stateAsync.when<String>(loading: (value) => "loading");
       expect(s2, "loading");
 
-      await stateAsync.resolve();
+      await stateAsync.resolve(Arg(false));
 
       final s3 = stateAsync.when<String>(done: (value) => value);
       expect(s3, "resolved");
 
-      await stateAsync.resolve(true);
+      await stateAsync.resolve(Arg(true));
 
       final s4 = stateAsync.when<String>(error: (error) => error.toString());
       expect(s4, "Exception: has a error");

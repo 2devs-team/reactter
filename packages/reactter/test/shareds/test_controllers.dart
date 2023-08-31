@@ -42,7 +42,9 @@ class DecrementActionCallable extends ReactterActionCallable<TestStore, int> {
   }
 }
 
-Future<String> _resolveStateAsync([bool throwError = false]) async {
+Future<String> _resolveStateAsync(Arg<bool> args) async {
+  final throwError = args.arg;
+
   if (throwError) {
     throw Exception("has a error");
   }
@@ -81,7 +83,7 @@ class TestController with ReactterState {
   final stateList = UseState([]);
   final stateMap = UseState({});
   final stateClass = UseState<TestClass?>(null);
-  final stateAsync = UseAsyncState("initial", _resolveStateAsync);
+  final stateAsync = UseAsyncState.withArg("initial", _resolveStateAsync);
   final stateReduce = UseReducer(_reducer, TestStore(count: 0));
 
   late final stateCompute = Reactter.lazy(
