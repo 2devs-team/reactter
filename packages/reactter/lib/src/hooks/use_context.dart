@@ -44,7 +44,9 @@ part of '../hooks.dart';
 ///
 /// * [ReactterInstanceManager], a instances manager.
 /// * [UseEffect], a side-effect manager.
+@Deprecated('Use manage instances shortcuts instead.')
 class UseContext<T extends Object> extends ReactterHook {
+  @override
   final $ = ReactterHook.$register;
 
   bool _isDisposed = false;

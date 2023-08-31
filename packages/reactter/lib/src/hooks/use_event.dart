@@ -60,6 +60,7 @@ part of '../hooks.dart';
 /// See also:
 ///
 /// * [ReactterInstanceManager], a instances manager.
+@Deprecated('Use event shortcuts instead.')
 class UseEvent<T extends Object?> {
   final Object? _instanceReceived;
 
