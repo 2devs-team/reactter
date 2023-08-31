@@ -19,12 +19,13 @@ ____
 - ⚡️ Build for **speed**.
 - ⚖️ Super **lightweight**([🥇 See benchmarks](https://github.com/CarLeonDev/state_managements#memory-size)).
 - 📏 **Reduce boilerplate code** significantly([🥇 See benchmarks](https://github.com/CarLeonDev/state_managements#lines-number)).
-- 📝 **Improve code readability**.
-- 💧 **Adaptable** to any architecture.
+- 📝 Improve **code readability**.
+- 💧 **Flexible** and **adaptable** to any architecture.
 - ☢️ **Reactive state** using [Signal](#signal).
 - ♻️ **Reuse state** creating [custom hooks](#custom-hooks).
-- 🪄 **No configuration** and **no code generation** necessary.
 - 🎮 **Total control** to re-render widget tree.
+- 🧪 **Fully testable**, 100% code coverage.
+- 🪄 **No configuration** and **no code generation** necessary.
 - 💙 **Dart or Flutter**, supports the latest version of Dart.
 
 Let's see a small and simple example:
@@ -76,11 +77,10 @@ See more examples [here](https://zapp.run/pub/flutter_reactter)!
 - [State management](#state-management)
   - [Signal](#signal)
   - [UseState](#usestate)
-  - [Difference between Signal and UseState](#difference-between-signal-and-usestate)
   - [UseAsyncState](#useasyncstate)
   - [UseReducer](#usereducer)
   - [UseCompute](#usecompute)
-  - [Custom hooks](#custom-hooks)
+  - [ReactterMemo](#reacttermemo)
 - [Dependency injection](#dependency-injection)
   - [Shortcuts to manage instances](#shortcuts-to-manage-instances)
   - [UseContext](#usecontext)
@@ -94,6 +94,9 @@ See more examples [here](https://zapp.run/pub/flutter_reactter)!
   - [ReactterConsumer](#reactterconsumer) (`flutter_reactter`)
   - [ReactterWatcher](#reactterwatcher) (`flutter_reactter`)
   - [BuildContext extension](#buildcontext-extension) (`flutter_reactter`)
+- [Custom hooks](#custom-hooks)
+- [Generic arguments](#generic-arguments)
+- [Difference between Signal and UseState](#difference-between-signal-and-usestate)
 - [Resources](#resources)
 - [Contribute](#contribute)
 - [Authors](#authors)
@@ -200,6 +203,7 @@ Reactter offers the following several state managers:
 - [UseAsyncState](#useasyncstate)
 - [UseReducer](#usereducer)
 - [UseCompute](#usecompute)
+- [ReactterMemo](#reacttermemo)
 
 > **NOTE:**
 > The hooks (also known as [`ReactterHook`](https://pub.dev/documentation/reactter/latest/reactter/ReactterHook-class.html)) are named with the prefix `Use` according to convention.
@@ -214,17 +218,17 @@ Reactter offers the following several state managers:
 It can be initialized using the extension `.signal`:
 
 ```dart
-final strSignal = "initial value".signal;
 final intSignal = 0.signal;
+final strSignal = "initial value".signal;
 final userSignal = User().signal;
 ```
 
-or using the constructor class `Signal<Type>(InitialValue)`:
+or using the constructor class `Signal<T>(T initialValue)`:
 
 ```dart
-final strSignal = Signal<String>("initial value");
 final intSignal = Signal<int>(0);
-final userSignal = Signal<User>(User());
+final strSignal = Signal("initial value");
+final userSignal = Signal(User());
 ```
 
 `Signal` has a `value` property that allows to read and write its state:
@@ -282,6 +286,12 @@ When `value` has changed, the `Signal` will emit the following events(learn abou
 
 [`UseState`](https://pub.dev/documentation/reactter/latest/reactter/UseState-class.html) is a hook([`ReactterHook`](https://pub.dev/documentation/reactter/latest/reactter/ReactterHook-class.html)) that allows to declare state variables and manipulate its `value`, which in turn notifies about its changes.
 
+`UseState` accepts an argument:
+
+```dart
+UseState<T>(T initialValue)
+```
+
 It can be declared inside a class, like this:
 
 ```dart
@@ -328,62 +338,54 @@ When `value` has changed, the `UseState` will emitted the following events(learn
 - `Lifecycle.willUpdate` event is triggered before the `value` change or `update`, `refresh` methods have been invoked.
 - `Lifecycle.didUpdate` event is triggered after the `value` change or `update`, `refresh` methods have been invoked.
 
-### Difference between Signal and UseState
-
-Both `UseState` and `Signal` represent a state (`ReactterState`). But there are a few features that are different between them.
-
-`UseState` is a `ReactterHook`, therefore unlike a `Signal`, it can be extended and given new capabilities.
-Use of the `value` attribute is required each time `UseState` reads or writes its state. However, `Signal` eliminates the need for it, making the code easier to understand.
-
-In Flutter, when you want to use `UseState`, you must expose the containing parent class to the widget tree through a `ReactterProvider` or `ReactterComponent` and access it using `BuildContext`. Instead, with `Signal` which is reactive, you simply use `ReactterWatcher`.
-
-But it is not all advantages for `Signal`, although it is good for global states and for improving code readability, it is prone to antipatterns and makes debugging difficult (This will be improved in the following versions).
-
-The decision between which one to use is yours. You can use one or both without them getting in the way. And you can even replace a `UseState` with a `Signal` at any time.
-
 ### UseAsyncState
 
-[`UseAsyncState`](https://pub.dev/documentation/reactter/latest/reactter/UseAsyncState-class.html) is a hook ([`ReactterHook`](https://pub.dev/documentation/reactter/latest/reactter/ReactterHook-class.html)) with the same feature as [`UseState`](#usestate) but provides an `asyncValue` method, which will be obtained when `resolve` method is executed.
+[`UseAsyncState`](https://pub.dev/documentation/reactter/latest/reactter/UseAsyncState-class.html) is a hook ([`ReactterHook`](https://pub.dev/documentation/reactter/latest/reactter/ReactterHook-class.html)) with the same feature as [`UseState`](#usestate) but its value will be lazily resolved by a function(`asyncFunction`).
+
+`UseAsyncState` accepts two arguments:
+
+```dart
+UseAsyncState<T>(
+  T initialValue,
+  Future<T> Function() asyncFunction,
+);
+```
+
+Use `UseAsyncState.withArg` to pass arguments to the `asyncFunction`
+
+```dart
+UseAsyncState.withArg<T, A extends Arg?>(
+  T initialValue,
+  Future<T> Function(A) asyncFunction,
+)
+```
 
 This is a translate example:
 
 ```dart
-class TranslateArgs {
-  final String text;
-  final String from;
-  final String to;
-
-  TranslateArgs({ this.text, this.from, this.to, });
-}
-
 class TranslateController {
-  late final translateState = UseAsyncStates<String?, TranslateArgs>(
+  final translateState = UseAsyncStates.withArg(
     null,
-    translate
+    (ArgsX3<String> args) async {
+      final text = args.arg;
+      final from = args.arg2;
+      final to = args.arg3;
+      // this is fake code, which simulates a request to API
+      return await api.translate(text, from, to);
+    }
   );
 
   TranslateController() {
     translateState.resolve(
-      TranslateArgs({
-        text: 'Hello world',
-        from: 'EN',
-        to: 'ES',
-      }),
+      Args3('Hello world', 'EN','ES'),
     ).then((_) {
       print("'Hello world' translated to Spanish: '${translateState.value}'");
     });
   }
-
-  Future<String> translate([TranslateArgs args]) async {
-    // this is fake code, which simulates a request to API
-    return await api.translate(args);
-  }
 }
 ```
 
-> **NOTE:**
-> If you want to send arguments to the `asyncValue` method, you need to define an argument type which will be send through the `resolve` method. Like the example shown above, the argument type sent is `TranslateArgs` class.
-
+// TODO: to reference `#generic-arguments` and how is it used in the example
 Use the `when` method to return a computed value depending on it's state:
 
 ```dart
@@ -410,7 +412,10 @@ When `value` has changed, the `UseAsyncState` will emit the following events (le
 `UseReducer` accepts two arguments:
 
  ```dart
-  UseReducer(<reducer>, <initialState>);
+  UseReducer<T>(
+    T Function(T state, ReactterAction<dynamic> action) reducer, 
+    T initialState,
+  );
  ```
 
 - The `reducer` method contains your custom state logic that calculates the new state using current state, and actions.
@@ -499,9 +504,18 @@ When `value` has changed, the `UseReducer` will emit the following events (learn
 
 ### UseCompute
 
-[`UseCompute`](https://pub.dev/documentation/reactter/latest/reactter/UseCompute-class.html) is a hook([`ReactterHook`](https://pub.dev/documentation/reactter/latest/reactter/ReactterHook-class.html)) that keeps listening for state dependencies changes, to return a computed value from a defined method.
+[`UseCompute`](https://pub.dev/documentation/reactter/latest/reactter/UseCompute-class.html) is a hook([`ReactterHook`](https://pub.dev/documentation/reactter/latest/reactter/ReactterHook-class.html)) that keeps listening for state `dependencies` changes, to return a computed value(`T`) from a defined method(`computeValue`).
 
-An example is shown below:
+`UseCompute` accepts two arguments:
+
+```dart
+UseCompute<T>(
+  T Function() computeValue,
+  List<ReactterState> dependencies,
+)
+```
+
+An example:
 
 ```dart
 class AppController {
@@ -545,57 +559,57 @@ When `value` has changed, the `UseState` will emit the following events (learn a
 > **NOTE:**
 > `UseCompute` is read-only, meaning that its value cannot be changed, except by invoking the `UseCompute` method.
 
-### Custom hooks
+// TODO: to talk about the performance using `Reactter.memo`
 
-Custom hooks are classes that extend [`ReactterHook`](https://pub.dev/documentation/reactter/latest/reactter/ReactterHook-class.html) that follow a special naming convention with the `use` prefix and can contain state logic, effects or any other custom code.
+### ReactterMemo
 
-There are several advantages to using Custom Hooks:
+[`ReactterMemo`](https://pub.dev/documentation/reactter/latest/reactter/ReactterMemo-class.html) is a class callable that lets you cache the result of a calculation.
 
-- **Reusability**: you can use the same hook again and again, without the need to write it twice.
-- **Clean Code**: extracting part of context logic into a hook will provide a cleaner codebase.
-- **Maintainability**: easier to maintain. if you need to change the logic of the hook, you only need to change it once.
-
-Here's the counter example:
+`ReactterMemo` accept an argument:
 
 ```dart
-class UseCount extends ReactterHook {
-  final $ = ReactterHook.$register;
+ReactterMemo<T, A extends Arg?>(
+  T Function(A) calculateValue,
+)
+```
 
-  int _count = 0;
-  int get value => _count;
+When `ReactterMemo` is called, it takes the arguments(`A`) and check if value(`T`) was previously resolved by `calculateValue` using the same arguments(`A`), then returns value(`T`) from the cache, otherwise it calls `calculateValue` and stores the returned value(`T`) in the cache.
 
-  UseCount(int initial) : _count = initial;
+This is an factorial example:
 
-  void increment() => update(() => _count += 1);
-  void decrement() => update(() => _count -= 1);
+```dart
+late final factorial = ReactterMemo(calculateFactorial);
+
+/// A factorial(n!) represents the multiplication of all numbers between 1 and n.
+/// So if you were to have 3!, for example, you'd compute 3 x 2 x 1 (which = 6).
+BigInt calculateFactorial(Arg<int> args) {
+  final numero = args.arg;
+  if (numero == 0) return BigInt.one;
+  return BigInt.from(numero) * factorial(Arg(numero - 1));
+}
+
+void main() {
+  // Returns the result of multiplication of 1 to 50.
+  final f50 = factorial(const Arg(50));
+  // Returns the result immediately from cache
+  // because it was resolved in the previous line.
+  final f10 = factorial(const Arg(10));
+  // Returns the result of the multiplication of 51 to 100
+  // and 50! which is obtained from the cache.
+  final f100 = factorial(const Arg(100));
+
+  print(
+    'Results:\n'
+    '\t10!: $f10\n'
+    '\t50!: $f50\n'
+    '\t100!: $f100\n'
+  );
 }
 ```
 
-> **IMPORTANT:**
-> To create a `ReactterHook`, you need to register it by adding the following line:
-> `final $ = ReactterHook.$register;`
->
-> **NOTE:**
-> `ReactterHook` provides an `update` method which notifies about its changes.
-
-You can then call that custom hook from anywhere in the code and get access to its shared logic:
-
-```dart
-class AppController {
-  final count = UseCount(0);
-
-  AppController() {
-    Timer.periodic(Duration(seconds: 1), (_) => count.increment());
-
-    // Print count value every second
-    Reactter.on(
-      count,
-      Lifecycle.didUpdate,
-      (_, __) => print("Count: ${count.value}",
-    );
-  }
-}
-```
+// TODO: to add `Reactter.memo` shortcut and what are the differences
+// TODO: to reference `#generic-arguments`
+// TODO: to talk about the performance
 
 ## Dependency injection
 
@@ -896,16 +910,16 @@ UseEvent<AppController>().emit(Events.SomeEvent, 'Parameter');
 
 ```dart
 UseEffect(
-  <<Function cleanup> Function callback>,
-  <ReactterState dependencies>[],
-  <Object instance>,
+  <Function cleanup> Function callback,
+  List<ReactterState> dependencies,
+  [Object? instance]
 )
 ```
 
-The side-effect logic into the `callback` function is executed when `dependencies` (List of `ReactterState`) argument changes or `instance` (Object) trigger `LifeCycle.didMount` event.
+The side-effect logic into the `callback` function is executed when the `dependencies` argument changes or the `instance` trigger `LifeCycle.didMount` event.
 
 If the `callback` returns a function, then `UseEffect` considers this as an `effect cleanup`.
-The `cleanup` callback is executed, before `callback` is called or `instance`(Object) trigger `LifeCycle.willUnmount` event:
+The `cleanup` callback is executed, before `callback` is called or `instance` trigger `LifeCycle.willUnmount` event:
 
 Let's see an example with a counter that increments every second:
 
@@ -1107,7 +1121,6 @@ final appController = context.watch<AppController>(
 );
 ```
 
-
 - **`context.watchId`**: Gets the `T` instance by `id` from `ReactterProvider`'s nearest ancestor and listens instance changes or `ReactterState` changes declared in second paramater.
 
 ```dart
@@ -1136,12 +1149,82 @@ final resourceController = context.use<ResourceController>('UniqueId');
 > **NOTE:**
 > A [`ReactterState`](#state-management) can be a [`Signal`](#signal) or [`ReactterHook`](https://pub.dev/documentation/reactter/latest/reactter/ReactterHook-class.html) (like [`UseState`](#usestate), [`UseAsynState`](#useasyncstate), [`UseReducer`](#usereducer) or another [Custom hooks](#custom-hooks)).
 
+### Custom hooks
+
+Custom hooks are classes that extend [`ReactterHook`](https://pub.dev/documentation/reactter/latest/reactter/ReactterHook-class.html) that follow a special naming convention with the `use` prefix and can contain state logic, effects or any other custom code.
+
+There are several advantages to using Custom Hooks:
+
+- **Reusability**: you can use the same hook again and again, without the need to write it twice.
+- **Clean Code**: extracting part of context logic into a hook will provide a cleaner codebase.
+- **Maintainability**: easier to maintain. if you need to change the logic of the hook, you only need to change it once.
+
+Here's the counter example:
+
+```dart
+class UseCount extends ReactterHook {
+  final $ = ReactterHook.$register;
+
+  int _count = 0;
+  int get value => _count;
+
+  UseCount(int initial) : _count = initial;
+
+  void increment() => update(() => _count += 1);
+  void decrement() => update(() => _count -= 1);
+}
+```
+
+> **IMPORTANT:**
+> To create a `ReactterHook`, you need to register it by adding the following line:
+> `final $ = ReactterHook.$register;`
+>
+> **NOTE:**
+> `ReactterHook` provides an `update` method which notifies about its changes.
+
+You can then call that custom hook from anywhere in the code and get access to its shared logic:
+
+```dart
+class AppController {
+  final count = UseCount(0);
+
+  AppController() {
+    Timer.periodic(Duration(seconds: 1), (_) => count.increment());
+
+    // Print count value every second
+    Reactter.on(
+      count,
+      Lifecycle.didUpdate,
+      (_, __) => print("Count: ${count.value}",
+    );
+  }
+}
+```
+
+## Generic arguments
+
+// TODO: to complete documentation
+
+## Difference between Signal and UseState
+
+Both `UseState` and `Signal` represent a state (`ReactterState`). But there are a few features that are different between them.
+
+`UseState` is a `ReactterHook`, therefore unlike a `Signal`, it can be extended and given new capabilities.
+Use of the `value` attribute is required each time `UseState` reads or writes its state. However, `Signal` eliminates the need for it, making the code easier to understand.
+
+In Flutter, when you want to use `UseState`, you must expose the containing parent class to the widget tree through a `ReactterProvider` or `ReactterComponent` and access it using `BuildContext`. Instead, with `Signal` which is reactive, you simply use `ReactterWatcher`.
+
+But it is not all advantages for `Signal`, although it is good for global states and for improving code readability, it is prone to antipatterns and makes debugging difficult (This will be improved in the following versions).
+
+The decision between which one to use is yours. You can use one or both without them getting in the way. And you can even replace a `UseState` with a `Signal` at any time.
+
 ## Resources
 
 - Documentation
   - [Reactter](https://pub.dev/documentation/reactter/latest)
   - [Flutter Reactter](https://pub.dev/documentation/flutter_reactter/latest)
 - [Examples](https://github.com/2devs-team/reactter/tree/master/packages/flutter_reactter/example)
+- [Examples in zapp](https://zapp.run/pub/flutter_reactter)
 
 ## Contribute
 
