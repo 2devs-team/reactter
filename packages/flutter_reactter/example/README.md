@@ -66,7 +66,7 @@ Search user or repository and show info about it.
 
 [![Github search example](https://raw.githubusercontent.com/2devs-team/reactter_assets/main/examples/api_example.gif)](https://github.com/2devs-team/reactter/tree/master/packages/flutter_reactter/example/lib/api)
 
-Implements: `ReactterConsumer`, `ReactterProvider`, `UseAsyncState`, `UseState`.
+Implements: `Arg`, `Reactter.memo`, `ReactterConsumer`, `ReactterProvider`, `UseAsyncState`, `UseState`.
 
 ## Todos
 
@@ -86,4 +86,4 @@ Change size, shape and color using animations.
 
 [![Animate widget example](https://raw.githubusercontent.com/2devs-team/reactter_assets/main/examples/animation_example.gif)](https://github.com/2devs-team/reactter/tree/master/packages/flutter_reactter/example/lib/animation)
 
-Implements: `ReactterConsumer`, `ReactterHook`, `ReactterProvider`, `UseEffect`, `UseEvent`.
+Implements: `Args3`, `Reactter.lazy`, `Reactter.memo`, `ReactterConsumer`, `ReactterHook`, `ReactterProvider`, `UseEffect`, `UseEvent`.

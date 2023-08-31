@@ -11,8 +11,10 @@ class ApiController {
   final formKey = GlobalKey<FormState>();
   final textFocusNode = FocusNode();
   final textController = TextEditingController();
-  final entity = UseAsyncState(null, _resolveEntity);
-
+  final entity = UseAsyncState.withArg(
+    null,
+    Reactter.memo(_resolveEntity),
+  );
 
   String? validator(String? value) {
     if (value == null || value.isEmpty) {
@@ -23,10 +25,11 @@ class ApiController {
   }
 
   void search() async {
-    entity.resolve(textController.text);
+    entity.resolve(Arg(textController.text));
   }
 
-  static Future<Object?> _resolveEntity([String query = ""]) async {
+  static Future<Object?> _resolveEntity(Arg<String> args) async {
+    final query = args.arg;
     final queryPath = query.split("/");
 
     if (queryPath.length > 1) {

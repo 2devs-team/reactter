@@ -59,6 +59,7 @@ class AnimationOptions<T> {
 
 class UseAnimation<T> extends ReactterHook implements TickerProvider {
   @override
+  @protected
   final $ = ReactterHook.$register;
 
   late final tween = Reactter.lazy(() => UseState(options.tween), this);

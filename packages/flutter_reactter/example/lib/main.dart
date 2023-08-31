@@ -59,9 +59,11 @@ final items = [
     "Github Search",
     "Search user or repository and show info about it.",
     [
+      "Arg",
+      "Reactter.memo",
       "ReactterConsumer",
       "ReactterProvider",
-      "UseAsyncState",
+      "UseAsyncState.withArg",
     ],
     () => const ApiPage(),
   ),
@@ -82,7 +84,9 @@ final items = [
     "Animate widget",
     "Change size, shape and color.",
     [
+      "Args3",
       "Reactter.lazy",
+      "Reactter.memo",
       "ReactterConsumer",
       "ReactterHook",
       "ReactterProvider",

@@ -65,15 +65,21 @@ class AnimationController {
     ),
   );
 
-  late final isAllAnimationsPlaying = Reactter.lazy(() {
+  late final isPlaying = Reactter.lazy(() {
+    bool resolveIsPlaying(ArgsX3<AnimationControl> args) => args
+        .toList<AnimationControl>()
+        .every((control) => control != AnimationControl.stop);
+
+    final resolveIsPlayingWithMemo = Reactter.memo(resolveIsPlaying);
+
     return UseCompute(
-      () {
-        return [
-          sizeAnimation.control,
-          borderRadiusAnimation.control,
-          colorAnimation.control,
-        ].every((control) => control.value != AnimationControl.stop);
-      },
+      () => resolveIsPlayingWithMemo(
+        Args3(
+          sizeAnimation.control.value,
+          borderRadiusAnimation.control.value,
+          colorAnimation.control.value,
+        ),
+      ),
       [
         sizeAnimation.control,
         borderRadiusAnimation.control,
@@ -82,8 +88,8 @@ class AnimationController {
     );
   }, this);
 
-  void togglePlayAllAnimations() {
-    if (isAllAnimationsPlaying.value) {
+  void togglePlayAnimations() {
+    if (isPlaying.value) {
       sizeAnimation.stop();
       borderRadiusAnimation.stop();
       colorAnimation.stop();
