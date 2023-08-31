@@ -60,6 +60,8 @@ enum UseAsyncStateStatus {
 /// Its status may be obtained using the getters [value] and [error],
 /// and restore it to its [initial] state using the [reset] method.
 class UseAsyncState<T, A> extends ReactterHook {
+  @protected
+  @override
   final $ = ReactterHook.$register;
 
   final UseState<T> _value;

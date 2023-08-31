@@ -43,7 +43,7 @@ part of '../framework.dart';
 /// about [ReactterHook] changes.
 /// * [ReactterState], adds state management features to [ReactterHook].
 abstract class ReactterHook with ReactterState {
-  /// This variable is used to register [ReacttrHook]
+  /// This variable is used to register [ReactterHook]
   /// and attach the [ReactterState] that are defined here.
   ///
   /// It must be defined as a final variable
@@ -51,6 +51,7 @@ abstract class ReactterHook with ReactterState {
   /// Like so:
   ///
   /// `final $ = ReactterHook.$register;`
+  @protected
   _HookRegister get $;
 
   /// This getter allows access to the [_HookRegister] instance

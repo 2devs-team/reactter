@@ -39,6 +39,8 @@ part of '../hooks.dart';
 /// ```
 ///
 class UseState<T> extends ReactterHook {
+  @protected
+  @override
   final $ = ReactterHook.$register;
 
   UseState(this.initial);

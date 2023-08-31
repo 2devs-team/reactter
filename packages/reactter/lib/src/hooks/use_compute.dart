@@ -33,6 +33,8 @@ part of '../hooks.dart';
 /// ```
 ///
 class UseCompute<T> extends ReactterHook {
+  @protected
+  @override
   final $ = ReactterHook.$register;
 
   late T _valueComputed;

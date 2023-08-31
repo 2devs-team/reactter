@@ -140,6 +140,8 @@ abstract class ReactterActionCallable<T, P> extends ReactterAction<P> {
 /// ```
 ///
 class UseReducer<T> extends ReactterHook {
+  @protected
+  @override
   final $ = ReactterHook.$register;
 
   late final UseState<T> _state;

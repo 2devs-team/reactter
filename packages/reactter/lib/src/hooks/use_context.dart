@@ -46,6 +46,7 @@ part of '../hooks.dart';
 /// * [UseEffect], a side-effect manager.
 @Deprecated('Use manage instances shortcuts instead.')
 class UseContext<T extends Object> extends ReactterHook {
+  @protected
   @override
   final $ = ReactterHook.$register;
 

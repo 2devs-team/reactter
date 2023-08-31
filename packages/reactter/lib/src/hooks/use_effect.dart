@@ -81,11 +81,13 @@ part of '../hooks.dart';
 ///
 /// * [ReactterState], it receives as dependencies.
 class UseEffect extends ReactterHook {
+  @protected
+  @override
+  final $ = ReactterHook.$register;
+
   Function? _cleanupCallback;
   bool _isUpdating = false;
   bool _initialized = false;
-
-  final $ = ReactterHook.$register;
 
   static DispatchEffect get dispatchEffect => _DispatchEffect();
 
