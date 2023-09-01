@@ -42,16 +42,18 @@ class DecrementActionCallable extends ReactterActionCallable<TestStore, int> {
   }
 }
 
-Future<String> _resolveStateAsync(Arg<bool> args) async {
-  final throwError = args.arg;
-
-  if (throwError) {
+Future<String> _resolveStateAsync([
+  Args<String?> args = const Args1(null),
+]) async {
+  if (args.arguments.any((arg) => arg is! String && arg != null)) {
     throw Exception("has a error");
   }
 
+  final argsString = args.toList<String>().join(',');
+
   await Future.delayed(const Duration(microseconds: 1));
 
-  return "resolved";
+  return argsString.isEmpty ? "resolved" : "resolved with args: $argsString";
 }
 
 TestStore _reducer(TestStore state, ReactterAction action) {
@@ -83,7 +85,12 @@ class TestController with ReactterState {
   final stateList = UseState([]);
   final stateMap = UseState({});
   final stateClass = UseState<TestClass?>(null);
-  final stateAsync = UseAsyncState.withArg("initial", _resolveStateAsync);
+  final stateAsync = UseAsyncState("initial", _resolveStateAsync);
+  final stateAsyncWithArg =
+      UseAsyncState.withArgs("initial", _resolveStateAsync);
+  final stateAsyncWithError = UseAsyncState("initial", () {
+    throw Exception("has a error");
+  });
   final stateReduce = UseReducer(_reducer, TestStore(count: 0));
 
   late final stateCompute = Reactter.lazy(

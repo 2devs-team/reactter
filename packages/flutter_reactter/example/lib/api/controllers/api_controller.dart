@@ -11,7 +11,7 @@ class ApiController {
   final formKey = GlobalKey<FormState>();
   final textFocusNode = FocusNode();
   final textController = TextEditingController();
-  final entity = UseAsyncState.withArg(
+  final entity = UseAsyncState.withArgs(
     null,
     Reactter.memo(_resolveEntity),
   );
@@ -25,10 +25,10 @@ class ApiController {
   }
 
   void search() async {
-    entity.resolve(Arg(textController.text));
+    entity.resolve(Args1(textController.text));
   }
 
-  static Future<Object?> _resolveEntity(Arg<String> args) async {
+  static Future<Object?> _resolveEntity(Args<String> args) async {
     final query = args.arg;
     final queryPath = query.split("/");
 

@@ -57,9 +57,9 @@ class _ReactterInterface with ReactterInstanceManager, ReactterEventManager {
   ///
   /// See also:
   ///
-  /// * [Arg], a class which represents the arguments received by
+  /// * [Args], a class which represents the arguments received by
   /// the function([calculateValue]), and also used as a cache value binding.
-  T Function(A) memo<T, A extends Arg?>(T Function(A) calculateValue) {
+  T Function(A) memo<T, A extends Args?>(T Function(A) calculateValue) {
     return ReactterMemo<T, A>(calculateValue).call;
   }
 }

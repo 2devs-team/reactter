@@ -1,10 +1,10 @@
 part of '../framework.dart';
 
-/// A class that represents an argument
-class Arg<A> {
+/// A abstract class that represents an argument
+abstract class Args<A> {
   final A arg;
 
-  const Arg(this.arg);
+  const Args(this.arg);
 
   /// Returns a list containing all arguments.
   ///
@@ -18,8 +18,13 @@ class Arg<A> {
   }
 }
 
+/// A class that represents an argument
+class Args1<A> extends Args<A> {
+  const Args1(A arg) : super(arg);
+}
+
 /// A class that represents a set of two arguments.
-class Args2<A, A2> extends Arg<A> {
+class Args2<A, A2> extends Args1<A> {
   final A2 arg2;
 
   const Args2(A arg, this.arg2) : super(arg);

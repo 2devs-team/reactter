@@ -35,9 +35,9 @@ part of '../framework.dart';
 ///
 /// See also:
 ///
-/// * [Arg], a class which represents the arguments received by
+/// * [Args], a class which represents the arguments received by
 /// the function([calculateValue]), and also used as a cache value binding.
-class ReactterMemo<T, A extends Arg?> {
+class ReactterMemo<T, A extends Args?> {
   // Stores memoized values, where the keys are hashCode
   //and the values are of type [T].
   final _cache = HashMap<int, T>();

@@ -12,6 +12,11 @@ abstract class _UseAsyncStateAbstract<T> extends ReactterHook {
   @override
   final $ = ReactterHook.$register;
 
+  /// Works as a the [value] initializer.
+  /// Need to call [resolve] to execute.
+  @protected
+  final Function _asyncFunction;
+
   final UseState<T> _value;
   final _error = UseState<Object?>(null);
   final _status = UseState(UseAsyncStateStatus.standby);
@@ -20,12 +25,30 @@ abstract class _UseAsyncStateAbstract<T> extends ReactterHook {
   Object? get error => _error.value;
   UseAsyncStateStatus get status => _status.value;
 
-  /// Works as a the [value] initializer.
-  /// Need to call [resolve] to execute.
-  final Function asyncFunction;
+  _UseAsyncStateAbstract(T initialValue, Function asyncFunction)
+      : _asyncFunction = asyncFunction,
+        _value = UseState(initialValue);
 
-  _UseAsyncStateAbstract(T initial, this.asyncFunction)
-      : _value = UseState(initial);
+  /// Execute [asyncFunction] to resolve [value].
+  FutureOr<T?> _resolve([args]) async {
+    try {
+      _status.value = UseAsyncStateStatus.loading;
+
+      final asyncFunctionExecuting = _asyncFunction is AsyncFunction
+          ? _asyncFunction()
+          : _asyncFunction(args);
+
+      _value.value = await asyncFunctionExecuting;
+      _status.value = UseAsyncStateStatus.done;
+
+      return _value.value;
+    } catch (e) {
+      _error.value = e;
+      _status.value = UseAsyncStateStatus.error;
+
+      return null;
+    }
+  }
 
   /// Returns a new value of [R] depending on the state of the hook:
   ///
@@ -75,43 +98,36 @@ abstract class _UseAsyncStateAbstract<T> extends ReactterHook {
 
 /// A [ReactteHook] that manages the state as async way.
 ///
-/// [UseAsyncState] has two types [T] and [A](`UseAsyncState<T, A>`).
-///
-/// [T] is use to define the type of [value]
-/// and [A] is use to define the type of [resolve] argument.
-///
-/// These types can be deferred depending on
-/// the initial [value] and [resolve] method defined.
+/// [T] is use to define the type of [value].
 ///
 /// This example produces one simple [UseAsyncState]:
 ///
 /// ```dart
 /// class AppController {
-///   // It's same that: late final asyncState = UseAsyncState<String, String?>(
-///   final asyncState = UseAsyncState("Initial value", _resolveState);
-///
-///   Future<String> _resolveState([String? value = "Default value"]) async {
-///     return Future.delayed(
+///   // It's same that: UseAsyncState<String>
+///   final asyncState = UseAsyncState(
+///     "Initial value",
+///     () => Future.delayed(
 ///       const Duration(seconds: 1),
-///       () => value,
+///       () => "Resolved value"
 ///     );
 ///   }
 /// }
 /// ```
 ///
-/// Use [resolve] method to resolve state
-/// and use [value] getter to get state:
+/// Use the [resolve] method to resolve state
+/// and use the [value] getter to get state:
 ///
 /// ```dart
 ///   // Before changed value: "Initial value"
 ///   print('Before changed value: "${appController.asyncState.value}"');
 ///   // Resolve state
-///   await appController.asyncState.resolve("Resolved value");
+///   await appController.asyncState.resolve();
 ///   // After changed value: "Resolved value"
 ///   print('After changed value: "${appController.asyncState.value}"');
 /// ```
 ///
-/// It also has [when] method that returns a new value
+/// It also has the [when] method that returns a new value
 /// depending on it's state:
 ///
 /// ```dart
@@ -125,61 +141,87 @@ abstract class _UseAsyncStateAbstract<T> extends ReactterHook {
 ///
 /// Its status may be obtained using the getters [value] and [error],
 /// and restore it to its [initial] state using the [reset] method.
-class UseAsyncState<T> extends _UseAsyncStateAbstract {
-  /// Works as a the [value] initializer.
-  /// Need to call [resolve] to execute.
-  final AsyncFunction<T> asyncFunction;
-
+///
+/// See also:
+///
+/// * [UseAsyncStateArgs], the same as it, but with arguments.
+class UseAsyncState<T> extends _UseAsyncStateAbstract<T> {
   UseAsyncState(
-    T initial,
-    this.asyncFunction,
-  ) : super(initial, asyncFunction);
+    T initialValue,
+    AsyncFunction<T> asyncFunction,
+  ) : super(initialValue, asyncFunction);
 
-  static UseAsyncStateArg<T, A> withArg<T, A extends Arg?>(
-    T initial,
-    AsyncFunctionArg<T, A> asyncFunction,
+  static UseAsyncStateArgs<T, A> withArgs<T, A extends Args?>(
+    T initialValue,
+    AsyncFunctionArgs<T, A> asyncFunction,
   ) {
-    return UseAsyncStateArg<T, A>(initial, asyncFunction);
+    return UseAsyncStateArgs<T, A>(initialValue, asyncFunction);
   }
 
   /// Execute [asyncFunction] to resolve [value].
-  Future<T?> resolve() async {
-    _status.value = UseAsyncStateStatus.loading;
-
-    try {
-      _value.value = await asyncFunction();
-      _status.value = UseAsyncStateStatus.done;
-
-      return _value.value;
-    } catch (e) {
-      _error.value = e;
-      _status.value = UseAsyncStateStatus.error;
-
-      return null;
-    }
+  FutureOr<T?> resolve() async {
+    return _resolve();
   }
 }
 
-/// The class `UseAsyncStateArg` is a generic class in Dart that extends `_UseAsyncStateAbstract` and
-/// takes two type parameters `T` and `A`, where `A` must be a subtype of `Arg`.
-class UseAsyncStateArg<T, A extends Arg?> extends _UseAsyncStateAbstract<T> {
-  final AsyncFunctionArg<T, A> asyncFunction;
+/// A [ReactteHook] that manages the state as async way.
+///
+/// [T] is use to define the type of [value]
+/// and [A] is use to define the type of [resolve] argument.
+///
+/// This example produces one simple [UseAsyncStateArgs]:
+///
+/// ```dart
+/// class AppController {
+///   // It's same that: UseAsyncStateArgs<String, Args1<String>>
+///   final asyncState = UseAsyncStateArgs(
+///     "Initial value",
+///     (Args1<String> args) => Future.delayed(
+///       const Duration(seconds: 1),
+///       () => args.arg,
+///     ),
+///   });
+/// ```
+///
+/// Use the [resolve] method to resolve state
+/// and use the [value] getter to get state:
+///
+/// ```dart
+///   // Before changed value: "Initial value"
+///   print('Before changed value: "${appController.asyncState.value}"');
+///   // Resolve state
+///   await appController.asyncState.resolve("Resolved value");
+///   // After changed value: "Resolved value"
+///   print('After changed value: "${appController.asyncState.value}"');
+/// ```
+///
+/// It also has the [when] method that returns a new value
+/// depending on it's state:
+///
+/// ```dart
+/// final valueComputed = appController.asyncState.when<String>(
+///   standby: (value) => "⚓️ Standby: $value",
+///   loading: (value) => "⏳ Loading...",
+///   done: (value) => "✅ Resolved: $value",
+///   error: (error) => "❌ Error: $error",
+/// );
+/// ```
+///
+/// Its status may be obtained using the getters [value] and [error],
+/// and restore it to its [initialValue] state using the [reset] method.
+///
+/// See also:
+///
+/// * [UseAsyncState], the same as it, but without arguments.
+/// * [Args], a generic arguments.
+class UseAsyncStateArgs<T, A extends Args?> extends _UseAsyncStateAbstract<T> {
+  UseAsyncStateArgs(
+    T initialValue,
+    AsyncFunctionArgs<T, A> asyncFunction,
+  ) : super(initialValue, asyncFunction);
 
-  UseAsyncStateArg(initial, this.asyncFunction) : super(initial, asyncFunction);
-
-  FutureOr<T?> resolve(A arg) async {
-    _status.value = UseAsyncStateStatus.loading;
-
-    try {
-      _value.value = await asyncFunction(arg);
-      _status.value = UseAsyncStateStatus.done;
-
-      return _value.value;
-    } catch (e) {
-      _error.value = e;
-      _status.value = UseAsyncStateStatus.error;
-
-      return null;
-    }
+  /// Execute [asyncFunction] to resolve [value].
+  FutureOr<T?> resolve(A args) async {
+    return _resolve(args);
   }
 }

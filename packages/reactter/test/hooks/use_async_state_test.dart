@@ -11,16 +11,16 @@ void main() {
 
       expect(stateAsync.value, "initial");
 
-      await stateAsync.resolve(Arg(false));
+      await stateAsync.resolve();
 
       expect(stateAsync.value, "resolved");
     });
 
     test("should catchs error", () async {
       final testController = TestController();
-      final stateAsync = testController.stateAsync;
+      final stateAsync = testController.stateAsyncWithError;
 
-      await stateAsync.resolve(Arg(true));
+      await stateAsync.resolve();
 
       expect(stateAsync.value, "initial");
       expect(stateAsync.status, UseAsyncStateStatus.error);
@@ -31,7 +31,7 @@ void main() {
       final testController = TestController();
       final stateAsync = testController.stateAsync;
 
-      await stateAsync.resolve(Arg(false));
+      await stateAsync.resolve();
 
       expect(stateAsync.value, "resolved");
 
@@ -40,24 +40,41 @@ void main() {
       expect(stateAsync.value, "initial");
     });
 
+    test("should resolves state with arguments", () async {
+      final testController = TestController();
+      final stateAsync = testController.stateAsyncWithArg;
+
+      await stateAsync.resolve(Args1('arg1'));
+
+      expect(stateAsync.value, "resolved with args: arg1");
+
+      await stateAsync.resolve(Args2('arg1', 'arg2'));
+
+      expect(stateAsync.value, "resolved with args: arg1,arg2");
+
+      await stateAsync.resolve(Args3('arg1', 'arg2', 'arg3'));
+
+      expect(stateAsync.value, "resolved with args: arg1,arg2,arg3");
+    });
+
     test("should gets value when", () async {
       final testController = TestController();
-      final stateAsync = testController.stateAsync;
+      final stateAsync = testController.stateAsyncWithArg;
 
       final s1 = stateAsync.when<String>(standby: (value) => value);
       expect(s1, "initial");
 
-      stateAsync.resolve(Arg(false));
+      final futureResolve = stateAsync.resolve(Args1(null));
 
       final s2 = stateAsync.when<String>(loading: (value) => "loading");
       expect(s2, "loading");
 
-      await stateAsync.resolve(Arg(false));
+      await futureResolve;
 
       final s3 = stateAsync.when<String>(done: (value) => value);
       expect(s3, "resolved");
 
-      await stateAsync.resolve(Arg(true));
+      await stateAsync.resolve(Args2(null, 1));
 
       final s4 = stateAsync.when<String>(error: (error) => error.toString());
       expect(s4, "Exception: has a error");
