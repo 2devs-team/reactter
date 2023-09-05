@@ -54,9 +54,8 @@ class ReactterMemo<T, A extends Args?> {
   /// so if it has already been resolved,
   /// the value is immediately returned from the cache.
   T call(A arg) {
-    if (arg == null) return calculateValue.call(arg);
-
-    final hashCode = Object.hashAll(arg.arguments);
+    final hashCode =
+        arg == null ? null.hashCode : Object.hashAll(arg.arguments);
 
     if (_cache.containsKey(hashCode)) return _cache[hashCode]!;
 
