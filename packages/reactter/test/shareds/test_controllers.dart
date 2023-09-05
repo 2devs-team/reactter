@@ -43,7 +43,7 @@ class DecrementActionCallable extends ReactterActionCallable<TestStore, int> {
 }
 
 Future<String> _resolveStateAsync([
-  Args<String?> args = const Args1(null),
+  Args args = const Args1(null),
 ]) async {
   if (args.arguments.any((arg) => arg is! String && arg != null)) {
     throw Exception("has a error");
@@ -86,8 +86,10 @@ class TestController with ReactterState {
   final stateMap = UseState({});
   final stateClass = UseState<TestClass?>(null);
   final stateAsync = UseAsyncState("initial", _resolveStateAsync);
-  final stateAsyncWithArg =
-      UseAsyncState.withArgs("initial", _resolveStateAsync);
+  final stateAsyncWithArg = UseAsyncState.withArgs(
+    "initial",
+    _resolveStateAsync,
+  );
   final stateAsyncWithError = UseAsyncState("initial", () {
     throw Exception("has a error");
   });
@@ -100,6 +102,16 @@ class TestController with ReactterState {
     ),
     this,
   );
+
+  late final fibonacciMemo = Reactter.memo(resolveFibonacci);
+
+  int resolveFibonacci(Args1<int>? args) {
+    final n = args?.arg ?? 100;
+
+    if (n < 2) return 1;
+
+    return fibonacciMemo(Args1(n - 1)) + fibonacciMemo(Args1(n - 2));
+  }
 }
 
 class Test2Controller {
