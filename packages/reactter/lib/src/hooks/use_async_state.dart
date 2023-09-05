@@ -34,9 +34,8 @@ abstract class _UseAsyncStateAbstract<T> extends ReactterHook {
     try {
       _status.value = UseAsyncStateStatus.loading;
 
-      final asyncFunctionExecuting = _asyncFunction is AsyncFunction
-          ? _asyncFunction()
-          : _asyncFunction(args);
+      final asyncFunctionExecuting =
+          args == null ? _asyncFunction() : _asyncFunction(args);
 
       _value.value = await asyncFunctionExecuting;
       _status.value = UseAsyncStateStatus.done;
