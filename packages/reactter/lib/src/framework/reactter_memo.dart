@@ -50,19 +50,37 @@ class ReactterMemo<T, A extends Args?> {
   /// Invokes the [calculateValue] with the given [arg],
   /// then stores and returns the resolved value.
   ///
-  /// The provided [arg] represent the dependencies that bind the stored value,
+  /// The provided [arg] represent the dependencies that bind the cached value,
   /// so if it has already been resolved,
   /// the value is immediately returned from the cache.
-  T call(A arg) {
-    final hashCode =
-        arg == null ? null.hashCode : Object.hashAll(arg.arguments);
+  ///
+  /// Set [overrideCache] to true to ignore the cached value
+  /// and re-call the [calculateValue].
+  T call(A arg, {bool overrideCache = false}) {
+    final hashCode = _getHashCode(arg);
 
-    if (_cache.containsKey(hashCode)) return _cache[hashCode]!;
+    if (!overrideCache && _cache.containsKey(hashCode)) {
+      return _cache[hashCode] as T;
+    }
 
-    final fnInvoked = calculateValue.call(arg);
+    final futureOrValueReturned = calculateValue.call(arg);
 
-    _cache[hashCode] = fnInvoked;
+    _cache[hashCode] = futureOrValueReturned;
 
-    return fnInvoked;
+    return futureOrValueReturned;
+  }
+
+  /// Removes the cached value by arg
+  T? remove(A arg) {
+    final hashCode = _getHashCode(arg);
+
+    return _cache.remove(hashCode);
+  }
+
+  /// Removes all cached data.
+  void clear() => _cache.clear();
+
+  int _getHashCode(A arg) {
+    return arg == null ? null.hashCode : Object.hashAll(arg.arguments);
   }
 }

@@ -103,15 +103,13 @@ class TestController with ReactterState {
     this,
   );
 
-  late final fibonacciMemo = Reactter.memo(resolveFibonacci);
+  final memo = ReactterMemo((Args? args) {
+    return args?.arguments ?? [];
+  });
 
-  int resolveFibonacci(Args1<int>? args) {
-    final n = args?.arg ?? 100;
-
-    if (n < 2) return 1;
-
-    return fibonacciMemo(Args1(n - 1)) + fibonacciMemo(Args1(n - 2));
-  }
+  final simpleMemo = Reactter.memo((Args? args) {
+    return args?.arguments ?? [];
+  });
 }
 
 class Test2Controller {

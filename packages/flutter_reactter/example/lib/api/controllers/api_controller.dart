@@ -28,8 +28,8 @@ class ApiController {
     entity.resolve(Args1(textController.text));
   }
 
-  static Future<Object?> _resolveEntity(Args<String> args) async {
-    final query = args.arg;
+  static Future<Object?> _resolveEntity(Args1<String> args) async {
+    final query = args.arg1;
     final queryPath = query.split("/");
 
     if (queryPath.length > 1) {
