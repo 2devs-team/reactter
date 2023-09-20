@@ -6,7 +6,7 @@ import '../shareds/test_controllers.dart';
 const ID = 'uniqueId';
 
 void main() {
-  group("UseContext", () {
+  group("UseInstance", () {
     test("should gets instance", () => _testController());
 
     test("should gets instance by id", () => _testController(ID));
@@ -20,7 +20,7 @@ void main() {
 void _testController([String? id]) {
   Reactter.create(id: id, builder: () => TestController());
 
-  final testController = UseContext<TestController>(id);
+  final testController = UseInstance<TestController>(id);
 
   expect(testController.instance, isA<TestController>());
 
@@ -31,7 +31,7 @@ void _testController([String? id]) {
 
 void _testControllerLate([String? id]) {
   late final TestController instance;
-  final testController = UseContext<TestController>(id);
+  final testController = UseInstance<TestController>(id);
 
   UseEffect(() {
     if (testController.instance != null) {

@@ -96,8 +96,8 @@ class ReactterProvider<T extends Object> extends ReactterProviderAbstraction {
   @protected
   final ContextBuilder<T> instanceBuilder;
 
-  /// Create the instance defined
-  /// on firts parameter [_instanceBuilder] when [UseContext] is called.
+  /// Immediately create the instance defined
+  /// on firts parameter([instanceBuilder]).
   @protected
   final bool init;
 

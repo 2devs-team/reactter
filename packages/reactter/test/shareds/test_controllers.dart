@@ -113,7 +113,7 @@ class TestController with ReactterState {
 }
 
 class Test2Controller {
-  final testController = UseContext<TestController>();
+  final testController = UseInstance<TestController>();
 
   Test2Controller() {
     Reactter.create(builder: () => TestController());
@@ -121,11 +121,11 @@ class Test2Controller {
 }
 
 class Test3Controller {
-  final test2Controller = UseContext<Test2Controller>();
+  final test2Controller = UseInstance<Test2Controller>();
 
   Test3Controller() {
     Reactter.create(builder: () => Test2Controller());
   }
 }
 
-final test3Controller = UseContext<Test3Controller>();
+final test3Controller = UseInstance<Test3Controller>();
