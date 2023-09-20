@@ -43,12 +43,18 @@ class UseState<T> extends ReactterHook {
   @override
   final $ = ReactterHook.$register;
 
-  UseState(this.initial);
+  UseState(T initialValue)
+      : _value = initialValue,
+        initial = initialValue;
 
   /// The initial value in state.
+  @Deprecated(
+    'No longer used by the framework, please remove any reference to it. '
+    'This feature was deprecated after v6.0.0.pre.',
+  )
   T initial;
 
-  late T _value = initial;
+  T _value;
 
   /// Get current value state
   T get value => _value;
@@ -60,6 +66,12 @@ class UseState<T> extends ReactterHook {
     }
   }
 
+  // coverage:ignore-start
   /// Reset the state to initial value
+  @Deprecated(
+    "No longer used by the framework. "
+    'This feature was deprecated after v6.0.0.pre.',
+  )
   void reset() => value = initial;
+  // coverage:ignore-end
 }

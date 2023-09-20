@@ -11,6 +11,8 @@ class ProductState extends Product {
   @override
   int get stock => stockState.value;
 
+  int get initialStock => super.stock;
+
   ProductState({
     required super.name,
     required super.price,
@@ -18,7 +20,7 @@ class ProductState extends Product {
   });
 
   bool increaseStock([int quantity = 1]) {
-    if (stockState.value > stockState.initial) return false;
+    if (stockState.value > initialStock) return false;
 
     stockState.value += quantity;
 

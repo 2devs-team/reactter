@@ -12,9 +12,11 @@ abstract class _UseAsyncStateAbstract<T> extends ReactterHook {
   @override
   final $ = ReactterHook.$register;
 
+  /// Stores the initial value.
+  final T _initialValue;
+
   /// Works as a the [value] initializer.
   /// Need to call [resolve] to execute.
-  @protected
   final Function _asyncFunction;
 
   final UseState<T> _value;
@@ -25,8 +27,11 @@ abstract class _UseAsyncStateAbstract<T> extends ReactterHook {
   Object? get error => _error.value;
   UseAsyncStateStatus get status => _status.value;
 
-  _UseAsyncStateAbstract(T initialValue, Function asyncFunction)
-      : _asyncFunction = asyncFunction,
+  _UseAsyncStateAbstract(
+    T initialValue,
+    Function asyncFunction,
+  )   : _initialValue = initialValue,
+        _asyncFunction = asyncFunction,
         _value = UseState(initialValue);
 
   /// Execute [asyncFunction] to resolve [value].
@@ -89,9 +94,9 @@ abstract class _UseAsyncStateAbstract<T> extends ReactterHook {
 
   /// Reset [value], [status] and [error] to its [initial] state.
   void reset() {
-    _value.reset();
-    _error.reset();
-    _status.reset();
+    _value.value = _initialValue;
+    _error.value = null;
+    _status.value = UseAsyncStateStatus.standby;
   }
 }
 
