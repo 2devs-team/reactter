@@ -45,6 +45,7 @@ class UseState<T> extends ReactterHook {
 
   UseState(T initialValue)
       : _value = initialValue,
+        // ignore: deprecated_member_use_from_same_package
         initial = initialValue;
 
   /// The initial value in state.
@@ -52,7 +53,7 @@ class UseState<T> extends ReactterHook {
     'No longer used by the framework, please remove any reference to it. '
     'This feature was deprecated after v6.0.0.pre.',
   )
-  T initial;
+  final T initial;
 
   T _value;
 

@@ -7,7 +7,8 @@ enum UseAsyncStateStatus {
   error,
 }
 
-abstract class _UseAsyncStateAbstract<T> extends ReactterHook {
+@internal
+abstract class UseAsyncStateBase<T> extends ReactterHook {
   @protected
   @override
   final $ = ReactterHook.$register;
@@ -27,7 +28,7 @@ abstract class _UseAsyncStateAbstract<T> extends ReactterHook {
   Object? get error => _error.value;
   UseAsyncStateStatus get status => _status.value;
 
-  _UseAsyncStateAbstract(
+  UseAsyncStateBase(
     T initialValue,
     Function asyncFunction,
   )   : _initialValue = initialValue,
@@ -149,7 +150,7 @@ abstract class _UseAsyncStateAbstract<T> extends ReactterHook {
 /// See also:
 ///
 /// * [UseAsyncStateArgs], the same as it, but with arguments.
-class UseAsyncState<T> extends _UseAsyncStateAbstract<T> {
+class UseAsyncState<T> extends UseAsyncStateBase<T> {
   UseAsyncState(
     T initialValue,
     AsyncFunction<T> asyncFunction,
@@ -218,7 +219,7 @@ class UseAsyncState<T> extends _UseAsyncStateAbstract<T> {
 ///
 /// * [UseAsyncState], the same as it, but without arguments.
 /// * [Args], a generic arguments.
-class UseAsyncStateArgs<T, A extends Args?> extends _UseAsyncStateAbstract<T> {
+class UseAsyncStateArgs<T, A extends Args?> extends UseAsyncStateBase<T> {
   UseAsyncStateArgs(
     T initialValue,
     AsyncFunctionArgs<T, A> asyncFunction,
