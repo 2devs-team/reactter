@@ -26,8 +26,14 @@ typedef AsyncFunction<T> = Future<T> Function();
 /// to represent an async function with arguments
 typedef AsyncFunctionArgs<T, A extends Args?> = Future<T> Function(A arg);
 
+/// to represent a function with arguments
+typedef FunctionArgs<T, A extends Args?> = T Function(A arg);
+
 // to represent two arguments of the same type
 typedef ArgsX2<T> = Args2<T, T>;
 
 // to represent three arguments of the same type
 typedef ArgsX3<T> = Args3<T, T, T>;
+
+// function memo type
+typedef MemoFunction<T, A extends Args?> = T Function(A, {bool overrideCache});

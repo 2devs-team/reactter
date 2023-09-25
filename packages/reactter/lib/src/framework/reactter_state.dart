@@ -142,3 +142,15 @@ abstract class ReactterState {
     }
   }
 }
+
+extension ReactterStateShortcuts on ReactterInterface {
+  /// It is used to create a new instance of a [ReactterState] class
+  /// and attach it to a specific instance.
+  T lazy<T extends ReactterState>(T Function() stateFn, Object instance) {
+    ReactterState._instanceToAttach = instance;
+    final state = stateFn();
+    ReactterState._instanceToAttach = null;
+
+    return state;
+  }
+}
