@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_reactter/src/extensions.dart';
 import 'package:flutter_reactter/src/types.dart';
-import 'package:reactter/reactter.dart';
+import 'package:reactter/reactter.dart' hide Reactter;
 
 import 'framework.dart';
 
