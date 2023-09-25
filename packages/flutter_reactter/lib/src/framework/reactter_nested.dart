@@ -1,6 +1,7 @@
 part of '../framework.dart';
 
 /// Organizes the widget as nested way
+@internal
 class ReactterNestedWidget<W extends StatelessWidget> extends StatelessWidget {
   const ReactterNestedWidget({
     Key? key,
@@ -23,6 +24,7 @@ class ReactterNestedWidget<W extends StatelessWidget> extends StatelessWidget {
 }
 
 /// [ReactterNestedWidget]'s Element
+@internal
 class ReactterNestedElement extends StatelessElement {
   ReactterNestedElement(ReactterNestedWidget widget) : super(widget);
 

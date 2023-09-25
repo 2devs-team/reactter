@@ -2,6 +2,7 @@ part of '../framework.dart';
 
 /// A class that holds a reference to a state or an instance, and it can add and remove listeners
 /// to the state or instance
+@internal
 class ReactterDependency<T> {
   Object? _instance;
   final Set<ReactterState>? _states;

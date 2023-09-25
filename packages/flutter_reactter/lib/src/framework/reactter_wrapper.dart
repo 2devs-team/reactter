@@ -1,12 +1,14 @@
 part of '../framework.dart';
 
 /// Abstract class to implementing a wrapper widget
+@internal
 abstract class ReactterWrapperWidget implements Widget {
   @override
   ReactterWrapperElementMixin createElement();
 }
 
 /// Mixin to [ReactterWrapperWidget]'s Element
+@internal
 mixin ReactterWrapperElementMixin<T extends Widget> on Element {
   ReactterNestedElement? parent;
 
