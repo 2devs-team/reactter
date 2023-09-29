@@ -89,6 +89,31 @@ void main() {
       expect(value1 == newValue1, false);
       expect(value2 == newValue2, true);
     });
+
+    test("shouldn't memoized when an error occurs", () {
+      final testController = TestController();
+
+      expect(
+        () => testController.memo(Args1(ArgumentError())),
+        throwsA(TypeMatcher<ArgumentError>()),
+      );
+    });
+
+    test("shouldn't memoized when an error Future occurs", () async {
+      final testController = TestController();
+
+      final futureErrorArg = Future.error(ArgumentError);
+      final valueFuture = testController.memo(Args1(futureErrorArg));
+      final valueFromCache = testController.memo.get(Args1(futureErrorArg));
+
+      await Future.sync(() => valueFuture);
+
+      final valueFromCache2 = testController.memo.get(Args1(futureErrorArg));
+
+      expect(valueFuture, valueFromCache);
+      expect(valueFuture == valueFromCache2, false);
+      expect(valueFromCache2, isNull);
+    });
   });
 
   group("Reactter.memo", () {

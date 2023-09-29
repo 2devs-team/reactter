@@ -104,6 +104,12 @@ class TestController with ReactterState {
   );
 
   final memo = ReactterMemo((Args? args) {
+    if (args is Args1<Future>) return args.arg1;
+
+    if (args is Args1<Error>) {
+      throw args.arg1;
+    }
+
     return args?.arguments ?? [];
   });
 
