@@ -4,7 +4,7 @@ part of '../framework.dart';
 ///
 /// It contains methods for adding, removing, and triggering events,
 /// as well as storing event callbacks.
-mixin ReactterEventManager {
+abstract class ReactterEventManager {
   /// Event's store.
   HashMap<String, List<String>> _instanceEvents = HashMap();
   HashMap<String, HashSet<Function>> _events = HashMap();

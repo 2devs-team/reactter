@@ -80,29 +80,18 @@ abstract class ReactterHook with ReactterState {
 /// It is responsible for registering a [ReactterHook] and attaching previously
 /// collected states to it.
 class _HookRegister {
-  bool _isRegistered = false;
+  final _statesRecollectedPrev = Reactter._statesRecollected;
+  final _isRecollectOnPrev = Reactter._isRecollectOn;
 
-  final _prevStatesRecollected = _getAndCleanStatesRecollected();
-
-  /// The function is used to retrieve and clean collected states.
-  static _getAndCleanStatesRecollected() {
-    final states = [...Reactter._statesRecollected];
-    Reactter._statesRecollected.clear();
-    return states;
+  _HookRegister() {
+    Reactter._isRecollectOn = true;
+    Reactter._statesRecollected = [];
   }
 
   /// The function registers a ReactterHook.
   void _register(ReactterHook hook) {
-    assert(!_isRegistered, "Can't call register method again");
-
-    _isRegistered = true;
-
-    Reactter._statesRecollected.forEach((state) {
-      state.attachTo(hook);
-    });
-
-    Reactter._statesRecollected
-      ..clear()
-      ..addAll(_prevStatesRecollected);
+    Reactter._attachInstance(hook);
+    Reactter._statesRecollected = _statesRecollectedPrev;
+    Reactter._isRecollectOn = _isRecollectOnPrev;
   }
 }

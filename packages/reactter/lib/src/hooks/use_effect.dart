@@ -121,12 +121,7 @@ class UseEffect extends ReactterHook {
       return;
     }
 
-    if (Reactter.isInstancesBuilding) return;
-
-    if (instanceAttached != null) {
-      _analyzeInstanceAttached();
-      return;
-    }
+    if (Reactter.isRecollectOn) return;
 
     final instance = _getInstance(context);
 

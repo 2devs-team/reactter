@@ -83,6 +83,7 @@ void main() {
 
       expect(nCalls, 0);
       expect(uEffect, isA<UseEffect>());
+      expect(uEffect.instanceAttached, isA<DispatchEffect>());
       expect(uEffect.instanceAttached, isNot(isA<TestController>()));
       expect(nCalls, 1);
 

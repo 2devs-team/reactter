@@ -2,7 +2,12 @@
 part of '../framework.dart';
 
 @internal
-class ReactterInterface with ReactterInstanceManager, ReactterEventManager {
+class ReactterInterface
+    with
+        ReactterInstanceManager,
+        ReactterEventManager,
+        ReactterLogger,
+        ReactterAttacher {
   static final _reactterInterface = ReactterInterface._();
   @internal
   factory ReactterInterface() => _reactterInterface;

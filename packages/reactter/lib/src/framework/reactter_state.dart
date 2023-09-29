@@ -6,9 +6,8 @@ part of '../framework.dart';
 /// the state, notifying listeners of state changes, and disposing of the state
 /// object when it is no longer needed.
 abstract class ReactterState {
-  static Object? _instanceToAttach;
-
-  /// The instance where it was created
+  /// It's used to store a reference to an object instance
+  /// that is attached to the state.
   Object? _instanceAttached;
   bool _isDisposed = false;
   bool _isUpdating = false;
@@ -22,19 +21,12 @@ abstract class ReactterState {
   /// Adds the current state to a list if instances of the Reactter class are being built.
   @mustCallSuper
   void createState() {
-    if (_instanceToAttach != null) {
-      attachTo(_instanceToAttach!);
-    }
-
-    if (Reactter.isInstancesBuilding) {
-      Reactter._statesRecollected.add(this);
-    }
+    Reactter._recollectState(this);
   }
 
   /// Attaches an object instance to this state.
   @mustCallSuper
   void attachTo(Object instance) {
-    // if (_instanceAttached != null) return;
     assert(
       _instanceAttached == null,
       "Can't attach a new instance because an instance is already.\n"
@@ -147,9 +139,12 @@ extension ReactterStateShortcuts on ReactterInterface {
   /// It is used to create a new instance of a [ReactterState] class
   /// and attach it to a specific instance.
   T lazy<T extends ReactterState>(T Function() stateFn, Object instance) {
-    ReactterState._instanceToAttach = instance;
-    final state = stateFn();
-    ReactterState._instanceToAttach = null;
+    late T state;
+
+    Reactter._recollectStatesAndAttachInstance(() {
+      state = stateFn();
+      return instance;
+    });
 
     return state;
   }
