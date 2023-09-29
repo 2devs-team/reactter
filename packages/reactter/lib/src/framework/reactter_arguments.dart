@@ -22,6 +22,7 @@ class Args1<A> extends Args {
   ///
   /// It allows access to these properties as a list,
   ///which can be useful for operations that require a list of arguments.
+  @override
   List get arguments => [arg1];
 }
 
@@ -51,4 +52,39 @@ class Args3<A, A2, A3> extends Args2<A, A2> {
   ///which can be useful for operations that require a list of arguments.
   @override
   List get arguments => [arg1, arg2, arg3];
+}
+
+extension AryFunction on Function {
+  /// Takes a variable number of arguments and returns a `FutureOr` of type `T`.
+  FutureOr<T> ary<T>(Args args) => Function.apply(this, args.arguments);
+}
+
+extension AryFunction1<T, A> on T Function(A) {
+  /// Takes an argument and calls the function with the argument.
+  T ary(Args1<A> args) => this.call(args.arg1);
+}
+
+extension AryFunction1_1<T, A, A2> on T Function(A, [A2]) {
+  /// Takes in two arguments and calls the function with those arguments.
+  T ary(Args2<A, A2> args) => this.call(args.arg1, args.arg2);
+}
+
+extension AryFunction1_2<T, A, A2, A3> on T Function(A, [A2, A3]) {
+  /// Takes in three arguments and calls the function with those arguments.
+  T ary(Args3<A, A2, A3> args) => this.call(args.arg1, args.arg2, args.arg3);
+}
+
+extension AryFunction2<T, A, A2> on T Function(A, A2) {
+  /// Takes in two arguments and calls the function with those arguments.
+  T ary(Args2<A, A2> args) => this.call(args.arg1, args.arg2);
+}
+
+extension AryFunction2_1<T, A, A2, A3> on T Function(A, A2, [A3]) {
+  /// Takes in three arguments and calls the function with those arguments.
+  T ary(Args3<A, A2, A3> args) => this.call(args.arg1, args.arg2, args.arg3);
+}
+
+extension AryFunction3<T, A, A2, A3> on T Function(A, A2, A3) {
+  /// Takes in three arguments and calls the function with those arguments.
+  T ary(Args3<A, A2, A3> args) => this.call(args.arg1, args.arg2, args.arg3);
 }
