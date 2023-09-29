@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:reactter/src/hooks.dart';
 
 import 'internals.dart';
@@ -21,10 +23,10 @@ typedef CallbackEvent<T extends Object?, P> = void Function(T? inst, P param);
 typedef Reducer<T> = T Function(T state, ReactterAction action);
 
 /// to represent an async function without arguments
-typedef AsyncFunction<T> = Future<T> Function();
+typedef AsyncFunction<T> = FutureOr<T> Function();
 
 /// to represent an async function with arguments
-typedef AsyncFunctionArgs<T, A extends Args?> = Future<T> Function(A arg);
+typedef AsyncFunctionArgs<T, A extends Args?> = FutureOr<T> Function(A arg);
 
 /// to represent a function with arguments
 typedef FunctionArgs<T, A extends Args?> = T Function(A arg);

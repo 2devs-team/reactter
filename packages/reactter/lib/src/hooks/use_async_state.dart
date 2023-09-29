@@ -36,14 +36,17 @@ abstract class UseAsyncStateBase<T> extends ReactterHook {
         _value = UseState(initialValue);
 
   /// Execute [asyncFunction] to resolve [value].
-  FutureOr<T?> _resolve([args]) async {
+  FutureOr<T?> _resolve<A>([A? args]) async {
     try {
       _status.value = UseAsyncStateStatus.loading;
 
       final asyncFunctionExecuting =
           args == null ? _asyncFunction() : _asyncFunction(args);
 
-      _value.value = await asyncFunctionExecuting;
+      _value.value = asyncFunctionExecuting is Future
+          ? await asyncFunctionExecuting
+          : asyncFunctionExecuting;
+
       _status.value = UseAsyncStateStatus.done;
 
       return _value.value;
