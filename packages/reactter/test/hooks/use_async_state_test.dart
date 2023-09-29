@@ -5,7 +5,7 @@ import '../shareds/test_controllers.dart';
 
 void main() {
   group("UseAsyncState", () {
-    test("should resolves state", () async {
+    test("should resolve state", () async {
       final testController = TestController();
       final stateAsync = testController.stateAsync;
 
@@ -16,7 +16,7 @@ void main() {
       expect(stateAsync.value, "resolved");
     });
 
-    test("should catchs error", () async {
+    test("should catch error", () async {
       final testController = TestController();
       final stateAsync = testController.stateAsyncWithError;
 
@@ -27,7 +27,7 @@ void main() {
       expect(stateAsync.error.toString(), "Exception: has a error");
     });
 
-    test("should resets state", () async {
+    test("should reset state", () async {
       final testController = TestController();
       final stateAsync = testController.stateAsync;
 
@@ -40,7 +40,7 @@ void main() {
       expect(stateAsync.value, "initial");
     });
 
-    test("should resolves state with arguments", () async {
+    test("should resolve state with arguments", () async {
       final testController = TestController();
       final stateAsync = testController.stateAsyncWithArg;
 
@@ -57,7 +57,7 @@ void main() {
       expect(stateAsync.value, "resolved with args: arg1,arg2,arg3");
     });
 
-    test("should gets value when", () async {
+    test("should get value when", () async {
       final testController = TestController();
       final stateAsync = testController.stateAsyncWithArg;
 

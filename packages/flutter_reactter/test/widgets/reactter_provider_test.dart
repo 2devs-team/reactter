@@ -8,7 +8,7 @@ import '../shareds/test_controller.dart';
 
 void main() {
   group("ReactterProvider", () {
-    testWidgets("should gets instance from context", (tester) async {
+    testWidgets("should get instance from context", (tester) async {
       late TestController instanceObtained;
 
       await tester.pumpWidget(
@@ -31,7 +31,7 @@ void main() {
       expect(find.text("stateString: initial"), findsOneWidget);
     });
 
-    testWidgets("should gets the instance by id from context", (tester) async {
+    testWidgets("should get the instance by id from context", (tester) async {
       late TestController instanceObtained;
 
       await tester.pumpWidget(
@@ -53,7 +53,7 @@ void main() {
     });
 
     testWidgets(
-        "should gets the instance from context and watch hooks to builder re-render",
+        "should get the instance from context and watch hooks to builder re-render",
         (tester) async {
       late TestController instanceObtained;
 
@@ -91,7 +91,7 @@ void main() {
     });
 
     testWidgets(
-        "should gets the instance by id from context and watch hooks to builder re-render",
+        "should get the instance by id from context and watch hooks to builder re-render",
         (tester) async {
       late TestController instanceObtained;
 

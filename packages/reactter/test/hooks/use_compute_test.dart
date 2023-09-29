@@ -8,7 +8,7 @@ void main() {
     "UseCompute",
     () {
       test(
-        "should has a initial value",
+        "should have a initial value",
         () {
           final testController = Reactter.create<TestController>(
             builder: () => TestController(),
@@ -21,7 +21,7 @@ void main() {
       );
 
       test(
-        "should changes vale when computed value is different to previus value",
+        "should change vale when computed value is different to previus value",
         () {
           final testController = Reactter.create<TestController>(
             builder: () => TestController(),

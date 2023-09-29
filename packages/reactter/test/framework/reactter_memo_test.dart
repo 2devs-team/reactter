@@ -11,7 +11,7 @@ void main() {
       expect(testController.memo.call, isA<Function(Args)>());
     });
 
-    test("should memoized the returned value by the calculate function", () {
+    test("should memoize the returned value by the calculate function", () {
       final testController = TestController();
 
       final value0 = testController.memo(null);
@@ -29,7 +29,7 @@ void main() {
       expect(value2 == value2Cached, true);
     });
 
-    test("should overrided the cached value", () {
+    test("should override the cached value", () {
       final testController = TestController();
 
       final value0 = testController.memo(null);
@@ -47,7 +47,7 @@ void main() {
       expect(value2 == value2Cached, true);
     });
 
-    test("should removed all cached data", () {
+    test("should remove all cached data", () {
       final testController = TestController();
 
       final value0 = testController.memo(null);
@@ -90,7 +90,7 @@ void main() {
       expect(value2 == newValue2, true);
     });
 
-    test("shouldn't memoized when an error occurs", () {
+    test("shouldn't memoize when an error occurs", () {
       final testController = TestController();
 
       expect(
@@ -99,7 +99,7 @@ void main() {
       );
     });
 
-    test("shouldn't memoized when an error Future occurs", () async {
+    test("shouldn't memoize when an error Future occurs", () async {
       final testController = TestController();
 
       final futureErrorArg = Future.error(ArgumentError);
@@ -123,7 +123,7 @@ void main() {
       expect(testController.simpleMemo.call, isA<Function(Args)>());
     });
 
-    test("should memoized the returned value by the calculate function", () {
+    test("should memoize the returned value by the calculate function", () {
       final testController = TestController();
 
       final value0 = testController.simpleMemo(null);
@@ -141,7 +141,7 @@ void main() {
       expect(value2 == value2Cached, true);
     });
 
-    test("should overrided the cached value", () {
+    test("should override the cached value", () {
       final testController = TestController();
 
       final value0 = testController.simpleMemo(null);

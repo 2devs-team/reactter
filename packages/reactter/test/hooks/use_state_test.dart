@@ -5,7 +5,7 @@ import '../shareds/test_controllers.dart';
 
 void main() {
   group("UseState", () {
-    test("should has a initial value", () {
+    test("should have a initial value", () {
       final testController =
           Reactter.create<TestController>(builder: () => TestController())!;
 
@@ -20,7 +20,7 @@ void main() {
       Reactter.delete<TestController>();
     });
 
-    test("should changes state value", () {
+    test("should change state value", () {
       final testController =
           Reactter.create<TestController>(builder: () => TestController())!;
 
@@ -43,7 +43,7 @@ void main() {
       Reactter.delete<TestController>();
     });
 
-    test("should notifies when will update", () {
+    test("should notify when will update", () {
       final testController =
           Reactter.create<TestController>(builder: () => TestController())!;
 
@@ -66,7 +66,7 @@ void main() {
       Reactter.delete<TestController>();
     });
 
-    test("should notifies when did update", () async {
+    test("should notify when did update", () async {
       final testController =
           Reactter.create<TestController>(builder: () => TestController())!;
 

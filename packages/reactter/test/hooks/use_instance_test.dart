@@ -7,13 +7,13 @@ const ID = 'uniqueId';
 
 void main() {
   group("UseInstance", () {
-    test("should gets instance", () => _testController());
+    test("should get instance", () => _testController());
 
-    test("should gets instance by id", () => _testController(ID));
+    test("should get instance by id", () => _testController(ID));
 
-    test("should gets instance late", () => _testControllerLate());
+    test("should get instance late", () => _testControllerLate());
 
-    test("should gets instance by id late", () => _testControllerLate(ID));
+    test("should get instance by id late", () => _testControllerLate(ID));
   });
 }
 

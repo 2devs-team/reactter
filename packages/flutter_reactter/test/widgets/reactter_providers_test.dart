@@ -9,7 +9,7 @@ import '../shareds/test_controller.dart';
 
 void main() {
   group("ReactterProviders", () {
-    testWidgets("should gets instance form different ReactterProvider",
+    testWidgets("should get instance form different ReactterProvider",
         (tester) async {
       late TestController instanceObtained;
       late TestController instanceObtainedWithId;

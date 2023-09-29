@@ -5,7 +5,7 @@ import '../shareds/test_controllers.dart';
 
 void main() {
   group("UseReducer", () {
-    test("should has a initial value", () {
+    test("should have a initial value", () {
       final testController = TestController();
 
       expect(testController.stateReduce.value.count, 0);
