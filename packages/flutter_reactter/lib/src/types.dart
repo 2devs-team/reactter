@@ -11,7 +11,7 @@ typedef SelectorAspect<T> = bool Function(InheritedElement inheritedElement);
 /// associated with that instance.
 typedef ListenStates<T> = List<ReactterState> Function(T instance);
 
-typedef InstanceBuilder<T> = Widget Function(
+typedef InstanceContextBuilder<T> = Widget Function(
   T inst,
   BuildContext context,
   Widget? child,

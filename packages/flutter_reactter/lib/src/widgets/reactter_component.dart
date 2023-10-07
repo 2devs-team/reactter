@@ -78,7 +78,7 @@ abstract class ReactterComponent<T extends Object> extends StatelessWidget {
   String? get id => null;
 
   /// How to builder the instance of [T].
-  ContextBuilder<T>? get builder => null;
+  InstanceBuilder<T>? get builder => null;
 
   /// Listens states to re-build [render] method.
   ListenStates<T>? get listenStates => null;

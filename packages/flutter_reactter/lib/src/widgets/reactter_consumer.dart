@@ -81,7 +81,7 @@ class ReactterConsumer<T extends Object?> extends StatelessWidget {
   ///
   /// This callback function is responsible for building the widget tree
   /// based on the obtained instance and the provided child widget.
-  final InstanceBuilder<T> builder;
+  final InstanceContextBuilder<T> builder;
 
   @override
   Widget build(BuildContext context) {

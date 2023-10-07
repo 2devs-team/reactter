@@ -3,7 +3,7 @@ part of '../framework.dart';
 /// A singleton instance of [T]
 class ReactterInstance<T> {
   final String? id;
-  ContextBuilder<T?>? _builder;
+  InstanceBuilder<T?>? _builder;
 
   T? _instance;
   T? get instance => _instance;

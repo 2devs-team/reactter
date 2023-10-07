@@ -5,7 +5,7 @@ import 'package:reactter/src/hooks.dart';
 import 'internals.dart';
 
 /// A function to generate the instance of [T]
-typedef ContextBuilder<T> = T Function();
+typedef InstanceBuilder<T> = T Function();
 
 /// Reactter.log type
 typedef LogWriterCallback = void Function(String text, {bool isError});

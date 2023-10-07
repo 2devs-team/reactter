@@ -26,7 +26,7 @@ abstract class ReactterInstanceManager {
   ///
   /// Returns `true` when instance has been registered.
   bool register<T extends Object?>({
-    required ContextBuilder<T> builder,
+    required InstanceBuilder<T> builder,
     String? id,
   }) {
     final instanceKey = ReactterInstance.generateKey<T?>(id);
@@ -82,7 +82,7 @@ abstract class ReactterInstanceManager {
   ///
   /// Returns it, else return `null`.
   T? create<T extends Object?>({
-    required ContextBuilder<T> builder,
+    required InstanceBuilder<T> builder,
     String? id,
     Object? ref,
   }) {

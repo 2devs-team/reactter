@@ -53,7 +53,7 @@ abstract class ReactterProviderAbstraction<T extends Object>
 ///
 /// > **NOTE:**
 /// > [ReactterProvider] is a "scoped". This mean that [ReactterProvider]
-/// exposes the [T] instance defined on first parameter([InstanceBuilder])
+/// exposes the [T] instance defined on first parameter([InstanceContextBuilder])
 /// through the [BuildContext] in the widget subtree:
 ///
 ///```dart
@@ -94,7 +94,7 @@ class ReactterProvider<T extends Object> extends ReactterProviderAbstraction {
 
   /// Create a [T] instance.
   @protected
-  final ContextBuilder<T> instanceBuilder;
+  final InstanceBuilder<T> instanceBuilder;
 
   /// Immediately create the instance defined
   /// on firts parameter([instanceBuilder]).
@@ -106,7 +106,7 @@ class ReactterProvider<T extends Object> extends ReactterProviderAbstraction {
   /// Exposes [BuilderContext] and [child] widget as parameters.
   /// and returns a widget.
   @protected
-  final InstanceBuilder<T>? builder;
+  final InstanceContextBuilder<T>? builder;
 
   const ReactterProvider(
     this.instanceBuilder, {
@@ -347,7 +347,7 @@ class ReactterProviderElement<T extends Object?> extends InheritedElement
     _isRoot = !Reactter.exists<T>(_id);
 
     Reactter.create<T>(
-      builder: widget.instanceBuilder as ContextBuilder<T>,
+      builder: widget.instanceBuilder as InstanceBuilder<T>,
       id: _id,
       ref: this,
     );
