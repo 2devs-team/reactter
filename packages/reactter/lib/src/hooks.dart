@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:meta/meta.dart';
 import 'package:reactter/src/types.dart';
 
-import 'internals.dart';
 import 'lifecycle.dart';
+import 'framework.dart';
 
 part 'hooks/use_async_state.dart';
 part 'hooks/use_compute.dart';

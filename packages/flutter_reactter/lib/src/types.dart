@@ -1,6 +1,5 @@
 import 'package:flutter/widgets.dart';
-
-import 'internals.dart';
+import 'package:reactter/reactter.dart' hide Reactter;
 
 /// This function type can be used as a callback to determine
 /// whether a specific aspect of an inherited widget should be selected or not.

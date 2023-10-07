@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:reactter/src/hooks.dart';
 
-import 'internals.dart';
+import 'framework.dart';
 
 /// A function to generate the instance of [T]
 typedef InstanceBuilder<T> = T Function();
