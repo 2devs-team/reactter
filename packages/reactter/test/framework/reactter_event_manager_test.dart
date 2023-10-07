@@ -232,7 +232,7 @@ void _testEmitListenEvent(
     );
   }
 
-  Reactter.dispose(ReactterInstance<TestController>(id));
+  Reactter.offAll(ReactterInstance<TestController>(id));
 
   if (expectParam != null) {
     expectLater(paramReceived, expectParam);

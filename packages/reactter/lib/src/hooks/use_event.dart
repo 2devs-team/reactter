@@ -100,5 +100,5 @@ class UseEvent<T extends Object?> {
   }
 
   /// Removes all instance's events
-  void dispose() => Reactter.dispose(_instanceReceived);
+  void dispose() => Reactter.offAll(_instanceReceived);
 }

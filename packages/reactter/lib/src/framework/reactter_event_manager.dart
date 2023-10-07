@@ -1,6 +1,6 @@
 part of '../framework.dart';
 
-/// A mixin-class that adds events management features to classes that use it.
+/// A abstract-class that adds events management features to classes that use it.
 ///
 /// It contains methods for adding, removing, and triggering events,
 /// as well as storing event callbacks.
@@ -118,7 +118,7 @@ abstract class ReactterEventManager {
   }
 
   /// Removes all instance's events
-  void dispose(Object? instance) {
+  void offAll(Object? instance) {
     final instanceKey = ReactterInstance.getInstanceKey(instance);
     final eventKeys = Set.from(_instanceEvents[instanceKey] ?? []);
 

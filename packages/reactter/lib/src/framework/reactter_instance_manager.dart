@@ -61,7 +61,7 @@ abstract class ReactterInstanceManager {
     _removeInstance<T>(reactterInstance);
 
     Reactter.emit(reactterInstance, Lifecycle.unregistered);
-    Reactter.dispose(reactterInstance);
+    Reactter.offAll(reactterInstance);
 
     _instancesByKey.remove(instanceKey);
 
@@ -123,7 +123,7 @@ abstract class ReactterInstanceManager {
 
     _removeInstance<T>(reactterInstance);
 
-    Reactter.dispose(reactterInstance);
+    Reactter.offAll(reactterInstance);
 
     return true;
   }

@@ -112,7 +112,7 @@ abstract class ReactterState {
       _instanceAttached = null;
     }
 
-    Reactter.dispose(this);
+    Reactter.offAll(this);
   }
 
   /// When the instance is destroyed, this object is dispose.
