@@ -42,7 +42,7 @@ part of '../framework.dart';
 /// * [ReactterNotifyManager], provides methods that notify listeners
 /// about [ReactterHook] changes.
 /// * [ReactterState], adds state management features to [ReactterHook].
-abstract class ReactterHook with ReactterState {
+abstract class ReactterHook with ReactterStateBase implements ReactterState {
   /// This variable is used to register [ReactterHook]
   /// and attach the [ReactterState] that are defined here.
   ///
@@ -52,46 +52,35 @@ abstract class ReactterHook with ReactterState {
   ///
   /// `final $ = ReactterHook.$register;`
   @protected
-  _HookRegister get $;
+  _ReactterHookRegister get $;
 
-  /// This getter allows access to the [_HookRegister] instance
+  /// This getter allows access to the [_ReactterHookRegister] instance
   /// which is responsible for registering a [ReactterHook]
   /// and attaching previously collected states to it.
-  static _HookRegister get $register => _HookRegister();
+  static _ReactterHookRegister get $register => _ReactterHookRegister();
 
   ReactterHook() {
-    $._register(this);
-    createState();
+    $._end(this);
   }
 
   /// Executes [callback], and notify the listeners about to update.
+  @override
   @mustCallSuper
   void update([Function? callback]) {
     return super.update(callback ?? () {});
   }
 
   /// Executes [callback], and notify the listeners about to update as async way.
+  @override
   @mustCallSuper
   Future<void> updateAsync([Function? callback]) async {
     return super.updateAsync(callback ?? () {});
   }
 }
 
-/// It is responsible for registering a [ReactterHook] and attaching previously
-/// collected states to it.
-class _HookRegister {
-  final _statesRecollectedPrev = Reactter._statesRecollected;
-  final _isRecollectOnPrev = Reactter._isRecollectOn;
-
-  _HookRegister() {
-    Reactter._isRecollectOn = true;
-    Reactter._statesRecollected = [];
-  }
-
-  /// The function registers a ReactterHook.
-  void _register(ReactterHook hook) {
-    Reactter._attachInstance(hook);
-    Reactter._statesRecollected = _statesRecollectedPrev;
-    Reactter._isRecollectOn = _isRecollectOnPrev;
+class _ReactterHookRegister extends ReactterZone {
+  void _end(ReactterHook reactterHook) {
+    this.attachInstance(reactterHook);
+    ReactterZone.recollectState(reactterHook);
   }
 }

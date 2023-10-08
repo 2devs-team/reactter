@@ -34,10 +34,15 @@ part of '../objs.dart';
 /// // or using the callable
 /// strObj("change value");
 /// ```
-class Obj<T> {
+class Obj<T> with ObjBase<T> {
   T value;
 
   Obj(this.value);
+}
+
+abstract class ObjBase<T> {
+  set value(T value);
+  T get value;
 
   /// The equality operator.
   ///

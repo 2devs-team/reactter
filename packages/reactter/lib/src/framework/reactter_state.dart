@@ -1,11 +1,59 @@
 part of '../framework.dart';
 
-/// A abstract-class that adds state management features to classes that use it.
+/// A abstract class that represents a stare in Reactter.
 ///
 /// It provides methods for attaching and detaching an object instance to
 /// the state, notifying listeners of state changes, and disposing of the state
 /// object when it is no longer needed.
 abstract class ReactterState {
+  /// Attaches an object instance to this state.
+  @mustCallSuper
+  void attachTo(Object instance);
+
+  /// Detaches an object instance to this state.
+  @mustCallSuper
+  void detachInstance();
+
+  /// Executes [fnUpdate], and notify the listeners about to update.
+  ///
+  /// This method triggers the `Lifecycle.didUpdate` event,
+  /// which allows listeners to react to the updated state.
+  @mustCallSuper
+  void update(covariant Function fnUpdate);
+
+  /// Executes [fnUpdate], and notify the listeners about to update as async way.
+  ///
+  /// This method triggers the `Lifecycle.didUpdate` event,
+  /// which allows listeners to react to the updated state.
+  @mustCallSuper
+  Future<void> updateAsync(covariant Function fnUpdate);
+
+  @mustCallSuper
+
+  /// It's used to notify listeners that the state has been updated.
+  /// It is typically called after making changes to the state object.
+  ///
+  /// This method triggers the `Lifecycle.didUpdate` event,
+  /// which allows listeners to react to the updated state.
+  void refresh();
+
+  /// Called when this object is removed
+  @mustCallSuper
+  void dispose();
+}
+
+/// An implementation of the [ReactterState].
+abstract class ReactterStateImpl extends ReactterStateBase
+    implements ReactterState {
+  ReactterStateImpl() {
+    ReactterZone.recollectState(this);
+  }
+}
+
+/// An abstract class that provides common functionality for managing
+/// state in Reactter.
+@internal
+abstract class ReactterStateBase implements ReactterState {
   /// It's used to store a reference to an object instance
   /// that is attached to the state.
   Object? _instanceAttached;
@@ -18,13 +66,6 @@ abstract class ReactterState {
       Reactter._hasListeners(this) ||
       (_instanceAttached != null && Reactter._hasListeners(_instanceAttached));
 
-  /// Adds the current state to a list if instances of the Reactter class are being built.
-  @mustCallSuper
-  void createState() {
-    Reactter._recollectState(this);
-  }
-
-  /// Attaches an object instance to this state.
   @mustCallSuper
   void attachTo(Object instance) {
     assert(
@@ -37,7 +78,6 @@ abstract class ReactterState {
     _instanceAttached = instance;
   }
 
-  /// Detaches an object instance to this state.
   @mustCallSuper
   void detachInstance() {
     if (_instanceAttached == null) return;
@@ -46,7 +86,6 @@ abstract class ReactterState {
     _instanceAttached = null;
   }
 
-  /// Executes [fnUpdate], and notify the listeners about to update.
   @mustCallSuper
   void update(covariant Function fnUpdate) {
     assert(!_isDisposed, "You can update when it's been disposed");
@@ -65,7 +104,6 @@ abstract class ReactterState {
     _isUpdating = false;
   }
 
-  /// Executes [fnUpdate], and notify the listeners about to update as async way.
   @mustCallSuper
   Future<void> updateAsync(covariant Function fnUpdate) async {
     assert(!_isDisposed, "You can update when it's been disposed");
@@ -83,7 +121,6 @@ abstract class ReactterState {
     _isUpdating = false;
   }
 
-  /// Forces update and notifies to listeners that it did update
   @mustCallSuper
   void refresh() {
     assert(!_isDisposed, "You can refresh when it's been disposed");
@@ -97,7 +134,6 @@ abstract class ReactterState {
     _isUpdating = false;
   }
 
-  /// Called when this object is removed
   @mustCallSuper
   void dispose() {
     _isDisposed = true;
@@ -139,13 +175,11 @@ extension ReactterStateShortcuts on ReactterInterface {
   /// It is used to create a new instance of a [ReactterState] class
   /// and attach it to a specific instance.
   T lazy<T extends ReactterState>(T Function() stateFn, Object instance) {
-    late T state;
-
-    Reactter._recollectStatesAndAttachInstance(() {
-      state = stateFn();
-      return instance;
-    });
-
-    return state;
+    final zone = ReactterZone();
+    try {
+      return stateFn();
+    } finally {
+      zone.attachInstance(instance);
+    }
   }
 }

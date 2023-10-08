@@ -121,7 +121,7 @@ class UseEffect extends ReactterHook {
       return;
     }
 
-    if (Reactter.isRecollectOn) return;
+    if (ReactterZone.current != null) return;
 
     final instance = _getInstance(context);
 
@@ -133,6 +133,7 @@ class UseEffect extends ReactterHook {
     _watchDependencies();
   }
 
+  @override
   void attachTo(Object instance) {
     if (context == null) return;
 
@@ -141,6 +142,23 @@ class UseEffect extends ReactterHook {
     if (!_initialized) return;
 
     _analyzeInstanceAttached();
+  }
+
+  @override
+  void detachInstance() {
+    _unwatchInstanceAttached();
+
+    super.detachInstance();
+  }
+
+  @override
+  void dispose() {
+    _cleanupCallback = null;
+
+    _unwatchInstanceAttached();
+    _unwatchDependencies();
+
+    super.dispose();
   }
 
   void _analyzeInstanceAttached() {
@@ -152,12 +170,6 @@ class UseEffect extends ReactterHook {
     }
 
     _watchInstanceAttached();
-  }
-
-  void detachInstance() {
-    _unwatchInstanceAttached();
-
-    super.detachInstance();
   }
 
   void _watchInstanceAttached() {
@@ -184,17 +196,6 @@ class UseEffect extends ReactterHook {
       Lifecycle.willUnmount,
       _runCleanupAndUnwatchDependencies,
     );
-  }
-
-  /// Used to clean up resources and memory used by an object before it is
-  /// removed from memory.
-  void dispose() {
-    _cleanupCallback = null;
-
-    _unwatchInstanceAttached();
-    _unwatchDependencies();
-
-    super.dispose();
   }
 
   void _runCallbackAndWatchDependencies([_, __]) {
@@ -242,7 +243,7 @@ class UseEffect extends ReactterHook {
   }
 
   Object? _getInstance(Object? instance) {
-    return instance is ReactterState && Reactter.find(instance) == null
+    return instance is ReactterStateBase && Reactter.find(instance) == null
         ? _getInstance(instance.instanceAttached)
         : instance;
   }

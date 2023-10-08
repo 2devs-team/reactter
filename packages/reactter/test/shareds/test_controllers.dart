@@ -75,7 +75,7 @@ TestStore _reducer(TestStore state, ReactterAction action) {
   }
 }
 
-class TestController with ReactterState {
+class TestController extends ReactterStateImpl {
   final signalString = "initial".signal;
 
   late final stateBool = UseState(false);

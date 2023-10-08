@@ -175,8 +175,8 @@ abstract class ReactterInstanceManager {
       return reactterInstance;
     }
 
-    Reactter._recollectStatesAndAttachInstance(
-      () => _createInstance(reactterInstance!),
+    ReactterZone.autoAttachInstance(
+      () => _createInstance<T>(reactterInstance!),
     );
 
     Reactter.emit(reactterInstance, Lifecycle.initialized);
@@ -186,7 +186,7 @@ abstract class ReactterInstanceManager {
   }
 
   /// Creates an instance of a given type using a [ReactterInstance].
-  T _createInstance<T>(ReactterInstance reactterInstance) {
+  T? _createInstance<T>(ReactterInstance<T> reactterInstance) {
     reactterInstance._instance = reactterInstance._builder?.call();
 
     if (reactterInstance._instance != null) {
@@ -203,7 +203,7 @@ abstract class ReactterInstanceManager {
     _instancesCreated.remove(reactterInstance.instance);
 
     if (reactterInstance.instance is ReactterState) {
-      (reactterInstance.instance as ReactterState).dispose();
+      reactterInstance.instance.dispose();
     }
 
     reactterInstance._instance = null;
