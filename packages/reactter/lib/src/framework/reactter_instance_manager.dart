@@ -74,8 +74,8 @@ abstract class ReactterInstanceManager {
   /// If not found and has registered, create a new instance.
   ///
   /// If found it, returns it, else returns `null`.
-  T? get<T extends Object?>([String? id]) {
-    return _getAndCreateIfNotExtist<T>(id)?.instance;
+  T? get<T extends Object?>([String? id, Object? ref]) {
+    return _getAndCreateIfNotExtist<T>(id, ref)?.instance;
   }
 
   /// Registers, creates and gets the instance of [T] with or without [id] given.
@@ -88,13 +88,7 @@ abstract class ReactterInstanceManager {
   }) {
     register<T>(builder: builder, id: id);
 
-    final reactterInstance = _getAndCreateIfNotExtist<T>(id);
-
-    if (ref != null) {
-      reactterInstance?.refs.add(ref.hashCode);
-    }
-
-    return reactterInstance?.instance;
+    return _getAndCreateIfNotExtist<T>(id, ref)?.instance;
   }
 
   /// Deletes the instance from the store but keep the [builder] function.
@@ -151,6 +145,7 @@ abstract class ReactterInstanceManager {
   /// to its creation or registration.
   ReactterInstance<T?>? _getAndCreateIfNotExtist<T extends Object?>([
     String? id,
+    Object? ref,
   ]) {
     final instanceKey = ReactterInstance.generateKey<T?>(id);
     var reactterInstance = _instancesByKey[instanceKey] as ReactterInstance<T>?;
@@ -178,6 +173,10 @@ abstract class ReactterInstanceManager {
     ReactterZone.autoAttachInstance(
       () => _createInstance<T>(reactterInstance!),
     );
+
+    if (ref != null) {
+      reactterInstance?.refs.add(ref.hashCode);
+    }
 
     Reactter.emit(reactterInstance, Lifecycle.initialized);
     Reactter.log('Instance "$reactterInstance" has been created.');
