@@ -243,7 +243,7 @@ class UseEffect extends ReactterHook {
   }
 
   Object? _getInstance(Object? instance) {
-    return instance is ReactterStateBase && Reactter.find(instance) == null
+    return instance is ReactterStateBase && !Reactter.isRegistered(instance)
         ? _getInstance(instance.instanceAttached)
         : instance;
   }

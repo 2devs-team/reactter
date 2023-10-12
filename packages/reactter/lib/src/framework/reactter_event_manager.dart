@@ -119,7 +119,7 @@ abstract class ReactterEventManager {
 
   /// Removes all instance's events
   void offAll(Object? instance) {
-    final instanceKey = ReactterInstance.getInstanceKey(instance);
+    final instanceKey = ReactterInstance._getInstanceKey(instance);
     final eventKeys = Set.from(_instanceEvents[instanceKey] ?? []);
 
     eventKeys.forEach((key) => _events.remove(key));
@@ -147,7 +147,7 @@ abstract class ReactterEventManager {
     Enum eventName, [
     Function? callback,
   ]) {
-    final instanceKey = ReactterInstance.getInstanceKey(instance);
+    final instanceKey = ReactterInstance._getInstanceKey(instance);
 
     if (callback == null) {
       return [instanceKey, "$instanceKey.${eventName.hashCode}"];
@@ -170,7 +170,7 @@ abstract class ReactterEventManager {
   }
 
   Object? _getInstance(Object? instance) {
-    return instance is ReactterInstance ? instance.stored?.instance : instance;
+    return instance is ReactterInstance ? instance.instance : instance;
   }
 
   /// Removes a one callback event from a _oneCallbacks if it exists.
@@ -191,7 +191,7 @@ abstract class ReactterEventManager {
   /// Checks if an object has any listeners.
   bool _hasListeners(Object? instance) {
     return _instanceEvents.containsKey(
-      ReactterInstance.getInstanceKey(instance),
+      ReactterInstance._getInstanceKey(instance),
     );
   }
 }

@@ -4,6 +4,7 @@ part of '../widgets.dart';
 
 /// An abstract class that extends [InheritedWidget] and implements
 /// [ReactterWrapperWidget].
+@internal
 abstract class ReactterProviderAbstraction<T extends Object>
     extends InheritedWidget implements ReactterWrapperWidget {
   const ReactterProviderAbstraction({
@@ -90,7 +91,21 @@ abstract class ReactterProviderAbstraction<T extends Object>
 /// watch of stateB.
 ///
 class ReactterProvider<T extends Object> extends ReactterProviderAbstraction {
+  /// It's used to identify the instance of [T] type
+  /// that is provided by the provider.
+  ///
+  /// It allows you to have multiple instances of the same [T] type in
+  /// your widget tree and differentiate between them.
+  ///
+  /// This can be useful when you want to provide
+  /// different instances of a class to different parts of your application.
   final String? id;
+
+  /// It's used to specify the type of instance creation for the provided object.
+  ///
+  /// It is of type [InstanceType], which is an enum with three possible values:
+  /// [InstanceType.builder], [InstanceType.factory] and [InstanceType.singleton].
+  final InstanceType type;
 
   /// Create a [T] instance.
   @protected
@@ -112,6 +127,7 @@ class ReactterProvider<T extends Object> extends ReactterProviderAbstraction {
     this.instanceBuilder, {
     Key? key,
     this.id,
+    this.type = InstanceType.builder,
     this.init = false,
     Widget? child,
     this.builder,
@@ -127,7 +143,11 @@ class ReactterProvider<T extends Object> extends ReactterProviderAbstraction {
 
   @override
   ReactterProviderElement createElement() {
-    return ReactterProviderElement<T>(widget: this, id: id);
+    return ReactterProviderElement<T>(
+      widget: this,
+      id: id,
+      type: type,
+    );
   }
 
   /// This is a hack to save it and find it with the `id` distinction
@@ -227,9 +247,11 @@ class ReactterProvider<T extends Object> extends ReactterProviderAbstraction {
 
 /// `ReactterProviderElement` is a class that manages the lifecycle of the `ReactterInstance` and
 /// provides the `ReactterInstance` to its descendants
+@internal
 class ReactterProviderElement<T extends Object?> extends InheritedElement
     with ReactterWrapperElementMixin, ReactterScopeElementMixin {
   final String? _id;
+  final InstanceType type;
   Widget? _widget;
   bool _isRoot = false;
   Map<String, ReactterProviderElement<T>>? _inheritedElementsWithId;
@@ -237,17 +259,32 @@ class ReactterProviderElement<T extends Object?> extends InheritedElement
   @override
   ReactterProvider get widget => super.widget as ReactterProvider;
 
-  T? get _instance => Reactter.instanceOf<T>(_id);
+  T? get _instance => Reactter.find<T>(_id);
 
   /// Creates an element that uses the given widget as its configuration.
   ReactterProviderElement({
     required ReactterProvider widget,
+    this.type = InstanceType.builder,
     String? id,
   })  : _id = id,
         super(widget) {
     if (widget.init) {
-      _createInstance();
+      _isRoot = !Reactter.exists<T>(_id);
+      Reactter.create<T>(
+        widget.instanceBuilder as InstanceBuilder<T>,
+        id: _id,
+        type: type,
+        ref: this,
+      );
+
+      return;
     }
+
+    Reactter.register<T>(
+      widget.instanceBuilder as InstanceBuilder<T>,
+      id: _id,
+      type: type,
+    );
   }
 
   @override
@@ -271,7 +308,8 @@ class ReactterProviderElement<T extends Object?> extends InheritedElement
   @override
   void mount(Element? parent, Object? newSlot) {
     if (!widget.init) {
-      _createInstance();
+      _isRoot = !Reactter.exists<T>(_id);
+      Reactter.get<T>(_id, this);
     }
 
     _updateInheritedElementWithId(parent);
@@ -341,16 +379,6 @@ class ReactterProviderElement<T extends Object?> extends InheritedElement
 
     final instanceKey = ReactterInstance.generateKey<T?>(widget.id);
     _inheritedElementsWithId![instanceKey] = this;
-  }
-
-  void _createInstance() {
-    _isRoot = !Reactter.exists<T>(_id);
-
-    Reactter.create<T>(
-      builder: widget.instanceBuilder as InstanceBuilder<T>,
-      id: _id,
-      ref: this,
-    );
   }
 }
 
