@@ -66,20 +66,12 @@ class AnimationController {
   );
 
   late final isPlaying = Reactter.lazy(() {
-    bool resolveIsPlaying(ArgsX3<AnimationControl> args) => args
-        .toList<AnimationControl>()
-        .every((control) => control != AnimationControl.stop);
-
-    final resolveIsPlayingWithMemo = Reactter.memo(resolveIsPlaying);
-
     return UseCompute(
-      () => resolveIsPlayingWithMemo(
-        Args3(
-          sizeAnimation.control.value,
-          borderRadiusAnimation.control.value,
-          colorAnimation.control.value,
-        ),
-      ),
+      () => [
+        sizeAnimation.control.value,
+        borderRadiusAnimation.control.value,
+        colorAnimation.control.value,
+      ].every((control) => control != AnimationControl.stop),
       [
         sizeAnimation.control,
         borderRadiusAnimation.control,

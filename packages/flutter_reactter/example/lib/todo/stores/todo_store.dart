@@ -2,21 +2,21 @@ import '../models/todo.dart';
 
 enum TodoListType { all, done, todo }
 
-class TodosStore {
-  final List<Todo> todos;
+class TodoStore {
+  final List<Todo> todoList;
   final TodoListType filterBy;
 
-  const TodosStore({
-    required this.todos,
+  const TodoStore({
+    required this.todoList,
     this.filterBy = TodoListType.all,
   });
 
-  TodosStore copyWith({
-    List<Todo>? todos,
+  TodoStore copyWith({
+    List<Todo>? todoList,
     TodoListType? filterBy,
   }) =>
-      TodosStore(
-        todos: todos ?? this.todos,
+      TodoStore(
+        todoList: todoList ?? this.todoList,
         filterBy: filterBy ?? this.filterBy,
       );
 }

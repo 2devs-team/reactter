@@ -1,21 +1,19 @@
-import 'dart:math';
+import 'package:examples/shopping_cart/repositories/store_repository.dart';
 import 'package:flutter_reactter/flutter_reactter.dart';
 
-import '../models/product_state.dart';
-
-Random _random = Random();
+import '../models/product.dart';
 
 class ProductsController {
-  final products = UseState(_generateProducts());
+  final useStoreRepository = UseInstance.create(StoreRepository.new);
+  final products = UseState(<Product>[]);
 
-  static List<ProductState> _generateProducts() {
-    return List.generate(
-      26,
-      (index) => ProductState(
-        name: "Product ${String.fromCharCode(index + 65)}",
-        price: (_random.nextInt(3000) + 100) + _random.nextDouble(),
-        stock: _random.nextInt(20),
-      ),
-    );
+  ProductsController() {
+    loadProducts();
+  }
+
+  void loadProducts() {
+    products.update(() {
+      products.value = useStoreRepository.instance!.getProducts();
+    });
   }
 }

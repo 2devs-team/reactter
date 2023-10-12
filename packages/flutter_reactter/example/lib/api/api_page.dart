@@ -4,7 +4,9 @@ import 'package:flutter_reactter/flutter_reactter.dart';
 import 'controllers/api_controller.dart';
 import 'models/repository.dart';
 import 'models/user.dart';
+import 'services/api_service.dart';
 import 'widgets/repository_item.dart';
+import 'widgets/search_bar.dart';
 import 'widgets/user_item.dart';
 
 class ApiPage extends StatelessWidget {
@@ -18,73 +20,66 @@ class ApiPage extends StatelessWidget {
         return Scaffold(
           appBar: AppBar(
             title: const Text("Github search"),
-          ),
-          body: Column(
-            children: [
-              Container(
-                color: Theme.of(context).scaffoldBackgroundColor,
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Form(
-                            key: apiController.formKey,
-                            child: TextFormField(
-                              autofocus: true,
-                              autovalidateMode:
-                                  AutovalidateMode.onUserInteraction,
-                              decoration: const InputDecoration(
-                                labelText: 'Type a username or company name or'
-                                    ' repository name("2devs-team/reactter")',
-                              ),
-                              textCapitalization: TextCapitalization.sentences,
-                              maxLength: 150,
-                              controller: apiController.textController,
-                              focusNode: apiController.textFocusNode,
-                              validator: apiController.validator,
-                              onFieldSubmitted: (_) => apiController.search(),
-                            ),
-                          ),
-                        ),
-                        Material(
-                          color: Colors.transparent,
-                          child: IconButton(
-                            constraints: const BoxConstraints.tightFor(
-                              width: 62,
-                              height: 62,
-                            ),
-                            color: Colors.blueAccent,
-                            icon: const Icon(Icons.search),
-                            iconSize: 32,
-                            padding: EdgeInsets.zero,
-                            splashRadius: 24,
-                            onPressed: apiController.search,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
+            bottom: PreferredSize(
+              preferredSize: const Size.fromHeight(56),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8)
+                    .copyWith(bottom: 2),
+                child: SearchBar(
+                  onSearch: apiController.search,
                 ),
               ),
-              ReactterConsumer<ApiController>(
+            ),
+          ),
+          body: SingleChildScrollView(
+            padding: const EdgeInsets.all(8),
+            child: Center(
+              child: ReactterConsumer<ApiController>(
                 listenStates: (inst) => [inst.entity],
                 builder: (_, __, ___) {
-                  return Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: apiController.entity.when<Widget>(
-                      loading: (_) => const CircularProgressIndicator(),
-                      done: (entity) => entity is User
-                          ? UserItem(user: entity)
-                          : RepositoryItem(repository: entity as Repository),
-                      error: (_) => const Text("Not found"),
+                  return FittedBox(
+                    child: SizedBox(
+                      width: 400,
+                      child: Card(
+                        margin: EdgeInsets.zero,
+                        child: Container(
+                          alignment: Alignment.center,
+                          padding: const EdgeInsets.all(16),
+                          child: apiController.entity.when<Widget>(
+                            standby: (_) => const Text(
+                              'Search a user or repository(like "flutter/flutter")',
+                            ),
+                            loading: (_) => const Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                            done: (entity) {
+                              if (entity is User) {
+                                return UserItem(user: entity);
+                              }
+
+                              if (entity is Repository) {
+                                return RepositoryItem(repository: entity);
+                              }
+
+                              return const Text("Not found");
+                            },
+                            error: (error) {
+                              if (error is NotFoundException) {
+                                return Text(
+                                  'Not found "${apiController.query}"',
+                                );
+                              }
+
+                              return Text(error.toString());
+                            },
+                          ),
+                        ),
+                      ),
                     ),
                   );
                 },
               ),
-            ],
+            ),
           ),
         );
       },

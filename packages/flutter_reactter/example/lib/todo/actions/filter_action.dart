@@ -1,8 +1,8 @@
 import 'package:flutter_reactter/flutter_reactter.dart';
 
-import '../stores/todos_store.dart';
+import '../stores/todo_store.dart';
 
-class FilterAction extends ReactterActionCallable<TodosStore, TodoListType> {
+class FilterAction extends ReactterActionCallable<TodoStore, TodoListType> {
   final TodoListType todoListType;
 
   const FilterAction({
@@ -13,7 +13,7 @@ class FilterAction extends ReactterActionCallable<TodosStore, TodoListType> {
         );
 
   @override
-  TodosStore call(TodosStore state) {
+  TodoStore call(TodoStore state) {
     return state.copyWith(filterBy: todoListType);
   }
 }

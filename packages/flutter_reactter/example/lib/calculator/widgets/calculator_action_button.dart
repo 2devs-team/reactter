@@ -51,8 +51,16 @@ class CalculatorActionButton extends StatelessWidget {
 
     if (action == ActionCalculator.point) {
       return Expanded(
-        flex: 2,
         child: Button.tertiary(
+          label: label,
+          onPressed: onPressed,
+        ),
+      );
+    }
+
+    if (action == ActionCalculator.equal) {
+      return Expanded(
+        child: Button.primary(
           label: label,
           onPressed: onPressed,
         ),
