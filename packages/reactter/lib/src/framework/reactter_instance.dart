@@ -31,14 +31,17 @@ enum InstanceType {
   /// This type preserves the instance and its states,
   /// even if the dependency tree stops using it.
   ///
-  /// Use `Reactter.unregister` if you want to force destroy
-  /// the instance and its register
-  /// or use `Reactter.delete` for deleting the instance only.
+  /// Use `Reactter.destroy` if you want to force destroy
+  /// the instance and its register.
   ///
   /// It consumes less CPU than [builder] and [factory],
   /// but uses more RAM than the other types.
   /// {@endtemplate}
   singleton,
+}
+
+extension InstanceTypeExt on InstanceType {
+  String get label => '$this'.split('.').last;
 }
 
 /// A singleton instance of [T]

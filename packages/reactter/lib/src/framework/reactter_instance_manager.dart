@@ -38,7 +38,9 @@ abstract class ReactterInstanceManager {
     var reactterInstance = _instancesByKey[instanceKey];
 
     if (reactterInstance?.builder != null) {
-      Reactter.log('Instance "$reactterInstance" already registered.');
+      Reactter.log(
+        'The "$reactterInstance" builder already registered as `$type`.',
+      );
       return false;
     }
 
@@ -50,7 +52,9 @@ abstract class ReactterInstanceManager {
     );
 
     Reactter.emit(reactterInstance, Lifecycle.registered);
-    Reactter.log('Instance "$reactterInstance" has been registered.');
+    Reactter.log(
+      'The "$reactterInstance" builder has been registered as `$type`.',
+    );
     return true;
   }
 
@@ -285,10 +289,7 @@ abstract class ReactterInstanceManager {
     if (reactterInstance?.instance == null) {
       final reactterInstance = ReactterInstance<T>(id);
 
-      Reactter.log(
-        'Instance "$reactterInstance" already deleted.',
-        isError: true,
-      );
+      Reactter.log('The "$reactterInstance" instance already deleted.');
 
       return false;
     }
@@ -303,14 +304,19 @@ abstract class ReactterInstanceManager {
 
     switch (reactterInstance.type) {
       case InstanceType.builder:
-        unregister<T>(id);
+        destroy<T>(id: id);
         return true;
       case InstanceType.factory:
         _removeInstance<T>(reactterInstance);
+        Reactter.log(
+          'The "$reactterInstance" builder has been retained '
+          'because it\'s `${InstanceType.factory}`.',
+        );
         return true;
       case InstanceType.singleton:
         Reactter.log(
-          'Instance "$reactterInstance" has been retained because is marked as `InstanceType.singleton`.',
+          'The "$reactterInstance" instance has been retained '
+          'because it\'s `${InstanceType.singleton}`.',
         );
     }
 
@@ -324,22 +330,68 @@ abstract class ReactterInstanceManager {
     final instanceKey = ReactterInstance.generateKey<T?>(id);
     final reactterInstance =
         _instancesByKey[instanceKey] as _ReactterInstanceBuilder<T?>?;
+    final typeLabel =
+        reactterInstance?._stored?.type.label ?? InstanceType.builder.label;
 
     if (reactterInstance == null) {
       final reactterInstance = ReactterInstance<T>(id);
-      Reactter.log('Instance "$reactterInstance" don\'t exist.');
+
+      Reactter.log('The "$reactterInstance" $typeLabel already deregistered.');
+
       return false;
     }
 
-    _removeInstance<T>(reactterInstance);
+    if (reactterInstance._instance != null) {
+      final idParam = id != null ? "id: '$id, '" : '';
 
-    Reactter.emit(reactterInstance, Lifecycle.unregistered);
-    Reactter.offAll(reactterInstance);
+      Reactter.log(
+        'The "$T" builder couldn\'t deregister '
+        'because the "$reactterInstance" instance is active.\n'
+        'You should delete the instance before with:\n'
+        '`Reactter.delete<$T>(${id ?? ''});` or \n'
+        '`Reactter.destroy<$T>(${idParam}onlyInstance: true);`\n',
+        isError: true,
+      );
+
+      return false;
+    }
 
     _instancesByKey.remove(instanceKey);
 
-    Reactter.log('Instance "$reactterInstance" has been removed its register.');
+    Reactter.emit(reactterInstance, Lifecycle.unregistered);
+    Reactter.offAll(reactterInstance);
+    Reactter.log('The "$reactterInstance" $typeLabel has been deregistered.');
+
     return true;
+  }
+
+  /// Destroys the instance and builder of [T] type with an [id] optional.
+  ///
+  /// If [onlyInstance] is `true`, ignores to deresgisters the builder.
+  ///
+  /// Returns `true` if it was successfully.
+  bool destroy<T extends Object?>({
+    String? id,
+    bool onlyInstance = false,
+  }) {
+    final reactterInstance = _getReactterInstance<T>(id);
+
+    if (reactterInstance?.instance == null && onlyInstance) {
+      final reactterInstance = ReactterInstance<T>(id);
+
+      Reactter.log('The "$reactterInstance" instance already deleted.');
+
+      return false;
+    }
+
+    if (reactterInstance != null) {
+      reactterInstance.refs.clear();
+      _removeInstance<T>(reactterInstance);
+    }
+
+    if (onlyInstance) return true;
+
+    return unregister<T>(id);
   }
 
   /// {@template find}
@@ -383,12 +435,13 @@ abstract class ReactterInstanceManager {
 
     if (reactterInstance == null) {
       final reactterInstance = ReactterInstance<T>(id);
+      final idParam = id != null ? ", id: '$id'" : '';
 
       Reactter.log(
-        'Builder for instance "$reactterInstance" is not registered.\n'
-        'You should register instance with '
-        '"Reactter.register<$T>(builder:() => $T())" or '
-        '"Reactter.create<$T>(builder: () => $T())".',
+        'The "$reactterInstance" builder is not registered.\n'
+        'You should register the instance build with: \n'
+        '`Reactter.register<$T>(() => $T()$idParam);` or \n'
+        '`Reactter.create<$T>(() => $T()$idParam);`.',
         isError: true,
       );
 
@@ -396,7 +449,7 @@ abstract class ReactterInstanceManager {
     }
 
     if (reactterInstance.instance != null) {
-      Reactter.log('Instance "$reactterInstance" already created.');
+      Reactter.log('The "$reactterInstance" instance already created.');
 
       return reactterInstance;
     }
@@ -410,7 +463,7 @@ abstract class ReactterInstanceManager {
     }
 
     Reactter.emit(reactterInstance, Lifecycle.initialized);
-    Reactter.log('Instance "$reactterInstance" has been created.');
+    Reactter.log('The "$reactterInstance" instance has been created.');
 
     return reactterInstance;
   }
@@ -428,7 +481,7 @@ abstract class ReactterInstanceManager {
 
   /// Removes an instance of a generic type from a [_ReactterInstanceBuilder].
   void _removeInstance<T>(_ReactterInstanceBuilder<T?> reactterInstance) {
-    final log = 'Instance "$reactterInstance" has been deleted.';
+    final log = 'The "$reactterInstance" instance has been deleted.';
 
     _instancesCreated.remove(reactterInstance.instance);
 
