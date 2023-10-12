@@ -84,9 +84,14 @@ class UseInstance<T extends Object> extends ReactterHook {
     if (_instance == null) {
       final instanceFound = Reactter.find<T>(id);
 
+      // coverage:ignore-start
+      /// this condition shouldn't be `true`
+      /// because the instance already captured by the event listeners,
+      /// but it is in case of any bugs.
       if (instanceFound != null) {
         update(() => _instance = instanceFound);
       }
+      // coverage:ignore-end
     }
 
     return _instance;

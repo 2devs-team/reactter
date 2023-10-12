@@ -15,7 +15,7 @@ part of '../hooks.dart';
 /// class AddTodoAction extends ReactterAction<String> {
 ///   AddTodoAction(String payload)
 ///     : super(
-///         type: 'todos/todoAdded',
+///         type: 'todo/todoAdded',
 ///         payload: payload,
 ///       );
 /// }
@@ -52,13 +52,13 @@ class ReactterAction<T> {
 /// class AddTodoAction extends ReactterActionCallable<Store, String> {
 ///   AddTodoAction(String payload)
 ///     : super(
-///         type: 'todos/todoAdded',
+///         type: 'todo/todoAdded',
 ///         payload: payload,
 ///       );
 ///
 ///   Store call(state) {
 ///     return state.copyWith(
-///       todos: state.todos..add(payload),
+///       todo: state.todo..add(payload),
 ///     );
 ///   }
 /// }
