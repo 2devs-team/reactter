@@ -69,7 +69,8 @@ void main() {
                 instanceObtained = context.watch<TestController>();
 
                 return Text(
-                    "stateString: ${instanceObtained.stateString.value}");
+                  "stateString: ${instanceObtained.stateString.value}",
+                );
               },
             ),
           ),

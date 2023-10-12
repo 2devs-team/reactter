@@ -11,7 +11,7 @@ void main() {
         "should have a initial value",
         () {
           final testController = Reactter.create<TestController>(
-            builder: () => TestController(),
+            () => TestController(),
           )!;
 
           expect(testController.stateCompute.value, 5);
@@ -24,7 +24,7 @@ void main() {
         "should change vale when computed value is different to previus value",
         () {
           final testController = Reactter.create<TestController>(
-            builder: () => TestController(),
+            () => TestController(),
           )!;
 
           final logValueChanges = [testController.stateCompute.value];

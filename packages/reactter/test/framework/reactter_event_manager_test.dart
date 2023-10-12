@@ -70,7 +70,7 @@ void main() {
 
     test("should listen and emits event with instance", () {
       late TestController? instance;
-      final testController = Reactter.create(builder: () => TestController());
+      final testController = Reactter.create(() => TestController());
 
       _testEmitListenEvent(
         (callback) {
@@ -178,7 +178,7 @@ void main() {
 
     test("should listen and emits event only once with instance", () {
       late TestController? instance;
-      final testController = Reactter.create(builder: () => TestController());
+      final testController = Reactter.create(() => TestController());
 
       _testEmitListenEvent(
         (callback) {

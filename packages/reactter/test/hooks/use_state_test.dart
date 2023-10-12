@@ -7,7 +7,7 @@ void main() {
   group("UseState", () {
     test("should have a initial value", () {
       final testController =
-          Reactter.create<TestController>(builder: () => TestController())!;
+          Reactter.create<TestController>(() => TestController())!;
 
       expect(testController.stateBool.value, false);
       expect(testController.stateString.value, "initial");
@@ -22,7 +22,7 @@ void main() {
 
     test("should change state value", () {
       final testController =
-          Reactter.create<TestController>(builder: () => TestController())!;
+          Reactter.create<TestController>(() => TestController())!;
 
       testController.stateBool.value = !testController.stateBool.value;
       testController.stateString.value = "new value";
@@ -45,7 +45,7 @@ void main() {
 
     test("should notify when will update", () {
       final testController =
-          Reactter.create<TestController>(builder: () => TestController())!;
+          Reactter.create<TestController>(() => TestController())!;
 
       testController.stateInt.value = 1;
 
@@ -68,7 +68,7 @@ void main() {
 
     test("should notify when did update", () async {
       final testController =
-          Reactter.create<TestController>(builder: () => TestController())!;
+          Reactter.create<TestController>(() => TestController())!;
 
       testController.stateInt.value = 1;
 
@@ -109,7 +109,7 @@ void main() {
 
     test("should be updated as async way", () async {
       final testController =
-          Reactter.create<TestController>(builder: () => TestController())!;
+          Reactter.create<TestController>(() => TestController())!;
 
       testController.stateInt.value = 1;
 

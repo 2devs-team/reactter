@@ -103,7 +103,7 @@ void main() {
       late final didUpdateChecked;
 
       final testController =
-          Reactter.create<TestController>(builder: () => TestController())!;
+          Reactter.create<TestController>(() => TestController())!;
       final signalString = testController.signalString;
 
       expect(signalString(), "initial");

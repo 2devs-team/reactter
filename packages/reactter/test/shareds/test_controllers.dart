@@ -122,7 +122,7 @@ class Test2Controller {
   final testController = UseInstance<TestController>();
 
   Test2Controller() {
-    Reactter.create(builder: () => TestController());
+    Reactter.create(() => TestController());
   }
 }
 
@@ -130,7 +130,7 @@ class Test3Controller {
   final test2Controller = UseInstance<Test2Controller>();
 
   Test3Controller() {
-    Reactter.create(builder: () => Test2Controller());
+    Reactter.create(() => Test2Controller());
   }
 }
 
