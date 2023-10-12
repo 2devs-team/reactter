@@ -120,9 +120,7 @@ void main() {
       expectLater(willUpdateChecked, true);
       expectLater(didUpdateChecked, true);
 
-      Reactter
-        ..unregister<TestController>()
-        ..delete<TestController>();
+      Reactter.destroy<TestController>();
 
       expect(
         () => signalString("throw a assertion error"),

@@ -25,7 +25,7 @@ void main() {
       final isRegistered = Reactter.isRegistered(useInstance.instance);
       expect(isRegistered, true);
 
-      Reactter.unregister<TestController>();
+      Reactter.destroy<TestController>();
     });
 
     test("should register an instance with id", () {
@@ -38,7 +38,7 @@ void main() {
       final isRegistered = Reactter.isRegistered(useInstance.instance);
       expect(isRegistered, true);
 
-      Reactter.unregister<TestController>(ID);
+      Reactter.destroy<TestController>(id: ID);
     });
 
     test("should register an instance as builder type", () {
@@ -54,7 +54,7 @@ void main() {
       final instanceType = Reactter.getInstanceType(useInstance.instance);
       expect(instanceType, InstanceType.builder);
 
-      Reactter.unregister<TestController>();
+      Reactter.destroy<TestController>();
     });
 
     test("should register an instance with id as builder type", () {
@@ -70,7 +70,7 @@ void main() {
       final instanceType = Reactter.getInstanceType(useInstance.instance);
       expect(instanceType, InstanceType.builder);
 
-      Reactter.unregister<TestController>(ID);
+      Reactter.destroy<TestController>(id: ID);
     });
 
     test("should register an instance as factory type", () {
@@ -86,7 +86,7 @@ void main() {
       final instanceType = Reactter.getInstanceType(useInstance.instance);
       expect(instanceType, InstanceType.factory);
 
-      Reactter.unregister<TestController>();
+      Reactter.destroy<TestController>();
     });
 
     test("should register an instance with id as factory type", () {
@@ -102,7 +102,7 @@ void main() {
       final instanceType = Reactter.getInstanceType(useInstance.instance);
       expect(instanceType, InstanceType.factory);
 
-      Reactter.unregister<TestController>(ID);
+      Reactter.destroy<TestController>(id: ID);
     });
 
     test("should register an instance as singleton type", () {
@@ -118,7 +118,7 @@ void main() {
       final instanceType = Reactter.getInstanceType(useInstance.instance);
       expect(instanceType, InstanceType.singleton);
 
-      Reactter.unregister<TestController>();
+      Reactter.destroy<TestController>();
     });
 
     test("should register an instance with id as singleton type", () {
@@ -134,7 +134,7 @@ void main() {
       final instanceType = Reactter.getInstanceType(useInstance.instance);
       expect(instanceType, InstanceType.singleton);
 
-      Reactter.unregister<TestController>(ID);
+      Reactter.destroy<TestController>(id: ID);
     });
 
     test("should create an instance", () {
@@ -144,7 +144,7 @@ void main() {
       final isRegistered = Reactter.isRegistered(useInstance.instance);
       expect(isRegistered, true);
 
-      Reactter.unregister<TestController>();
+      Reactter.destroy<TestController>();
     });
 
     test("should create an instance as builder type", () {
@@ -157,7 +157,7 @@ void main() {
       final instanceType = Reactter.getInstanceType(useInstance.instance);
       expect(instanceType, InstanceType.builder);
 
-      Reactter.unregister<TestController>();
+      Reactter.destroy<TestController>();
     });
 
     test("should create an instance with id as builder type", () {
@@ -170,7 +170,7 @@ void main() {
       final instanceType = Reactter.getInstanceType(useInstance.instance);
       expect(instanceType, InstanceType.builder);
 
-      Reactter.unregister<TestController>(ID);
+      Reactter.destroy<TestController>(id: ID);
     });
 
     test("should create an instance as factory type", () {
@@ -183,7 +183,7 @@ void main() {
       final instanceType = Reactter.getInstanceType(useInstance.instance);
       expect(instanceType, InstanceType.factory);
 
-      Reactter.unregister<TestController>();
+      Reactter.destroy<TestController>();
     });
 
     test("should create an instance with id as factory type", () {
@@ -196,7 +196,7 @@ void main() {
       final instanceType = Reactter.getInstanceType(useInstance.instance);
       expect(instanceType, InstanceType.factory);
 
-      Reactter.unregister<TestController>(ID);
+      Reactter.destroy<TestController>(id: ID);
     });
 
     test("should create an instance as singleton type", () {
@@ -209,7 +209,7 @@ void main() {
       final instanceType = Reactter.getInstanceType(useInstance.instance);
       expect(instanceType, InstanceType.singleton);
 
-      Reactter.unregister<TestController>();
+      Reactter.destroy<TestController>();
     });
 
     test("should create an instance with id as singleton type", () {
@@ -222,7 +222,7 @@ void main() {
       final instanceType = Reactter.getInstanceType(useInstance.instance);
       expect(instanceType, InstanceType.singleton);
 
-      Reactter.unregister<TestController>(ID);
+      Reactter.destroy<TestController>(id: ID);
     });
 
     test("should get an instance", () {
@@ -234,7 +234,7 @@ void main() {
       final isRegistered = Reactter.isRegistered(useInstance.instance);
       expect(isRegistered, true);
 
-      Reactter.unregister<TestController>();
+      Reactter.destroy<TestController>();
     });
 
     test("should get an instance with id", () {
@@ -246,7 +246,7 @@ void main() {
       final isRegistered = Reactter.isRegistered(useInstance.instance);
       expect(isRegistered, true);
 
-      Reactter.unregister<TestController>(ID);
+      Reactter.destroy<TestController>(id: ID);
     });
   });
 }
@@ -258,7 +258,7 @@ void _testController([String? id]) {
 
   expect(useInstance.instance, isA<TestController>());
 
-  Reactter.unregister<TestController>(id);
+  Reactter.destroy<TestController>(id: id);
 }
 
 void _testControllerLate([String? id]) {
@@ -272,7 +272,7 @@ void _testControllerLate([String? id]) {
   }, [useInstance]);
 
   Reactter.create(() => TestController(), id: id);
-  Reactter.unregister<TestController>(id);
+  Reactter.destroy<TestController>(id: id);
 
   expectLater(instance, isA<TestController>());
 }
