@@ -1,6 +1,6 @@
-import 'package:examples/shopping_cart/repositories/store_repository.dart';
 import 'package:flutter_reactter/flutter_reactter.dart';
 
+import '../repositories/store_repository.dart';
 import '../models/product.dart';
 
 class ProductsController {

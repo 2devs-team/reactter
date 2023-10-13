@@ -1,7 +1,7 @@
-import 'package:examples/todo/actions/clear_completed_action.dart';
 import 'package:flutter_reactter/flutter_reactter.dart';
 
 import '../actions/add_todo_action.dart';
+import '../actions/clear_completed_action.dart';
 import '../actions/filter_action.dart';
 import '../actions/remove_todo_action.dart';
 import '../actions/toggle_todo_action.dart';

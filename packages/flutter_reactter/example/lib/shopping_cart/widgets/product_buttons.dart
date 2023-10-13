@@ -1,10 +1,10 @@
-import 'package:examples/shopping_cart/widgets/quantity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_reactter/flutter_reactter.dart';
 
 import '../controllers/cart_controller.dart';
 import '../models/product.dart';
 import 'custom_icon_button.dart';
+import 'quantity.dart';
 
 class ProductButtons extends StatelessWidget {
   const ProductButtons({
