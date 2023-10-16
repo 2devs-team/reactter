@@ -2,7 +2,8 @@ import 'dart:async';
 
 import 'package:reactter/src/hooks.dart';
 
-import 'framework.dart';
+import 'args.dart';
+import 'memo.dart';
 
 /// A function to generate the instance of [T]
 typedef InstanceBuilder<T> = T Function();
@@ -26,10 +27,10 @@ typedef Reducer<T> = T Function(T state, ReactterAction action);
 typedef AsyncFunction<T> = FutureOr<T> Function();
 
 /// to represent an async function with arguments
-typedef AsyncFunctionArgs<T, A extends Args?> = FutureOr<T> Function(A arg);
+typedef AsyncFunctionArgs<T, A extends Args?> = Future<T> Function(A args);
 
 /// to represent a function with arguments
-typedef FunctionArgs<T, A extends Args?> = T Function(A arg);
+typedef FunctionArgs<T, A extends Args?> = T Function(A args);
 
 // to represent two arguments of the same type
 typedef ArgsX2<T> = Args2<T, T>;
@@ -38,4 +39,22 @@ typedef ArgsX2<T> = Args2<T, T>;
 typedef ArgsX3<T> = Args3<T, T, T>;
 
 // function memo type
-typedef MemoFunction<T, A extends Args?> = T Function(A, {bool overrideCache});
+typedef FunctionMemo<T, A extends Args?> = T Function(A, {bool overrideCache});
+
+typedef FunctionArgsMemo<T, A extends Args?> = void Function(
+  Memo<T, A> memo,
+  A args,
+);
+
+typedef FunctionValueMemo<T, A extends Args?> = void Function(
+  Memo<T, A> memo,
+  A args,
+  T value,
+  bool fromCache,
+);
+
+typedef FunctionErrorMemo<T, A extends Args?> = void Function(
+  Memo<T, A> memo,
+  A args,
+  Object error,
+);

@@ -1,4 +1,4 @@
-part of '../framework.dart';
+import 'dart:async';
 
 /// A abstract class that represents an argument
 class Args<A> {
