@@ -103,7 +103,7 @@ class TestController extends ReactterStateImpl {
     this,
   );
 
-  final memo = ReactterMemo((Args? args) {
+  final memo = Memo((Args? args) {
     if (args is Args1<Future>) return args.arg1;
 
     if (args is Args1<Error>) {
@@ -113,7 +113,20 @@ class TestController extends ReactterStateImpl {
     return args?.arguments ?? [];
   });
 
-  final simpleMemo = Reactter.memo((Args? args) {
+  final asyncMemo = Memo(
+    (Args? args) {
+      if (args is Args1<Future>) return args.arg1;
+
+      if (args is Args1<Error>) {
+        throw args.arg1;
+      }
+
+      return args?.arguments ?? [];
+    },
+    AsyncMemoSafe(),
+  );
+
+  final inlineMemo = Memo.inline((Args? args) {
     return args?.arguments ?? [];
   });
 }
@@ -135,3 +148,30 @@ class Test3Controller {
 }
 
 final test3Controller = UseInstance<Test3Controller>();
+
+class FakeInterceptorForCoverage<T, A extends Args?>
+    extends MemoInterceptor<T, A> {
+  @override
+  void onInit(Memo<T, A> memo, A args) {
+    // TODO: implement onInit
+    super.onInit(memo, args);
+  }
+
+  @override
+  void onValue(Memo<T, A> memo, A args, T value, bool fromCache) {
+    // TODO: implement onValue
+    super.onValue(memo, args, value, fromCache);
+  }
+
+  @override
+  void onError(Memo<T, A> memo, A args, Object error) {
+    // TODO: implement onError
+    super.onError(memo, args, error);
+  }
+
+  @override
+  void onFinish(Memo<T, A> memo, A args) {
+    // TODO: implement onFinish
+    super.onFinish(memo, args);
+  }
+}
