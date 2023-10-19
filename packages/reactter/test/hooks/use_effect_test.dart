@@ -68,7 +68,7 @@ void main() {
       final testController = Reactter.create(() => TestController());
       int nCalls = 0;
 
-      late final uEffect = Reactter.lazy(
+      late final uEffect = Reactter.lazyState(
         () {
           return UseEffect(
             () {

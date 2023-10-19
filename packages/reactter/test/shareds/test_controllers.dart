@@ -95,7 +95,7 @@ class TestController extends ReactterStateImpl {
   });
   final stateReduce = UseReducer(_reducer, TestStore(count: 0));
 
-  late final stateCompute = Reactter.lazy(
+  late final stateCompute = Reactter.lazyState(
     () => UseCompute(
       () => (stateInt.value + stateDouble.value).clamp(5, 10),
       [stateInt, stateDouble],

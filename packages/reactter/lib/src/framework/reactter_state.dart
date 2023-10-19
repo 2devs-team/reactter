@@ -172,9 +172,9 @@ abstract class ReactterStateBase implements ReactterState {
 }
 
 extension ReactterStateShortcuts on ReactterInterface {
-  /// It is used to create a new instance of a [ReactterState] class
+  /// It is used to load a [ReactterState] lazily
   /// and attach it to a specific instance.
-  T lazy<T extends ReactterState>(T Function() stateFn, Object instance) {
+  T lazyState<T extends ReactterState>(T stateFn(), Object instance) {
     final zone = ReactterZone();
     try {
       return stateFn();
