@@ -10,6 +10,12 @@ class Args<A> {
   List<T> toList<T>() {
     return List<T>.from(arguments.whereType<T>());
   }
+
+  @override
+  int get hashCode => Object.hashAll(arguments);
+
+  @override
+  bool operator ==(Object other);
 }
 
 /// A class that represents an argument

@@ -86,7 +86,7 @@ class TestController extends ReactterStateImpl {
   final stateMap = UseState({});
   final stateClass = UseState<TestClass?>(null);
   final stateAsync = UseAsyncState("initial", _resolveStateAsync);
-  final stateAsyncWithArg = UseAsyncState.withArgs(
+  final stateAsyncWithArg = UseAsyncState.withArg(
     "initial",
     _resolveStateAsync,
   );
@@ -113,7 +113,7 @@ class TestController extends ReactterStateImpl {
     return args?.arguments ?? [];
   });
 
-  final asyncMemo = Memo(
+  final asyncMemo = Memo<dynamic, Args>(
     (Args? args) {
       if (args is Args1<Future>) return args.arg1;
 
@@ -149,8 +149,7 @@ class Test3Controller {
 
 final test3Controller = UseInstance<Test3Controller>();
 
-class FakeInterceptorForCoverage<T, A extends Args?>
-    extends MemoInterceptor<T, A> {
+class FakeInterceptorForCoverage<T, A> extends MemoInterceptor<T, A> {
   @override
   void onInit(Memo<T, A> memo, A args) {
     // TODO: implement onInit

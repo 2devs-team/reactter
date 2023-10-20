@@ -159,8 +159,8 @@ void main() {
       int nCallOnValueFromCache = 0;
       int nCallOnError = 0;
       int nCallOnFinish = 0;
-      dynamic? lastValue;
-      dynamic? lastError;
+      dynamic lastValue;
+      dynamic lastError;
 
       final nInterceptors = 2;
 

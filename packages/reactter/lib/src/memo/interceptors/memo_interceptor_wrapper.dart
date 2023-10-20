@@ -3,12 +3,12 @@ part of '../../memo.dart';
 /// It´s a wrapper for a memoized function that allows you to define
 /// callbacks for initialization, successful completion,
 /// error handling, and finishing.
-class MemoInterceptorWrapper<T, A extends Args?> extends MemoInterceptor<T, A> {
+class MemoInterceptorWrapper<T, A> extends MemoInterceptor<T, A> {
   /// It's called when the memoized function is invoked
   /// for the first time with a new set of arguments.
   /// It allows you to perform any initialization logic
   /// or side effects before the calculation is performed.
-  final FunctionArgsMemo<T, A>? _onInit;
+  final FunctionArgMemo<T, A>? _onInit;
 
   /// It's called after the memoized function has completed its execution.
   final FunctionValueMemo<T, A>? _onValue;
@@ -19,35 +19,35 @@ class MemoInterceptorWrapper<T, A extends Args?> extends MemoInterceptor<T, A> {
 
   /// It's called after the memoized function has completed its execution,
   /// regardless of whether it was successful or encountered an error.
-  final FunctionArgsMemo<T, A>? _onFinish;
+  final FunctionArgMemo<T, A>? _onFinish;
 
   const MemoInterceptorWrapper({
-    FunctionArgsMemo<T, A>? onInit,
+    FunctionArgMemo<T, A>? onInit,
     FunctionValueMemo<T, A>? onValue,
     FunctionErrorMemo<T, A>? onError,
-    FunctionArgsMemo<T, A>? onFinish,
+    FunctionArgMemo<T, A>? onFinish,
   })  : _onInit = onInit,
         _onValue = onValue,
         _onError = onError,
         _onFinish = onFinish;
 
   @override
-  void onInit(Memo<T, A> memo, A args) {
-    _onInit?.call(memo, args);
+  void onInit(Memo<T, A> memo, A arg) {
+    _onInit?.call(memo, arg);
   }
 
   @override
-  void onValue(Memo<T, A> memo, A args, T value, bool fromCache) {
-    _onValue?.call(memo, args, value, fromCache);
+  void onValue(Memo<T, A> memo, A arg, T value, bool fromCache) {
+    _onValue?.call(memo, arg, value, fromCache);
   }
 
   @override
-  void onError(Memo<T, A> memo, A args, Object error) {
-    _onError?.call(memo, args, error);
+  void onError(Memo<T, A> memo, A arg, Object error) {
+    _onError?.call(memo, arg, error);
   }
 
   @override
-  void onFinish(Memo<T, A> memo, A args) {
-    _onFinish?.call(memo, args);
+  void onFinish(Memo<T, A> memo, A arg) {
+    _onFinish?.call(memo, arg);
   }
 }

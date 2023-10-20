@@ -1,37 +1,37 @@
 part of '../../memo.dart';
 
 /// It allows multiple memoization interceptors to be used together.
-class MemoInterceptors<T, A extends Args?> extends MemoInterceptor<T, A> {
+class MemoInterceptors<T, A> extends MemoInterceptor<T, A> {
   final List<MemoInterceptor<T, A>> interceptors;
 
   /// It allows multiple memoization interceptors to be used together.
   const MemoInterceptors(this.interceptors);
 
   @override
-  void onInit(Memo<T, A> memo, A args) {
+  void onInit(Memo<T, A> memo, A arg) {
     for (final interceptor in interceptors) {
-      interceptor.onInit(memo, args);
+      interceptor.onInit(memo, arg);
     }
   }
 
   @override
-  void onValue(Memo<T, A> memo, A args, T value, bool fromCache) {
+  void onValue(Memo<T, A> memo, A arg, T value, bool fromCache) {
     for (final interceptor in interceptors) {
-      interceptor.onValue(memo, args, value, fromCache);
+      interceptor.onValue(memo, arg, value, fromCache);
     }
   }
 
   @override
-  void onError(Memo<T, A> memo, A args, Object error) {
+  void onError(Memo<T, A> memo, A arg, Object error) {
     for (final interceptor in interceptors) {
-      interceptor.onError(memo, args, error);
+      interceptor.onError(memo, arg, error);
     }
   }
 
   @override
-  void onFinish(Memo<T, A> memo, A args) {
+  void onFinish(Memo<T, A> memo, A arg) {
     for (final interceptor in interceptors) {
-      interceptor.onFinish(memo, args);
+      interceptor.onFinish(memo, arg);
     }
   }
 }

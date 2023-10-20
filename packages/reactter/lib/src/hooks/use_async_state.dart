@@ -36,12 +36,12 @@ abstract class UseAsyncStateBase<T> extends ReactterHook {
         _value = UseState(initialValue);
 
   /// Execute [asyncFunction] to resolve [value].
-  FutureOr<T?> _resolve<A>([A? args]) async {
+  FutureOr<T?> _resolve<A>([A? arg]) async {
     try {
       _status.value = UseAsyncStateStatus.loading;
 
       final asyncFunctionExecuting =
-          args == null ? _asyncFunction() : _asyncFunction(args);
+          arg == null ? _asyncFunction() : _asyncFunction(arg);
 
       _value.value = asyncFunctionExecuting is Future
           ? await asyncFunctionExecuting
@@ -152,18 +152,18 @@ abstract class UseAsyncStateBase<T> extends ReactterHook {
 ///
 /// See also:
 ///
-/// * [UseAsyncStateArgs], the same as it, but with arguments.
+/// * [UseAsyncStateArg], the same as it, but with arguments.
 class UseAsyncState<T> extends UseAsyncStateBase<T> {
   UseAsyncState(
     T initialValue,
     AsyncFunction<T> asyncFunction,
   ) : super(initialValue, asyncFunction);
 
-  static UseAsyncStateArgs<T, A> withArgs<T, A extends Args?>(
+  static UseAsyncStateArg<T, A> withArg<T, A>(
     T initialValue,
-    AsyncFunctionArgs<T, A> asyncFunction,
+    AsyncFunctionArg<T, A> asyncFunction,
   ) {
-    return UseAsyncStateArgs<T, A>(initialValue, asyncFunction);
+    return UseAsyncStateArg<T, A>(initialValue, asyncFunction);
   }
 
   /// Execute [asyncFunction] to resolve [value].
@@ -177,12 +177,12 @@ class UseAsyncState<T> extends UseAsyncStateBase<T> {
 /// [T] is use to define the type of [value]
 /// and [A] is use to define the type of [resolve] argument.
 ///
-/// This example produces one simple [UseAsyncStateArgs]:
+/// This example produces one simple [UseAsyncStateArg]:
 ///
 /// ```dart
 /// class AppController {
-///   // It's same that: UseAsyncStateArgs<String, Args1<String>>
-///   final asyncState = UseAsyncStateArgs(
+///   // It's same that: UseAsyncStateArg<String, Args1<String>>
+///   final asyncState = UseAsyncStateArg(
 ///     "Initial value",
 ///     (Args1<String> args) => Future.delayed(
 ///       const Duration(seconds: 1),
@@ -222,14 +222,14 @@ class UseAsyncState<T> extends UseAsyncStateBase<T> {
 ///
 /// * [UseAsyncState], the same as it, but without arguments.
 /// * [Args], a generic arguments.
-class UseAsyncStateArgs<T, A extends Args?> extends UseAsyncStateBase<T> {
-  UseAsyncStateArgs(
+class UseAsyncStateArg<T, A> extends UseAsyncStateBase<T> {
+  UseAsyncStateArg(
     T initialValue,
-    AsyncFunctionArgs<T, A> asyncFunction,
+    AsyncFunctionArg<T, A> asyncFunction,
   ) : super(initialValue, asyncFunction);
 
   /// Execute [asyncFunction] to resolve [value].
-  FutureOr<T?> resolve(A args) async {
-    return _resolve(args);
+  FutureOr<T?> resolve(A arg) async {
+    return _resolve(arg);
   }
 }

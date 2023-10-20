@@ -27,10 +27,10 @@ typedef Reducer<T> = T Function(T state, ReactterAction action);
 typedef AsyncFunction<T> = FutureOr<T> Function();
 
 /// to represent an async function with arguments
-typedef AsyncFunctionArgs<T, A extends Args?> = Future<T> Function(A args);
+typedef AsyncFunctionArg<T, A> = Future<T> Function(A arg);
 
 /// to represent a function with arguments
-typedef FunctionArgs<T, A extends Args?> = T Function(A args);
+typedef FunctionArg<T, A> = T Function(A arg);
 
 // to represent two arguments of the same type
 typedef ArgsX2<T> = Args2<T, T>;
@@ -39,22 +39,22 @@ typedef ArgsX2<T> = Args2<T, T>;
 typedef ArgsX3<T> = Args3<T, T, T>;
 
 // function memo type
-typedef FunctionMemo<T, A extends Args?> = T Function(A, {bool overrideCache});
+typedef FunctionMemo<T, A> = T Function(A, {bool overrideCache});
 
-typedef FunctionArgsMemo<T, A extends Args?> = void Function(
+typedef FunctionArgMemo<T, A> = void Function(
   Memo<T, A> memo,
-  A args,
+  A arg,
 );
 
-typedef FunctionValueMemo<T, A extends Args?> = void Function(
+typedef FunctionValueMemo<T, A> = void Function(
   Memo<T, A> memo,
-  A args,
+  A arg,
   T value,
   bool fromCache,
 );
 
-typedef FunctionErrorMemo<T, A extends Args?> = void Function(
+typedef FunctionErrorMemo<T, A> = void Function(
   Memo<T, A> memo,
-  A args,
+  A arg,
   Object error,
 );
