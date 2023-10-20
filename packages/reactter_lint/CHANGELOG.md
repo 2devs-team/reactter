@@ -1,5 +1,11 @@
 # Reactter Lint
 
+## 0.1.0
+
+### Breakings
+
+- Replace `Reactter.lazy` to `Reactter.lazyState`.
+
 ## 0.0.3
 
 ### Internals

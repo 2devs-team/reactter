@@ -62,12 +62,12 @@ class AppController {
 
 #### Good
 
-Fix: Use `Reactter.lazy` for attaching a instance.
+Fix: Use `Reactter.lazyState` for attaching a instance.
 
 ```dart
 class AppController {
   final otherState = UseState(0);
-  late final stateLate = Reactter.lazy(
+  late final stateLate = Reactter.lazyState(
     () => UseState(otherState.value),
     this,
   );
