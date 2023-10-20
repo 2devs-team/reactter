@@ -16,8 +16,8 @@ class HookLateConvention extends DartLintRule {
     errorSeverity: ErrorSeverity.WARNING,
     problemMessage: "The '{0}' hook late must be attached an instance.",
     correctionMessage:
-        "Try removing 'late' keyword or wrapping the hook using 'Reactter.lazy'.\n"
-        "Example: late final myHookLate = Reactter.lazy(() => UseState(0), this);",
+        "Try removing 'late' keyword or wrapping the hook using 'Reactter.lazyState'.\n"
+        "Example: late final myHookLate = Reactter.lazyState(() => UseState(0), this);",
   );
 
   @override
@@ -38,7 +38,7 @@ class HookLateConvention extends DartLintRule {
 
       bool checkIsUseLazy(MethodInvocation method) {
         return method.target.toString() == "Reactter" &&
-            method.methodName.toString() == "lazy";
+            method.methodName.toString() == "lazyState";
       }
 
       bool checkIsVariableUseLazy(VariableDeclaration variable) {
@@ -105,14 +105,14 @@ class _HookLateFix extends DartFix {
           if (instanceCreationExpression == null) return;
 
           final changeBuilder = reporter.createChangeBuilder(
-            message: "Wrap with 'Reactter.lazy'.",
+            message: "Wrap with 'Reactter.lazyState'.",
             priority: 1,
           );
 
           changeBuilder.addDartFileEdit((builder) {
             builder.addSimpleReplacement(
               instanceCreationExpression.sourceRange,
-              "Reactter.lazy(() => $instanceCreationExpression, this)",
+              "Reactter.lazyState(() => $instanceCreationExpression, this)",
             );
           });
         } catch (e) {
