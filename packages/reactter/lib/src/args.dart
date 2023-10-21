@@ -1,10 +1,13 @@
 import 'dart:async';
 
-/// A abstract class that represents an argument
+/// A class that represents an argument
 class Args<A> {
   final List<A> arguments;
 
   const Args([this.arguments = const []]);
+
+  /// Returns the first element of the `arguments` list.
+  A get arg1 => arguments.first;
 
   /// Creates a new list with all [arguments] that have type [T].
   List<T> toList<T>() {
@@ -20,6 +23,7 @@ class Args<A> {
 
 /// A class that represents an argument
 class Args1<A> extends Args {
+  @override
   final A arg1;
 
   const Args1(this.arg1) : super();
@@ -43,7 +47,7 @@ class Args2<A, A2> extends Args1<A> {
   /// It allows access to these properties as a list,
   ///which can be useful for operations that require a list of arguments.
   @override
-  List get arguments => [arg1, arg2];
+  List get arguments => [...super.arguments, arg2];
 }
 
 /// A class that represents a set of three arguments.
@@ -57,7 +61,7 @@ class Args3<A, A2, A3> extends Args2<A, A2> {
   /// It allows access to these properties as a list,
   ///which can be useful for operations that require a list of arguments.
   @override
-  List get arguments => [arg1, arg2, arg3];
+  List get arguments => [...super.arguments, arg3];
 }
 
 extension AryFunction on Function {
