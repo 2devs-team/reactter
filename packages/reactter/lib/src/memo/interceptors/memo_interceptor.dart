@@ -1,6 +1,6 @@
 part of '../../memo.dart';
 
-/// It allows for intercepting and memoizing function calls.
+/// It allows for intercepting the memoizing function calls.
 abstract class MemoInterceptor<T, A> {
   const MemoInterceptor();
 

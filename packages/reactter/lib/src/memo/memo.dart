@@ -39,20 +39,20 @@ class Memo<T, A> {
   final _cache = HashMap<int, T>();
 
   /// It's used to store the function that will be memoized.
-  final FunctionArg<T, A> _calculateValue;
+  final FunctionArg<T, A> _computeValue;
 
   /// It allows you to provide a custom interceptor object that can intercept
   /// and handle various events during the memoization process.
   final MemoInterceptor<T, A>? _interceptor;
 
   Memo(
-    FunctionArg<T, A> calculateValue, [
+    FunctionArg<T, A> computeValue, [
     MemoInterceptor<T, A>? interceptor,
-  ])  : _calculateValue = calculateValue,
+  ])  : _computeValue = computeValue,
         _interceptor = interceptor;
 
   /// Creates a memoized function version. It´s used for memoizing values([T])
-  /// returned by a calcutate function([calculateValue]).
+  /// returned by a calcutate function([computeValue]).
   ///
   /// This is a factorial example:
   ///
@@ -87,12 +87,12 @@ class Memo<T, A> {
   /// See also:
   ///
   /// * [Args], a class which represents the arguments received by
-  /// the function([calculateValue]), and also used as a cache value binding.
+  /// the function([computeValue]), and also used as a cache value binding.
   static FunctionMemo<T, A> inline<T, A>(
-    FunctionArg<T, A> calculateValue, [
+    FunctionArg<T, A> computeValue, [
     MemoInterceptor<T, A>? interceptor,
   ]) =>
-      Memo<T, A>(calculateValue, interceptor).call;
+      Memo<T, A>(computeValue, interceptor).call;
 
   /// Invokes the [calculateValue] with the given [arg],
   /// then stores and returns the resolved value.
@@ -116,7 +116,7 @@ class Memo<T, A> {
     }
 
     try {
-      final valueCalculated = _calculateValue(arg);
+      final valueCalculated = _computeValue(arg);
 
       _cache[arg.hashCode] = valueCalculated;
 
