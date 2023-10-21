@@ -26,20 +26,20 @@ abstract class ReactterInstanceManager {
   /// for creating a new instance of [T] with an [id] optional.
   /// {@endtemplate}
   ///
-  /// Use [type] parameter for defining how to manage the instance.
+  /// Use [mode] parameter for defining how to manage the instance.
   ///
   /// Returns `true` when instance has been registered.
   bool register<T extends Object?>(
     InstanceBuilder<T> builder, {
     String? id,
-    InstanceType type = InstanceType.builder,
+    InstanceManageMode mode = InstanceManageMode.builder,
   }) {
     final instanceKey = ReactterInstance.generateKey<T?>(id);
     var reactterInstance = _instancesByKey[instanceKey];
 
     if (reactterInstance?.builder != null) {
       Reactter.log(
-        'The "$reactterInstance" builder already registered as `$type`.',
+        'The "$reactterInstance" builder already registered as `$mode`.',
       );
       return false;
     }
@@ -48,19 +48,19 @@ abstract class ReactterInstanceManager {
         _instancesByKey[instanceKey] = _ReactterInstanceBuilder<T>(
       builder,
       id: id,
-      type: type,
+      mode: mode,
     );
 
     Reactter.emit(reactterInstance, Lifecycle.registered);
     Reactter.log(
-      'The "$reactterInstance" builder has been registered as `$type`.',
+      'The "$reactterInstance" builder has been registered as `$mode`.',
     );
     return true;
   }
 
   /// {@template lazy_builder}
   /// Register a [builder] function for creating a new instance
-  /// of [T] with an [id] optional as [InstanceType.builder].
+  /// of [T] with an [id] optional as [InstanceManageMode.builder].
   /// {@endtemplate}
   ///
   /// Returns `true` when instance has been registered.
@@ -73,7 +73,7 @@ abstract class ReactterInstanceManager {
   /// Reactter.register<T>(
   ///   builder,
   ///   id: id,
-  ///   type: InstanceType.builder,
+  ///   mode: InstanceManageMode.builder,
   /// );
   bool lazyBuilder<T extends Object?>(
     InstanceBuilder<T> builder, {
@@ -82,13 +82,13 @@ abstract class ReactterInstanceManager {
     return register<T>(
       builder,
       id: id,
-      type: InstanceType.builder,
+      mode: InstanceManageMode.builder,
     );
   }
 
   /// {@template lazy_factory}
   /// Register a [builder] function for creating a new instance
-  /// of [T] with an [id] optional as [InstanceType.factory].
+  /// of [T] with an [id] optional as [InstanceManageMode.factory].
   /// {@endtemplate}
   ///
   /// Returns `true` when instance has been registered.
@@ -101,7 +101,7 @@ abstract class ReactterInstanceManager {
   /// Reactter.register<T>(
   ///   builder,
   ///   id: id,
-  ///   type: InstanceType.factory,
+  ///   mode: InstanceManageMode.factory,
   /// );
   bool lazyFactory<T extends Object?>(
     InstanceBuilder<T> builder, {
@@ -110,13 +110,13 @@ abstract class ReactterInstanceManager {
     return register<T>(
       builder,
       id: id,
-      type: InstanceType.factory,
+      mode: InstanceManageMode.factory,
     );
   }
 
   /// {@template lazy_singleton}
   /// Register a [builder] function for creating a new instance
-  /// of [T] with an [id] optional as [InstanceType.singleton].
+  /// of [T] with an [id] optional as [InstanceManageMode.singleton].
   /// {@endtemplate}
   ///
   /// Returns `true` when instance has been registered.
@@ -129,7 +129,7 @@ abstract class ReactterInstanceManager {
   /// Reactter.register<T>(
   ///   builder,
   ///   id: id,
-  ///   type: InstanceType.singleton,
+  ///   mode: InstanceManageMode.singleton,
   /// );
   bool lazySingleton<T extends Object?>(
     InstanceBuilder<T> builder, {
@@ -138,7 +138,7 @@ abstract class ReactterInstanceManager {
     return register<T>(
       builder,
       id: id,
-      type: InstanceType.singleton,
+      mode: InstanceManageMode.singleton,
     );
   }
 
@@ -146,7 +146,7 @@ abstract class ReactterInstanceManager {
   /// Registers, creates and/or gets the instance of [T] with an [id] optional.
   /// {@endtemplate}
   ///
-  /// Use [type] parameter for defining how to manage the instance.
+  /// Use [mode] parameter for defining how to manage the instance.
   ///
   /// {@template create_conditions}
   /// Under the following conditions:
@@ -160,16 +160,16 @@ abstract class ReactterInstanceManager {
     InstanceBuilder<T> builder, {
     String? id,
     Object? ref,
-    InstanceType type = InstanceType.builder,
+    InstanceManageMode mode = InstanceManageMode.builder,
   }) {
-    register<T>(builder, id: id, type: type);
+    register<T>(builder, id: id, mode: mode);
 
     return _getOrCreateIfNotExtist<T>(id, ref)?.instance;
   }
 
   /// {@template builder}
   /// Registers, creates and/or gets the instance of [T] type with an [id] optional
-  /// as [InstanceType.builder].
+  /// as [InstanceManageMode.builder].
   /// {@endtemplate}
   ///
   /// {@macro create_conditions}
@@ -183,7 +183,7 @@ abstract class ReactterInstanceManager {
   ///   builder,
   ///   id: id,
   ///   ref: ref,
-  ///   type: InstanceType.builder,
+  ///   mode: InstanceManageMode.builder,
   /// );
   /// ```
   T? builder<T extends Object?>(
@@ -195,13 +195,13 @@ abstract class ReactterInstanceManager {
       builder,
       id: id,
       ref: ref,
-      type: InstanceType.builder,
+      mode: InstanceManageMode.builder,
     );
   }
 
   /// {@template factory}
   /// Registers, creates and/or gets the instance of [T] type with an [id] optional
-  /// as [InstanceType.factory].
+  /// as [InstanceManageMode.factory].
   /// {@endtemplate}
   ///
   /// {@macro create_conditions}
@@ -215,7 +215,7 @@ abstract class ReactterInstanceManager {
   ///   builder,
   ///   id: id,
   ///   ref: ref,
-  ///   type: InstanceType.factory,
+  ///   mode: InstanceManageMode.factory,
   /// );
   /// ```
   T? factory<T extends Object?>(
@@ -227,13 +227,13 @@ abstract class ReactterInstanceManager {
       builder,
       id: id,
       ref: ref,
-      type: InstanceType.factory,
+      mode: InstanceManageMode.factory,
     );
   }
 
   /// {@template singleton}
   /// Registers, creates and/or gets the instance of [T] type with an [id] optional
-  /// as [InstanceType.singleton].
+  /// as [InstanceManageMode.singleton].
   /// {@endtemplate}
   ///
   /// {@macro create_conditions}
@@ -247,7 +247,7 @@ abstract class ReactterInstanceManager {
   ///   builder,
   ///   id: id,
   ///   ref: ref,
-  ///   type: InstanceType.singleton,
+  ///   mode: InstanceManageMode.singleton,
   /// );
   /// ```
   T? singleton<T extends Object?>(
@@ -259,7 +259,7 @@ abstract class ReactterInstanceManager {
       builder,
       id: id,
       ref: ref,
-      type: InstanceType.singleton,
+      mode: InstanceManageMode.singleton,
     );
   }
 
@@ -302,21 +302,21 @@ abstract class ReactterInstanceManager {
       return false;
     }
 
-    switch (reactterInstance.type) {
-      case InstanceType.builder:
+    switch (reactterInstance.mode) {
+      case InstanceManageMode.builder:
         destroy<T>(id: id);
         return true;
-      case InstanceType.factory:
+      case InstanceManageMode.factory:
         _removeInstance<T>(reactterInstance);
         Reactter.log(
           'The "$reactterInstance" builder has been retained '
-          'because it\'s `${InstanceType.factory}`.',
+          'because it\'s `${InstanceManageMode.factory}`.',
         );
         return true;
-      case InstanceType.singleton:
+      case InstanceManageMode.singleton:
         Reactter.log(
           'The "$reactterInstance" instance has been retained '
-          'because it\'s `${InstanceType.singleton}`.',
+          'because it\'s `${InstanceManageMode.singleton}`.',
         );
     }
 
@@ -330,8 +330,8 @@ abstract class ReactterInstanceManager {
     final instanceKey = ReactterInstance.generateKey<T?>(id);
     final reactterInstance =
         _instancesByKey[instanceKey] as _ReactterInstanceBuilder<T?>?;
-    final typeLabel =
-        reactterInstance?._stored?.type.label ?? InstanceType.builder.label;
+    final typeLabel = reactterInstance?._stored?.mode.label ??
+        InstanceManageMode.builder.label;
 
     if (reactterInstance == null) {
       final reactterInstance = ReactterInstance<T>(id);
@@ -413,9 +413,9 @@ abstract class ReactterInstanceManager {
     return _instancesCreated[instance] != null;
   }
 
-  /// Returns [InstanceType] of instance parameter.
-  InstanceType? getInstanceType(Object? instance) {
-    return _instancesCreated[instance]?.type;
+  /// Returns [InstanceManageMode] of instance parameter.
+  InstanceManageMode? getInstanceManageMode(Object? instance) {
+    return _instancesCreated[instance]?.mode;
   }
 
   /// Returns an instance of [ReactterInstance] of [T] type with an [id] optional.

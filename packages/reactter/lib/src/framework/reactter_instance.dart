@@ -1,22 +1,23 @@
 part of '../framework.dart';
 
-/// Represents different ways of creating and managing instances.
-enum InstanceType {
+/// Represents different ways for managing instances.
+enum InstanceManageMode {
   /// {@template builder}
-  /// It's the type of instance that will be registered and instantiated
-  /// unless it has already done so.
-  /// When the dependency tree no longer needs it,
-  /// it is completely deleted,
+  /// It's a ways to manage an instance, which registers a builder function
+  /// and creates the instance, unless it has already done so.
+  ///
+  /// When the dependency tree no longer needs it, it is completely deleted,
   /// including deregistration (deleting the builder function).
   ///
   /// It uses less RAM than [factory] and [singleton],
-  /// but it consumes more CPU than the other types.
+  /// but it consumes more CPU than the other modes.
   /// {@endtemplate}
   builder,
 
   /// {@template factory}
-  /// It's the type of instance that will be registered once only
-  /// and instantiated unless it has already done so.
+  /// It's a ways to manage an instance, which registers
+  /// a builder function only once and creates the instance if not already done.
+  ///
   /// When the dependency tree no longer needs it,
   /// the instance is deleted and the builder function is kept in the register.
   ///
@@ -26,21 +27,22 @@ enum InstanceType {
   factory,
 
   /// {@template singleton}
-  /// It's the type of instance that will be registered
-  /// and instantiated once only.
-  /// This type preserves the instance and its states,
+  /// It's a ways to manage a instance, which registers a builder function
+  /// and creates the instance only once.
+  ///
+  /// This mode preserves the instance and its states,
   /// even if the dependency tree stops using it.
   ///
   /// Use `Reactter.destroy` if you want to force destroy
   /// the instance and its register.
   ///
   /// It consumes less CPU than [builder] and [factory],
-  /// but uses more RAM than the other types.
+  /// but uses more RAM than the other modes.
   /// {@endtemplate}
   singleton,
 }
 
-extension InstanceTypeExt on InstanceType {
+extension InstanceManageModeExt on InstanceManageMode {
   String get label => '$this'.split('.').last;
 }
 
@@ -85,11 +87,8 @@ class ReactterInstance<T> {
 class _ReactterInstanceBuilder<T> extends ReactterInstance<T> {
   InstanceBuilder<T?> builder;
 
-  /// It's used to store the type of instance that will be created and managed by the framework.
-  /// The `InstanceType` enum defines three possible values: `factory`, `lazy`, and `singleton`. By
-  /// assigning one of these values to the `type` variable, the framework can determine how the instance
-  /// should be created and managed.
-  InstanceType type;
+  /// It's used to store the mode of managing an instance.
+  InstanceManageMode mode;
 
   /// Stores the refs where the instance was created.
   final refs = HashSet<int>();
@@ -100,7 +99,7 @@ class _ReactterInstanceBuilder<T> extends ReactterInstance<T> {
   _ReactterInstanceBuilder(
     this.builder, {
     String? id,
-    this.type = InstanceType.builder,
+    this.mode = InstanceManageMode.builder,
   }) : super(id);
 
   @override

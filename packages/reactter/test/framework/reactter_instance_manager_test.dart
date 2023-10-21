@@ -309,12 +309,12 @@ void main() {
       Reactter.destroy<TestController>(id: id);
     });
 
-    test("should create the instance as builder type", () {
+    test("should create the instance in builder mode", () {
       final instance = Reactter.builder(() => TestController());
       expect(instance, isA<TestController>());
 
-      final instanceType = Reactter.getInstanceType(instance);
-      expect(instanceType, InstanceType.builder);
+      final instanceManageMode = Reactter.getInstanceManageMode(instance);
+      expect(instanceManageMode, InstanceManageMode.builder);
 
       final isDeleted = Reactter.delete<TestController>();
       expect(isDeleted, true);
@@ -328,14 +328,14 @@ void main() {
       Reactter.destroy<TestController>();
     });
 
-    test("should create the instance with id as builder type", () {
+    test("should create the instance with id in builder mode", () {
       final id = 'uniqueId';
 
       final instance = Reactter.builder(() => TestController(), id: id);
       expect(instance, isA<TestController>());
 
-      final instanceType = Reactter.getInstanceType(instance);
-      expect(instanceType, InstanceType.builder);
+      final instanceManageMode = Reactter.getInstanceManageMode(instance);
+      expect(instanceManageMode, InstanceManageMode.builder);
 
       final isDeleted = Reactter.delete<TestController>(id);
       expect(isDeleted, true);
@@ -349,12 +349,12 @@ void main() {
       Reactter.destroy<TestController>(id: id);
     });
 
-    test("should create the instance as factory type", () {
+    test("should create the instance in factory mode", () {
       final instance = Reactter.factory(() => TestController());
       expect(instance, isA<TestController>());
 
-      final instanceType = Reactter.getInstanceType(instance);
-      expect(instanceType, InstanceType.factory);
+      final instanceManageMode = Reactter.getInstanceManageMode(instance);
+      expect(instanceManageMode, InstanceManageMode.factory);
 
       final isDeleted = Reactter.delete<TestController>();
       expect(isDeleted, true);
@@ -368,14 +368,14 @@ void main() {
       Reactter.destroy<TestController>();
     });
 
-    test("should create the instance with id as factory type", () {
+    test("should create the instance with id in factory mode", () {
       final id = 'uniqueId';
 
       final instance = Reactter.factory(() => TestController(), id: id);
       expect(instance, isA<TestController>());
 
-      final instanceType = Reactter.getInstanceType(instance);
-      expect(instanceType, InstanceType.factory);
+      final instanceManageMode = Reactter.getInstanceManageMode(instance);
+      expect(instanceManageMode, InstanceManageMode.factory);
 
       final isDeleted = Reactter.delete<TestController>(id);
       expect(isDeleted, true);
@@ -389,12 +389,12 @@ void main() {
       Reactter.destroy<TestController>(id: id);
     });
 
-    test("should create the instance as singleton type", () {
+    test("should create the instance in singleton mode", () {
       final instance = Reactter.singleton(() => TestController());
       expect(instance, isA<TestController>());
 
-      final instanceType = Reactter.getInstanceType(instance);
-      expect(instanceType, InstanceType.singleton);
+      final instanceManageMode = Reactter.getInstanceManageMode(instance);
+      expect(instanceManageMode, InstanceManageMode.singleton);
 
       final isDeleted = Reactter.delete<TestController>();
       expect(isDeleted, false);
@@ -409,14 +409,14 @@ void main() {
       Reactter.destroy<TestController>();
     });
 
-    test("should create the instance with id as singleton type", () {
+    test("should create the instance with id in singleton mode", () {
       final id = 'uniqueId';
 
       final instance = Reactter.singleton(() => TestController(), id: id);
       expect(instance, isA<TestController>());
 
-      final instanceType = Reactter.getInstanceType(instance);
-      expect(instanceType, InstanceType.singleton);
+      final nstanceManageMode = Reactter.getInstanceManageMode(instance);
+      expect(nstanceManageMode, InstanceManageMode.singleton);
 
       final isDeleted = Reactter.delete<TestController>(id);
       expect(isDeleted, false);

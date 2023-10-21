@@ -108,13 +108,13 @@ class UseInstance<T extends Object> extends ReactterHook {
   /// {@macro register}
   UseInstance.register(
     InstanceBuilder<T> builder, {
-    InstanceType type = InstanceType.builder,
+    InstanceManageMode mode = InstanceManageMode.builder,
     this.id,
   }) {
     Reactter.register(
       builder,
       id: id,
-      type: type,
+      mode: mode,
     );
     _listen();
   }
@@ -123,7 +123,7 @@ class UseInstance<T extends Object> extends ReactterHook {
   factory UseInstance.lazyBuilder(InstanceBuilder<T> builder, [String? id]) =>
       UseInstance.register(
         builder,
-        type: InstanceType.builder,
+        mode: InstanceManageMode.builder,
         id: id,
       );
 
@@ -131,7 +131,7 @@ class UseInstance<T extends Object> extends ReactterHook {
   factory UseInstance.lazyFactory(InstanceBuilder<T> builder, [String? id]) =>
       UseInstance.register(
         builder,
-        type: InstanceType.factory,
+        mode: InstanceManageMode.factory,
         id: id,
       );
 
@@ -139,7 +139,7 @@ class UseInstance<T extends Object> extends ReactterHook {
   factory UseInstance.lazySingleton(InstanceBuilder<T> builder, [String? id]) =>
       UseInstance.register(
         builder,
-        type: InstanceType.singleton,
+        mode: InstanceManageMode.singleton,
         id: id,
       );
 
@@ -147,13 +147,13 @@ class UseInstance<T extends Object> extends ReactterHook {
   UseInstance.create(
     InstanceBuilder<T> builder, {
     this.id,
-    InstanceType type = InstanceType.builder,
+    InstanceManageMode mode = InstanceManageMode.builder,
   }) {
     _instance = Reactter.create(
       builder,
       id: id,
       ref: this,
-      type: type,
+      mode: mode,
     );
     _listen();
   }
@@ -163,7 +163,7 @@ class UseInstance<T extends Object> extends ReactterHook {
       UseInstance.create(
         builder,
         id: id,
-        type: InstanceType.builder,
+        mode: InstanceManageMode.builder,
       );
 
   /// {@macro factory}
@@ -171,7 +171,7 @@ class UseInstance<T extends Object> extends ReactterHook {
       UseInstance.create(
         builder,
         id: id,
-        type: InstanceType.factory,
+        mode: InstanceManageMode.factory,
       );
 
   /// {@macro singleton}
@@ -179,7 +179,7 @@ class UseInstance<T extends Object> extends ReactterHook {
       UseInstance.create(
         builder,
         id: id,
-        type: InstanceType.singleton,
+        mode: InstanceManageMode.singleton,
       );
 
   /// {@macro get}

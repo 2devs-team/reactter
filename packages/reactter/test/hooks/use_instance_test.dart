@@ -41,7 +41,7 @@ void main() {
       Reactter.destroy<TestController>(id: ID);
     });
 
-    test("should register an instance as builder type", () {
+    test("should register an instance in builder mode", () {
       final useInstance = UseInstance.lazyBuilder(() => TestController());
       expect(useInstance.instance, null);
 
@@ -51,13 +51,14 @@ void main() {
       final isRegistered = Reactter.isRegistered(useInstance.instance);
       expect(isRegistered, true);
 
-      final instanceType = Reactter.getInstanceType(useInstance.instance);
-      expect(instanceType, InstanceType.builder);
+      final instanceManageMode =
+          Reactter.getInstanceManageMode(useInstance.instance);
+      expect(instanceManageMode, InstanceManageMode.builder);
 
       Reactter.destroy<TestController>();
     });
 
-    test("should register an instance with id as builder type", () {
+    test("should register an instance with id in builder mode", () {
       final useInstance = UseInstance.lazyBuilder(() => TestController(), ID);
       expect(useInstance.instance, null);
 
@@ -67,13 +68,14 @@ void main() {
       final isRegistered = Reactter.isRegistered(useInstance.instance);
       expect(isRegistered, true);
 
-      final instanceType = Reactter.getInstanceType(useInstance.instance);
-      expect(instanceType, InstanceType.builder);
+      final instanceManageMode =
+          Reactter.getInstanceManageMode(useInstance.instance);
+      expect(instanceManageMode, InstanceManageMode.builder);
 
       Reactter.destroy<TestController>(id: ID);
     });
 
-    test("should register an instance as factory type", () {
+    test("should register an instance in factory mode", () {
       final useInstance = UseInstance.lazyFactory(() => TestController());
       expect(useInstance.instance, null);
 
@@ -83,13 +85,14 @@ void main() {
       final isRegistered = Reactter.isRegistered(useInstance.instance);
       expect(isRegistered, true);
 
-      final instanceType = Reactter.getInstanceType(useInstance.instance);
-      expect(instanceType, InstanceType.factory);
+      final instanceManageMode =
+          Reactter.getInstanceManageMode(useInstance.instance);
+      expect(instanceManageMode, InstanceManageMode.factory);
 
       Reactter.destroy<TestController>();
     });
 
-    test("should register an instance with id as factory type", () {
+    test("should register an instance with id in factory mode", () {
       final useInstance = UseInstance.lazyFactory(() => TestController(), ID);
       expect(useInstance.instance, null);
 
@@ -99,13 +102,14 @@ void main() {
       final isRegistered = Reactter.isRegistered(useInstance.instance);
       expect(isRegistered, true);
 
-      final instanceType = Reactter.getInstanceType(useInstance.instance);
-      expect(instanceType, InstanceType.factory);
+      final instanceManageMode =
+          Reactter.getInstanceManageMode(useInstance.instance);
+      expect(instanceManageMode, InstanceManageMode.factory);
 
       Reactter.destroy<TestController>(id: ID);
     });
 
-    test("should register an instance as singleton type", () {
+    test("should register an instance in singleton mode", () {
       final useInstance = UseInstance.lazySingleton(() => TestController());
       expect(useInstance.instance, null);
 
@@ -115,13 +119,14 @@ void main() {
       final isRegistered = Reactter.isRegistered(useInstance.instance);
       expect(isRegistered, true);
 
-      final instanceType = Reactter.getInstanceType(useInstance.instance);
-      expect(instanceType, InstanceType.singleton);
+      final instanceManageMode =
+          Reactter.getInstanceManageMode(useInstance.instance);
+      expect(instanceManageMode, InstanceManageMode.singleton);
 
       Reactter.destroy<TestController>();
     });
 
-    test("should register an instance with id as singleton type", () {
+    test("should register an instance with id in singleton mode", () {
       final useInstance = UseInstance.lazySingleton(() => TestController(), ID);
       expect(useInstance.instance, null);
 
@@ -131,8 +136,9 @@ void main() {
       final isRegistered = Reactter.isRegistered(useInstance.instance);
       expect(isRegistered, true);
 
-      final instanceType = Reactter.getInstanceType(useInstance.instance);
-      expect(instanceType, InstanceType.singleton);
+      final instanceManageMode =
+          Reactter.getInstanceManageMode(useInstance.instance);
+      expect(instanceManageMode, InstanceManageMode.singleton);
 
       Reactter.destroy<TestController>(id: ID);
     });
@@ -147,80 +153,86 @@ void main() {
       Reactter.destroy<TestController>();
     });
 
-    test("should create an instance as builder type", () {
+    test("should create an instance in builder mode", () {
       final useInstance = UseInstance.builder(() => TestController());
       expect(useInstance.instance, isA<TestController>());
 
       final isRegistered = Reactter.isRegistered(useInstance.instance);
       expect(isRegistered, true);
 
-      final instanceType = Reactter.getInstanceType(useInstance.instance);
-      expect(instanceType, InstanceType.builder);
+      final instanceManageMode =
+          Reactter.getInstanceManageMode(useInstance.instance);
+      expect(instanceManageMode, InstanceManageMode.builder);
 
       Reactter.destroy<TestController>();
     });
 
-    test("should create an instance with id as builder type", () {
+    test("should create an instance with id in builder mode", () {
       final useInstance = UseInstance.builder(() => TestController(), ID);
       expect(useInstance.instance, isA<TestController>());
 
       final isRegistered = Reactter.isRegistered(useInstance.instance);
       expect(isRegistered, true);
 
-      final instanceType = Reactter.getInstanceType(useInstance.instance);
-      expect(instanceType, InstanceType.builder);
+      final instanceManageMode =
+          Reactter.getInstanceManageMode(useInstance.instance);
+      expect(instanceManageMode, InstanceManageMode.builder);
 
       Reactter.destroy<TestController>(id: ID);
     });
 
-    test("should create an instance as factory type", () {
+    test("should create an instance in factory mode", () {
       final useInstance = UseInstance.factory(() => TestController());
       expect(useInstance.instance, isA<TestController>());
 
       final isRegistered = Reactter.isRegistered(useInstance.instance);
       expect(isRegistered, true);
 
-      final instanceType = Reactter.getInstanceType(useInstance.instance);
-      expect(instanceType, InstanceType.factory);
+      final instanceManageMode =
+          Reactter.getInstanceManageMode(useInstance.instance);
+      expect(instanceManageMode, InstanceManageMode.factory);
 
       Reactter.destroy<TestController>();
     });
 
-    test("should create an instance with id as factory type", () {
+    test("should create an instance with id in factory mode", () {
       final useInstance = UseInstance.factory(() => TestController(), ID);
       expect(useInstance.instance, isA<TestController>());
 
       final isRegistered = Reactter.isRegistered(useInstance.instance);
       expect(isRegistered, true);
 
-      final instanceType = Reactter.getInstanceType(useInstance.instance);
-      expect(instanceType, InstanceType.factory);
+      final instanceManageMode =
+          Reactter.getInstanceManageMode(useInstance.instance);
+      expect(instanceManageMode, InstanceManageMode.factory);
 
       Reactter.destroy<TestController>(id: ID);
     });
 
-    test("should create an instance as singleton type", () {
+    test("should create an instance in singleton mode", () {
       final useInstance = UseInstance.singleton(() => TestController());
       expect(useInstance.instance, isA<TestController>());
 
       final isRegistered = Reactter.isRegistered(useInstance.instance);
       expect(isRegistered, true);
 
-      final instanceType = Reactter.getInstanceType(useInstance.instance);
-      expect(instanceType, InstanceType.singleton);
+      final instanceManageMode =
+          Reactter.getInstanceManageMode(useInstance.instance);
+      expect(instanceManageMode, InstanceManageMode.singleton);
 
       Reactter.destroy<TestController>();
     });
 
-    test("should create an instance with id as singleton type", () {
+    test("should create an instance with id in singleton mode", () {
       final useInstance = UseInstance.singleton(() => TestController(), ID);
       expect(useInstance.instance, isA<TestController>());
 
       final isRegistered = Reactter.isRegistered(useInstance.instance);
       expect(isRegistered, true);
 
-      final instanceType = Reactter.getInstanceType(useInstance.instance);
-      expect(instanceType, InstanceType.singleton);
+      final instanceManageMode =
+          Reactter.getInstanceManageMode(useInstance.instance);
+      expect(instanceManageMode, InstanceManageMode.singleton);
 
       Reactter.destroy<TestController>(id: ID);
     });

@@ -103,9 +103,9 @@ class ReactterProvider<T extends Object> extends ReactterProviderAbstraction {
 
   /// It's used to specify the type of instance creation for the provided object.
   ///
-  /// It is of type [InstanceType], which is an enum with three possible values:
-  /// [InstanceType.builder], [InstanceType.factory] and [InstanceType.singleton].
-  final InstanceType type;
+  /// It is of mode [InstanceManageMode], which is an enum with three possible values:
+  /// [InstanceManageMode.builder], [InstanceManageMode.factory] and [InstanceManageMode.singleton].
+  final InstanceManageMode mode;
 
   /// Create a [T] instance.
   @protected
@@ -127,7 +127,7 @@ class ReactterProvider<T extends Object> extends ReactterProviderAbstraction {
     this.instanceBuilder, {
     Key? key,
     this.id,
-    this.type = InstanceType.builder,
+    this.mode = InstanceManageMode.builder,
     this.init = false,
     Widget? child,
     this.builder,
@@ -146,7 +146,7 @@ class ReactterProvider<T extends Object> extends ReactterProviderAbstraction {
     return ReactterProviderElement<T>(
       widget: this,
       id: id,
-      type: type,
+      mode: mode,
     );
   }
 
@@ -251,7 +251,7 @@ class ReactterProvider<T extends Object> extends ReactterProviderAbstraction {
 class ReactterProviderElement<T extends Object?> extends InheritedElement
     with ReactterWrapperElementMixin, ReactterScopeElementMixin {
   final String? _id;
-  final InstanceType type;
+  final InstanceManageMode mode;
   Widget? _widget;
   bool _isRoot = false;
   Map<String, ReactterProviderElement<T>>? _inheritedElementsWithId;
@@ -264,7 +264,7 @@ class ReactterProviderElement<T extends Object?> extends InheritedElement
   /// Creates an element that uses the given widget as its configuration.
   ReactterProviderElement({
     required ReactterProvider widget,
-    this.type = InstanceType.builder,
+    this.mode = InstanceManageMode.builder,
     String? id,
   })  : _id = id,
         super(widget) {
@@ -273,7 +273,7 @@ class ReactterProviderElement<T extends Object?> extends InheritedElement
       Reactter.create<T>(
         widget.instanceBuilder as InstanceBuilder<T>,
         id: _id,
-        type: type,
+        mode: mode,
         ref: this,
       );
 
@@ -283,7 +283,7 @@ class ReactterProviderElement<T extends Object?> extends InheritedElement
     Reactter.register<T>(
       widget.instanceBuilder as InstanceBuilder<T>,
       id: _id,
-      type: type,
+      mode: mode,
     );
   }
 
