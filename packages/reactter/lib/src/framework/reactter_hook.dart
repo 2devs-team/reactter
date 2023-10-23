@@ -19,31 +19,31 @@ part of '../framework.dart';
 ///   void toggle() => _state.value = !_state.value;
 /// }
 /// ```
-/// > **IMPORTANT**: All [ReactterHook] must be registered using the final [$] variable.
+/// > **IMPORTANT**: All [ReactterHook] must be registered using the final [$] variable.:
 ///
-/// and use it like this:
+/// and use it, like so:
 ///
-///```dart
-/// class AppController {
-///   final state = UseToggle(false);
-///
-///   UserContext() {
-///     print('initial value: ${state.value}');
-///
-///     state.toggle();
-///
-///     print('toggle value: ${state.value}');
-///   }
-/// }
-/// ```
+/// >```dart
+/// > class AppController {
+/// >   final state = UseToggle(false);
+/// >
+/// >   UserContext() {
+/// >     print('initial value: ${state.value}');
+/// >
+/// >     state.toggle();
+/// >
+/// >     print('toggle value: ${state.value}');
+/// >   }
+/// > }
+/// > ```
 ///
 /// See also:
 ///
 /// * [ReactterNotifyManager], provides methods that notify listeners
 /// about [ReactterHook] changes.
 /// * [ReactterState], adds state management features to [ReactterHook].
-abstract class ReactterHook with ReactterState {
-  /// This variable is used to register [ReacttrHook]
+abstract class ReactterHook with ReactterStateBase implements ReactterState {
+  /// This variable is used to register [ReactterHook]
   /// and attach the [ReactterState] that are defined here.
   ///
   /// It must be defined as a final variable
@@ -51,57 +51,36 @@ abstract class ReactterHook with ReactterState {
   /// Like so:
   ///
   /// `final $ = ReactterHook.$register;`
-  _HookRegister get $;
+  @protected
+  _ReactterHookRegister get $;
 
-  /// This getter allows access to the [_HookRegister] instance
+  /// This getter allows access to the [_ReactterHookRegister] instance
   /// which is responsible for registering a [ReactterHook]
   /// and attaching previously collected states to it.
-  static _HookRegister get $register => _HookRegister();
+  static _ReactterHookRegister get $register => _ReactterHookRegister();
 
   ReactterHook() {
-    $._register(this);
-    createState();
+    $._end(this);
   }
 
   /// Executes [callback], and notify the listeners about to update.
+  @override
   @mustCallSuper
   void update([Function? callback]) {
     return super.update(callback ?? () {});
   }
 
   /// Executes [callback], and notify the listeners about to update as async way.
+  @override
   @mustCallSuper
   Future<void> updateAsync([Function? callback]) async {
     return super.updateAsync(callback ?? () {});
   }
 }
 
-/// It is responsible for registering a [ReactterHook] and attaching previously
-/// collected states to it.
-class _HookRegister {
-  bool _isRegistered = false;
-
-  final _prevStatesRecollected = _getAndCleanStatesRecollected();
-
-  /// The function is used to retrieve and clean collected states.
-  static _getAndCleanStatesRecollected() {
-    final states = [...Reactter._statesRecollected];
-    Reactter._statesRecollected.clear();
-    return states;
-  }
-
-  /// The function registers a ReactterHook.
-  void _register(ReactterHook hook) {
-    assert(!_isRegistered, "Can't call register method again");
-
-    _isRegistered = true;
-
-    Reactter._statesRecollected.forEach((state) {
-      state.attachTo(hook);
-    });
-
-    Reactter._statesRecollected
-      ..clear()
-      ..addAll(_prevStatesRecollected);
+class _ReactterHookRegister extends ReactterZone {
+  void _end(ReactterHook reactterHook) {
+    this.attachInstance(reactterHook);
+    ReactterZone.recollectState(reactterHook);
   }
 }

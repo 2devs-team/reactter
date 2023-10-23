@@ -1,5 +1,6 @@
 // ignore_for_file: avoid_renaming_method_parameters
 
+import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_reactter/flutter_reactter.dart';
@@ -53,8 +54,8 @@ class TreeItem extends ReactterComponent<TreeNode> {
                       alignment: Alignment.centerRight,
                       child: Text(
                         id,
-                        style: Theme.of(context).textTheme.bodySmall,
                         overflow: TextOverflow.ellipsis,
+                        style: Theme.of(context).textTheme.bodySmall,
                       ),
                     ),
                   ),

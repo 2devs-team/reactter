@@ -1,5 +1,6 @@
 part of '../widgets.dart';
 
+/// {@template reactter_watcher}
 /// A [StatefulWidget] that listens for [Signal]s and re-build when any [Signal] is changed.
 ///
 /// For example:
@@ -29,9 +30,9 @@ part of '../widgets.dart';
 /// the [ReactterWatcher] [builder], and with each change of its values,
 /// it will re-build the widget tree.
 ///
-/// **CONSIDER** Use [child] property to pass a [Widget] that
-/// you want to build it once. The [ReactterWatcher] pass it through
-/// the [builder] callback, so you can incorporate it into your build:
+/// Use [child] property to pass a [Widget] which to be built once only.
+/// It will be sent through the [builder] callback, so you can incorporate it
+/// into your build:
 ///
 /// ```dart
 /// ReactterWatcher(
@@ -62,7 +63,15 @@ part of '../widgets.dart';
 /// See also:
 ///
 /// * [Signal], a reactive state of any type.
+/// {@endtemplate}
 class ReactterWatcher extends StatefulWidget {
+  /// {@macro reactter_watcher}
+  const ReactterWatcher({
+    Key? key,
+    this.child,
+    this.builder,
+  }) : super(key: key);
+
   /// Provides a widget , which render one time.
   ///
   /// It's expose on [builder] method as second parameter.
@@ -73,12 +82,6 @@ class ReactterWatcher extends StatefulWidget {
   /// Exposes [BuilderContext] and [child] widget as parameters.
   /// and returns a widget.
   final TransitionBuilder? builder;
-
-  const ReactterWatcher({
-    Key? key,
-    this.child,
-    this.builder,
-  }) : super(key: key);
 
   @override
   State<ReactterWatcher> createState() => _ReactterWatcherState();

@@ -1,6 +1,6 @@
 name: reactter
 description: A light, powerful and quick Reactive State Management, Dependency Injection and Event Management.
-version: 5.1.2
+version: 6.0.0
 homepage: https://2devs.io
 license: MIT License
 repository: https://github.com/2devs-team/reactter/tree/master/packages/reactter
@@ -16,3 +16,4 @@ dev_dependencies:
     sdk: flutter
   flutter_test:
     sdk: flutter
+  fake_async: ^1.3.1

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_reactter/flutter_reactter.dart';
 
-import 'cart_page.dart';
 import 'controllers/cart_controller.dart';
 import 'controllers/products_controller.dart';
-import 'widgets/product_item.dart';
+import 'widgets/cart_action.dart';
+import 'widgets/product_card.dart';
 
 class ShoppingCartPage extends StatelessWidget {
   const ShoppingCartPage({Key? key}) : super(key: key);
@@ -12,82 +12,48 @@ class ShoppingCartPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ReactterProviders(
-      [
-        ReactterProvider(() => ProductsController()),
-        ReactterProvider(() => CartController()),
+      const [
+        ReactterProvider(ProductsController.new),
+        ReactterProvider(CartController.new),
       ],
       builder: (context, child) {
         return Scaffold(
           appBar: AppBar(
             title: const Text("Shopping cart"),
             actions: [
-              ConstrainedBox(
-                constraints: const BoxConstraints.tightFor(
-                  width: kToolbarHeight,
-                ),
-                child: IconButton(
-                  onPressed: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const CartPage(),
-                    ),
-                  ),
-                  icon: Stack(
-                    clipBehavior: Clip.none,
-                    children: [
-                      const Icon(Icons.shopping_cart, size: 24),
-                      Positioned(
-                        top: -8,
-                        right: -8,
-                        child: CircleAvatar(
-                          backgroundColor: Colors.amber,
-                          radius: 8,
-                          child: ReactterConsumer<CartController>(
-                            listenStates: (inst) => [inst.quantityProducts],
-                            builder: (cartController, _, __) {
-                              return Text(
-                                "${cartController.quantityProducts.value}",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .labelSmall
-                                    ?.copyWith(color: Colors.black87),
-                              );
-                            },
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+              ReactterConsumer<ProductsController>(
+                builder: (productsController, _, __) {
+                  return CartAction(
+                    onCheckout: productsController.loadProducts,
+                  );
+                },
               ),
             ],
           ),
-          body: ReactterConsumer<ProductsController>(
-            listenStates: (inst) => [inst.products],
-            builder: (productsController, _, __) {
-              final products = productsController.products.value;
+          body: LayoutBuilder(builder: (context, constraints) {
+            return ReactterConsumer<ProductsController>(
+              listenStates: (inst) => [
+                inst.products,
+              ],
+              builder: (productsController, _, __) {
+                final products = productsController.products.value;
+                final crossAxisCount = (constraints.maxWidth / 140).floor();
 
-              return ListView.builder(
-                itemCount: products.length,
-                itemBuilder: (context, index) {
-                  final product = products[index];
-
-                  return ReactterConsumer<ProductsController>(
-                    listenStates: (_) => [product.stockState],
-                    builder: (_, __, ___) {
-                      return ProductItem(
+                return GridView.count(
+                  padding: const EdgeInsets.all(8),
+                  crossAxisCount: crossAxisCount.clamp(1, crossAxisCount),
+                  childAspectRatio: 9 / 15,
+                  children: [
+                    for (final product in products)
+                      ProductCard(
                         key: ObjectKey(product),
                         product: product,
-                        color: index % 2 == 0
-                            ? Theme.of(context).hoverColor
-                            : Theme.of(context).cardColor,
-                      );
-                    },
-                  );
-                },
-              );
-            },
-          ),
+                      )
+                  ],
+                );
+              },
+            );
+          }),
         );
       },
     );

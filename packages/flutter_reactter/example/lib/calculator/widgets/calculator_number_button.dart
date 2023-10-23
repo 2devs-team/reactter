@@ -15,6 +15,7 @@ class CalculatorNumberButton extends StatelessWidget {
     final calculatorController = context.use<CalculatorController>();
 
     return Expanded(
+      flex: number == 0 ? 2 : 1,
       child: Button.tertiary(
         label: "$number",
         onPressed: () => calculatorController.executeAction(

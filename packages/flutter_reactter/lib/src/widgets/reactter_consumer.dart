@@ -1,18 +1,19 @@
 part of '../widgets.dart';
 
-/// A [StatelessWidget] that allows to obtains a [T] instance
-/// from the closest ancestor of [ReactterProvider]
-/// and passes the instance to [builder].
+/// {@template reactter_consumer}
+/// A [StatelessWidget] that allows to obtains an instance of [T] type
+/// from the closest ancestor of [ReactterProvider] and passes the instance
+/// to [builder].
 ///
-/// Also, it listens for changes from the instance or a [ReactterState] list
-/// to rebuild the Widget tree.
+/// Also, listens for instance changes or a [ReactterState] list
+/// to rebuild the widget tree.
 ///
 /// [ReactterConsumer] has same functionality as [ReactterProvider.contextOf].
 ///
 /// Use [id] property to identify the [T] instance.
 ///
-/// Use [listenAll] property for listen to changes from the instance
-/// or states defined in [listenStates] property:
+/// Use [listenAll] property to listen changes to the instance
+/// or the states defined in [listenStates] property:
 ///
 ///```dart
 /// ReactterConsumer<AppController>(
@@ -29,7 +30,8 @@ part of '../widgets.dart';
 /// ```
 ///
 /// Use [child] property to pass a [Widget] which to be built once only.
-/// It will be sent through the [builder] callback, so you can incorporate it into your build:
+/// It will be sent through the [builder] callback, so you can incorporate it
+/// into your build:
 ///
 ///```dart
 /// ReactterConsumer<AppController>(
@@ -49,9 +51,11 @@ part of '../widgets.dart';
 /// See also:
 ///
 /// * [ReactterState], a state in reactter.
-/// * [ReactterProvider], a widget that provides a [T] instance through Widget tree.
-///
+/// * [ReactterProvider], a widget that provides a [T] instance through Widget
+/// tree.
+///{@endtemplate}
 class ReactterConsumer<T extends Object?> extends StatelessWidget {
+  /// {@macro reactter_consumer}
   const ReactterConsumer({
     Key? key,
     this.id,
@@ -81,7 +85,7 @@ class ReactterConsumer<T extends Object?> extends StatelessWidget {
   ///
   /// This callback function is responsible for building the widget tree
   /// based on the obtained instance and the provided child widget.
-  final InstanceBuilder<T> builder;
+  final InstanceContextBuilder<T> builder;
 
   @override
   Widget build(BuildContext context) {

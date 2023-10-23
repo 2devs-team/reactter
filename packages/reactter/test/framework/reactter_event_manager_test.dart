@@ -14,7 +14,7 @@ const TEST_EVENT2_COUNT = 2;
 
 void main() {
   group("ReactterEventManager", () {
-    test("should listens and emits event", () {
+    test("should listen and emits event", () {
       _testEmitListenEvent(
         (callback) {
           Reactter.on(
@@ -40,7 +40,7 @@ void main() {
       );
     });
 
-    test("should listens and emits event with id", () {
+    test("should listen and emits event with id", () {
       _testEmitListenEvent(
         (callback) {
           Reactter.on(
@@ -68,9 +68,9 @@ void main() {
       );
     });
 
-    test("should listens and emits event with instance", () {
+    test("should listen and emits event with instance", () {
       late TestController? instance;
-      final testController = Reactter.create(builder: () => TestController());
+      final testController = Reactter.create(() => TestController());
 
       _testEmitListenEvent(
         (callback) {
@@ -93,7 +93,7 @@ void main() {
       expectLater(instance, testController);
     });
 
-    test("should listens and emits event only once", () {
+    test("should listen and emits event only once", () {
       _testEmitListenEvent(
         (callback) {
           Reactter.one(
@@ -119,7 +119,7 @@ void main() {
       );
     });
 
-    test("should unlistens event", () {
+    test("should unlisten event", () {
       _testEmitListenEvent(
         (callback) {
           Reactter.on(
@@ -147,7 +147,7 @@ void main() {
       );
     });
 
-    test("should unlistens event with id", () {
+    test("should unlisten event with id", () {
       _testEmitListenEvent(
         (callback) {
           Reactter.on(
@@ -176,9 +176,9 @@ void main() {
       );
     });
 
-    test("should listens and emits event only once with instance", () {
+    test("should listen and emits event only once with instance", () {
       late TestController? instance;
-      final testController = Reactter.create(builder: () => TestController());
+      final testController = Reactter.create(() => TestController());
 
       _testEmitListenEvent(
         (callback) {
@@ -232,7 +232,7 @@ void _testEmitListenEvent(
     );
   }
 
-  Reactter.dispose(ReactterInstance<TestController>(id));
+  Reactter.offAll(ReactterInstance<TestController>(id));
 
   if (expectParam != null) {
     expectLater(paramReceived, expectParam);

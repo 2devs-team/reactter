@@ -4,6 +4,7 @@ part of '../signals.dart';
 /// getting or setting the value of a `Signal` object.
 enum SignalEvent { onGetValue, onSetValue }
 
+/// {@template signal}
 /// A base-class that store a value of [T] and notify the listeners
 /// when the value is updated.
 ///
@@ -78,38 +79,35 @@ enum SignalEvent { onGetValue, onSetValue }
 /// See also:
 ///
 /// * [Obj], a base-class that can be used to store a value of [T].
-class Signal<T> extends Obj<T> with ReactterState {
-  Signal(T initial) : super(initial) {
-    createState();
-  }
+/// {@endtemplate}
+class Signal<T> extends ReactterStateImpl
+    with ObjBase<T>
+    implements ReactterState, Obj<T> {
+  T _value;
+
+  /// {@macro signal}
+  Signal(T value) : _value = value;
 
   bool _shouldGetValueNotify = true;
   bool _shouldSetValueNotify = true;
 
   /// Returns the [value] of the signal.
+  @override
   T get value {
-    if (_shouldGetValueNotify) {
-      _shouldGetValueNotify = false;
-      Reactter.emit(Signal, SignalEvent.onGetValue, this);
-      _shouldGetValueNotify = true;
-    }
+    _notifyGetValue();
 
-    return super.value;
+    return _value;
   }
 
   /// Updates the [value] of the signal
   /// and notifies the observers when changes occur.
+  @override
   set value(T val) {
-    if (super.value == val) return;
+    if (_value == val) return;
 
     update((_) {
-      super.value = val;
-
-      if (!_shouldSetValueNotify) return;
-
-      _shouldSetValueNotify = false;
-      Reactter.emit(Signal, SignalEvent.onSetValue, this);
-      _shouldSetValueNotify = true;
+      _value = val;
+      _notifySetValue();
     });
   }
 
@@ -124,14 +122,30 @@ class Signal<T> extends Obj<T> with ReactterState {
     return value;
   }
 
-  /// Executes [fnUpdate], and notify the listeners about to update.
+  @override
   void update(void fnUpdate(T value)) {
     super.update(() => fnUpdate(value));
   }
 
-  /// Executes [fnUpdate], and notify the listeners about to update as async way.
+  @override
   Future<void> updateAsync(void fnUpdate(value)) async {
     await super.updateAsync(() => fnUpdate(value));
+  }
+
+  void _notifyGetValue() {
+    if (!_shouldGetValueNotify) return;
+
+    _shouldGetValueNotify = false;
+    Reactter.emit(Signal, SignalEvent.onGetValue, this);
+    _shouldGetValueNotify = true;
+  }
+
+  void _notifySetValue() {
+    if (!_shouldSetValueNotify) return;
+
+    _shouldSetValueNotify = false;
+    Reactter.emit(Signal, SignalEvent.onSetValue, this);
+    _shouldSetValueNotify = true;
   }
 }
 

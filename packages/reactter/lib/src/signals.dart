@@ -1,6 +1,7 @@
 import 'dart:math';
 
-import 'internals.dart';
+import 'framework.dart';
+
 import 'objs.dart';
 
 part 'signals/signal_list.dart';

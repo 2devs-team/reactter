@@ -5,7 +5,7 @@ import 'api/api_page.dart';
 import 'calculator/calculator_page.dart';
 import 'counter/counter_page.dart';
 import 'shopping_cart/shopping_cart_page.dart';
-import 'todos/todos_page.dart';
+import 'todo/todo_page.dart';
 import 'tree/tree_page.dart';
 
 final items = [
@@ -34,10 +34,12 @@ final items = [
     "Shopping Cart",
     "Add, remove product to cart and checkout",
     [
+      "List<ReactterState>.when",
       "ReactterComponent",
       "ReactterConsumer",
       "ReactterProvider",
       "ReactterProviders",
+      "UseInstance",
       "UseState",
     ],
     () => const ShoppingCartPage(),
@@ -59,6 +61,8 @@ final items = [
     "Github Search",
     "Search user or repository and show info about it.",
     [
+      "Generic arguments",
+      "Memo",
       "ReactterConsumer",
       "ReactterProvider",
       "UseAsyncState",
@@ -66,7 +70,7 @@ final items = [
     () => const ApiPage(),
   ),
   ExampleItem(
-    "Todos",
+    "To-Do List",
     "Add and remove to-do, mark and unmark to-do as done and filter to-do list",
     [
       "Reactter.lazy",
@@ -76,7 +80,7 @@ final items = [
       "UseCompute",
       "UseReducer",
     ],
-    () => const TodosPage(),
+    () => const TodoPage(),
   ),
   ExampleItem(
     "Animate widget",
@@ -94,56 +98,12 @@ final items = [
   ),
 ];
 
+final lightTheme = ThemeData.light().copyWith(
+  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+);
+
 final darkTheme = ThemeData.dark().copyWith(
-  checkboxTheme: ThemeData.dark().checkboxTheme.copyWith(
-    fillColor: MaterialStateProperty.resolveWith<Color?>(
-      (Set<MaterialState> states) {
-        if (states.contains(MaterialState.disabled)) {
-          return null;
-        }
-        if (states.contains(MaterialState.selected)) {
-          return ThemeData.dark().colorScheme.primary;
-        }
-        return null;
-      },
-    ),
-  ),
-  radioTheme: RadioThemeData(
-    fillColor:
-        MaterialStateProperty.resolveWith<Color?>((Set<MaterialState> states) {
-      if (states.contains(MaterialState.disabled)) {
-        return null;
-      }
-      if (states.contains(MaterialState.selected)) {
-        return ThemeData.dark().colorScheme.primary;
-      }
-      return null;
-    }),
-  ),
-  switchTheme: SwitchThemeData(
-    thumbColor: MaterialStateProperty.resolveWith<Color?>(
-      (Set<MaterialState> states) {
-        if (states.contains(MaterialState.disabled)) {
-          return null;
-        }
-        if (states.contains(MaterialState.selected)) {
-          return ThemeData.dark().colorScheme.primary;
-        }
-        return null;
-      },
-    ),
-    trackColor: MaterialStateProperty.resolveWith<Color?>(
-      (Set<MaterialState> states) {
-        if (states.contains(MaterialState.disabled)) {
-          return null;
-        }
-        if (states.contains(MaterialState.selected)) {
-          return ThemeData.dark().colorScheme.primary;
-        }
-        return null;
-      },
-    ),
-  ),
+  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
 );
 
 Future<void> main() async {
@@ -157,7 +117,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData.light(),
+      theme: lightTheme,
       darkTheme: darkTheme,
       home: Scaffold(
         appBar: AppBar(
@@ -262,6 +222,8 @@ class ExampleItem implements ListItem {
           return Chip(
             labelStyle: Theme.of(context).textTheme.labelMedium,
             label: Text(tag),
+            visualDensity: VisualDensity.compact,
+            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
           );
         },
       ).toList(),

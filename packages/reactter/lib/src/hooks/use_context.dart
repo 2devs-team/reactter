@@ -1,6 +1,6 @@
 part of '../hooks.dart';
 
-/// A [ReactterHook]  that allows to get the [T] instance with/without [id]
+/// A [ReactterHook] that allows to get the [T] instance with/without [id]
 /// from dependency store when it's ready.
 ///
 /// ```dart
@@ -29,7 +29,7 @@ part of '../hooks.dart';
 /// Use [UseEffect] hook to wait for the [instance] to be created.
 ///
 /// ```dart
-/// final useAppController = UseContext<AppController>(context: this);
+/// final useAppController = UseContext<AppController>();
 /// print(useAppController.instance); // return null
 ///
 /// UseEffect(() {
@@ -44,45 +44,8 @@ part of '../hooks.dart';
 ///
 /// * [ReactterInstanceManager], a instances manager.
 /// * [UseEffect], a side-effect manager.
-class UseContext<T extends Object> extends ReactterHook {
-  final $ = ReactterHook.$register;
-
-  bool _isDisposed = false;
-  T? _instance;
-
-  T? get instance {
-    assert(!_isDisposed);
-    return _instance;
-  }
-
-  final String? id;
-
-  UseContext([this.id]) {
-    update(() => _instance = Reactter.get<T>(id));
-
-    Reactter.on(ReactterInstance<T>(id), Lifecycle.initialized, _onInstance);
-    Reactter.on(ReactterInstance<T>(id), Lifecycle.willMount, _onInstance);
-    Reactter.on(ReactterInstance<T>(id), Lifecycle.destroyed, _onInstance);
-  }
-
-  /// Call when this hook is no longer needed.
-  void dispose() {
-    if (_isDisposed) return;
-
-    _isDisposed = true;
-
-    Reactter.off(ReactterInstance<T>(id), Lifecycle.initialized, _onInstance);
-    Reactter.off(ReactterInstance<T>(id), Lifecycle.willMount, _onInstance);
-    Reactter.off(ReactterInstance<T>(id), Lifecycle.destroyed, _onInstance);
-
-    update(() => _instance = null);
-
-    super.dispose();
-  }
-
-  void _onInstance(inst, param) {
-    if (_isDisposed) return;
-
-    update(() => _instance = inst);
-  }
-}
+@Deprecated(
+  'Use manage instances shortcuts or `UseInstance` instead. '
+  'This feature was deprecated after v6.0.0.pre.',
+)
+typedef UseContext<T extends Object> = UseInstance<T>;

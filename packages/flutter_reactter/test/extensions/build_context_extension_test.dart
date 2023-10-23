@@ -33,7 +33,7 @@ void main() {
     );
 
     testWidgets(
-      "should gets null when instance not found",
+      "should get null when instance not found",
       (tester) async {
         late TestController? instanceObtained;
 
@@ -69,7 +69,8 @@ void main() {
                 instanceObtained = context.watch<TestController>();
 
                 return Text(
-                    "stateString: ${instanceObtained.stateString.value}");
+                  "stateString: ${instanceObtained.stateString.value}",
+                );
               },
             ),
           ),

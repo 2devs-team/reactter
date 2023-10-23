@@ -4,6 +4,7 @@ part of '../widgets.dart';
 
 /// An abstract class that extends [InheritedWidget] and implements
 /// [ReactterWrapperWidget].
+@internal
 abstract class ReactterProviderAbstraction<T extends Object>
     extends InheritedWidget implements ReactterWrapperWidget {
   const ReactterProviderAbstraction({
@@ -15,8 +16,9 @@ abstract class ReactterProviderAbstraction<T extends Object>
   ReactterProviderElement createElement();
 }
 
-/// A [StatelessWidget] that provides a [T] instance
-/// to widget tree that can be access through the methods [BuildContext] extension.
+/// {@template reactter_provider}
+/// A [StatelessWidget] that provides an instance of [T] type to widget tree
+/// that can be access through the methods [BuildContext] extension.
 ///
 ///```dart
 /// ReactterProvider<AppController>(
@@ -30,7 +32,8 @@ abstract class ReactterProviderAbstraction<T extends Object>
 /// Use [id] property to identify the [T] instance.
 ///
 /// Use [child] property to pass a [Widget] which to be built once only.
-/// It will be sent through the [builder] callback, so you can incorporate it into your build:
+/// It will be sent through the [builder] callback, so you can incorporate it
+/// into your build:
 ///
 ///```dart
 /// ReactterProvider<AppController>(
@@ -53,65 +56,53 @@ abstract class ReactterProviderAbstraction<T extends Object>
 ///
 /// > **NOTE:**
 /// > [ReactterProvider] is a "scoped". This mean that [ReactterProvider]
-/// exposes the [T] instance defined on first parameter([InstanceBuilder])
+/// exposes the instance of [T] type defined on first parameter([InstanceContextBuilder])
 /// through the [BuildContext] in the widget subtree:
+/// >
+/// >```dart
+/// > ReactterProvider<AppController>(
+/// >   () => AppController(),
+/// >   builder: (appController, context, child) {
+/// >     return OtherWidget();
+/// >   }
+/// > );
+/// >
+/// > class OtherWidget extends StatelessWidget {
+/// >   ...
+/// >   Widget build(context) {
+/// >      final appController = context.use<AppController>();
+/// >
+/// >      return Column(
+/// >       children: [
+/// >         Text("StateA: ${appController.stateA.value}"),
+/// >         Builder(
+/// >           builder: (context){
+/// >             context.watch<AppController>((inst) => [inst.stateB]);
+/// >
+/// >             return Text("StateB: ${appController.stateB.value}");
+/// >           },
+/// >         ),
+/// >       ],
+/// >     );
+/// >   }
+/// > }
+/// >```
+/// >
+/// > In the above example, stateA remains static while the [Builder] is rebuilt
+/// > according to the changes in stateB. Because the [Builder]'s context kept in
+/// > watch of stateB.
 ///
-///```dart
-/// ReactterProvider<AppController>(
-///   () => AppController(),
-///   builder: (appController, context, child) {
-///     return OtherWidget();
-///   }
-/// );
+/// See also:
 ///
-/// class OtherWidget extends StatelessWidget {
-///   ...
-///   Widget build(context) {
-///      final appController = context.use<AppController>();
-///
-///      return Column(
-///       children: [
-///         Text("StateA: ${appController.stateA.value}"),
-///         Builder(
-///           builder: (context){
-///             context.watch<AppController>((inst) => [inst.stateB]);
-///
-///             return Text("StateB: ${appController.stateB.value}");
-///           },
-///         ),
-///       ],
-///     );
-///   }
-/// }
-///```
-///
-/// In the above example, stateA remains static while the [Builder] is rebuilt
-/// according to the changes in stateB. Because the [Builder]'s context kept in
-/// watch of stateB.
-///
+/// * [ReactterProvider], a widget that allows to use multiple [ReactterProvider].
+/// > {@endtemplate}
 class ReactterProvider<T extends Object> extends ReactterProviderAbstraction {
-  final String? id;
-
-  /// Create a [T] instance.
-  @protected
-  final ContextBuilder<T> instanceBuilder;
-
-  /// Create the instance defined
-  /// on firts parameter [_instanceBuilder] when [UseContext] is called.
-  @protected
-  final bool init;
-
-  /// Method which has the render logic
-  ///
-  /// Exposes [BuilderContext] and [child] widget as parameters.
-  /// and returns a widget.
-  @protected
-  final InstanceBuilder<T>? builder;
-
+  /// {@macro reactter_provider}
   const ReactterProvider(
     this.instanceBuilder, {
     Key? key,
     this.id,
+    this.mode = InstanceManageMode.builder,
     this.init = false,
     Widget? child,
     this.builder,
@@ -121,13 +112,49 @@ class ReactterProvider<T extends Object> extends ReactterProviderAbstraction {
           child: child ?? const _UndefinedWidget(),
         );
 
+  /// It's used to identify the instance of [T] type
+  /// that is provided by the provider.
+  ///
+  /// It allows you to have multiple instances of the same [T] type in
+  /// your widget tree and differentiate between them.
+  ///
+  /// This can be useful when you want to provide
+  /// different instances of a class to different parts of your application.
+  final String? id;
+
+  /// It's used to specify the type of instance creation for the provided object.
+  ///
+  /// It is of mode [InstanceManageMode], which is an enum with three possible values:
+  /// [InstanceManageMode.builder], [InstanceManageMode.factory] and [InstanceManageMode.singleton].
+  final InstanceManageMode mode;
+
+  /// Create a [T] instance.
+  @protected
+  final InstanceBuilder<T> instanceBuilder;
+
+  /// Immediately create the instance defined
+  /// on firts parameter([instanceBuilder]).
+  @protected
+  final bool init;
+
+  /// Method which has the render logic
+  ///
+  /// Exposes [BuilderContext] and [child] widget as parameters.
+  /// and returns a widget.
+  @protected
+  final InstanceContextBuilder<T>? builder;
+
   Widget build(BuildContext context) {
     return _buildWithChild(child is _UndefinedWidget ? null : child);
   }
 
   @override
   ReactterProviderElement createElement() {
-    return ReactterProviderElement<T>(widget: this, id: id);
+    return ReactterProviderElement<T>(
+      widget: this,
+      id: id,
+      mode: mode,
+    );
   }
 
   /// This is a hack to save it and find it with the `id` distinction
@@ -227,9 +254,11 @@ class ReactterProvider<T extends Object> extends ReactterProviderAbstraction {
 
 /// `ReactterProviderElement` is a class that manages the lifecycle of the `ReactterInstance` and
 /// provides the `ReactterInstance` to its descendants
+@internal
 class ReactterProviderElement<T extends Object?> extends InheritedElement
     with ReactterWrapperElementMixin, ReactterScopeElementMixin {
   final String? _id;
+  final InstanceManageMode mode;
   Widget? _widget;
   bool _isRoot = false;
   Map<String, ReactterProviderElement<T>>? _inheritedElementsWithId;
@@ -237,17 +266,32 @@ class ReactterProviderElement<T extends Object?> extends InheritedElement
   @override
   ReactterProvider get widget => super.widget as ReactterProvider;
 
-  T? get _instance => Reactter.instanceOf<T>(_id);
+  T? get _instance => Reactter.find<T>(_id);
 
   /// Creates an element that uses the given widget as its configuration.
   ReactterProviderElement({
     required ReactterProvider widget,
+    this.mode = InstanceManageMode.builder,
     String? id,
   })  : _id = id,
         super(widget) {
     if (widget.init) {
-      _createInstance();
+      _isRoot = !Reactter.exists<T>(_id);
+      Reactter.create<T>(
+        widget.instanceBuilder as InstanceBuilder<T>,
+        id: _id,
+        mode: mode,
+        ref: this,
+      );
+
+      return;
     }
+
+    Reactter.register<T>(
+      widget.instanceBuilder as InstanceBuilder<T>,
+      id: _id,
+      mode: mode,
+    );
   }
 
   @override
@@ -271,7 +315,8 @@ class ReactterProviderElement<T extends Object?> extends InheritedElement
   @override
   void mount(Element? parent, Object? newSlot) {
     if (!widget.init) {
-      _createInstance();
+      _isRoot = !Reactter.exists<T>(_id);
+      Reactter.get<T>(_id, this);
     }
 
     _updateInheritedElementWithId(parent);
@@ -341,16 +386,6 @@ class ReactterProviderElement<T extends Object?> extends InheritedElement
 
     final instanceKey = ReactterInstance.generateKey<T?>(widget.id);
     _inheritedElementsWithId![instanceKey] = this;
-  }
-
-  void _createInstance() {
-    _isRoot = !Reactter.exists<T>(_id);
-
-    Reactter.create<T>(
-      builder: widget.instanceBuilder as ContextBuilder<T>,
-      id: _id,
-      ref: this,
-    );
   }
 }
 

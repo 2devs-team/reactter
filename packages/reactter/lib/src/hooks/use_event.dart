@@ -1,3 +1,4 @@
+// coverage:ignore-file
 part of '../hooks.dart';
 
 /// A hook that manages events.
@@ -60,6 +61,10 @@ part of '../hooks.dart';
 /// See also:
 ///
 /// * [ReactterInstanceManager], a instances manager.
+@Deprecated(
+  'Use event shortcuts instead. '
+  'This feature was deprecated after v6.0.0-pre.',
+)
 class UseEvent<T extends Object?> {
   final Object? _instanceReceived;
 
@@ -95,5 +100,5 @@ class UseEvent<T extends Object?> {
   }
 
   /// Removes all instance's events
-  void dispose() => Reactter.dispose(_instanceReceived);
+  void dispose() => Reactter.offAll(_instanceReceived);
 }

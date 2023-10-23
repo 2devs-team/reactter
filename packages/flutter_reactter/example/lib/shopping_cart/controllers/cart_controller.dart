@@ -1,59 +1,66 @@
 import 'package:flutter_reactter/flutter_reactter.dart';
 
-import '../models/product_state.dart';
+import '../models/product.dart';
+import '../repositories/store_repository.dart';
 
 class CartController {
-  final products = UseState(<ProductState, int>{});
-  final quantityProducts = UseState(0);
+  final useStoreRepository = UseInstance.create(StoreRepository.new);
+  final items = UseState(<Product, int>{});
+  final itemsCount = UseState(0);
   final total = UseState(0.0);
 
-  void addProduct(ProductState productState) {
-    if (!productState.decreaseStock()) return;
+  int getQuantity(Product product) => items.value[product] ?? 0;
 
-    products.update(() {
-      final quantity = (products.value[productState] ?? 0) + 1;
-      products.value[productState] = quantity;
+  void addItem(Product product) {
+    final quantity = (items.value[product] ?? 0) + 1;
+
+    if (quantity > product.stock) return;
+
+    items.update(() {
+      items.value[product] = quantity;
     });
 
-    quantityProducts.value += 1;
-    total.value += productState.price;
+    itemsCount.value += 1;
+    total.value += product.price;
   }
 
-  void removeProduct(ProductState productState) {
-    if (!productState.increaseStock()) return;
+  void removeItem(Product product) {
+    final quantity = (items.value[product] ?? 0) - 1;
 
-    products.update(() {
-      final quantity = (products.value[productState] ?? 0) - 1;
-      products.value[productState] = quantity;
+    if (quantity < 0) return;
 
-      if (quantity < 1) {
-        products.value.remove(productState);
+    items.update(() {
+      if (quantity == 0) {
+        items.value.remove(product);
+        return;
       }
+
+      items.value[product] = quantity;
     });
 
-    quantityProducts.value -= 1;
-    total.value -= productState.price;
+    itemsCount.value -= 1;
+    total.value -= product.price;
   }
 
-  void deleteProduct(ProductState productState) {
-    if (products.value[productState] == null) {
+  void deleteItem(Product product) {
+    if (items.value[product] == null) {
       return;
     }
 
-    final quantity = products.value[productState]!;
-    productState.increaseStock(quantity);
+    final quantity = items.value[product]!;
 
-    products.update(() {
-      products.value.remove(productState);
+    items.update(() {
+      items.value.remove(product);
     });
 
-    quantityProducts.value -= quantity;
-    total.value -= productState.price * quantity;
+    itemsCount.value -= quantity;
+    total.value -= product.price * quantity;
   }
 
   void checkout() {
-    products.update(products.value.clear);
-    quantityProducts.value = 0;
+    useStoreRepository.instance!.checkout(items.value);
+    items.update(items.value.clear);
+    itemsCount.value = 0;
     total.value = 0;
   }
 }

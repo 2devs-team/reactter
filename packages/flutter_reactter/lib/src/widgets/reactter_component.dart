@@ -1,7 +1,8 @@
 part of '../widgets.dart';
 
+/// {@template reactter_component}
 /// A abstract [StatelessWidget] class that provides [ReactterProvider] features,
-/// whose [T] instance defined is exposing trough [render] method.
+/// whose instance of [T] type defined is exposing trough [render] method.
 ///
 /// ```dart
 /// class App extends ReactterComponent<AppController> {
@@ -53,8 +54,8 @@ part of '../widgets.dart';
 /// }
 /// ```
 ///
-/// Use [listenAll] getter as `true` to listen all the [T] instance changes
-/// to rebuild the Widget tree defined in [render] method.
+/// Use [listenAll] getter as `true` to listen all instance changes to rebuild
+/// the Widget tree defined in [render] method.
 ///
 /// ```dart
 /// class App extends ReactterComponent<AppController> {
@@ -69,8 +70,9 @@ part of '../widgets.dart';
 ///
 /// See also:
 ///
-/// * [ReactterProvider], a [StatelessWidget] that provides a [T] instance
+/// * [ReactterProvider], a [StatelessWidget] that provides an instance of [T] type
 /// to widget tree that can be access through the [BuildContext].
+/// {@endtemplate}
 abstract class ReactterComponent<T extends Object> extends StatelessWidget {
   const ReactterComponent({Key? key}) : super(key: key);
 
@@ -78,7 +80,7 @@ abstract class ReactterComponent<T extends Object> extends StatelessWidget {
   String? get id => null;
 
   /// How to builder the instance of [T].
-  ContextBuilder<T>? get builder => null;
+  InstanceBuilder<T>? get builder => null;
 
   /// Listens states to re-build [render] method.
   ListenStates<T>? get listenStates => null;

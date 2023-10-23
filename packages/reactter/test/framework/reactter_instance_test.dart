@@ -46,7 +46,7 @@ void main() {
         },
       );
 
-      final testController = Reactter.create(builder: () => TestController());
+      final testController = Reactter.create(() => TestController());
       testController?.stateString.value = "changed";
 
       Reactter.delete<TestController>();
@@ -73,7 +73,7 @@ void main() {
         isNull,
       );
 
-      Reactter.create(builder: () => Test3Controller());
+      Reactter.create(() => Test3Controller());
 
       expect(
         test3Controller.instance,

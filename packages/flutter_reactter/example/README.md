@@ -22,7 +22,7 @@ for [Github search example](#github-search), add http permission:
 
 Increase and decrease the counter.
 
-> Learn how to use signal.
+> Learn how to use reactive state using signal.
 
 [![Counter example](https://raw.githubusercontent.com/2devs-team/reactter_assets/main/examples/counter_example.gif)](https://github.com/2devs-team/reactter/tree/master/packages/flutter_reactter/example/lib/counter)
 
@@ -32,11 +32,11 @@ Implements: `ReactterWatcher`, `Signal`.
 
 Performs simple arithmetic operations on numbers
 
-> Learn how to provide and consume a instance.
+> Learn how to provide and consume an instance.
 
 [![Counter example](https://raw.githubusercontent.com/2devs-team/reactter_assets/main/examples/calculator_example.png)](https://github.com/2devs-team/reactter/tree/master/packages/flutter_reactter/example/lib/calculator)
 
-Implements: `BuildContext.use`, `ReactterConsumer`, `ReactterProvider`, `Signal`.
+Implements: `BuildContext.use`, `List<ReactterState>.when`, `ReactterConsumer`, `ReactterProvider`, `Signal`.
 
 ## Shopping cart
 
@@ -46,7 +46,7 @@ Add, remove product to cart and checkout.
 
 [![Shopping cart example](https://raw.githubusercontent.com/2devs-team/reactter_assets/main/examples/cart_example.gif)](https://github.com/2devs-team/reactter/tree/master/packages/flutter_reactter/example/lib/shopping_cart)
 
-Implements: `ReactterComponent`, `ReactterConsumer`, `ReactterProvider`, `ReactterProviders`, `UseState`.
+Implements: `List<ReactterState>.when`, `ReactterComponent`, `ReactterConsumer`, `ReactterProvider`, `ReactterProviders`, `UseInstance`, `UseState`.
 
 ## Tree widget
 
@@ -56,7 +56,7 @@ Add, remove and hide child widget with counter.
 
 [![Tree widget example](https://raw.githubusercontent.com/2devs-team/reactter_assets/main/examples/tree_example.gif)](https://github.com/2devs-team/reactter/tree/master/packages/flutter_reactter/example/lib/tree)
 
-Implements: `BuildContext.use`, `BuildContext.watchId`, `ReactterComponent`, `ReactterProvider`, `UseEffect`, `UseState`.
+Implements: `BuilContext.use`, `BuilContext.watchId`, `ReactterComponent`, `ReactterProvider`, `UseEffect`, `UseState`.
 
 ## Github search
 
@@ -64,17 +64,17 @@ Search user or repository and show info about it.
 
 > Learn how to manage state in async way.
 
-[![Github search example](https://raw.githubusercontent.com/2devs-team/reactter_assets/main/examples/api_example.gif)](https://github.com/2devs-team/reactter/tree/master/packages/flutter_reactter/example/lib/api)
+[![Github search example](https://raw.githubusercontent.com/2devs-team/reactter_assets/main/examples/api_example.png)](https://github.com/2devs-team/reactter/tree/master/packages/flutter_reactter/example/lib/api)
 
-Implements: `ReactterConsumer`, `ReactterProvider`, `UseAsyncState`, `UseState`.
+Implements: `Generic arguments`, `Memo`, `ReactterConsumer`, `ReactterProvider`, `UseAsyncState`.
 
-## Todos
+## To-Do List
 
 Add and remove to-do, mark and unmark to-do as done and filter to-do list.
 
 > Learn how to use the reducer hook like Redux.
 
-[![Todos example](https://raw.githubusercontent.com/2devs-team/reactter_assets/main/examples/todos_example.gif)](https://github.com/2devs-team/reactter/tree/master/packages/flutter_reactter/example/lib/todos)
+[![To-Do List example](https://raw.githubusercontent.com/2devs-team/reactter_assets/main/examples/todos_example.png)](https://github.com/2devs-team/reactter/tree/master/packages/flutter_reactter/example/lib/todo)
 
 Implements: `Reactter.lazy`, `ReactterActionCallable`, `ReactterConsumer`, `ReactterProvider`, `UseCompute`, `UseReducer`.
 
@@ -86,4 +86,4 @@ Change size, shape and color using animations.
 
 [![Animate widget example](https://raw.githubusercontent.com/2devs-team/reactter_assets/main/examples/animation_example.gif)](https://github.com/2devs-team/reactter/tree/master/packages/flutter_reactter/example/lib/animation)
 
-Implements: `ReactterConsumer`, `ReactterHook`, `ReactterProvider`, `UseEffect`, `UseEvent`.
+Implements: `Reactter.lazy`, `ReactterConsumer`, `ReactterHook`, `ReactterProvider`, `UseCompute`, `UseEffect`, `UseState`.

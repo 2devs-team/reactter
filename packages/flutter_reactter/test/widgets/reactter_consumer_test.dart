@@ -36,7 +36,7 @@ void main() {
       );
 
       testWidgets(
-        "should gets null when instance not found",
+        "should get null when instance not found",
         (tester) async {
           late TestController? instanceObtained;
 

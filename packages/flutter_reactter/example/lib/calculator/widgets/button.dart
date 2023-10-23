@@ -38,10 +38,14 @@ class Button extends StatelessWidget {
     return SizedBox(
       height: 48,
       child: ElevatedButton(
+        clipBehavior: Clip.hardEdge,
         onPressed: onPressed ?? () {},
         style: ElevatedButton.styleFrom(
           backgroundColor: color ?? Colors.grey.shade700,
-          side: BorderSide(width: isSelected ? 2 : 1),
+          side: BorderSide(
+            width: isSelected ? 4 : 1,
+            color: Theme.of(context).scaffoldBackgroundColor,
+          ),
           shape: const ContinuousRectangleBorder(side: BorderSide.none),
         ),
         child: Text(

@@ -1,5 +1,6 @@
 part of '../hooks.dart';
 
+/// {@template use_state}
 /// A [ReactterHook] that manages a state.
 ///
 /// Contains a [value] of type [T] which represents the current state.
@@ -37,16 +38,26 @@ part of '../hooks.dart';
 ///   }
 /// }
 /// ```
-///
+/// {@endtemplate}
 class UseState<T> extends ReactterHook {
+  @protected
+  @override
   final $ = ReactterHook.$register;
 
-  UseState(this.initial);
+  /// {@macro use_state}
+  UseState(T initialValue)
+      : _value = initialValue,
+        // ignore: deprecated_member_use_from_same_package
+        initial = initialValue;
 
   /// The initial value in state.
-  T initial;
+  @Deprecated(
+    'No longer used by the framework, please remove any reference to it. '
+    'This feature was deprecated after v6.0.0.pre.',
+  )
+  final T initial;
 
-  late T _value = initial;
+  T _value;
 
   /// Get current value state
   T get value => _value;
@@ -58,6 +69,12 @@ class UseState<T> extends ReactterHook {
     }
   }
 
+  // coverage:ignore-start
   /// Reset the state to initial value
+  @Deprecated(
+    "No longer used by the framework. "
+    'This feature was deprecated after v6.0.0.pre.',
+  )
   void reset() => value = initial;
+  // coverage:ignore-end
 }

@@ -1,8 +1,8 @@
 part of '../extensions.dart';
 
 extension ReactterStateListExtension<E extends ReactterState> on List<E> {
-  /// Takes multiple conditions as arguments and returns a list of
-  /// [UseCompute] objects based on those conditions.
+  /// Takes multiple conditions and returns a list of [UseCompute] based
+  /// on theses conditions.
   ///
   /// Generally, it's used to listen for conditional states using [context.watch]:
   ///
@@ -16,7 +16,10 @@ extension ReactterStateListExtension<E extends ReactterState> on List<E> {
   ///     () => inst.stateB.value == 'Y', // condition3
   ///   ),
   /// );
+  ///
   /// ```
+  /// Use [UseCompute] instead to improve performance, creating it out of
+  /// context.
   List<UseCompute> when(
     dynamic Function() condition, [
     dynamic Function()? condition2,

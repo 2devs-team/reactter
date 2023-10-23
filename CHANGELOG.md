@@ -1,5 +1,64 @@
 # Reactter
 
+## 6.0.0
+
+### Enhancements
+
+- **feat(args):** Implement generic arguments.
+  - Add the [`Args`](https://pub.dev/documentation/reactter/6.0.0/reactter/Args-class.html) class which represent one or more arguments.
+  - Add the [`Args1`](https://pub.dev/documentation/reactter/6.0.0/reactter/Args1-class.html), [`Args2`](https://pub.dev/documentation/reactter/6.0.0/reactter/Args2-class.html) and [`Args3`](https://pub.dev/documentation/reactter/6.0.0/reactter/Args3-class.html) classes which represent one, two and three arguments respectively.
+  - Add the types [`ArgsX2`](https://pub.dev/documentation/reactter/6.0.0/reactter/ArgsX2.html) and [`ArgsX3`](https://pub.dev/documentation/reactter/6.0.0/reactter/ArgsX3.html) which represent [`Args2`](https://pub.dev/documentation/reactter/6.0.0/reactter/Args2-class.html) and [`Args3`](https://pub.dev/documentation/reactter/6.0.0/reactter/Args3-class.html) with the same arguments type.
+  - Add [`ary`](https://pub.dev/documentation/reactter/6.0.0/reactter/AryFunction/ary.html) methods for converting Function to Function with generic arguments.
+- **feat(memo):** Implement the [`Memo`](https://pub.dev/documentation/reactter/6.0.0/reactter/Memo-class.html) class. It's used for memoizing values returned by a calcutate function.
+- **feat(memo):** Add [`MemoInterceptors`](https://pub.dev/documentation/reactter/6.0.0/reactter/MemoInterceptors-class.html), [`MemoInterceptor`](https://pub.dev/documentation/reactter/6.0.0/reactter/MemoInterceptor-class.html) and [`MemoInterceptorWrapper`](https://pub.dev/documentation/reactter/6.0.0/reactter/MemoInterceptorWrapper-class.html) for intercepting and handling various events during the memoization process.
+- **feat(memo):** Add [`AsyncMemoSafe`](https://pub.dev/documentation/reactter/6.0.0/reactter/AsyncMemoSafe-class.html)  for removing the memoized value if its futures that throw an error when executed.
+- **feat(memo):** Add [`TemporaryCacheMemo`](https://pub.dev/documentation/reactter/6.0.0/reactter/TemporaryCacheMemo-class.html) for removing memoized values from the cache after a specified duration.
+- **feat(framework, widgets)**:Improve `ReactterInstanceManager` and `ReactterInstance`.
+  - Add `ref` parameter to [`Reactter.get`](https://pub.dev/documentation/reactter/6.0.0/reactter/ReactterInstanceManager/get.html).
+  - Add [`Reactter.destory`](https://pub.dev/documentation/reactter/6.0.0/reactter/ReactterInstanceManager/destroy.html).
+  - Add [`InstanceManageMode.builder`](https://pub.dev/documentation/reactter/6.0.0/InstanceManageMode/InstanceManageMode.builder.html), [`InstanceManageMode.factory`](https://pub.dev/documentation/reactter/6.0.0/InstanceManageMode/InstanceManageMode.factory.html) and [`InstanceManageMode.singleton`](https://pub.dev/documentation/reactter/6.0.0/InstanceManageMode/InstanceManageMode.singleton.html) enums. These types represent different ways of creating and managing instances.
+  - Add [`Reactter.getInstanceManageMode`](https://pub.dev/documentation/reactter/6.0.0/reactter/ReactterInstanceManager/getInstanceManageMode.html) method for getting the instance type of the instance specified.
+  - Add [`Reactter.isRegistered`](https://pub.dev/documentation/reactter/6.0.0/reactter/ReactterInstanceManager/isRegistered.html) method for check if an instance is registered in Reactter.
+  - Add [`Reactter.lazyBuilder`](https://pub.dev/documentation/reactter/6.0.0/reactter/ReactterInstanceManager/lazyBuilder.html), [`Reactter.lazyFactory`](https://pub.dev/documentation/reactter/6.0.0/reactter/ReactterInstanceManager/lazyFactory.html), [`Reactter.lazySingleton`](https://pub.dev/documentation/reactter/6.0.0/reactter/ReactterInstanceManager/lazySingleton.html) methods to register a builder function to create a new instance in one of the different types.
+  - Add [`Reactter.builder`,](https://pub.dev/documentation/reactter/6.0.0/reactter/ReactterInstanceManager/builder.html) [`Reactter.factory`,](https://pub.dev/documentation/reactter/6.0.0/reactter/ReactterInstanceManager/factory.html) [`Reactter.singleton`](https://pub.dev/documentation/reactter/6.0.0/reactter/ReactterInstanceManager/singleton.html) methods to create a new instance in one of the different types.
+  - Add [`type`](https://pub.dev/documentation/flutter_reactter/6.0.0/flutter_reactter/ReactterProvider/type.html) property to [`ReactterProvider`](https://pub.dev/documentation/flutter_reactter/6.0.0/flutter_reactter/ReactterProvider-class.html).
+- **feat(hooks)**: Improve [`UseInstance`](https://pub.dev/documentation/reactter/6.0.0/reactter/UseInstance-class.html) hook.
+  - Add [`UseInstance.register`](https://pub.dev/documentation/reactter/6.0.0/reactter/UseInstance/UseInstance.register.html) constructor for registering the builder function when it instantiated.
+  - Add [`UseInstance.create`](https://pub.dev/documentation/reactter/6.0.0/reactter/UseInstance/UseInstance.create.html) constructor to create an instancia when it instantiated.
+  - Add [`UseInstance.get`](https://pub.dev/documentation/reactter/6.0.0/reactter/UseInstance/UseInstance.get.html) constructor to create and/or get an instancia when it instantiated.
+  - Add [`UseInstance.lazyBuilder`](https://pub.dev/documentation/reactter/6.0.0/reactter/UseInstance/UseInstance.lazyBuilder.html), [`UseInstance.lazyFactory`](https://pub.dev/documentation/reactter/6.0.0/reactter/UseInstance/UseInstance.lazyFactory.html), [`UseInstance.lazySingleton`](https://pub.dev/documentation/reactter/6.0.0/reactter/UseInstance/UseInstance.lazySingleton.html) factories to register a builder function to create a new instance in one of the different types when it instantiated.
+  - Add [`UseInstance.builder`](https://pub.dev/documentation/reactter/6.0.0/reactter/UseInstance/UseInstance.builder.html), [`UseInstance.factory`](https://pub.dev/documentation/reactter/6.0.0/reactter/UseInstance/UseInstance.factory.html), [`UseInstance.singleton`](https://pub.dev/documentation/reactter/6.0.0/reactter/UseInstance/UseInstance.singleton.html) factories to create a new instance in one of the different types when it instantiated.
+
+### Breakings
+
+- **refactor(framework)**: Replace `Reactter.instanceOf`  to [`Reactter.find`](https://pub.dev/documentation/reactter/6.0.0/reactter/ReactterInstanceManager/find.html).
+- **refactor(framework)**: Change builder parameter  of [`Reactter.register`](https://pub.dev/documentation/reactter/6.0.0/reactter/ReactterInstanceManager/register.html) and [`Reactter.create`](https://pub.dev/documentation/reactter/6.0.0/reactter/ReactterInstanceManager/create.html) to positional parameter.
+- **refactor(hooks):** Add [`UseAsyncState.withArg`](https://pub.dev/documentation/reactter/6.0.0/reactter/UseAsyncState/withArg.html) for using [`UseAsyncState`](https://pub.dev/documentation/reactter/6.0.0/reactter/UseAsyncState-class.html) with [`Args`](https://pub.dev/documentation/reactter/6.0.0/reactter/Args-class.html).
+  - Now, the [`resolve`](https://pub.dev/documentation/reactter/6.0.0/reactter/UseAsyncState/resolve.html) method of [`UseAsyncState`](https://pub.dev/documentation/reactter/6.0.0/reactter/UseAsyncState-class.html) is used without arguments. Replace with [`UseAsyncState.withArg`](https://pub.dev/documentation/reactter/6.0.0/reactter/UseAsyncState/withArg.html). Its [`resolve`](https://pub.dev/documentation/reactter/6.0.0/reactter/UseAsyncStateArgs/resolve.html) method allows to use arguments.
+- **refactor(hooks, example):** Deprecate [`UseState.initial`](https://pub.dev/documentation/reactter/6.0.0/reactter/UseState/initial.html) and [`UseState.reset`](https://pub.dev/documentation/reactter/6.0.0/reactter/UseState/reset.html).
+  - Avoid using it.
+- **refactor(hooks):** Deprecate [`UseEvent`](https://pub.dev/documentation/reactter/6.0.0/reactter/UseEvent-class.html) hook.
+  - Use event shortcuts instead.
+- **refactor(hooks, test):** Deprecate [`UseContext`](https://pub.dev/documentation/reactter/6.0.0/reactter/UseContext.html) hook.
+  - Use manage instances shortcuts or [`UseInstance`](https://pub.dev/documentation/reactter/6.0.0/reactter/UseInstance-class.html) instead.
+- **refactor(framework)**: The [`Reactter.unregister`](https://pub.dev/documentation/reactter/6.0.0/reactter/ReactterInstanceManager/unregister.html) couldn't deregister the instance builder when the instance is active.
+- **refactor(framework)**: Rename `Reactter.dispose` to [`Reactter.offAll`](https://pub.dev/documentation/reactter/6.0.0/reactter/ReactterEventManager/offAll.html).
+- **refactor(types)**: Rename `ContextBuilder` to [`InstanceBuilder`](https://pub.dev/documentation/reactter/6.0.0/reactter/InstanceBuilder.html) and `InstanceBuilder` to [`InstanceContextBuilder`](https://pub.dev/documentation/reactter/6.0.0/reactter/InstanceContextBuilder.html).
+- **reactor(framework)**: Rename `Reactter.lazy` to [`Reactter.lazyState`](https://pub.dev/documentation/reactter/6.0.0/reactter/ReactterStateShortcuts/lazyState.html).
+
+### Internal
+
+- **refactor(framework, hooks, test)**: Improve code structure and how to attach an instance to states using `ReactterZone` and  structure code of `ReactterState`.
+- **refactor(example)**: Improve examples using the new features.
+- **test(framework, widgets, hooks)**: Add some tests about `ReactterInstanceManager`, `ReactterInstance`, `UseInstance`
+- **test(framework):** Improve tests.
+- **test(framework):** Add `Reactter.destroy` test.
+- **test(memo):** Add `Memo` and `MemoInterceptor` test.
+- **test(args):** Add `Args` test.
+- **test(hooks):** Add `UseAsyncState.withArg` test.
+- **test(hooks):** Add `UseInstance` test.
+- **fix(test)**: Fix grammar of test description.
+
 ## 5.1.2
 
 ### Fixes
@@ -73,7 +132,7 @@
 
 ## 5.0.0
 
-### Breaking
+### Breakings
 
 - **refactor(engine, widgets, core, hooks, test)**: Delete `ReactterContext` and `ReactterHookManager` and remove all about it.
 - **refactor(widgets, test)**: Replace `ReactterContextNotFoundException` to `ReactterInstanceNotFoundException`.
@@ -149,7 +208,7 @@ Now there is no need to use `ReactterComponent` or `ReactterBuilder`. The instan
 - **feat(widgets)**: Add [`ReactterWatcher`](https://pub.dev/documentation/reactter_flutter/4.0.0/widgets/ReactterWatcher-class.html).
 You can use the `Signal` variable in `ReactterWatcher` and react when it changed for `ReactterWatcher`'s widgets rebuild.
 
-### Breaking
+### Breakings
 
 - **refactor(core)**: Remove `typedef` innecesary.
 - **refactor(hooks)**: Fix dispose of `UseContext` and `UseEffect`.
@@ -188,7 +247,7 @@ You can use the `Signal` variable in `ReactterWatcher` and react when it changed
 
 - **feat(hooks)**: Add [`UseReducer`](https://pub.dev/documentation/reactter/3.2.0/hooks/UseReducer-class.html) hook.
 
-### Breaking
+### Breakings
 
 - **refactor(core)**: Replace `ReactterInstanceManager` extension to class.
 
@@ -220,7 +279,7 @@ You can use the `Signal` variable in `ReactterWatcher` and react when it changed
 
 ## 3.1.0
 
-### Breaking
+### Breakings
 
 - **refactor(core)**: Remove selector aspect from `ReactterProvider.of`.
 
@@ -240,7 +299,7 @@ You can use the `Signal` variable in `ReactterWatcher` and react when it changed
 
 ## 3.0.0
 
-### Breaking
+### Breakings
 
 - **build**: Change structure folder. Now the package was separated into two packages, one for dart only([`reactter`](https://pub.dev/packages/reactter)) and one for flutter([`flutter_reactter`](https://pub.dev/packages/flutter_reactter)).
 - **refactor(hooks)**: Type return on [`UseAsyncState.when`](https://pub.dev/documentation/reactter/3.0.0/reactter/UseAsyncState/when.html).
@@ -288,7 +347,7 @@ You can use the `Signal` variable in `ReactterWatcher` and react when it changed
 
 ## 2.3.0
 
-### Breaking
+### Breakings
 
 - **refactor**: Rename `context.of` to `context.watch`.
 - **refactor**: Rename `context.ofId` to `context.watchId`.

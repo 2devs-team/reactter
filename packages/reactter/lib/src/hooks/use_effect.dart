@@ -1,5 +1,6 @@
 part of '../hooks.dart';
 
+/// {@template use_effect}
 /// A [ReactterHook] that manages side-effect.
 ///
 /// The side-effect logic into the [callback] function is executed
@@ -80,12 +81,15 @@ part of '../hooks.dart';
 /// See also:
 ///
 /// * [ReactterState], it receives as dependencies.
+/// {@endtemplate}
 class UseEffect extends ReactterHook {
+  @protected
+  @override
+  final $ = ReactterHook.$register;
+
   Function? _cleanupCallback;
   bool _isUpdating = false;
   bool _initialized = false;
-
-  final $ = ReactterHook.$register;
 
   static DispatchEffect get dispatchEffect => _DispatchEffect();
 
@@ -102,6 +106,7 @@ class UseEffect extends ReactterHook {
   /// the hook will simply watch for changes in the specified `dependencies`.
   final Object? context;
 
+  /// {@macro use_effect}
   UseEffect(
     this.callback,
     this.dependencies, [
@@ -119,12 +124,7 @@ class UseEffect extends ReactterHook {
       return;
     }
 
-    if (Reactter.isInstancesBuilding) return;
-
-    if (instanceAttached != null) {
-      _analyzeInstanceAttached();
-      return;
-    }
+    if (ReactterZone.current != null) return;
 
     final instance = _getInstance(context);
 
@@ -136,6 +136,7 @@ class UseEffect extends ReactterHook {
     _watchDependencies();
   }
 
+  @override
   void attachTo(Object instance) {
     if (context == null) return;
 
@@ -144,6 +145,23 @@ class UseEffect extends ReactterHook {
     if (!_initialized) return;
 
     _analyzeInstanceAttached();
+  }
+
+  @override
+  void detachInstance() {
+    _unwatchInstanceAttached();
+
+    super.detachInstance();
+  }
+
+  @override
+  void dispose() {
+    _cleanupCallback = null;
+
+    _unwatchInstanceAttached();
+    _unwatchDependencies();
+
+    super.dispose();
   }
 
   void _analyzeInstanceAttached() {
@@ -155,12 +173,6 @@ class UseEffect extends ReactterHook {
     }
 
     _watchInstanceAttached();
-  }
-
-  void detachInstance() {
-    _unwatchInstanceAttached();
-
-    super.detachInstance();
   }
 
   void _watchInstanceAttached() {
@@ -187,17 +199,6 @@ class UseEffect extends ReactterHook {
       Lifecycle.willUnmount,
       _runCleanupAndUnwatchDependencies,
     );
-  }
-
-  /// Used to clean up resources and memory used by an object before it is
-  /// removed from memory.
-  void dispose() {
-    _cleanupCallback = null;
-
-    _unwatchInstanceAttached();
-    _unwatchDependencies();
-
-    super.dispose();
   }
 
   void _runCallbackAndWatchDependencies([_, __]) {
@@ -245,7 +246,7 @@ class UseEffect extends ReactterHook {
   }
 
   Object? _getInstance(Object? instance) {
-    return instance is ReactterState && Reactter.find(instance) == null
+    return instance is ReactterStateBase && !Reactter.isRegistered(instance)
         ? _getInstance(instance.instanceAttached)
         : instance;
   }

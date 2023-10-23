@@ -42,14 +42,18 @@ class DecrementActionCallable extends ReactterActionCallable<TestStore, int> {
   }
 }
 
-Future<String> _resolveStateAsync([bool throwError = false]) async {
-  if (throwError) {
+Future<String> _resolveStateAsync([
+  Args args = const Args1(null),
+]) async {
+  if (args.arguments.any((arg) => arg is! String && arg != null)) {
     throw Exception("has a error");
   }
 
+  final argsString = args.toList<String>().join(',');
+
   await Future.delayed(const Duration(microseconds: 1));
 
-  return "resolved";
+  return argsString.isEmpty ? "resolved" : "resolved with args: $argsString";
 }
 
 TestStore _reducer(TestStore state, ReactterAction action) {
@@ -71,7 +75,7 @@ TestStore _reducer(TestStore state, ReactterAction action) {
   }
 }
 
-class TestController with ReactterState {
+class TestController extends ReactterStateImpl {
   final signalString = "initial".signal;
 
   late final stateBool = UseState(false);
@@ -82,31 +86,91 @@ class TestController with ReactterState {
   final stateMap = UseState({});
   final stateClass = UseState<TestClass?>(null);
   final stateAsync = UseAsyncState("initial", _resolveStateAsync);
+  final stateAsyncWithArg = UseAsyncState.withArg(
+    "initial",
+    _resolveStateAsync,
+  );
+  final stateAsyncWithError = UseAsyncState("initial", () {
+    throw Exception("has a error");
+  });
   final stateReduce = UseReducer(_reducer, TestStore(count: 0));
 
-  late final stateCompute = Reactter.lazy(
+  late final stateCompute = Reactter.lazyState(
     () => UseCompute(
       () => (stateInt.value + stateDouble.value).clamp(5, 10),
       [stateInt, stateDouble],
     ),
     this,
   );
+
+  final memo = Memo((Args? args) {
+    if (args is Args1<Future>) return args.arg1;
+
+    if (args is Args1<Error>) {
+      throw args.arg1;
+    }
+
+    return args?.arguments ?? [];
+  });
+
+  final asyncMemo = Memo<dynamic, Args>(
+    (Args? args) {
+      if (args is Args1<Future>) return args.arg1;
+
+      if (args is Args1<Error>) {
+        throw args.arg1;
+      }
+
+      return args?.arguments ?? [];
+    },
+    AsyncMemoSafe(),
+  );
+
+  final inlineMemo = Memo.inline((Args? args) {
+    return args?.arguments ?? [];
+  });
 }
 
 class Test2Controller {
-  final testController = UseContext<TestController>();
+  final testController = UseInstance<TestController>();
 
   Test2Controller() {
-    Reactter.create(builder: () => TestController());
+    Reactter.create(() => TestController());
   }
 }
 
 class Test3Controller {
-  final test2Controller = UseContext<Test2Controller>();
+  final test2Controller = UseInstance<Test2Controller>();
 
   Test3Controller() {
-    Reactter.create(builder: () => Test2Controller());
+    Reactter.create(() => Test2Controller());
   }
 }
 
-final test3Controller = UseContext<Test3Controller>();
+final test3Controller = UseInstance<Test3Controller>();
+
+class FakeInterceptorForCoverage<T, A> extends MemoInterceptor<T, A> {
+  @override
+  void onInit(Memo<T, A> memo, A args) {
+    // TODO: implement onInit
+    super.onInit(memo, args);
+  }
+
+  @override
+  void onValue(Memo<T, A> memo, A args, T value, bool fromCache) {
+    // TODO: implement onValue
+    super.onValue(memo, args, value, fromCache);
+  }
+
+  @override
+  void onError(Memo<T, A> memo, A args, Object error) {
+    // TODO: implement onError
+    super.onError(memo, args, error);
+  }
+
+  @override
+  void onFinish(Memo<T, A> memo, A args) {
+    // TODO: implement onFinish
+    super.onFinish(memo, args);
+  }
+}

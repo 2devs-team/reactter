@@ -5,7 +5,7 @@ import '../shareds/test_controllers.dart';
 
 void main() {
   test("UseEffect should detach previous instance", () {
-    final testController = Reactter.create(builder: () => TestController());
+    final testController = Reactter.create(() => TestController());
     final uEffect = UseEffect(() {}, [], testController);
 
     expect(uEffect.instanceAttached, isA<TestController>());
@@ -47,7 +47,7 @@ void main() {
     });
 
     test("should be called after instance did mount", () {
-      final testController = Reactter.create(builder: () => TestController());
+      final testController = Reactter.create(() => TestController());
 
       int nCalls = 0;
 
@@ -65,10 +65,10 @@ void main() {
     });
 
     test("should be called with DispatchEffect when it initialized later", () {
-      final testController = Reactter.create(builder: () => TestController());
+      final testController = Reactter.create(() => TestController());
       int nCalls = 0;
 
-      late final uEffect = Reactter.lazy(
+      late final uEffect = Reactter.lazyState(
         () {
           return UseEffect(
             () {
@@ -83,6 +83,7 @@ void main() {
 
       expect(nCalls, 0);
       expect(uEffect, isA<UseEffect>());
+      expect(uEffect.instanceAttached, isA<DispatchEffect>());
       expect(uEffect.instanceAttached, isNot(isA<TestController>()));
       expect(nCalls, 1);
 
@@ -166,7 +167,7 @@ void main() {
     });
 
     test("should be called after context will unmount", () {
-      final testController = Reactter.create(builder: () => TestController())!;
+      final testController = Reactter.create(() => TestController())!;
 
       int nCalls = 0;
 
@@ -185,7 +186,7 @@ void main() {
     });
 
     test("should be called after context will unmount with dependencies", () {
-      final testController = Reactter.create(builder: () => TestController())!;
+      final testController = Reactter.create(() => TestController())!;
       final stateA = testController.stateBool;
       final stateB = testController.stateInt;
       final stateC = testController.stateString;

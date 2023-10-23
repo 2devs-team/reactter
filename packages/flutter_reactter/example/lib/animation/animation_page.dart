@@ -85,11 +85,11 @@ class AnimationPage extends StatelessWidget {
             ),
           ),
           floatingActionButton: FloatingActionButton(
-            onPressed: animationController.togglePlayAllAnimations,
+            onPressed: animationController.togglePlayAnimations,
             child: ReactterConsumer<AnimationController>(
-              listenStates: (inst) => [inst.isAllAnimationsPlaying],
+              listenStates: (inst) => [inst.isPlaying],
               builder: (_, __, ___) {
-                if (animationController.isAllAnimationsPlaying.value) {
+                if (animationController.isPlaying.value) {
                   return const Icon(Icons.pause);
                 }
 
