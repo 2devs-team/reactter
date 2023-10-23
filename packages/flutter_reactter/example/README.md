@@ -66,7 +66,7 @@ Search user or repository and show info about it.
 
 [![Github search example](https://raw.githubusercontent.com/2devs-team/reactter_assets/main/examples/api_example.png)](https://github.com/2devs-team/reactter/tree/master/packages/flutter_reactter/example/lib/api)
 
-Implements: `Generic arguments`, `Reactter.memo`, `ReactterConsumer`, `ReactterProvider`, `UseAsyncState`.
+Implements: `Generic arguments`, `Memo`, `ReactterConsumer`, `ReactterProvider`, `UseAsyncState`.
 
 ## To-Do List
 
