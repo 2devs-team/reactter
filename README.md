@@ -731,7 +731,8 @@ class AppController {
   AppController() {
     UseEffect(() {
       authController = useAuthController.instance;
-    }, [useAuthController]);
+    }, [useAuthController],
+    );
   }
 }
 ```
@@ -977,7 +978,7 @@ Reactter.emit(appController, Lifecycle.didUpdate, 'test param');
 UseEffect(
   <Function cleanup> Function callback,
   List<ReactterState> dependencies,
-  [Object? instance]
+  [Object? instance],
 )
 ```
 
@@ -1384,7 +1385,7 @@ Memo<T, A>(
 `Memo` accepts theses properties:
 
 - `computeValue`: Represents a function that takes an argument of type `A` and returns a value of type `T`. This is the core function that will be memoized.
-- `interceptor`: Receives a [`MemoInterceptor`](https://pub.dev/documentation/reactter/6.0.0/reactter/MemoInterceptor-class.html) that allows you to intercept the memoization function calls and modify the memoization process. 
+- `interceptor`: Receives a [`MemoInterceptor`](https://pub.dev/documentation/reactter/6.0.0/reactter/MemoInterceptor-class.html) that allows you to intercept the memoization function calls and modify the memoization process.
   Reactter providers some interceptors:
   - [`MemoInterceptors`](https://pub.dev/documentation/reactter/6.0.0/reactter/MemoInterceptors-class.html): Allows multiple memoization interceptors to be used together.
   - [`MemoInterceptorWrapper`](https://pub.dev/documentation/reactter/6.0.0/reactter/MemoInterceptorWrapper-class.html): A wrapper for a memoized function that allows you to define callbacks for initialization, successful completion, error handling, and finishing.
