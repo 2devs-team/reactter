@@ -38,7 +38,7 @@ part of '../objs.dart';
 /// {@endtemplate}
 class Obj<T> with ObjBase<T> {
   T value;
-  
+
   /// {@macro obj}
   Obj(this.value);
 }
