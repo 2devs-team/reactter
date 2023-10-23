@@ -1,8 +1,10 @@
 part of '../../memo.dart';
 
+/// {@template memo_interceptor_wrapper}
 /// It´s a wrapper for a memoized function that allows you to define
 /// callbacks for initialization, successful completion,
 /// error handling, and finishing.
+/// {@endtemplate}
 class MemoInterceptorWrapper<T, A> extends MemoInterceptor<T, A> {
   /// It's called when the memoized function is invoked
   /// for the first time with a new set of arguments.
@@ -21,6 +23,7 @@ class MemoInterceptorWrapper<T, A> extends MemoInterceptor<T, A> {
   /// regardless of whether it was successful or encountered an error.
   final FunctionArgMemo<T, A>? _onFinish;
 
+  /// {@macro memo_interceptor_wrapper}
   const MemoInterceptorWrapper({
     FunctionArgMemo<T, A>? onInit,
     FunctionValueMemo<T, A>? onValue,

@@ -1,5 +1,6 @@
 part of '../objs.dart';
 
+/// {@template obj}
 /// A base-class that store a value of [T].
 ///
 /// You can create a new [Obj]:
@@ -34,9 +35,11 @@ part of '../objs.dart';
 /// // or using the callable
 /// strObj("change value");
 /// ```
+/// {@endtemplate}
 class Obj<T> with ObjBase<T> {
   T value;
-
+  
+  /// {@macro obj}
   Obj(this.value);
 }
 

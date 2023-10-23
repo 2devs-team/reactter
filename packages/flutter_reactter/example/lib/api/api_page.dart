@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide SearchBar;
 import 'package:flutter_reactter/flutter_reactter.dart';
 
 import 'controllers/api_controller.dart';
@@ -35,7 +35,7 @@ class ApiPage extends StatelessWidget {
             padding: const EdgeInsets.all(8),
             child: Center(
               child: ReactterConsumer<ApiController>(
-                listenStates: (inst) => [inst.entity],
+                listenStates: (inst) => [inst.entityState],
                 builder: (_, __, ___) {
                   return FittedBox(
                     child: SizedBox(
@@ -45,7 +45,7 @@ class ApiPage extends StatelessWidget {
                         child: Container(
                           alignment: Alignment.center,
                           padding: const EdgeInsets.all(16),
-                          child: apiController.entity.when<Widget>(
+                          child: apiController.entityState.when<Widget>(
                             standby: (_) => const Text(
                               'Search a user or repository(like "flutter/flutter")',
                             ),

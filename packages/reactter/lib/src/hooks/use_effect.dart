@@ -1,5 +1,6 @@
 part of '../hooks.dart';
 
+/// {@template use_effect}
 /// A [ReactterHook] that manages side-effect.
 ///
 /// The side-effect logic into the [callback] function is executed
@@ -80,6 +81,7 @@ part of '../hooks.dart';
 /// See also:
 ///
 /// * [ReactterState], it receives as dependencies.
+/// {@endtemplate}
 class UseEffect extends ReactterHook {
   @protected
   @override
@@ -104,6 +106,7 @@ class UseEffect extends ReactterHook {
   /// the hook will simply watch for changes in the specified `dependencies`.
   final Object? context;
 
+  /// {@macro use_effect}
   UseEffect(
     this.callback,
     this.dependencies, [

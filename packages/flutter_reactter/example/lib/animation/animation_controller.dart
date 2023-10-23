@@ -65,7 +65,7 @@ class AnimationController {
     ),
   );
 
-  late final isPlaying = Reactter.lazy(() {
+  late final isPlaying = Reactter.lazyState(() {
     return UseCompute(
       () => [
         sizeAnimation.control.value,

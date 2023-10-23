@@ -62,10 +62,12 @@ class UseAnimation<T> extends ReactterHook implements TickerProvider {
   @protected
   final $ = ReactterHook.$register;
 
-  late final tween = Reactter.lazy(() => UseState(options.tween), this);
-  late final control = Reactter.lazy(() => UseState(options.control), this);
-  late final duration = Reactter.lazy(() => UseState(options.duration), this);
-  late final curve = Reactter.lazy(() => UseState(options.curve), this);
+  late final tween = Reactter.lazyState(() => UseState(options.tween), this);
+  late final control =
+      Reactter.lazyState(() => UseState(options.control), this);
+  late final duration =
+      Reactter.lazyState(() => UseState(options.duration), this);
+  late final curve = Reactter.lazyState(() => UseState(options.curve), this);
 
   bool _waitForDelay = true;
   Set<Ticker>? _tickers;

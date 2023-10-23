@@ -1,5 +1,6 @@
 part of '../widgets.dart';
 
+/// {@template reactter_providers}
 /// A [StatelessWidget] that allows to use multiple [ReactterProvider] as nested way.
 ///
 /// ```dart
@@ -22,9 +23,9 @@ part of '../widgets.dart';
 /// )
 /// ```
 ///
-/// **CONSIDER** Use [child] property to pass a [Widget] that
-/// you want to build it once. The [ReactterProviders] pass it through
-/// the [builder] callback, so you can incorporate it into your build:
+/// Use [child] property to pass a [Widget] which to be built once only.
+/// The [ReactterProviders] pass it through the [builder] callback,
+/// so you can incorporate it into your build:
 ///
 /// ```dart
 /// ReactterProviders(
@@ -47,8 +48,22 @@ part of '../widgets.dart';
 ///   }
 /// )
 /// ```
+///
+/// See also:
+///
+/// * [ReactterProvider], a widget that provides an instance type to widget tree.
+/// {@endtemplate}
 class ReactterProviders extends StatelessWidget
     implements ReactterWrapperWidget {
+  /// {@macro reactter_providers}
+  const ReactterProviders(
+    this.providers, {
+    Key? key,
+    this.child,
+    this.builder,
+  })  : assert(child != null || builder != null),
+        super(key: key);
+
   final List<ReactterProviderAbstraction> providers;
 
   /// Provides a widget , which render one time.
@@ -61,14 +76,6 @@ class ReactterProviders extends StatelessWidget
   /// Exposes [BuilderContext] and [child] widget as parameters.
   /// and returns a widget.
   final TransitionBuilder? builder;
-
-  const ReactterProviders(
-    this.providers, {
-    Key? key,
-    this.child,
-    this.builder,
-  })  : assert(child != null || builder != null),
-        super(key: key);
 
   @override
   Widget build(BuildContext context) {

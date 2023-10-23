@@ -24,7 +24,7 @@ class TodoController {
     ),
   );
 
-  late final todoListFiltered = Reactter.lazy(
+  late final todoListFiltered = Reactter.lazyState(
     () => UseCompute(
       () => getTodosBy(state.value.filterBy),
       [state],
@@ -32,7 +32,7 @@ class TodoController {
     this,
   );
 
-  late final todoActiveCount = Reactter.lazy(
+  late final todoActiveCount = Reactter.lazyState(
     () => UseCompute(
       () => state.value.todoList.fold<int>(
         0,

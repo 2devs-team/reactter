@@ -6,13 +6,19 @@ class ApiController {
   String _query = '';
   String get query => _query;
 
-  final entity = UseAsyncState.withArgs(
+  final entityState = UseAsyncState.withArg(
     null,
-    Reactter.memo(ApiService().getEntity.ary),
+    Memo.inline<Future<Object?>, Args1<String>>(
+      ApiService().getEntity.ary,
+      const MemoInterceptors([
+        AsyncMemoSafe(),
+        TemporaryCacheMemo(Duration(seconds: 30)),
+      ]),
+    ),
   );
 
   void search(String query) {
     _query = query;
-    entity.resolve(Args1(query));
+    entityState.resolve(Args1(query));
   }
 }

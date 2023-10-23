@@ -12,7 +12,7 @@ abstract class ReactterEventManager {
 
   /// Puts on to listen [eventName] event.
   ///
-  /// When the event is [emit]ted, the [callback] is called.
+  /// When the event is emitted(by [emit]), the [callback] is called.
   void on<T, P>(
     Object? instance,
     Enum eventName,
@@ -31,7 +31,7 @@ abstract class ReactterEventManager {
 
   /// Puts on to listen [eventName] event only once.
   ///
-  /// When the event is [emit]ted, the [callback] is called
+  /// When the event is emitted(by [emit]), the [callback] is called
   /// and after removes event.
   void one<T, P>(
     Object? instance,
@@ -53,7 +53,7 @@ abstract class ReactterEventManager {
     on<T, P>(instance, eventName, _oneCallback);
   }
 
-  /// Removes the [callback] of event.
+  /// Removes the [callback] of [eventName].
   void off<T, P>(
     Object? instance,
     Enum eventName,

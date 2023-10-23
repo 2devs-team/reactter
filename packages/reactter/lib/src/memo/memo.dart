@@ -1,5 +1,6 @@
 part of '../memo.dart';
 
+/// {@template memo}
 /// A class callable that is used for memoizing values([T])
 /// returned by a calcutate function([calculateValue]).
 ///
@@ -32,7 +33,7 @@ part of '../memo.dart';
 ///   );
 /// }
 /// ```
-///
+/// {@endtemplate}
 class Memo<T, A> {
   // Stores memoized values, where the keys are hashCode
   // and the values are of type [T].
@@ -45,6 +46,7 @@ class Memo<T, A> {
   /// and handle various events during the memoization process.
   final MemoInterceptor<T, A>? _interceptor;
 
+  /// {@macro memo}
   Memo(
     FunctionArg<T, A> computeValue, [
     MemoInterceptor<T, A>? interceptor,

@@ -16,8 +16,9 @@ abstract class ReactterProviderAbstraction<T extends Object>
   ReactterProviderElement createElement();
 }
 
-/// A [StatelessWidget] that provides a [T] instance
-/// to widget tree that can be access through the methods [BuildContext] extension.
+/// {@template reactter_provider}
+/// A [StatelessWidget] that provides an instance of [T] type to widget tree
+/// that can be access through the methods [BuildContext] extension.
 ///
 ///```dart
 /// ReactterProvider<AppController>(
@@ -31,7 +32,8 @@ abstract class ReactterProviderAbstraction<T extends Object>
 /// Use [id] property to identify the [T] instance.
 ///
 /// Use [child] property to pass a [Widget] which to be built once only.
-/// It will be sent through the [builder] callback, so you can incorporate it into your build:
+/// It will be sent through the [builder] callback, so you can incorporate it
+/// into your build:
 ///
 ///```dart
 /// ReactterProvider<AppController>(
@@ -54,43 +56,62 @@ abstract class ReactterProviderAbstraction<T extends Object>
 ///
 /// > **NOTE:**
 /// > [ReactterProvider] is a "scoped". This mean that [ReactterProvider]
-/// exposes the [T] instance defined on first parameter([InstanceContextBuilder])
+/// exposes the instance of [T] type defined on first parameter([InstanceContextBuilder])
 /// through the [BuildContext] in the widget subtree:
+/// >
+/// >```dart
+/// > ReactterProvider<AppController>(
+/// >   () => AppController(),
+/// >   builder: (appController, context, child) {
+/// >     return OtherWidget();
+/// >   }
+/// > );
+/// >
+/// > class OtherWidget extends StatelessWidget {
+/// >   ...
+/// >   Widget build(context) {
+/// >      final appController = context.use<AppController>();
+/// >
+/// >      return Column(
+/// >       children: [
+/// >         Text("StateA: ${appController.stateA.value}"),
+/// >         Builder(
+/// >           builder: (context){
+/// >             context.watch<AppController>((inst) => [inst.stateB]);
+/// >
+/// >             return Text("StateB: ${appController.stateB.value}");
+/// >           },
+/// >         ),
+/// >       ],
+/// >     );
+/// >   }
+/// > }
+/// >```
+/// >
+/// > In the above example, stateA remains static while the [Builder] is rebuilt
+/// > according to the changes in stateB. Because the [Builder]'s context kept in
+/// > watch of stateB.
 ///
-///```dart
-/// ReactterProvider<AppController>(
-///   () => AppController(),
-///   builder: (appController, context, child) {
-///     return OtherWidget();
-///   }
-/// );
+/// See also:
 ///
-/// class OtherWidget extends StatelessWidget {
-///   ...
-///   Widget build(context) {
-///      final appController = context.use<AppController>();
-///
-///      return Column(
-///       children: [
-///         Text("StateA: ${appController.stateA.value}"),
-///         Builder(
-///           builder: (context){
-///             context.watch<AppController>((inst) => [inst.stateB]);
-///
-///             return Text("StateB: ${appController.stateB.value}");
-///           },
-///         ),
-///       ],
-///     );
-///   }
-/// }
-///```
-///
-/// In the above example, stateA remains static while the [Builder] is rebuilt
-/// according to the changes in stateB. Because the [Builder]'s context kept in
-/// watch of stateB.
-///
+/// * [ReactterProvider], a widget that allows to use multiple [ReactterProvider].
+/// > {@endtemplate}
 class ReactterProvider<T extends Object> extends ReactterProviderAbstraction {
+  /// {@macro reactter_provider}
+  const ReactterProvider(
+    this.instanceBuilder, {
+    Key? key,
+    this.id,
+    this.mode = InstanceManageMode.builder,
+    this.init = false,
+    Widget? child,
+    this.builder,
+  }) : super(
+          key: key,
+          // `child` is required because the super class is a InheritedWidget.
+          child: child ?? const _UndefinedWidget(),
+        );
+
   /// It's used to identify the instance of [T] type
   /// that is provided by the provider.
   ///
@@ -122,20 +143,6 @@ class ReactterProvider<T extends Object> extends ReactterProviderAbstraction {
   /// and returns a widget.
   @protected
   final InstanceContextBuilder<T>? builder;
-
-  const ReactterProvider(
-    this.instanceBuilder, {
-    Key? key,
-    this.id,
-    this.mode = InstanceManageMode.builder,
-    this.init = false,
-    Widget? child,
-    this.builder,
-  }) : super(
-          key: key,
-          // `child` is required because the super class is a InheritedWidget.
-          child: child ?? const _UndefinedWidget(),
-        );
 
   Widget build(BuildContext context) {
     return _buildWithChild(child is _UndefinedWidget ? null : child);

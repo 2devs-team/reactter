@@ -104,6 +104,7 @@ abstract class UseAsyncStateBase<T> extends ReactterHook {
   }
 }
 
+/// {@template use_async_state}
 /// A [ReactteHook] that manages the state as async way.
 ///
 /// [T] is use to define the type of [value].
@@ -153,12 +154,15 @@ abstract class UseAsyncStateBase<T> extends ReactterHook {
 /// See also:
 ///
 /// * [UseAsyncStateArg], the same as it, but with arguments.
+/// {@endtemplate}
 class UseAsyncState<T> extends UseAsyncStateBase<T> {
+  /// {@macro use_async_state}
   UseAsyncState(
     T initialValue,
     AsyncFunction<T> asyncFunction,
   ) : super(initialValue, asyncFunction);
 
+  /// {@macro use_async_state_arg}
   static UseAsyncStateArg<T, A> withArg<T, A>(
     T initialValue,
     AsyncFunctionArg<T, A> asyncFunction,
@@ -172,6 +176,7 @@ class UseAsyncState<T> extends UseAsyncStateBase<T> {
   }
 }
 
+/// {@template use_async_state_arg}
 /// A [ReactteHook] that manages the state as async way.
 ///
 /// [T] is use to define the type of [value]
@@ -222,7 +227,9 @@ class UseAsyncState<T> extends UseAsyncStateBase<T> {
 ///
 /// * [UseAsyncState], the same as it, but without arguments.
 /// * [Args], a generic arguments.
+/// {@endtemplate}
 class UseAsyncStateArg<T, A> extends UseAsyncStateBase<T> {
+  /// {@macro use_async_state_arg}
   UseAsyncStateArg(
     T initialValue,
     AsyncFunctionArg<T, A> asyncFunction,

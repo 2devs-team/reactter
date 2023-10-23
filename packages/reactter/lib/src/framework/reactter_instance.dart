@@ -46,11 +46,12 @@ extension InstanceManageModeExt on InstanceManageMode {
   String get label => '$this'.split('.').last;
 }
 
-/// A singleton instance of [T]
+/// A generic class that represents an instance of a Reactter object and
+/// provides methods for generating unique keys and retrieving the stored instance.
 class ReactterInstance<T> {
   final String? id;
 
-  ReactterInstance([this.id]);
+  const ReactterInstance([this.id]);
 
   /// A getter that returns the instance of [T].
   T? get instance => _stored?.instance;
@@ -85,10 +86,10 @@ class ReactterInstance<T> {
 }
 
 class _ReactterInstanceBuilder<T> extends ReactterInstance<T> {
-  InstanceBuilder<T?> builder;
+  final InstanceBuilder<T?> builder;
 
   /// It's used to store the mode of managing an instance.
-  InstanceManageMode mode;
+  final InstanceManageMode mode;
 
   /// Stores the refs where the instance was created.
   final refs = HashSet<int>();

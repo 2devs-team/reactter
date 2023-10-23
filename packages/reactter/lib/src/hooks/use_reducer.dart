@@ -1,5 +1,6 @@
 part of '../hooks.dart';
 
+/// {@template reactter_action}
 /// A representation of an event that describes something
 /// that happened in the application.
 ///
@@ -31,6 +32,7 @@ part of '../hooks.dart';
 /// See also:
 ///
 /// * [UseReducer], a [ReactterHook] that manages state using [reducer] method.
+/// {@endtemplate}
 class ReactterAction<T> {
   // Provides this action a name that is descriptive.
   final String type;
@@ -38,6 +40,7 @@ class ReactterAction<T> {
   // additional information about what happened
   final T payload;
 
+  /// {@macro reactter_action}
   const ReactterAction({
     required this.type,
     required this.payload,
@@ -94,6 +97,7 @@ abstract class ReactterActionCallable<T, P> extends ReactterAction<P> {
   T call(T state);
 }
 
+//// {@template use_reducer}
 /// A [ReactterHook] that manages state using [reducer] method.
 ///
 /// [UseReducer] accepts a [reducer] method
@@ -138,7 +142,7 @@ abstract class ReactterActionCallable<T, P> extends ReactterAction<P> {
 ///   }
 /// }
 /// ```
-///
+/// {@endtemplate}
 class UseReducer<T> extends ReactterHook {
   @protected
   @override
@@ -151,6 +155,7 @@ class UseReducer<T> extends ReactterHook {
 
   T get value => _state.value;
 
+  /// {@macro use_reducer}
   UseReducer(
     this.reducer,
     T initialState,

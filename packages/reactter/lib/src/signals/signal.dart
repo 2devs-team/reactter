@@ -4,6 +4,7 @@ part of '../signals.dart';
 /// getting or setting the value of a `Signal` object.
 enum SignalEvent { onGetValue, onSetValue }
 
+/// {@template signal}
 /// A base-class that store a value of [T] and notify the listeners
 /// when the value is updated.
 ///
@@ -78,11 +79,13 @@ enum SignalEvent { onGetValue, onSetValue }
 /// See also:
 ///
 /// * [Obj], a base-class that can be used to store a value of [T].
+/// {@endtemplate}
 class Signal<T> extends ReactterStateImpl
     with ObjBase<T>
     implements ReactterState, Obj<T> {
   T _value;
 
+  /// {@macro signal}
   Signal(T value) : _value = value;
 
   bool _shouldGetValueNotify = true;

@@ -19,23 +19,23 @@ part of '../framework.dart';
 ///   void toggle() => _state.value = !_state.value;
 /// }
 /// ```
-/// > **IMPORTANT**: All [ReactterHook] must be registered using the final [$] variable.
+/// > **IMPORTANT**: All [ReactterHook] must be registered using the final [$] variable.:
 ///
-/// and use it like this:
+/// and use it, like so:
 ///
-///```dart
-/// class AppController {
-///   final state = UseToggle(false);
-///
-///   UserContext() {
-///     print('initial value: ${state.value}');
-///
-///     state.toggle();
-///
-///     print('toggle value: ${state.value}');
-///   }
-/// }
-/// ```
+/// >```dart
+/// > class AppController {
+/// >   final state = UseToggle(false);
+/// >
+/// >   UserContext() {
+/// >     print('initial value: ${state.value}');
+/// >
+/// >     state.toggle();
+/// >
+/// >     print('toggle value: ${state.value}');
+/// >   }
+/// > }
+/// > ```
 ///
 /// See also:
 ///

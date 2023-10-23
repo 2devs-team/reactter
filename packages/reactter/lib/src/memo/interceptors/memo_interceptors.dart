@@ -1,10 +1,12 @@
 part of '../../memo.dart';
 
+/// {@template memo_interceptors}
 /// It allows multiple memoization interceptors to be used together.
+/// {@endtemplate}
 class MemoInterceptors<T, A> extends MemoInterceptor<T, A> {
   final List<MemoInterceptor<T, A>> interceptors;
 
-  /// It allows multiple memoization interceptors to be used together.
+  /// {@macro memo_interceptors}
   const MemoInterceptors(this.interceptors);
 
   @override

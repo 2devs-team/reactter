@@ -1,5 +1,6 @@
 part of '../hooks.dart';
 
+/// {@template use_instance}
 /// A [ReactterHook] that allows to manages an instance of [T] with/without [id].
 ///
 /// ```dart
@@ -67,7 +68,7 @@ part of '../hooks.dart';
 /// See also:
 /// * [ReactterInstanceManager], a instances manager.
 /// * [UseEffect], a side-effect manager.
-
+/// {@endtemplate}
 class UseInstance<T extends Object> extends ReactterHook {
   @protected
   @override
@@ -100,6 +101,7 @@ class UseInstance<T extends Object> extends ReactterHook {
   /// It's used to identify the instance of [T] type.
   final String? id;
 
+  /// {@macro use_instance}
   UseInstance([this.id]) {
     _instance = Reactter.find<T>(id);
     _listen();

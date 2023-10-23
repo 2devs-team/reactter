@@ -2,13 +2,15 @@ part of '../extensions.dart';
 
 /// Exposes methods to helps to get and listen the Object instance.
 extension ReactterBuildContextExtension on BuildContext {
-  /// Gets the [T] instance from the closest ancestor of [ReactterProvider]
-  /// and watches instance changes or [ReactterState] defined
-  /// in first paramater([listenStates]) to re-render the Widget tree.
+  /// Gets the instance of [T] type from the closest ancestor of [ReactterProvider]
+  /// and listens changes to the instance or the states([ReactterState]) defined
+  /// in first parameter([listenStates]) to trigger re-render of the Widget tree.
   ///
   /// ```dart
   /// final appController = context.watch<AppController>();
-  /// final appControllerWatchState = context.watch<AppController>((inst) => [inst.stateA]);
+  /// final appControllerWatchStates = context.watch<AppController>(
+  ///   (inst) => [inst.stateA],
+  /// );
   /// final appControllerNullable = context.wath<AppController?>();
   /// ```
   ///
@@ -27,13 +29,17 @@ extension ReactterBuildContextExtension on BuildContext {
     return ReactterProvider.contextOf<T>(this, listenStates: listenStates);
   }
 
-  /// Gets the [T] instance by [id] from the closest ancestor of [ReactterProvider]
-  /// and watches instance changes or [ReactterState] defined
-  /// in second paramater([listenStates]) to re-render the Widget tree.
+  /// Gets the instance of [T] type by [id] from the closest ancestor
+  /// of [ReactterProvider] and watchs changes to the instance or
+  /// the states([ReactterState]) defined in first parameter([listenStates])
+  /// to trigger re-render of the Widget tree.
   ///
   /// ```dart
   /// final appController = context.watchId<AppController>("UniqueId");
-  /// final appControllerWatchHook = context.watchId<AppController>("UniqueId", (inst) => [inst.stateA]);
+  /// final appControllerWatchHook = context.watchId<AppController>(
+  ///   "UniqueId",
+  ///   (inst) => [inst.stateA],
+  /// );
   /// final appControllerNullable = context.wathId<AppController?>("UniqueId");
   /// ```
   ///
@@ -59,7 +65,7 @@ extension ReactterBuildContextExtension on BuildContext {
     );
   }
 
-  /// Gets the [T] instance with/without [id]
+  /// Gets the instance of [T] type with/without [id]
   /// from the closest ancestor of [ReactterProvider].
   ///
   /// ```dart
@@ -87,7 +93,7 @@ extension ReactterBuildContextExtension on BuildContext {
 /// The error that will be thrown if [ReactterProvider.contextOf] fails
 /// to find the instance from ancestor of the [BuildContext] used.
 class ReactterInstanceNotFoundException implements Exception {
-  ReactterInstanceNotFoundException(
+  const ReactterInstanceNotFoundException(
     this.valueType,
     this.widgetType,
   );

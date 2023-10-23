@@ -62,7 +62,7 @@ final items = [
     "Search user or repository and show info about it.",
     [
       "Generic arguments",
-      "Reactter.memo",
+      "Memo",
       "ReactterConsumer",
       "ReactterProvider",
       "UseAsyncState",

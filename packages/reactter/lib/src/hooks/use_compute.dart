@@ -1,5 +1,6 @@
 part of '../hooks.dart';
 
+/// {@template use_compute}
 /// A [ReactterHook] that allows to compute a value
 /// using a predetermined [compute] function and a list of state [dependencies],
 /// and which automatically updates the computed [value] if a dependency changes.
@@ -31,7 +32,7 @@ part of '../hooks.dart';
 ///   }
 /// }
 /// ```
-///
+/// {@endtemplate}
 class UseCompute<T> extends ReactterHook {
   @protected
   @override
@@ -43,6 +44,7 @@ class UseCompute<T> extends ReactterHook {
 
   T get value => _valueComputed;
 
+  /// {@macro use_compute}
   UseCompute(
     this.compute,
     this.dependencies,
