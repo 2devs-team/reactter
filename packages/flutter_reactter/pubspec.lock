@@ -169,10 +169,10 @@ packages:
     dependency: "direct main"
     description:
       name: reactter
-      sha256: aae3bd82ba1f91860d46e45766ab83d456967f323477779f8073502c39f5b8ed
+      sha256: "3879fdd223110e2f0b21c3f73f43da3155c9e885084c23a2747e3391c2b569e4"
       url: "https://pub.dev"
     source: hosted
-    version: "6.0.1"
+    version: "6.0.2"
   sky_engine:
     dependency: transitive
     description: flutter
