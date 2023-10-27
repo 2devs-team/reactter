@@ -1,5 +1,11 @@
 # Reactter
 
+## 6.0.1
+
+### Fixes
+
+- **fix(signal):** Add missing getters to Signal of list type.
+
 ## 6.0.0
 
 ### Enhancements
