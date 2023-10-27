@@ -17,6 +17,13 @@ extension SignalListExt<E> on Signal<List<E>> {
   void operator []=(int index, E valueToSet) =>
       update((_) => value[index] = valueToSet);
 
+  /// Returns the first element.
+  ///
+  /// Throws a [StateError] if `this` is empty.
+  /// Otherwise returns the first element in the iteration order,
+  /// equivalent to `this.elementAt(0)`.
+  E get first => value.first;
+
   /// The first element of the list.
   ///
   /// The list must be non-empty when accessing its first element.
@@ -35,6 +42,16 @@ extension SignalListExt<E> on Signal<List<E>> {
   /// ```
   set first(E valueToSet) => update((_) => value.first = valueToSet);
 
+  /// Returns the last element.
+  ///
+  /// Throws a [StateError] if `this` is empty.
+  /// Otherwise may iterate through the elements and returns the last one
+  /// seen.
+  /// Some iterables may have more efficient ways to find the last element
+  /// (for example a list can directly access the last element,
+  /// without iterating through the previous ones).
+  E get last => value.last;
+
   /// The last element of the list.
   ///
   /// The list must be non-empty when accessing its last element.
@@ -52,6 +69,15 @@ extension SignalListExt<E> on Signal<List<E>> {
   /// numbers.last; // Throws.
   /// ```
   set last(E valueToSet) => update((_) => value.last = valueToSet);
+
+  /// The number of objects in this list.
+  ///
+  /// The valid indices for a list are `0` through `length - 1`.
+  /// ```dart
+  /// final numbers = <int>[1, 2, 3];
+  /// print(numbers.length); // 3
+  /// ```
+  int get length => value.length;
 
   /// Setting the `length` changes the number of elements in the list.
   ///
@@ -397,27 +423,6 @@ extension SignalListNullExt<E> on Signal<List<E>?> {
   void operator []=(int index, E valueToSet) {
     if (value == null) return;
     update((_) => value?[index] = valueToSet);
-  }
-
-  /// The first element of the list.
-  ///
-  /// The list must be non-empty when accessing its first element.
-  ///
-  /// The first element of a list can be modified, unlike an [Iterable].
-  /// A `list.first` is equivalent to `list[0]`,
-  /// both for getting and setting the value.
-  ///
-  /// ```dart
-  /// final numbers = <int>[1, 2, 3];
-  /// print(numbers.first); // 1
-  /// numbers.first = 10;
-  /// print(numbers.first); // 10
-  /// numbers.clear();
-  /// numbers.first; // Throws.
-  /// ```
-  set first(E valueToSet) {
-    if (value == null) return;
-    update((_) => value?.first = valueToSet);
   }
 
   /// The last element of the list.
