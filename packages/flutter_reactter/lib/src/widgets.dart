@@ -9,6 +9,7 @@ import 'package:reactter/reactter.dart' hide Reactter;
 
 import 'framework.dart';
 
+part 'widgets/reactter_scope.dart';
 part 'widgets/reactter_component.dart';
 part 'widgets/reactter_consumer.dart';
 part 'widgets/reactter_provider.dart';

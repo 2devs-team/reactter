@@ -188,6 +188,17 @@ class ReactterProvider<T extends Object> extends Widget
     ListenStates<T>? listenStates,
     bool listen = true,
   }) {
+    if (T == getType<Object?>()) {
+      ReactterScope.contextOf(
+        context,
+        id: id,
+        listenStates: listenStates as ListenStates<Object?>?,
+        listen: listen,
+      );
+
+      return null as T;
+    }
+
     final providerInheritedElement =
         _getProviderInheritedElement<T>(context, id);
 
