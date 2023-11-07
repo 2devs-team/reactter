@@ -15,3 +15,6 @@ typedef InstanceContextBuilder<T> = Widget Function(
   BuildContext context,
   Widget? child,
 );
+
+typedef WatchState = S Function<S extends ReactterState>(S state);
+typedef SelectComputeValue<T, R> = R Function(T, WatchState);
