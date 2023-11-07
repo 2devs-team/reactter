@@ -54,7 +54,7 @@ part of '../widgets.dart';
 /// * [ReactterProvider], a widget that provides an instance type to widget tree.
 /// {@endtemplate}
 class ReactterProviders extends StatelessWidget
-    implements ReactterWrapperWidget {
+    implements ReactterProviderWrapper {
   /// {@macro reactter_providers}
   const ReactterProviders(
     this.providers, {
@@ -64,7 +64,7 @@ class ReactterProviders extends StatelessWidget
   })  : assert(child != null || builder != null),
         super(key: key);
 
-  final List<ReactterProviderAbstraction> providers;
+  final List<ReactterProviderWrapper> providers;
 
   /// Provides a widget , which render one time.
   ///

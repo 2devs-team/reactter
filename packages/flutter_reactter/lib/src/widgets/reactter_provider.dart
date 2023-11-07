@@ -2,19 +2,14 @@
 
 part of '../widgets.dart';
 
-/// An abstract class that extends [InheritedWidget] and implements
-/// [ReactterWrapperWidget].
 @internal
-abstract class ReactterProviderAbstraction<T extends Object>
-    extends InheritedWidget implements ReactterWrapperWidget {
-  const ReactterProviderAbstraction({
-    Key? key,
-    required Widget child,
-  }) : super(key: key, child: child);
+abstract class ReactterProviderWrapper implements ReactterWrapperWidget {}
 
-  @override
-  ReactterProviderElement createElement();
-}
+abstract class _ReactterProvider<T extends Object?>
+    implements InheritedWidget {}
+
+abstract class _ReactterProviderWithId<T extends Object?>
+    implements InheritedWidget {}
 
 /// {@template reactter_provider}
 /// A [StatelessWidget] that provides an instance of [T] type to widget tree
@@ -96,22 +91,8 @@ abstract class ReactterProviderAbstraction<T extends Object>
 ///
 /// * [ReactterProvider], a widget that allows to use multiple [ReactterProvider].
 /// > {@endtemplate}
-class ReactterProvider<T extends Object> extends ReactterProviderAbstraction {
-  /// {@macro reactter_provider}
-  const ReactterProvider(
-    this.instanceBuilder, {
-    Key? key,
-    this.id,
-    this.mode = InstanceManageMode.builder,
-    this.init = false,
-    Widget? child,
-    this.builder,
-  }) : super(
-          key: key,
-          // `child` is required because the super class is a InheritedWidget.
-          child: child ?? const _UndefinedWidget(),
-        );
-
+class ReactterProvider<T extends Object> extends Widget
+    implements ReactterProviderWrapper, _ReactterProvider<T> {
   /// It's used to identify the instance of [T] type
   /// that is provided by the provider.
   ///
@@ -144,12 +125,27 @@ class ReactterProvider<T extends Object> extends ReactterProviderAbstraction {
   @protected
   final InstanceContextBuilder<T>? builder;
 
-  Widget build(BuildContext context) {
-    return _buildWithChild(child is _UndefinedWidget ? null : child);
-  }
+  final Widget? _child;
+
+  final Type _type;
+
+  /// {@macro reactter_provider}
+  ReactterProvider(
+    this.instanceBuilder, {
+    Key? key,
+    this.id,
+    this.mode = InstanceManageMode.builder,
+    this.init = false,
+    Widget? child,
+    this.builder,
+  })  : _child = child,
+        _type = (id == null
+            ? getType<_ReactterProvider<T>>()
+            : getType<_ReactterProviderWithId<T>>()),
+        super(key: key);
 
   @override
-  ReactterProviderElement createElement() {
+  ReactterProviderElement<T> createElement() {
     return ReactterProviderElement<T>(
       widget: this,
       id: id,
@@ -157,25 +153,17 @@ class ReactterProvider<T extends Object> extends ReactterProviderAbstraction {
     );
   }
 
-  /// This is a hack to save it and find it with the `id` distinction
-  /// in `_inheritedWidgets` of `Element` using the helper functions
-  /// of `BuildContext` like `getElementForInheritedWidgetOfExactType`.
   @override
-  Type get runtimeType {
-    Type getType<TT>() => TT;
+  bool updateShouldNotify(covariant InheritedWidget oldWidget) => false;
 
-    if (id != null) {
-      return getType<_ReactterProviderKey<T, String>>();
-    }
+  @override
+  Type get runtimeType => _type;
 
-    return getType<_ReactterProviderKey<T, Null>>();
-  }
-
-  /// A [build] method that receives an extra `child` parameter.
+  /// A [build] method that receives an extra [child] parameter.
   ///
-  /// This method may be called with a `child` different from the parameter
+  /// This method may be called with a [child] different from the parameter
   /// passed to the constructor of [SingleChildStatelessWidget].
-  /// It may also be called again with a different `child`, without this widget
+  /// It may also be called again with a different [child], without this widget
   /// being recreated.
   Widget _buildWithChild(Widget? child) {
     return Builder(
@@ -188,6 +176,9 @@ class ReactterProvider<T extends Object> extends ReactterProviderAbstraction {
       },
     );
   }
+
+  @override
+  Widget get child => _buildWithChild(_child);
 
   /// Returns an instance of [T]
   /// and sets the `BuildContext` to listen for when it should be re-rendered.
@@ -236,32 +227,29 @@ class ReactterProvider<T extends Object> extends ReactterProviderAbstraction {
     if (id != null) {
       final inheritedElementNotSure =
           context.getElementForInheritedWidgetOfExactType<
-              _ReactterProviderKey<T, String>>() as ReactterProviderElement<T>?;
+              _ReactterProviderWithId<T>>() as ReactterProviderElement<T>?;
 
       return inheritedElementNotSure?.getInheritedElementOfExactId(id);
     }
 
     // To find it without id, is O(1) complexity
-    return context.getElementForInheritedWidgetOfExactType<
-        _ReactterProviderKey<T, Null>>() as ReactterProviderElement<T>?;
-  }
-
-  @override
-  bool updateShouldNotify(covariant InheritedWidget oldWidget) {
-    return false;
+    return context
+            .getElementForInheritedWidgetOfExactType<_ReactterProvider<T>>()
+        as ReactterProviderElement<T>?;
   }
 }
 
-/// `ReactterProviderElement` is a class that manages the lifecycle of the `ReactterInstance` and
-/// provides the `ReactterInstance` to its descendants
+/// [ReactterProviderElement] is a class that manages the lifecycle of the [ReactterInstance] and
+/// provides the [ReactterInstance] to its descendants
 @internal
 class ReactterProviderElement<T extends Object?> extends InheritedElement
     with ReactterWrapperElementMixin, ReactterScopeElementMixin {
   final String? _id;
   final InstanceManageMode mode;
-  Widget? _widget;
+  Widget? child;
   bool _isRoot = false;
-  Map<String, ReactterProviderElement<T>>? _inheritedElementsWithId;
+  HashMap<ReactterInstance, ReactterProviderElement<T>>?
+      _inheritedElementsWithId;
 
   @override
   ReactterProvider get widget => super.widget as ReactterProvider;
@@ -322,41 +310,41 @@ class ReactterProviderElement<T extends Object?> extends InheritedElement
     _updateInheritedElementWithId(parent);
 
     if (_isRoot) {
-      Reactter.emit(_instance, Lifecycle.willMount);
+      Reactter.emit(_instance!, Lifecycle.willMount);
     }
 
     super.mount(parent, newSlot);
 
     if (_isRoot) {
-      Reactter.emit(_instance, Lifecycle.didMount);
+      Reactter.emit(_instance!, Lifecycle.didMount);
     }
   }
 
   @override
   Widget build() {
-    if (instanceOrStatesDirty.isNotEmpty) {
+    if (hasDependenciesDirty) {
       notifyClients(widget);
 
-      return _widget!;
+      if (child != null) return child!;
     }
 
     if (parent != null) {
-      return _widget = widget._buildWithChild(parent?.injectedChild);
+      return child = widget._buildWithChild(parent?.injectedChild);
     }
 
-    return _widget = widget.build(this);
+    return child = super.build();
   }
 
   @override
   void unmount() {
     if (_isRoot) {
-      Reactter.emit(_instance, Lifecycle.willUnmount);
+      Reactter.emit(_instance!, Lifecycle.willUnmount);
     }
 
     Reactter.delete<T>(_id, this);
 
     _inheritedElementsWithId = null;
-    _widget = null;
+    child = null;
 
     return super.unmount();
   }
@@ -365,7 +353,7 @@ class ReactterProviderElement<T extends Object?> extends InheritedElement
   ReactterProviderElement<T>? getInheritedElementOfExactId(
     String id,
   ) =>
-      _inheritedElementsWithId?[ReactterInstance.generateKey<T?>(id)];
+      _inheritedElementsWithId?[ReactterInstance<T?>(id)];
 
   /// updates [inheritedElementsWithId]
   /// with all ancestor [ReactterProviderElement] with id
@@ -374,36 +362,87 @@ class ReactterProviderElement<T extends Object?> extends InheritedElement
 
     var ancestorInheritedElement =
         parent?.getElementForInheritedWidgetOfExactType<
-            _ReactterProviderKey<T, String>>() as ReactterProviderElement<T>?;
+            _ReactterProviderWithId<T>>() as ReactterProviderElement<T>?;
 
     if (ancestorInheritedElement?._inheritedElementsWithId != null) {
-      _inheritedElementsWithId = HashMap<String, ReactterProviderElement<T>>.of(
+      _inheritedElementsWithId =
+          HashMap<ReactterInstance, ReactterProviderElement<T>>.of(
         ancestorInheritedElement!._inheritedElementsWithId!,
       );
     } else {
-      _inheritedElementsWithId = HashMap<String, ReactterProviderElement<T>>();
+      _inheritedElementsWithId =
+          HashMap<ReactterInstance, ReactterProviderElement<T>>();
     }
 
-    final instanceKey = ReactterInstance.generateKey<T?>(widget.id);
-    _inheritedElementsWithId![instanceKey] = this;
+    _inheritedElementsWithId![ReactterInstance<T?>(widget.id)] = this;
   }
 }
 
-abstract class _ReactterProviderKey<T extends Object?, Id extends String?>
-    extends InheritedWidget {
-  // coverage:ignore-start
-  const _ReactterProviderKey({Key? key})
-      : super(key: key, child: const _UndefinedWidget());
-  // coverage:ignore-end
-}
+/// The error that will be thrown if [ReactterProvider.contextOf] fails
+/// to find the instance from ancestor of the [BuildContext] used.
+class ReactterInstanceNotFoundException implements Exception {
+  const ReactterInstanceNotFoundException(
+    this.valueType,
+    this.widgetType,
+  );
 
-class _UndefinedWidget extends Widget {
-  const _UndefinedWidget({Key? key}) : super(key: key);
+  /// The type of the value being retrieved
+  final Type valueType;
 
-  // coverage:ignore-start
+  /// The type of the Widget requesting the value
+  final Type widgetType;
+
   @override
-  Element createElement() {
-    throw UnimplementedError();
+  String toString() {
+    return '''
+Error: Could not find the correct `ReactterProvider<$valueType>` above this `$widgetType` Widget
+
+This happens because you used a `BuildContext` that does not include the instance of your choice.
+There are a few common scenarios:
+
+- You added a new `ReactterProvider` in your `main.dart` and perform a hot-restart.
+
+- The instance you are trying to read is in a different route.
+
+  `ReactterProvider` is a "scoped". So if you insert of `ReactterProvider` inside a route, then
+  other routes will not be able to access that instance.
+
+- You used a `BuildContext` that is an ancestor of the `ReactterProvider` you are trying to read.
+
+  Make sure that `$widgetType` is under your `ReactterProvider<$valueType>`.
+  This usually happens when you are creating a instance and trying to read it immediately.
+
+  For example, instead of:
+
+  ```
+  Widget build(BuildContext context) {
+    return ReactterProvider(
+      () => AppController(),
+      // Will throw a `ReactterInstanceNotFoundException`,
+      // because `context` is out of `ReactterProvider`'s scope.
+      child: Text(context.watch<AppController>().state.value),
+    ),
   }
-  // coverage:ignore-end
+  ```
+
+  Try to use `builder` propery of `ReactterProvider` to access the instance inmedately as it created, like so:
+
+  ```
+  Widget build(BuildContext context) {
+    return ReactterProvider(
+      () => AppController(),
+      // we use `builder` to obtain a new `BuildContext` that has access to the provider
+      builder: (appController, context, child) {
+        // No longer throws
+        context.watch<AppController>();
+        return Text(appController.state.value),
+      }
+    ),
+  }
+  ```
+
+If none of these solutions work, consider asking for help on StackOverflow:
+https://stackoverflow.com/questions/tagged/flutter
+''';
+  }
 }
