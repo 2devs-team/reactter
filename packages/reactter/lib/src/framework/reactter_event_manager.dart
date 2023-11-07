@@ -5,10 +5,7 @@ part of '../framework.dart';
 /// It contains methods for adding, removing, and triggering events,
 /// as well as storing event callbacks.
 abstract class ReactterEventManager {
-  /// Event's store.
-  HashMap<String, List<String>> _instanceEvents = HashMap();
-  HashMap<String, HashSet<Function>> _events = HashMap();
-  HashMap<String, Function> _oneCallbacks = HashMap();
+  final _notifiers = HashSet<ReactterNotifier>();
 
   /// Puts on to listen [eventName] event.
   ///
@@ -18,15 +15,10 @@ abstract class ReactterEventManager {
     Enum eventName,
     CallbackEvent<T, P> callback,
   ) {
-    final _instanceEventKey = _getInstanceEventKey(instance, eventName);
-    final _instanceKey = _instanceEventKey.first;
-    final _eventKey = _instanceEventKey.last;
-
-    _instanceEvents[_instanceKey] ??= [];
-    _instanceEvents[_instanceKey]?.add(_eventKey);
-
-    _events[_eventKey] ??= HashSet();
-    _events[_eventKey]?.add(callback);
+    var notifier = ReactterNotifier(instance, eventName);
+    notifier = _notifiers.lookup(notifier) ?? notifier;
+    notifier.addListener(callback);
+    _notifiers.add(notifier);
   }
 
   /// Puts on to listen [eventName] event only once.
@@ -38,19 +30,10 @@ abstract class ReactterEventManager {
     Enum eventName,
     CallbackEvent<T, P> callback,
   ) {
-    final _instanceEventKey =
-        _getInstanceEventKey(instance, eventName, callback);
-    final _eventOneKey = _instanceEventKey.last;
-
-    void _oneCallback(inst, param) {
-      callback(inst, param);
-
-      _oneOff<T, P>(instance, eventName, callback);
-    }
-
-    _oneCallbacks[_eventOneKey] ??= _oneCallback;
-
-    on<T, P>(instance, eventName, _oneCallback);
+    var notifier = ReactterNotifier(instance, eventName);
+    notifier = _notifiers.lookup(notifier) ?? notifier;
+    notifier.addListener(callback, true);
+    _notifiers.add(notifier);
   }
 
   /// Removes the [callback] of [eventName].
@@ -59,25 +42,12 @@ abstract class ReactterEventManager {
     Enum eventName,
     CallbackEvent<T, P> callback,
   ) {
-    _oneOff<T, P>(instance, eventName, callback);
+    final notifier = _notifiers.lookup(ReactterNotifier(instance, eventName));
+    notifier?.removeListener(callback);
 
-    final _instanceEventKey = _getInstanceEventKey(instance, eventName);
-    final _instanceKey = _instanceEventKey.first;
-    final _eventKey = _instanceEventKey.last;
-
-    if (!(_events[_eventKey]?.contains(callback) ?? false)) {
-      return;
-    }
-
-    _events[_eventKey]?.remove(callback);
-
-    if (_events[_eventKey]?.isEmpty ?? false) {
-      _events.remove(_eventKey);
-      _instanceEvents[_instanceKey]?.remove(_eventKey);
-
-      if (_instanceEvents[_instanceKey]?.isEmpty ?? false) {
-        _instanceEvents.remove(_instanceKey);
-      }
+    if (notifier != null && notifier.hasListeners == false) {
+      notifier.dispose();
+      _notifiers.remove(notifier);
     }
   }
 
@@ -87,111 +57,23 @@ abstract class ReactterEventManager {
     Enum eventName, [
     dynamic param,
   ]) {
-    final callbacks = {
-      ...?_events[_getEventKey(instance, eventName)],
-      ...?_events["${instance.hashCode}.${eventName.hashCode}"],
-    };
-
-    for (var callback in callbacks) {
-      callback(_getInstance(instance), param);
-    }
-  }
-
-  /// Trigger [eventName] event with or without the [param] given as async way.
-  Future<void> emitAsync(
-    Object? instance,
-    Enum eventName, [
-    dynamic param,
-  ]) async {
-    final callbacks = {
-      ...?_events[_getEventKey(instance, eventName)],
-      ...?_events["${instance.hashCode}.${eventName.hashCode}"],
-    };
-
-    await Future.wait(
-      callbacks.map(
-        (callback) => Future.microtask(
-          () => callback(_getInstance(instance), param),
-        ),
-      ),
-    );
+    _notifiers
+        .lookup(ReactterNotifier(instance, eventName))
+        ?.notifyListeners(param);
   }
 
   /// Removes all instance's events
   void offAll(Object? instance) {
-    final instanceKey = ReactterInstance._getInstanceKey(instance);
-    final eventKeys = Set.from(_instanceEvents[instanceKey] ?? []);
+    final notifiers = _notifiers.where((notifier) => notifier == instance);
 
-    eventKeys.forEach((key) => _events.remove(key));
-
-    /// instanceKey with a dot, to prevent another event containing
-    /// the same starts number of the instanceKey from being removed.
-    ///
-    /// _oneCallbacks = {
-    ///   "6778923.4576": [...],
-    ///   "67789.4523": [...],
-    ///   ...
-    /// };
-    /// instanceKey = "67789"; <- This could remove another event, it is not expected.
-    /// instanceKeyWithDot = "67789."; <- This remove event correctly.
-    final instanceKeyWithDot = "$instanceKey.";
-    _oneCallbacks.removeWhere(
-      (key, value) => key.startsWith(instanceKeyWithDot),
-    );
-  }
-
-  /// Returns a combination of the instance key, the event name key,
-  /// and the callback key. This optimizes event storage.
-  List<String> _getInstanceEventKey(
-    Object? instance,
-    Enum eventName, [
-    Function? callback,
-  ]) {
-    final instanceKey = ReactterInstance._getInstanceKey(instance);
-
-    if (callback == null) {
-      return [instanceKey, "$instanceKey.${eventName.hashCode}"];
-    }
-
-    return [
-      instanceKey,
-      "$instanceKey.${eventName.hashCode}.${callback.hashCode}"
-    ];
-  }
-
-  /// Returns a combination of the instance key, the event name key,
-  /// and the callback key. This optimizes event storage.
-  String _getEventKey(
-    Object? instance,
-    Enum eventName, [
-    Function? callback,
-  ]) {
-    return _getInstanceEventKey(instance, eventName, callback).last;
-  }
-
-  Object? _getInstance(Object? instance) {
-    return instance is ReactterInstance ? instance.instance : instance;
-  }
-
-  /// Removes a one callback event from a _oneCallbacks if it exists.
-  void _oneOff<T, P>(
-    Object? instance,
-    Enum eventName,
-    CallbackEvent<T, P> callback,
-  ) {
-    final _eventOneKey = _getEventKey(instance, eventName, callback);
-    final _oneCallbackFound = _oneCallbacks[_eventOneKey];
-
-    if (_oneCallbackFound != null) {
-      off(instance, eventName, _oneCallbackFound as CallbackEvent);
-      _oneCallbacks.remove(_eventOneKey);
+    for (final notifier in {...notifiers}) {
+      notifier.dispose();
+      _notifiers.remove(notifier);
     }
   }
 
   /// Checks if an object has any listeners.
   bool _hasListeners(Object? instance) {
-    return _instanceEvents.containsKey(
-      ReactterInstance._getInstanceKey(instance),
-    );
+    return _notifiers.any((notifier) => notifier == instance);
   }
 }

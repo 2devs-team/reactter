@@ -177,12 +177,12 @@ class UseEffect extends ReactterHook {
 
   void _watchInstanceAttached() {
     Reactter.on(
-      instanceAttached,
+      instanceAttached!,
       Lifecycle.didMount,
       _runCallbackAndWatchDependencies,
     );
     Reactter.on(
-      instanceAttached,
+      instanceAttached!,
       Lifecycle.willUnmount,
       _runCleanupAndUnwatchDependencies,
     );
@@ -190,12 +190,12 @@ class UseEffect extends ReactterHook {
 
   void _unwatchInstanceAttached() {
     Reactter.off(
-      instanceAttached,
+      instanceAttached!,
       Lifecycle.didMount,
       _runCallbackAndWatchDependencies,
     );
     Reactter.off(
-      instanceAttached,
+      instanceAttached!,
       Lifecycle.willUnmount,
       _runCleanupAndUnwatchDependencies,
     );

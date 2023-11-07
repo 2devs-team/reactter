@@ -18,7 +18,10 @@ typedef WhenValueReturn<T, R> = R Function(T value);
 typedef WhenErrorReturn<R> = R Function(Object? value);
 
 /// to represent an event callback
-typedef CallbackEvent<T extends Object?, P> = void Function(T? inst, P param);
+typedef CallbackEvent<T extends Object?, P> = Function(
+  T? inst,
+  P param,
+);
 
 /// to represent a reducer method
 typedef Reducer<T> = T Function(T state, ReactterAction action);

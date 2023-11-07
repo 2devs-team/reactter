@@ -78,7 +78,7 @@ class UseEvent<T extends Object?> {
   ///
   /// When the event is [emit]ted, the [callback] is called.
   void on<P extends dynamic>(Enum eventName, CallbackEvent<T, P> callback) {
-    Reactter.on<T, P>(_instanceReceived, eventName, callback);
+    Reactter.on<T, P>(_instanceReceived!, eventName, callback);
   }
 
   /// Puts on to listen [eventName] event only once.
@@ -86,17 +86,17 @@ class UseEvent<T extends Object?> {
   /// When the event is [emit]ted, the [callback] is called
   /// and after removes [eventName] event.
   void one<P>(Enum eventName, CallbackEvent<T, P> callback) {
-    Reactter.one<T, P>(_instanceReceived, eventName, callback);
+    Reactter.one<T, P>(_instanceReceived!, eventName, callback);
   }
 
   /// Removes the [callback] of [eventName] event.
   void off<P>(Enum eventName, CallbackEvent<T, P> callback) {
-    Reactter.off<T, P>(_instanceReceived, eventName, callback);
+    Reactter.off(_instanceReceived!, eventName, callback);
   }
 
   /// Triggers [eventName] event with or without the [param] given.
   void emit(Enum eventName, [dynamic param]) {
-    Reactter.emit(_instanceReceived, eventName, param);
+    Reactter.emit(_instanceReceived!, eventName, param);
   }
 
   /// Removes all instance's events

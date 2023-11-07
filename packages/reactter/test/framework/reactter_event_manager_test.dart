@@ -75,7 +75,7 @@ void main() {
       _testEmitListenEvent(
         (callback) {
           Reactter.on(
-            testController,
+            testController!,
             Events.TestEvent,
             (TestController? inst, String param) {
               instance = inst;
@@ -183,7 +183,7 @@ void main() {
       _testEmitListenEvent(
         (callback) {
           Reactter.one(
-            testController,
+            testController!,
             Events.TestEvent,
             (TestController? inst, String param) {
               instance = inst;

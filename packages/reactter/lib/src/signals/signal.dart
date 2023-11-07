@@ -127,11 +127,6 @@ class Signal<T> extends ReactterStateImpl
     super.update(() => fnUpdate(value));
   }
 
-  @override
-  Future<void> updateAsync(void fnUpdate(value)) async {
-    await super.updateAsync(() => fnUpdate(value));
-  }
-
   void _notifyGetValue() {
     if (!_shouldGetValueNotify) return;
 

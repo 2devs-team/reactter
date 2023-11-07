@@ -57,7 +57,7 @@ void main() {
 
       expect(nCalls, 0);
 
-      Reactter.emit(testController, Lifecycle.didMount);
+      Reactter.emit(testController!, Lifecycle.didMount);
 
       expect(nCalls, 1);
 

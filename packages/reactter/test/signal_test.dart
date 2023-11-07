@@ -27,10 +27,6 @@ void main() {
     test("should notifies when its value is changed", () {
       final signal = "initial".signal;
 
-      signal.updateAsync((value) {
-        signal("change value before listen");
-      });
-
       late final willUpdateChecked;
       late final didUpdateChecked;
 
@@ -60,26 +56,6 @@ void main() {
       });
 
       signal.update((_) {});
-
-      expectLater(willUpdateChecked, true);
-      expectLater(didUpdateChecked, true);
-    });
-
-    test("should be updated as async way", () async {
-      final signal = "initial".signal;
-      late final willUpdateChecked;
-      late final didUpdateChecked;
-
-      Reactter.one(signal, Lifecycle.willUpdate, (_, __) {
-        willUpdateChecked = true;
-      });
-      Reactter.one(signal, Lifecycle.didUpdate, (_, __) {
-        didUpdateChecked = true;
-      });
-
-      await signal.updateAsync(
-        ((_) async => Future.delayed(Duration(microseconds: 1))),
-      );
 
       expectLater(willUpdateChecked, true);
       expectLater(didUpdateChecked, true);

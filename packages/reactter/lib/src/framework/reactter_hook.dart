@@ -69,13 +69,6 @@ abstract class ReactterHook with ReactterStateBase implements ReactterState {
   void update([Function? callback]) {
     return super.update(callback ?? () {});
   }
-
-  /// Executes [callback], and notify the listeners about to update as async way.
-  @override
-  @mustCallSuper
-  Future<void> updateAsync([Function? callback]) async {
-    return super.updateAsync(callback ?? () {});
-  }
 }
 
 class _ReactterHookRegister extends ReactterZone {

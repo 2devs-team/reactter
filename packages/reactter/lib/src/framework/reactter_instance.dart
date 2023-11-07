@@ -54,14 +54,18 @@ class ReactterInstance<T> {
   const ReactterInstance([this.id]);
 
   /// A getter that returns the instance of [T].
-  T? get instance => _stored?.instance;
+  T? get instance => fromStore<T>(this)?.instance;
 
-  /// Generating a unique key for a given object [T] and optional `id`
-  String get _key => generateKey<T?>(id);
+  static ReactterInstance<T?>? fromStore<T extends Object?>(Object? instance) {
+    if (instance == null) return null;
 
-  /// A getter that returns the stored instance of [T].
-  _ReactterInstanceBuilder<T?>? get _stored =>
-      Reactter._instancesByKey[_key] as _ReactterInstanceBuilder<T?>?;
+    if (instance is ReactterInstance<T?>) {
+      return Reactter._reactterInstance.lookup(instance)
+          as ReactterInstance<T?>?;
+    }
+
+    return Reactter._instances[instance] as ReactterInstance<T?>?;
+  }
 
   @override
   String toString() {
@@ -71,21 +75,22 @@ class ReactterInstance<T> {
     return '$type$id';
   }
 
-  /// It generates a unique key for a given object [T] and optional `id`
-  static String generateKey<T>([String? id]) {
-    return "${T.hashCode}${id != null ? '[$id]' : ''}";
-  }
+  int _getTypeHashCode<TT extends T?>() => TT.hashCode;
 
-  static String _getInstanceKey(Object? instance) {
-    if (instance is ReactterInstance) {
-      return instance._stored?._key ?? instance._key;
+  @override
+  int get hashCode => _getTypeHashCode() ^ id.hashCode;
+
+  @override
+  bool operator ==(Object other) {
+    if (other is ReactterInstance<T?>) {
+      return other.id == this.id;
     }
 
-    return Reactter._instancesCreated[instance]?._key ?? "${instance.hashCode}";
+    return identical(other, this.instance);
   }
 }
 
-class _ReactterInstanceBuilder<T> extends ReactterInstance<T> {
+class _ReactterInstanceBuilder<T> extends ReactterInstance<T?> {
   final InstanceBuilder<T?> builder;
 
   /// It's used to store the mode of managing an instance.
@@ -96,6 +101,12 @@ class _ReactterInstanceBuilder<T> extends ReactterInstance<T> {
 
   T? _instance;
   T? get instance => _instance;
+
+  static _ReactterInstanceBuilder<T>? fromStore<T extends Object?>(
+    Object? instance,
+  ) =>
+      Reactter._reactterInstance.lookup(instance)
+          as _ReactterInstanceBuilder<T>?;
 
   _ReactterInstanceBuilder(
     this.builder, {
@@ -108,5 +119,21 @@ class _ReactterInstanceBuilder<T> extends ReactterInstance<T> {
     final hashCode = instance != null ? "(${instance.hashCode})" : "";
 
     return '${super.toString()}$hashCode';
+  }
+
+  @override
+  int get hashCode => super.hashCode;
+
+  @override
+  bool operator ==(Object other) {
+    if (other is _ReactterInstanceBuilder<T>) {
+      return other.id == this.id;
+    }
+
+    if (other is ReactterInstance<T?>) {
+      return other.id == this.id;
+    }
+
+    return identical(other, this.instance);
   }
 }

@@ -106,30 +106,5 @@ void main() {
 
       Reactter.delete<TestController>();
     });
-
-    test("should be updated as async way", () async {
-      final testController =
-          Reactter.create<TestController>(() => TestController())!;
-
-      testController.stateInt.value = 1;
-
-      late final int didUpdateValue;
-
-      Reactter.one(
-        testController.stateInt,
-        Lifecycle.didUpdate,
-        (inst, param) {
-          didUpdateValue = testController.stateInt.value;
-        },
-      );
-
-      await testController.stateInt.updateAsync(() {
-        return Future.microtask(() => testController.stateInt.value += 1);
-      });
-
-      expectLater(didUpdateValue, 2);
-
-      Reactter.delete<TestController>();
-    });
   });
 }

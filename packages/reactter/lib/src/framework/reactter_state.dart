@@ -21,13 +21,6 @@ abstract class ReactterState {
   @mustCallSuper
   void update(covariant Function fnUpdate);
 
-  /// Executes [fnUpdate], and notify the listeners about to update as async way.
-  ///
-  /// This method triggers the `Lifecycle.didUpdate` event,
-  /// which allows listeners to react to the updated state.
-  @mustCallSuper
-  Future<void> updateAsync(covariant Function fnUpdate);
-
   @mustCallSuper
 
   /// It's used to notify listeners that the state has been updated.
@@ -82,7 +75,7 @@ abstract class ReactterStateBase implements ReactterState {
   void detachInstance() {
     if (_instanceAttached == null) return;
 
-    Reactter.off(_instanceAttached, Lifecycle.destroyed, _onInstanceDestroyed);
+    Reactter.off(_instanceAttached!, Lifecycle.destroyed, _onInstanceDestroyed);
     _instanceAttached = null;
   }
 
@@ -100,23 +93,6 @@ abstract class ReactterStateBase implements ReactterState {
     _notify(Lifecycle.willUpdate);
     fnUpdate();
     _notify(Lifecycle.didUpdate);
-
-    _isUpdating = false;
-  }
-
-  @mustCallSuper
-  Future<void> updateAsync(covariant Function fnUpdate) async {
-    assert(!_isDisposed, "You can update when it's been disposed");
-
-    if (!_hasListeners || _isUpdating) {
-      return await fnUpdate();
-    }
-
-    _isUpdating = true;
-
-    await _notifyAsync(Lifecycle.willUpdate);
-    await fnUpdate();
-    await _notifyAsync(Lifecycle.didUpdate);
 
     _isUpdating = false;
   }
@@ -140,7 +116,7 @@ abstract class ReactterStateBase implements ReactterState {
 
     if (_instanceAttached != null) {
       Reactter.off(
-        _instanceAttached,
+        _instanceAttached!,
         Lifecycle.destroyed,
         _onInstanceDestroyed,
       );
@@ -159,14 +135,6 @@ abstract class ReactterStateBase implements ReactterState {
 
     if (_instanceAttached != null) {
       Reactter.emit(_instanceAttached!, event, this);
-    }
-  }
-
-  Future<void> _notifyAsync(Enum event) async {
-    await Reactter.emitAsync(this, event, this);
-
-    if (_instanceAttached != null) {
-      await Reactter.emitAsync(_instanceAttached!, event, this);
     }
   }
 }
