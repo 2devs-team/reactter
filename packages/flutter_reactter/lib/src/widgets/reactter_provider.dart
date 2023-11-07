@@ -206,18 +206,18 @@ class ReactterProvider<T extends Object> extends Widget
     /// change.
     context.dependOnInheritedElement(
       providerInheritedElement!,
-      aspect: ReactterDependency<T?>(
-        id: id,
-        instance: listenStates != null ? null : instance,
-        states: listenStates?.call(instance).toSet(),
-      ),
+      aspect: listenStates == null
+          ? ReactterInstanceDependency(instance)
+          : ReactterStatesDependency(
+              listenStates(instance).toSet(),
+            ),
     );
 
     return instance;
   }
 
-  /// Returns the `ReactterProviderElement` of the `ReactterProvider` that is
-  /// closest to the `BuildContext` that was passed as arguments.
+  /// Returns the [ReactterProviderElement] of the [ReactterProvider] that is
+  /// closest to the [BuildContext] that was passed as arguments.
   static ReactterProviderElement?
       _getProviderInheritedElement<T extends Object?>(
     BuildContext context, [

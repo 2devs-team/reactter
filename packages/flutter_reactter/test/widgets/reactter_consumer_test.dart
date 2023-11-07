@@ -146,7 +146,7 @@ void main() {
         "should watch multiple instance's states, using different context.watch",
         (tester) async {
           late TestController instanceObtained;
-          late TestController instanceObtainedWithId;
+          late TestController instanceWithIdObtained;
 
           await tester.pumpWidget(
             TestBuilder(
@@ -159,7 +159,7 @@ void main() {
                       return ReactterConsumer<TestController>(
                         id: 'uniqueId',
                         builder: (instWithId, _, __) {
-                          instanceObtainedWithId = instWithId;
+                          instanceWithIdObtained = instWithId;
 
                           return Column(
                             children: [
@@ -170,7 +170,7 @@ void main() {
                                   return Column(
                                     children: [
                                       Text(
-                                        "stateStringByIdDontWatch: ${instanceObtainedWithId.stateString.value}",
+                                        "stateStringByIdDontWatch: ${instanceWithIdObtained.stateString.value}",
                                       ),
                                       Text(
                                         "stateString: ${inst.stateString.value}",
@@ -219,7 +219,7 @@ void main() {
           await tester.pumpAndSettle();
 
           expectLater(instanceObtained, isInstanceOf<TestController>());
-          expectLater(instanceObtainedWithId, isInstanceOf<TestController>());
+          expectLater(instanceWithIdObtained, isInstanceOf<TestController>());
 
           expect(
             find.text("stateStringByIdDontWatch: from uniqueId"),
@@ -242,7 +242,7 @@ void main() {
           expect(find.text("stateIntById: 0"), findsOneWidget);
           expect(find.text("stateInt: 0"), findsOneWidget);
 
-          instanceObtainedWithId.stateString.value = "new value";
+          instanceWithIdObtained.stateString.value = "new value";
           await tester.pumpAndSettle();
 
           expect(find.text("stateStringByIdDontWatch: from uniqueId"),
@@ -262,7 +262,7 @@ void main() {
           expect(find.text("stateIntById: 0"), findsOneWidget);
           expect(find.text("stateInt: 2"), findsOneWidget);
 
-          instanceObtainedWithId.stateInt.value += 5;
+          instanceWithIdObtained.stateInt.value += 5;
           await tester.pumpAndSettle();
 
           expect(

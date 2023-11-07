@@ -29,7 +29,13 @@ extension ReactterStateListExtension<E extends ReactterState> on List<E> {
   ]) {
     return [condition, condition2, condition3, condition4, condition5]
         .whereType<dynamic Function()>()
-        .map((condition) => UseCompute(condition, this))
+        .map((condition) => UseWhen(condition, this))
         .toList();
   }
+}
+
+@internal
+class UseWhen extends UseCompute {
+  UseWhen(Function() compute, List<ReactterState> dependencies)
+      : super(compute, dependencies);
 }

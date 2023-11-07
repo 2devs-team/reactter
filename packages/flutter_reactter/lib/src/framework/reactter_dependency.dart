@@ -1,73 +1,68 @@
 part of '../framework.dart';
 
-/// A class that holds a reference to a state or an instance, and it can add and remove listeners
-/// to the state or instance
-@internal
-class ReactterDependency<T> {
+abstract class ReactterDependency {
+  // ignore: prefer_final_fields
   Object? _instance;
-  final Set<ReactterState>? _states;
+  final Set<ReactterState> _states;
 
-  ReactterDependency({
-    String? id,
+  ReactterDependency(this._instance, this._states);
+
+  ReactterMasterDependency makeMaster();
+}
+
+class ReactterInstanceDependency extends ReactterDependency {
+  ReactterInstanceDependency(Object instance) : super(instance, const {});
+
+  @override
+  ReactterMasterDependency makeMaster() => ReactterMasterDependency(
+        instance: _instance,
+      );
+}
+
+class ReactterStatesDependency extends ReactterDependency {
+  ReactterStatesDependency(Set<ReactterState> states) : super(null, states);
+
+  @override
+  ReactterMasterDependency makeMaster() => ReactterMasterDependency(
+        states: _states,
+      );
+}
+
+class ReactterSelectDependency extends ReactterDependency {
+  ReactterSelectDependency({
     Object? instance,
-    Set<ReactterState>? states,
-  })  : assert((instance != null && states == null) ||
-            (states != null && instance == null)),
-        _instance = instance,
-        _states = states;
+    Set<ReactterState> states = const {},
+    required SelectComputeValue computeValue,
+  }) : super(instance, states);
 
-  void _addListener(
-    CallbackEvent<Object, ReactterState> callback,
-  ) {
-    if (_states != null) {
-      for (final state in _states!) {
-        Reactter.on(state, Lifecycle.didUpdate, callback);
-      }
-    }
+  @override
+  ReactterMasterDependency makeMaster() => ReactterMasterDependency(
+        selects: {this},
+      );
+}
 
-    if (_instance != null) {
-      Reactter.on(_instance, Lifecycle.didUpdate, callback);
-    }
-  }
+class ReactterMasterDependency extends ReactterDependency {
+  final Set<ReactterSelectDependency> selects;
 
-  void _addStatesAndListener(
-    Set<ReactterState> states,
-    CallbackEvent<Object, ReactterState> callback,
-  ) {
-    for (final state in states) {
-      if (_states?.contains(state) == true) continue;
-
-      _states?.add(state);
-      Reactter.on(state, Lifecycle.didUpdate, callback);
-    }
-  }
-
-  void _addInstanceAndListener(
+  ReactterMasterDependency({
     Object? instance,
-    CallbackEvent<Object, ReactterState> callback,
-  ) {
-    if (_instance != null) return;
+    Set<ReactterState> states = const {},
+    this.selects = const {},
+  }) : super(instance, states);
 
-    _instance = instance;
-
-    Reactter.on(_instance, Lifecycle.didUpdate, callback);
+  void putDependency(ReactterDependency dependency) {
+    if (dependency is ReactterInstanceDependency) {
+      _instance = dependency._instance;
+      return;
+    }
+    if (dependency is ReactterStatesDependency) {
+      _states.addAll(dependency._states);
+      return;
+    }
   }
 
-  void _removeListener(
-    CallbackEvent<Object, ReactterState> callback,
-  ) {
-    if (_states != null) {
-      for (final state in _states!) {
-        Reactter.off(state, Lifecycle.didUpdate, callback);
-
-        if (state is UseCompute && state.instanceAttached == null) {
-          state.dispose();
-        }
-      }
-    }
-
-    if (_instance != null) {
-      Reactter.off(_instance, Lifecycle.didUpdate, callback);
-    }
+  @override
+  ReactterMasterDependency makeMaster() {
+    throw UnimplementedError();
   }
 }
