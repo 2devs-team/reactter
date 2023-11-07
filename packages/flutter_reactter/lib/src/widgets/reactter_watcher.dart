@@ -94,8 +94,6 @@ class _ReactterWatcherState extends State<ReactterWatcher> {
 
   @override
   Widget build(BuildContext context) {
-    _clearSignals();
-
     final prevState = _currentState;
 
     _currentState = this;
@@ -113,20 +111,24 @@ class _ReactterWatcherState extends State<ReactterWatcher> {
   @override
   void dispose() {
     _clearSignals();
-    Reactter.off(Signal, SignalEvent.onGetValue, _onGetValue);
     super.dispose();
   }
 
-  _onGetValue(_, Signal signal) {
+  void _onGetValue(_, Signal signal) {
     if (_currentState != this || _signals.contains(signal)) {
       return;
     }
 
-    Reactter.one(signal, Lifecycle.didUpdate, _onSignalDidUpdate);
     _signals.add(signal);
+    Reactter.on(signal, Lifecycle.didUpdate, _onSignalDidUpdate);
   }
 
-  void _onSignalDidUpdate(_, __) => setState(() {});
+  void _onSignalDidUpdate(_, __) {
+    _clearSignals();
+    Future.microtask(
+      () => setState(() {}),
+    );
+  }
 
   void _clearSignals() {
     for (var signal in _signals) {
