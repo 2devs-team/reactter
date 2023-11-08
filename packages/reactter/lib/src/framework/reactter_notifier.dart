@@ -322,7 +322,7 @@ class ReactterNotifier {
         listener?.call(instance, param);
       } catch (exception, _) {
         Reactter.log(
-          'The $runtimeType sending notification was while dispatching notifications for $runtimeType',
+          'The $_reactterInstance sending notification was while dispatching notifications for $_reactterInstance',
           isError: true,
         );
       }
