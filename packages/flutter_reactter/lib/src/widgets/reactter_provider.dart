@@ -41,7 +41,7 @@ abstract class ReactterProvider<T extends Object?>
   ReactterProviderElement<T> createElement();
 
   /// Returns an instance of [T]
-  /// and sets the `BuildContext` to listen for when it should be re-rendered.
+  /// and sets the [BuildContext] to listen for when it should be re-rendered.
   static T contextOf<T extends Object?>(
     BuildContext context, {
     String? id,
@@ -72,14 +72,14 @@ abstract class ReactterProvider<T extends Object?>
       return instance;
     }
 
-    /// A way to tell the `BuildContext` that it should be re-rendered
-    /// when the `ReactterInstance` or the `ReactterHook`s that are being listened
+    /// A way to tell the [BuildContext] that it should be re-rendered
+    /// when the [ReactterInstance] or the [ReactterHook]s that are being listened
     /// change.
     context.dependOnInheritedElement(
       providerInheritedElement!,
       aspect: listenStates == null
-          ? ReactterInstanceDependency(instance)
-          : ReactterStatesDependency(listenStates(instance).toSet()),
+          ? ReactterInstanceDependency<T?>(instance)
+          : ReactterStatesDependency<T?>(listenStates(instance).toSet()),
     );
 
     return instance;
@@ -87,7 +87,7 @@ abstract class ReactterProvider<T extends Object?>
 
   /// Returns the [ReactterProviderElement] of the [ReactterProvider] that is
   /// closest to the [BuildContext] that was passed as arguments.
-  static ReactterProviderElement?
+  static ReactterProviderElement<T>?
       _getProviderInheritedElement<T extends Object?>(
     BuildContext context, [
     String? id,

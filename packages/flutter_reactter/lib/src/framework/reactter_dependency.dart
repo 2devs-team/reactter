@@ -1,56 +1,82 @@
 part of '../framework.dart';
 
-abstract class ReactterDependency {
+abstract class ReactterDependency<T extends Object?> {
   // ignore: prefer_final_fields
-  Object? _instance;
+  T? _instance;
   final Set<ReactterState> _states;
 
   ReactterDependency(this._instance, this._states);
 
-  ReactterMasterDependency makeMaster();
+  ReactterMasterDependency<T> makeMaster();
 }
 
-class ReactterInstanceDependency extends ReactterDependency {
-  ReactterInstanceDependency(Object instance) : super(instance, const {});
+class ReactterInstanceDependency<T extends Object?>
+    extends ReactterDependency<T> {
+  ReactterInstanceDependency(T instance) : super(instance, const {});
 
   @override
-  ReactterMasterDependency makeMaster() => ReactterMasterDependency(
+  ReactterMasterDependency<T> makeMaster() => ReactterMasterDependency<T>(
         instance: _instance,
       );
 }
 
-class ReactterStatesDependency extends ReactterDependency {
+class ReactterStatesDependency<T extends Object?>
+    extends ReactterDependency<T> {
   ReactterStatesDependency(Set<ReactterState> states) : super(null, states);
 
   @override
-  ReactterMasterDependency makeMaster() => ReactterMasterDependency(
+  ReactterMasterDependency<T> makeMaster() => ReactterMasterDependency<T>(
         states: _states,
       );
 }
 
-class ReactterSelectDependency extends ReactterDependency {
+class ReactterSelectDependency<T extends Object?>
+    extends ReactterDependency<T> {
+  final T instance;
+  late final dynamic value;
+  final Selector<T, dynamic> computeValue;
+
+  Set<ReactterState> get states => _states;
+
   ReactterSelectDependency({
-    Object? instance,
-    Set<ReactterState> states = const {},
-    required SelectComputeValue computeValue,
-  }) : super(instance, states);
+    required this.instance,
+    required this.computeValue,
+  }) : super(null, {}) {
+    value = resolve(true);
+  }
+
+  dynamic resolve([bool isWatchState = false]) {
+    return computeValue(
+      instance,
+      isWatchState ? watchState : skipWatchState,
+    );
+  }
+
+  S watchState<S extends ReactterState>(S state) {
+    _states.add(state);
+    return state;
+  }
+
+  static S skipWatchState<S extends ReactterState>(S s) => s;
 
   @override
-  ReactterMasterDependency makeMaster() => ReactterMasterDependency(
+  ReactterMasterDependency<T> makeMaster() => ReactterMasterDependency<T>(
         selects: {this},
       );
 }
 
-class ReactterMasterDependency extends ReactterDependency {
-  final Set<ReactterSelectDependency> selects;
+class ReactterMasterDependency<T extends Object?>
+    extends ReactterDependency<T> {
+  final Set<ReactterSelectDependency<T>> _selects;
 
   ReactterMasterDependency({
-    Object? instance,
+    T? instance,
     Set<ReactterState> states = const {},
-    this.selects = const {},
-  }) : super(instance, states);
+    Set<ReactterSelectDependency<T>> selects = const {},
+  })  : _selects = selects,
+        super(instance, states);
 
-  void putDependency(ReactterDependency dependency) {
+  void putDependency(ReactterDependency<T> dependency) {
     if (dependency is ReactterInstanceDependency) {
       _instance = dependency._instance;
       return;
@@ -59,10 +85,14 @@ class ReactterMasterDependency extends ReactterDependency {
       _states.addAll(dependency._states);
       return;
     }
+
+    if (dependency is ReactterSelectDependency) {
+      _selects.add(dependency as ReactterSelectDependency<T>);
+    }
   }
 
   @override
-  ReactterMasterDependency makeMaster() {
+  ReactterMasterDependency<T> makeMaster() {
     throw UnimplementedError();
   }
 }

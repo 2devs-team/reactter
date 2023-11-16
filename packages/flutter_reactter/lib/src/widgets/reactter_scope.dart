@@ -1,5 +1,7 @@
 part of '../widgets.dart';
 
+/// An [InheritedWidget] that provides a scope for managing state
+/// and re-rendering child widgets.
 class ReactterScope extends InheritedWidget {
   const ReactterScope({
     Key? key,
@@ -10,13 +12,11 @@ class ReactterScope extends InheritedWidget {
   bool updateShouldNotify(covariant InheritedWidget oldWidget) => false;
 
   @override
-  ReactterScopeElement createElement() {
-    return ReactterScopeElement(this);
-  }
+  ReactterScopeElement createElement() => ReactterScopeElement(this);
 
   /// Returns the [ReactterScopeElement]
-  /// and sets the `BuildContext` to listen for when it should be re-rendered.
-  static ReactterScopeElement? contextOf(
+  /// and sets the [BuildContext] to listen for when it should be re-rendered.
+  static ReactterScopeElement contextOf(
     BuildContext context, {
     String? id,
     ListenStates<void>? listenStates,
@@ -44,7 +44,23 @@ class ReactterScope extends InheritedWidget {
 
 class ReactterScopeElement extends InheritedElement
     with ReactterScopeElementMixin {
+  Widget? prevChild;
+
   ReactterScopeElement(InheritedWidget widget) : super(widget);
+
+  @override
+  ReactterScope get widget => super.widget as ReactterScope;
+
+  @override
+  Widget build() {
+    if (hasDependenciesDirty) {
+      notifyClients(widget);
+
+      if (prevChild != null) return prevChild!;
+    }
+
+    return prevChild = super.build();
+  }
 }
 
 class ReactterScopeNotFoundException implements Exception {

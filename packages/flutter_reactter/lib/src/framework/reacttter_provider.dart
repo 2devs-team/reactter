@@ -82,8 +82,8 @@ abstract class ReactterProviderWrapper implements ReactterWrapperWidget {}
 ///
 /// See also:
 ///
-/// * [ReactterProvider], a widget that allows to use multiple [ReactterProvider].
-/// > {@endtemplate}
+/// * [ReactterProviders], a widget that allows to use multiple [ReactterProvider].
+/// {@endtemplate}
 @internal
 class ReactterProviderI<T extends Object?, I extends String?> extends Widget
     implements ReactterProvider<T> {
@@ -123,7 +123,7 @@ class ReactterProviderI<T extends Object?, I extends String?> extends Widget
   /// {@template reactter_provider.builder}
   /// Method which has the render logic
   ///
-  /// Exposes [BuilderContext] and [child] widget as parameters.
+  /// Exposes [BuilderContext] and [child] widget as arguments.
   /// and returns a widget.
   /// {@endtemplate}
   @protected
@@ -174,10 +174,10 @@ class ReactterProviderI<T extends Object?, I extends String?> extends Widget
 /// provides the [ReactterInstance] to its descendants
 @internal
 class ReactterProviderElement<T extends Object?> extends InheritedElement
-    with ReactterWrapperElementMixin, ReactterScopeElementMixin {
+    with ReactterWrapperElementMixin, ReactterScopeElementMixin<T> {
   final String? _id;
   final InstanceManageMode mode;
-  Widget? child;
+  Widget? prevChild;
   bool _isRoot = false;
   HashMap<ReactterInstance, ReactterProviderElement<T>>?
       _inheritedElementsWithId;
@@ -256,14 +256,14 @@ class ReactterProviderElement<T extends Object?> extends InheritedElement
     if (hasDependenciesDirty) {
       notifyClients(widget);
 
-      if (child != null) return child!;
+      if (prevChild != null) return prevChild!;
     }
 
     if (parent != null) {
-      return child = widget.buildWithChild(parent?.injectedChild);
+      return prevChild = widget.buildWithChild(parent?.injectedChild);
     }
 
-    return child = super.build();
+    return prevChild = super.build();
   }
 
   @override
@@ -275,7 +275,7 @@ class ReactterProviderElement<T extends Object?> extends InheritedElement
     Reactter.delete<T>(_id, this);
 
     _inheritedElementsWithId = null;
-    child = null;
+    prevChild = null;
 
     return super.unmount();
   }

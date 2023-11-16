@@ -3,12 +3,14 @@ part of '../framework.dart';
 /// A mixin that helps to manages dependencies
 /// and notify when should be updated its dependencies.
 @internal
-mixin ReactterScopeElementMixin on InheritedElement {
+mixin ReactterScopeElementMixin<T extends Object?> on InheritedElement {
+  bool _isFlushDependentsScheduled = false;
   bool _updatedShouldNotify = false;
-  final _dependenciesDirty = HashSet<ReactterDependency>();
+  final _dependenciesDirty = HashSet<ReactterDependency<T?>>();
   final _dependents = HashMap<Element, Object?>();
   final _instancesAndStatesDependencies =
-      HashMap<Object, Set<ReactterDependency>>();
+      HashMap<Object, Set<ReactterDependency<T?>>>();
+  final _dependentsFlushReady = <Element>{};
 
   bool get hasDependenciesDirty => _dependenciesDirty.isNotEmpty;
 
@@ -22,6 +24,7 @@ mixin ReactterScopeElementMixin on InheritedElement {
   @override
   void updated(InheritedWidget oldWidget) {
     super.updated(oldWidget);
+
     if (_updatedShouldNotify) {
       notifyClients(oldWidget);
     }
@@ -36,31 +39,35 @@ mixin ReactterScopeElementMixin on InheritedElement {
   }
 
   @override
-  Object? getDependencies(Element dependent) =>
-      _dependents[dependent] ?? super.getDependencies(dependent);
+  Object? getDependencies(Element dependent) {
+    return _dependents[dependent] ?? super.getDependencies(dependent);
+  }
 
   @override
   void updateDependencies(Element dependent, Object? aspect) {
-    if (aspect is! ReactterDependency) {
+    if (aspect is! ReactterDependency<T?>) {
       return super.updateDependencies(dependent, aspect);
     }
 
-    final dependencyOrigin = getDependencies(dependent);
+    var masterDependency = getDependencies(dependent);
 
-    if (dependencyOrigin != null &&
-        dependencyOrigin is! ReactterMasterDependency) {
+    if (masterDependency != null &&
+        masterDependency is! ReactterMasterDependency<T?>) {
       return super.updateDependencies(dependent, aspect);
     }
 
-    if (dependencyOrigin is ReactterMasterDependency) {
-      dependencyOrigin.putDependency(aspect);
+    _scheduleflushDependents();
+
+    masterDependency = _flushDependent(dependent, masterDependency);
+
+    if (masterDependency is ReactterMasterDependency<T?>) {
+      masterDependency.putDependency(aspect);
     }
 
-    final storeDependency =
-        (dependencyOrigin ?? aspect.makeMaster()) as ReactterMasterDependency;
+    masterDependency ??= aspect.makeMaster();
+    _addListener(masterDependency as ReactterMasterDependency<T?>);
 
-    _addListener(storeDependency);
-    return setDependencies(dependent, storeDependency);
+    return setDependencies(dependent, masterDependency);
   }
 
   @override
@@ -73,12 +80,6 @@ mixin ReactterScopeElementMixin on InheritedElement {
   }
 
   @override
-  void notifyClients(InheritedWidget oldWidget) {
-    super.notifyClients(oldWidget);
-    _dependenciesDirty.clear();
-  }
-
-  @override
   void notifyDependent(InheritedWidget oldWidget, Element dependent) {
     // select can never be used inside `didChangeDependencies`, so if the
     // dependent is already marked as needed build, there is no point
@@ -86,26 +87,38 @@ mixin ReactterScopeElementMixin on InheritedElement {
     if (dependent.dirty) return;
 
     final dependency = getDependencies(dependent);
+    final dependencies = {
+      dependency,
+      if (dependency is ReactterMasterDependency) ...dependency._selects,
+    };
 
-    if (_dependenciesDirty.contains(dependency)) {
+    if (dependencies.any(_dependenciesDirty.contains)) {
       dependent.didChangeDependencies();
       _removeDependencies(dependent);
+      _dependenciesDirty.removeAll(dependencies);
     }
   }
 
-  void _addListener(ReactterMasterDependency dependency) {
+  void _addListener(ReactterDependency<T?> dependency) {
     if (dependency._instance != null) {
       _addInstanceListener(dependency._instance!, dependency);
     }
 
     if (dependency._states.isNotEmpty) {
-      _addStateListener(dependency._states, dependency);
+      _addStatesListener(dependency._states, dependency);
+    }
+
+    if (dependency is ReactterMasterDependency<T?> &&
+        dependency._selects.isNotEmpty) {
+      for (final dependency in dependency._selects) {
+        _addListener(dependency);
+      }
     }
   }
 
   void _addInstanceListener(
     Object instance,
-    ReactterDependency dependency,
+    ReactterDependency<T?> dependency,
   ) {
     if (!_instancesAndStatesDependencies.containsKey(instance)) {
       Reactter.on(instance, Lifecycle.didUpdate, _markNeedsNotifyDependents);
@@ -115,9 +128,9 @@ mixin ReactterScopeElementMixin on InheritedElement {
     _instancesAndStatesDependencies[instance]?.add(dependency);
   }
 
-  void _addStateListener(
+  void _addStatesListener(
     Set<ReactterState> states,
-    ReactterDependency dependency,
+    ReactterDependency<T?> dependency,
   ) {
     for (final state in states) {
       if (!_instancesAndStatesDependencies.containsKey(state)) {
@@ -132,21 +145,51 @@ mixin ReactterScopeElementMixin on InheritedElement {
   void _markNeedsNotifyDependents(Object? instanceOrState, _) {
     assert(instanceOrState != null);
 
-    Reactter.off(
-      instanceOrState,
-      Lifecycle.didUpdate,
-      _markNeedsNotifyDependents,
-    );
+    final dependencies = _instancesAndStatesDependencies[instanceOrState];
 
-    _dependenciesDirty
-        .addAll(_instancesAndStatesDependencies[instanceOrState]!);
-    _instancesAndStatesDependencies.remove(instanceOrState);
+    if (dependencies?.isEmpty ?? true) return;
 
-    if (instanceOrState is UseWhen) {
-      Future.microtask(() => instanceOrState.dispose());
+    final dependenciesDirty = <ReactterDependency<T?>>[
+      for (final dependency in dependencies!)
+        if (dependency is! ReactterSelectDependency<T?>)
+          dependency
+        else if (dependency.value != dependency.resolve())
+          dependency
+    ];
+
+    if (dependenciesDirty.isEmpty) return;
+
+    _dependenciesDirty.addAll(dependenciesDirty);
+    dependencies.removeAll(dependenciesDirty);
+
+    if (dependencies.isEmpty) {
+      _clearInstanceOrStateDependencies(instanceOrState);
     }
 
     markNeedsBuild();
+  }
+
+  void _scheduleflushDependents() {
+    if (_isFlushDependentsScheduled) return;
+
+    _isFlushDependentsScheduled = true;
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      _isFlushDependentsScheduled = false;
+      _dependentsFlushReady.clear();
+    });
+  }
+
+  Object? _flushDependent(Element dependent, Object? dependency) {
+    if (_dependentsFlushReady.contains(dependent)) return dependency;
+
+    _dependentsFlushReady.add(dependent);
+
+    if (dependency is! ReactterMasterDependency<T?>) return dependency;
+
+    _clearDependency(dependency);
+
+    return null;
   }
 
   void _removeDependencies(Element dependent) {
@@ -164,5 +207,46 @@ mixin ReactterScopeElementMixin on InheritedElement {
     }
 
     _instancesAndStatesDependencies.clear();
+  }
+
+  void _clearDependency(ReactterDependency dependency) {
+    if (dependency._instance != null) {
+      final dependencies =
+          _instancesAndStatesDependencies[dependency._instance];
+      dependencies?.remove(dependency);
+
+      if (dependencies?.isEmpty ?? false) {
+        _clearInstanceOrStateDependencies(dependency._instance);
+      }
+    }
+
+    for (final state in dependency._states) {
+      final dependenciesOfState = _instancesAndStatesDependencies[state];
+      dependenciesOfState?.remove(dependency);
+
+      if (dependenciesOfState?.isEmpty ?? false) {
+        _clearInstanceOrStateDependencies(state);
+      }
+    }
+
+    if (dependency is ReactterMasterDependency) {
+      for (final select in dependency._selects) {
+        _clearDependency(select);
+      }
+    }
+  }
+
+  void _clearInstanceOrStateDependencies(Object? instanceOrState) {
+    Reactter.off(
+      instanceOrState,
+      Lifecycle.didUpdate,
+      _markNeedsNotifyDependents,
+    );
+
+    if (instanceOrState is UseWhen) {
+      Future.microtask(() => instanceOrState.dispose());
+    }
+
+    _instancesAndStatesDependencies.remove(instanceOrState);
   }
 }
