@@ -67,32 +67,35 @@ class ReactterSelectDependency<T extends Object?>
 
 class ReactterMasterDependency<T extends Object?>
     extends ReactterDependency<T> {
-  final Set<ReactterSelectDependency<T>> _selects;
+  final Set<ReactterSelectDependency> _selects;
 
   ReactterMasterDependency({
     T? instance,
     Set<ReactterState> states = const {},
-    Set<ReactterSelectDependency<T>> selects = const {},
-  })  : _selects = selects,
-        super(instance, states);
+    Set<ReactterSelectDependency> selects = const {},
+  })  : _selects = selects.toSet(),
+        super(instance, states.toSet());
 
-  void putDependency(ReactterDependency<T> dependency) {
+  void putDependency(ReactterDependency dependency) {
     if (dependency is ReactterInstanceDependency) {
-      _instance = dependency._instance;
+      _instance = dependency._instance as T;
       return;
     }
+
     if (dependency is ReactterStatesDependency) {
       _states.addAll(dependency._states);
       return;
     }
 
     if (dependency is ReactterSelectDependency) {
-      _selects.add(dependency as ReactterSelectDependency<T>);
+      _selects.add(dependency);
     }
   }
 
+  // coverage:ignore-start
   @override
   ReactterMasterDependency<T> makeMaster() {
     throw UnimplementedError();
   }
+  // coverage:ignore-end
 }

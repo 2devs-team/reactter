@@ -86,7 +86,9 @@ class ReactterInstance<T> {
       return other.id == this.id;
     }
 
+    // coverage:ignore-start
     return identical(other, this.instance);
+    // coverage:ignore-end
   }
 }
 

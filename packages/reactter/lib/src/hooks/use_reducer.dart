@@ -97,7 +97,7 @@ abstract class ReactterActionCallable<T, P> extends ReactterAction<P> {
   T call(T state);
 }
 
-//// {@template use_reducer}
+/// {@template use_reducer}
 /// A [ReactterHook] that manages state using [reducer] method.
 ///
 /// [UseReducer] accepts a [reducer] method

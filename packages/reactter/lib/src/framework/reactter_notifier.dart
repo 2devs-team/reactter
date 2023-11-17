@@ -85,6 +85,7 @@ class ReactterNotifier {
   // This is static and not an instance method because too many people try to
   // implement ReactterNotifier instead of extending it (and so it is too breaking
   // to add a method, especially for debug).
+  // coverage:ignore-start
   static bool debugAssertNotDisposed(ReactterNotifier notifier) {
     assert(() {
       if (notifier._debugDisposed) {
@@ -98,6 +99,7 @@ class ReactterNotifier {
     }());
     return true;
   }
+  // coverage:ignore-end
 
   /// Copied from Flutter
   /// Whether any listeners are currently registered.
@@ -174,6 +176,8 @@ class ReactterNotifier {
     }
   }
 
+  /// Copied from Flutter
+  // coverage:ignore-start
   void _removeAt(int index) {
     // The list holding the listeners is not growable for performances reasons.
     // We still want to shrink this list if a lot of listeners have been added
@@ -205,6 +209,7 @@ class ReactterNotifier {
       _listeners[_count] = null;
     }
   }
+  // coverage:ignore-end
 
   /// Copied from Flutter
   /// Remove a previously registered closure from the list of closures that are
@@ -321,10 +326,12 @@ class ReactterNotifier {
 
         listener?.call(instance, param);
       } catch (exception, _) {
+        // coverage:ignore-start
         Reactter.log(
           'The $_reactterInstance sending notification was while dispatching notifications for $_reactterInstance',
           isError: true,
         );
+        // coverage:ignore-end
       }
     }
 
@@ -349,6 +356,7 @@ class ReactterNotifier {
 
         _listeners = newListeners;
       } else {
+        // coverage:ignore-start
         // Otherwise we put all the null references at the end.
         for (int i = 0; i < newLength; i += 1) {
           if (_listeners[i] == null) {
@@ -361,6 +369,7 @@ class ReactterNotifier {
             _listeners[swapIndex] = null;
           }
         }
+        // coverage:ignore-end
       }
 
       _reentrantlyRemovedListeners = 0;

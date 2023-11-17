@@ -157,29 +157,21 @@ class ReactterSelector<T extends Object?, V> extends StatelessWidget {
     final shouldFindProvider = T != getType<Object?>();
     final inheritedElement = shouldFindProvider
         ? ReactterProvider._getProviderInheritedElement<T>(context, id)
-        : context.getElementForInheritedWidgetOfExactType<ReactterScope>();
+        : ReactterScope._getScopeInheritedElement(context);
     final instance = inheritedElement is ReactterProviderElement<T>
         ? inheritedElement.instance
         : null;
 
-    if (!shouldFindProvider && inheritedElement == null) {
-      throw ReactterScopeNotFoundException(context.widget.runtimeType);
-    }
-
-    if (instance == null && null is! T) {
-      throw ReactterInstanceNotFoundException(T, context.widget.runtimeType);
-    }
-
-    final dependency = ReactterSelectDependency<T?>(
-      instance: instance,
-      computeValue: selector as Selector<T?, dynamic>,
+    final dependency = ReactterSelectDependency(
+      instance: instance as T,
+      computeValue: selector as dynamic,
     );
 
     if (dependency.states.isEmpty) {
       if (instance != null) {
         context.dependOnInheritedElement(
           inheritedElement!,
-          aspect: ReactterInstanceDependency<T?>(instance),
+          aspect: ReactterInstanceDependency(instance),
         );
       }
 

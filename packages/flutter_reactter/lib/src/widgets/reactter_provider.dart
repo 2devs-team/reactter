@@ -62,10 +62,6 @@ abstract class ReactterProvider<T extends Object?>
     final providerInheritedElement =
         _getProviderInheritedElement<T>(context, id);
 
-    if (providerInheritedElement?.instance == null && null is! T) {
-      throw ReactterInstanceNotFoundException(T, context.widget.runtimeType);
-    }
-
     final instance = providerInheritedElement?.instance as T;
 
     if (!listen || instance == null) {
@@ -78,8 +74,8 @@ abstract class ReactterProvider<T extends Object?>
     context.dependOnInheritedElement(
       providerInheritedElement!,
       aspect: listenStates == null
-          ? ReactterInstanceDependency<T?>(instance)
-          : ReactterStatesDependency<T?>(listenStates(instance).toSet()),
+          ? ReactterInstanceDependency(instance)
+          : ReactterStatesDependency(listenStates(instance).toSet()),
     );
 
     return instance;
@@ -92,18 +88,28 @@ abstract class ReactterProvider<T extends Object?>
     BuildContext context, [
     String? id,
   ]) {
+    ReactterProviderElement<T>? providerInheritedElement;
+
     // To find it with id, is O(2) complexity(O(1)*2)
     if (id != null) {
       final inheritedElementNotSure =
           context.getElementForInheritedWidgetOfExactType<
               ReactterProviderI<T, WithId>>() as ReactterProviderElement<T>?;
 
-      return inheritedElementNotSure?.getInheritedElementOfExactId(id);
+      providerInheritedElement =
+          inheritedElementNotSure?.getInheritedElementOfExactId(id);
+    } else {
+      // To find it without id, is O(1) complexity
+      providerInheritedElement =
+          context.getElementForInheritedWidgetOfExactType<
+              ReactterProviderI<T, WithoutId>>() as ReactterProviderElement<T>?;
     }
 
-    // To find it without id, is O(1) complexity
-    return context.getElementForInheritedWidgetOfExactType<
-        ReactterProviderI<T, WithoutId>>() as ReactterProviderElement<T>?;
+    if (providerInheritedElement?.instance == null && null is! T) {
+      throw ReactterInstanceNotFoundException(T, context.widget.runtimeType);
+    }
+
+    return providerInheritedElement;
   }
 }
 

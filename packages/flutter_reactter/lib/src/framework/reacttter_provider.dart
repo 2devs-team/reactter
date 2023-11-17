@@ -174,7 +174,7 @@ class ReactterProviderI<T extends Object?, I extends String?> extends Widget
 /// provides the [ReactterInstance] to its descendants
 @internal
 class ReactterProviderElement<T extends Object?> extends InheritedElement
-    with ReactterWrapperElementMixin, ReactterScopeElementMixin<T> {
+    with ReactterWrapperElementMixin, ReactterScopeElementMixin {
   final String? _id;
   final InstanceManageMode mode;
   Widget? prevChild;

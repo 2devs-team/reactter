@@ -3,13 +3,13 @@ part of '../framework.dart';
 /// A mixin that helps to manages dependencies
 /// and notify when should be updated its dependencies.
 @internal
-mixin ReactterScopeElementMixin<T extends Object?> on InheritedElement {
+mixin ReactterScopeElementMixin on InheritedElement {
   bool _isFlushDependentsScheduled = false;
   bool _updatedShouldNotify = false;
-  final _dependenciesDirty = HashSet<ReactterDependency<T?>>();
+  final _dependenciesDirty = HashSet<ReactterDependency>();
   final _dependents = HashMap<Element, Object?>();
   final _instancesAndStatesDependencies =
-      HashMap<Object, Set<ReactterDependency<T?>>>();
+      HashMap<Object, Set<ReactterDependency>>();
   final _dependentsFlushReady = <Element>{};
 
   bool get hasDependenciesDirty => _dependenciesDirty.isNotEmpty;
@@ -45,27 +45,29 @@ mixin ReactterScopeElementMixin<T extends Object?> on InheritedElement {
 
   @override
   void updateDependencies(Element dependent, Object? aspect) {
-    if (aspect is! ReactterDependency<T?>) {
+    // coverage:ignore-start
+    if (aspect is! ReactterDependency) {
       return super.updateDependencies(dependent, aspect);
     }
 
     var masterDependency = getDependencies(dependent);
 
     if (masterDependency != null &&
-        masterDependency is! ReactterMasterDependency<T?>) {
+        masterDependency is! ReactterMasterDependency) {
       return super.updateDependencies(dependent, aspect);
     }
+    // coverage:ignore-end
 
     _scheduleflushDependents();
 
     masterDependency = _flushDependent(dependent, masterDependency);
 
-    if (masterDependency is ReactterMasterDependency<T?>) {
+    if (masterDependency is ReactterMasterDependency) {
       masterDependency.putDependency(aspect);
     }
 
     masterDependency ??= aspect.makeMaster();
-    _addListener(masterDependency as ReactterMasterDependency<T?>);
+    _addListener(masterDependency as ReactterMasterDependency);
 
     return setDependencies(dependent, masterDependency);
   }
@@ -99,7 +101,7 @@ mixin ReactterScopeElementMixin<T extends Object?> on InheritedElement {
     }
   }
 
-  void _addListener(ReactterDependency<T?> dependency) {
+  void _addListener(ReactterDependency dependency) {
     if (dependency._instance != null) {
       _addInstanceListener(dependency._instance!, dependency);
     }
@@ -108,7 +110,7 @@ mixin ReactterScopeElementMixin<T extends Object?> on InheritedElement {
       _addStatesListener(dependency._states, dependency);
     }
 
-    if (dependency is ReactterMasterDependency<T?> &&
+    if (dependency is ReactterMasterDependency &&
         dependency._selects.isNotEmpty) {
       for (final dependency in dependency._selects) {
         _addListener(dependency);
@@ -118,7 +120,7 @@ mixin ReactterScopeElementMixin<T extends Object?> on InheritedElement {
 
   void _addInstanceListener(
     Object instance,
-    ReactterDependency<T?> dependency,
+    ReactterDependency dependency,
   ) {
     if (!_instancesAndStatesDependencies.containsKey(instance)) {
       Reactter.on(instance, Lifecycle.didUpdate, _markNeedsNotifyDependents);
@@ -130,7 +132,7 @@ mixin ReactterScopeElementMixin<T extends Object?> on InheritedElement {
 
   void _addStatesListener(
     Set<ReactterState> states,
-    ReactterDependency<T?> dependency,
+    ReactterDependency dependency,
   ) {
     for (final state in states) {
       if (!_instancesAndStatesDependencies.containsKey(state)) {
@@ -149,9 +151,9 @@ mixin ReactterScopeElementMixin<T extends Object?> on InheritedElement {
 
     if (dependencies?.isEmpty ?? true) return;
 
-    final dependenciesDirty = <ReactterDependency<T?>>[
+    final dependenciesDirty = <ReactterDependency>[
       for (final dependency in dependencies!)
-        if (dependency is! ReactterSelectDependency<T?>)
+        if (dependency is! ReactterSelectDependency)
           dependency
         else if (dependency.value != dependency.resolve())
           dependency
@@ -185,7 +187,7 @@ mixin ReactterScopeElementMixin<T extends Object?> on InheritedElement {
 
     _dependentsFlushReady.add(dependent);
 
-    if (dependency is! ReactterMasterDependency<T?>) return dependency;
+    if (dependency is! ReactterMasterDependency) return dependency;
 
     _clearDependency(dependency);
 

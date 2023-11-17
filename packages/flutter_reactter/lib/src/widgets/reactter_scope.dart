@@ -16,18 +16,13 @@ class ReactterScope extends InheritedWidget {
 
   /// Returns the [ReactterScopeElement]
   /// and sets the [BuildContext] to listen for when it should be re-rendered.
-  static ReactterScopeElement contextOf(
+  static void contextOf(
     BuildContext context, {
     String? id,
     ListenStates<void>? listenStates,
     bool listen = true,
   }) {
-    final reactterScopeElement =
-        context.getElementForInheritedWidgetOfExactType<ReactterScope>();
-
-    if (reactterScopeElement == null) {
-      throw ReactterScopeNotFoundException(context.widget.runtimeType);
-    }
+    final reactterScopeElement = _getScopeInheritedElement(context);
 
     if (listen && listenStates != null) {
       context.dependOnInheritedElement(
@@ -36,6 +31,15 @@ class ReactterScope extends InheritedWidget {
           listenStates(null).toSet(),
         ),
       );
+    }
+  }
+
+  static ReactterScopeElement _getScopeInheritedElement(BuildContext context) {
+    final reactterScopeElement =
+        context.getElementForInheritedWidgetOfExactType<ReactterScope>();
+
+    if (reactterScopeElement == null) {
+      throw ReactterScopeNotFoundException(context.widget.runtimeType);
     }
 
     return reactterScopeElement as ReactterScopeElement;
