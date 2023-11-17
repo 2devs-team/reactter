@@ -6,8 +6,10 @@ import 'test_controller.dart';
 class ReactterProvidersBuilder extends StatefulWidget {
   final TransitionBuilder builder;
 
-  const ReactterProvidersBuilder({Key? key, required this.builder})
-      : super(key: key);
+  const ReactterProvidersBuilder({
+    Key? key,
+    required this.builder,
+  }) : super(key: key);
 
   @override
   State<ReactterProvidersBuilder> createState() =>
@@ -17,23 +19,25 @@ class ReactterProvidersBuilder extends StatefulWidget {
 class _ReactterProvidersBuilderState extends State<ReactterProvidersBuilder> {
   @override
   Widget build(BuildContext context) {
-    return ReactterProviders(
-      [
-        ReactterProvider(
-          () => TestController(),
-          init: true,
-        ),
-        ReactterProvider(
-          () {
-            final inst = TestController();
-            inst.stateString.value = "from uniqueId";
-            return inst;
-          },
-          id: 'uniqueId',
-        ),
-      ],
-      builder: widget.builder,
-      child: const Text('child'),
+    return ReactterScope(
+      child: ReactterProviders(
+        [
+          ReactterProvider(
+            () => TestController(),
+            init: true,
+          ),
+          ReactterProvider(
+            () {
+              final inst = TestController();
+              inst.stateString.value = "from uniqueId";
+              return inst;
+            },
+            id: 'uniqueId',
+          ),
+        ],
+        builder: widget.builder,
+        child: const Text('child'),
+      ),
     );
   }
 }

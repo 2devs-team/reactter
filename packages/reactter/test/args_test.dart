@@ -17,6 +17,8 @@ void main() {
       final args = Args([1, 'test', false]);
 
       expect(args.arguments, [1, 'test', false]);
+
+      expect(args.arg1, 1);
     });
 
     test("should convert the arguments to List by type", () {

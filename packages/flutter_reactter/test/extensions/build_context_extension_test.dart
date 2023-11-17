@@ -3,133 +3,125 @@ import 'package:flutter_reactter/src/extensions.dart';
 import 'package:flutter_reactter/src/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import '../shareds/iterable_extension.dart';
 import '../shareds/reactter_provider_builder.dart';
 import '../shareds/reactter_providers_builder.dart';
 import '../shareds/test_builder.dart';
 import '../shareds/test_controller.dart';
 
 void main() {
-  group("ReactterBuildContextExtension", () {
-    testWidgets(
-      "should throw exception when instance not found",
-      (tester) async {
-        await tester.pumpWidget(
-          TestBuilder(
-            child: Builder(
-              builder: (context) {
-                context.use<TestController>();
-                return const Text("Rendered");
-              },
-            ),
+  group("context.use", () {
+    testWidgets("should throw exception when instance not found",
+        (tester) async {
+      await tester.pumpWidget(
+        TestBuilder(
+          child: Builder(
+            builder: (context) {
+              context.use<TestController>();
+              return const Text("Rendered");
+            },
           ),
-        );
-        await tester.pumpAndSettle();
+        ),
+      );
+      await tester.pumpAndSettle();
 
-        expect(
-          tester.takeException(),
-          isInstanceOf<ReactterInstanceNotFoundException>(),
-        );
-        expect(find.text("Rendered"), findsNothing);
-      },
-    );
+      expect(
+        tester.takeException(),
+        isInstanceOf<ReactterInstanceNotFoundException>(),
+      );
+      expect(find.text("Rendered"), findsNothing);
+    });
 
-    testWidgets(
-      "should get null when instance not found",
-      (tester) async {
-        late TestController? instanceObtained;
+    testWidgets("should get null when instance not found", (tester) async {
+      late TestController? instanceObtained;
 
-        await tester.pumpWidget(
-          TestBuilder(
-            child: Builder(
-              builder: (context) {
-                instanceObtained = context.use<TestController?>();
+      await tester.pumpWidget(
+        TestBuilder(
+          child: Builder(
+            builder: (context) {
+              instanceObtained = context.use<TestController?>();
 
-                return Text(
-                  "stateString: ${instanceObtained?.stateString.value ?? 'not found'}",
-                );
-              },
-            ),
+              return Text(
+                "stateString: ${instanceObtained?.stateString.value ?? 'not found'}",
+              );
+            },
           ),
-        );
-        await tester.pumpAndSettle();
+        ),
+      );
+      await tester.pumpAndSettle();
 
-        expectLater(instanceObtained, null);
-        expect(find.text("stateString: not found"), findsOneWidget);
-      },
-    );
+      expectLater(instanceObtained, null);
+      expect(find.text("stateString: not found"), findsOneWidget);
+    });
+  });
 
-    testWidgets(
-      "should watch instance changes",
-      (tester) async {
-        late TestController instanceObtained;
+  group("context.watch", () {
+    testWidgets("should watch instance changes", (tester) async {
+      late TestController instanceObtained;
 
-        await tester.pumpWidget(
-          TestBuilder(
-            child: ReactterProviderBuilder(
-              builder: (_, context, __) {
-                instanceObtained = context.watch<TestController>();
+      await tester.pumpWidget(
+        TestBuilder(
+          child: ReactterProviderBuilder(
+            builder: (_, context, __) {
+              instanceObtained = context.watch<TestController>();
 
-                return Text(
-                  "stateString: ${instanceObtained.stateString.value}",
-                );
-              },
-            ),
+              return Text(
+                "stateString: ${instanceObtained.stateString.value}",
+              );
+            },
           ),
-        );
-        await tester.pumpAndSettle();
+        ),
+      );
+      await tester.pumpAndSettle();
 
-        expectLater(instanceObtained, isInstanceOf<TestController>());
-        expect(find.text("stateString: initial"), findsOneWidget);
+      expectLater(instanceObtained, isInstanceOf<TestController>());
+      expect(find.text("stateString: initial"), findsOneWidget);
 
-        instanceObtained.stateString.value = "new value";
-        await tester.pumpAndSettle();
+      instanceObtained.stateString.value = "new value";
+      await tester.pumpAndSettle();
 
-        expect(find.text("stateString: new value"), findsOneWidget);
-      },
-    );
+      expect(find.text("stateString: new value"), findsOneWidget);
+    });
 
-    testWidgets(
-      "should watch instance's states",
-      (tester) async {
-        late TestController instanceObtained;
+    testWidgets("should watch instance's states", (tester) async {
+      late TestController instanceObtained;
 
-        await tester.pumpWidget(
-          TestBuilder(
-            child: ReactterProviderBuilder(
-              builder: (_, context, __) {
-                instanceObtained = context.watch<TestController>(
-                  (inst) => [inst.stateInt],
-                );
+      await tester.pumpWidget(
+        TestBuilder(
+          child: ReactterProviderBuilder(
+            builder: (_, context, __) {
+              instanceObtained = context.watch<TestController>(
+                (inst) => [inst.stateInt],
+              );
 
-                return Column(
-                  children: [
-                    Text("stateString: ${instanceObtained.stateString.value}"),
-                    Text("stateInt: ${instanceObtained.stateInt.value}"),
-                  ],
-                );
-              },
-            ),
+              return Column(
+                children: [
+                  Text("stateString: ${instanceObtained.stateString.value}"),
+                  Text("stateInt: ${instanceObtained.stateInt.value}"),
+                ],
+              );
+            },
           ),
-        );
-        await tester.pumpAndSettle();
+        ),
+      );
+      await tester.pumpAndSettle();
 
-        expectLater(instanceObtained, isInstanceOf<TestController>());
-        expect(find.text("stateString: initial"), findsOneWidget);
-        expect(find.text("stateInt: 0"), findsOneWidget);
+      expectLater(instanceObtained, isInstanceOf<TestController>());
+      expect(find.text("stateString: initial"), findsOneWidget);
+      expect(find.text("stateInt: 0"), findsOneWidget);
 
-        instanceObtained.stateString.value = "new value";
-        await tester.pumpAndSettle();
+      instanceObtained.stateString.value = "new value";
+      await tester.pumpAndSettle();
 
-        expect(find.text("stateString: initial"), findsOneWidget);
-        expect(find.text("stateInt: 0"), findsOneWidget);
+      expect(find.text("stateString: initial"), findsOneWidget);
+      expect(find.text("stateInt: 0"), findsOneWidget);
 
-        instanceObtained.stateInt.value += 2;
-        await tester.pumpAndSettle();
+      instanceObtained.stateInt.value += 2;
+      await tester.pumpAndSettle();
 
-        expect(find.text("stateString: new value"), findsOneWidget);
-        expect(find.text("stateInt: 2"), findsOneWidget);
-      },
-    );
+      expect(find.text("stateString: new value"), findsOneWidget);
+      expect(find.text("stateInt: 2"), findsOneWidget);
+    });
 
     testWidgets(
         "should watch multiple instance's states, using different context.watch",
@@ -177,9 +169,7 @@ void main() {
                     builder: (context) {
                       // any change of stateInt
                       context.watch<TestController>((inst) => [inst.stateInt]);
-                      context.watch<TestController>(
-                        (inst) => [instanceObtainedWithId.stateInt],
-                      );
+                      context.watch((_) => [instanceObtainedWithId.stateInt]);
 
                       return Column(
                         children: [
@@ -250,6 +240,384 @@ void main() {
       expect(find.text("stateStringById: new value"), findsOneWidget);
       expect(find.text("stateIntById: 5"), findsOneWidget);
       expect(find.text("stateInt: 2"), findsOneWidget);
+    });
+  });
+
+  group("context.select", () {
+    testWidgets(
+      "should throw exception when ReactterScope not found",
+      (tester) async {
+        await tester.pumpWidget(
+          TestBuilder(
+            child: Builder(
+              builder: (context) {
+                context.select((_, __) => 0);
+                return const Text("Rendered");
+              },
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        expect(
+          tester.takeException(),
+          isInstanceOf<ReactterScopeNotFoundException>(),
+        );
+        expect(find.text("Rendered"), findsNothing);
+      },
+    );
+
+    testWidgets(
+      "should throw exception when instance not found",
+      (tester) async {
+        await tester.pumpWidget(
+          TestBuilder(
+            child: Builder(
+              builder: (context) {
+                context.select<TestController, int>((_, __) => 0);
+                return const Text("Rendered");
+              },
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        expect(
+          tester.takeException(),
+          isInstanceOf<ReactterInstanceNotFoundException>(),
+        );
+        expect(find.text("Rendered"), findsNothing);
+      },
+    );
+
+    testWidgets("should rebuild without type defined", (tester) async {
+      late TestController instanceObtained;
+      int countRender = 0;
+
+      await tester.pumpWidget(
+        TestBuilder(
+          child: ReactterProvidersBuilder(
+            builder: (context, _) {
+              instanceObtained = context.use<TestController>();
+
+              final len = context.select(
+                (_, $) => $(instanceObtained.stateList).value.length,
+              );
+
+              countRender++;
+
+              return Column(
+                children: [
+                  Text('stateList.length: $len'),
+                  Text(
+                    'stateList.first: ${instanceObtained.stateList.value.firstOrNull}',
+                  ),
+                  Text(
+                    'stateList.last: ${instanceObtained.stateList.value.lastOrNull}',
+                  ),
+                ],
+              );
+            },
+          ),
+        ),
+      );
+
+      await tester.pumpAndSettle();
+
+      expectLater(instanceObtained, isInstanceOf<TestController>());
+      expect(countRender, 1);
+      expect(find.text("stateList.length: 0"), findsOneWidget);
+      expect(find.text("stateList.first: null"), findsOneWidget);
+      expect(find.text("stateList.last: null"), findsOneWidget);
+
+      instanceObtained.stateList.update(() {
+        instanceObtained.stateList.value.add('test');
+      });
+      await tester.pumpAndSettle();
+
+      expect(countRender, 2);
+      expect(find.text("stateList.length: 1"), findsOneWidget);
+      expect(find.text("stateList.first: test"), findsOneWidget);
+      expect(find.text("stateList.last: test"), findsOneWidget);
+
+      instanceObtained.stateList.value.add('test2');
+      await tester.pumpAndSettle();
+
+      expect(countRender, 2);
+      expect(find.text("stateList.length: 1"), findsOneWidget);
+      expect(find.text("stateList.first: test"), findsOneWidget);
+      expect(find.text("stateList.last: test"), findsOneWidget);
+
+      instanceObtained.stateList.update();
+      await tester.pumpAndSettle();
+
+      expect(countRender, 3);
+      expect(find.text("stateList.length: 2"), findsOneWidget);
+      expect(find.text("stateList.first: test"), findsOneWidget);
+      expect(find.text("stateList.last: test2"), findsOneWidget);
+
+      instanceObtained.stateList.update();
+      await tester.pumpAndSettle();
+
+      expect(countRender, 3);
+      expect(find.text("stateList.length: 2"), findsOneWidget);
+      expect(find.text("stateList.first: test"), findsOneWidget);
+      expect(find.text("stateList.last: test2"), findsOneWidget);
+    });
+
+    testWidgets("should rebuild without selecting states", (tester) async {
+      late TestController instanceObtained;
+      int countRender = 0;
+
+      await tester.pumpWidget(
+        TestBuilder(
+          child: ReactterProvidersBuilder(
+            builder: (context, _) {
+              final len = context.select<TestController, int>(
+                (inst, $) {
+                  instanceObtained = inst;
+                  return inst.stateList.value.length;
+                },
+              );
+
+              countRender++;
+
+              return Column(
+                children: [
+                  Text('stateList.length: $len'),
+                  Text(
+                    'stateList.first: ${instanceObtained.stateList.value.firstOrNull}',
+                  ),
+                  Text(
+                    'stateList.last: ${instanceObtained.stateList.value.lastOrNull}',
+                  ),
+                ],
+              );
+            },
+          ),
+        ),
+      );
+
+      await tester.pumpAndSettle();
+
+      expectLater(instanceObtained, isInstanceOf<TestController>());
+      expect(countRender, 1);
+      expect(find.text("stateList.length: 0"), findsOneWidget);
+      expect(find.text("stateList.first: null"), findsOneWidget);
+      expect(find.text("stateList.last: null"), findsOneWidget);
+
+      instanceObtained.stateList.update(() {
+        instanceObtained.stateList.value.add('test');
+      });
+      await tester.pumpAndSettle();
+
+      expect(countRender, 2);
+      expect(find.text("stateList.length: 1"), findsOneWidget);
+      expect(find.text("stateList.first: test"), findsOneWidget);
+      expect(find.text("stateList.last: test"), findsOneWidget);
+
+      instanceObtained.stateList.value.add('test2');
+      await tester.pumpAndSettle();
+
+      expect(countRender, 2);
+      expect(find.text("stateList.length: 1"), findsOneWidget);
+      expect(find.text("stateList.first: test"), findsOneWidget);
+      expect(find.text("stateList.last: test"), findsOneWidget);
+
+      instanceObtained.stateList.update();
+      await tester.pumpAndSettle();
+
+      expect(countRender, 3);
+      expect(find.text("stateList.length: 2"), findsOneWidget);
+      expect(find.text("stateList.first: test"), findsOneWidget);
+      expect(find.text("stateList.last: test2"), findsOneWidget);
+
+      instanceObtained.stateList.update();
+      await tester.pumpAndSettle();
+
+      expect(countRender, 4);
+      expect(find.text("stateList.length: 2"), findsOneWidget);
+      expect(find.text("stateList.first: test"), findsOneWidget);
+      expect(find.text("stateList.last: test2"), findsOneWidget);
+    });
+
+    testWidgets("with context.watch should rebuild", (tester) async {
+      late TestController instanceObtained;
+      int countRender = 0;
+
+      await tester.pumpWidget(
+        TestBuilder(
+          child: ReactterProvidersBuilder(
+            builder: (context, _) {
+              instanceObtained = context.watch<TestController>(
+                (inst) => [inst.stateList],
+              );
+              final total = context.select<TestController, int>(
+                (inst, $) {
+                  return $(inst.stateList).value.length +
+                      $(inst.stateInt).value;
+                },
+              );
+              context.watch<TestController>((inst) => [inst.stateString]);
+
+              countRender++;
+
+              return Column(
+                children: [
+                  Text('total: $total'),
+                  Text(
+                    'stateList.first: ${instanceObtained.stateList.value.firstOrNull}',
+                  ),
+                  Text(
+                    'stateList.last: ${instanceObtained.stateList.value.lastOrNull}',
+                  ),
+                  Text('stateString: ${instanceObtained.stateString.value}'),
+                ],
+              );
+            },
+          ),
+        ),
+      );
+
+      await tester.pumpAndSettle();
+
+      expectLater(instanceObtained, isInstanceOf<TestController>());
+      expect(countRender, 1);
+      expect(find.text("total: 0"), findsOneWidget);
+      expect(find.text("stateList.first: null"), findsOneWidget);
+      expect(find.text("stateList.last: null"), findsOneWidget);
+      expect(find.text("stateString: initial"), findsOneWidget);
+
+      instanceObtained.stateList.update(() {
+        instanceObtained.stateList.value.add('test');
+      });
+      await tester.pumpAndSettle();
+
+      expect(countRender, 2);
+      expect(find.text("total: 1"), findsOneWidget);
+      expect(find.text("stateList.first: test"), findsOneWidget);
+      expect(find.text("stateList.last: test"), findsOneWidget);
+      expect(find.text("stateString: initial"), findsOneWidget);
+
+      instanceObtained.stateList.value.add('test2');
+      await tester.pumpAndSettle();
+
+      expect(countRender, 2);
+      expect(find.text("total: 1"), findsOneWidget);
+      expect(find.text("stateList.first: test"), findsOneWidget);
+      expect(find.text("stateList.last: test"), findsOneWidget);
+      expect(find.text("stateString: initial"), findsOneWidget);
+
+      instanceObtained.stateList.update();
+      await tester.pumpAndSettle();
+
+      expect(countRender, 3);
+      expect(find.text("total: 2"), findsOneWidget);
+      expect(find.text("stateList.first: test"), findsOneWidget);
+      expect(find.text("stateList.last: test2"), findsOneWidget);
+      expect(find.text("stateString: initial"), findsOneWidget);
+
+      instanceObtained.stateList.update();
+      await tester.pumpAndSettle();
+
+      expect(countRender, 4);
+      expect(find.text("total: 2"), findsOneWidget);
+      expect(find.text("stateList.first: test"), findsOneWidget);
+      expect(find.text("stateList.last: test2"), findsOneWidget);
+      expect(find.text("stateString: initial"), findsOneWidget);
+
+      instanceObtained.stateInt.value++;
+      await tester.pumpAndSettle();
+
+      expect(countRender, 5);
+      expect(find.text("total: 3"), findsOneWidget);
+      expect(find.text("stateList.first: test"), findsOneWidget);
+      expect(find.text("stateList.last: test2"), findsOneWidget);
+      expect(find.text("stateString: initial"), findsOneWidget);
+
+      instanceObtained.stateString.value = "hello";
+      await tester.pumpAndSettle();
+
+      expect(countRender, 6);
+      expect(find.text("total: 3"), findsOneWidget);
+      expect(find.text("stateList.first: test"), findsOneWidget);
+      expect(find.text("stateList.last: test2"), findsOneWidget);
+      expect(find.text("stateString: hello"), findsOneWidget);
+    });
+
+    testWidgets("should rebuild using multiple select", (tester) async {
+      late TestController instanceObtained;
+      int countRender = 0;
+
+      await tester.pumpWidget(
+        TestBuilder(
+          child: ReactterProvidersBuilder(
+            builder: (context, _) {
+              instanceObtained = context.use<TestController>();
+              final len = context.select<TestController, int>(
+                (inst, $) => $(inst.stateList).value.length,
+              );
+
+              countRender++;
+
+              return ListView.builder(
+                itemCount: len,
+                itemBuilder: (context, index) {
+                  return Builder(
+                    builder: (context) {
+                      final item = context.select(
+                        (_, $) {
+                          return $(instanceObtained.stateList)
+                              .value
+                              .elementAtOrNull(index);
+                        },
+                      );
+
+                      return Text("item[$index]: $item");
+                    },
+                  );
+                },
+              );
+            },
+          ),
+        ),
+      );
+
+      await tester.pumpAndSettle();
+
+      expectLater(instanceObtained, isInstanceOf<TestController>());
+      expect(countRender, 1);
+      expect(find.text("item[0]: test"), findsNothing);
+
+      instanceObtained.stateList.update(() {
+        instanceObtained.stateList.value.add('test');
+      });
+      await tester.pumpAndSettle();
+
+      expect(countRender, 2);
+      expect(find.text("item[0]: test"), findsOneWidget);
+
+      instanceObtained.stateList.value.add('test2');
+      await tester.pumpAndSettle();
+
+      expect(countRender, 2);
+      expect(find.text("item[0]: test"), findsOneWidget);
+      expect(find.text("item[1]: test2"), findsNothing);
+
+      instanceObtained.stateList.update();
+      await tester.pumpAndSettle();
+
+      expect(countRender, 3);
+      expect(find.text("item[0]: test"), findsOneWidget);
+      expect(find.text("item[1]: test2"), findsOneWidget);
+
+      instanceObtained.stateList.value[0] = 'test*';
+      instanceObtained.stateList.update();
+      await tester.pumpAndSettle();
+
+      expect(countRender, 3);
+      expect(find.text("item[0]: test*"), findsOneWidget);
+      expect(find.text("item[1]: test2"), findsOneWidget);
     });
   });
 }
