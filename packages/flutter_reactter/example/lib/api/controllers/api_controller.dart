@@ -8,8 +8,8 @@ class ApiController {
 
   final entityState = UseAsyncState.withArg(
     null,
-    Memo.inline<Future<Object?>, Args1<String>>(
-      ApiService().getEntity.ary,
+    Memo.inline<Future<Object?>, String>(
+      ApiService().getEntity,
       const MemoInterceptors([
         AsyncMemoSafe(),
         TemporaryCacheMemo(Duration(seconds: 30)),
@@ -19,6 +19,6 @@ class ApiController {
 
   void search(String query) {
     _query = query;
-    entityState.resolve(Args1(query));
+    entityState.resolve(query);
   }
 }
