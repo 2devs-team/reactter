@@ -20,6 +20,10 @@ extension ReactterStateListExtension<E extends ReactterState> on List<E> {
   /// ```
   /// Use [UseCompute] instead to improve performance, creating it out of
   /// context.
+  @Deprecated(
+    'Use `context.select` or `UseCompute` instead. '
+    'This feature was deprecated after v6.1.0.pre.',
+  )
   List<UseCompute> when(
     dynamic Function() condition, [
     dynamic Function()? condition2,
