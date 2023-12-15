@@ -1,7 +1,6 @@
 part of '../framework.dart';
 
-/// An abstract-class that provides the functionality of [ReactterNotifyManager]
-/// and [ReactterState].
+/// An abstract-class that provides the functionality of [ReactterState].
 ///
 /// This is an example of how to create a custom hook:
 ///
@@ -38,9 +37,6 @@ part of '../framework.dart';
 /// > ```
 ///
 /// See also:
-///
-/// * [ReactterNotifyManager], provides methods that notify listeners
-/// about [ReactterHook] changes.
 /// * [ReactterState], adds state management features to [ReactterHook].
 abstract class ReactterHook with ReactterStateBase implements ReactterState {
   /// This variable is used to register [ReactterHook]

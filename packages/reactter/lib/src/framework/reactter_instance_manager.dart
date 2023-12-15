@@ -350,7 +350,7 @@ abstract class ReactterInstanceManager {
         'because the "$reactterInstance" instance is active.\n'
         'You should delete the instance before with:\n'
         '`Reactter.delete<$T>(${id ?? ''});` or \n'
-        '`Reactter.destroy<$T>(${idParam}onlyInstance: true);`\n',
+        '`Reactter.destroy<$T>($idParam, onlyInstance: true);`\n',
         isError: true,
       );
 

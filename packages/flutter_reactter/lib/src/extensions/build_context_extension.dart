@@ -3,7 +3,7 @@ part of '../extensions.dart';
 /// Exposes methods to helps to get and listen the Object instance.
 extension ReactterBuildContextExtension on BuildContext {
   /// Uses the [selector] callback(first argument), for determining if
-  /// the widget tree of [context] needs to be rebuild by comparaing
+  /// the widget tree of [context] needs to be rebuild by comparing
   /// the previous and new result of [selector], and returns it.
   /// This evaluation only occurs if one of the selected [ReactterState]s gets updated,
   /// or by the instance if the [selector] does not have any selected [ReactterState]s.
@@ -53,7 +53,7 @@ extension ReactterBuildContextExtension on BuildContext {
     return ReactterSelector.contextOf(this, id: id, selector: selector);
   }
 
-  /// Gets the instance of [T] type from the closest ancestor of [ReactterProvider]
+  /// Gets the instance of [T] type from the closest ancestor [ReactterProvider]
   /// and listens changes to the instance or the states([ReactterState]) defined
   /// in first parameter([listenStates]) to trigger rebuild of the Widget tree.
   ///
@@ -117,7 +117,7 @@ extension ReactterBuildContextExtension on BuildContext {
   }
 
   /// Gets the instance of [T] type with/without [id]
-  /// from the closest ancestor of [ReactterProvider].
+  /// from the closest ancestor [ReactterProvider].
   ///
   /// ```dart
   /// final appController = context.use<AppController>();

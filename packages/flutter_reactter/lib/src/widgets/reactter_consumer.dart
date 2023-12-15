@@ -2,7 +2,7 @@ part of '../widgets.dart';
 
 /// {@template reactter_consumer}
 /// A [StatelessWidget] that allows to obtain an instance of [T] type
-/// from the closest ancestor of [ReactterProvider] and passes the instance
+/// from the closest ancestor [ReactterProvider] and passes the instance
 /// to [builder].
 ///
 /// Also, listens for instance changes or a [ReactterState] list

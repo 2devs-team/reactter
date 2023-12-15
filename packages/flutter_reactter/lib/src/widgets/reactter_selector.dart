@@ -2,15 +2,16 @@ part of '../widgets.dart';
 
 /// {@template reactter_selector}
 /// A [StatelessWidget] similar to [ReactterConsumer] but allowing to control
-/// the rebuilding of widget tree by selecting the [ReactterState]s and computing value.
+/// the rebuilding of widget tree by selecting the [ReactterState]s,
+/// and a computed value.
 ///
-/// [ReactterSelector] determines if [builder] needs to be called again
-/// by comparaing the previous and new result of [Selector].
+/// [ReactterSelector] determines if [builder] needs to be rebuild again
+/// by comparing the previous and new result of [Selector] and returns it.
 /// This evaluation only occurs if one of the selected [ReactterState]s gets updated,
 /// or by the instance if the [selector] does not have any selected [ReactterState]s.
 ///
 /// The [selector] property has a two arguments, the first one is the instance
-/// of [T] type which is obtained from the closest ancestor of [ReactterProvider].
+/// of [T] type which is obtained from the closest ancestor [ReactterProvider].
 /// and the second one is a [Select] function which allows to wrapper any
 /// [ReactterState]s to listen, and returns the value in each build. e.g:
 ///
@@ -79,7 +80,7 @@ part of '../widgets.dart';
 ///
 /// * [ReactterState], a state in reactter.
 /// * [ReactterConsumer], a widget that obtains an instance of [T] type
-/// from the closest ancestor of [ReactterProvider].
+/// from the closest ancestor [ReactterProvider].
 /// * [ReactterProvider], a widget that provides a [T] instance through Widget.
 /// {@endtemplate}
 ///
