@@ -82,18 +82,20 @@ See more examples [here](https://zapp.run/pub/flutter_reactter)!
   - [Singleton](#singleton)
   - [Shortcuts to manage instances](#shortcuts-to-manage-instances)
   - [UseInstance](#useinstance)
-  - [ReactterProvider](#reactterprovider) (`flutter_reactter`)
-  - [ReactterProviders](#reactterproviders) (`flutter_reactter`)
-  - [ReactterComponent](#reacttercomponent) (`flutter_reactter`)
-  - [BuildContext.use](#buildcontextuse) (`flutter_reactter`)
-- [LifeCycle and event management](#lifecycle-and-event-management)
+- [Event management](#event-management)
+  - [Lifecycles](#lifecycles)
   - [Shortcuts to manage events](#shortcuts-to-manage-events)
   - [UseEffect](#useeffect)
-  - [ReactterConsumer](#reactterconsumer) (`flutter_reactter`)
-  - [ReactterSelector](#reactterselector) (`flutter_reactter`)
-  - [ReactterWatcher](#reactterwatcher) (`flutter_reactter`)
-  - [BuildContext.watch](#buildcontextwatch) (`flutter_reactter`)
-  - [BuildContext.select](#buildcontextselect) (`flutter_reactter`)
+- [Rendering control](#rendering-control) (`flutter_reactter`)
+  - [ReactterProvider](#reactterprovider)
+  - [ReactterProviders](#reactterproviders)
+  - [ReactterComponent](#reacttercomponent)
+  - [ReactterConsumer](#reactterconsumer)
+  - [ReactterWatcher](#reactterwatcher)
+  - [ReactterSelector](#reactterselector)
+  - [BuildContext.use](#buildcontextuse)
+  - [BuildContext.watch](#buildcontextwatch)
+  - [BuildContext.select](#buildcontextselect)
 - [Custom hooks](#custom-hooks)
 - [Lazy state](#lazy-state)
 - [Generic arguments](#generic-arguments)
@@ -191,7 +193,9 @@ Reactter is a light and powerful solution for Dart and Flutter. It is composed o
 
 - [State management](#state-management)
 - [Dependency injection](#dependency-injection)
-- [Event management](#lifecycle-and-event-management)
+- [Event management](#event-management)
+
+Moreover, Reactter offers an extensive collection of widgets and extensions, granting advanced [rendering control](#rendering-control) through the `flutter_reactter` package.
 
 ## State management
 
@@ -687,7 +691,7 @@ Reactter identifies the singleton mode as [`InstanceManageMode.singleton`](https
 Reactter offers several convenient shortcuts for managing instances:
 
 - [`Reactter.register`](https://pub.dev/documentation/reactter/latest/reactter/ReactterInstanceManager/register.html): Registers a builder function, for creating a new instance using `[Reactter|UseInstance].[get|create|builder|factory|singleton]`.
-- [`Reactter.lazyStateBuilder`](https://pub.dev/documentation/reactter/latest/reactter/ReactterInstanceManager/lazyBuilder.html): Registers a builder function, for creating a new instance as [Builder](#builder) mode using `[Reactter|UseInstance].[get|create|builder]`.
+- [`Reactter.lazyBuilder`](https://pub.dev/documentation/reactter/latest/reactter/ReactterInstanceManager/lazyBuilder.html): Registers a builder function, for creating a new instance as [Builder](#builder) mode using `[Reactter|UseInstance].[get|create|builder]`.
 - [`Reactter.lazyFactory`](https://pub.dev/documentation/reactter/latest/reactter/ReactterInstanceManager/lazyFactory.html): Registers a builder function, for creating a new instance as [Factory](#factory) mode using `[Reactter|UseInstance].[get|create|factory]`.
 - [`Reactter.lazySingleton`](https://pub.dev/documentation/reactter/latest/reactter/ReactterInstanceManager/lazySingleton.html): Registers a builder function, for creating a new instance as [Singleton](#singleton) mode using `[Reactter|UseInstance].[get|create|singleton]`.
 - [`Reactter.create`](https://pub.dev/documentation/reactter/latest/reactter/ReactterInstanceManager/create.html): Registers, creates and returns the instance directly.
@@ -762,186 +766,31 @@ In each of the contructors or factories above shown, it provides the `id` proper
 > The scope of the registered instances is global.
 > This indicates that using the [shortcuts to manage instance](#shortcuts-to-manage-events) or [`UseInstance`](#useinstance) will allow you to access them from anywhere in the project.
 
-### ReactterProvider
+## Event management
 
-[`ReactterProvider`](https://pub.dev/documentation/flutter_reactter/latest/flutter_reactter/ReactterProvider-class.html) is a Widget (exclusive of `flutter_reactter`) that hydrates from an instance of `T` type to the Widget tree.
+In Reactter, event management plays a pivotal role in facilitating seamless communication and coordination between various components within the application.
+The event management system is designed to ensure efficient handling of states and instances, fostering a cohesive ecosystem where different parts of the application can interact harmoniously.
 
-```dart
-ReactterProvider<T>(
-  T instanceBuilder(), {
-  String? id,
-  bool init = false,
-  InstanceManageMode type = InstanceManageMode.builder,
-  Widget? child,
-  required Widget builder(T instance, BuilderContext context, Widget? child),
-})
-```
+One of the key aspects of event management in Reactter is the introduction of [lifecycles](#lifecycles) linked to events.
+These lifecycles define the different stages through which a state or instance passes, offering a structured flow and effective handling of changes.
 
-`ReactterProvider` accepts theses properties:
+Additionally, Reactter offers the following event managers:
 
-- `instanceBuilder`: to define a method for the creation of a new instance of `T` type.
+- [Shortcuts to manage events](#shortcuts-to-manage-instances)
+- [UseEffect](#useeffect)
 
-  > **NOTE:**
-  > The instance can be accessed through methods [BuildContext extension](#buildcontext-extension).
+by `flutter_reactter`:
 
-  > **RECOMMENDED:**
-  > Don't use Object with constructor parameters to prevent conflicts.
+- [ReactterConsumer](#reactterconsumer)
+- [ReactterSelector](#reactterselector)
+- [ReactterWatcher](#reactterwatcher)
+- [BuildContext.watch](#buildcontextwatch)
+- [BuildContext.select](#buildcontextselect)
 
-- `id`: to uniquely identify the instance.
-- `init`:  to indicate that the instance must be initialized before the `ReactterProvider` is mounted.
-- `mode`: to determine the instance manage mode([Builder](#builder), [Factory](#factory) or [Singleton](#singleton)).
-- `child`: to pass a `Widget`  through the `builder` method that it will be built only once.
-- `builder`: to define a method that contains the builder logic of the widget that will be embedded in the widget tree. This method exposes the `instance`(`T`) created, a new `context`(`BuildContext`) and a `child`(`Widget`) defined in the `child` property.
+### Lifecycles
 
-Here is an example:
-
-```dart
-ReactterProvider<CounterController>(
-  () => CounterController(),
-  child: const Text('This widget is rendered once'),
-  builder: (counterController, context, child) {
-    // `context.watch` listens any CounterController changes for rebuild this widget tree.
-    context.watch<CounterController>();
-
-    // Change the `value` each 1 second.
-    Timer.periodic(Duration(seconds: 1), (_) => counterController.count.value++);
-
-    return Column(
-      children: [
-        child!, // The child widget has already been built in `child` property.
-        Text("count: ${counterController.count.value}"),
-      ],
-    );
-  },
-)
-```
-
-> **NOTE:** `ReactteProvider` is "scoped". So, the `builder` method will be rebuild when the instance or any `ReactterState` specified the watch methods of [BuildContext extension](#buildcontext-extension) changes.
-
-### ReactterProviders
-
-[`ReactterProviders`](https://pub.dev/documentation/flutter_reactter/latest/flutter_reactter/ReactterProviders-class.html) is a Widget (exclusive of `flutter_reactter`) that allows to use multiple [`ReactterProvider`](#reactterprovider) in a nested way.
-
-```dart
-ReactterProviders(
-  [
-    ReactterProvider(
-      () => MyController(),
-    ),
-    ReactterProvider(
-      () => ConfigController(),
-      id: 'App',
-    ),
-    ReactterProvider(
-      () => ConfigController(),
-      id: 'Dashboard'
-    ),
-  ],
-  builder: (context, child) {
-    final myController = context.use<MyController>();
-    final appConfigController = context.use<ConfigController>('App');
-    final dashboardConfigController = context.use<ConfigController>('Dashboard');
-    ...
-  },
-)
-```
-
-> **RECOMMENDED:**
-> Don't use Object with constructor parameters to prevent conflicts.
-
-> **NOTE:**
-> `ReactteProviders` is "scoped". So, the `builder` method will be rebuild when the instance or any `ReactterState` specified using the watch methods of [BuildContext extension](#buildcontext-extension) changes.
-
-### ReactterComponent
-
-[`ReactterComponent`](https://pub.dev/documentation/flutter_reactter/latest/widgets/ReactterComponent-class.html) is a abstract `StatelessWidget` (exclusive of `flutter_reactter`) that provides [`ReactterProvider`](#reactterprovider) features, whose instance of `T` type is exposed trough `render` method.
-
-```dart
-class CounterComponent extends ReactterComponent<CounterController> {
-  const CounterComponent({Key? key}) : super(key: key);
-
-  @override
-  get builder => () => CounterController();
-
-  @override
-  void listenStates(counterController) => [counterController.count];
-
-  @override
-  Widget render(counterController, context) {
-    return Text("Count: ${counterController.count.value}");
-  }
-}
-```
-
-Use `builder` getter to define the instance builder function.
-
-> **RECOMMENDED:**
-> Don't use Object with constructor parameters to prevent conflicts.
-
-> **NOTE:**
-> If you don't use `builder` getter, the instance will not be created. Instead, an attempt will be made to locate it within the closest ancestor where it was initially created.
-
-Use the `id` getter to identify the instance of `T`:
-
-Use the `listenStates` getter to define the states that will rebuild the tree of the widget defined in the `render` method whenever it changes.
-
-Use the `listenAll` getter as `true` to listen to all the instance changes to rebuild the Widget tree defined in the `render` method.
-
-### BuildContext.use
-
-[`BuildContext.use`](https://pub.dev/documentation/flutter_reactter/latest/flutter_reactter/ReactterBuildContextExtension/use.html) is an extension method of the `BuildContext`, that allows to access to instance of `T` type from the closest ancestor [`ReactterProvider`](https://pub.dev/documentation/flutter_reactter/latest/flutter_reactter/ReactterProvider-class.html).
-
-```dart
-T context.use<T>([String? id])
-```
-
-Here is an example:
-
-```dart
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
-  @override
-  Widget? build(BuildContext context) {
-    return ReactterProvider<MyController>(
-      () => MyController(),
-      builder: (inst, context, child) {
-        return OtherWidget();
-      }
-    );
-  }
-}
-
-class OtherWidget extends StatelessWidget {
-  const OtherWidget({Key? key}) : super(key: key);
-
-  @override
-  Widget? build(BuildContext context) {
-    final myController = context.use<MyController>();
-
-    return Text("value: ${myController.stateA.value}");
-  }
-}
-```
-
-Use the first argument for obtaining the instance by `id`. e.g:
-
-```dart
-  final myControllerById = context.use<MyController>('uniqueId');
-```
-
-Use the nullable type to safely get the instance, avoiding exceptions if the instance is not found, and get `null` instead. e.g:
-
-```dart
-  final myController = context.use<MyController?>();
-```
-
->**NOTE:**
-> If `T` is non-nullable and the instance is not found, it will throw `ProviderNullException`.
-
-## LifeCycle and event management
-
-In Reactter, the states ([`ReactterState`](#state-management)) and the instances (managed by the [`dependency injection`](#dependency-injection)) contain different stages, also known as [`Lifecycle`](https://pub.dev/documentation/reactter/latest/reactter/Lifecycle.html). This lifecycles linked events, which are:
+In Reactter, both the states ([`ReactterState`](#state-management)) and the instances (managed by the [`dependency injection`](#dependency-injection)) contain different stages, also known as [`Lifecycle`](https://pub.dev/documentation/reactter/latest/reactter/Lifecycle.html).
+This lifecycles linked events, which are:
 
 - `Lifecycle.registered`: is triggered when the instance has been registered.
 - `Lifecycle.unregistered`: is triggered when the instance is no longer registered.
@@ -952,19 +801,6 @@ In Reactter, the states ([`ReactterState`](#state-management)) and the instances
 - `Lifecycle.didUpdate`: is triggered anytime the instance's state has been updated. The event parameter is a `ReactterState`.
 - `Lifecycle.willUnmount`(exclusive of `flutter_reactter`): is triggered when the instance is about to be unmounted from the widget tree.
 - `Lifecycle.destroyed`: is triggered when the instance has been destroyed.
-
-Reactter offers the following several event managers:
-
-- [Shortcuts to manage events](#shortcuts-to-manage-instances)
-- [UseEffect](#useeffect)
-
-and provides the following widget tree rebuilding controls (`flutter_reactter`):
-
-- [ReactterConsumer](#reactterconsumer)
-- [ReactterSelector](#reactterselector)
-- [ReactterWatcher](#reactterwatcher)
-- [BuildContext.watch](#buildcontextwatch)
-- [BuildContext.select](#buildcontextselect)
 
 ### Shortcuts to manage events
 
@@ -1001,12 +837,6 @@ Reactter offers several convenient shortcuts for managing events:
 
   ```dart
   Reactter.emit(Object instance, Enum event, [dynamic param]);
-  ```
-
-- [`Reactter.emitAsync`](https://pub.dev/documentation/reactter/latest/reactter/ReactterEventManager/emitAsync.html): triggers an `event` of `instance` with or without the `param` given as async way.
-
-  ```dart
-  Future<void> Reactter.emitAsync(Object instance, Enum event, [dynamic param]);
   ```
 
 In each of the methods it receives as first parameter an `instance` that can be directly the instance object or use `ReactterInstance` instead:
@@ -1078,6 +908,145 @@ UseEffect(
 
 > **NOTE:**
 > If you don't add an `instance` argument to `UseEffect`, the `callback` won't execute on `Lifecycle.didMount`, and the `cleanup` won't execute on `Lifecycle.willUnmount` (theses `Lifecycle` events are used with `flutter_reactter` only).
+
+## Rendering control
+
+Rendering control provides the capability to observe specific instances or states, triggering re-renders of the widget tree as required. This methodology ensures a unified and responsive user interface, facilitating efficient updates based on changes in the application's state.
+
+In this context, the [`flutter_reactter`](https://pub.dev/packages/flutter_reactter) package provides the following purpose-built widgets and certain `BuildContext` extension for rendering control:
+
+- [ReactterProvider](#reactterprovider)
+- [ReactterProviders](#reactterproviders)
+- [ReactterComponent](#reacttercomponent)
+- [ReactterConsumer](#reactterconsumer)
+- [ReactterWatcher](#reactterwatcher)
+- [ReactterSelector](#reactterselector)
+- [BuildContext.use](#buildcontextuse)
+- [BuildContext.watch](#buildcontextwatch)
+- [BuildContext.select](#buildcontextselect)
+
+### ReactterProvider
+
+[`ReactterProvider`](https://pub.dev/documentation/flutter_reactter/latest/flutter_reactter/ReactterProvider-class.html) is a Widget (exclusive of `flutter_reactter`) that hydrates from an instance of `T` type to the Widget tree.
+
+```dart
+ReactterProvider<T>(
+  T instanceBuilder(), {
+  String? id,
+  bool init = false,
+  InstanceManageMode type = InstanceManageMode.builder,
+  Widget? child,
+  required Widget builder(T instance, BuilderContext context, Widget? child),
+})
+```
+
+`ReactterProvider` accepts theses properties:
+
+- `instanceBuilder`: to define a method for the creation of a new instance of `T` type.
+
+  > **RECOMMENDED:**
+  > Don't use Object with constructor parameters to prevent conflicts.
+
+- `id`: to uniquely identify the instance.
+- `init`:  to indicate that the instance must be initialized before the `ReactterProvider` is mounted.
+- `mode`: to determine the instance manage mode([Builder](#builder), [Factory](#factory) or [Singleton](#singleton)).
+- `child`: to pass a `Widget`  through the `builder` method that it will be built only once.
+- `builder`: to define a method that contains the builder logic of the widget that will be embedded in the widget tree. This method exposes the `instance`(`T`) created, a new `context`(`BuildContext`) and a `child`(`Widget`) defined in the `child` property.
+
+Here is an example:
+
+```dart
+ReactterProvider<CounterController>(
+  () => CounterController(),
+  child: const Text('This widget is rendered once'),
+  builder: (counterController, context, child) {
+    // `context.watch` listens any CounterController changes for rebuild this widget tree.
+    context.watch<CounterController>();
+
+    // Change the `value` each 1 second.
+    Future.delayed(Duration(seconds: 1), (_) => counterController.count.value++);
+
+    return Column(
+      children: [
+        child!, // The child widget has already been built in `child` property.
+        Text("count: ${counterController.count.value}"),
+      ],
+    );
+  },
+)
+```
+
+> **NOTE:**
+> `ReactteProvider` is "scoped". So, the `builder` method will be rebuild when the instance or any `ReactterState` specified in [`BuildContext.watch`](#buildcontextwatch) or [`BuildContext.select`](#buildcontextselect)  changes.
+
+### ReactterProviders
+
+[`ReactterProviders`](https://pub.dev/documentation/flutter_reactter/latest/flutter_reactter/ReactterProviders-class.html) is a Widget (exclusive of `flutter_reactter`) that allows to use multiple [`ReactterProvider`](#reactterprovider) in a nested way.
+
+```dart
+ReactterProviders(
+  [
+    ReactterProvider(
+      () => MyController(),
+    ),
+    ReactterProvider(
+      () => ConfigController(),
+      id: 'App',
+    ),
+    ReactterProvider(
+      () => ConfigController(),
+      id: 'Dashboard'
+    ),
+  ],
+  builder: (context, child) {
+    final myController = context.use<MyController>();
+    final appConfigController = context.use<ConfigController>('App');
+    final dashboardConfigController = context.use<ConfigController>('Dashboard');
+    ...
+  },
+)
+```
+
+> **RECOMMENDED:**
+> Don't use Object with constructor parameters to prevent conflicts.
+
+> **NOTE:**
+> `ReactteProvider` is "scoped". So, the `builder` method will be rebuild when the instance or any `ReactterState` specified in [`BuildContext.watch`](#buildcontextwatch) or [`BuildContext.select`](#buildcontextselect)  changes.
+
+### ReactterComponent
+
+[`ReactterComponent`](https://pub.dev/documentation/flutter_reactter/latest/widgets/ReactterComponent-class.html) is a abstract `StatelessWidget` (exclusive of `flutter_reactter`) that provides [`ReactterProvider`](#reactterprovider) features, whose instance of `T` type is exposed trough `render` method.
+
+```dart
+class CounterComponent extends ReactterComponent<CounterController> {
+  const CounterComponent({Key? key}) : super(key: key);
+
+  @override
+  get builder => () => CounterController();
+
+  @override
+  void listenStates(counterController) => [counterController.count];
+
+  @override
+  Widget render(counterController, context) {
+    return Text("Count: ${counterController.count.value}");
+  }
+}
+```
+
+Use `builder` getter to define the instance builder function.
+
+> **RECOMMENDED:**
+> Don't use Object with constructor parameters to prevent conflicts.
+
+> **NOTE:**
+> If you don't use `builder` getter, the instance will not be created. Instead, an attempt will be made to locate it within the closest ancestor where it was initially created.
+
+Use the `id` getter to identify the instance of `T`:
+
+Use the `listenStates` getter to define the states that will rebuild the tree of the widget defined in the `render` method whenever it changes.
+
+Use the `listenAll` getter as `true` to listen to all the instance changes to rebuild the Widget tree defined in the `render` method.
 
 ### ReactterConsumer
 
@@ -1282,6 +1251,58 @@ class App extends StatelessWidget {
   }
 }
 ```
+
+### BuildContext.use
+
+[`BuildContext.use`](https://pub.dev/documentation/flutter_reactter/latest/flutter_reactter/ReactterBuildContextExtension/use.html) is an extension method of the `BuildContext`, that allows to access to instance of `T` type from the closest ancestor [`ReactterProvider`](https://pub.dev/documentation/flutter_reactter/latest/flutter_reactter/ReactterProvider-class.html).
+
+```dart
+T context.use<T>([String? id])
+```
+
+Here is an example:
+
+```dart
+class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
+  @override
+  Widget? build(BuildContext context) {
+    return ReactterProvider<MyController>(
+      () => MyController(),
+      builder: (inst, context, child) {
+        return OtherWidget();
+      }
+    );
+  }
+}
+
+class OtherWidget extends StatelessWidget {
+  const OtherWidget({Key? key}) : super(key: key);
+
+  @override
+  Widget? build(BuildContext context) {
+    final myController = context.use<MyController>();
+
+    return Text("value: ${myController.stateA.value}");
+  }
+}
+```
+
+Use the first argument for obtaining the instance by `id`. e.g:
+
+```dart
+  final myControllerById = context.use<MyController>('uniqueId');
+```
+
+Use the nullable type to safely get the instance, avoiding exceptions if the instance is not found, and get `null` instead. e.g:
+
+```dart
+  final myController = context.use<MyController?>();
+```
+
+>**NOTE:**
+> If `T` is non-nullable and the instance is not found, it will throw `ProviderNullException`.
 
 ### BuildContext.watch
 
