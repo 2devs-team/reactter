@@ -1,7 +1,6 @@
 part of '../framework.dart';
 
 abstract class ReactterDependency<T extends Object?> {
-  // ignore: prefer_final_fields
   T? _instance;
   final Set<ReactterState> _states;
 
@@ -32,22 +31,22 @@ class ReactterStatesDependency<T extends Object?>
 
 class ReactterSelectDependency<T extends Object?>
     extends ReactterDependency<T> {
-  final T instance;
-  late final dynamic value;
+  final T _instanceSelect;
   final Selector<T, dynamic> computeValue;
-
-  Set<ReactterState> get states => _states;
+  late final dynamic value;
 
   ReactterSelectDependency({
-    required this.instance,
+    required T instance,
     required this.computeValue,
-  }) : super(null, {}) {
+  })  : _instanceSelect = instance,
+        super(null, {}) {
     value = resolve(true);
+    if (_states.isEmpty) _instance = instance;
   }
 
   dynamic resolve([bool isWatchState = false]) {
     return computeValue(
-      instance,
+      _instanceSelect,
       isWatchState ? watchState : skipWatchState,
     );
   }
@@ -88,6 +87,7 @@ class ReactterMasterDependency<T extends Object?>
     }
 
     if (dependency is ReactterSelectDependency) {
+      _instance = dependency._instance as T;
       _selects.add(dependency);
     }
   }

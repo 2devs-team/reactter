@@ -168,17 +168,6 @@ class ReactterSelector<T extends Object?, V> extends StatelessWidget {
       computeValue: selector as dynamic,
     );
 
-    if (dependency.states.isEmpty) {
-      if (instance != null) {
-        context.dependOnInheritedElement(
-          inheritedElement!,
-          aspect: ReactterInstanceDependency(instance),
-        );
-      }
-
-      return dependency.value;
-    }
-
     context.dependOnInheritedElement(
       inheritedElement!,
       aspect: dependency,

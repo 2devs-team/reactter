@@ -435,7 +435,7 @@ void main() {
       instanceObtained.stateList.update();
       await tester.pumpAndSettle();
 
-      expect(countRender, 4);
+      expect(countRender, 3);
       expect(find.text("stateList.length: 2"), findsOneWidget);
       expect(find.text("stateList.first: test"), findsOneWidget);
       expect(find.text("stateList.last: test2"), findsOneWidget);
