@@ -33,15 +33,15 @@ class CalculatorActionButton extends StatelessWidget {
     void onPressed() => calculatorController.executeAction(action);
 
     if (isMathOperation) {
-      checkIsSelected() => calculatorController.mathOperation.value == action;
-
       return Expanded(
-        child: ReactterConsumer<CalculatorController>(
-          listenStates: (inst) => [inst.mathOperation].when(checkIsSelected),
-          builder: (_, __, ___) {
+        child: ReactterSelector<CalculatorController, bool>(
+          selector: (inst, $) {
+            return $(calculatorController.mathOperation).value == action;
+          },
+          builder: (_, __, isSelected, ___) {
             return Button.primary(
               label: label,
-              isSelected: checkIsSelected(),
+              isSelected: isSelected,
               onPressed: onPressed,
             );
           },

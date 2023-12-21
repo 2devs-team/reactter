@@ -15,7 +15,7 @@ TodoStore _reducer(TodoStore state, ReactterAction action) {
 }
 
 class TodoController {
-  final state = UseReducer(
+  final uReduce = UseReducer(
     _reducer,
     const TodoStore(
       todoList: [
@@ -24,39 +24,18 @@ class TodoController {
     ),
   );
 
-  late final todoListFiltered = Reactter.lazyState(
-    () => UseCompute(
-      () => getTodosBy(state.value.filterBy),
-      [state],
-    ),
-    this,
-  );
-
-  late final todoActiveCount = Reactter.lazyState(
-    () => UseCompute(
-      () => state.value.todoList.fold<int>(
-        0,
-        (acc, todo) => acc + (todo.isDone ? 0 : 1),
-      ),
-      [state],
-    ),
-    this,
-  );
-
   List<Todo> getTodosBy(TodoListType todoListType) {
-    if (todoListType == TodoListType.todo) {
-      return state.value.todoList.where((todo) => !todo.isDone).toList();
-    }
+    if (todoListType == TodoListType.all) return uReduce.value.todoList;
 
-    if (todoListType == TodoListType.done) {
-      return state.value.todoList.where((todo) => todo.isDone).toList();
-    }
+    final isDone = todoListType == TodoListType.done;
 
-    return state.value.todoList;
+    return uReduce.value.todoList
+        .where((todo) => todo.isDone == isDone)
+        .toList();
   }
 
   void filterBy(TodoListType? todoListType) {
-    state.dispatch(
+    uReduce.dispatch(
       FilterAction(
         todoListType: todoListType ?? TodoListType.all,
       ),
@@ -64,7 +43,7 @@ class TodoController {
   }
 
   void addTodo(String task) {
-    state.dispatch(
+    uReduce.dispatch(
       AddTodoAction(
         todo: Todo(
           title: task.trim(),
@@ -74,7 +53,7 @@ class TodoController {
   }
 
   void removeTodo(Todo todo) {
-    state.dispatch(
+    uReduce.dispatch(
       RemoveTodoAction(
         todo: todo,
       ),
@@ -82,7 +61,7 @@ class TodoController {
   }
 
   void toggleTodo(Todo todo) {
-    state.dispatch(
+    uReduce.dispatch(
       ToggleTodoAction(
         todo: todo,
       ),
@@ -90,6 +69,6 @@ class TodoController {
   }
 
   void clearCompleted() {
-    state.dispatch(const ClearCompletedAction());
+    uReduce.dispatch(const ClearCompletedAction());
   }
 }

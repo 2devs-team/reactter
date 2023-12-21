@@ -14,6 +14,6 @@ class FilterAction extends ReactterActionCallable<TodoStore, TodoListType> {
 
   @override
   TodoStore call(TodoStore state) {
-    return state.copyWith(filterBy: todoListType);
+    return state.copyWith(filteredBy: todoListType);
   }
 }

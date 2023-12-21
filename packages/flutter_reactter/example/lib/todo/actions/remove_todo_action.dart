@@ -15,9 +15,12 @@ class RemoveTodoAction extends ReactterActionCallable<TodoStore, Todo> {
 
   @override
   TodoStore call(TodoStore state) {
-    return state.copyWith(todoList: [
-      for (final todo in state.todoList)
-        if (this.todo != todo) todo
-    ]);
+    return state.copyWith(
+      todoList: [
+        for (final todo in state.todoList)
+          if (this.todo != todo) todo
+      ],
+      doneCount: state.doneCount - (todo.isDone ? 1 : 0),
+    );
   }
 }

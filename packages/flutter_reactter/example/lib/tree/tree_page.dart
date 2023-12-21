@@ -9,8 +9,8 @@ class TreePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ReactterProvider<TreeNode>(
-      () => TreeNode(),
+    return ReactterProvider(
+      TreeNode.new,
       builder: (treeContext, context, _) {
         return Scaffold(
           appBar: AppBar(

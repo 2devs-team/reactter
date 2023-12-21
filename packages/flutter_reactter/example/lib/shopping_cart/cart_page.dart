@@ -24,14 +24,12 @@ class CartPage extends ReactterComponent<CartController> {
       appBar: AppBar(
         title: const Text("My cart"),
       ),
-      body: ReactterConsumer<CartController>(
-        listenStates: (inst) => [
-          inst.items,
-        ].when(() => inst.items.value.length),
-        builder: (_, __, ___) {
-          final items = cartController.items.value;
+      body: ReactterSelector<CartController, int>(
+        selector: (inst, $) => $(inst.uItems).value.length,
+        builder: (_, __, itemCount, ____) {
+          final items = cartController.uItems.value;
 
-          if (items.isEmpty) {
+          if (itemCount == 0) {
             return Center(
               child: Text(
                 "Your cart is empty!",
@@ -41,7 +39,7 @@ class CartPage extends ReactterComponent<CartController> {
           }
 
           return ListView.builder(
-            itemCount: items.length,
+            itemCount: itemCount,
             cacheExtent: 70,
             padding: const EdgeInsets.symmetric(
               vertical: 8,
@@ -50,13 +48,9 @@ class CartPage extends ReactterComponent<CartController> {
             itemBuilder: (context, index) {
               final product = items.keys.elementAt(index);
 
-              return ReactterConsumer<CartController>(
-                  listenStates: (inst) => [
-                        inst.items,
-                      ].when(
-                        () => inst.items.value[product],
-                      ),
-                  builder: (cartController, _, __) {
+              return ReactterSelector<CartController, int>(
+                  selector: (inst, $) => $(inst.uItems).value[product] ?? 0,
+                  builder: (_, cartController, __, ___) {
                     final item = items.entries.elementAt(index);
 
                     return SizedBox(
@@ -75,11 +69,11 @@ class CartPage extends ReactterComponent<CartController> {
         },
       ),
       bottomNavigationBar: ReactterConsumer<CartController>(
-        listenStates: (inst) => [inst.items],
+        listenStates: (inst) => [inst.uItems],
         builder: (cartController, _, __) {
-          final items = cartController.items.value;
-          final itemsCount = cartController.itemsCount.value;
-          final total = cartController.total.value;
+          final items = cartController.uItems.value;
+          final itemsCount = cartController.uItemsCount.value;
+          final total = cartController.uTotal.value;
 
           return CartBottom(
             productsCount: items.length,

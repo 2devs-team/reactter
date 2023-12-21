@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_reactter/flutter_reactter.dart';
 
-final count = 0.signal;
+final count = Signal(0);
 
 class CounterPage extends StatelessWidget {
   const CounterPage({Key? key}) : super(key: key);

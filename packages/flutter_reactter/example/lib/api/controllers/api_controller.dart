@@ -6,7 +6,7 @@ class ApiController {
   String _query = '';
   String get query => _query;
 
-  final entityState = UseAsyncState.withArg(
+  final uEntity = UseAsyncState.withArg(
     null,
     Memo.inline<Future<Object?>, String>(
       ApiService().getEntity,
@@ -19,6 +19,6 @@ class ApiController {
 
   void search(String query) {
     _query = query;
-    entityState.resolve(query);
+    uEntity.resolve(query);
   }
 }

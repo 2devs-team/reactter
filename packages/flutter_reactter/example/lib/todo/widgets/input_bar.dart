@@ -21,7 +21,6 @@ class InputBar extends StatelessWidget {
       final task = inputKey.currentState?.value ?? '';
 
       onAdd?.call(task);
-
       inputKey.currentState?.reset();
     }
 

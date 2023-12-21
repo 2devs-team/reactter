@@ -12,7 +12,7 @@ class ShoppingCartPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ReactterProviders(
-      const [
+      [
         ReactterProvider(ProductsController.new),
         ReactterProvider(CartController.new),
       ],
@@ -33,10 +33,10 @@ class ShoppingCartPage extends StatelessWidget {
           body: LayoutBuilder(builder: (context, constraints) {
             return ReactterConsumer<ProductsController>(
               listenStates: (inst) => [
-                inst.products,
+                inst.uProducts,
               ],
               builder: (productsController, _, __) {
-                final products = productsController.products.value;
+                final products = productsController.uProducts.value;
                 final crossAxisCount = (constraints.maxWidth / 140).floor();
 
                 return GridView.count(

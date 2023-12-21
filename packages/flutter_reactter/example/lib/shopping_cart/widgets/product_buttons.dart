@@ -16,30 +16,26 @@ class ProductButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ReactterConsumer<CartController>(
-      listenStates: (inst) => [
-        inst.items,
-      ].when(() => inst.getQuantity(product)),
-      builder: (cartController, _, __) {
-        final quantity = cartController.getQuantity(product);
+    final cartController = context.use<CartController>();
+    final quantity = context.select<CartController, int>(
+      (inst, $) => inst.uItems.value[product] ?? 0,
+    );
 
-        if (quantity == 0) {
-          return CustomIconButton(
-            icon: Icons.add,
-            color: Colors.green,
-            onPressed: quantity < product.stock
-                ? () => cartController.addItem(product)
-                : null,
-          );
-        }
+    if (quantity == 0) {
+      return CustomIconButton(
+        icon: Icons.add,
+        color: Colors.green,
+        onPressed: quantity < product.stock
+            ? () => cartController.addItem(product)
+            : null,
+      );
+    }
 
-        return Quantity(
-          quantity: quantity,
-          maxQuantity: product.stock,
-          onRemove: () => cartController.removeItem(product),
-          onAdd: () => cartController.addItem(product),
-        );
-      },
+    return Quantity(
+      quantity: quantity,
+      maxQuantity: product.stock,
+      onRemove: () => cartController.removeItem(product),
+      onAdd: () => cartController.addItem(product),
     );
   }
 }

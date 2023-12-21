@@ -14,8 +14,8 @@ class ApiPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ReactterProvider<ApiController>(
-      () => ApiController(),
+    return ReactterProvider(
+      ApiController.new,
       builder: (apiController, context, child) {
         return Scaffold(
           appBar: AppBar(
@@ -35,7 +35,7 @@ class ApiPage extends StatelessWidget {
             padding: const EdgeInsets.all(8),
             child: Center(
               child: ReactterConsumer<ApiController>(
-                listenStates: (inst) => [inst.entityState],
+                listenStates: (inst) => [inst.uEntity],
                 builder: (_, __, ___) {
                   return FittedBox(
                     child: SizedBox(
@@ -45,7 +45,7 @@ class ApiPage extends StatelessWidget {
                         child: Container(
                           alignment: Alignment.center,
                           padding: const EdgeInsets.all(16),
-                          child: apiController.entityState.when<Widget>(
+                          child: apiController.uEntity.when<Widget>(
                             standby: (_) => const Text(
                               'Search a user or repository(like "flutter/flutter")',
                             ),

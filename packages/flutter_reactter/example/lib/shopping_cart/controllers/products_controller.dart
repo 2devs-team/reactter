@@ -4,16 +4,16 @@ import '../repositories/store_repository.dart';
 import '../models/product.dart';
 
 class ProductsController {
-  final useStoreRepository = UseInstance.create(StoreRepository.new);
-  final products = UseState(<Product>[]);
+  final uStoreRepository = UseInstance.create(StoreRepository.new);
+  final uProducts = UseState(<Product>[]);
 
   ProductsController() {
     loadProducts();
   }
 
   void loadProducts() {
-    products.update(() {
-      products.value = useStoreRepository.instance!.getProducts();
+    uProducts.update(() {
+      uProducts.value = uStoreRepository.instance!.getProducts();
     });
   }
 }

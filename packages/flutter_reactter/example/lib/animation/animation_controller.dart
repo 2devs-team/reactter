@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_reactter/flutter_reactter.dart';
 
 import 'use_animation.dart';
 
 class AnimationController {
-  final sizeAnimation = UseAnimation<double>(
+  final uSizeAnimation = UseAnimation<double>(
     AnimationOptions(
       tween: Tween(begin: 10, end: 100),
       duration: const Duration(milliseconds: 800),
@@ -13,7 +12,7 @@ class AnimationController {
     ),
   );
 
-  final borderRadiusAnimation = UseAnimation<BorderRadius?>(
+  final uBorderRadiusAnimation = UseAnimation<BorderRadius?>(
     AnimationOptions(
       tween: BorderRadiusTween(
         begin: BorderRadius.circular(75.0),
@@ -25,7 +24,7 @@ class AnimationController {
     ),
   );
 
-  final colorAnimation = UseAnimation<Color?>(
+  final uColorAnimation = UseAnimation<Color?>(
     AnimationOptions(
       tween: TweenSequence<Color?>(
         [
@@ -65,31 +64,21 @@ class AnimationController {
     ),
   );
 
-  late final isPlaying = Reactter.lazyState(() {
-    return UseCompute(
-      () => [
-        sizeAnimation.control.value,
-        borderRadiusAnimation.control.value,
-        colorAnimation.control.value,
-      ].every((control) => control != AnimationControl.stop),
-      [
-        sizeAnimation.control,
-        borderRadiusAnimation.control,
-        colorAnimation.control,
-      ],
-    );
-  }, this);
+  void resumeAnimation() {
+    uSizeAnimation.mirror();
+    uBorderRadiusAnimation.mirror();
+    uColorAnimation.mirror();
+  }
 
-  void togglePlayAnimations() {
-    if (isPlaying.value) {
-      sizeAnimation.stop();
-      borderRadiusAnimation.stop();
-      colorAnimation.stop();
-      return;
-    }
+  void pauseAnimation() {
+    uSizeAnimation.pause();
+    uBorderRadiusAnimation.pause();
+    uColorAnimation.pause();
+  }
 
-    sizeAnimation.mirror();
-    borderRadiusAnimation.mirror();
-    colorAnimation.mirror();
+  void stopAnimation() {
+    uSizeAnimation.stop();
+    uBorderRadiusAnimation.stop();
+    uColorAnimation.stop();
   }
 }

@@ -19,6 +19,9 @@ class ToggleTodoAction extends ReactterActionCallable<TodoStore, Todo> {
 
     todoList[index] = todo.copyWith(isDone: !todo.isDone);
 
-    return state.copyWith(todoList: todoList);
+    return state.copyWith(
+      todoList: todoList,
+      doneCount: state.doneCount + (todo.isDone ? -1 : 1),
+    );
   }
 }

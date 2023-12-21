@@ -4,63 +4,61 @@ import '../models/product.dart';
 import '../repositories/store_repository.dart';
 
 class CartController {
-  final useStoreRepository = UseInstance.create(StoreRepository.new);
-  final items = UseState(<Product, int>{});
-  final itemsCount = UseState(0);
-  final total = UseState(0.0);
-
-  int getQuantity(Product product) => items.value[product] ?? 0;
+  final uStoreRepository = UseInstance.create(StoreRepository.new);
+  final uItems = UseState(<Product, int>{});
+  final uItemsCount = UseState(0);
+  final uTotal = UseState(0.0);
 
   void addItem(Product product) {
-    final quantity = (items.value[product] ?? 0) + 1;
+    final quantity = (uItems.value[product] ?? 0) + 1;
 
     if (quantity > product.stock) return;
 
-    items.update(() {
-      items.value[product] = quantity;
+    uItems.update(() {
+      uItems.value[product] = quantity;
     });
 
-    itemsCount.value += 1;
-    total.value += product.price;
+    uItemsCount.value += 1;
+    uTotal.value += product.price;
   }
 
   void removeItem(Product product) {
-    final quantity = (items.value[product] ?? 0) - 1;
+    final quantity = (uItems.value[product] ?? 0) - 1;
 
     if (quantity < 0) return;
 
-    items.update(() {
+    uItems.update(() {
       if (quantity == 0) {
-        items.value.remove(product);
+        uItems.value.remove(product);
         return;
       }
 
-      items.value[product] = quantity;
+      uItems.value[product] = quantity;
     });
 
-    itemsCount.value -= 1;
-    total.value -= product.price;
+    uItemsCount.value -= 1;
+    uTotal.value -= product.price;
   }
 
   void deleteItem(Product product) {
-    if (items.value[product] == null) {
+    if (uItems.value[product] == null) {
       return;
     }
 
-    final quantity = items.value[product]!;
+    final quantity = uItems.value[product]!;
 
-    items.update(() {
-      items.value.remove(product);
+    uItems.update(() {
+      uItems.value.remove(product);
     });
 
-    itemsCount.value -= quantity;
-    total.value -= product.price * quantity;
+    uItemsCount.value -= quantity;
+    uTotal.value -= product.price * quantity;
   }
 
   void checkout() {
-    useStoreRepository.instance!.checkout(items.value);
-    items.update(items.value.clear);
-    itemsCount.value = 0;
-    total.value = 0;
+    uStoreRepository.instance?.checkout(uItems.value);
+    uItems.update(uItems.value.clear);
+    uItemsCount.value = 0;
+    uTotal.value = 0;
   }
 }

@@ -1,3 +1,4 @@
+import 'package:examples/animation/use_animation.dart';
 import 'package:flutter/material.dart' hide AnimationController;
 import 'package:flutter_reactter/flutter_reactter.dart';
 
@@ -8,8 +9,8 @@ class AnimationPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ReactterProvider<AnimationController>(
-      () => AnimationController(),
+    return ReactterProvider(
+      AnimationController.new,
       builder: (animationController, context, child) {
         return Scaffold(
           appBar: AppBar(
@@ -24,7 +25,7 @@ class AnimationPage extends StatelessWidget {
               direction: Axis.horizontal,
               children: [
                 ReactterConsumer<AnimationController>(
-                  listenStates: (inst) => [inst.borderRadiusAnimation],
+                  listenStates: (inst) => [inst.uBorderRadiusAnimation],
                   builder: (_, __, ___) {
                     return Container(
                       width: 100,
@@ -32,7 +33,7 @@ class AnimationPage extends StatelessWidget {
                       decoration: BoxDecoration(
                         color: Colors.blue,
                         borderRadius:
-                            animationController.borderRadiusAnimation.value,
+                            animationController.uBorderRadiusAnimation.value,
                       ),
                     );
                   },
@@ -42,23 +43,23 @@ class AnimationPage extends StatelessWidget {
                   height: 100,
                   alignment: Alignment.center,
                   child: ReactterConsumer<AnimationController>(
-                    listenStates: (inst) => [inst.sizeAnimation],
+                    listenStates: (inst) => [inst.uSizeAnimation],
                     builder: (_, __, ___) {
                       return Container(
-                        width: animationController.sizeAnimation.value,
-                        height: animationController.sizeAnimation.value,
+                        width: animationController.uSizeAnimation.value,
+                        height: animationController.uSizeAnimation.value,
                         color: Colors.red,
                       );
                     },
                   ),
                 ),
                 ReactterConsumer<AnimationController>(
-                  listenStates: (inst) => [inst.colorAnimation],
+                  listenStates: (inst) => [inst.uColorAnimation],
                   builder: (_, __, ___) {
                     return Container(
                       width: 100,
                       height: 100,
-                      color: animationController.colorAnimation.value,
+                      color: animationController.uColorAnimation.value,
                     );
                   },
                 ),
@@ -70,12 +71,12 @@ class AnimationPage extends StatelessWidget {
                     listenAll: true,
                     builder: (_, __, ___) {
                       return Container(
-                        width: animationController.sizeAnimation.value,
-                        height: animationController.sizeAnimation.value,
+                        width: animationController.uSizeAnimation.value,
+                        height: animationController.uSizeAnimation.value,
                         decoration: BoxDecoration(
-                          color: animationController.colorAnimation.value,
+                          color: animationController.uColorAnimation.value,
                           borderRadius:
-                              animationController.borderRadiusAnimation.value,
+                              animationController.uBorderRadiusAnimation.value,
                         ),
                       );
                     },
@@ -84,18 +85,44 @@ class AnimationPage extends StatelessWidget {
               ],
             ),
           ),
-          floatingActionButton: FloatingActionButton(
-            onPressed: animationController.togglePlayAnimations,
-            child: ReactterConsumer<AnimationController>(
-              listenStates: (inst) => [inst.isPlaying],
-              builder: (_, __, ___) {
-                if (animationController.isPlaying.value) {
-                  return const Icon(Icons.pause);
-                }
-
-                return const Icon(Icons.play_arrow);
-              },
+          floatingActionButton: ReactterSelector<AnimationController, bool>(
+            selector: (inst, $) => [
+              $(inst.uSizeAnimation.uControl).value,
+              $(inst.uBorderRadiusAnimation.uControl).value,
+              $(inst.uColorAnimation.uControl).value,
+            ].every(
+              (control) => ![
+                AnimationControl.pause,
+                AnimationControl.stop,
+              ].contains(control),
             ),
+            builder: (_, __, isPlaying, ___) {
+              if (!isPlaying) {
+                return FloatingActionButton(
+                  heroTag: 'playButton',
+                  onPressed: animationController.resumeAnimation,
+                  child: const Icon(Icons.play_arrow),
+                );
+              }
+
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  FloatingActionButton(
+                    heroTag: 'stopButton',
+                    backgroundColor: Colors.red,
+                    onPressed: animationController.stopAnimation,
+                    child: const Icon(Icons.stop),
+                  ),
+                  const SizedBox(width: 8),
+                  FloatingActionButton(
+                    heroTag: 'pauseButton',
+                    onPressed: animationController.pauseAnimation,
+                    child: const Icon(Icons.pause),
+                  )
+                ],
+              );
+            },
           ),
         );
       },

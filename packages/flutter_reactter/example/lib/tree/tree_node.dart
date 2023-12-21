@@ -3,49 +3,58 @@ import 'package:flutter_reactter/flutter_reactter.dart';
 class TreeNode {
   final TreeNode? parent;
 
-  final children = UseState(<TreeNode>[]);
-  final childrenTotal = UseState(0);
-  final count = UseState(0);
-  final hide = UseState(false);
+  final uHide = UseState(false);
+  final uChildren = UseState(<TreeNode>[]);
+  final uCount = UseState(0);
+  final uChildrenTotal = UseState(0);
+  late final uTotal = Reactter.lazyState(
+    () => UseCompute(
+      () => uCount.value + uChildrenTotal.value,
+      [uCount, uChildrenTotal],
+    ),
+    this,
+  );
 
   String get path => "${parent?.path ?? ''} > $hashCode";
-  int get total => count.value + childrenTotal.value;
 
   TreeNode([this.parent]) {
     if (parent != null) {
-      UseEffect(parent!._calculateTotal, [count, childrenTotal]);
+      UseEffect(
+        parent!._calculateChildrenTotal,
+        [uTotal],
+      );
     }
 
     UseEffect(() {
-      hide.value = false;
-      _calculateTotal();
-    }, [children]);
+      uHide.value = false;
+      _calculateChildrenTotal();
+    }, [uChildren]);
   }
 
-  void increase() => count.value++;
+  void increase() => uCount.value++;
 
-  void decrease() => count.value--;
+  void decrease() => uCount.value--;
 
-  void toggleHide() => hide.value = !hide.value;
+  void toggleHide() => uHide.value = !uHide.value;
 
   void addChild() {
-    children.update(
-      () => children.value.add(TreeNode(this)),
+    uChildren.update(
+      () => uChildren.value.add(TreeNode(this)),
     );
   }
 
   void removeChild(TreeNode child) {
-    children.update(
-      () => children.value.remove(child),
+    uChildren.update(
+      () => uChildren.value.remove(child),
     );
   }
 
   void removeFromParent() => parent?.removeChild(this);
 
-  void _calculateTotal() {
-    childrenTotal.value = children.value.fold<int>(
+  void _calculateChildrenTotal() {
+    uChildrenTotal.value = uChildren.value.fold<int>(
       0,
-      (acc, child) => acc + child.total,
+      (acc, child) => acc + child.uTotal.value,
     );
   }
 }

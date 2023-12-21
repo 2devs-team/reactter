@@ -59,11 +59,12 @@ class TreeItem extends ReactterComponent<TreeNode> {
                       ),
                     ),
                   ),
+                  const SizedBox(width: 8),
+                  buildCountLabel(),
                   Button(
                     icon: const Icon(Icons.indeterminate_check_box_rounded),
                     onPressed: treeContext.decrease,
                   ),
-                  buildCountLabel(),
                   Button(
                     icon: const Icon(Icons.add_box),
                     onPressed: treeContext.increase,
@@ -109,7 +110,7 @@ class TreeItem extends ReactterComponent<TreeNode> {
                   const Text("children:"),
                   const SizedBox(width: 8),
                   Text(
-                    "${treeNode.children.value.length}",
+                    "${treeNode.uChildren.value.length}",
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                 ],
@@ -119,7 +120,7 @@ class TreeItem extends ReactterComponent<TreeNode> {
                   const Text("count:"),
                   const SizedBox(width: 8),
                   Text(
-                    "${treeNode.count.value}",
+                    "${treeNode.uCount.value}",
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                 ],
@@ -129,7 +130,7 @@ class TreeItem extends ReactterComponent<TreeNode> {
                   const Text("childrenTotal:"),
                   const SizedBox(width: 8),
                   Text(
-                    "${treeNode.childrenTotal.value}",
+                    "${treeNode.uChildrenTotal.value}",
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                 ],
@@ -139,7 +140,7 @@ class TreeItem extends ReactterComponent<TreeNode> {
                   const Text("total(count + childrenTotal):"),
                   const SizedBox(width: 8),
                   Text(
-                    "${treeNode.total}",
+                    "${treeNode.uTotal.value}",
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                 ],
@@ -171,11 +172,11 @@ class TreeItem extends ReactterComponent<TreeNode> {
               builder: (context) {
                 final treeNode = context.watchId<TreeNode>(
                   id,
-                  (inst) => [inst.children],
+                  (inst) => [inst.uChildren],
                 );
 
                 return SizedBox(
-                  width: treeNode.children.value.isEmpty ? 42 : 6,
+                  width: treeNode.uChildren.value.isEmpty ? 42 : 6,
                   height: 36,
                   child: const Divider(
                     height: 2,
@@ -195,10 +196,10 @@ class TreeItem extends ReactterComponent<TreeNode> {
       builder: (context) {
         final treeNode = context.watchId<TreeNode>(
           id,
-          (inst) => [inst.hide, inst.children],
+          (inst) => [inst.uHide, inst.uChildren],
         );
-        final children = treeNode.children.value;
-        final hide = treeNode.hide.value;
+        final children = treeNode.uChildren.value;
+        final hide = treeNode.uHide.value;
         final itemLast = children.isNotEmpty ? children.last : null;
 
         return ListView.builder(
@@ -225,11 +226,11 @@ class TreeItem extends ReactterComponent<TreeNode> {
       builder: (context) {
         final treeNode = context.watchId<TreeNode>(
           id,
-          (inst) => [inst.count, inst.childrenTotal],
+          (inst) => [inst.uCount, inst.uTotal],
         );
 
         return Text(
-          "${treeNode.count.value} (${treeNode.total})",
+          "${treeNode.uCount.value} (${treeNode.uTotal.value})",
         );
       },
     );
@@ -240,16 +241,16 @@ class TreeItem extends ReactterComponent<TreeNode> {
       builder: (context) {
         final treeNode = context.watchId<TreeNode>(
           id,
-          (inst) => [inst.hide, inst.children],
+          (inst) => [inst.uHide, inst.uChildren],
         );
 
-        if (treeNode.children.value.isEmpty) {
+        if (treeNode.uChildren.value.isEmpty) {
           return const SizedBox(width: 36);
         }
 
         return Button(
           icon: Transform.rotate(
-            angle: treeNode.hide.value ? -pi / 2 : 0,
+            angle: treeNode.uHide.value ? -pi / 2 : 0,
             child: const Icon(Icons.expand_circle_down_rounded),
           ),
           onPressed: treeNode.toggleHide,

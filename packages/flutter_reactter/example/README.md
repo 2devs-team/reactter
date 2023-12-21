@@ -36,7 +36,7 @@ Performs simple arithmetic operations on numbers
 
 [![Counter example](https://raw.githubusercontent.com/2devs-team/reactter_assets/main/examples/calculator_example.png)](https://github.com/2devs-team/reactter/tree/master/packages/flutter_reactter/example/lib/calculator)
 
-Implements: `BuildContext.use`, `List<ReactterState>.when`, `ReactterConsumer`, `ReactterProvider`, `Signal`.
+Implements: `BuildContext.use`, `ReactterConsumer`, `ReactterProvider`, `ReactterSelector`, `Signal`.
 
 ## Shopping cart
 
@@ -46,7 +46,7 @@ Add, remove product to cart and checkout.
 
 [![Shopping cart example](https://raw.githubusercontent.com/2devs-team/reactter_assets/main/examples/cart_example.gif)](https://github.com/2devs-team/reactter/tree/master/packages/flutter_reactter/example/lib/shopping_cart)
 
-Implements: `List<ReactterState>.when`, `ReactterComponent`, `ReactterConsumer`, `ReactterProvider`, `ReactterProviders`, `UseInstance`, `UseState`.
+Implements: `ReactterComponent`, `ReactterConsumer`, `ReactterProvider`, `ReactterProviders`, `ReactterSelector`, `UseInstance`, `UseState`.
 
 ## Tree widget
 
@@ -56,7 +56,7 @@ Add, remove and hide child widget with counter.
 
 [![Tree widget example](https://raw.githubusercontent.com/2devs-team/reactter_assets/main/examples/tree_example.gif)](https://github.com/2devs-team/reactter/tree/master/packages/flutter_reactter/example/lib/tree)
 
-Implements: `BuilContext.use`, `BuilContext.watchId`, `ReactterComponent`, `ReactterProvider`, `UseEffect`, `UseState`.
+Implements: `BuilContext.use`, `BuilContext.watchId`, `Reactter.lazyState`, `ReactterComponent`, `ReactterProvider`, `UseEffect`, `UseState`.
 
 ## Github search
 
@@ -66,7 +66,7 @@ Search user or repository and show info about it.
 
 [![Github search example](https://raw.githubusercontent.com/2devs-team/reactter_assets/main/examples/api_example.png)](https://github.com/2devs-team/reactter/tree/master/packages/flutter_reactter/example/lib/api)
 
-Implements: `Generic arguments`, `Memo`, `ReactterConsumer`, `ReactterProvider`, `UseAsyncState`.
+Implements: `Memo`, `ReactterConsumer`, `ReactterProvider`, `UseAsyncState`.
 
 ## To-Do List
 
@@ -76,7 +76,7 @@ Add and remove to-do, mark and unmark to-do as done and filter to-do list.
 
 [![To-Do List example](https://raw.githubusercontent.com/2devs-team/reactter_assets/main/examples/todos_example.png)](https://github.com/2devs-team/reactter/tree/master/packages/flutter_reactter/example/lib/todo)
 
-Implements: `Reactter.lazy`, `ReactterActionCallable`, `ReactterConsumer`, `ReactterProvider`, `UseCompute`, `UseReducer`.
+Implements: `Reactter.lazyState`, `ReactterActionCallable`, `ReactterCompontent`, `ReactterConsumer`, `ReactterProvider`, `ReactterSelector`, `UseCompute`, `UseReducer`.
 
 ## Animate widget
 
@@ -86,4 +86,4 @@ Change size, shape and color using animations.
 
 [![Animate widget example](https://raw.githubusercontent.com/2devs-team/reactter_assets/main/examples/animation_example.gif)](https://github.com/2devs-team/reactter/tree/master/packages/flutter_reactter/example/lib/animation)
 
-Implements: `Reactter.lazy`, `ReactterConsumer`, `ReactterHook`, `ReactterProvider`, `UseCompute`, `UseEffect`, `UseState`.
+Implements: `Reactter.lazyState`, `ReactterConsumer`, `ReactterHook`, `ReactterProvider`, `ReactterSelector`, `UseCompute`, `UseEffect`, `UseState`.

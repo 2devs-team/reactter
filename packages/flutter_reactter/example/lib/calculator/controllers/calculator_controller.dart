@@ -22,7 +22,7 @@ final mathOperationMethods = {
 
 class CalculatorController {
   final mathOperation = Signal<ActionCalculator?>(null);
-  final result = "0".signal;
+  final result = Signal("0");
 
   ActionCalculator? _lastAction;
   double? _numberMemorized;
