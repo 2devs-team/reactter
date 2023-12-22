@@ -1,10 +1,44 @@
 # Reactter
 
+## 6.1.0
+
+### Enhancements
+
+- **feat(framework, widgets, extensions):** Add `ReactterSelector` widget and `context.select` method extension.
+  - `ReactterSelect` and `context.select` help to control the rebuilding of widget tree using a `Selector` methods that allows to select a state specific for listening, and return a computed value.
+- **feat(widgets):** Add `ReactterScope` Widget.
+If `ReactterProvider.contextOf` doesn't have a type defined, use `ReactterScope` to work correctly.
+
+### Breakings
+
+- **perf(framework):** Remove `updateAsync` from `ReactterHook` and `ReactterState`.
+- **perf(framework):** Remove `emitAsync` from `ReactterEventManager`.
+- **refactor(extensions):** Deprecate `List<ReactterState>.when`.
+
+### Fixes
+
+- **fix(widgets):** Notify `ReactterWatcher` has changed when available.
+- **fix(framework):** Remove `UseWen` asynchronously when call `markNeedsNotifyDependents` through its changes.
+
+### Internal
+
+- **perf(framework):** Add `ReactterNotifier` to manage events.
+- **refactor(widgets):** Improve `ReactterProvider` code.
+- **perf(extensions, framework, widgets):** Improve performance of `context.watch`.
+- **refactor(types):** Add `WatchState` and `SelectComputeValue` types.
+- **refactor(framework):** Improve message error about `notifyListeners` of `ReactterNotifier`.
+- **feat(framework, widgets, extensions):** Improve managing dependency.
+- **test(framework, widgets, hooks):** Fix some part for test coverage.
+- **test:** Add `context.select` and `ReactterSelector` test.
+- **doc:** Fix some code documentation.
+- **refactor(example):** Improve api example.
+- **doc:** Add documention about new features.
+
 ## 6.0.2
 
 ### Fixes
 
-- **fix(signal):** Add missing getters to Signal of list type.
+- **fix(signal):** Add missing getters(`first`, `last`, and `length`) to Signal of list type.
 
 ## 6.0.0
 
