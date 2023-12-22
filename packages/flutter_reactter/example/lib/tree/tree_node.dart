@@ -3,7 +3,7 @@ import 'package:flutter_reactter/flutter_reactter.dart';
 class TreeNode {
   final TreeNode? parent;
 
-  final uHide = UseState(false);
+  final uIsExpanded = UseState(false);
   final uChildren = UseState(<TreeNode>[]);
   final uCount = UseState(0);
   final uChildrenTotal = UseState(0);
@@ -26,7 +26,7 @@ class TreeNode {
     }
 
     UseEffect(() {
-      uHide.value = false;
+      uIsExpanded.value = true;
       _calculateChildrenTotal();
     }, [uChildren]);
   }
@@ -35,7 +35,7 @@ class TreeNode {
 
   void decrease() => uCount.value--;
 
-  void toggleHide() => uHide.value = !uHide.value;
+  void toggleExpansion() => uIsExpanded.value = !uIsExpanded.value;
 
   void addChild() {
     uChildren.update(

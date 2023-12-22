@@ -5,28 +5,30 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_reactter/flutter_reactter.dart';
 
-import 'tree_node.dart';
+import '../tree_node.dart';
+import 'button.dart';
+import 'tree_items.dart';
 
 class TreeItem extends ReactterComponent<TreeNode> {
   const TreeItem({
     Key? key,
-    required this.item,
-    this.isLastChild = false,
+    required this.treeNode,
+    this.isTreeNodeLast = false,
   }) : super(key: key);
 
-  final TreeNode item;
-  final bool isLastChild;
+  final TreeNode treeNode;
+  final bool isTreeNodeLast;
 
   @override
-  String get id => "${item.hashCode}";
+  String get id => "${treeNode.hashCode}";
 
   @override
-  get builder => () => item;
+  get builder => () => treeNode;
 
   @override
   Widget render(treeContext, context) {
     return InkWell(
-      onTap: () => openDialog(context),
+      onTap: () => _openDialog(context),
       child: Stack(
         children: [
           Column(
@@ -36,7 +38,7 @@ class TreeItem extends ReactterComponent<TreeNode> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   const SizedBox(width: 8),
-                  buildAddButton(),
+                  _buildExpandButton(),
                   Button(
                     icon: const Icon(Icons.add_circle),
                     onPressed: treeContext.addChild,
@@ -60,7 +62,7 @@ class TreeItem extends ReactterComponent<TreeNode> {
                     ),
                   ),
                   const SizedBox(width: 8),
-                  buildCountLabel(),
+                  _buildCountLabel(),
                   Button(
                     icon: const Icon(Icons.indeterminate_check_box_rounded),
                     onPressed: treeContext.decrease,
@@ -71,16 +73,16 @@ class TreeItem extends ReactterComponent<TreeNode> {
                   ),
                 ],
               ),
-              buildChildrenList(),
+              _buildTreeItems(),
             ],
           ),
-          buildTreeLine(treeContext),
+          _buildTreeLine(treeContext),
         ],
       ),
     );
   }
 
-  Future<void> openDialog(BuildContext context) {
+  Future<void> _openDialog(BuildContext context) {
     final treeNode = context.use<TreeNode>(id);
 
     return showDialog(
@@ -152,7 +154,64 @@ class TreeItem extends ReactterComponent<TreeNode> {
     );
   }
 
-  Widget buildTreeLine(TreeNode treeContext) {
+  Widget _buildExpandButton() {
+    return Builder(
+      builder: (context) {
+        final treeNode = context.watchId<TreeNode>(
+          id,
+          (inst) => [inst.uIsExpanded, inst.uChildren],
+        );
+
+        if (treeNode.uChildren.value.isEmpty) {
+          return const SizedBox(width: 36);
+        }
+
+        return Button(
+          icon: Transform.rotate(
+            angle: treeNode.uIsExpanded.value ? 0 : -pi / 2,
+            child: const Icon(Icons.expand_circle_down_rounded),
+          ),
+          onPressed: treeNode.toggleExpansion,
+        );
+      },
+    );
+  }
+
+  Widget _buildCountLabel() {
+    return Builder(
+      builder: (context) {
+        final treeNode = context.watchId<TreeNode>(
+          id,
+          (inst) => [inst.uCount, inst.uTotal],
+        );
+
+        return Text(
+          "${treeNode.uCount.value} (${treeNode.uTotal.value})",
+        );
+      },
+    );
+  }
+
+  Widget _buildTreeItems() {
+    return Builder(
+      builder: (context) {
+        final treeNode = context.watchId<TreeNode>(
+          id,
+          (inst) => [
+            inst.uIsExpanded,
+            inst.uChildren,
+          ],
+        );
+
+        return TreeItems(
+          children: treeNode.uChildren.value,
+          expanded: treeNode.uIsExpanded.value,
+        );
+      },
+    );
+  }
+
+  Widget _buildTreeLine(TreeNode treeContext) {
     return Positioned(
       top: 0,
       bottom: 0,
@@ -162,7 +221,7 @@ class TreeItem extends ReactterComponent<TreeNode> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(
-              height: treeContext.parent == null || isLastChild ? 19 : null,
+              height: treeContext.parent == null || isTreeNodeLast ? 19 : null,
               child: const VerticalDivider(
                 width: 2,
                 thickness: 2,
@@ -188,97 +247,6 @@ class TreeItem extends ReactterComponent<TreeNode> {
           ],
         ),
       ),
-    );
-  }
-
-  Widget buildChildrenList() {
-    return Builder(
-      builder: (context) {
-        final treeNode = context.watchId<TreeNode>(
-          id,
-          (inst) => [inst.uHide, inst.uChildren],
-        );
-        final children = treeNode.uChildren.value;
-        final hide = treeNode.uHide.value;
-        final itemLast = children.isNotEmpty ? children.last : null;
-
-        return ListView.builder(
-          shrinkWrap: true,
-          physics: const ClampingScrollPhysics(),
-          padding: const EdgeInsets.only(left: 24),
-          itemCount: hide ? 0 : children.length,
-          itemBuilder: (context, index) {
-            final item = children[index];
-
-            return TreeItem(
-              key: ObjectKey(item),
-              item: item,
-              isLastChild: item == itemLast,
-            );
-          },
-        );
-      },
-    );
-  }
-
-  Widget buildCountLabel() {
-    return Builder(
-      builder: (context) {
-        final treeNode = context.watchId<TreeNode>(
-          id,
-          (inst) => [inst.uCount, inst.uTotal],
-        );
-
-        return Text(
-          "${treeNode.uCount.value} (${treeNode.uTotal.value})",
-        );
-      },
-    );
-  }
-
-  Widget buildAddButton() {
-    return Builder(
-      builder: (context) {
-        final treeNode = context.watchId<TreeNode>(
-          id,
-          (inst) => [inst.uHide, inst.uChildren],
-        );
-
-        if (treeNode.uChildren.value.isEmpty) {
-          return const SizedBox(width: 36);
-        }
-
-        return Button(
-          icon: Transform.rotate(
-            angle: treeNode.uHide.value ? -pi / 2 : 0,
-            child: const Icon(Icons.expand_circle_down_rounded),
-          ),
-          onPressed: treeNode.toggleHide,
-        );
-      },
-    );
-  }
-}
-
-class Button extends StatelessWidget {
-  const Button({
-    Key? key,
-    required this.icon,
-    required this.onPressed,
-  }) : super(key: key);
-
-  final Widget icon;
-  final void Function()? onPressed;
-
-  @override
-  Widget build(BuildContext context) {
-    return IconButton(
-      padding: const EdgeInsets.all(6),
-      splashRadius: 18,
-      iconSize: 24,
-      constraints: const BoxConstraints.tightForFinite(),
-      icon: icon,
-      onPressed: onPressed,
     );
   }
 }
