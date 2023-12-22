@@ -8,14 +8,14 @@ abstract class ReactterProviderWrapper implements ReactterWrapperWidget {}
 /// A Widget that provides an instance of [T] type to widget tree
 /// that can be access through the methods [BuildContext] extension.
 ///
-///```dart
+/// ```dart
 /// ReactterProvider<AppController>(
 ///   () => AppController(),
 ///   builder: (appController, context, child) {
 ///     return Text("StateA: ${appController.stateA.value}");
 ///   },
 /// )
-///```
+/// ```
 ///
 /// Use [id] property to identify the [T] instance.
 ///
@@ -23,7 +23,7 @@ abstract class ReactterProviderWrapper implements ReactterWrapperWidget {}
 /// It will be sent through the [builder] callback, so you can incorporate it
 /// into your build:
 ///
-///```dart
+/// ```dart
 /// ReactterProvider<AppController>(
 ///   () => AppController(),
 ///   child: Text("This widget build only once"),
@@ -38,7 +38,7 @@ abstract class ReactterProviderWrapper implements ReactterWrapperWidget {}
 ///     );
 ///   },
 /// )
-///```
+/// ```
 /// > **RECOMMENDED:**
 /// > Dont's use Object with constructor parameters to prevent conflicts.
 ///
@@ -47,7 +47,7 @@ abstract class ReactterProviderWrapper implements ReactterWrapperWidget {}
 /// exposes the instance of [T] type defined on first parameter([InstanceContextBuilder])
 /// through the [BuildContext] in the widget subtree:
 /// >
-/// >```dart
+/// > ```dart
 /// > ReactterProvider<AppController>(
 /// >   () => AppController(),
 /// >   builder: (appController, context, child) {
@@ -74,7 +74,7 @@ abstract class ReactterProviderWrapper implements ReactterWrapperWidget {}
 /// >     );
 /// >   }
 /// > }
-/// >```
+/// > ```
 /// >
 /// > In the above example, stateA remains static while the [Builder] is rebuilt
 /// > according to the changes in stateB. Because the [Builder]'s context kept in
