@@ -8,36 +8,36 @@ import 'shareds/test_controllers.dart';
 void main() {
   group("Obj", () {
     test("should be created by any type value", () {
-      final objBool = true.obj;
+      final objBool = Obj(true);
       expect(objBool, isA<Obj<bool>>());
       expect(objBool.value, true);
       expect("$objBool", true.toString());
 
-      final objInt = 1.obj;
+      final objInt = Obj(1);
       expect(objInt, isA<Obj<int>>());
       expect(objInt.value, 1);
       expect("$objInt", 1.toString());
 
-      final objDouble = 1.2.obj;
+      final objDouble = Obj(1.2);
       expect(objDouble, isA<Obj<double>>());
       expect(objDouble.value, 1.2);
       expect("$objDouble", 1.2.toString());
 
-      final objString = "test".obj;
+      final objString = Obj("test");
       expect(objString, isA<Obj<String>>());
       expect(objString.value, "test");
 
-      final objList = ["test"].obj;
+      final objList = Obj(["test"]);
       expect(objList, isA<Obj<List<String>>>());
       expect(objList.value.first, "test");
       expect("$objList", ["test"].toString());
 
-      final objMap = {"test": 1}.obj;
+      final objMap = Obj({"test": 1});
       expect(objMap, isA<Obj<Map<String, int>>>());
       expect(objMap["test"], 1);
       expect("$objMap", {"test": 1}.toString());
 
-      final objAnother = TestClass("test").obj;
+      final objAnother = Obj(TestClass("test"));
       expect(objAnother, isA<Obj<TestClass>>());
       expect(objAnother.value.prop, "test");
       expect("$objAnother", TestClass("test").toString());
@@ -49,37 +49,37 @@ void main() {
     });
 
     test("should set a new value", () {
-      final objBool = true.obj;
+      final objBool = Obj(true);
       objBool.value = false;
       expect(objBool.value, false);
       expect(objBool(true), true);
 
-      final objInt = 1.obj;
+      final objInt = Obj(1);
       objInt.value = 2;
       expect(objInt.value, 2);
       expect(objInt(3), 3);
 
-      final objDouble = 1.2.obj;
+      final objDouble = Obj(1.2);
       objDouble.value = 2.3;
       expect(objDouble.value, 2.3);
       expect(objDouble(3.4), 3.4);
 
-      final objString = "test".obj;
+      final objString = Obj("test");
       objString.value = "other value";
       expect(objString.value, "other value");
       expect(objString("other value by call"), "other value by call");
 
-      final objList = ["test"].obj;
+      final objList = Obj(["test"]);
       objList.value = ["other value"];
       expect(objList.value.first, "other value");
       expect(objList(["other value by call"]).first, "other value by call");
 
-      final objMap = {"test": 1}.obj;
+      final objMap = Obj({"test": 1});
       objMap.value = {"other": 2};
       expect(objMap["other"], 2);
       expect(objMap({"other by call": 3})["other by call"], 3);
 
-      final objAnother = TestClass("test").obj;
+      final objAnother = Obj(TestClass("test"));
       objAnother.value = TestClass("other instance");
       expect(objAnother.value.prop, "other instance");
       expect(objAnother(TestClass("other instance by call")).prop,
@@ -92,37 +92,37 @@ void main() {
     });
 
     test("should be compared to another for its value", () {
-      final objBool = true.obj;
+      final objBool = Obj(true);
       expect(objBool == true, true);
-      expect(objBool == true.obj, true);
+      expect(objBool == Obj(true), true);
 
-      final objInt = 1.obj;
+      final objInt = Obj(1);
       expect(objInt == 1, true);
-      expect(objInt == 1.obj, true);
+      expect(objInt == Obj(1), true);
 
-      final objDouble = 1.2.obj;
+      final objDouble = Obj(1.2);
       expect(objDouble == 1.2, true);
-      expect(objDouble == 1.2.obj, true);
+      expect(objDouble == Obj(1.2), true);
 
-      final objString = "test".obj;
+      final objString = Obj("test");
       expect(objString == "test", true);
-      expect(objString == "test".obj, true);
+      expect(objString == Obj("test"), true);
 
-      final objList = ["test"].obj;
+      final objList = Obj(["test"]);
       expect(objList == ["test"], false);
-      expect(objList == ["test"].obj, false);
+      expect(objList == Obj(["test"]), false);
 
-      final objMap = {"test": 1}.obj;
+      final objMap = Obj({"test": 1});
       expect(objMap == {"test": 1}, false);
-      expect(objMap == {"test": 1}.obj, false);
+      expect(objMap == Obj({"test": 1}), false);
 
-      final objAnother = TestClass("test").obj;
+      final objAnother = Obj(TestClass("test"));
       expect(objAnother == TestClass("test"), false);
-      expect(objAnother == TestClass("test").obj, false);
+      expect(objAnother == Obj(TestClass("test")), false);
 
       final objNull = Obj<TestClass?>(null);
       expect(objNull == null, false);
-      expect(objNull == null.obj, true);
+      expect(objNull == Obj(null), true);
     });
 
     test("should be cast away nullability", () {

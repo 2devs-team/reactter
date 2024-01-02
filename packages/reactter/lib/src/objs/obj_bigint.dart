@@ -6,22 +6,22 @@ extension ObjBigIntExt on Obj<BigInt> {
   ///
   /// The result of negating an integer always has the opposite sign, except
   /// for zero, which is its own negation.
-  Obj<BigInt> operator -() => -value.obj;
+  Obj<BigInt> operator -() => Obj(-value);
 
   /// Adds [other] to this big integer.
   ///
   /// The result is again a big integer.
-  Obj<BigInt> operator +(Obj<BigInt> other) => (value + other.value).obj;
+  Obj<BigInt> operator +(Obj<BigInt> other) => Obj(value + other.value);
 
   /// Subtracts [other] from this big integer.
   ///
   /// The result is again a big integer.
-  Obj<BigInt> operator -(Obj<BigInt> other) => (value - other.value).obj;
+  Obj<BigInt> operator -(Obj<BigInt> other) => Obj(value - other.value);
 
   /// Multiplies [other] by this big integer.
   ///
   /// The result is again a big integer.
-  Obj<BigInt> operator *(Obj<BigInt> other) => (value * other.value).obj;
+  Obj<BigInt> operator *(Obj<BigInt> other) => Obj(value * other.value);
 
   /// Double division operator.
   ///
@@ -37,7 +37,7 @@ extension ObjBigIntExt on Obj<BigInt> {
   /// print(Obj(BigInt.from(1)) / Obj(BigInt.from(2))); // Obj(0.5)
   /// print(Obj(BigInt.from(1.99999)) / Obj(BigInt.from(2))); // Obj(0.5)
   /// ```
-  Obj<double> operator /(Obj<BigInt> other) => (value / other.value).obj;
+  Obj<double> operator /(Obj<BigInt> other) => Obj(value / other.value);
 
   /// Truncating integer division operator.
   ///
@@ -56,7 +56,7 @@ extension ObjBigIntExt on Obj<BigInt> {
   /// (-seven).remainder(three); // => -1
   /// seven.remainder(-three);   // => 1
   /// ```
-  Obj<BigInt> operator ~/(Obj<BigInt> other) => (value ~/ other.value).obj;
+  Obj<BigInt> operator ~/(Obj<BigInt> other) => Obj(value ~/ other.value);
 
   /// Euclidean modulo operator.
   ///
@@ -75,7 +75,7 @@ extension ObjBigIntExt on Obj<BigInt> {
   /// print(Obj(BigInt.from(5)) % Obj(BigInt.from(-)3)); // Obj<BigInt>(2)
   /// print(Obj(BigInt.from(-)5) % Obj(BigInt.from(-)3)); // Obj<BigInt>(1)
   /// ```
-  Obj<BigInt> operator %(Obj<BigInt> other) => (value % other.value).obj;
+  Obj<BigInt> operator %(Obj<BigInt> other) => Obj(value % other.value);
 
   /// Shift the bits of this integer to the left by [shiftAmount].
   ///
@@ -88,7 +88,7 @@ extension ObjBigIntExt on Obj<BigInt> {
   ///
   /// It is an error if [shiftAmount] is negative.
   Obj<BigInt> operator <<(Obj<int> shiftAmount) =>
-      (value << shiftAmount.value).obj;
+      Obj(value << shiftAmount.value);
 
   /// Shift the bits of this integer to the right by [shiftAmount].
   ///
@@ -98,7 +98,7 @@ extension ObjBigIntExt on Obj<BigInt> {
   ///
   /// It is an error if [shiftAmount] is negative.
   Obj<BigInt> operator >>(Obj<int> shiftAmount) =>
-      (value >> shiftAmount.value).obj;
+      Obj(value >> shiftAmount.value);
 
   /// Bit-wise and operator.
   ///
@@ -108,7 +108,7 @@ extension ObjBigIntExt on Obj<BigInt> {
   ///
   /// Of both operands are negative, the result is negative, otherwise
   /// the result is non-negative.
-  Obj<BigInt> operator &(Obj<BigInt> other) => (value & other.value).obj;
+  Obj<BigInt> operator &(Obj<BigInt> other) => Obj(value & other.value);
 
   /// Bit-wise or operator.
   ///
@@ -118,7 +118,7 @@ extension ObjBigIntExt on Obj<BigInt> {
   ///
   /// If both operands are non-negative, the result is non-negative,
   /// otherwise the result is negative.
-  Obj<BigInt> operator |(Obj<BigInt> other) => (value | other.value).obj;
+  Obj<BigInt> operator |(Obj<BigInt> other) => Obj(value | other.value);
 
   /// Bit-wise exclusive-or operator.
   ///
@@ -128,7 +128,7 @@ extension ObjBigIntExt on Obj<BigInt> {
   ///
   /// If the operands have the same sign, the result is non-negative,
   /// otherwise the result is negative.
-  Obj<BigInt> operator ^(Obj<BigInt> other) => (value ^ other.value).obj;
+  Obj<BigInt> operator ^(Obj<BigInt> other) => Obj(value ^ other.value);
 
   /// The bit-wise negate operator.
   ///
@@ -136,7 +136,7 @@ extension ObjBigIntExt on Obj<BigInt> {
   /// the result is a number with the opposite bits set.
   ///
   /// This maps any integer `x` to `-x - 1`.
-  Obj<BigInt> operator ~() => ~value.obj;
+  Obj<BigInt> operator ~() => Obj(~value);
 
   /// Whether this big integer is numerically smaller than [other].
   bool operator <(Obj<BigInt> other) => value < other.value;

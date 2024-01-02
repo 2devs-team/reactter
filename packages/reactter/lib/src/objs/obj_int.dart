@@ -15,7 +15,7 @@ extension ObjIntExt on Obj<int> {
   /// print((Obj(3) & Obj(1)).toRadixString(2)); // 0011 & 0001 -> 0001
   /// print((Obj(10) & Obj(2)).toRadixString(2)); // 1010 & 0010 -> 0010
   /// ```
-  Obj<int> operator &(Obj<int> other) => (value & other.value).obj;
+  Obj<int> operator &(Obj<int> other) => Obj(value & other.value);
 
   /// Bit-wise or operator.
   ///
@@ -32,7 +32,7 @@ extension ObjIntExt on Obj<int> {
   /// print((Obj(3) | Obj(1)).toRadixString(2)); // 0011 | 0001 -> 0011
   /// print((Obj(10) | Obj(2)).toRadixString(2)); // 1010 | 0010 -> 1010
   /// ```
-  Obj<int> operator |(Obj<int> other) => (value | other.value).obj;
+  Obj<int> operator |(Obj<int> other) => Obj(value | other.value);
 
   /// Bit-wise exclusive-or operator.
   ///
@@ -49,7 +49,7 @@ extension ObjIntExt on Obj<int> {
   /// print((Obj(3) ^ Obj(1)).toRadixString(2)); //  0011 ^ 0001 -> 0010
   /// print((Obj(10) ^ Obj(2)).toRadixString(2)); //  1010 ^ 0010 -> 1000
   /// ```
-  Obj<int> operator ^(Obj<int> other) => (value ^ other.value).obj;
+  Obj<int> operator ^(Obj<int> other) => Obj(value ^ other.value);
 
   /// The bit-wise negate operator.
   ///
@@ -57,7 +57,7 @@ extension ObjIntExt on Obj<int> {
   /// the result is a number with the opposite bits set.
   ///
   /// This maps any integer `x` to `-x - 1`.
-  Obj<int> operator ~() => ~value.obj;
+  Obj<int> operator ~() => Obj(~value);
 
   /// Shift the bits of this integer to the left by [shiftAmount].
   ///
@@ -76,8 +76,7 @@ extension ObjIntExt on Obj<int> {
   /// print((Obj(9) << Obj(2)).toRadixString(2)); // 1001 -> 100100
   /// print((Obj(10) << Obj(3)).toRadixString(2)); // 1010 -> 1010000
   /// ```
-  Obj<int> operator <<(Obj<int> shiftAmount) =>
-      (value << shiftAmount.value).obj;
+  Obj<int> operator <<(Obj<int> shiftAmount) => Obj(value << shiftAmount.value);
 
   /// Shift the bits of this integer to the right by [shiftAmount].
   ///
@@ -95,8 +94,7 @@ extension ObjIntExt on Obj<int> {
   /// print((Obj(-6) >> Obj(2)).toRadixString); // 111...1010 -> 111...1110 == -2
   /// print((Obj(-85) >> Obj(3)).toRadixString); // 111...10101011 -> 111...11110101 == -11
   /// ```
-  Obj<int> operator >>(Obj<int> shiftAmount) =>
-      (value >> shiftAmount.value).obj;
+  Obj<int> operator >>(Obj<int> shiftAmount) => Obj(value >> shiftAmount.value);
 
   /// Bitwise unsigned right shift by [shiftAmount] bits.
   ///
@@ -113,13 +111,13 @@ extension ObjIntExt on Obj<int> {
   /// print((Obj(-9) >>> Obj(2)).toRadixString(2)); // 111...1011 -> 001...1110 (> 0)
   /// ```
   Obj<int> operator >>>(Obj<int> shiftAmount) =>
-      (value >>> shiftAmount.value).obj;
+      Obj(value >>> shiftAmount.value);
 
   /// Return the negative value of this integer.
   ///
   /// The result of negating an integer always has the opposite sign, except
   /// for zero, which is its own negation.
-  Obj<int> operator -() => -value.obj;
+  Obj<int> operator -() => Obj(-value);
 
   /// Returns this integer to the power of [exponent] modulo [modulus].
   ///

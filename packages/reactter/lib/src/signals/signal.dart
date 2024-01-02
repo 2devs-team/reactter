@@ -11,11 +11,7 @@ enum SignalEvent { onGetValue, onSetValue }
 /// You can create a new [Signal]:
 ///
 /// ```dart
-/// // usign `.signal` extension
-/// final strSignal = "initial value".signal;
-/// final intSignal = 0.signal;
-/// final userSignal = User().signal;
-/// // or usign the constructor class
+/// // usign the `Signal` class
 /// final strSignal = Signal<String>("initial value");
 /// final intSignal = Signal<int>(0);
 /// final userSignal = Signal<User>(User());
@@ -153,6 +149,10 @@ extension SignalNullExt<T> on Signal<T?> {
   }
 }
 
+@Deprecated(
+  'Use `Signal` class instead. '
+  'This feature was deprecated after v6.2.0.',
+)
 extension SignalGenericTypeExt<T> on T {
   /// Allows you to create a signal from any type.
   Signal<T> get signal => Signal<T>(this);

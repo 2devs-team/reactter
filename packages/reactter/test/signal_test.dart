@@ -6,7 +6,7 @@ import 'shareds/test_controllers.dart';
 void main() {
   group("Signal", () {
     test("should be created by Obj", () {
-      final obj = true.obj;
+      final obj = Obj(true);
 
       expect(obj.toSignal, isA<Signal<bool>>());
     });
@@ -19,13 +19,13 @@ void main() {
     });
 
     test("should be casted to Obj", () {
-      final signal = true.signal;
+      final signal = Signal(true);
 
       expect(signal.toObj, isA<Obj<bool>>());
     });
 
     test("should notifies when its value is changed", () {
-      final signal = "initial".signal;
+      final signal = Signal("initial");
 
       late final willUpdateChecked;
       late final didUpdateChecked;
@@ -44,7 +44,7 @@ void main() {
     });
 
     test("should be updated", () {
-      final signal = "initial".signal;
+      final signal = Signal("initial");
       late final willUpdateChecked;
       late final didUpdateChecked;
 
@@ -62,7 +62,7 @@ void main() {
     });
 
     test("should be refreshed", () {
-      final signal = "initial".signal;
+      final signal = Signal("initial");
       late final didUpdateChecked;
 
       Reactter.one(signal, Lifecycle.didUpdate, (_, __) {

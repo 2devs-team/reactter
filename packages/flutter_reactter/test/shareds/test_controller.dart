@@ -17,9 +17,8 @@ Future<String> _resolveStateAsync([bool throwError = false]) async {
 }
 
 class TestController {
-  final signalString = "initial".signal;
-  final signalInt = 0.signal;
-
+  final signalString = Signal("initial");
+  final signalInt = Signal(0);
   final stateBool = UseState(false);
   final stateString = UseState("initial");
   final stateInt = UseState(0);

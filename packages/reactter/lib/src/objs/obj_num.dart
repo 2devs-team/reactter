@@ -7,21 +7,21 @@ extension ObjNumExt on Obj<num> {
   /// The result is an [Obj] of [double], as described by [double.+],
   /// if both `this` and [other] is an [Obj] of [double],
   /// otherwise the result is a [Obj] of [int].
-  Obj<num> operator +(Obj<num> other) => (value + other.value).obj;
+  Obj<num> operator +(Obj<num> other) => Obj(value + other.value);
 
   /// Subtracts [other] from this number.
   ///
   /// The result is an [Obj] of [double], as described by [double.-],
   /// if both `this` and [other] is an [Obj] of [double],
   /// otherwise the result is a [Obj] of [int].
-  Obj<num> operator -(Obj<num> other) => (value - other.value).obj;
+  Obj<num> operator -(Obj<num> other) => Obj(value - other.value);
 
   /// Multiplies this number by [other].
   ///
   /// The result is an [Obj] of [double], as described by [double.*],
   /// if both `this` and [other] is an [Obj] of [double],
   /// otherwise the result is a [Obj] of [int].
-  Obj<num> operator *(Obj<num> other) => (value * other.value).obj;
+  Obj<num> operator *(Obj<num> other) => Obj(value * other.value);
 
   /// Euclidean modulo of this number by [other].
   ///
@@ -49,10 +49,10 @@ extension ObjNumExt on Obj<num> {
   /// print(Obj(5) % Obj(-3)); // Obj(2)
   /// print(Obj(-5) % Obj(-3)); // Obj(1)
   /// ```
-  Obj<num> operator %(Obj<num> other) => (value % other.value).obj;
+  Obj<num> operator %(Obj<num> other) => Obj(value % other.value);
 
   /// Divides this number by [other].
-  Obj<double> operator /(Obj<num> other) => (value / other.value).obj;
+  Obj<double> operator /(Obj<num> other) => Obj(value / other.value);
 
   /// Truncating division operator.
   ///
@@ -69,7 +69,7 @@ extension ObjNumExt on Obj<num> {
   /// Then `a ~/ b` is equivalent to `(a / b).truncate()`.
   /// This means that the intermediate result of the double division
   /// must be a finite integer (not an infinity or [double.nan]).
-  Obj<int> operator ~/(Obj<num> other) => (value ~/ other.value).obj;
+  Obj<int> operator ~/(Obj<num> other) => Obj(value ~/ other.value);
 
   /// The negation of this value.
   ///
@@ -87,7 +87,7 @@ extension ObjNumExt on Obj<num> {
   ///
   /// (Both properties generally also hold for the other type,
   /// but with a few edge case exceptions).
-  Obj<num> operator -() => -value.obj;
+  Obj<num> operator -() => Obj(-value);
 
   /// Whether this number is numerically smaller than [other].
   ///

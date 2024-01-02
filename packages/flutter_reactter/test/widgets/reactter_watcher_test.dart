@@ -9,7 +9,7 @@ void main() {
     testWidgets(
       "should rebuild when detected signals has changes",
       (tester) async {
-        final signalString = "initial".signal;
+        final signalString = Signal("initial");
 
         await tester.pumpWidget(
           TestBuilder(

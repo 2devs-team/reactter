@@ -32,7 +32,7 @@ Let's see a small and simple example:
 
 ```dart
 // Create a reactive state using `Signal`
-final count = 0.signal;
+final count = Signal(0);
 
 void main() {
   // Put on listen `didUpdate` event, whitout use `Stream`
@@ -219,15 +219,7 @@ Reactter offers the following several state managers:
 
 [`Signal`](https://pub.dev/documentation/reactter/latest/reactter/Signal-class.html) is an object (that extends [`ReactterState`](https://pub.dev/documentation/reactter/latest/reactter/ReactterState-class.html)) which has a `value` and notifies about its changes.
 
-It can be initialized using the extension `.signal`:
-
-```dart
-final intSignal = 0.signal;
-final strSignal = "initial value".signal;
-final userSignal = User().signal;
-```
-
-or using the constructor class `Signal<T>(T initialValue)`:
+It can be initialized using the constructor class `Signal<T>(T initialValue)`:
 
 ```dart
 final intSignal = Signal<int>(0);
@@ -280,7 +272,7 @@ When `value` has changed, the `Signal` will emit the following events(learn abou
 - `Lifecycle.didUpdate` event is triggered after the `value` change or `update`, `refresh` methods have been invoked.
 
 > **NOTE:**
-> When you do any arithmetic operation between two `Signal`s, it returns an `Obj`, for example: `1.signal + 2.signal` returns `3.obj`.
+> When you do any arithmetic operation between two `Signal`s, it returns an `Obj`, for example: `signal(1) + Signal(2)` returns `Obj(3)`.
 > An [`Obj`](https://pub.dev/documentation/reactter/latest/reactter/Obj-class.html) is like a `Signal` without reactive functionality, but you can convert it to `Signal` using `.toSignal`.
 
 > **NOTE:**
@@ -1214,8 +1206,8 @@ ReactterWatcher({
   - `child`: a `Widget` defined in the `child` property.
 
 ```dart
-final count = 0.signal;
-final flag = false.signal;
+final count = Signal(0);
+final flag = Signal(false);
 
 void increase() => count.value += 1;
 void toggle() => flag(!flag.value);

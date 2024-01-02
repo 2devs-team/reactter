@@ -24,7 +24,7 @@ extension ObjListExt<E> on Obj<List<E>> {
   /// The default behavior is to return a normal growable list.
   /// Some list types may choose to return a list of the same type as themselves
   /// (see [Uint8List.+]);
-  Obj<List<E>> operator +(Obj<List<E>> other) => (value + other.value).obj;
+  Obj<List<E>> operator +(Obj<List<E>> other) => Obj(value + other.value);
 
   /// Returns a view of this list as a list of [R] instances.
   ///

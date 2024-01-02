@@ -2,19 +2,19 @@
 part of '../objs.dart';
 
 extension ObjDoubleExt on Obj<double> {
-  Obj<double> operator +(Obj<num> other) => (value + other.value).obj;
+  Obj<double> operator +(Obj<num> other) => Obj(value + other.value);
 
-  Obj<double> operator -(Obj<num> other) => (value - other.value).obj;
+  Obj<double> operator -(Obj<num> other) => Obj(value - other.value);
 
-  Obj<double> operator *(Obj<num> other) => (value * other.value).obj;
+  Obj<double> operator *(Obj<num> other) => Obj(value * other.value);
 
-  Obj<double> operator %(Obj<num> other) => (value % other.value).obj;
+  Obj<double> operator %(Obj<num> other) => Obj(value % other.value);
 
-  Obj<double> operator /(Obj<num> other) => (value / other.value).obj;
+  Obj<double> operator /(Obj<num> other) => Obj(value / other.value);
 
-  Obj<int> operator ~/(Obj<num> other) => (value ~/ other.value).obj;
+  Obj<int> operator ~/(Obj<num> other) => Obj(value ~/ other.value);
 
-  Obj<double> operator -() => -value.obj;
+  Obj<double> operator -() => Obj(-value);
 
   double remainder(num other) => value.remainder(other);
 

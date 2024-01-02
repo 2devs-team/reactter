@@ -8,7 +8,7 @@ void main() {
     testWidgets(
       "should rebuild when detected value has changes",
       (tester) async {
-        final signalList = <int>[].signal;
+        final signalList = Signal(<int>[]);
 
         await tester.pumpWidget(
           ReactterScope(

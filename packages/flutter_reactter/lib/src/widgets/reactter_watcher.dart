@@ -6,8 +6,8 @@ part of '../widgets.dart';
 /// For example:
 ///
 /// ```dart
-/// final count = 0.signal;
-/// final toggle = false.signal;
+/// final count = Signal(0);
+/// final toggle = Signal(false);
 ///
 /// class Example extends StatelessWidget {
 ///   ...

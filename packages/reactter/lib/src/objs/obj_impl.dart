@@ -6,11 +6,7 @@ part of '../objs.dart';
 /// You can create a new [Obj]:
 ///
 /// ```dart
-/// // usign `.obj` extension
-/// final strObj = "initial value".obj;
-/// final intObj = 0.obj;
-/// final userObj = User().obj;
-/// // or usign the constructor class
+/// // usign the `Obj` class
 /// final strObj = Obj<String>("initial value");
 /// final intObj = Obj<int>(0);
 /// final userObj = Obj<User>(User());
@@ -93,6 +89,10 @@ extension ObjNullExt<T> on Obj<T?> {
   }
 }
 
+@Deprecated(
+  'Use `Obj` class instead. '
+  'This feature was deprecated after v6.2.0.',
+)
 extension ObjGenericTypeExt<T> on T {
   /// Allows you to call `.obj` on any object.
   Obj<T> get obj => Obj<T>(this);
