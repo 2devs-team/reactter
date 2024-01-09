@@ -16,14 +16,14 @@ ____
 
 ## Features
 
-- ⚡️ Engineered for **Speed**(up to 12x faster than other).
+- ⚡️ Engineered for **Speed**.
 - ⚖️ Super **Lightweight**([🥇 See benchmarks](https://github.com/CarLeonDev/state_managements#memory-size)).
 - 📏 **Reduce Boilerplate Code** significantly([🥇 See benchmarks](https://github.com/CarLeonDev/state_managements#lines-number)).
-- 📝 Improve **Code Readability**.
+- ✏️ Improve **Code Readability**.
 - 💧 **Flexible** and **Adaptable** to any architecture.
-- ☢️ **Reactive States** using [Signal](#signal).
-- ♻️ **Reusable States** creating [Custom hooks](#custom-hooks).
-- 🎮 Fully **Rendering Control**.
+- ☢️ **Reactive States** using [Signal](#signal) and Hooks.
+- ♻️ **Reusable States and Logic** with [Custom hooks](#custom-hooks).
+- 🎮 Fully **[Rendering Control](#rendering-control)**.
 - 🧪 Fully **Testable**, 100% code coverage.
 - 🪄 **Zero Configuration** and **No Code Generation** necessary.
 - 💙 **Compatible with Dart and Flutter**, supports the latest version of Dart.
@@ -35,26 +35,26 @@ Let's see a small and simple example:
 final count = Signal(0);
 
 void main() {
-  // Put on listen `didUpdate` event, whitout use `Stream`
-  Reactter.on(count, Lifecycle.didUpdate, (_, __) => print('Count: $count'));
-
   // Change the `value` in any time(e.g., each 1 second).
-  Timer.periodic(Duration(seconds: 1), (_) => count.value++);
+  Timer.periodic(
+    Duration(seconds: 1), 
+    (_) => count.value++,
+  );
+
+  // Put on listen `didUpdate` event, whitout use `Stream`
+  Reactter.on(
+    count,
+    Lifecycle.didUpdate,
+    (_, __) => print('Count: $count'),
+  );
 
   // And you can use in flutter, e.g:
   runApp(
     MaterialApp(
       home: Scaffold(
-        body: Center(
-          child: ReactterWatcher(
-            builder: (context, child) {
-              // This will be re-built, at each count change.
-              return Text(
-                "$count",
-                style: Theme.of(context).textTheme.headline3,
-              );
-            },
-          ),
+        body: ReactterWatcher(
+          // It will be re-built, at each count change.
+          builder: (_, __) => Text("Count: $count"),
         ),
       ),
     ),
@@ -601,7 +601,7 @@ When `value` has changed, the `UseState` will emit the following events (learn a
 > `UseCompute` is read-only, meaning that its value cannot be changed, except by invoking the `computeValue` method.
 
 > **RECOMENDED:**
-> `UseCompute` does not cache the computed value, meaning it recalculates the value with every change in its dependencies , potentially impacting performance, especially if the computation is expensive. In these cases, you should consider using `Memo`(leard about it [here](#memo)) in the following manner:
+> `UseCompute` does not cache the computed value, meaning it recalculates the value when its depenencies has changes, potentially impacting performance, especially if the computation is expensive. In these cases, you should consider using `Memo`(learn about it [here](#memo)) in the following manner:
 
 ```dart
   late final myUseComputeMemo = Reactter.lazyState((){
