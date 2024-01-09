@@ -245,10 +245,6 @@ mixin ReactterScopeElementMixin on InheritedElement {
       _markNeedsNotifyDependents,
     );
 
-    if (instanceOrState is UseWhen) {
-      Future.microtask(() => instanceOrState.dispose());
-    }
-
     _instancesAndStatesDependencies.remove(instanceOrState);
   }
 }

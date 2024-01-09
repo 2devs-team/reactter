@@ -88,12 +88,3 @@ extension ObjNullExt<T> on Obj<T?> {
     return Obj<T>(value as T);
   }
 }
-
-@Deprecated(
-  'Use `Obj` class instead. '
-  'This feature was deprecated after v6.2.0.',
-)
-extension ObjGenericTypeExt<T> on T {
-  /// Allows you to call `.obj` on any object.
-  Obj<T> get obj => Obj<T>(this);
-}

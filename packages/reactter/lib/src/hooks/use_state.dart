@@ -45,17 +45,7 @@ class UseState<T> extends ReactterHook {
   final $ = ReactterHook.$register;
 
   /// {@macro use_state}
-  UseState(T initialValue)
-      : _value = initialValue,
-        // ignore: deprecated_member_use_from_same_package
-        initial = initialValue;
-
-  /// The initial value in state.
-  @Deprecated(
-    'No longer used by the framework, please remove any reference to it. '
-    'This feature was deprecated after v6.0.0.pre.',
-  )
-  final T initial;
+  UseState(T initialValue) : _value = initialValue;
 
   T _value;
 
@@ -68,13 +58,4 @@ class UseState<T> extends ReactterHook {
       update(() => _value = value);
     }
   }
-
-  // coverage:ignore-start
-  /// Reset the state to initial value
-  @Deprecated(
-    "No longer used by the framework. "
-    'This feature was deprecated after v6.0.0.pre.',
-  )
-  void reset() => value = initial;
-  // coverage:ignore-end
 }

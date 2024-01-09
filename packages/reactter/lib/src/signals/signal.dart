@@ -149,15 +149,6 @@ extension SignalNullExt<T> on Signal<T?> {
   }
 }
 
-@Deprecated(
-  'Use `Signal` class instead. '
-  'This feature was deprecated after v6.2.0.',
-)
-extension SignalGenericTypeExt<T> on T {
-  /// Allows you to create a signal from any type.
-  Signal<T> get signal => Signal<T>(this);
-}
-
 extension ObjToSignalExt<T> on Obj<T> {
   /// Returns a new Signal<T> with the value of the current Obj<T>.
   Signal<T> get toSignal => Signal<T>(value);
