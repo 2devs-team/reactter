@@ -1,5 +1,16 @@
 # Reactter
 
+## 6.2.0
+
+### Breakings
+
+- **refactor:** Deprecate `.signal` and `.obj` extensions.
+
+### Internal
+
+- **doc:** Improve README.
+- **fix(example):** Reset `doneCount` when clear todo completed.
+
 ## 6.1.0
 
 ### Enhancements
