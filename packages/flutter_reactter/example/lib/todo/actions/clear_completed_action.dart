@@ -16,6 +16,7 @@ class ClearCompletedAction extends ReactterActionCallable<TodoStore, void> {
         for (final todo in state.todoList)
           if (!todo.isDone) todo
       ],
+      doneCount: 0,
     );
   }
 }
