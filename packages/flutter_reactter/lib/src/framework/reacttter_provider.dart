@@ -11,7 +11,7 @@ abstract class ReactterProviderWrapper implements ReactterWrapperWidget {}
 /// ```dart
 /// ReactterProvider<AppController>(
 ///   () => AppController(),
-///   builder: (appController, context, child) {
+///   builder: (context, appController, child) {
 ///     return Text("StateA: ${appController.stateA.value}");
 ///   },
 /// )
@@ -27,7 +27,7 @@ abstract class ReactterProviderWrapper implements ReactterWrapperWidget {}
 /// ReactterProvider<AppController>(
 ///   () => AppController(),
 ///   child: Text("This widget build only once"),
-///   builder: (context, child) {
+///   builder: (context, _, __) {
 ///     final appController = context.watch<AppController>();
 ///
 ///     return Column(
@@ -44,13 +44,13 @@ abstract class ReactterProviderWrapper implements ReactterWrapperWidget {}
 ///
 /// > **NOTE:**
 /// > [ReactterProvider] is a "scoped". This mean that [ReactterProvider]
-/// exposes the instance of [T] type defined on first parameter([InstanceContextBuilder])
+/// exposes the instance of [T] type defined on second parameter([InstanceContextBuilder])
 /// through the [BuildContext] in the widget subtree:
 /// >
 /// > ```dart
 /// > ReactterProvider<AppController>(
 /// >   () => AppController(),
-/// >   builder: (appController, context, child) {
+/// >   builder: (context, appController, child) {
 /// >     return OtherWidget();
 /// >   }
 /// > );
@@ -162,9 +162,7 @@ class ReactterProviderI<T extends Object?, I extends String?> extends Widget
       builder: (context) {
         assert(child != null || builder != null);
 
-        final instance = context.use<T>(id);
-
-        return builder?.call(instance, context, child) ?? child!;
+        return builder?.call(context, context.use<T>(id), child) ?? child!;
       },
     );
   }

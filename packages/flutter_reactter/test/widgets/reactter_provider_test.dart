@@ -14,7 +14,7 @@ void main() {
       await tester.pumpWidget(
         TestBuilder(
           child: ReactterProviderBuilder(
-            builder: (_, context, child) {
+            builder: (context, _, __) {
               instanceObtained = context.use<TestController>();
 
               return Text("stateString: ${instanceObtained.stateString.value}");
@@ -38,7 +38,7 @@ void main() {
         TestBuilder(
           child: ReactterProviderBuilder(
             id: "uniqueId",
-            builder: (_, context, child) {
+            builder: (context, _, __) {
               instanceObtained = context.use<TestController>("uniqueId");
 
               return Text("stateString: ${instanceObtained.stateString.value}");
@@ -60,7 +60,7 @@ void main() {
       await tester.pumpWidget(
         TestBuilder(
           child: ReactterProviderBuilder(
-            builder: (_, BuildContext context, Widget? child) {
+            builder: (context, _, __) {
               instanceObtained = context.watch<TestController>(
                 (inst) => [inst.stateString, inst.stateBool],
               );
@@ -99,7 +99,7 @@ void main() {
         TestBuilder(
           child: ReactterProviderBuilder(
             id: "uniqueId",
-            builder: (_, BuildContext context, Widget? child) {
+            builder: (context, _, __) {
               instanceObtained = context.watchId<TestController>(
                 "uniqueId",
                 (inst) => [inst.stateString, inst.stateBool],

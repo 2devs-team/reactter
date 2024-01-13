@@ -193,7 +193,7 @@ class ReactterComponentTestWithoutId extends ReactterComponent<TestController> {
   get listenStates => (inst) => [inst.stateBool, inst.stateString];
 
   @override
-  Widget render(TestController inst, BuildContext context) {
+  Widget render(context, inst) {
     getInstance(inst);
 
     return _buildWidget(inst);
@@ -217,7 +217,7 @@ class ReactterComponentTestWithoutBuilder
   get listenStates => (inst) => [inst.stateBool, inst.stateString];
 
   @override
-  Widget render(TestController inst, BuildContext context) {
+  Widget render(context, inst) {
     getInstance(inst);
 
     return _buildWidget(inst);
@@ -241,7 +241,7 @@ class ReactterComponentTestWithoutListenStates
   get builder => () => TestController();
 
   @override
-  Widget render(TestController inst, BuildContext context) {
+  Widget render(context, inst) {
     getInstance(inst);
 
     return _buildWidget(inst);
@@ -267,7 +267,7 @@ class ReactterComponentTestAll extends ReactterComponent<TestController> {
   get builder => () => TestController();
 
   @override
-  Widget render(TestController inst, BuildContext context) {
+  Widget render(context, inst) {
     getInstance(inst);
 
     return _buildWidget(inst);

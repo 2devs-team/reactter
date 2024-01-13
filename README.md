@@ -928,7 +928,7 @@ ReactterProvider<T>(
   bool init = false,
   InstanceManageMode type = InstanceManageMode.builder,
   Widget? child,
-  required Widget builder(T instance, BuilderContext context, Widget? child),
+  required Widget builder(BuilderContext context, T instance, Widget? child),
 })
 ```
 
@@ -951,7 +951,7 @@ Here is an example:
 ReactterProvider<CounterController>(
   () => CounterController(),
   child: const Text('This widget is rendered once'),
-  builder: (counterController, context, child) {
+  builder: (context, counterController, child) {
     // `context.watch` listens any CounterController changes for rebuild this widget tree.
     context.watch<CounterController>();
 
@@ -1020,7 +1020,7 @@ class CounterComponent extends ReactterComponent<CounterController> {
   void listenStates(counterController) => [counterController.count];
 
   @override
-  Widget render(counterController, context) {
+  Widget render(context, counterController) {
     return Text("Count: ${counterController.count.value}");
   }
 }
@@ -1050,7 +1050,7 @@ ReactterConsumer<T>({
   bool listenAll = false,
   List<ReactterState> listenStates(T instance)?,
   Widget? child,
-  required Widget builder(T instance, BuildContext context, Widget? child),
+  required Widget builder(BuildContext context, T instance, Widget? child),
 });
 ```
 
@@ -1071,7 +1071,7 @@ class ExampleWidget extends StatelessWidget {
     return ReactterConsumer<MyController>(
       listenStates: (inst) => [inst.stateA, inst.stateB],
       child: const Text('This widget is rendered once'),
-      builder: (myController, context, child) {
+      builder: (context, myController, child) {
         // This is built when stateA or stateB has changed.
         return Column(
           children: [
@@ -1138,7 +1138,7 @@ class MyApp extends StatelessWidget {
   Widget? build(BuildContext context) {
     return ReactterProvider<MyController>(
       () => MyController(),
-      builder: (inst, context, child) {
+      builder: (context, inst, child) {
         return OtherWidget();
       }
     );
@@ -1262,7 +1262,7 @@ class MyApp extends StatelessWidget {
   Widget? build(BuildContext context) {
     return ReactterProvider<MyController>(
       () => MyController(),
-      builder: (inst, context, child) {
+      builder: (context, inst, child) {
         return OtherWidget();
       }
     );
@@ -1316,7 +1316,7 @@ class MyApp extends StatelessWidget {
   Widget? build(BuildContext context) {
     return ReactterProvider<MyController>(
       () => MyController(),
-      builder: (inst, context, child) {
+      builder: (context, inst, child) {
         return OtherWidget();
       }
     );
@@ -1403,7 +1403,7 @@ class MyApp extends StatelessWidget {
   Widget? build(BuildContext context) {
     return ReactterProvider<MyController>(
       () => MyController(),
-      builder: (inst, context, child) {
+      builder: (context, inst, child) {
         return OtherWidget();
       }
     );

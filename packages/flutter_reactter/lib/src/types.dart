@@ -15,8 +15,8 @@ typedef ListenStates<T> = List<ReactterState> Function(T instance);
 /// This function type can be used as a callback to build a widget tree
 /// based on an instance of [T] type.
 typedef InstanceContextBuilder<T> = Widget Function(
-  T inst,
   BuildContext context,
+  T inst,
   Widget? child,
 );
 

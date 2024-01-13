@@ -62,7 +62,7 @@ void main() {
       await tester.pumpWidget(
         TestBuilder(
           child: ReactterProviderBuilder(
-            builder: (_, context, __) {
+            builder: (context, _, __) {
               instanceObtained = context.watch<TestController>();
 
               return Text(
@@ -89,7 +89,7 @@ void main() {
       await tester.pumpWidget(
         TestBuilder(
           child: ReactterProviderBuilder(
-            builder: (_, context, __) {
+            builder: (context, _, __) {
               instanceObtained = context.watch<TestController>(
                 (inst) => [inst.stateInt],
               );
