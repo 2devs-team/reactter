@@ -105,7 +105,7 @@ class ReactterSelector<T extends Object?, V> extends StatelessWidget {
   /// Exposes the [BuildContext], the instance of [T] type,
   /// the comptued value of [V] type and the [child] widget as arguments,
   /// and returns a widget.
-  final InstanceValueBuilder<T, V> builder;
+  final InstanceValueChildBuilder<T, V> builder;
 
   /// {@macro reactter_selector}
   const ReactterSelector({
@@ -157,13 +157,13 @@ class ReactterSelector<T extends Object?, V> extends StatelessWidget {
   }) {
     final shouldFindProvider = T != getType<Object?>();
     final inheritedElement = shouldFindProvider
-        ? ReactterProvider._getProviderInheritedElement<T>(context, id)
+        ? ProvideImpl.getProviderInheritedElement<T>(context, id)
         : ReactterScope._getScopeInheritedElement(context);
-    final instance = inheritedElement is ReactterProviderElement<T>
+    final instance = inheritedElement is ProviderElement<T>
         ? inheritedElement.instance
         : null;
 
-    final dependency = ReactterSelectDependency(
+    final dependency = SelectDependency(
       instance: instance as T,
       computeValue: selector as dynamic,
     );

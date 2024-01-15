@@ -2,20 +2,20 @@ part of '../framework.dart';
 
 /// Organizes the widget as nested way
 @internal
-class ReactterNestedWidget<W extends StatelessWidget> extends StatelessWidget {
-  const ReactterNestedWidget({
+class NestedWidget<W extends StatelessWidget> extends StatelessWidget {
+  const NestedWidget({
     Key? key,
     required this.owner,
     required this.wrappedWidget,
     this.injectedChild,
   }) : super(key: key);
 
-  final ReactterWrapperWidget wrappedWidget;
+  final WrapperWidget wrappedWidget;
   final Widget? injectedChild;
-  final ReactterWrapperElementMixin owner;
+  final WrapperElementMixin owner;
 
   @override
-  ReactterNestedElement createElement() => ReactterNestedElement(this);
+  NestedElement createElement() => NestedElement(this);
 
   // coverage:ignore-start
   @override
@@ -23,20 +23,20 @@ class ReactterNestedWidget<W extends StatelessWidget> extends StatelessWidget {
   // coverage:ignore-end
 }
 
-/// [ReactterNestedWidget]'s Element
+/// [NestedWidget]'s Element
 @internal
-class ReactterNestedElement extends StatelessElement {
-  ReactterNestedElement(ReactterNestedWidget widget) : super(widget);
+class NestedElement extends StatelessElement {
+  NestedElement(NestedWidget widget) : super(widget);
 
   @override
-  ReactterNestedWidget get widget => super.widget as ReactterNestedWidget;
+  NestedWidget get widget => super.widget as NestedWidget;
 
   Widget? _injectedChild;
   Widget? get injectedChild => _injectedChild;
   set injectedChild(Widget? value) {
     final previous = _injectedChild;
-    if (value is ReactterNestedWidget &&
-        previous is ReactterNestedWidget &&
+    if (value is NestedWidget &&
+        previous is NestedWidget &&
         Widget.canUpdate(value.wrappedWidget, previous.wrappedWidget)) {
       // no need to rebuild the wrapped widget just for a _NestedHook.
       // The widget doesn't matter here, only its Element.
@@ -48,9 +48,9 @@ class ReactterNestedElement extends StatelessElement {
     }
   }
 
-  ReactterWrapperWidget? _wrappedChild;
-  ReactterWrapperWidget? get wrappedChild => _wrappedChild;
-  set wrappedChild(ReactterWrapperWidget? value) {
+  WrapperWidget? _wrappedChild;
+  WrapperWidget? get wrappedChild => _wrappedChild;
+  set wrappedChild(WrapperWidget? value) {
     if (_wrappedChild != value) {
       _wrappedChild = value;
       markNeedsBuild();

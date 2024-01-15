@@ -84,7 +84,7 @@ class ReactterConsumer<T extends Object?> extends StatelessWidget {
   ///
   /// Exposes the instance of type [T], the [BuildContext],
   /// and the [child] widget as arguments, and returns a widget.
-  final InstanceContextBuilder<T> builder;
+  final InstanceChildBuilder<T> builder;
 
   @override
   Widget build(BuildContext context) {

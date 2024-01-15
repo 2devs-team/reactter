@@ -3,13 +3,12 @@ part of '../framework.dart';
 /// A mixin that helps to manages dependencies
 /// and notify when should be updated its dependencies.
 @internal
-mixin ReactterScopeElementMixin on InheritedElement {
+mixin ScopeElementMixin on InheritedElement {
   bool _isFlushDependentsScheduled = false;
   bool _updatedShouldNotify = false;
-  final _dependenciesDirty = HashSet<ReactterDependency>();
+  final _dependenciesDirty = HashSet<Dependency>();
   final _dependents = HashMap<Element, Object?>();
-  final _instancesAndStatesDependencies =
-      HashMap<Object, Set<ReactterDependency>>();
+  final _instancesAndStatesDependencies = HashMap<Object, Set<Dependency>>();
   final _dependentsFlushReady = <Element>{};
 
   bool get hasDependenciesDirty => _dependenciesDirty.isNotEmpty;
@@ -46,14 +45,13 @@ mixin ReactterScopeElementMixin on InheritedElement {
   @override
   void updateDependencies(Element dependent, Object? aspect) {
     // coverage:ignore-start
-    if (aspect is! ReactterDependency) {
+    if (aspect is! Dependency) {
       return super.updateDependencies(dependent, aspect);
     }
 
     var masterDependency = getDependencies(dependent);
 
-    if (masterDependency != null &&
-        masterDependency is! ReactterMasterDependency) {
+    if (masterDependency != null && masterDependency is! MasterDependency) {
       return super.updateDependencies(dependent, aspect);
     }
     // coverage:ignore-end
@@ -62,19 +60,19 @@ mixin ReactterScopeElementMixin on InheritedElement {
 
     masterDependency = _flushDependent(dependent, masterDependency);
 
-    if (masterDependency is ReactterMasterDependency) {
+    if (masterDependency is MasterDependency) {
       masterDependency.putDependency(aspect);
     }
 
     masterDependency ??= aspect.makeMaster();
-    _addListener(masterDependency as ReactterMasterDependency);
+    _addListener(masterDependency as MasterDependency);
 
     return setDependencies(dependent, masterDependency);
   }
 
   @override
   void setDependencies(Element dependent, Object? value) {
-    if (value is ReactterMasterDependency) {
+    if (value is MasterDependency) {
       _dependents[dependent] = value;
     }
 
@@ -91,7 +89,7 @@ mixin ReactterScopeElementMixin on InheritedElement {
     final dependency = getDependencies(dependent);
     final dependencies = {
       dependency,
-      if (dependency is ReactterMasterDependency) ...dependency._selects,
+      if (dependency is MasterDependency) ...dependency._selects,
     };
 
     if (dependencies.any(_dependenciesDirty.contains)) {
@@ -101,7 +99,7 @@ mixin ReactterScopeElementMixin on InheritedElement {
     }
   }
 
-  void _addListener(ReactterDependency dependency) {
+  void _addListener(Dependency dependency) {
     if (dependency._instance != null) {
       _addInstanceListener(dependency._instance!, dependency);
     }
@@ -110,8 +108,7 @@ mixin ReactterScopeElementMixin on InheritedElement {
       _addStatesListener(dependency._states, dependency);
     }
 
-    if (dependency is ReactterMasterDependency &&
-        dependency._selects.isNotEmpty) {
+    if (dependency is MasterDependency && dependency._selects.isNotEmpty) {
       for (final dependency in dependency._selects) {
         _addListener(dependency);
       }
@@ -120,7 +117,7 @@ mixin ReactterScopeElementMixin on InheritedElement {
 
   void _addInstanceListener(
     Object instance,
-    ReactterDependency dependency,
+    Dependency dependency,
   ) {
     if (!_instancesAndStatesDependencies.containsKey(instance)) {
       Reactter.on(instance, Lifecycle.didUpdate, _markNeedsNotifyDependents);
@@ -132,7 +129,7 @@ mixin ReactterScopeElementMixin on InheritedElement {
 
   void _addStatesListener(
     Set<ReactterState> states,
-    ReactterDependency dependency,
+    Dependency dependency,
   ) {
     for (final state in states) {
       if (!_instancesAndStatesDependencies.containsKey(state)) {
@@ -151,9 +148,9 @@ mixin ReactterScopeElementMixin on InheritedElement {
 
     if (dependencies?.isEmpty ?? true) return;
 
-    final dependenciesDirty = <ReactterDependency>[
+    final dependenciesDirty = <Dependency>[
       for (final dependency in dependencies!)
-        if (dependency is! ReactterSelectDependency)
+        if (dependency is! SelectDependency)
           dependency
         else if (dependency.value != dependency.resolve())
           dependency
@@ -187,7 +184,7 @@ mixin ReactterScopeElementMixin on InheritedElement {
 
     _dependentsFlushReady.add(dependent);
 
-    if (dependency is! ReactterMasterDependency) return dependency;
+    if (dependency is! MasterDependency) return dependency;
 
     _clearDependency(dependency);
 
@@ -211,7 +208,7 @@ mixin ReactterScopeElementMixin on InheritedElement {
     _instancesAndStatesDependencies.clear();
   }
 
-  void _clearDependency(ReactterDependency dependency) {
+  void _clearDependency(Dependency dependency) {
     if (dependency._instance != null) {
       final dependencies =
           _instancesAndStatesDependencies[dependency._instance];
@@ -231,7 +228,7 @@ mixin ReactterScopeElementMixin on InheritedElement {
       }
     }
 
-    if (dependency is ReactterMasterDependency) {
+    if (dependency is MasterDependency) {
       for (final select in dependency._selects) {
         _clearDependency(select);
       }

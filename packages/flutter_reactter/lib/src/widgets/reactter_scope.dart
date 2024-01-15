@@ -27,7 +27,7 @@ class ReactterScope extends InheritedWidget {
     if (listen && listenStates != null) {
       context.dependOnInheritedElement(
         reactterScopeElement,
-        aspect: ReactterStatesDependency(
+        aspect: StatesDependency(
           listenStates(null).toSet(),
         ),
       );
@@ -46,8 +46,7 @@ class ReactterScope extends InheritedWidget {
   }
 }
 
-class ReactterScopeElement extends InheritedElement
-    with ReactterScopeElementMixin {
+class ReactterScopeElement extends InheritedElement with ScopeElementMixin {
   Widget? prevChild;
 
   ReactterScopeElement(InheritedWidget widget) : super(widget);

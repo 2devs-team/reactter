@@ -133,9 +133,21 @@ void main() {
     testWidgets("should shows child", (tester) async {
       await tester.pumpWidget(
         TestBuilder(
-          child: ReactterProvider(
-            () => TestController(),
-            child: const Text("child"),
+          child: Column(
+            children: [
+              ReactterProvider(
+                () => TestController(),
+                child: const Text("child"),
+              ),
+              ReactterProvider(
+                () => TestController(),
+                child: const Text("child2"),
+                builder: (_, context, child) {
+                  if (child != null) return child;
+                  return const SizedBox.shrink();
+                },
+              ),
+            ],
           ),
         ),
       );
@@ -143,21 +155,6 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text("child"), findsOneWidget);
-
-      await tester.pumpWidget(
-        TestBuilder(
-          child: ReactterProvider(
-            () => TestController(),
-            child: const Text("child2"),
-            builder: (_, context, child) {
-              if (child != null) return child;
-              return const SizedBox.shrink();
-            },
-          ),
-        ),
-      );
-
-      await tester.pumpAndSettle();
       expect(find.text("child2"), findsOneWidget);
     });
   });

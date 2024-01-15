@@ -1,5 +1,9 @@
 part of '../widgets.dart';
 
+/// Abstract class to implementing a wrapper widget for [ReactterProvider]
+@internal
+abstract class ProviderWrapper implements WrapperWidget {}
+
 /// {@template reactter_providers}
 /// A [StatelessWidget] that allows to use multiple [ReactterProvider] as nested way.
 ///
@@ -53,8 +57,7 @@ part of '../widgets.dart';
 ///
 /// * [ReactterProvider], a widget that provides an instance type to widget tree.
 /// {@endtemplate}
-class ReactterProviders extends StatelessWidget
-    implements ReactterProviderWrapper {
+class ReactterProviders extends StatelessWidget implements ProviderWrapper {
   /// {@macro reactter_providers}
   const ReactterProviders(
     this.providers, {
@@ -64,7 +67,7 @@ class ReactterProviders extends StatelessWidget
   })  : assert(child != null || builder != null),
         super(key: key);
 
-  final List<ReactterProviderWrapper> providers;
+  final List<ProviderWrapper> providers;
 
   /// Provides a widget , which render one time.
   ///
@@ -75,7 +78,7 @@ class ReactterProviders extends StatelessWidget
   ///
   /// Exposes [BuilderContext] and [child] widget as parameters.
   /// and returns a widget.
-  final TransitionBuilder? builder;
+  final ChildBuilder? builder;
 
   @override
   Widget build(BuildContext context) {
@@ -89,20 +92,20 @@ class ReactterProviders extends StatelessWidget
 }
 
 class ReactterProvidersElement extends StatelessElement
-    with ReactterWrapperElementMixin<ReactterProviders> {
+    with WrapperElementMixin<ReactterProviders> {
   /// Creates an element that uses the given widget as its configuration.
   ReactterProvidersElement(ReactterProviders widget) : super(widget);
 
   @override
   Widget build() {
-    ReactterNestedWidget? nestedHook;
+    NestedWidget? nestedHook;
     var nextNode = parent?.injectedChild ??
         Builder(
           builder: (context) => widget.build(context),
         );
 
     for (final child in widget.providers.reversed) {
-      nextNode = nestedHook = ReactterNestedWidget<ReactterProviders>(
+      nextNode = nestedHook = NestedWidget<ReactterProviders>(
         owner: this,
         wrappedWidget: child,
         injectedChild: nextNode,
@@ -119,7 +122,7 @@ class ReactterProvidersElement extends StatelessElement
           ..injectedChild = nestedHook.injectedChild;
 
         final next = nestedHook.injectedChild;
-        if (next is ReactterNestedWidget) {
+        if (next is NestedWidget) {
           nestedHook = next;
         } else {
           break;

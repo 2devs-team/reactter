@@ -419,6 +419,12 @@ abstract class ReactterInstanceManager {
     return _instances[instance]?.mode;
   }
 
+  /// Returns the hashCode reference at a specified index for a given type and
+  /// optional ID.
+  int? getHashCodeRefAt<T extends Object?>(int index, [String? id]) {
+    return _getReactterInstance<T>(id)?.refs.elementAt(index);
+  }
+
   /// Returns an instance of [ReactterInstance] of [T] type with an [id] optional.
   _ReactterInstanceBuilder<T?>? _getReactterInstance<T>([String? id]) {
     return _reactterInstance.lookup(ReactterInstance<T?>(id))

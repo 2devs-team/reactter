@@ -4,7 +4,7 @@ import 'package:flutter_reactter/flutter_reactter.dart';
 import 'test_controller.dart';
 
 class ReactterProviderBuilder extends StatelessWidget {
-  final InstanceContextBuilder<TestController> builder;
+  final InstanceChildBuilder<TestController> builder;
   final String? id;
 
   const ReactterProviderBuilder({

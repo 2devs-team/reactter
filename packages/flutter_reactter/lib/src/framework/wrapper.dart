@@ -1,25 +1,26 @@
 part of '../framework.dart';
 
+
 /// Abstract class to implementing a wrapper widget
 @internal
-abstract class ReactterWrapperWidget implements Widget {
+abstract class WrapperWidget implements Widget {
   @override
-  ReactterWrapperElementMixin createElement();
+  WrapperElementMixin createElement();
 }
 
-/// Mixin to [ReactterWrapperWidget]'s Element
+/// Mixin to [WrapperWidget]'s Element
 @internal
-mixin ReactterWrapperElementMixin<T extends Widget> on Element {
-  ReactterNestedElement? parent;
+mixin WrapperElementMixin<T extends Widget> on Element {
+  NestedElement? parent;
 
-  final nodes = <ReactterNestedElement>{};
+  final nodes = <NestedElement>{};
 
   @override
   T get widget => super.widget as T;
 
   @override
   void mount(Element? parent, dynamic newSlot) {
-    if (parent is ReactterNestedElement?) {
+    if (parent is NestedElement?) {
       this.parent = parent;
     }
     super.mount(parent, newSlot);
@@ -29,7 +30,7 @@ mixin ReactterWrapperElementMixin<T extends Widget> on Element {
   void activate() {
     super.activate();
     visitAncestorElements((parent) {
-      if (parent is ReactterNestedElement) {
+      if (parent is NestedElement) {
         this.parent = parent;
       }
       return false;

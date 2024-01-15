@@ -17,7 +17,7 @@ void main() {
             child: Builder(
               builder: (context) {
                 try {
-                  return ReactterNestedWidget(
+                  return NestedWidget(
                     owner: ReactterProvider(
                       () => TestController(),
                       child: const SizedBox.shrink(),
