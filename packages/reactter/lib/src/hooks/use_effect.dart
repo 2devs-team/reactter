@@ -1,4 +1,4 @@
-part of '../hooks.dart';
+part of 'hooks.dart';
 
 /// {@template use_effect}
 /// A [ReactterHook] that manages side-effect.
@@ -246,7 +246,7 @@ class UseEffect extends ReactterHook {
   }
 
   Object? _getInstance(Object? instance) {
-    return instance is ReactterStateBase && !Reactter.isRegistered(instance)
+    return instance is ReactterStateInternal && !Reactter.isRegistered(instance)
         ? _getInstance(instance.instanceAttached)
         : instance;
   }

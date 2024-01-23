@@ -1,4 +1,4 @@
-part of '../../memo.dart';
+part of '../memo.dart';
 
 /// {@template temporary_cache_memo}
 /// It's a memoization interceptor that removes memoized values from the

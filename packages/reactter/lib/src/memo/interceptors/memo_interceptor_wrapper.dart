@@ -1,4 +1,4 @@
-part of '../../memo.dart';
+part of '../memo.dart';
 
 /// {@template memo_interceptor_wrapper}
 /// It´s a wrapper for a memoized function that allows you to define

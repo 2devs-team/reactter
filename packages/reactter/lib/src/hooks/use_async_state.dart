@@ -1,4 +1,4 @@
-part of '../hooks.dart';
+part of 'hooks.dart';
 
 enum UseAsyncStateStatus {
   standby,

@@ -1,4 +1,4 @@
-part of '../hooks.dart';
+part of 'hooks.dart';
 
 /// {@template use_state}
 /// A [ReactterHook] that manages a state.
