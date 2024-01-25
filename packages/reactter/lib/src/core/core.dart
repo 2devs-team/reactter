@@ -17,3 +17,4 @@ part 'reactter_instance_base.dart';
 part 'reactter_state_base.dart';
 part 'reactter_state_internal.dart';
 part 'reactter_zone.dart';
+part 'state_manager.dart';

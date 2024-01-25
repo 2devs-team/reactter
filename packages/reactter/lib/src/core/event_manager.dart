@@ -16,8 +16,7 @@ abstract class EventManager {
     Enum eventName,
     CallbackEvent<T, P> callback,
   ) {
-    var notifier = EventNotifier(instance, eventName);
-    notifier = _notifiers.lookup(notifier) ?? notifier;
+    final notifier = _getEventNotifier(instance, eventName);
     notifier.addListener(callback);
     _notifiers.add(notifier);
   }
@@ -31,8 +30,7 @@ abstract class EventManager {
     Enum eventName,
     CallbackEvent<T, P> callback,
   ) {
-    var notifier = EventNotifier(instance, eventName);
-    notifier = _notifiers.lookup(notifier) ?? notifier;
+    final notifier = _getEventNotifier(instance, eventName);
     notifier.addListener(callback, true);
     _notifiers.add(notifier);
   }
@@ -76,5 +74,15 @@ abstract class EventManager {
   /// Checks if an object has any listeners.
   bool _hasListeners(Object? instance) {
     return _notifiers.any((notifier) => notifier == instance);
+  }
+
+  /// Retrieves the [EventNotifier] for the given [instance] and [eventName].
+  /// If the [EventNotifier] does not exist in the lookup table, it creates a new one.
+  EventNotifier _getEventNotifier(
+    Object? instance,
+    Enum eventName,
+  ) {
+    final notifier = EventNotifier(instance, eventName);
+    return _notifiers.lookup(notifier) ?? notifier;
   }
 }

@@ -46,11 +46,9 @@ abstract class ReactterStateInternal implements ReactterStateBase {
     }
 
     _isUpdating = true;
-
     _notify(Lifecycle.willUpdate);
     fnUpdate();
     _notify(Lifecycle.didUpdate);
-
     _isUpdating = false;
   }
 
@@ -58,12 +56,12 @@ abstract class ReactterStateInternal implements ReactterStateBase {
   void refresh() {
     assert(!_isDisposed, "You can refresh when it's been disposed");
 
-    final _isUpdatingTmp = _isUpdating;
+    if (!_hasListeners || _isUpdating) {
+      return _notify(Lifecycle.didUpdate);
+    }
+
     _isUpdating = true;
-
     _notify(Lifecycle.didUpdate);
-
-    if (_isUpdatingTmp) return;
     _isUpdating = false;
   }
 
@@ -87,11 +85,20 @@ abstract class ReactterStateInternal implements ReactterStateBase {
   /// When the instance is destroyed, this object is dispose.
   void _onInstanceDestroyed(_, __) => dispose();
 
+  /// Notifies the listeners about the specified [event].
+  /// If [Reactter._isUntrackedRunning] is true, the notification is skipped.
+  /// If [Reactter._isBatchRunning] is true, the notification is deferred until the batch is completed.
+  /// The [event] is emitted using [Reactter.emit] for the current instance and [_instanceAttached].
   void _notify(Enum event) {
-    Reactter.emit(this, event, this);
+    if (Reactter._isUntrackedRunning) return;
+
+    final emit =
+        Reactter._isBatchRunning ? Reactter._emitDefferred : Reactter.emit;
+
+    emit(this, event, this);
 
     if (_instanceAttached != null) {
-      Reactter.emit(_instanceAttached!, event, this);
+      emit(_instanceAttached!, event, this);
     }
   }
 }
