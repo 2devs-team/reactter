@@ -5,21 +5,21 @@ part of 'core.dart';
 @internal
 class ReactterZone {
   /// It's used to keep track of the current [ReactterZone].
-  static ReactterZone? _current;
+  static ReactterZone? _currentZone;
 
   /// This is done to keep a reference to the previous [ReactterZone] before
   /// creating a new instance.
-  final _parent = _current;
+  final _parentZone = _currentZone;
 
   /// It's used to store a collection of [ReactterState].
   final states = Set<ReactterStateBase>();
 
   /// Returns the current [ReactterZone].
-  static ReactterZone? get current => _current;
+  static ReactterZone? get currentZone => _currentZone;
 
   ReactterZone() {
     /// This is done to keep track of the current [ReactterZone] instance.
-    _current = this;
+    _currentZone = this;
   }
 
   /// Takes a function as a parameter and automatically attaches an
@@ -31,7 +31,7 @@ class ReactterZone {
 
   /// Stores the state given from parameter.
   static void recollectState(ReactterStateBase state) {
-    _current?.states.add(state);
+    _currentZone?.states.add(state);
   }
 
   /// Attaches an instance to the stored states([ReactterState]), and if the instance is null,
@@ -39,7 +39,7 @@ class ReactterZone {
   void attachInstance<T extends Object?>(T instance) {
     try {
       if (instance == null) {
-        _parent?.states.addAll(states);
+        _parentZone?.states.addAll(states);
         return;
       }
 
@@ -53,6 +53,6 @@ class ReactterZone {
 
   /// Sets the current object to its parent object, if it exists.
   void _dispose() {
-    _current = _current?._parent;
+    _currentZone = _currentZone?._parentZone;
   }
 }

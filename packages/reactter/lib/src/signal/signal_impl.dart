@@ -76,9 +76,7 @@ enum SignalEvent { onGetValue, onSetValue }
 ///
 /// * [Obj], a base-class that can be used to store a value of [T].
 /// {@endtemplate}
-class Signal<T> extends ReactterStateImpl
-    with ObjBase<T>
-    implements ReactterState, Obj<T> {
+class Signal<T> extends ReactterStateImpl with ObjBase<T> implements Obj<T> {
   T _value;
 
   /// {@macro signal}

@@ -124,7 +124,7 @@ class UseEffect extends ReactterHook {
       return;
     }
 
-    if (ReactterZone.current != null) return;
+    if (ReactterZone.currentZone != null) return;
 
     final instance = _getInstance(context);
 
