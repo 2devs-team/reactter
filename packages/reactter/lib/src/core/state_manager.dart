@@ -7,6 +7,7 @@ abstract class StateManager {
   bool _isBatchRunning = false;
   final HashMap<EventNotifier, Object?> _deferredEvents = HashMap();
 
+  /// {@template lazy_state}
   /// Lazily initializes a state of type [ReactterState] and attaches it to the given [instance].
   ///
   /// This method is recommended to use when initializing state inside a class
@@ -30,7 +31,8 @@ abstract class StateManager {
   ///     this,
   ///   );
   /// }
-  ///
+  /// ```
+  /// {@endtemplate}
   T lazyState<T extends ReactterState>(T buildState(), Object instance) {
     final zone = ReactterZone();
 
@@ -41,6 +43,7 @@ abstract class StateManager {
     }
   }
 
+  /// {@template untracked}
   /// Executes the given [callback] function without tracking any state changes.
   /// This means that any state changes that occur inside the [callback] function
   /// will not trigger any side effects.
@@ -62,6 +65,7 @@ abstract class StateManager {
   ///
   /// print(computed.value); // 1 -> because the state change is not tracked
   /// ```
+  /// {@endtemplate}
   T untracked<T>(T callback()) {
     if (_isUntrackedRunning) {
       return callback();
@@ -75,6 +79,7 @@ abstract class StateManager {
     }
   }
 
+  /// {@template batch}
   /// Executes the given [callback] function within a batch operation.
   ///
   /// A batch operation allows multiple state changes to be grouped together,
@@ -102,6 +107,7 @@ abstract class StateManager {
   ///
   /// print(computed.value); // 3 -> because the batch operation is completed.
   /// ```
+  /// {@endtemplate}
   T batch<T>(T callback()) {
     if (_isBatchRunning) {
       return callback();

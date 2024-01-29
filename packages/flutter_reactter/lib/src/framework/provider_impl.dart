@@ -195,16 +195,27 @@ class ProviderElement<T extends Object?> extends InheritedElement
 
   @override
   void unmount() {
-    if (isRoot) {
-      Reactter.emit(instance!, Lifecycle.willUnmount);
+    final id = widget.id;
+    final ref = widget.ref;
+    final isRoot = this.isRoot;
+    final instance = this.instance;
+
+    try {
+      if (isRoot) {
+        Reactter.emit(instance!, Lifecycle.willUnmount);
+      }
+
+      return super.unmount();
+    } finally {
+      if (isRoot) {
+        Reactter.emit(instance!, Lifecycle.didUnmount);
+      }
+
+      Reactter.delete<T>(id, ref);
+
+      _inheritedElementsWithId = null;
+      prevChild = null;
     }
-
-    Reactter.delete<T>(widget.id, widget.ref);
-
-    _inheritedElementsWithId = null;
-    prevChild = null;
-
-    return super.unmount();
   }
 
   /// Gets [ProviderElement] that it has the [ReactterInstance]'s id.
