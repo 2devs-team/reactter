@@ -3,21 +3,21 @@ part of 'core.dart';
 /// Represents an environment that Reactter uses for managing and
 /// attaching instances to a collection of states.
 @internal
-class ReactterZone {
-  /// It's used to keep track of the current [ReactterZone].
-  static ReactterZone? _currentZone;
+class Zone {
+  /// It's used to keep track of the current [Zone].
+  static Zone? _currentZone;
 
-  /// This is done to keep a reference to the previous [ReactterZone] before
+  /// This is done to keep a reference to the previous [Zone] before
   /// creating a new instance.
   final _parentZone = _currentZone;
 
-  /// It's used to store a collection of [ReactterState].
-  final states = Set<ReactterStateBase>();
+  /// It's used to store a collection of [StateBase].
+  final states = Set<StateBase>();
 
-  /// Returns the current [ReactterZone].
-  static ReactterZone? get currentZone => _currentZone;
+  /// Returns the current [Zone].
+  static Zone? get currentZone => _currentZone;
 
-  ReactterZone() {
+  Zone() {
     /// This is done to keep track of the current [ReactterZone] instance.
     _currentZone = this;
   }
@@ -25,17 +25,17 @@ class ReactterZone {
   /// Takes a function as a parameter and automatically attaches an
   /// instance of the object returned by that function.
   static void autoAttachInstance(Object? Function() getInstance) {
-    final zone = ReactterZone();
+    final zone = Zone();
     zone.attachInstance(getInstance());
   }
 
   /// Stores the state given from parameter.
-  static void recollectState(ReactterStateBase state) {
+  static void recollectState(StateBase state) {
     _currentZone?.states.add(state);
   }
 
-  /// Attaches an instance to the stored states([ReactterState]), and if the instance is null,
-  /// it adds the stored states to the [ReactterZone] parent.
+  /// Attaches an instance to the stored states([StateBase]), and if the instance is null,
+  /// it adds the stored states to the [Zone] parent.
   void attachInstance<T extends Object?>(T instance) {
     try {
       if (instance == null) {

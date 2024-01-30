@@ -3,7 +3,7 @@ part of 'core.dart';
 /// An abstract class that provides common functionality for managing
 /// state in Reactter.
 @internal
-abstract class ReactterStateInternal implements ReactterStateBase {
+abstract class State implements StateBase {
   /// It's used to store a reference to an object instance
   /// that is attached to the state.
   Object? _instanceAttached;
@@ -13,8 +13,9 @@ abstract class ReactterStateInternal implements ReactterStateBase {
   Object? get instanceAttached => _instanceAttached;
   bool get isDisposed => _isDisposed;
   bool get _hasListeners =>
-      Reactter._hasListeners(this) ||
-      (_instanceAttached != null && Reactter._hasListeners(_instanceAttached));
+      eventManager._hasListeners(this) ||
+      (_instanceAttached != null &&
+          eventManager._hasListeners(_instanceAttached));
 
   @mustCallSuper
   void attachTo(Object instance) {
@@ -24,7 +25,7 @@ abstract class ReactterStateInternal implements ReactterStateBase {
       "Use `detachInstance` method, if you want to attach a new instance.",
     );
 
-    Reactter.one(instance, Lifecycle.destroyed, _onInstanceDestroyed);
+    eventManager.one(instance, Lifecycle.destroyed, _onInstanceDestroyed);
     _instanceAttached = instance;
   }
 
@@ -32,7 +33,8 @@ abstract class ReactterStateInternal implements ReactterStateBase {
   void detachInstance() {
     if (_instanceAttached == null) return;
 
-    Reactter.off(_instanceAttached!, Lifecycle.destroyed, _onInstanceDestroyed);
+    eventManager.off(
+        _instanceAttached!, Lifecycle.destroyed, _onInstanceDestroyed);
     _instanceAttached = null;
   }
 
@@ -70,7 +72,7 @@ abstract class ReactterStateInternal implements ReactterStateBase {
     _isDisposed = true;
 
     if (_instanceAttached != null) {
-      Reactter.off(
+      eventManager.off(
         _instanceAttached!,
         Lifecycle.destroyed,
         _onInstanceDestroyed,
@@ -79,7 +81,7 @@ abstract class ReactterStateInternal implements ReactterStateBase {
       _instanceAttached = null;
     }
 
-    Reactter.offAll(this);
+    eventManager.offAll(this);
   }
 
   /// When the instance is destroyed, this object is dispose.
@@ -90,10 +92,11 @@ abstract class ReactterStateInternal implements ReactterStateBase {
   /// If [Reactter._isBatchRunning] is true, the notification is deferred until the batch is completed.
   /// The [event] is emitted using [Reactter.emit] for the current instance and [_instanceAttached].
   void _notify(Enum event) {
-    if (Reactter._isUntrackedRunning) return;
+    if (stateManager._isUntrackedRunning) return;
 
-    final emit =
-        Reactter._isBatchRunning ? Reactter._emitDefferred : Reactter.emit;
+    final emit = stateManager._isBatchRunning
+        ? stateManager._emitDefferred
+        : eventManager.emit;
 
     emit(this, event, this);
 

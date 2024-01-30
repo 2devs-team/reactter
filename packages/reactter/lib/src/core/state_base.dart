@@ -1,7 +1,14 @@
 part of 'core.dart';
 
 /// A abstract class that represents a stare in Reactter.
-abstract class ReactterStateBase {
+@internal
+abstract class StateBase {
+  @internal
+  StateManager get stateManager;
+
+  @internal
+  EventManager get eventManager;
+
   /// Attaches an object instance to this state.
   @mustCallSuper
   void attachTo(Object instance);

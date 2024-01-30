@@ -14,6 +14,9 @@ part of 'core.dart';
 /// initialized, and destroyed.
 @internal
 abstract class InstanceManager {
+  Logger get logger;
+  EventManager get eventManager;
+
   final _instanceRegisters = HashSet<InstanceRegister>();
 
   /// It's used to store instances of a certain
@@ -40,7 +43,7 @@ abstract class InstanceManager {
     var instanceRegister = _getInstanceRegister<T?>(id);
 
     if (instanceRegister != null) {
-      Reactter.log(
+      logger.log(
         'The "$instanceRegister" builder already registered as `$mode`.',
       );
       return false;
@@ -54,8 +57,8 @@ abstract class InstanceManager {
 
     _instanceRegisters.add(instanceRegister);
 
-    Reactter.emit(instanceRegister, Lifecycle.registered);
-    Reactter.log(
+    eventManager.emit(instanceRegister, Lifecycle.registered);
+    logger.log(
       'The "$instanceRegister" builder has been registered as `$mode`.',
     );
     return true;
@@ -290,9 +293,9 @@ abstract class InstanceManager {
     final instanceRegister = _getInstanceRegister<T>(id);
 
     if (instanceRegister?.instance == null) {
-      final reactterInstance = ReactterInstance<T>(id);
+      final reactterInstance = Instance<T>(id);
 
-      Reactter.log('The "$reactterInstance" instance already deleted.');
+      logger.log('The "$reactterInstance" instance already deleted.');
 
       return false;
     }
@@ -311,13 +314,13 @@ abstract class InstanceManager {
         return true;
       case InstanceManageMode.factory:
         _removeInstance<T>(instanceRegister);
-        Reactter.log(
+        logger.log(
           'The "$instanceRegister" builder has been retained '
           'because it\'s `${InstanceManageMode.factory}`.',
         );
         return true;
       case InstanceManageMode.singleton:
-        Reactter.log(
+        logger.log(
           'The "$instanceRegister" instance has been retained '
           'because it\'s `${InstanceManageMode.singleton}`.',
         );
@@ -335,9 +338,9 @@ abstract class InstanceManager {
         instanceRegister?.mode.label ?? InstanceManageMode.builder.label;
 
     if (instanceRegister == null) {
-      final reactterInstance = ReactterInstance<T>(id);
+      final reactterInstance = Instance<T>(id);
 
-      Reactter.log('The "$reactterInstance" $typeLabel already deregistered.');
+      logger.log('The "$reactterInstance" $typeLabel already deregistered.');
 
       return false;
     }
@@ -345,7 +348,7 @@ abstract class InstanceManager {
     if (instanceRegister._instance != null) {
       final idParam = id != null ? "id: '$id, '" : '';
 
-      Reactter.log(
+      logger.log(
         'The "$T" builder couldn\'t deregister '
         'because the "$instanceRegister" instance is active.\n'
         'You should delete the instance before with:\n'
@@ -359,9 +362,9 @@ abstract class InstanceManager {
 
     _instanceRegisters.remove(instanceRegister);
 
-    Reactter.emit(instanceRegister, Lifecycle.unregistered);
-    Reactter.offAll(instanceRegister);
-    Reactter.log('The "$instanceRegister" $typeLabel has been deregistered.');
+    eventManager.emit(instanceRegister, Lifecycle.unregistered);
+    eventManager.offAll(instanceRegister);
+    logger.log('The "$instanceRegister" $typeLabel has been deregistered.');
 
     return true;
   }
@@ -378,9 +381,9 @@ abstract class InstanceManager {
     final instanceRegister = _getInstanceRegister<T>(id);
 
     if (instanceRegister?.instance == null && onlyInstance) {
-      final reactterInstance = ReactterInstance<T>(id);
+      final reactterInstance = Instance<T>(id);
 
-      Reactter.log('The "$reactterInstance" instance already deleted.');
+      logger.log('The "$reactterInstance" instance already deleted.');
 
       return false;
     }
@@ -434,10 +437,10 @@ abstract class InstanceManager {
     final instanceRegister = _getInstanceRegister<T>(id);
 
     if (instanceRegister == null) {
-      final reactterInstance = ReactterInstance<T>(id);
+      final reactterInstance = Instance<T>(id);
       final idParam = id != null ? ", id: '$id'" : '';
 
-      Reactter.log(
+      logger.log(
         'The "$reactterInstance" builder is not registered.\n'
         'You should register the instance build with: \n'
         '`Reactter.register<$T>(() => $T()$idParam);` or \n'
@@ -449,19 +452,19 @@ abstract class InstanceManager {
     }
 
     if (instanceRegister.instance != null) {
-      Reactter.log('The "$instanceRegister" instance already created.');
+      logger.log('The "$instanceRegister" instance already created.');
 
       return instanceRegister;
     }
 
-    ReactterZone.autoAttachInstance(() => _createInstance<T>(instanceRegister));
+    Zone.autoAttachInstance(() => _createInstance<T>(instanceRegister));
 
     if (ref != null) {
       instanceRegister.refs.add(ref.hashCode);
     }
 
-    Reactter.emit(instanceRegister, Lifecycle.initialized);
-    Reactter.log('The "$instanceRegister" instance has been created.');
+    eventManager.emit(instanceRegister, Lifecycle.initialized);
+    logger.log('The "$instanceRegister" instance has been created.');
 
     return instanceRegister;
   }
@@ -485,36 +488,33 @@ abstract class InstanceManager {
 
     _instances.remove(instance);
 
-    Reactter.emit(reactterInstance, Lifecycle.destroyed);
-    Reactter.log(log);
+    eventManager.emit(reactterInstance, Lifecycle.destroyed);
+    logger.log(log);
 
-    if (instance is ReactterState) instance.dispose();
+    if (instance is StateBase) instance.dispose();
   }
 
-  /// Returns the [ReactterInstanceBase] associated with the given instance.
+  /// Returns the [Instance] associated with the given instance.
   /// If the instance is null or not found, returns null.
-  ReactterInstanceBase? _getReactterInstance<T extends Object?>(
-      Object? instance) {
+  Instance? _getReactterInstance<T extends Object?>(Object? instance) {
     if (instance == null) return null;
 
-    if (instance is ReactterInstanceBase<T?>) {
-      return Reactter._instanceRegisters.lookup(instance)
-          as ReactterInstanceBase<T?>?;
+    if (instance is Instance<T?>) {
+      return _instanceRegisters.lookup(instance) as Instance<T?>?;
     }
 
-    return Reactter._instances[instance] as ReactterInstanceBase<T?>?;
+    return _instances[instance] as Instance<T?>?;
   }
 
   /// Returns an instance of [InstanceRegister] of [T] type with an [id] optional.
   InstanceRegister<T?>? _getInstanceRegister<T>([String? id]) {
-    return _instanceRegisters.lookup(ReactterInstance<T?>(id))
-        as InstanceRegister<T?>?;
+    return _instanceRegisters.lookup(Instance<T?>(id)) as InstanceRegister<T?>?;
   }
 
   /// Returns an instance of [InstanceRegister] of [T] type with a given [instance].
   InstanceRegister<T>? _getInstanceRegisterByInstance<T extends Object?>(
-    ReactterInstanceBase? instance,
+    Instance? instance,
   ) {
-    return Reactter._instanceRegisters.lookup(instance) as InstanceRegister<T>?;
+    return _instanceRegisters.lookup(instance) as InstanceRegister<T>?;
   }
 }

@@ -2,25 +2,23 @@ part of 'core.dart';
 
 /// An abstract class that provides the base functionality for creating
 /// custom hooks in the Reactter library.
-abstract class ReactterHookInternal
-    with ReactterStateInternal
-    implements ReactterStateBase {
-  /// This variable is used to register [ReactterHookInternal]
-  /// and attach the [ReactterState] that are defined here.
+abstract class Hook with State implements StateBase {
+  /// This variable is used to register [Hook]
+  /// and attach the [StateBase] that are defined here.
   ///
   /// It must be defined as a final variable
-  /// and set with [ReactterHookInternal.$register].
+  /// and set with [Hook.$register].
   /// Like so:
   ///
   /// `final $ = ReactterHookBase.$register;`
   @protected
   HookRegister get $;
 
-  /// Initializes a new instance of the [ReactterHookInternal] class.
+  /// Initializes a new instance of the [Hook] class.
   ///
   /// This constructor calls the `end` method of the [HookRegister] instance
   /// to register the hook and attach the collected states.
-  ReactterHookInternal() {
+  Hook() {
     $.end(this);
   }
 

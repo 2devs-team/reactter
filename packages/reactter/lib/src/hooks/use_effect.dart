@@ -124,7 +124,7 @@ class UseEffect extends ReactterHook {
       return;
     }
 
-    if (ReactterZone.currentZone != null) return;
+    if (Zone.currentZone != null) return;
 
     final instance = _getInstance(context);
 
@@ -246,7 +246,7 @@ class UseEffect extends ReactterHook {
   }
 
   Object? _getInstance(Object? instance) {
-    return instance is ReactterStateInternal && !Reactter.isRegistered(instance)
+    return instance is ReactterState && !Reactter.isRegistered(instance)
         ? _getInstance(instance.instanceAttached)
         : instance;
   }

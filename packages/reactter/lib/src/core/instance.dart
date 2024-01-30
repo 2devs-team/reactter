@@ -3,13 +3,10 @@ part of 'core.dart';
 /// A generic class that represents an instance of a Reactter object and
 /// provides methods for generating unique keys and retrieving the stored instance.
 @internal
-abstract class ReactterInstanceBase<T> {
+class Instance<T> {
   final String? id;
 
-  const ReactterInstanceBase([this.id]);
-
-  /// A getter that returns the instance of [T].
-  T? get instance => Reactter._instanceRegisters.lookup(this)?.instance;
+  const Instance([this.id]);
 
   @override
   String toString() {
@@ -26,12 +23,6 @@ abstract class ReactterInstanceBase<T> {
 
   @override
   bool operator ==(Object other) {
-    if (other is ReactterInstanceBase<T?>) {
-      return other.id == this.id;
-    }
-
-    // coverage:ignore-start
-    return identical(other, this.instance);
-    // coverage:ignore-end
+    return other is Instance<T?> && other.id == this.id;
   }
 }

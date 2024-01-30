@@ -1,11 +1,11 @@
 part of 'core.dart';
 
 @internal
-class HookRegister extends ReactterZone {
+class HookRegister extends Zone {
   /// Attaches the [hook] instance to the current [HookRegister] instance.
-  /// Recollects the state of the [hook] in the [ReactterZone].
-  void end(ReactterHookInternal hook) {
+  /// Recollects the state of the [hook] in the [Zone].
+  void end(Hook hook) {
     this.attachInstance(hook);
-    ReactterZone.recollectState(hook);
+    Zone.recollectState(hook);
   }
 }

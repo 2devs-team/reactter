@@ -1,14 +1,16 @@
 part of 'core.dart';
 
-final x = MapEntry(0, 0);
+@internal
+abstract class StateManager<S extends StateBase> {
+  @internal
+  EventManager get eventManager;
 
-abstract class StateManager {
   bool _isUntrackedRunning = false;
   bool _isBatchRunning = false;
   final HashMap<EventNotifier, Object?> _deferredEvents = HashMap();
 
   /// {@template lazy_state}
-  /// Lazily initializes a state of type [ReactterState] and attaches it to the given [instance].
+  /// Lazily initializes a state of type [StateBase] and attaches it to the given [instance].
   ///
   /// This method is recommended to use when initializing state inside a class
   /// using the `late` keyword.
@@ -33,8 +35,8 @@ abstract class StateManager {
   /// }
   /// ```
   /// {@endtemplate}
-  T lazyState<T extends ReactterState>(T buildState(), Object instance) {
-    final zone = ReactterZone();
+  T lazyState<T extends S>(T buildState(), Object instance) {
+    final zone = Zone();
 
     try {
       return buildState();
@@ -136,7 +138,7 @@ abstract class StateManager {
 
   void _emitDefferred(Object? instance, Enum eventName, [dynamic param]) {
     _deferredEvents.putIfAbsent(
-      Reactter._getEventNotifier(instance, eventName),
+      eventManager._getEventNotifier(instance, eventName),
       () => param,
     );
   }

@@ -6,6 +6,9 @@ part of 'core.dart';
 /// as well as storing event callbacks.
 @internal
 abstract class EventManager {
+  @internal
+  InstanceManager get instanceManager;
+
   final _notifiers = HashSet<EventNotifier>();
 
   /// Puts on to listen [eventName] event.
@@ -41,7 +44,8 @@ abstract class EventManager {
     Enum eventName,
     CallbackEvent<T, P> callback,
   ) {
-    final notifier = _notifiers.lookup(EventNotifier(instance, eventName));
+    final notifier =
+        _notifiers.lookup(EventNotifier(instanceManager, instance, eventName));
     notifier?.removeListener(callback);
 
     if (notifier != null && notifier.hasListeners == false) {
@@ -56,7 +60,8 @@ abstract class EventManager {
     Enum eventName, [
     dynamic param,
   ]) {
-    final notifier = _notifiers.lookup(EventNotifier(instance, eventName));
+    final notifier =
+        _notifiers.lookup(EventNotifier(instanceManager, instance, eventName));
 
     if (notifier == null) return;
 
@@ -90,7 +95,7 @@ abstract class EventManager {
     Object? instance,
     Enum eventName,
   ) {
-    final notifier = EventNotifier(instance, eventName);
+    final notifier = EventNotifier(instanceManager, instance, eventName);
     return _notifiers.lookup(notifier) ?? notifier;
   }
 }

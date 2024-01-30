@@ -33,20 +33,26 @@ class EventNotifier {
   int _reentrantlyRemovedListeners = 0;
   bool _debugDisposed = false;
 
-  final ReactterInstanceBase? _reactterInstance;
+  final InstanceManager instanceManager;
+  final Instance? _reactterInstance;
   final Object? _instance;
   final Enum event;
 
-  EventNotifier(Object? instance, this.event)
-      : _reactterInstance = (instance is ReactterInstanceBase
+  EventNotifier(this.instanceManager, Object? instance, this.event)
+      : _reactterInstance = (instance is Instance
             ? instance
-            : Reactter._getReactterInstance(instance)),
-        _instance =
-            (instance is ReactterInstanceBase ? instance.instance : instance);
+            : instanceManager._getReactterInstance(instance)),
+        _instance = (instance is Instance
+            ? instanceManager._getInstanceRegisterByInstance(instance)?.instance
+            : instance);
 
-  ReactterInstanceBase? get reactterInstance =>
-      _reactterInstance ?? Reactter._instanceRegisters.lookup(_instance);
-  Object? get instance => _instance ?? _reactterInstance?.instance;
+  Instance? get reactterInstance =>
+      _reactterInstance ?? instanceManager._getReactterInstance(_instance);
+  Object? get instance =>
+      _instance ??
+      instanceManager
+          ._getInstanceRegisterByInstance(_reactterInstance)
+          ?.instance;
 
   @override
   int get hashCode => reactterInstance.hashCode ^ event.hashCode;
@@ -66,14 +72,14 @@ class EventNotifier {
       return other.instance == instance;
     }
 
-    if (other is ReactterInstanceBase) {
+    if (other is Instance) {
       return other == reactterInstance;
     }
 
     final ri = reactterInstance;
 
     if (ri != null) {
-      return Reactter._getReactterInstance(other) == ri;
+      return instanceManager._getReactterInstance(other) == ri;
     }
 
     return identical(other, instance);
@@ -340,12 +346,12 @@ class EventNotifier {
 
         listener?.call(instance, param);
       } catch (exception, _) {
-        // coverage:ignore-start
-        Reactter.log(
-          'The $_reactterInstance sending notification was while dispatching notifications for $_reactterInstance',
-          isError: true,
-        );
-        // coverage:ignore-end
+        // // coverage:ignore-start
+        // Reactter.log(
+        //   'The $_reactterInstance sending notification was while dispatching notifications for $_reactterInstance',
+        //   isError: true,
+        // );
+        // // coverage:ignore-end
       }
     }
 

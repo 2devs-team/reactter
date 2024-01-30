@@ -1,4 +1,4 @@
-part of 'framework.dart';
+part of 'core.dart';
 
 enum Lifecycle {
   /// This event is triggered when the [InstanceManager] registers the instance.
@@ -16,10 +16,10 @@ enum Lifecycle {
   /// This event(exclusive to `flutter_reactter`) happens after the instance has been successfully mounted in the widget tree.
   didMount,
 
-  /// This event is triggered anytime the instance's state is about to be updated. The event parameter is a [ReactterState].
+  /// This event is triggered anytime the instance's state is about to be updated. The event parameter is a [StateBase].
   willUpdate,
 
-  /// This event is triggered anytime the instance's state has been updated. The event parameter is a [ReactterState].
+  /// This event is triggered anytime the instance's state has been updated. The event parameter is a [StateBase].
   didUpdate,
 
   /// This event(exclusive to `flutter_reactter`) happens when the instance is going to be unmounted from the widget tree.
@@ -45,12 +45,12 @@ abstract class LifecycleObserver {
   void onDidMount() {}
 
   /// This method is called when the instance's state is about to be updated.
-  /// The parameter is a [ReactterState].
-  void onWillUpdate(ReactterState? state) {}
+  /// The parameter is a [StateBase].
+  void onWillUpdate(StateBase? state) {}
 
   /// This method is called when the instance's state has been updated.
-  /// The parameter is a [ReactterState].
-  void onDidUpdate(ReactterState? state) {}
+  /// The parameter is a [StateBase].
+  void onDidUpdate(StateBase? state) {}
 
   /// This method is called when the instance is going to be unmounted
   /// from the widget tree(exclusive to `flutter_reactter`).
@@ -84,10 +84,10 @@ void resolveLifecycle(
       instance.onDidMount();
       break;
     case Lifecycle.willUpdate:
-      instance.onWillUpdate(param is ReactterState ? param : null);
+      instance.onWillUpdate(param is StateBase ? param : null);
       break;
     case Lifecycle.didUpdate:
-      instance.onDidUpdate(param is ReactterState ? param : null);
+      instance.onDidUpdate(param is StateBase ? param : null);
       break;
     case Lifecycle.willUnmount:
       instance.onWillUnmount();

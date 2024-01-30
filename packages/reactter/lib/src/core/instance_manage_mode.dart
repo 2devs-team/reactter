@@ -1,4 +1,4 @@
-part of 'framework.dart';
+part of 'core.dart';
 
 /// Represents different ways for managing instances.
 enum InstanceManageMode {
