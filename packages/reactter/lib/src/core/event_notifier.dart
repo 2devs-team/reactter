@@ -239,8 +239,6 @@ class EventNotifier {
   ///
   /// This method returns immediately if [dispose] has been called.
   ///
-  /// {@macro flutter.foundation.ReactterNotifier.addListener}
-  ///
   /// See also:
   ///
   ///  * [addListener], which registers a closure to be called when the object
