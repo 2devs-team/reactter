@@ -464,6 +464,13 @@ abstract class InstanceManager {
     }
 
     eventManager.emit(instanceRegister, Lifecycle.initialized);
+
+    final instance = instanceRegister.instance;
+
+    if (instance is LifecycleObserver) {
+      instance.onInitialized();
+    }
+
     logger.log('The "$instanceRegister" instance has been created.');
 
     return instanceRegister;

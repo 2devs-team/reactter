@@ -100,8 +100,16 @@ abstract class State implements StateBase {
 
     emit(this, event, this);
 
-    if (_instanceAttached != null) {
-      emit(_instanceAttached!, event, this);
+    if (_instanceAttached == null) return;
+
+    emit(_instanceAttached!, event, this);
+
+    if (_instanceAttached is! LifecycleObserver) return;
+
+    if (event == Lifecycle.willUpdate) {
+      (_instanceAttached as LifecycleObserver).onWillUpdate(this);
+    } else if (event == Lifecycle.didUpdate) {
+      (_instanceAttached as LifecycleObserver).onDidUpdate(this);
     }
   }
 }

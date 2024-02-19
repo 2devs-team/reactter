@@ -66,12 +66,6 @@ abstract class EventManager {
     if (notifier == null) return;
 
     notifier.notifyListeners(param);
-
-    final instanceObj = notifier.instance;
-
-    if (instanceObj is LifecycleObserver && eventName is Lifecycle) {
-      resolveLifecycle(instanceObj, eventName, param);
-    }
   }
 
   /// Removes all instance's events
