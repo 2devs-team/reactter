@@ -75,7 +75,7 @@ TestStore _reducer(TestStore state, ReactterAction action) {
   }
 }
 
-class TestController extends ReactterStateImpl {
+class TestController extends ReactterState {
   final signalString = Signal("initial");
   late final stateBool = UseState(false);
   final stateString = UseState("initial");
@@ -128,6 +128,64 @@ class TestController extends ReactterStateImpl {
   final inlineMemo = Memo.inline((Args? args) {
     return args?.arguments ?? [];
   });
+}
+
+class TestLifecycleController extends LifecycleObserver {
+  final stateString = UseState("initial");
+  final stateInt = UseState(0);
+
+  int onInitializedCalledCount = 0;
+  int onWillMountCalledCount = 0;
+  int onDidMountCalledCount = 0;
+  int onWillUpdateCalledCount = 0;
+  int onDidUpdateCalledCount = 0;
+  int onWillUnmountCalledCount = 0;
+  int onDidUnmountCalledCount = 0;
+  ReactterState? lastState;
+
+  @override
+  void onInitialized() {
+    onInitializedCalledCount++;
+    super.onInitialized();
+  }
+
+  @override
+  void onWillMount() {
+    onWillMountCalledCount++;
+    super.onWillMount();
+  }
+
+  @override
+  void onDidMount() {
+    onDidMountCalledCount++;
+    super.onDidMount();
+  }
+
+  @override
+  void onWillUpdate(ReactterState? state) {
+    onWillUpdateCalledCount++;
+    lastState = state;
+    super.onWillUpdate(state);
+  }
+
+  @override
+  void onDidUpdate(ReactterState? state) {
+    onDidUpdateCalledCount++;
+    lastState = state;
+    super.onDidUpdate(state);
+  }
+
+  @override
+  void onWillUnmount() {
+    onWillUnmountCalledCount++;
+    super.onWillUnmount();
+  }
+
+  @override
+  void onDidUnmount() {
+    onDidUnmountCalledCount++;
+    super.onDidUnmount();
+  }
 }
 
 class Test2Controller {
