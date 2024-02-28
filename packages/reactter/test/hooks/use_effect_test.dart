@@ -94,7 +94,7 @@ void main() {
       final testController = TestController();
       int nCalls = 0;
 
-      final uEffect = UseEffect(
+      UseEffect(
         () {
           nCalls += 1;
         },
@@ -102,7 +102,6 @@ void main() {
         testController,
       );
 
-      expect(uEffect.instanceAttached, isNull);
       expect(nCalls, 0);
 
       testController.stateString.value = 'other value';

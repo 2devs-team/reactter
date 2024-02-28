@@ -19,7 +19,7 @@ abstract class EventManager {
     Enum eventName,
     CallbackEvent<T, P> callback,
   ) {
-    final notifier = _getEventNotifier(instance, eventName);
+    final notifier = _getEventNotifierFallback(instance, eventName);
     notifier.addListener(callback);
     _notifiers.add(notifier);
   }
@@ -33,7 +33,7 @@ abstract class EventManager {
     Enum eventName,
     CallbackEvent<T, P> callback,
   ) {
-    final notifier = _getEventNotifier(instance, eventName);
+    final notifier = _getEventNotifierFallback(instance, eventName);
     notifier.addListener(callback, true);
     _notifiers.add(notifier);
   }
@@ -44,14 +44,12 @@ abstract class EventManager {
     Enum eventName,
     CallbackEvent<T, P> callback,
   ) {
-    final notifier =
-        _notifiers.lookup(EventNotifier(instanceManager, instance, eventName));
-    notifier?.removeListener(callback);
+    final notifier = _getEventNotifier(instance, eventName);
 
-    if (notifier != null && notifier.hasListeners == false) {
-      notifier.dispose();
-      _notifiers.remove(notifier);
-    }
+    if (notifier == null) return;
+
+    notifier.removeListener(callback);
+    _offEventNotifier(notifier);
   }
 
   /// Trigger [eventName] event with or without the [param] given.
@@ -60,8 +58,7 @@ abstract class EventManager {
     Enum eventName, [
     dynamic param,
   ]) {
-    final notifier =
-        _notifiers.lookup(EventNotifier(instanceManager, instance, eventName));
+    final notifier = _getEventNotifier(instance, eventName);
 
     if (notifier == null) return;
 
@@ -85,11 +82,34 @@ abstract class EventManager {
 
   /// Retrieves the [EventNotifier] for the given [instance] and [eventName].
   /// If the [EventNotifier] does not exist in the lookup table, it creates a new one.
-  EventNotifier _getEventNotifier(
-    Object? instance,
-    Enum eventName,
-  ) {
-    final notifier = EventNotifier(instanceManager, instance, eventName);
+  EventNotifier _getEventNotifierFallback(Object? instance, Enum eventName) {
+    final notifier = EventNotifier(
+      instanceManager,
+      instance,
+      eventName,
+      _offEventNotifier,
+    );
+
     return _notifiers.lookup(notifier) ?? notifier;
+  }
+
+  /// Retrieves the [EventNotifier] for the given [instance] and [eventName].
+  /// If the [EventNotifier] does not exist in the lookup table, it creates a new one.
+  EventNotifier? _getEventNotifier(Object? instance, Enum eventName) {
+    final notifier = EventNotifier(
+      instanceManager,
+      instance,
+      eventName,
+      _offEventNotifier,
+    );
+
+    return _notifiers.lookup(notifier);
+  }
+
+  void _offEventNotifier(EventNotifier notifier) {
+    if (notifier.hasListeners) return;
+
+    notifier.dispose();
+    _notifiers.remove(notifier);
   }
 }

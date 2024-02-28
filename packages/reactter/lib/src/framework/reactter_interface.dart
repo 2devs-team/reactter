@@ -15,8 +15,6 @@ class ReactterInterface
   ReactterInterface._();
 
   @internal
-  StateManager get stateManager => this;
-  @internal
   InstanceManager get instanceManager => this;
   @internal
   EventManager get eventManager => this;

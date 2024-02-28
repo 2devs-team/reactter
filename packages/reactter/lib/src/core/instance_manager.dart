@@ -503,14 +503,8 @@ abstract class InstanceManager {
 
   /// Returns the [Instance] associated with the given instance.
   /// If the instance is null or not found, returns null.
-  Instance? _getReactterInstance<T extends Object?>(Object? instance) {
-    if (instance == null) return null;
-
-    if (instance is Instance<T?>) {
-      return _instanceRegisters.lookup(instance) as Instance<T?>?;
-    }
-
-    return _instances[instance] as Instance<T?>?;
+  Instance<T>? _getInstance<T extends Object?>(Object? instance) {
+    return _instances[instance] as Instance<T>?;
   }
 
   /// Returns an instance of [InstanceRegister] of [T] type with an [id] optional.

@@ -138,7 +138,7 @@ abstract class StateManager<S extends StateBase> {
 
   void _emitDefferred(Object? instance, Enum eventName, [dynamic param]) {
     _deferredEvents.putIfAbsent(
-      eventManager._getEventNotifier(instance, eventName),
+      eventManager._getEventNotifierFallback(instance, eventName),
       () => param,
     );
   }

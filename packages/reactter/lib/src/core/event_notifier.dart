@@ -34,55 +34,61 @@ class EventNotifier {
   bool _debugDisposed = false;
 
   final InstanceManager instanceManager;
-  final Instance? _reactterInstance;
-  final Object? _instance;
+  final Instance? _instance;
+  final Object? _instanceObj;
   final Enum event;
+  final void Function(EventNotifier notifier) onNotifyComplete;
 
-  EventNotifier(this.instanceManager, Object? instance, this.event)
-      : _reactterInstance = (instance is Instance
-            ? instance
-            : instanceManager._getReactterInstance(instance)),
-        _instance = (instance is Instance
-            ? instanceManager._getInstanceRegisterByInstance(instance)?.instance
-            : instance);
+  EventNotifier(
+    this.instanceManager,
+    Object? instanceOrObj,
+    this.event,
+    this.onNotifyComplete,
+  )   : _instance = instanceOrObj is Instance
+            ? instanceOrObj
+            : instanceManager._getInstance(instanceOrObj),
+        _instanceObj = instanceOrObj is Instance
+            ? instanceManager
+                ._getInstanceRegisterByInstance(instanceOrObj)
+                ?.instance
+            : instanceOrObj;
 
-  Instance? get reactterInstance =>
-      _reactterInstance ?? instanceManager._getReactterInstance(_instance);
-  Object? get instance =>
-      _instance ??
-      instanceManager
-          ._getInstanceRegisterByInstance(_reactterInstance)
-          ?.instance;
+  Instance? get instance =>
+      _instance ?? instanceManager._getInstance(_instanceObj);
+
+  Object? get instanceObj =>
+      _instanceObj ??
+      instanceManager._getInstanceRegisterByInstance(_instance)?.instance;
 
   @override
-  int get hashCode => reactterInstance.hashCode ^ event.hashCode;
+  int get hashCode => Object.hash(instance.hashCode, event.hashCode);
 
   @override
   bool operator ==(Object other) {
     if (other is EventNotifier) {
       if (other.event != this.event) return false;
 
-      final otherRi = other.reactterInstance;
-      final ri = reactterInstance;
+      final instanceOther = other.instance;
+      final instanceSelf = instance;
 
-      if (otherRi != null && ri != null) {
-        return otherRi == ri;
+      if (instanceOther != null && instanceSelf != null) {
+        return instanceOther == instanceSelf;
       }
 
-      return other.instance == instance;
+      return identical(other.instanceObj, instanceObj);
     }
 
     if (other is Instance) {
-      return other == reactterInstance;
+      return other == instance;
     }
 
-    final ri = reactterInstance;
+    final instanceSelf = instance;
 
-    if (ri != null) {
-      return instanceManager._getReactterInstance(other) == ri;
+    if (instanceSelf != null) {
+      return instanceManager._getInstance(other) == instanceSelf;
     }
 
-    return identical(other, instance);
+    return identical(other, instanceObj);
   }
 
   /// Copied from Flutter
@@ -342,7 +348,7 @@ class EventNotifier {
           _listenersSingleUse.remove(listener);
         }
 
-        listener?.call(instance, param);
+        listener?.call(instanceObj, param);
       } catch (exception, _) {
         // // coverage:ignore-start
         // Reactter.log(
@@ -392,6 +398,8 @@ class EventNotifier {
 
       _reentrantlyRemovedListeners = 0;
       _count = newLength;
+
+      onNotifyComplete(this);
     }
   }
 }

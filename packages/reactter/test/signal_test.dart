@@ -63,15 +63,19 @@ void main() {
 
     test("should be refreshed", () {
       final signal = Signal("initial");
-      late final didUpdateChecked;
+      int count = 0;
 
       Reactter.one(signal, Lifecycle.didUpdate, (_, __) {
-        didUpdateChecked = true;
+        count += 1;
       });
 
       signal.refresh();
 
-      expectLater(didUpdateChecked, true);
+      expectLater(count, 1);
+
+      signal.refresh();
+
+      expectLater(count, 1);
     });
 
     test("should be able to used on instance", () {
