@@ -94,19 +94,19 @@ void main() {
     test("should be compared to another for its value", () {
       final objBool = Obj(true);
       expect(objBool == true, true);
-      expect(objBool == Obj(true), true);
+      expect(objBool == Obj(true), false);
 
       final objInt = Obj(1);
       expect(objInt == 1, true);
-      expect(objInt == Obj(1), true);
+      expect(objInt == Obj(1), false);
 
       final objDouble = Obj(1.2);
       expect(objDouble == 1.2, true);
-      expect(objDouble == Obj(1.2), true);
+      expect(objDouble == Obj(1.2), false);
 
       final objString = Obj("test");
       expect(objString == "test", true);
-      expect(objString == Obj("test"), true);
+      expect(objString == Obj("test"), false);
 
       final objList = Obj(["test"]);
       expect(objList == ["test"], false);
@@ -122,7 +122,7 @@ void main() {
 
       final objNull = Obj<TestClass?>(null);
       expect(objNull == null, false);
-      expect(objNull == Obj(null), true);
+      expect(objNull == Obj(null), false);
     });
 
     test("should be cast away nullability", () {

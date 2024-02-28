@@ -63,9 +63,9 @@ abstract class ObjBase<T> {
   /// ```
   ///
   bool operator ==(Object other) =>
-      other is Obj<T> ? value == other.value : value == other;
+      other is Obj<T> ? identical(this, other) : value == other;
 
-  int get hashCode => Object.hash(super.hashCode, super.hashCode);
+  int get hashCode => super.hashCode;
 
   /// Gets and/or sets to [value] like a function
   T call([T? val]) {
