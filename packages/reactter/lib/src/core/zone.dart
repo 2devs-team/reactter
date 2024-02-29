@@ -44,7 +44,7 @@ class Zone {
       }
 
       for (final state in states) {
-        state.attachTo(instance);
+        state.bind(instance);
       }
     } finally {
       _dispose();

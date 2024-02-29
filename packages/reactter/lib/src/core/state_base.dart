@@ -9,13 +9,13 @@ abstract class StateBase {
   @internal
   EventManager get eventManager;
 
-  /// Attaches an object instance to this state.
+  /// Stores a reference to an object instance
   @mustCallSuper
-  void attachTo(Object instance);
+  void bind(Object instance);
 
-  /// Detaches an object instance to this state.
+  /// Removes the reference to the object instance
   @mustCallSuper
-  void detachInstance();
+  void unbind();
 
   /// Executes [fnUpdate], and notify the listeners about to update.
   ///

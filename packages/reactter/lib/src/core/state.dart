@@ -4,43 +4,46 @@ part of 'core.dart';
 /// state in Reactter.
 @internal
 abstract class State implements StateBase {
-  /// It's used to store a reference to an object instance
-  /// that is attached to the state.
-  Object? _instanceAttached;
-  bool _isDisposed = false;
   bool _isUpdating = false;
 
-  Object? get instanceAttached => _instanceAttached;
+  /// The reference instance to the current state.
+  Object? get bindedTo => _bindedTo;
+  Object? _bindedTo;
+
+  /// Returns `true` if the state has been disposed.
   bool get isDisposed => _isDisposed;
+  bool _isDisposed = false;
+
   bool get _hasListeners =>
       eventManager._hasListeners(this) ||
-      (_instanceAttached != null &&
-          eventManager._hasListeners(_instanceAttached));
+      (_bindedTo != null && eventManager._hasListeners(_bindedTo));
 
   @mustCallSuper
-  void attachTo(Object instance) {
+  void bind(Object instance) {
+    assert(!_isDisposed, "Can't bind when it's been disposed");
     assert(
-      _instanceAttached == null,
-      "Can't attach a new instance because an instance is already.\n"
-      "Use `detachInstance` method, if you want to attach a new instance.",
+      _bindedTo == null,
+      "Can't bind a new instance because an instance is already.\n"
+      "Use `detachInstance` method, if you want to bind a new instance.",
     );
 
     eventManager.one(instance, Lifecycle.destroyed, _onInstanceDestroyed);
-    _instanceAttached = instance;
+    _bindedTo = instance;
   }
 
   @mustCallSuper
-  void detachInstance() {
-    if (_instanceAttached == null) return;
+  void unbind() {
+    assert(!_isDisposed, "Can't unbind when it's been disposed");
 
-    eventManager.off(
-        _instanceAttached!, Lifecycle.destroyed, _onInstanceDestroyed);
-    _instanceAttached = null;
+    if (_bindedTo == null) return;
+
+    eventManager.off(_bindedTo!, Lifecycle.destroyed, _onInstanceDestroyed);
+    _bindedTo = null;
   }
 
   @mustCallSuper
   void update(covariant Function fnUpdate) {
-    assert(!_isDisposed, "You can update when it's been disposed");
+    assert(!_isDisposed, "Can't update when it's been disposed");
 
     if (!_hasListeners || _isUpdating) {
       fnUpdate();
@@ -56,7 +59,7 @@ abstract class State implements StateBase {
 
   @mustCallSuper
   void refresh() {
-    assert(!_isDisposed, "You can refresh when it's been disposed");
+    assert(!_isDisposed, "Can't refresh when it's been disposed");
 
     if (!_hasListeners || _isUpdating) {
       return _notify(Lifecycle.didUpdate);
@@ -71,14 +74,14 @@ abstract class State implements StateBase {
   void dispose() {
     _isDisposed = true;
 
-    if (_instanceAttached != null) {
+    if (_bindedTo != null) {
       eventManager.off(
-        _instanceAttached!,
+        _bindedTo!,
         Lifecycle.destroyed,
         _onInstanceDestroyed,
       );
 
-      _instanceAttached = null;
+      _bindedTo = null;
     }
 
     eventManager.offAll(this);
@@ -90,7 +93,7 @@ abstract class State implements StateBase {
   /// Notifies the listeners about the specified [event].
   /// If [Reactter._isUntrackedRunning] is true, the notification is skipped.
   /// If [Reactter._isBatchRunning] is true, the notification is deferred until the batch is completed.
-  /// The [event] is emitted using [Reactter.emit] for the current instance and [_instanceAttached].
+  /// The [event] is emitted using [Reactter.emit] for the current instance and [_bindedTo].
   void _notify(Enum event) {
     if (stateManager._isUntrackedRunning) return;
 
@@ -100,16 +103,16 @@ abstract class State implements StateBase {
 
     emit(this, event, this);
 
-    if (_instanceAttached == null) return;
+    if (_bindedTo == null) return;
 
-    emit(_instanceAttached!, event, this);
+    emit(_bindedTo!, event, this);
 
-    if (_instanceAttached is! LifecycleObserver) return;
+    if (_bindedTo is! LifecycleObserver) return;
 
     if (event == Lifecycle.willUpdate) {
-      (_instanceAttached as LifecycleObserver).onWillUpdate(this);
+      (_bindedTo as LifecycleObserver).onWillUpdate(this);
     } else if (event == Lifecycle.didUpdate) {
-      (_instanceAttached as LifecycleObserver).onDidUpdate(this);
+      (_bindedTo as LifecycleObserver).onDidUpdate(this);
     }
   }
 }

@@ -129,7 +129,7 @@ class UseEffect extends ReactterHook {
     final instance = _getInstance(context);
 
     if (instance != null) {
-      attachTo(instance);
+      bind(instance);
       return;
     }
 
@@ -137,10 +137,10 @@ class UseEffect extends ReactterHook {
   }
 
   @override
-  void attachTo(Object instance) {
+  void bind(Object instance) {
     if (context == null) return;
 
-    super.attachTo(instance);
+    super.bind(instance);
 
     if (!_initialized) return;
 
@@ -148,10 +148,10 @@ class UseEffect extends ReactterHook {
   }
 
   @override
-  void detachInstance() {
+  void unbind() {
     _unwatchInstanceAttached();
 
-    super.detachInstance();
+    super.unbind();
   }
 
   @override
@@ -165,9 +165,9 @@ class UseEffect extends ReactterHook {
   }
 
   void _analyzeInstanceAttached() {
-    if (instanceAttached == null) return;
+    if (bindedTo == null) return;
 
-    if (instanceAttached is DispatchEffect) {
+    if (bindedTo is DispatchEffect) {
       _runCallbackAndWatchDependencies();
       return;
     }
@@ -177,12 +177,12 @@ class UseEffect extends ReactterHook {
 
   void _watchInstanceAttached() {
     Reactter.on(
-      instanceAttached!,
+      bindedTo!,
       Lifecycle.didMount,
       _runCallbackAndWatchDependencies,
     );
     Reactter.on(
-      instanceAttached!,
+      bindedTo!,
       Lifecycle.willUnmount,
       _runCleanupAndUnwatchDependencies,
     );
@@ -190,12 +190,12 @@ class UseEffect extends ReactterHook {
 
   void _unwatchInstanceAttached() {
     Reactter.off(
-      instanceAttached!,
+      bindedTo!,
       Lifecycle.didMount,
       _runCallbackAndWatchDependencies,
     );
     Reactter.off(
-      instanceAttached!,
+      bindedTo!,
       Lifecycle.willUnmount,
       _runCleanupAndUnwatchDependencies,
     );
@@ -247,7 +247,7 @@ class UseEffect extends ReactterHook {
 
   Object? _getInstance(Object? instance) {
     return instance is ReactterState && !Reactter.isRegistered(instance)
-        ? _getInstance(instance.instanceAttached)
+        ? _getInstance(instance.bindedTo)
         : instance;
   }
 }
