@@ -7,8 +7,8 @@ abstract class State implements StateBase {
   bool _isUpdating = false;
 
   /// The reference instance to the current state.
-  Object? get bindedTo => _bindedTo;
-  Object? _bindedTo;
+  Object? get instanceBinded => _instanceBinded;
+  Object? _instanceBinded;
 
   /// Returns `true` if the state has been disposed.
   bool get isDisposed => _isDisposed;
@@ -16,29 +16,35 @@ abstract class State implements StateBase {
 
   bool get _hasListeners =>
       eventManager._hasListeners(this) ||
-      (_bindedTo != null && eventManager._hasListeners(_bindedTo));
+      (_instanceBinded != null && eventManager._hasListeners(_instanceBinded));
 
   @mustCallSuper
   void bind(Object instance) {
     assert(!_isDisposed, "Can't bind when it's been disposed");
     assert(
-      _bindedTo == null,
+      _instanceBinded == null,
       "Can't bind a new instance because an instance is already.\n"
       "Use `detachInstance` method, if you want to bind a new instance.",
     );
 
     eventManager.one(instance, Lifecycle.destroyed, _onInstanceDestroyed);
-    _bindedTo = instance;
+    _instanceBinded = instance;
+
+    if (BindingZone.currentZone == null) _validateInstanceBinded();
   }
 
   @mustCallSuper
   void unbind() {
     assert(!_isDisposed, "Can't unbind when it's been disposed");
 
-    if (_bindedTo == null) return;
+    if (_instanceBinded == null) return;
 
-    eventManager.off(_bindedTo!, Lifecycle.destroyed, _onInstanceDestroyed);
-    _bindedTo = null;
+    eventManager.off(
+      _instanceBinded!,
+      Lifecycle.destroyed,
+      _onInstanceDestroyed,
+    );
+    _instanceBinded = null;
   }
 
   @mustCallSuper
@@ -74,17 +80,30 @@ abstract class State implements StateBase {
   void dispose() {
     _isDisposed = true;
 
-    if (_bindedTo != null) {
+    if (_instanceBinded != null) {
       eventManager.off(
-        _bindedTo!,
+        _instanceBinded!,
         Lifecycle.destroyed,
         _onInstanceDestroyed,
       );
 
-      _bindedTo = null;
+      _instanceBinded = null;
     }
 
     eventManager.offAll(this);
+  }
+
+  void _validateInstanceBinded() {
+    if (instanceManager.isRegistered(instanceBinded)) return;
+
+    logger.log(
+      "The instance binded($instanceBinded) to $this is not in Reactter's context and cannot be disposed automatically.\n"
+      "You can solve this problem in two ways:\n"
+      "1. Call the 'dispose' method manually when $this is no longer needed.\n"
+      "2. Create $instanceBinded using the instance manager methods.\n"
+      "**Ignore this message if you are sure that it will be disposed.**",
+      level: LogLevel.warning,
+    );
   }
 
   /// When the instance is destroyed, this object is dispose.
@@ -93,7 +112,7 @@ abstract class State implements StateBase {
   /// Notifies the listeners about the specified [event].
   /// If [Reactter._isUntrackedRunning] is true, the notification is skipped.
   /// If [Reactter._isBatchRunning] is true, the notification is deferred until the batch is completed.
-  /// The [event] is emitted using [Reactter.emit] for the current instance and [_bindedTo].
+  /// The [event] is emitted using [Reactter.emit] for the current instance and [_instanceBinded].
   void _notify(Enum event) {
     if (stateManager._isUntrackedRunning) return;
 
@@ -103,16 +122,16 @@ abstract class State implements StateBase {
 
     emit(this, event, this);
 
-    if (_bindedTo == null) return;
+    if (_instanceBinded == null) return;
 
-    emit(_bindedTo!, event, this);
+    emit(_instanceBinded!, event, this);
 
-    if (_bindedTo is! LifecycleObserver) return;
+    if (_instanceBinded is! LifecycleObserver) return;
 
     if (event == Lifecycle.willUpdate) {
-      (_bindedTo as LifecycleObserver).onWillUpdate(this);
+      (_instanceBinded as LifecycleObserver).onWillUpdate(this);
     } else if (event == Lifecycle.didUpdate) {
-      (_bindedTo as LifecycleObserver).onDidUpdate(this);
+      (_instanceBinded as LifecycleObserver).onDidUpdate(this);
     }
   }
 }

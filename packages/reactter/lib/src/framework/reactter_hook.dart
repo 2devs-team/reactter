@@ -40,9 +40,13 @@ part of 'framework.dart';
 /// * [ReactterState], adds state management features to [ReactterHook].
 abstract class ReactterHook extends Hook implements ReactterState {
   @internal
+  InstanceManager get instanceManager => Reactter;
+  @internal
   StateManager get stateManager => Reactter;
   @internal
   EventManager get eventManager => Reactter;
+  @internal
+  Logger get logger => Reactter;
 
   /// This getter allows access to the [HookRegister] instance
   /// which is responsible for registering a [Hook]

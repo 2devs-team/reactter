@@ -4,10 +4,13 @@ part of 'core.dart';
 @internal
 abstract class StateBase {
   @internal
+  InstanceManager get instanceManager;
+  @internal
   StateManager get stateManager;
-
   @internal
   EventManager get eventManager;
+  @internal
+  Logger get logger;
 
   /// Stores a reference to an object instance
   @mustCallSuper
