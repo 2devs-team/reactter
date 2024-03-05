@@ -36,12 +36,12 @@ abstract class StateManager<S extends StateBase> {
   /// ```
   /// {@endtemplate}
   T lazyState<T extends S>(T buildState(), Object instance) {
-    final zone = Zone();
+    final zone = BindingZone();
 
     try {
       return buildState();
     } finally {
-      zone.attachInstance(instance);
+      zone.bindInstanceToStates(instance);
     }
   }
 

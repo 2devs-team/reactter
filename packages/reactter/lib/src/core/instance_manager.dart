@@ -354,7 +354,7 @@ abstract class InstanceManager {
         'You should delete the instance before with:\n'
         '`Reactter.delete<$T>(${id ?? ''});` or \n'
         '`Reactter.destroy<$T>($idParam, onlyInstance: true);`\n',
-        isError: true,
+        level: LogLevel.warning,
       );
 
       return false;
@@ -445,7 +445,7 @@ abstract class InstanceManager {
         'You should register the instance build with: \n'
         '`Reactter.register<$T>(() => $T()$idParam);` or \n'
         '`Reactter.create<$T>(() => $T()$idParam);`.',
-        isError: true,
+        level: LogLevel.warning,
       );
 
       return _getInstanceRegisterByInstance<T>(reactterInstance);
@@ -457,7 +457,7 @@ abstract class InstanceManager {
       return instanceRegister;
     }
 
-    Zone.autoAttachInstance(() => _createInstance<T>(instanceRegister));
+    BindingZone.autoBinding(() => _createInstance<T>(instanceRegister));
 
     if (ref != null) {
       instanceRegister.refs.add(ref.hashCode);
@@ -495,6 +495,7 @@ abstract class InstanceManager {
 
     _instances.remove(instance);
 
+    eventManager.emit(instance, Lifecycle.destroyed);
     eventManager.emit(reactterInstance, Lifecycle.destroyed);
     logger.log(log);
 

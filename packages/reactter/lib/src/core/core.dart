@@ -18,4 +18,4 @@ part 'logger.dart';
 part 'state_base.dart';
 part 'state_manager.dart';
 part 'state.dart';
-part 'zone.dart';
+part 'binding_zone.dart';

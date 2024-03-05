@@ -1,11 +1,10 @@
 part of 'core.dart';
 
 @internal
-class HookRegister extends Zone {
-  /// Attaches the [hook] instance to the current [HookRegister] instance.
-  /// Recollects the state of the [hook] in the [Zone].
+class HookRegister extends BindingZone {
+  /// Stores the instance of the [Hook] and attaches the previously collected states to it.
   void end(Hook hook) {
-    this.attachInstance(hook);
-    Zone.recollectState(hook);
+    this.bindInstanceToStates(hook);
+    BindingZone.recollectState(hook);
   }
 }
