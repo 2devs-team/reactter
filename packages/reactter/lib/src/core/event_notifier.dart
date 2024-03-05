@@ -34,6 +34,8 @@ class EventNotifier {
   bool _debugDisposed = false;
 
   final InstanceManager instanceManager;
+  final Logger logger;
+
   final Instance? _instance;
   final Object? _instanceObj;
   final Enum event;
@@ -41,17 +43,12 @@ class EventNotifier {
 
   EventNotifier(
     this.instanceManager,
+    this.logger,
     Object? instanceOrObj,
     this.event,
     this.onNotifyComplete,
-  )   : _instance = instanceOrObj is Instance
-            ? instanceOrObj
-            : instanceManager._getInstance(instanceOrObj),
-        _instanceObj = instanceOrObj is Instance
-            ? instanceManager
-                ._getInstanceRegisterByInstance(instanceOrObj)
-                ?.instance
-            : instanceOrObj;
+  )   : _instance = instanceOrObj is Instance ? instanceOrObj : null,
+        _instanceObj = instanceOrObj is! Instance ? instanceOrObj : null;
 
   Instance? get instance =>
       _instance ?? instanceManager._getInstance(_instanceObj);
@@ -61,21 +58,25 @@ class EventNotifier {
       instanceManager._getInstanceRegisterByInstance(_instance)?.instance;
 
   @override
-  int get hashCode => Object.hash(instance.hashCode, event.hashCode);
+  int get hashCode => Object.hash(
+        _instance.hashCode,
+        _instanceObj.hashCode,
+        event.hashCode,
+      );
 
   @override
   bool operator ==(Object other) {
     if (other is EventNotifier) {
       if (other.event != this.event) return false;
 
-      final instanceOther = other.instance;
-      final instanceSelf = instance;
+      final instanceOther = other._instance;
+      final instanceSelf = _instance;
 
       if (instanceOther != null && instanceSelf != null) {
         return instanceOther == instanceSelf;
       }
 
-      return identical(other.instanceObj, instanceObj);
+      return identical(other._instanceObj, _instanceObj);
     }
 
     if (other is Instance) {
@@ -349,12 +350,13 @@ class EventNotifier {
         }
 
         listener?.call(instanceObj, param);
-      } catch (exception, _) {
+      } catch (error, _) {
         // // coverage:ignore-start
-        // Reactter.log(
-        //   'The $_reactterInstance sending notification was while dispatching notifications for $_reactterInstance',
-        //   isError: true,
-        // );
+        logger.log(
+          'An error was caught during notifyListeners on $instanceObj about $event event',
+          error: error,
+          level: LogLevel.error,
+        );
         // // coverage:ignore-end
       }
     }

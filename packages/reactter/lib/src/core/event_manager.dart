@@ -9,6 +9,9 @@ abstract class EventManager {
   @internal
   InstanceManager get instanceManager;
 
+  @internal
+  Logger get logger;
+
   final _notifiers = HashSet<EventNotifier>();
 
   /// Puts on to listen [eventName] event.
@@ -59,15 +62,24 @@ abstract class EventManager {
     dynamic param,
   ]) {
     final notifier = _getEventNotifier(instance, eventName);
+    final notifierPartner = _getEventNotifierPartner(instance, eventName);
 
-    if (notifier == null) return;
+    if (notifier?._instance == null) {
+      notifier?.notifyListeners(param);
+      notifierPartner?.notifyListeners(param);
+      return;
+    }
 
-    notifier.notifyListeners(param);
+    notifierPartner?.notifyListeners(param);
+    notifier?.notifyListeners(param);
   }
 
   /// Removes all instance's events
   void offAll(Object? instance) {
-    final notifiers = _notifiers.where((notifier) => notifier == instance);
+    final notifiers = _notifiers.where(
+      (notifier) =>
+          notifier._instance == instance || notifier._instanceObj == instance,
+    );
 
     for (final notifier in {...notifiers}) {
       notifier.dispose();
@@ -85,6 +97,7 @@ abstract class EventManager {
   EventNotifier _getEventNotifierFallback(Object? instance, Enum eventName) {
     final notifier = EventNotifier(
       instanceManager,
+      logger,
       instance,
       eventName,
       _offEventNotifier,
@@ -98,12 +111,31 @@ abstract class EventManager {
   EventNotifier? _getEventNotifier(Object? instance, Enum eventName) {
     final notifier = EventNotifier(
       instanceManager,
+      logger,
       instance,
       eventName,
       _offEventNotifier,
     );
 
     return _notifiers.lookup(notifier);
+  }
+
+  EventNotifier? _getEventNotifierPartner(Object? instance, Enum eventName) {
+    final instancePartner = instance is Instance
+        ? instanceManager._getInstanceRegisterByInstance(instance)?.instance
+        : instanceManager._getInstance(instance);
+
+    if (instancePartner == null) return null;
+
+    final partner = EventNotifier(
+      instanceManager,
+      logger,
+      instancePartner,
+      eventName,
+      _offEventNotifier,
+    );
+
+    return _notifiers.lookup(partner);
   }
 
   void _offEventNotifier(EventNotifier notifier) {
