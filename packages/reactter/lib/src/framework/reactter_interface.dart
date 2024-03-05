@@ -1,7 +1,13 @@
 part of 'framework.dart';
 
-void defaultLogWriterCallback(String value, {bool isError = false}) {
-  if (Reactter.isLogEnable || isError) dev.log(value, name: 'REACTTER');
+void defaultLogWriterCallback(
+  String value, {
+  Object? error,
+  LogLevel? level = LogLevel.info,
+}) {
+  if (Reactter.isLogEnable || error != null) {
+    dev.log(value, name: 'REACTTER', error: error);
+  }
 }
 
 /// A class that represents the interface for Reactter.
