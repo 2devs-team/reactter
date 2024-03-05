@@ -3,7 +3,7 @@ part of 'core.dart';
 /// A generic class that represents an instance of a Reactter object and
 /// provides methods for generating unique keys and retrieving the stored instance.
 @internal
-class Instance<T> {
+class Instance<T extends Object?> {
   final String? id;
 
   const Instance([this.id]);
@@ -19,7 +19,7 @@ class Instance<T> {
   int _getTypeHashCode<TT extends T?>() => TT.hashCode;
 
   @override
-  int get hashCode => _getTypeHashCode() ^ id.hashCode;
+  int get hashCode => Object.hash(_getTypeHashCode<T?>(), id.hashCode);
 
   @override
   bool operator ==(Object other) {
