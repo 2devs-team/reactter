@@ -500,7 +500,7 @@ abstract class InstanceManager {
 
   /// Returns the [InstanceRef] associated with the given instance.
   /// If the instance is null or not found, returns null.
-  InstanceRef<T>? _getInstanceRef<T extends Object?>(T? instance) {
+  InstanceRef<T>? _getInstanceRef<T extends Object?>(Object? instance) {
     return _instances[instance] as InstanceRef<T>?;
   }
 
