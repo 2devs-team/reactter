@@ -64,7 +64,7 @@ abstract class EventManager {
     final notifier = _getEventNotifier(instance, eventName);
     final notifierPartner = _getEventNotifierPartner(instance, eventName);
 
-    if (notifier?._instance == null) {
+    if (notifier?._instanceRef == null) {
       notifier?.notifyListeners(param);
       notifierPartner?.notifyListeners(param);
       return;
@@ -78,7 +78,8 @@ abstract class EventManager {
   void offAll(Object? instance) {
     final notifiers = _notifiers.where(
       (notifier) =>
-          notifier._instance == instance || notifier._instanceObj == instance,
+          notifier._instanceRef == instance ||
+          notifier._instanceObj == instance,
     );
 
     for (final notifier in {...notifiers}) {
@@ -121,9 +122,9 @@ abstract class EventManager {
   }
 
   EventNotifier? _getEventNotifierPartner(Object? instance, Enum eventName) {
-    final instancePartner = instance is Instance
-        ? instanceManager._getInstanceRegisterByInstance(instance)?.instance
-        : instanceManager._getInstance(instance);
+    final instancePartner = instance is InstanceRef
+        ? instanceManager._getInstanceRegisterByInstanceRef(instance)?.instance
+        : instanceManager._getInstanceRef(instance);
 
     if (instancePartner == null) return null;
 

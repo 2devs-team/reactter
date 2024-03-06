@@ -1,12 +1,14 @@
 part of 'core.dart';
 
-/// A generic class that represents an instance of a Reactter object and
-/// provides methods for generating unique keys and retrieving the stored instance.
+/// A generic class that represents the reference to an instance in Reactter's context.
+/// Provides an optional [id] parameter for identifying the instance.
+///
+/// This class is used by the instance manager and event manager to identify instances.
 @internal
-class Instance<T extends Object?> {
+class InstanceRef<T extends Object?> {
   final String? id;
 
-  const Instance([this.id]);
+  const InstanceRef([this.id]);
 
   @override
   String toString() {
@@ -23,6 +25,6 @@ class Instance<T extends Object?> {
 
   @override
   bool operator ==(Object other) {
-    return other is Instance<T?> && other.id == this.id;
+    return other is InstanceRef<T?> && other.id == this.id;
   }
 }

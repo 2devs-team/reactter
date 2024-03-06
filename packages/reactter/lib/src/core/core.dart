@@ -11,7 +11,7 @@ part 'hook.dart';
 part 'instance_manage_mode.dart';
 part 'instance_manager.dart';
 part 'instance_register.dart';
-part 'instance.dart';
+part 'instance_ref.dart';
 part 'lifecycle_observer.dart';
 part 'lifecycle.dart';
 part 'logger.dart';

@@ -7,7 +7,7 @@ part of 'core.dart';
 /// The instance can be accessed through the [instance] getter.
 ///
 @internal
-class InstanceRegister<T> extends Instance<T?> {
+class InstanceRegister<T> extends InstanceRef<T?> {
   final InstanceBuilder<T?> builder;
 
   /// It's used to store the mode of managing an instance.
@@ -41,7 +41,7 @@ class InstanceRegister<T> extends Instance<T?> {
       return other.id == this.id;
     }
 
-    if (other is Instance<T?>) {
+    if (other is InstanceRef<T?>) {
       return other.id == this.id;
     }
 

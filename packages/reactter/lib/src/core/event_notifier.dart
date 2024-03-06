@@ -36,7 +36,7 @@ class EventNotifier {
   final InstanceManager instanceManager;
   final Logger logger;
 
-  final Instance? _instance;
+  final InstanceRef? _instanceRef;
   final Object? _instanceObj;
   final Enum event;
   final void Function(EventNotifier notifier) onNotifyComplete;
@@ -47,19 +47,19 @@ class EventNotifier {
     Object? instanceOrObj,
     this.event,
     this.onNotifyComplete,
-  )   : _instance = instanceOrObj is Instance ? instanceOrObj : null,
-        _instanceObj = instanceOrObj is! Instance ? instanceOrObj : null;
+  )   : _instanceRef = instanceOrObj is InstanceRef ? instanceOrObj : null,
+        _instanceObj = instanceOrObj is! InstanceRef ? instanceOrObj : null;
 
-  Instance? get instance =>
-      _instance ?? instanceManager._getInstance(_instanceObj);
+  InstanceRef? get instanceRef =>
+      _instanceRef ?? instanceManager._getInstanceRef(_instanceObj);
 
   Object? get instanceObj =>
       _instanceObj ??
-      instanceManager._getInstanceRegisterByInstance(_instance)?.instance;
+      instanceManager._getInstanceRegisterByInstanceRef(_instanceRef)?.instance;
 
   @override
   int get hashCode => Object.hash(
-        _instance.hashCode,
+        _instanceRef.hashCode,
         _instanceObj.hashCode,
         event.hashCode,
       );
@@ -69,24 +69,24 @@ class EventNotifier {
     if (other is EventNotifier) {
       if (other.event != this.event) return false;
 
-      final instanceOther = other._instance;
-      final instanceSelf = _instance;
+      final instanceRefOther = other._instanceRef;
+      final instanceRefSelf = _instanceRef;
 
-      if (instanceOther != null && instanceSelf != null) {
-        return instanceOther == instanceSelf;
+      if (instanceRefOther != null && instanceRefSelf != null) {
+        return instanceRefOther == instanceRefSelf;
       }
 
       return identical(other._instanceObj, _instanceObj);
     }
 
-    if (other is Instance) {
-      return other == instance;
+    final instanceRefSelf = instanceRef;
+
+    if (other is InstanceRef) {
+      return other == instanceRefSelf;
     }
 
-    final instanceSelf = instance;
-
-    if (instanceSelf != null) {
-      return instanceManager._getInstance(other) == instanceSelf;
+    if (instanceRefSelf != null) {
+      return instanceManager._getInstanceRef(other) == instanceRefSelf;
     }
 
     return identical(other, instanceObj);
