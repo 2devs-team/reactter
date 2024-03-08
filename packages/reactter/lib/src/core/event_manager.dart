@@ -96,31 +96,24 @@ abstract class EventManager {
   /// Retrieves the [EventNotifier] for the given [instance] and [eventName].
   /// If the [EventNotifier] does not exist in the lookup table, it creates a new one.
   EventNotifier _getEventNotifierFallback(Object? instance, Enum eventName) {
-    final notifier = EventNotifier(
-      instanceManager,
-      logger,
-      instance,
-      eventName,
-      _offEventNotifier,
-    );
-
-    return _notifiers.lookup(notifier) ?? notifier;
+    return _notifiers.lookup(EventNotifierRef(instance, eventName)) ??
+        EventNotifier(
+          instance,
+          eventName,
+          instanceManager,
+          logger,
+          _offEventNotifier,
+        );
   }
 
   /// Retrieves the [EventNotifier] for the given [instance] and [eventName].
   /// If the [EventNotifier] does not exist in the lookup table, it creates a new one.
   EventNotifier? _getEventNotifier(Object? instance, Enum eventName) {
-    final notifier = EventNotifier(
-      instanceManager,
-      logger,
-      instance,
-      eventName,
-      _offEventNotifier,
-    );
-
-    return _notifiers.lookup(notifier);
+    return _notifiers.lookup(EventNotifierRef(instance, eventName));
   }
 
+  /// Retrieves the [EventNotifier] partner for the given [instance] and [eventName].
+  /// If the [EventNotifier] does not exist in the lookup table, it creates a new one.
   EventNotifier? _getEventNotifierPartner(Object? instance, Enum eventName) {
     final instancePartner = instance is InstanceRef
         ? instanceManager._getInstanceRegisterByInstanceRef(instance)?.instance
@@ -128,17 +121,10 @@ abstract class EventManager {
 
     if (instancePartner == null) return null;
 
-    final partner = EventNotifier(
-      instanceManager,
-      logger,
-      instancePartner,
-      eventName,
-      _offEventNotifier,
-    );
-
-    return _notifiers.lookup(partner);
+    return _notifiers.lookup(EventNotifierRef(instancePartner, eventName));
   }
 
+  /// Removes the [EventNotifier] from the lookup table if it has no listeners.
   void _offEventNotifier(EventNotifier notifier) {
     if (notifier.hasListeners) return;
 

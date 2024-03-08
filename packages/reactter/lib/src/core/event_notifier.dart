@@ -1,5 +1,42 @@
 part of 'core.dart';
 
+/// A class that represents an event notifier reference for the [EventManager].
+class EventNotifierRef {
+  final InstanceRef? _instanceRef;
+  final Object? _instanceObj;
+  final Enum event;
+
+  EventNotifierRef(
+    Object? instanceOrObj,
+    this.event,
+  )   : _instanceRef = instanceOrObj is InstanceRef ? instanceOrObj : null,
+        _instanceObj = instanceOrObj is! InstanceRef ? instanceOrObj : null;
+
+  @override
+  int get hashCode => Object.hash(
+        _instanceRef.hashCode,
+        _instanceObj.hashCode,
+        event.hashCode,
+      );
+
+  @override
+  bool operator ==(Object other) {
+    if (other is EventNotifierRef) {
+      if (other.event != this.event) {
+        return false;
+      }
+
+      if (_instanceRef != null && other._instanceRef != null) {
+        return _instanceRef == other._instanceRef;
+      }
+
+      return _instanceObj == other._instanceObj;
+    }
+
+    return false;
+  }
+}
+
 /// A class that represents an event notifier.
 ///
 /// An event notifier is responsible for managing listeners and notifying them
@@ -14,7 +51,7 @@ part of 'core.dart';
 /// behavior when notifying listeners.
 ///
 @internal
-class EventNotifier {
+class EventNotifier extends EventNotifierRef {
   int _count = 0;
   // The _listeners is intentionally set to a fixed-length _GrowableList instead
   // of const [].
@@ -35,20 +72,15 @@ class EventNotifier {
 
   final InstanceManager instanceManager;
   final Logger logger;
-
-  final InstanceRef? _instanceRef;
-  final Object? _instanceObj;
-  final Enum event;
   final void Function(EventNotifier notifier) onNotifyComplete;
 
   EventNotifier(
+    Object? instanceOrObj,
+    Enum event,
     this.instanceManager,
     this.logger,
-    Object? instanceOrObj,
-    this.event,
     this.onNotifyComplete,
-  )   : _instanceRef = instanceOrObj is InstanceRef ? instanceOrObj : null,
-        _instanceObj = instanceOrObj is! InstanceRef ? instanceOrObj : null;
+  ) : super(instanceOrObj, event);
 
   InstanceRef? get instanceRef =>
       _instanceRef ?? instanceManager._getInstanceRef(_instanceObj);
@@ -58,38 +90,25 @@ class EventNotifier {
       instanceManager._getInstanceRegisterByInstanceRef(_instanceRef)?.instance;
 
   @override
-  int get hashCode => Object.hash(
-        _instanceRef.hashCode,
-        _instanceObj.hashCode,
-        event.hashCode,
-      );
+  int get hashCode => super.hashCode;
 
   @override
   bool operator ==(Object other) {
-    if (other is EventNotifier) {
-      if (other.event != this.event) return false;
+    if (other is EventNotifierRef) {
+      return super == other;
+    }
 
-      final instanceRefOther = other._instanceRef;
-      final instanceRefSelf = _instanceRef;
-
-      if (instanceRefOther != null && instanceRefSelf != null) {
-        return instanceRefOther == instanceRefSelf;
-      }
-
-      return identical(other._instanceObj, _instanceObj);
+    if (other is InstanceRef) {
+      return instanceRef == other;
     }
 
     final instanceRefSelf = instanceRef;
 
-    if (other is InstanceRef) {
-      return other == instanceRefSelf;
-    }
-
     if (instanceRefSelf != null) {
-      return instanceManager._getInstanceRef(other) == instanceRefSelf;
+      return instanceRefSelf == instanceManager._getInstanceRef(other);
     }
 
-    return identical(other, instanceObj);
+    return instanceObj == other;
   }
 
   /// Copied from Flutter
