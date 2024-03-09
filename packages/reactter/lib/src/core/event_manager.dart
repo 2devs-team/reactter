@@ -76,11 +76,7 @@ abstract class EventManager {
 
   /// Removes all instance's events
   void offAll(Object? instance) {
-    final notifiers = _notifiers.where(
-      (notifier) =>
-          notifier._instanceRef == instance ||
-          notifier._instanceObj == instance,
-    );
+    final notifiers = _notifiers.where((notifier) => notifier == instance);
 
     for (final notifier in {...notifiers}) {
       notifier.dispose();

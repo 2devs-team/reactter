@@ -370,18 +370,19 @@ class EventNotifier extends EventNotifierRef {
 
         listener?.call(instanceObj, param);
       } catch (error, _) {
-        // // coverage:ignore-start
         logger.log(
           'An error was caught during notifyListeners on $instanceObj about $event event',
           error: error,
           level: LogLevel.error,
         );
-        // // coverage:ignore-end
       }
     }
 
     _notificationCallStackDepth--;
 
+    // coverage:ignore-start
+    // No coverage for the following block because it is only used for
+    // performance optimization.
     if (_notificationCallStackDepth == 0 && _reentrantlyRemovedListeners > 0) {
       // We really remove the listeners when all notifications are done.
       final int newLength = _count - _reentrantlyRemovedListeners;
@@ -401,7 +402,6 @@ class EventNotifier extends EventNotifierRef {
 
         _listeners = newListeners;
       } else {
-        // coverage:ignore-start
         // Otherwise we put all the null references at the end.
         for (int i = 0; i < newLength; i += 1) {
           if (_listeners[i] == null) {
@@ -414,8 +414,8 @@ class EventNotifier extends EventNotifierRef {
             _listeners[swapIndex] = null;
           }
         }
-        // coverage:ignore-end
       }
+      // coverage:ignore-end
 
       _reentrantlyRemovedListeners = 0;
       _count = newLength;

@@ -31,20 +31,4 @@ class InstanceRegister<T> extends InstanceRef<T?> {
 
     return '${super.toString()}$hashCode';
   }
-
-  @override
-  int get hashCode => super.hashCode;
-
-  @override
-  bool operator ==(Object other) {
-    if (other is InstanceRegister<T>) {
-      return other.id == this.id;
-    }
-
-    if (other is InstanceRef<T?>) {
-      return other.id == this.id;
-    }
-
-    return identical(other, this.instance);
-  }
 }
