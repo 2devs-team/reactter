@@ -107,5 +107,62 @@ void main() {
         throwsA(TypeMatcher<AssertionError>()),
       );
     });
+
+    test("should be able to used on instance with nested way", () {
+      late final willUpdateChecked;
+      late final didUpdateChecked;
+
+      final test2Controller = Reactter.create(() => Test2Controller())!;
+      final testController = test2Controller.testController.instance!;
+
+      final signalString = testController.signalString;
+
+      expect(signalString(), "initial");
+
+      Reactter.one(testController, Lifecycle.willUpdate, (_, __) {
+        willUpdateChecked = true;
+      });
+      Reactter.one(testController, Lifecycle.didUpdate, (_, __) {
+        didUpdateChecked = true;
+      });
+
+      signalString("change signal");
+
+      expectLater(willUpdateChecked, true);
+      expectLater(didUpdateChecked, true);
+
+      Reactter.destroy<TestController>();
+
+      expect(
+        () => signalString("throw a assertion error"),
+        throwsA(TypeMatcher<AssertionError>()),
+      );
+    });
+
+    test("should be able to bind to another instance", () {
+      final testController = Reactter.create(() => SignalTestController())!;
+      final signalString = testController.signalString;
+
+      expect(signalString(), "initial");
+
+      signalString("change signal");
+
+      expect(signalString(), "change signal");
+
+      Reactter.destroy<SignalTestController>();
+
+      expect(
+        signalString("no throw a assertion error"),
+        "no throw a assertion error",
+      );
+    });
   });
+}
+
+class SignalTestController extends TestController {
+  final signalString = Signal("initial");
+
+  SignalTestController() {
+    signalString.bind(TestController());
+  }
 }

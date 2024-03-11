@@ -13,229 +13,353 @@ const TEST_EVENT2_COUNT = 2;
 
 void main() {
   group("ReactterEventManager", () {
-    test("should listen and emits event", () {
-      _testEmitListenEvent(
-        (callback) {
-          Reactter.on(
-            ReactterInstance<TestController>(),
-            Events.TestEvent,
-            callback,
-          );
-        },
-        expectParam: "$TEST_EVENT_PARAM_NAME$TEST_EVENT_COUNT",
-        expectCount: TEST_EVENT_COUNT,
-      );
+    test("should listen and emit event using the instance", () {
+      final testController = Reactter.create(() => TestController())!;
 
-      _testEmitListenEvent(
-        (callback) {
-          Reactter.on(
-            ReactterInstance<TestController>(),
-            Events.TestEvent2,
-            callback,
-          );
-        },
-        expectParam: "$TEST_EVENT2_PARAM_NAME$TEST_EVENT2_COUNT",
-        expectCount: TEST_EVENT2_COUNT,
-      );
-    });
-
-    test("should listen and emits event with id", () {
-      _testEmitListenEvent(
-        (callback) {
-          Reactter.on(
-            ReactterInstance<TestController>('uniqueId'),
-            Events.TestEvent,
-            callback,
-          );
-        },
-        id: 'uniqueId',
-        expectParam: "$TEST_EVENT_PARAM_NAME$TEST_EVENT_COUNT",
-        expectCount: TEST_EVENT_COUNT,
-      );
-
-      _testEmitListenEvent(
-        (callback) {
-          Reactter.on(
-            ReactterInstance<TestController>('uniqueId'),
-            Events.TestEvent2,
-            callback,
-          );
-        },
-        id: 'uniqueId',
-        expectParam: "$TEST_EVENT2_PARAM_NAME$TEST_EVENT2_COUNT",
-        expectCount: TEST_EVENT2_COUNT,
-      );
-    });
-
-    test("should listen and emits event with instance", () {
-      late TestController? instance;
-      final testController = Reactter.create(() => TestController());
-
-      _testEmitListenEvent(
-        (callback) {
-          Reactter.on(
-            testController!,
-            Events.TestEvent,
-            (TestController? inst, String param) {
-              instance = inst;
-              callback(inst, param);
-            },
-          );
-        },
-        expectParam: "$TEST_EVENT_PARAM_NAME$TEST_EVENT_COUNT",
-        expectCount: TEST_EVENT_COUNT,
+      _testListenAndEmitEvent(
+        testController,
+        testController,
+        instanceMatcher: testController,
       );
 
       Reactter.delete<TestController>();
-
-      expectLater(instance, isA<TestController>());
-      expectLater(instance, testController);
     });
+
+    test("should listen and emit event using the instance with id", () {
+      final testController = Reactter.create(
+        () => TestController(),
+        id: 'uniqueId',
+      )!;
+
+      _testListenAndEmitEvent(
+        testController,
+        testController,
+        instanceMatcher: testController,
+      );
+
+      Reactter.delete<TestController>('uniqueId');
+    });
+
+    test(
+      "should listen and emit event using ReactterInstance",
+      () {
+        _testListenAndEmitEvent(
+          ReactterInstance<TestController>(),
+          ReactterInstance<TestController>(),
+          instanceMatcher: isNull,
+        );
+
+        final testController = Reactter.create(() => TestController())!;
+
+        _testListenAndEmitEvent(
+          ReactterInstance<TestController>(),
+          ReactterInstance<TestController>(),
+          instanceMatcher: testController,
+        );
+
+        Reactter.delete<TestController>();
+      },
+    );
+
+    test(
+      "should listen and emit event using ReactterInstance with id",
+      () {
+        _testListenAndEmitEvent(
+          ReactterInstance<TestController>('uniqueId'),
+          ReactterInstance<TestController>('uniqueId'),
+          instanceMatcher: isNull,
+        );
+
+        final testController = Reactter.create(
+          () => TestController(),
+          id: 'uniqueId',
+        )!;
+
+        _testListenAndEmitEvent(
+          ReactterInstance<TestController>('uniqueId'),
+          ReactterInstance<TestController>('uniqueId'),
+          instanceMatcher: testController,
+        );
+
+        Reactter.delete<TestController>('uniqueId');
+      },
+    );
+
+    test(
+      "should listen event using the instance and emit event using ReactterInstance",
+      () {
+        final testController = Reactter.create(() => TestController())!;
+
+        _testListenAndEmitEvent(
+          testController,
+          ReactterInstance<TestController>(),
+          instanceMatcher: testController,
+        );
+
+        Reactter.delete<TestController>();
+      },
+    );
+
+    test(
+      "should listen event using the instance and emit event using ReactterInstance with id",
+      () {
+        final testController = Reactter.create(
+          () => TestController(),
+          id: 'uniqueId',
+        )!;
+
+        _testListenAndEmitEvent(
+          testController,
+          ReactterInstance<TestController>('uniqueId'),
+          instanceMatcher: testController,
+        );
+
+        Reactter.delete<TestController>('uniqueId');
+      },
+    );
+
+    test(
+      "should listen event using ReactterInstance and emit event using the instance",
+      () {
+        final testController = Reactter.create(() => TestController())!;
+
+        _testListenAndEmitEvent(
+          ReactterInstance<TestController>(),
+          testController,
+          instanceMatcher: testController,
+        );
+
+        Reactter.delete<TestController>();
+      },
+    );
+
+    test(
+      "should listen event using ReactterInstance and emit event using the instance with id",
+      () {
+        final testController = Reactter.create(
+          () => TestController(),
+          id: 'uniqueId',
+        )!;
+
+        _testListenAndEmitEvent(
+          ReactterInstance<TestController>('uniqueId'),
+          testController,
+          instanceMatcher: testController,
+        );
+
+        Reactter.delete<TestController>('uniqueId');
+      },
+    );
 
     test("should listen and emits event only once", () {
-      _testEmitListenEvent(
-        (callback) {
-          Reactter.one(
-            ReactterInstance<TestController>(),
-            Events.TestEvent,
-            callback,
-          );
-        },
-        expectParam: "$TEST_EVENT_PARAM_NAME${1}",
-        expectCount: 1,
+      final testController = Reactter.create(() => TestController())!;
+
+      _testListenAndEmitEvent(
+        testController,
+        testController,
+        instanceMatcher: testController,
+        isOnce: true,
       );
 
-      _testEmitListenEvent(
-        (callback) {
-          Reactter.one(
-            ReactterInstance<TestController>(),
-            Events.TestEvent2,
-            callback,
-          );
-        },
-        expectParam: "$TEST_EVENT2_PARAM_NAME${1}",
-        expectCount: 1,
+      _testListenAndEmitEvent(
+        ReactterInstance<TestController>(),
+        ReactterInstance<TestController>(),
+        instanceMatcher: testController,
+        isOnce: true,
       );
-    });
 
-    test("should unlisten event", () {
-      _testEmitListenEvent(
-        (callback) {
-          Reactter.on(
-            ReactterInstance<TestController>(),
-            Events.TestEvent,
-            callback,
-          );
-          Reactter.off(
-            ReactterInstance<TestController>(),
-            Events.TestEvent,
-            callback,
-          );
-          Reactter.on(
-            ReactterInstance<TestController>(),
-            Events.TestEvent2,
-            callback,
-          );
-          Reactter.off(
-            ReactterInstance<TestController>(),
-            Events.TestEvent2,
-            callback,
-          );
-        },
-        expectCount: 0,
+      _testListenAndEmitEvent(
+        testController,
+        ReactterInstance<TestController>(),
+        instanceMatcher: testController,
+        isOnce: true,
       );
-    });
 
-    test("should unlisten event with id", () {
-      _testEmitListenEvent(
-        (callback) {
-          Reactter.on(
-            ReactterInstance<TestController>('uniqueId'),
-            Events.TestEvent,
-            callback,
-          );
-          Reactter.off(
-            ReactterInstance<TestController>('uniqueId'),
-            Events.TestEvent,
-            callback,
-          );
-          Reactter.on(
-            ReactterInstance<TestController>('uniqueId'),
-            Events.TestEvent2,
-            callback,
-          );
-          Reactter.off(
-            ReactterInstance<TestController>('uniqueId'),
-            Events.TestEvent2,
-            callback,
-          );
-        },
-        id: 'uniqueId',
-        expectCount: 0,
-      );
-    });
-
-    test("should listen and emits event only once with instance", () {
-      late TestController? instance;
-      final testController = Reactter.create(() => TestController());
-
-      _testEmitListenEvent(
-        (callback) {
-          Reactter.one(
-            testController!,
-            Events.TestEvent,
-            (TestController? inst, String param) {
-              instance = inst;
-              callback(inst, param);
-            },
-          );
-        },
-        expectParam: "$TEST_EVENT_PARAM_NAME${1}",
-        expectCount: 1,
+      _testListenAndEmitEvent(
+        ReactterInstance<TestController>(),
+        testController,
+        instanceMatcher: testController,
+        isOnce: true,
       );
 
       Reactter.delete<TestController>();
-
-      expectLater(instance, isA<TestController>());
-      expectLater(instance, testController);
     });
+
+    test("should listen and emits event only once with id", () {
+      final testController = Reactter.create(
+        () => TestController(),
+        id: 'uniqueId',
+      )!;
+
+      _testListenAndEmitEvent(
+        testController,
+        testController,
+        instanceMatcher: testController,
+        isOnce: true,
+      );
+
+      _testListenAndEmitEvent(
+        ReactterInstance<TestController>('uniqueId'),
+        ReactterInstance<TestController>('uniqueId'),
+        instanceMatcher: testController,
+        isOnce: true,
+      );
+
+      _testListenAndEmitEvent(
+        testController,
+        ReactterInstance<TestController>('uniqueId'),
+        instanceMatcher: testController,
+        isOnce: true,
+      );
+
+      _testListenAndEmitEvent(
+        ReactterInstance<TestController>('uniqueId'),
+        testController,
+        instanceMatcher: testController,
+        isOnce: true,
+      );
+
+      Reactter.delete<TestController>('uniqueId');
+    });
+    test("should unlisten event", _testUnlistenEvent);
+
+    test(
+      "should unlisten event with id",
+      () => _testUnlistenEvent(withId: true),
+    );
   });
 }
 
-void _testEmitListenEvent(
-  Function(CallbackEvent<TestController?, String> callback) eventCb, {
-  String? id,
-  required int expectCount,
-  String? expectParam,
+void _testListenAndEmitEvent(
+  Object instListen,
+  Object instEmit, {
+  bool isOnce = false,
+  Object? instanceMatcher,
 }) {
-  late String? paramReceived;
-  int countEvent = 0;
+  int countEvent1 = 0;
+  int countEvent2 = 0;
 
-  eventCb((instance, param) {
-    paramReceived = param;
-    countEvent += 1;
+  final listen = isOnce ? Reactter.one : Reactter.on;
+
+  listen(instListen, Events.TestEvent, (inst, param) {
+    if (instanceMatcher != null) expect(inst, instanceMatcher);
+    expect(param, TEST_EVENT_PARAM_NAME);
+    countEvent1 += 1;
+  });
+
+  listen(instListen, Events.TestEvent2, (inst, param) {
+    if (instanceMatcher != null) expect(inst, instanceMatcher);
+    expect(param, TEST_EVENT2_PARAM_NAME);
+    countEvent2 += 1;
   });
 
   for (var i = 0; i < TEST_EVENT_COUNT; i++) {
     Reactter.emit(
-      ReactterInstance<TestController>(id),
+      instEmit,
       Events.TestEvent,
-      "$TEST_EVENT_PARAM_NAME${i + 1}",
+      TEST_EVENT_PARAM_NAME,
     );
+    expect(countEvent1, isOnce ? 1 : i + 1);
   }
+
   for (var i = 0; i < TEST_EVENT2_COUNT; i++) {
     Reactter.emit(
-      ReactterInstance<TestController>(id),
+      instEmit,
       Events.TestEvent2,
-      "$TEST_EVENT2_PARAM_NAME${i + 1}",
+      TEST_EVENT2_PARAM_NAME,
     );
+    expect(countEvent2, isOnce ? 1 : i + 1);
   }
 
-  Reactter.offAll(ReactterInstance<TestController>(id));
+  Reactter.offAll(instListen);
+}
 
-  if (expectParam != null) {
-    expectLater(paramReceived, expectParam);
+void _testUnlistenEvent({bool withId = false}) {
+  int countEvent1 = 0;
+  int countEvent2 = 0;
+  final id = withId ? 'uniqueId' : null;
+
+  final testController = Reactter.create(() => TestController(), id: id)!;
+
+  void _onTestEvent(TestController? inst, String param) {
+    countEvent1 += 1;
   }
 
-  expect(countEvent, expectCount);
+  void _onTestEvent2(TestController? inst, String param) {
+    countEvent2 += 1;
+  }
+
+  Reactter.on(testController, Events.TestEvent, _onTestEvent);
+  Reactter.on(
+    ReactterInstance<TestController>(id),
+    Events.TestEvent,
+    (inst, param) {
+      expect(inst, testController);
+      expect(param, TEST_EVENT_PARAM_NAME);
+    },
+  );
+  Reactter.on(
+    ReactterInstance<TestController>(id),
+    Events.TestEvent2,
+    _onTestEvent2,
+  );
+
+  expect(countEvent1, 0);
+  expect(countEvent2, 0);
+
+  Reactter.emit(testController, Events.TestEvent, TEST_EVENT_PARAM_NAME);
+
+  expect(countEvent1, 1);
+  expect(countEvent2, 0);
+
+  Reactter.emit(
+    ReactterInstance<TestController>(id),
+    Events.TestEvent,
+    TEST_EVENT_PARAM_NAME,
+  );
+
+  expect(countEvent1, 2);
+  expect(countEvent2, 0);
+
+  Reactter.emit(
+    ReactterInstance<TestController>(id),
+    Events.TestEvent2,
+    TEST_EVENT2_PARAM_NAME,
+  );
+
+  expect(countEvent1, 2);
+  expect(countEvent2, 1);
+
+  Reactter.off(testController, Events.TestEvent, _onTestEvent);
+  Reactter.emit(
+    ReactterInstance<TestController>(id),
+    Events.TestEvent,
+    TEST_EVENT_PARAM_NAME,
+  );
+  Reactter.emit(testController, Events.TestEvent, TEST_EVENT_PARAM_NAME);
+
+  expect(countEvent1, 2);
+  expect(countEvent2, 1);
+
+  Reactter.emit(testController, Events.TestEvent2, TEST_EVENT2_PARAM_NAME);
+
+  expect(countEvent1, 2);
+  expect(countEvent2, 2);
+
+  Reactter.off(
+    ReactterInstance<TestController>(id),
+    Events.TestEvent2,
+    _onTestEvent2,
+  );
+  Reactter.emit(testController, Events.TestEvent2, TEST_EVENT2_PARAM_NAME);
+  Reactter.emit(
+    ReactterInstance<TestController>(id),
+    Events.TestEvent2,
+    TEST_EVENT2_PARAM_NAME,
+  );
+
+  expect(countEvent1, 2);
+  expect(countEvent2, 2);
+
+  Reactter.delete<TestController>(id);
 }
