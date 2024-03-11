@@ -1,82 +1,127 @@
 part of 'hooks.dart';
 
 /// {@template use_effect}
-/// A [ReactterHook] that manages side-effect.
+/// A [ReactterHook] that manages `side-effect`.
 ///
-/// The side-effect logic into the [callback] function is executed
+///
+/// The `side-effect` logic into the [callback] function is executed
 /// when [dependencies] of [ReactterState] argument has changes
-/// or [instance] trigger [LifeCycle.didMount] event.
+/// or [instance] trigger [LifeCycle.didMount] event:
 ///
 /// ```dart
-/// UseEffect(() {
-///   print("Execute by state changed or 'didMount' event");
-/// }, [state], this);
+/// UseEffect(
+///   () {
+///     print("Executed by state changed or 'didMount' event");
+///   },
+///   [state],
+/// );
 /// ```
 ///
-/// If the [callback] returns a function,
-/// then [UseEffect] considers this as an `effect cleanup`.
-///
-/// The `effect cleanup` callback is executed, before [callback] is called
-/// or [context] trigger [LifeCycle.willUnmount] event:
+/// The [callback] function can return a cleanup function to manage the `effect
+/// cleanup`.
+/// The cleanup function is executed before the [dependencies] of
+/// [ReactterState] argument has changes or [instance] trigger
+/// [LifeCycle.willUnmount] event:
 ///
 /// ```dart
-/// UseEffect(() {
-///   print("Execute by 'didMount' event");
+/// UseEffect(
+///   () {
+///     print("Executed by state changed or 'didMount' event");
 ///
-///   return () {
-///     print("Execute by 'willUnmount' event");
-///   };
-/// }, [], this);
+///     return () {
+///       print("Executed before state changed or 'willUnmount' event");
+///     };
+///   },
+///   [state],
+/// );
 /// ```
 ///
-/// **RECOMMENDED**: Use it on Object constructor:
+/// **RECOMMENDED**: Use it on class constructor:
 ///
 /// ```dart
 /// class AppController {
-///   late final state = UseState(false);
+///   final state = UseState(0);
 ///
 ///   AppController() {
-///     UseEffect(() {
-///       print('state: ${state.value}');
-///     }, [state], this);
-///
-///     Future.delayed(
-///       const Duration(seconds: 1),
+///     UseEffect(
 ///       () {
-///         state.value = !state.value;
+///         print("Executed by state changed or 'didMount' event");
+///
+///         return () {
+///           print("Executed before state changed or 'willUnmount' event");
+///         };
 ///       },
+///       [state],
 ///     );
+///
+///     Timer.periodic(Duration(seconds: 1), (_) => state.value++);
 ///   }
 /// }
 /// ```
 ///
-/// If you need to execute the UseEffect's [callback] inmediately created,
-/// use [dispatchEffect] on [context] parameter:
-///
+/// If you want to execute the effect on initialization,
+/// you can use [UseEffect.runOnInit]:
 ///
 /// ```dart
-/// UseEffect(
-///   () => print("Prompt execution or state changed"),
-///   [state],
-///   UseEffect.dispatchEffect,
+/// UseEffect.runOnInit(
+///   () {
+///     print("Executed on initialization and 'didMount' event");
+///   },
+///   [],
 /// );
 /// ```
-/// or use mixin [DispatchEffect]:
+///
+/// You can also use the [DispatchEffect] mixin to execute the effect
+/// on initialization:
 ///
 /// ```dart
 /// class AppController with DispatchEffect {
 ///   AppController() {
 ///     UseEffect(
-///       () => print("Prompt execution or state changed"),
-///       [state],
-///       this,
+///       () {
+///         print("Executed on initialization and 'didMount' event");
+///       },
+///       [],
 ///     );
 ///   }
 /// }
 /// ```
 ///
-/// If you not put instance on the [context] parameter,
-/// should to call [dispose] method to clear any UseEffect's events.
+/// Use [bind] method to bind the instance, if you want to execute the effect
+/// within the instance context:
+///
+/// ```dart
+/// UseEffect(
+///   () {
+///     print("Executed by `didMount` event of 'useController' instance");
+///   },
+///   [],
+/// ).bind(useController);
+/// ```
+///
+/// **NOTE**: A [UseEffect] instance can only be binded to one instance at a time.
+/// When create a new instance of [UseEffect] on the instance that is created
+/// by instance manager, this instance will be binded to it automatically.
+///
+/// **NOTE**: The [UseEffect] instance will be disposed automatically when
+/// the instance binded is destroyed by instance manager.
+///
+/// If the [UseEffect] instance didn't have an instance binded or
+/// the instance binded is not created by instance manager,
+/// you must dispose it manually, using the [dispose] method:
+///
+/// ```dart
+/// final useEffect = UseEffect(
+///   () {
+///     print("Executed by state changed");
+///   },
+///   [state],
+/// );
+///
+/// [...]
+///
+/// useEffect.dispose();
+/// ```
 ///
 /// See also:
 ///
@@ -87,11 +132,9 @@ class UseEffect extends ReactterHook {
   @override
   final $ = ReactterHook.$register;
 
+  bool _isDispatched = false;
   Function? _cleanupCallback;
   bool _isUpdating = false;
-  bool _initialized = false;
-
-  static DispatchEffect get dispatchEffect => _DispatchEffect();
 
   /// Function to control side-effect and effect cleanup.
   final Function callback;
@@ -99,57 +142,48 @@ class UseEffect extends ReactterHook {
   /// It's used to store the states as dependencies of [UseEffect].
   final List<ReactterState> dependencies;
 
-  /// It's used to specify the context in which the [UseEffect] hook is being used.
-  /// If a context is provided, the [UseEffect] hook will listen
-  /// for the `LifeCycle.didMount` and `LifeCycle.willUnmount` events of the [context]
-  /// and execute the [callback] method accordingly. If no context is provided,
-  /// the hook will simply watch for changes in the specified `dependencies`.
-  final Object? context;
+  /// {@macro use_effect}
+  UseEffect(this.callback, this.dependencies) {
+    if (BindingZone.currentZone != null) return;
+
+    _watchDependencies();
+  }
 
   /// {@macro use_effect}
-  UseEffect(
-    this.callback,
-    this.dependencies, [
-    this.context,
-  ]) {
-    _initialized = true;
+  UseEffect.runOnInit(this.callback, this.dependencies) : super() {
+    _runCallback(this, this);
+    _isUpdating = false;
+    _isDispatched = true;
 
-    if (context == null) {
-      _watchDependencies();
-      return;
-    }
-
-    if (context is DispatchEffect) {
-      _runCallbackAndWatchDependencies();
-      return;
-    }
-
-    if (Zone.currentZone != null) return;
-
-    final instance = _getInstance(context);
-
-    if (instance != null) {
-      bind(instance);
-      return;
-    }
+    if (BindingZone.currentZone != null) return;
 
     _watchDependencies();
   }
 
   @override
   void bind(Object instance) {
-    if (context == null) return;
+    final shouldListen = instanceBinded == null;
 
     super.bind(instance);
 
-    if (!_initialized) return;
+    if (!shouldListen) return;
 
-    _analyzeInstanceAttached();
+    _watchInstanceAttached();
+
+    if (!_isDispatched && instanceBinded is DispatchEffect) {
+      _runCleanupAndUnwatchDependencies(instanceBinded);
+      _runCallbackAndWatchDependencies(instanceBinded);
+      return;
+    }
+
+    _unwatchDependencies();
+    _watchDependencies();
   }
 
   @override
   void unbind() {
     _unwatchInstanceAttached();
+    _unwatchDependencies();
 
     super.unbind();
   }
@@ -164,25 +198,14 @@ class UseEffect extends ReactterHook {
     super.dispose();
   }
 
-  void _analyzeInstanceAttached() {
-    if (bindedTo == null) return;
-
-    if (bindedTo is DispatchEffect) {
-      _runCallbackAndWatchDependencies();
-      return;
-    }
-
-    _watchInstanceAttached();
-  }
-
   void _watchInstanceAttached() {
     Reactter.on(
-      bindedTo!,
+      instanceBinded!,
       Lifecycle.didMount,
       _runCallbackAndWatchDependencies,
     );
     Reactter.on(
-      bindedTo!,
+      instanceBinded!,
       Lifecycle.willUnmount,
       _runCleanupAndUnwatchDependencies,
     );
@@ -190,12 +213,12 @@ class UseEffect extends ReactterHook {
 
   void _unwatchInstanceAttached() {
     Reactter.off(
-      bindedTo!,
+      instanceBinded!,
       Lifecycle.didMount,
       _runCallbackAndWatchDependencies,
     );
     Reactter.off(
-      bindedTo!,
+      instanceBinded!,
       Lifecycle.willUnmount,
       _runCleanupAndUnwatchDependencies,
     );
@@ -230,6 +253,12 @@ class UseEffect extends ReactterHook {
 
     _isUpdating = true;
 
+    try {
+      _cleanupCallback?.call();
+    } finally {
+      _cleanupCallback = null;
+    }
+
     final cleanupCallback = callback();
 
     if (cleanupCallback is Function) {
@@ -241,25 +270,13 @@ class UseEffect extends ReactterHook {
     if (!_isUpdating) return;
 
     _isUpdating = false;
-    _cleanupCallback?.call();
-    _cleanupCallback = null;
-  }
 
-  Object? _getInstance(Object? instance) {
-    return instance is ReactterState && !Reactter.isRegistered(instance)
-        ? _getInstance(instance.bindedTo)
-        : instance;
+    try {
+      _cleanupCallback?.call();
+    } finally {
+      _cleanupCallback = null;
+    }
   }
 }
 
 abstract class DispatchEffect {}
-
-class _DispatchEffect with DispatchEffect {
-  static final inst = _DispatchEffect._();
-
-  factory _DispatchEffect() {
-    return inst;
-  }
-
-  _DispatchEffect._();
-}
