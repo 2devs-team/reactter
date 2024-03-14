@@ -421,7 +421,11 @@ abstract class InstanceManager {
   /// Returns the hashCode reference at a specified index for a given type and
   /// optional ID.
   int? getHashCodeRefAt<T extends Object?>(int index, [String? id]) {
-    return _getInstanceRegister<T>(id)?.refs.elementAt(index);
+    final refs = _getInstanceRegister<T>(id)?.refs;
+
+    if (refs == null || refs.length < index + 1) return null;
+
+    return refs.elementAt(index);
   }
 
   /// Returns or creates a [InstanceRegister] and logs messages related
