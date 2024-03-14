@@ -16,7 +16,7 @@ Future<String> _resolveStateAsync([bool throwError = false]) async {
   return "resolved";
 }
 
-class TestController {
+class TestController extends LifecycleObserver {
   final signalString = Signal("initial");
   final signalInt = Signal(0);
   final stateBool = UseState(false);

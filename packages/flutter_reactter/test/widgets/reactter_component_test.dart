@@ -23,7 +23,7 @@ void main() {
         ),
       );
 
-      _testReactterComponent(tester: tester, instance: instanceObtained);
+      await _testReactterComponent(tester: tester, instance: instanceObtained);
     });
 
     testWidgets("should renders and get instance by id", (tester) async {
@@ -44,11 +44,21 @@ void main() {
         ),
       );
 
-      _testReactterComponent(
+      await _testReactterComponent(
         tester: tester,
         instance: instanceObtained,
         byId: true,
       );
+
+      final rectterCompontentElement =
+          tester.element(find.bySubtype<ReactterComponent>().first)
+            ..deactivate()
+            ..activate();
+
+      final diagnostic =
+          rectterCompontentElement.toDiagnosticsNode().toTimelineArguments();
+
+      expect(diagnostic?['id'], '"uniqueId"');
     });
 
     testWidgets("should render and get instance without builder instance",
@@ -70,7 +80,7 @@ void main() {
         ),
       );
 
-      _testReactterComponent(tester: tester, instance: instanceObtained);
+      await _testReactterComponent(tester: tester, instance: instanceObtained);
     });
 
     testWidgets("should render and get instance without listen hooks",
@@ -92,7 +102,7 @@ void main() {
         ),
       );
 
-      _testReactterComponent(
+      await _testReactterComponent(
         tester: tester,
         instance: instanceObtained,
         withoutListenStates: true,
