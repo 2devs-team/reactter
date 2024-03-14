@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_reactter/flutter_reactter.dart';
 
 import 'animation/animation_page.dart';
 import 'api/api_page.dart';
@@ -7,6 +8,16 @@ import 'counter/counter_page.dart';
 import 'shopping_cart/shopping_cart_page.dart';
 import 'todo/todo_page.dart';
 import 'tree/tree_page.dart';
+
+class UseEffectTestController {
+  final state = UseState(false);
+
+  UseEffectTestController() {
+    UseEffect(() {
+      print("Prompt execution or state changed");
+    }, [state]).bind(this);
+  }
+}
 
 final items = [
   ExampleItem(
@@ -110,6 +121,12 @@ final darkTheme = ThemeData.dark().copyWith(
 );
 
 Future<void> main() async {
+//  final controller = Reactter.create(() => UseEffectTestController());
+  final controller = UseEffectTestController();
+
+  controller.state.value = !controller.state.value;
+
+  Reactter.delete<UseEffectTestController>();
   runApp(const MyApp());
 }
 

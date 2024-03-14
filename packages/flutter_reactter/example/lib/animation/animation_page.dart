@@ -11,7 +11,7 @@ class AnimationPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return ReactterProvider(
       AnimationController.new,
-      builder: (animationController, context, child) {
+      builder: (context, animationController, child) {
         return Scaffold(
           appBar: AppBar(
             title: const Text("Animation"),

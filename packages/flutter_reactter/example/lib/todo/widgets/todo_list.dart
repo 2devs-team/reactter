@@ -11,7 +11,7 @@ class TodoList extends ReactterComponent<TodoController> {
   ListenStates<TodoController>? get listenStates => (inst) => [inst.uReduce];
 
   @override
-  Widget render(TodoController inst, BuildContext context) {
+  Widget render(BuildContext context, TodoController inst) {
     final todos = inst.getTodosBy(inst.uReduce.value.filteredBy);
 
     return ListView.builder(

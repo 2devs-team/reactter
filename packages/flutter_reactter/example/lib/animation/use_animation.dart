@@ -102,19 +102,16 @@ class UseAnimation<T> extends ReactterHook implements TickerProvider {
     UseEffect(
       _addFrameLimitingUpdater,
       [],
-      this,
     );
 
     UseEffect(
       _rebuild,
       [uTween, uControl, uCurve],
-      this,
     );
 
     UseEffect(
       () => controller.duration = uDuration.value,
       [uDuration],
-      this,
     );
   }
 

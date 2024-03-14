@@ -13,7 +13,7 @@ class TodoPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return ReactterProvider(
       TodoController.new,
-      builder: (todoController, context, _) {
+      builder: (context, todoController, _) {
         final size = MediaQuery.of(context).size;
 
         return Scaffold(

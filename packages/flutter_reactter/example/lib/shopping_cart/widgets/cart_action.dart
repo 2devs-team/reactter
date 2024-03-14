@@ -37,7 +37,7 @@ class CartAction extends StatelessWidget {
                 radius: 8,
                 child: ReactterConsumer<CartController>(
                   listenStates: (inst) => [inst.uItemsCount],
-                  builder: (cartController, _, __) {
+                  builder: (_, cartController, __) {
                     return Text(
                       "${cartController.uItemsCount.value}",
                       style: Theme.of(context)
