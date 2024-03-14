@@ -125,4 +125,17 @@ abstract class ReactterComponent<T extends Object> extends StatelessWidget {
         ? context.watch<T>(listenStates)
         : context.watchId<T>(id!, listenStates);
   }
+
+  @override
+  void debugFillProperties(properties) {
+    super.debugFillProperties(properties);
+
+    properties.add(
+      StringProperty(
+        'id',
+        id,
+        showName: true,
+      ),
+    );
+  }
 }
