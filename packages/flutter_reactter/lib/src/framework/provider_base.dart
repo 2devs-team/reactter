@@ -37,14 +37,30 @@ abstract class ProviderBase<T extends Object?> extends Widget {
   @protected
   final bool init;
 
+  /// {@template provider_base.isLazy}
+  /// Lazily create the instance defined
+  /// on firts parameter([instanceBuilder]).
+  /// {@endtemplate}
+  @protected
+  final bool isLazy;
+
   /// {@template provider_base.builder}
+  /// Method which has the render logic
+  ///
+  /// Exposes [BuilderContext], the instance and [child] widget as arguments.
+  /// and returns a widget.
+  /// {@endtemplate}
+  @protected
+  final InstanceChildBuilder<T>? builder;
+
+  /// {@template provider_base.lazyBuilder}
   /// Method which has the render logic
   ///
   /// Exposes [BuilderContext] and [child] widget as arguments.
   /// and returns a widget.
   /// {@endtemplate}
   @protected
-  final InstanceChildBuilder<T>? builder;
+  final ChildBuilder? lazyBuilder;
 
   /// {@template provider_base.init}
   /// The child widget that will be wrapped by the provider.
@@ -58,7 +74,9 @@ abstract class ProviderBase<T extends Object?> extends Widget {
     this.id,
     this.mode = InstanceManageMode.builder,
     this.init = false,
+    this.isLazy = false,
     this.child,
     this.builder,
+    this.lazyBuilder,
   }) : super(key: key);
 }

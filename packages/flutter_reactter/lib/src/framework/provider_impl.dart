@@ -17,25 +17,34 @@ class ProvideImpl<T extends Object?, I extends String?> extends ProviderBase<T>
     I? id,
     InstanceManageMode mode = InstanceManageMode.builder,
     bool init = false,
+    bool isLazy = false,
     Widget? child,
     InstanceChildBuilder<T>? builder,
+    ChildBuilder? lazyBuilder,
   }) : super(
           instanceBuilder,
           key: key,
           id: id,
           mode: mode,
           init: init,
+          isLazy: isLazy,
           child: child,
           builder: builder,
+          lazyBuilder: lazyBuilder,
         );
 
   @override
   Widget get child {
     return Builder(
       builder: (context) {
-        assert(super.child != null || builder != null);
+        assert(
+          super.child != null ||
+              (!super.isLazy && super.builder != null ||
+                  super.isLazy && super.lazyBuilder != null),
+        );
 
-        return builder?.call(context, context.use<T>(id), super.child) ??
+        return lazyBuilder?.call(context, super.child) ??
+            builder?.call(context, context.use<T>(id), super.child) ??
             super.child!;
       },
     );
@@ -128,6 +137,7 @@ class ProviderElement<T extends Object?> extends InheritedElement
     with ScopeElementMixin {
   Widget? prevChild;
   HashMap<ReactterInstance, ProviderElement<T>>? _inheritedElementsWithId;
+  bool _isLazyInstanceObtained = false;
 
   bool get isRoot {
     return Reactter.getHashCodeRefAt<T>(0, widget.id) == widget.ref.hashCode;
@@ -138,14 +148,24 @@ class ProviderElement<T extends Object?> extends InheritedElement
     return super.widget as ProvideImpl<T, String?>;
   }
 
-  T? get instance => Reactter.find<T>(widget.id);
+  T? get instance {
+    if (!_isLazyInstanceObtained && widget.isLazy) {
+      final instance = Reactter.get<T>(widget.id, widget.ref);
+
+      _isLazyInstanceObtained = instance != null;
+
+      return instance;
+    }
+
+    return Reactter.find<T>(widget.id);
+  }
 
   /// Creates an element that uses the given widget as its configuration.
   ProviderElement({
     required ProvideImpl<T, String?> widget,
     String? id,
   }) : super(widget) {
-    if (widget.init) {
+    if (widget.init && !widget.isLazy) {
       Reactter.create<T>(
         widget.instanceBuilder,
         id: widget.id,
@@ -165,7 +185,7 @@ class ProviderElement<T extends Object?> extends InheritedElement
 
   @override
   void mount(Element? parent, Object? newSlot) {
-    if (!widget.init) {
+    if (!widget.init && !widget.isLazy) {
       Reactter.get<T>(widget.id, widget.ref);
     }
 

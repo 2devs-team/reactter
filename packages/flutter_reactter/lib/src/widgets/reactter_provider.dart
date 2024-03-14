@@ -103,6 +103,24 @@ class ReactterProvider<T extends Object?> extends ProviderBase<T>
           builder: builder,
         );
 
+  /// {@macro reactter_provider}
+  const ReactterProvider.lazy(
+    InstanceBuilder<T> instanceBuilder, {
+    Key? key,
+    String? id,
+    InstanceManageMode mode = InstanceManageMode.builder,
+    Widget? child,
+    ChildBuilder? builder,
+  }) : super(
+          instanceBuilder,
+          key: key,
+          id: id,
+          mode: mode,
+          isLazy: true,
+          child: child,
+          lazyBuilder: builder,
+        );
+
   Widget buildWithChild(Widget? child) {
     if (id != null) {
       return ProvideImpl<T, WithId>(
@@ -112,7 +130,9 @@ class ReactterProvider<T extends Object?> extends ProviderBase<T>
         id: id,
         mode: mode,
         init: init,
+        isLazy: isLazy,
         builder: builder,
+        lazyBuilder: lazyBuilder,
         child: child,
       );
     }
@@ -122,7 +142,9 @@ class ReactterProvider<T extends Object?> extends ProviderBase<T>
       key: key,
       mode: mode,
       init: init,
+      isLazy: isLazy,
       builder: builder,
+      lazyBuilder: lazyBuilder,
       child: child,
     );
   }
