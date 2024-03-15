@@ -86,12 +86,12 @@ extension AryFunction1<T, A> on T Function(A) {
   T ary(Args1<A> args) => this.call(args.arg1);
 }
 
-extension AryFunction1_1<T, A, A2> on T Function(A, [A2]) {
+extension AryFunction1o1<T, A, A2> on T Function(A, [A2]) {
   /// Takes in two arguments and calls the function with those arguments.
   T ary(Args2<A, A2> args) => this.call(args.arg1, args.arg2);
 }
 
-extension AryFunction1_2<T, A, A2, A3> on T Function(A, [A2, A3]) {
+extension AryFunction1o2<T, A, A2, A3> on T Function(A, [A2, A3]) {
   /// Takes in three arguments and calls the function with those arguments.
   T ary(Args3<A, A2, A3> args) => this.call(args.arg1, args.arg2, args.arg3);
 }
@@ -101,7 +101,7 @@ extension AryFunction2<T, A, A2> on T Function(A, A2) {
   T ary(Args2<A, A2> args) => this.call(args.arg1, args.arg2);
 }
 
-extension AryFunction2_1<T, A, A2, A3> on T Function(A, A2, [A3]) {
+extension AryFunction2o1<T, A, A2, A3> on T Function(A, A2, [A3]) {
   /// Takes in three arguments and calls the function with those arguments.
   T ary(Args3<A, A2, A3> args) => this.call(args.arg1, args.arg2, args.arg3);
 }
