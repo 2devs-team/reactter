@@ -209,25 +209,21 @@ final test3Controller = UseInstance<Test3Controller>();
 class FakeInterceptorForCoverage<T, A> extends MemoInterceptor<T, A> {
   @override
   void onInit(Memo<T, A> memo, A args) {
-    // TODO: implement onInit
     super.onInit(memo, args);
   }
 
   @override
   void onValue(Memo<T, A> memo, A args, T value, bool fromCache) {
-    // TODO: implement onValue
     super.onValue(memo, args, value, fromCache);
   }
 
   @override
   void onError(Memo<T, A> memo, A args, Object error) {
-    // TODO: implement onError
     super.onError(memo, args, error);
   }
 
   @override
   void onFinish(Memo<T, A> memo, A args) {
-    // TODO: implement onFinish
     super.onFinish(memo, args);
   }
 }

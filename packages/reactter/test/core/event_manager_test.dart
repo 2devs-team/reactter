@@ -1,3 +1,5 @@
+// ignore_for_file: constant_identifier_names
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:reactter/reactter.dart';
 
@@ -281,15 +283,15 @@ void _testUnlistenEvent({bool withId = false}) {
 
   final testController = Reactter.create(() => TestController(), id: id)!;
 
-  void _onTestEvent(TestController? inst, String param) {
+  void onTestEvent(TestController? inst, String param) {
     countEvent1 += 1;
   }
 
-  void _onTestEvent2(TestController? inst, String param) {
+  void onTestEvent2(TestController? inst, String param) {
     countEvent2 += 1;
   }
 
-  Reactter.on(testController, Events.TestEvent, _onTestEvent);
+  Reactter.on(testController, Events.TestEvent, onTestEvent);
   Reactter.on(
     ReactterInstance<TestController>(id),
     Events.TestEvent,
@@ -301,7 +303,7 @@ void _testUnlistenEvent({bool withId = false}) {
   Reactter.on(
     ReactterInstance<TestController>(id),
     Events.TestEvent2,
-    _onTestEvent2,
+    onTestEvent2,
   );
 
   expect(countEvent1, 0);
@@ -330,7 +332,7 @@ void _testUnlistenEvent({bool withId = false}) {
   expect(countEvent1, 2);
   expect(countEvent2, 1);
 
-  Reactter.off(testController, Events.TestEvent, _onTestEvent);
+  Reactter.off(testController, Events.TestEvent, onTestEvent);
   Reactter.emit(
     ReactterInstance<TestController>(id),
     Events.TestEvent,
@@ -349,7 +351,7 @@ void _testUnlistenEvent({bool withId = false}) {
   Reactter.off(
     ReactterInstance<TestController>(id),
     Events.TestEvent2,
-    _onTestEvent2,
+    onTestEvent2,
   );
   Reactter.emit(testController, Events.TestEvent2, TEST_EVENT2_PARAM_NAME);
   Reactter.emit(

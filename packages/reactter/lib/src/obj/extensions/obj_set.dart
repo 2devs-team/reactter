@@ -133,7 +133,7 @@ extension ObjSetExt<E> on Obj<Set<E>> {
   /// characters.removeWhere((element) => element.startsWith('B'));
   /// print(characters); // {A, C}
   /// ```
-  void removeWhere(bool test(E element)) => value.removeWhere(test);
+  void removeWhere(bool Function(E element) test) => value.removeWhere(test);
 
   /// Removes all elements of this set that fail to satisfy [test].
   /// ```dart
@@ -142,7 +142,7 @@ extension ObjSetExt<E> on Obj<Set<E>> {
   ///     (element) => element.startsWith('B') || element.startsWith('C'));
   /// print(characters); // {B, C}
   /// ```
-  void retainWhere(bool test(E element)) => value.removeWhere(test);
+  void retainWhere(bool Function(E element) test) => value.removeWhere(test);
 
   /// Whether this set contains all the elements of [other].
   /// ```dart
@@ -343,7 +343,7 @@ extension ObjSetNullExt<E> on Obj<Set<E>?> {
   /// characters.removeWhere((element) => element.startsWith('B'));
   /// print(characters); // {A, C}
   /// ```
-  void removeWhere(bool test(E element)) => value?.removeWhere(test);
+  void removeWhere(bool Function(E element) test) => value?.removeWhere(test);
 
   /// Removes all elements of this set that fail to satisfy [test].
   /// ```dart
@@ -352,7 +352,7 @@ extension ObjSetNullExt<E> on Obj<Set<E>?> {
   ///     (element) => element.startsWith('B') || element.startsWith('C'));
   /// print(characters); // {B, C}
   /// ```
-  void retainWhere(bool test(E element)) => value?.removeWhere(test);
+  void retainWhere(bool Function(E element) test) => value?.removeWhere(test);
 
   /// Whether this set contains all the elements of [other].
   /// ```dart

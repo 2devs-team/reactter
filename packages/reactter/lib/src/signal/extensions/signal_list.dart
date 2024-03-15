@@ -153,7 +153,8 @@ extension SignalListExt<E> on Signal<List<E>> {
   /// numbers.sort((a, b) => a.length.compareTo(b.length));
   /// print(numbers); // [one, two, four, three] OR [two, one, four, three]
   /// ```
-  void sort([int compare(E a, E b)?]) => update((_) => value.sort(compare));
+  void sort([int Function(E a, E b)? compare]) =>
+      update((_) => value.sort(compare));
 
   /// Shuffles the elements of this list randomly.
   /// ```dart
@@ -247,9 +248,9 @@ extension SignalListExt<E> on Signal<List<E>> {
   /// print(parts); // [shoulders, knees, toes]
   /// ```
   bool remove(Object? valueToRemove) {
-    late bool _result;
-    update((_) => _result = value.remove(valueToRemove));
-    return _result;
+    late bool result;
+    update((_) => result = value.remove(valueToRemove));
+    return result;
   }
 
   /// Removes the object at position [index] from this list.
@@ -267,9 +268,9 @@ extension SignalListExt<E> on Signal<List<E>> {
   /// print(parts); // [head, shoulder, toes]
   /// ```
   E removeAt(int index) {
-    late E _result;
-    update((_) => _result = value.removeAt(index));
-    return _result;
+    late E result;
+    update((_) => result = value.removeAt(index));
+    return result;
   }
 
   /// Removes and returns the last object in this list.
@@ -281,9 +282,9 @@ extension SignalListExt<E> on Signal<List<E>> {
   /// print(parts); // [head, shoulder, knees]
   /// ```
   E removeLast() {
-    late E _result;
-    update((_) => _result = value.removeLast());
-    return _result;
+    late E result;
+    update((_) => result = value.removeLast());
+    return result;
   }
 
   /// Removes all objects from this list that satisfy [test].
@@ -295,7 +296,7 @@ extension SignalListExt<E> on Signal<List<E>> {
   /// print(numbers); // [three, four]
   /// ```
   /// The list must be growable.
-  void removeWhere(bool test(E element)) =>
+  void removeWhere(bool Function(E element) test) =>
       update((_) => value.removeWhere(test));
 
   /// Removes all objects from this list that fail to satisfy [test].
@@ -307,7 +308,7 @@ extension SignalListExt<E> on Signal<List<E>> {
   /// print(numbers); // [one, two]
   /// ```
   /// The list must be growable.
-  void retainWhere(bool test(E element)) =>
+  void retainWhere(bool Function(E element) test) =>
       update((_) => value.retainWhere(test));
 
   /// Writes some elements of [iterable] into a range of this list.
@@ -529,7 +530,7 @@ extension SignalListNullExt<E> on Signal<List<E>?> {
   /// numbers.sort((a, b) => a.length.compareTo(b.length));
   /// print(numbers); // [one, two, four, three] OR [two, one, four, three]
   /// ```
-  void sort([int compare(E a, E b)?]) {
+  void sort([int Function(E a, E b)? compare]) {
     if (value == null) return;
     update((_) => value?.sort(compare));
   }
@@ -639,9 +640,9 @@ extension SignalListNullExt<E> on Signal<List<E>?> {
   /// ```
   bool? remove(Object? valueToRemove) {
     if (value == null) return null;
-    late bool _result;
-    update((_) => _result = value!.remove(valueToRemove));
-    return _result;
+    late bool result;
+    update((_) => result = value!.remove(valueToRemove));
+    return result;
   }
 
   /// Removes the object at position [index] from this list.
@@ -660,9 +661,9 @@ extension SignalListNullExt<E> on Signal<List<E>?> {
   /// ```
   E? removeAt(int index) {
     if (value == null) return null;
-    late E _result;
-    update((_) => _result = value!.removeAt(index));
-    return _result;
+    late E result;
+    update((_) => result = value!.removeAt(index));
+    return result;
   }
 
   /// Removes and returns the last object in this list.
@@ -675,9 +676,9 @@ extension SignalListNullExt<E> on Signal<List<E>?> {
   /// ```
   E? removeLast() {
     if (value == null) return null;
-    late E? _result;
-    update((_) => _result = value!.removeLast());
-    return _result;
+    late E? result;
+    update((_) => result = value!.removeLast());
+    return result;
   }
 
   /// Removes all objects from this list that satisfy [test].
@@ -689,7 +690,7 @@ extension SignalListNullExt<E> on Signal<List<E>?> {
   /// print(numbers); // [three, four]
   /// ```
   /// The list must be growable.
-  void removeWhere(bool test(E element)) {
+  void removeWhere(bool Function(E element) test) {
     if (value == null) return;
     update((_) => value?.removeWhere(test));
   }
@@ -703,7 +704,7 @@ extension SignalListNullExt<E> on Signal<List<E>?> {
   /// print(numbers); // [one, two]
   /// ```
   /// The list must be growable.
-  void retainWhere(bool test(E element)) {
+  void retainWhere(bool Function(E element) test) {
     if (value == null) return;
     update((_) => value?.retainWhere(test));
   }

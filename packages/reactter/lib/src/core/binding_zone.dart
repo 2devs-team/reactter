@@ -12,7 +12,7 @@ class BindingZone {
   final _parentZone = _currentZone;
 
   /// It's used to store a collection of [StateBase].
-  final states = Set<StateBase>();
+  final states = <StateBase>{};
 
   /// Returns the current [BindingZone].
   static BindingZone? get currentZone => _currentZone;

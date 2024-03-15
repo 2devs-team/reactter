@@ -191,6 +191,7 @@ class UseInstance<T extends Object> extends ReactterHook {
   }
 
   /// Call when this hook is no longer needed.
+  @override
   void dispose() {
     if (_isDisposed) return;
 

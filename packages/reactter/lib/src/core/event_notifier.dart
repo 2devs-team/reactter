@@ -22,7 +22,7 @@ class EventNotifierRef {
   @override
   bool operator ==(Object other) {
     if (other is EventNotifierRef) {
-      if (other.event != this.event) {
+      if (other.event != event) {
         return false;
       }
 
@@ -64,7 +64,7 @@ class EventNotifier extends EventNotifierRef {
   static final List<Function?> _emptyListeners =
       List<Function?>.filled(0, null);
   List<Function?> _listeners = _emptyListeners;
-  final _listenersSingleUse = Set<Function>();
+  final _listenersSingleUse = <Function>{};
 
   int _notificationCallStackDepth = 0;
   int _reentrantlyRemovedListeners = 0;
@@ -90,7 +90,11 @@ class EventNotifier extends EventNotifierRef {
       instanceManager._getInstanceRegisterByInstanceRef(_instanceRef)?.instance;
 
   @override
-  int get hashCode => super.hashCode;
+  int get hashCode => Object.hash(
+        _instanceRef.hashCode,
+        _instanceObj.hashCode,
+        event.hashCode,
+      );
 
   @override
   bool operator ==(Object other) {

@@ -251,26 +251,28 @@ void main() {
 
       int nCalls = 0;
 
-      UseEffect(() {
-        return () {
-          nCalls += 1;
+      UseEffect(
+        () {
+          return () {
+            nCalls += 1;
 
-          if (nCalls == 1) {
-            expect(stateA.value, true);
-            expect(stateB.value, 0);
-            expect(stateC.value, "initial");
-          } else if (nCalls == 2) {
-            expect(stateA.value, true);
-            expect(stateB.value, 1);
-            expect(stateC.value, "initial");
-          } else if (nCalls == 3) {
-            expect(stateA.value, true);
-            expect(stateB.value, 1);
-            expect(stateC.value, "new value");
-          }
-        };
-      }, [stateA, stateB, stateC])
-        ..bind(UseEffectDispatchController());
+            if (nCalls == 1) {
+              expect(stateA.value, true);
+              expect(stateB.value, 0);
+              expect(stateC.value, "initial");
+            } else if (nCalls == 2) {
+              expect(stateA.value, true);
+              expect(stateB.value, 1);
+              expect(stateC.value, "initial");
+            } else if (nCalls == 3) {
+              expect(stateA.value, true);
+              expect(stateB.value, 1);
+              expect(stateC.value, "new value");
+            }
+          };
+        },
+        [stateA, stateB, stateC],
+      ).bind(UseEffectDispatchController());
 
       expect(nCalls, 0);
       stateA.value = !stateA.value;
@@ -290,8 +292,7 @@ void main() {
         return () {
           nCalls += 1;
         };
-      }, [])
-        ..bind(testController);
+      }, []).bind(testController);
 
       expect(nCalls, 0);
       expect(testController.nCleanupCalls1, 0);

@@ -39,12 +39,16 @@ part of 'framework.dart';
 /// See also:
 /// * [ReactterState], adds state management features to [ReactterHook].
 abstract class ReactterHook extends Hook implements ReactterState {
+  @override
   @internal
   InstanceManager get instanceManager => Reactter;
+  @override
   @internal
   StateManager get stateManager => Reactter;
+  @override
   @internal
   EventManager get eventManager => Reactter;
+  @override
   @internal
   Logger get logger => Reactter;
 

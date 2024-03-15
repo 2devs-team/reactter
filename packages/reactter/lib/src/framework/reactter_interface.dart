@@ -20,13 +20,17 @@ class ReactterInterface
   factory ReactterInterface() => _reactterInterface;
   ReactterInterface._();
 
+  @override
   @internal
   InstanceManager get instanceManager => this;
+  @override
   @internal
   EventManager get eventManager => this;
+  @override
   @internal
   Logger get logger => this;
 
+  @override
   LogWriterCallback get log => defaultLogWriterCallback;
 }
 

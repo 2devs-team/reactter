@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart' hide SearchBar;
+import 'package:flutter/material.dart';
 import 'package:flutter_reactter/flutter_reactter.dart';
 
 import 'controllers/api_controller.dart';

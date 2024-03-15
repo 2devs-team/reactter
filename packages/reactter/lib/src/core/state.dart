@@ -19,6 +19,7 @@ abstract class State implements StateBase {
       (_instanceBinded != null && eventManager._hasListeners(_instanceBinded));
 
   @mustCallSuper
+  @override
   void bind(Object instance) {
     assert(!_isDisposed, "Can't bind when it's been disposed");
     assert(
@@ -33,6 +34,7 @@ abstract class State implements StateBase {
     if (BindingZone.currentZone == null) _validateInstanceBinded();
   }
 
+  @override
   @mustCallSuper
   void unbind() {
     assert(!_isDisposed, "Can't unbind when it's been disposed");
@@ -47,6 +49,7 @@ abstract class State implements StateBase {
     _instanceBinded = null;
   }
 
+  @override
   @mustCallSuper
   void update(covariant Function fnUpdate) {
     assert(!_isDisposed, "Can't update when it's been disposed");
@@ -63,6 +66,7 @@ abstract class State implements StateBase {
     _isUpdating = false;
   }
 
+  @override
   @mustCallSuper
   void refresh() {
     assert(!_isDisposed, "Can't refresh when it's been disposed");
@@ -76,6 +80,7 @@ abstract class State implements StateBase {
     _isUpdating = false;
   }
 
+  @override
   @mustCallSuper
   void dispose() {
     _isDisposed = true;

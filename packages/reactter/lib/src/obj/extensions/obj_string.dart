@@ -326,7 +326,7 @@ extension ObjStringExt on Obj<String> {
   /// is replaced by the result of calling [replace] with the match object.
   ///
   /// The [startIndex] must be non-negative and no greater than [length].
-  String replaceFirstMapped(Pattern from, String replace(Match match),
+  String replaceFirstMapped(Pattern from, String Function(Match match) replace,
           [int startIndex = 0]) =>
       value.replaceFirstMapped(from, replace, startIndex);
 
@@ -842,7 +842,7 @@ extension ObjStringNullExt on Obj<String?> {
   /// is replaced by the result of calling [replace] with the match object.
   ///
   /// The [startIndex] must be non-negative and no greater than [length].
-  String? replaceFirstMapped(Pattern from, String replace(Match match),
+  String? replaceFirstMapped(Pattern from, String Function(Match match) replace,
           [int startIndex = 0]) =>
       value?.replaceFirstMapped(from, replace, startIndex);
 

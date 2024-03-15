@@ -91,7 +91,7 @@ extension ObjIterableExt<E> on Obj<Iterable<E>> {
   /// var values = products.map((product) => product['price'] as double);
   /// var totalPrice = values.fold(0.0, (a, b) => a + b); // 42.5.
   /// ```
-  Iterable<T> map<T>(T toElement(E e)) => value.map<T>(toElement);
+  Iterable<T> map<T>(T Function(E e) toElement) => value.map<T>(toElement);
 
   /// Returns a new lazy [Iterable] with all elements that satisfy the
   /// predicate [test].
@@ -113,7 +113,7 @@ extension ObjIterableExt<E> on Obj<Iterable<E>> {
   /// result = numbers.where((x) => x > 5); // (6, 7)
   /// result = numbers.where((x) => x.isEven); // (2, 6)
   /// ```
-  Iterable<E> where(bool test(E element)) => value.where(test);
+  Iterable<E> where(bool Function(E element) test) => value.where(test);
 
   /// Returns a new lazy [Iterable] with all elements that have type [T].
   ///
@@ -154,7 +154,7 @@ extension ObjIterableExt<E> on Obj<Iterable<E>> {
   ///   }
   /// }
   /// ```
-  Iterable<T> expand<T>(Iterable<T> toElements(E element)) =>
+  Iterable<T> expand<T>(Iterable<T> Function(E element) toElements) =>
       value.expand<T>(toElements);
 
   /// Whether the collection contains an element equal to [element].
@@ -193,7 +193,7 @@ extension ObjIterableExt<E> on Obj<Iterable<E>> {
   /// // 6
   /// // 7
   /// ```
-  void forEach(void action(E element)) => value.forEach(action);
+  void forEach(void Function(E element) action) => value.forEach(action);
 
   /// Reduces a collection to a single value by iteratively combining elements
   /// of the collection using the provided function.
@@ -217,7 +217,7 @@ extension ObjIterableExt<E> on Obj<Iterable<E>> {
   /// final result = numbers.reduce((value, element) => value + element);
   /// print(result); // 17.5
   /// ```
-  E reduce(E combine(E value, E element)) => value.reduce(combine);
+  E reduce(E Function(E value, E element) combine) => value.reduce(combine);
 
   /// Reduces a collection to a single value by iteratively combining each
   /// element of the collection with an existing value
@@ -240,7 +240,7 @@ extension ObjIterableExt<E> on Obj<Iterable<E>> {
   ///     initialValue, (previousValue, element) => previousValue + element);
   /// print(result); // 117.5
   /// ```
-  T fold<T>(T initialValue, T combine(T previousValue, E element)) =>
+  T fold<T>(T initialValue, T Function(T previousValue, E element) combine) =>
       value.fold<T>(initialValue, combine);
 
   /// Checks whether every element of this iterable satisfies [test].
@@ -255,7 +255,7 @@ extension ObjIterableExt<E> on Obj<Iterable<E>> {
   /// // Checks whether all keys are smaller than 1.
   /// final every = planetsByMass.keys.every((key) => key < 1.0); // true
   /// ```
-  bool every(bool test(E element)) => value.every(test);
+  bool every(bool Function(E element) test) => value.every(test);
 
   /// Converts each element to a [String] and concatenates the strings.
   ///
@@ -283,7 +283,7 @@ extension ObjIterableExt<E> on Obj<Iterable<E>> {
   /// var result = numbers.any((element) => element >= 5); // true;
   /// result = numbers.any((element) => element >= 10); // false;
   /// ```
-  bool any(bool test(E element)) => value.any(test);
+  bool any(bool Function(E element) test) => value.any(test);
 
   /// Creates a [List] containing the elements of this [Iterable].
   ///
@@ -380,7 +380,7 @@ extension ObjIterableExt<E> on Obj<Iterable<E>> {
   /// result = numbers.takeWhile((x) => x != 4); // (1, 2, 3, 5, 6, 7)
   /// result = numbers.takeWhile((x) => x.isOdd); // (1)
   /// ```
-  Iterable<E> takeWhile(bool test(E value)) => value.takeWhile(test);
+  Iterable<E> takeWhile(bool Function(E value) test) => value.takeWhile(test);
 
   /// Returns an [Iterable] that provides all but the first [count] elements.
   ///
@@ -424,7 +424,7 @@ extension ObjIterableExt<E> on Obj<Iterable<E>> {
   /// result = numbers.skipWhile((x) => x != 4); // ()
   /// result = numbers.skipWhile((x) => x.isOdd); // (2, 3, 5, 6, 7)
   /// ```
-  Iterable<E> skipWhile(bool test(E value)) => value.skipWhile(test);
+  Iterable<E> skipWhile(bool Function(E value) test) => value.skipWhile(test);
 
   /// Returns the first element.
   ///
@@ -464,7 +464,7 @@ extension ObjIterableExt<E> on Obj<Iterable<E>> {
   /// If no element satisfies [test], the result of invoking the [orElse]
   /// function is returned.
   /// If [orElse] is omitted, it defaults to throwing a [StateError].
-  E firstWhere(bool test(E element), {E orElse()?}) =>
+  E firstWhere(bool Function(E element) test, {E Function()? orElse}) =>
       value.firstWhere(test, orElse: orElse);
 
   /// Returns the last element that satisfies the given predicate [test].
@@ -488,7 +488,7 @@ extension ObjIterableExt<E> on Obj<Iterable<E>> {
   /// If no element satisfies [test], the result of invoking the [orElse]
   /// function is returned.
   /// If [orElse] is omitted, it defaults to throwing a [StateError].
-  E lastWhere(bool test(E element), {E orElse()?}) =>
+  E lastWhere(bool Function(E element) test, {E Function()? orElse}) =>
       value.lastWhere(test, orElse: orElse);
 
   /// Returns the single element that satisfies [test].
@@ -514,7 +514,7 @@ extension ObjIterableExt<E> on Obj<Iterable<E>> {
   /// ```dart continued
   /// result = numbers.singleWhere((element) => element == 2); // Throws Error.
   /// ```
-  E singleWhere(bool test(E element), {E orElse()?}) =>
+  E singleWhere(bool Function(E element) test, {E Function()? orElse}) =>
       value.singleWhere(test, orElse: orElse);
 
   /// Returns the [index]th element.
@@ -625,7 +625,7 @@ extension ObjIterableNullExt<E> on Obj<Iterable<E>?> {
   /// var values = products.map((product) => product['price'] as double);
   /// var totalPrice = values.fold(0.0, (a, b) => a + b); // 42.5.
   /// ```
-  Iterable<T>? map<T>(T toElement(E e)) => value?.map<T>(toElement);
+  Iterable<T>? map<T>(T Function(E e) toElement) => value?.map<T>(toElement);
 
   /// Returns a new lazy [Iterable] with all elements that satisfy the
   /// predicate [test].
@@ -647,7 +647,7 @@ extension ObjIterableNullExt<E> on Obj<Iterable<E>?> {
   /// result = numbers.where((x) => x > 5); // (6, 7)
   /// result = numbers.where((x) => x.isEven); // (2, 6)
   /// ```
-  Iterable<E>? where(bool test(E element)) => value?.where(test);
+  Iterable<E>? where(bool Function(E element) test) => value?.where(test);
 
   /// Returns a new lazy [Iterable] with all elements that have type [T].
   ///
@@ -688,7 +688,7 @@ extension ObjIterableNullExt<E> on Obj<Iterable<E>?> {
   ///   }
   /// }
   /// ```
-  Iterable<T>? expand<T>(Iterable<T> toElements(E element)) =>
+  Iterable<T>? expand<T>(Iterable<T> Function(E element) toElements) =>
       value?.expand<T>(toElements);
 
   /// Whether the collection contains an element equal to [element].
@@ -727,7 +727,7 @@ extension ObjIterableNullExt<E> on Obj<Iterable<E>?> {
   /// // 6
   /// // 7
   /// ```
-  void forEach(void action(E element)) => value?.forEach(action);
+  void forEach(void Function(E element) action) => value?.forEach(action);
 
   /// Reduces a collection to a single value by iteratively combining elements
   /// of the collection using the provided function.
@@ -751,7 +751,7 @@ extension ObjIterableNullExt<E> on Obj<Iterable<E>?> {
   /// final result = numbers.reduce((value, element) => value + element);
   /// print(result); // 17.5
   /// ```
-  E? reduce(E combine(E value, E element)) => value?.reduce(combine);
+  E? reduce(E Function(E value, E element) combine) => value?.reduce(combine);
 
   /// Reduces a collection to a single value by iteratively combining each
   /// element of the collection with an existing value
@@ -774,7 +774,7 @@ extension ObjIterableNullExt<E> on Obj<Iterable<E>?> {
   ///     initialValue, (previousValue, element) => previousValue + element);
   /// print(result); // 117.5
   /// ```
-  T? fold<T>(T initialValue, T combine(T previousValue, E element)) =>
+  T? fold<T>(T initialValue, T Function(T previousValue, E element) combine) =>
       value?.fold<T>(initialValue, combine);
 
   /// Checks whether every element of this iterable satisfies [test].
@@ -789,7 +789,7 @@ extension ObjIterableNullExt<E> on Obj<Iterable<E>?> {
   /// // Checks whether all keys are smaller than 1.
   /// final every = planetsByMass.keys.every((key) => key < 1.0); // true
   /// ```
-  bool? every(bool test(E element)) => value?.every(test);
+  bool? every(bool Function(E element) test) => value?.every(test);
 
   /// Converts each element to a [String] and concatenates the strings.
   ///
@@ -817,7 +817,7 @@ extension ObjIterableNullExt<E> on Obj<Iterable<E>?> {
   /// var result = numbers.any((element) => element >= 5); // true;
   /// result = numbers.any((element) => element >= 10); // false;
   /// ```
-  bool? any(bool test(E element)) => value?.any(test);
+  bool? any(bool Function(E element) test) => value?.any(test);
 
   /// Creates a [List] containing the elements of this [Iterable].
   ///
@@ -914,7 +914,7 @@ extension ObjIterableNullExt<E> on Obj<Iterable<E>?> {
   /// result = numbers.takeWhile((x) => x != 4); // (1, 2, 3, 5, 6, 7)
   /// result = numbers.takeWhile((x) => x.isOdd); // (1)
   /// ```
-  Iterable<E>? takeWhile(bool test(E value)) => value?.takeWhile(test);
+  Iterable<E>? takeWhile(bool Function(E value) test) => value?.takeWhile(test);
 
   /// Returns an [Iterable] that provides all but the first [count] elements.
   ///
@@ -958,7 +958,7 @@ extension ObjIterableNullExt<E> on Obj<Iterable<E>?> {
   /// result = numbers.skipWhile((x) => x != 4); // ()
   /// result = numbers.skipWhile((x) => x.isOdd); // (2, 3, 5, 6, 7)
   /// ```
-  Iterable<E>? skipWhile(bool test(E value)) => value?.skipWhile(test);
+  Iterable<E>? skipWhile(bool Function(E value) test) => value?.skipWhile(test);
 
   /// Returns the first element.
   ///
@@ -998,7 +998,7 @@ extension ObjIterableNullExt<E> on Obj<Iterable<E>?> {
   /// If no element satisfies [test], the result of invoking the [orElse]
   /// function is returned.
   /// If [orElse] is omitted, it defaults to throwing a [StateError].
-  E? firstWhere(bool test(E element), {E orElse()?}) =>
+  E? firstWhere(bool Function(E element) test, {E Function()? orElse}) =>
       value?.firstWhere(test, orElse: orElse);
 
   /// Returns the last element that satisfies the given predicate [test].
@@ -1022,7 +1022,7 @@ extension ObjIterableNullExt<E> on Obj<Iterable<E>?> {
   /// If no element satisfies [test], the result of invoking the [orElse]
   /// function is returned.
   /// If [orElse] is omitted, it defaults to throwing a [StateError].
-  E? lastWhere(bool test(E element), {E orElse()?}) =>
+  E? lastWhere(bool Function(E element) test, {E Function()? orElse}) =>
       value?.lastWhere(test, orElse: orElse);
 
   /// Returns the single element that satisfies [test].
@@ -1048,7 +1048,7 @@ extension ObjIterableNullExt<E> on Obj<Iterable<E>?> {
   /// ```dart continued
   /// result = numbers.singleWhere((element) => element == 2); // Throws Error.
   /// ```
-  E? singleWhere(bool test(E element), {E orElse()?}) =>
+  E? singleWhere(bool Function(E element) test, {E Function()? orElse}) =>
       value?.singleWhere(test, orElse: orElse);
 
   /// Returns the [index]th element.

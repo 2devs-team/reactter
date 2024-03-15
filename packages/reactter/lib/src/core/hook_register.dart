@@ -4,7 +4,7 @@ part of 'core.dart';
 class HookRegister extends BindingZone {
   /// Stores the instance of the [Hook] and attaches the previously collected states to it.
   void end(Hook hook) {
-    this.bindInstanceToStates(hook);
+    bindInstanceToStates(hook);
     BindingZone.recollectState(hook);
   }
 }

@@ -108,6 +108,7 @@ class Signal<T> extends ReactterStateImpl with ObjBase<T> implements Obj<T> {
   /// Gets and/or sets to [value] like a function
   /// This method doesn't allow setting its value to null.
   /// If you need to set null as value, use `.value = null`.
+  @override
   T call([T? val]) {
     assert(!isDisposed, "You can call when it's been disposed");
 
@@ -117,7 +118,7 @@ class Signal<T> extends ReactterStateImpl with ObjBase<T> implements Obj<T> {
   }
 
   @override
-  void update(void fnUpdate(T value)) {
+  void update(void Function(T value) fnUpdate) {
     super.update(() => fnUpdate(value));
   }
 

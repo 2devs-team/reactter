@@ -54,16 +54,16 @@ extension SignalMapExt<K, V> on Signal<Map<K, V>> {
   /// largestPlanets.update(8, (value) => 'New', ifAbsent: () => 'Mercury');
   /// print(largestPlanets); // {1: Jupiter, 2: Saturn, 3: Neptune, 8: Mercury}
   /// ```
-  V updateMap(K key, V fnUpdate(V value), {V ifAbsent()?}) {
-    late V _result;
+  V updateMap(K key, V Function(V value) fnUpdate, {V Function()? ifAbsent}) {
+    late V result;
     update(
-      (_) => _result = value.update(
+      (_) => result = value.update(
         key,
         fnUpdate,
         ifAbsent: ifAbsent,
       ),
     );
-    return _result;
+    return result;
   }
 
   /// Updates all values.
@@ -75,7 +75,7 @@ extension SignalMapExt<K, V> on Signal<Map<K, V>> {
   /// terrestrial.updateAll((key, value) => value.toUpperCase());
   /// print(terrestrial); // {1: MERCURY, 2: VENUS, 3: EARTH}
   /// ```
-  void updateAll(V fnUpdate(K key, V value)) =>
+  void updateAll(V Function(K key, V value) fnUpdate) =>
       update((_) => value.updateAll(fnUpdate));
 
   /// Removes all entries of this map that satisfy the given [test].
@@ -84,7 +84,7 @@ extension SignalMapExt<K, V> on Signal<Map<K, V>> {
   /// terrestrial.removeWhere((key, value) => value.startsWith('E'));
   /// print(terrestrial); // {1: Mercury, 2: Venus}
   /// ```
-  void removeWhere(bool test(K key, V value)) =>
+  void removeWhere(bool Function(K key, V value) test) =>
       update((_) => value.removeWhere(test));
 
   /// Look up the value of [key], or add a new entry if it isn't there.
@@ -107,10 +107,10 @@ extension SignalMapExt<K, V> on Signal<Map<K, V>> {
   /// print(diameters); // {1.0: Earth, 0.383: Mercury, 0.949: Venus}
   /// ```
   /// Calling [ifAbsent] must not add or remove keys from the map.
-  V putIfAbsent(K key, V ifAbsent()) {
-    late V _result;
-    update((_) => _result = value.putIfAbsent(key, ifAbsent));
-    return _result;
+  V putIfAbsent(K key, V Function() ifAbsent) {
+    late V result;
+    update((_) => result = value.putIfAbsent(key, ifAbsent));
+    return result;
   }
 
   /// Adds all key/value pairs of [other] to this map.
@@ -140,9 +140,9 @@ extension SignalMapExt<K, V> on Signal<Map<K, V>> {
   /// print(terrestrial); // {1: Mercury, 3: Earth}
   /// ```
   V? remove(Object? key) {
-    late V? _result;
-    update((_) => _result = value.remove(key));
-    return _result;
+    late V? result;
+    update((_) => result = value.remove(key));
+    return result;
   }
 
   /// Removes all entries from the map.
@@ -161,7 +161,7 @@ extension SignalMapNullExt<K, V> on Signal<Map<K, V>?> {
   /// If the key was already in the map, its associated value is changed.
   /// Otherwise the key/value pair is added to the map.
   void operator []=(K key, V valueToSet) {
-    if (value == null) return null;
+    if (value == null) return;
     update((_) => value?[key] = valueToSet);
   }
 
@@ -184,7 +184,7 @@ extension SignalMapNullExt<K, V> on Signal<Map<K, V>?> {
   /// //  7: Uranus, 8: Neptune}
   /// ```
   void addEntries(Iterable<MapEntry<K, V>> newEntries) {
-    if (value == null) return null;
+    if (value == null) return;
     update((_) => value!.addEntries(newEntries));
   }
 
@@ -212,17 +212,17 @@ extension SignalMapNullExt<K, V> on Signal<Map<K, V>?> {
   /// largestPlanets.update(8, (value) => 'New', ifAbsent: () => 'Mercury');
   /// print(largestPlanets); // {1: Jupiter, 2: Saturn, 3: Neptune, 8: Mercury}
   /// ```
-  V? updateMap(K key, V fnUpdate(V value), {V ifAbsent()?}) {
+  V? updateMap(K key, V Function(V value) fnUpdate, {V Function()? ifAbsent}) {
     if (value == null) return null;
-    late V _result;
+    late V result;
     update(
-      (_) => _result = value!.update(
+      (_) => result = value!.update(
         key,
         fnUpdate,
         ifAbsent: ifAbsent,
       ),
     );
-    return _result;
+    return result;
   }
 
   /// Updates all values.
@@ -234,8 +234,8 @@ extension SignalMapNullExt<K, V> on Signal<Map<K, V>?> {
   /// terrestrial.updateAll((key, value) => value.toUpperCase());
   /// print(terrestrial); // {1: MERCURY, 2: VENUS, 3: EARTH}
   /// ```
-  void updateAll(V fnUpdate(K key, V value)) {
-    if (value == null) return null;
+  void updateAll(V Function(K key, V value) fnUpdate) {
+    if (value == null) return;
     update((_) => value!.updateAll(fnUpdate));
   }
 
@@ -245,8 +245,8 @@ extension SignalMapNullExt<K, V> on Signal<Map<K, V>?> {
   /// terrestrial.removeWhere((key, value) => value.startsWith('E'));
   /// print(terrestrial); // {1: Mercury, 2: Venus}
   /// ```
-  void removeWhere(bool test(K key, V value)) {
-    if (value == null) return null;
+  void removeWhere(bool Function(K key, V value) test) {
+    if (value == null) return;
     update((_) => value!.removeWhere(test));
   }
 
@@ -270,11 +270,11 @@ extension SignalMapNullExt<K, V> on Signal<Map<K, V>?> {
   /// print(diameters); // {1.0: Earth, 0.383: Mercury, 0.949: Venus}
   /// ```
   /// Calling [ifAbsent] must not add or remove keys from the map.
-  V? putIfAbsent(K key, V ifAbsent()) {
+  V? putIfAbsent(K key, V Function() ifAbsent) {
     if (value == null) return null;
-    late V _result;
-    update((_) => _result = value!.putIfAbsent(key, ifAbsent));
-    return _result;
+    late V result;
+    update((_) => result = value!.putIfAbsent(key, ifAbsent));
+    return result;
   }
 
   /// Adds all key/value pairs of [other] to this map.
@@ -290,7 +290,7 @@ extension SignalMapNullExt<K, V> on Signal<Map<K, V>?> {
   /// print(planets); // {1: Mercury, 2: Earth, 5: Jupiter, 6: Saturn}
   /// ```
   void addAll(Map<K, V> other) {
-    if (value == null) return null;
+    if (value == null) return;
     update((_) => value!.addAll(other));
   }
 
@@ -308,9 +308,9 @@ extension SignalMapNullExt<K, V> on Signal<Map<K, V>?> {
   /// ```
   V? remove(Object? key) {
     if (value == null) return null;
-    late V? _result;
-    update((_) => _result = value!.remove(key));
-    return _result;
+    late V? result;
+    update((_) => result = value!.remove(key));
+    return result;
   }
 
   /// Removes all entries from the map.
@@ -321,7 +321,7 @@ extension SignalMapNullExt<K, V> on Signal<Map<K, V>?> {
   /// planets.clear(); // {}
   /// ```
   void clear() {
-    if (value == null) return null;
+    if (value == null) return;
     update((_) => value!.clear());
   }
 }

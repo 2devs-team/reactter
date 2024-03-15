@@ -28,9 +28,9 @@ extension SignalSetExt<E> on Signal<Set<E>> {
   /// print(dateTimes.length);
   /// ```
   bool add(E valueToAdd) {
-    late bool _result;
-    update((_) => _result = value.add(valueToAdd));
-    return _result;
+    late bool result;
+    update((_) => result = value.add(valueToAdd));
+    return result;
   }
 
   /// Adds all [elements] to this set.
@@ -55,9 +55,9 @@ extension SignalSetExt<E> on Signal<Set<E>> {
   /// print(characters); // {A, C}
   /// ```
   bool remove(Object? valueToRemove) {
-    late bool _result;
-    update((_) => _result = value.remove(valueToRemove));
-    return _result;
+    late bool result;
+    update((_) => result = value.remove(valueToRemove));
+    return result;
   }
 
   /// Removes each element of [elements] from this set.
@@ -89,7 +89,7 @@ extension SignalSetExt<E> on Signal<Set<E>> {
   /// characters.removeWhere((element) => element.startsWith('B'));
   /// print(characters); // {A, C}
   /// ```
-  void removeWhere(bool test(E element)) =>
+  void removeWhere(bool Function(E element) test) =>
       update((_) => value.removeWhere(test));
 
   /// Removes all elements of this set that fail to satisfy [test].
@@ -99,7 +99,7 @@ extension SignalSetExt<E> on Signal<Set<E>> {
   ///     (element) => element.startsWith('B') || element.startsWith('C'));
   /// print(characters); // {B, C}
   /// ```
-  void retainWhere(bool test(E element)) =>
+  void retainWhere(bool Function(E element) test) =>
       update((_) => value.removeWhere(test));
 
   /// Removes all elements from the set.
@@ -138,9 +138,9 @@ extension SignalSetNullExt<E> on Signal<Set<E>?> {
   /// ```
   bool? add(E valueToAdd) {
     if (value == null) return null;
-    late bool _result;
-    update((_) => _result = value!.add(valueToAdd));
-    return _result;
+    late bool result;
+    update((_) => result = value!.add(valueToAdd));
+    return result;
   }
 
   /// Adds all [elements] to this set.
@@ -153,7 +153,7 @@ extension SignalSetNullExt<E> on Signal<Set<E>?> {
   /// print(characters); // {A, B, C}
   /// ```
   void addAll(Iterable<E> elements) {
-    if (value == null) return null;
+    if (value == null) return;
     update((_) => value!.addAll(elements));
   }
 
@@ -169,9 +169,9 @@ extension SignalSetNullExt<E> on Signal<Set<E>?> {
   /// ```
   bool? remove(Object? valueToRemove) {
     if (value == null) return null;
-    late bool _result;
-    update((_) => _result = value!.remove(valueToRemove));
-    return _result;
+    late bool result;
+    update((_) => result = value!.remove(valueToRemove));
+    return result;
   }
 
   /// Removes each element of [elements] from this set.
@@ -181,7 +181,7 @@ extension SignalSetNullExt<E> on Signal<Set<E>?> {
   /// print(characters); // {C}
   /// ```
   void removeAll(Iterable<Object?> elements) {
-    if (value == null) return null;
+    if (value == null) return;
     update((_) => value!.removeAll(elements));
   }
 
@@ -197,7 +197,7 @@ extension SignalSetNullExt<E> on Signal<Set<E>?> {
   /// print(characters); // {A, B}
   /// ```
   void retainAll(Iterable<Object?> elements) {
-    if (value == null) return null;
+    if (value == null) return;
     update((_) => value!.retainAll(elements));
   }
 
@@ -207,8 +207,8 @@ extension SignalSetNullExt<E> on Signal<Set<E>?> {
   /// characters.removeWhere((element) => element.startsWith('B'));
   /// print(characters); // {A, C}
   /// ```
-  void removeWhere(bool test(E element)) {
-    if (value == null) return null;
+  void removeWhere(bool Function(E element) test) {
+    if (value == null) return;
     update((_) => value!.removeWhere(test));
   }
 
@@ -219,8 +219,8 @@ extension SignalSetNullExt<E> on Signal<Set<E>?> {
   ///     (element) => element.startsWith('B') || element.startsWith('C'));
   /// print(characters); // {B, C}
   /// ```
-  void retainWhere(bool test(E element)) {
-    if (value == null) return null;
+  void retainWhere(bool Function(E element) test) {
+    if (value == null) return;
     update((_) => value!.removeWhere(test));
   }
 
@@ -230,7 +230,7 @@ extension SignalSetNullExt<E> on Signal<Set<E>?> {
   /// characters.clear(); // {}
   /// ```
   void clear() {
-    if (value == null) return null;
+    if (value == null) return;
     update((_) => value!.clear());
   }
 }

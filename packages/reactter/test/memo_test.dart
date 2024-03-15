@@ -240,7 +240,9 @@ void main() {
 
       try {
         memo(Args1(ArgumentError()));
-      } catch (e) {}
+      } catch (e) {
+        expect(e, isArgumentError);
+      }
 
       expect(nCallOnInit, 4 * nInterceptors);
       expect(nCallOnValue, 3 * nInterceptors);

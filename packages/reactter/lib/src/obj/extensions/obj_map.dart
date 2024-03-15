@@ -68,7 +68,7 @@ extension ObjMapExt<K, V> on Obj<Map<K, V>> {
 
   /// Returns a new map where all entries of this map are transformed by
   /// the given [convert] function.
-  Map<K2, V2> map<K2, V2>(MapEntry<K2, V2> convert(K key, V value)) =>
+  Map<K2, V2> map<K2, V2>(MapEntry<K2, V2> Function(K key, V value) convert) =>
       value.map<K2, V2>(convert);
 
   /// Adds all key/value pairs of [newEntries] to this map.
@@ -116,7 +116,7 @@ extension ObjMapExt<K, V> on Obj<Map<K, V>> {
   /// largestPlanets.update(8, (value) => 'New', ifAbsent: () => 'Mercury');
   /// print(largestPlanets); // {1: Jupiter, 2: Saturn, 3: Neptune, 8: Mercury}
   /// ```
-  V updateMap(K key, V update(V value), {V ifAbsent()?}) =>
+  V updateMap(K key, V Function(V value) update, {V Function()? ifAbsent}) =>
       value.update(key, update, ifAbsent: ifAbsent);
 
   /// Updates all values.
@@ -128,7 +128,7 @@ extension ObjMapExt<K, V> on Obj<Map<K, V>> {
   /// terrestrial.updateAll((key, value) => value.toUpperCase());
   /// print(terrestrial); // {1: MERCURY, 2: VENUS, 3: EARTH}
   /// ```
-  void updateAll(V update(K key, V value)) => value.updateAll(update);
+  void updateAll(V Function(K key, V value) update) => value.updateAll(update);
 
   /// Removes all entries of this map that satisfy the given [test].
   /// ```dart
@@ -136,7 +136,7 @@ extension ObjMapExt<K, V> on Obj<Map<K, V>> {
   /// terrestrial.removeWhere((key, value) => value.startsWith('E'));
   /// print(terrestrial); // {1: Mercury, 2: Venus}
   /// ```
-  void removeWhere(bool test(K key, V value)) => value.removeWhere(test);
+  void removeWhere(bool Function(K key, V value) test) => value.removeWhere(test);
 
   /// Look up the value of [key], or add a new entry if it isn't there.
   ///
@@ -158,7 +158,7 @@ extension ObjMapExt<K, V> on Obj<Map<K, V>> {
   /// print(diameters); // {1.0: Earth, 0.383: Mercury, 0.949: Venus}
   /// ```
   /// Calling [ifAbsent] must not add or remove keys from the map.
-  V putIfAbsent(K key, V ifAbsent()) => value.putIfAbsent(key, ifAbsent);
+  V putIfAbsent(K key, V Function() ifAbsent) => value.putIfAbsent(key, ifAbsent);
 
   /// Adds all key/value pairs of [other] to this map.
   ///
@@ -212,7 +212,7 @@ extension ObjMapExt<K, V> on Obj<Map<K, V>> {
   ///   // 17.15: Neptune
   /// });
   /// ```
-  void forEach(void action(K key, V value)) => value.forEach(action);
+  void forEach(void Function(K key, V value) action) => value.forEach(action);
 
   /// The keys of [this].
   ///
@@ -315,7 +315,7 @@ extension ObjMapNullExt<K, V> on Obj<Map<K, V>?> {
 
   /// Returns a new map where all entries of this map are transformed by
   /// the given [convert] function.
-  Map<K2, V2>? map<K2, V2>(MapEntry<K2, V2> convert(K key, V value)) =>
+  Map<K2, V2>? map<K2, V2>(MapEntry<K2, V2> Function(K key, V value) convert) =>
       value?.map<K2, V2>(convert);
 
   /// Adds all key/value pairs of [newEntries] to this map.
@@ -363,7 +363,7 @@ extension ObjMapNullExt<K, V> on Obj<Map<K, V>?> {
   /// largestPlanets.update(8, (value) => 'New', ifAbsent: () => 'Mercury');
   /// print(largestPlanets); // {1: Jupiter, 2: Saturn, 3: Neptune, 8: Mercury}
   /// ```
-  V? updateMap(K key, V update(V value), {V ifAbsent()?}) =>
+  V? updateMap(K key, V Function(V value) update, {V Function()? ifAbsent}) =>
       value?.update(key, update, ifAbsent: ifAbsent);
 
   /// Updates all values.
@@ -375,7 +375,7 @@ extension ObjMapNullExt<K, V> on Obj<Map<K, V>?> {
   /// terrestrial.updateAll((key, value) => value.toUpperCase());
   /// print(terrestrial); // {1: MERCURY, 2: VENUS, 3: EARTH}
   /// ```
-  void updateAll(V update(K key, V value)) => value?.updateAll(update);
+  void updateAll(V Function(K key, V value) update) => value?.updateAll(update);
 
   /// Removes all entries of this map that satisfy the given [test].
   /// ```dart
@@ -383,7 +383,7 @@ extension ObjMapNullExt<K, V> on Obj<Map<K, V>?> {
   /// terrestrial.removeWhere((key, value) => value.startsWith('E'));
   /// print(terrestrial); // {1: Mercury, 2: Venus}
   /// ```
-  void removeWhere(bool test(K key, V value)) => value?.removeWhere(test);
+  void removeWhere(bool Function(K key, V value) test) => value?.removeWhere(test);
 
   /// Look up the value of [key], or add a new entry if it isn't there.
   ///
@@ -405,7 +405,7 @@ extension ObjMapNullExt<K, V> on Obj<Map<K, V>?> {
   /// print(diameters); // {1.0: Earth, 0.383: Mercury, 0.949: Venus}
   /// ```
   /// Calling [ifAbsent] must not add or remove keys from the map.
-  V? putIfAbsent(K key, V ifAbsent()) => value?.putIfAbsent(key, ifAbsent);
+  V? putIfAbsent(K key, V Function() ifAbsent) => value?.putIfAbsent(key, ifAbsent);
 
   /// Adds all key/value pairs of [other] to this map.
   ///
@@ -459,7 +459,7 @@ extension ObjMapNullExt<K, V> on Obj<Map<K, V>?> {
   ///   // 17.15: Neptune
   /// });
   /// ```
-  void forEach(void action(K key, V value)) => value?.forEach(action);
+  void forEach(void Function(K key, V value) action) => value?.forEach(action);
 
   /// The keys of [this].
   ///

@@ -27,8 +27,8 @@ void main() {
     test("should notifies when its value is changed", () {
       final signal = Signal("initial");
 
-      late final willUpdateChecked;
-      late final didUpdateChecked;
+      late final bool willUpdateChecked;
+      late final bool didUpdateChecked;
 
       Reactter.one(signal, Lifecycle.willUpdate, (_, __) {
         willUpdateChecked = true;
@@ -45,8 +45,8 @@ void main() {
 
     test("should be updated", () {
       final signal = Signal("initial");
-      late final willUpdateChecked;
-      late final didUpdateChecked;
+      late final bool willUpdateChecked;
+      late final bool didUpdateChecked;
 
       Reactter.one(signal, Lifecycle.willUpdate, (_, __) {
         willUpdateChecked = true;
@@ -79,8 +79,8 @@ void main() {
     });
 
     test("should be able to used on instance", () {
-      late final willUpdateChecked;
-      late final didUpdateChecked;
+      late final bool willUpdateChecked;
+      late final bool didUpdateChecked;
 
       final testController =
           Reactter.create<TestController>(() => TestController())!;
@@ -109,8 +109,8 @@ void main() {
     });
 
     test("should be able to used on instance with nested way", () {
-      late final willUpdateChecked;
-      late final didUpdateChecked;
+      late final bool willUpdateChecked;
+      late final bool didUpdateChecked;
 
       final test2Controller = Reactter.create(() => Test2Controller())!;
       final testController = test2Controller.testController.instance!;
@@ -160,8 +160,6 @@ void main() {
 }
 
 class SignalTestController extends TestController {
-  final signalString = Signal("initial");
-
   SignalTestController() {
     signalString.bind(TestController());
   }

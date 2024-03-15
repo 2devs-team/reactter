@@ -35,7 +35,7 @@ abstract class StateManager<S extends StateBase> {
   /// }
   /// ```
   /// {@endtemplate}
-  T lazyState<T extends S>(T buildState(), Object instance) {
+  T lazyState<T extends S>(T Function() buildState, Object instance) {
     final zone = BindingZone();
 
     try {
@@ -68,7 +68,7 @@ abstract class StateManager<S extends StateBase> {
   /// print(computed.value); // 1 -> because the state change is not tracked
   /// ```
   /// {@endtemplate}
-  T untracked<T>(T callback()) {
+  T untracked<T>(T Function() callback) {
     if (_isUntrackedRunning) {
       return callback();
     }
@@ -110,7 +110,7 @@ abstract class StateManager<S extends StateBase> {
   /// print(computed.value); // 3 -> because the batch operation is completed.
   /// ```
   /// {@endtemplate}
-  T batch<T>(T callback()) {
+  T batch<T>(T Function() callback) {
     if (_isBatchRunning) {
       return callback();
     }

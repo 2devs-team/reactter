@@ -12,6 +12,7 @@ class TemporaryCacheMemo<T, A> extends MemoInterceptor<T, A> {
   /// {@macro temporary_cache_memo}
   const TemporaryCacheMemo(this.duration);
 
+  @override
   void onValue(Memo<T, A> memo, A arg, T value, bool fromCache) {
     if (!fromCache) {
       Future.delayed(duration, () => memo.remove(arg));

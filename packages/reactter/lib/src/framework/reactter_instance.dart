@@ -4,7 +4,5 @@ part of 'framework.dart';
 ///
 /// This class extends [InstanceRef] and provides an optional [id] parameter.
 class ReactterInstance<T> extends InstanceRef<T> {
-  final String? id;
-
-  const ReactterInstance([this.id]);
+  const ReactterInstance([String? id]) : super(id);
 }

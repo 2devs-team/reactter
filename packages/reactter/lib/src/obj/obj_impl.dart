@@ -33,6 +33,7 @@ part of 'obj.dart';
 /// ```
 /// {@endtemplate}
 class Obj<T> with ObjBase<T> {
+  @override
   T value;
 
   /// {@macro obj}
@@ -62,9 +63,12 @@ abstract class ObjBase<T> {
   /// print(obj == objCopy); // true
   /// ```
   ///
+  @override
   bool operator ==(Object other) =>
       other is Obj<T> ? identical(this, other) : value == other;
 
+  @override
+  // ignore: unnecessary_overrides
   int get hashCode => super.hashCode;
 
   /// Gets and/or sets to [value] like a function

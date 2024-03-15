@@ -173,7 +173,7 @@ extension ObjListExt<E> on Obj<List<E>> {
   /// numbers.sort((a, b) => a.length.compareTo(b.length));
   /// print(numbers); // [one, two, four, three] OR [two, one, four, three]
   /// ```
-  void sort([int compare(E a, E b)?]) => value.sort(compare);
+  void sort([int Function(E a, E b)? compare]) => value.sort(compare);
 
   /// Shuffles the elements of this list randomly.
   /// ```dart
@@ -218,7 +218,7 @@ extension ObjListExt<E> on Obj<List<E>> {
   /// final notes = <String>['do', 're', 'mi', 're'];
   /// final index = notes.indexWhere((note) => note.startsWith('k')); // -1
   /// ```
-  int indexWhere(bool test(E element), [int start = 0]) =>
+  int indexWhere(bool Function(E element) test, [int start = 0]) =>
       value.indexWhere(test);
 
   /// The last index in the list that satisfies the provided [test].
@@ -241,7 +241,7 @@ extension ObjListExt<E> on Obj<List<E>> {
   /// final index = notes.lastIndexWhere((note) => note.startsWith('k'));
   /// print(index); // -1
   /// ```
-  int lastIndexWhere(bool test(E element), [int? start]) =>
+  int lastIndexWhere(bool Function(E element) test, [int? start]) =>
       value.lastIndexWhere(test, start);
 
   /// The last index of [element] in this list.
@@ -386,7 +386,7 @@ extension ObjListExt<E> on Obj<List<E>> {
   /// print(numbers); // [three, four]
   /// ```
   /// The list must be growable.
-  void removeWhere(bool test(E element)) => value.removeWhere(test);
+  void removeWhere(bool Function(E element) test) => value.removeWhere(test);
 
   /// Removes all objects from this list that fail to satisfy [test].
   ///
@@ -397,7 +397,7 @@ extension ObjListExt<E> on Obj<List<E>> {
   /// print(numbers); // [one, two]
   /// ```
   /// The list must be growable.
-  void retainWhere(bool test(E element)) => value.retainWhere(test);
+  void retainWhere(bool Function(E element) test) => value.retainWhere(test);
 
   /// Returns a new list containing the elements between [start] and [end].
   ///
@@ -723,7 +723,7 @@ extension ObjListNullExt<E> on Obj<List<E>?> {
   /// numbers.sort((a, b) => a.length.compareTo(b.length));
   /// print(numbers); // [one, two, four, three] OR [two, one, four, three]
   /// ```
-  void sort([int compare(E a, E b)?]) => value?.sort(compare);
+  void sort([int Function(E a, E b)? compare]) => value?.sort(compare);
 
   /// Shuffles the elements of this list randomly.
   /// ```dart
@@ -768,7 +768,7 @@ extension ObjListNullExt<E> on Obj<List<E>?> {
   /// final notes = <String>['do', 're', 'mi', 're'];
   /// final index = notes.indexWhere((note) => note.startsWith('k')); // -1
   /// ```
-  int? indexWhere(bool test(E element), [int start = 0]) =>
+  int? indexWhere(bool Function(E element) test, [int start = 0]) =>
       value?.indexWhere(test);
 
   /// The last index in the list that satisfies the provided [test].
@@ -791,7 +791,7 @@ extension ObjListNullExt<E> on Obj<List<E>?> {
   /// final index = notes.lastIndexWhere((note) => note.startsWith('k'));
   /// print(index); // -1
   /// ```
-  int? lastIndexWhere(bool test(E element), [int? start]) =>
+  int? lastIndexWhere(bool Function(E element) test, [int? start]) =>
       value?.lastIndexWhere(test, start);
 
   /// The last index of [element] in this list.
@@ -938,7 +938,7 @@ extension ObjListNullExt<E> on Obj<List<E>?> {
   /// print(numbers); // [three, four]
   /// ```
   /// The list must be growable.
-  void removeWhere(bool test(E element)) => value?.removeWhere(test);
+  void removeWhere(bool Function(E element) test) => value?.removeWhere(test);
 
   /// Removes all objects from this list that fail to satisfy [test].
   ///
@@ -949,7 +949,7 @@ extension ObjListNullExt<E> on Obj<List<E>?> {
   /// print(numbers); // [one, two]
   /// ```
   /// The list must be growable.
-  void retainWhere(bool test(E element)) => value?.retainWhere(test);
+  void retainWhere(bool Function(E element) test) => value?.retainWhere(test);
 
   /// Returns a new list containing the elements between [start] and [end].
   ///

@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_shadowing_type_parameters
+
 import 'dart:async';
 
 import 'package:flutter_test/flutter_test.dart';
