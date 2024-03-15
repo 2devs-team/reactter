@@ -1,6 +1,5 @@
 part of '../framework.dart';
 
-
 /// Abstract class to implementing a wrapper widget
 @internal
 abstract class WrapperWidget implements Widget {

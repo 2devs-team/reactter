@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 
 import '../utils/format_currency.dart';
+
 class CartBottom extends StatelessWidget {
   final int productsCount;
   final int itemsCount;

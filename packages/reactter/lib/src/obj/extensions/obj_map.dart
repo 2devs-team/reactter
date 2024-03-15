@@ -136,7 +136,8 @@ extension ObjMapExt<K, V> on Obj<Map<K, V>> {
   /// terrestrial.removeWhere((key, value) => value.startsWith('E'));
   /// print(terrestrial); // {1: Mercury, 2: Venus}
   /// ```
-  void removeWhere(bool Function(K key, V value) test) => value.removeWhere(test);
+  void removeWhere(bool Function(K key, V value) test) =>
+      value.removeWhere(test);
 
   /// Look up the value of [key], or add a new entry if it isn't there.
   ///
@@ -158,7 +159,8 @@ extension ObjMapExt<K, V> on Obj<Map<K, V>> {
   /// print(diameters); // {1.0: Earth, 0.383: Mercury, 0.949: Venus}
   /// ```
   /// Calling [ifAbsent] must not add or remove keys from the map.
-  V putIfAbsent(K key, V Function() ifAbsent) => value.putIfAbsent(key, ifAbsent);
+  V putIfAbsent(K key, V Function() ifAbsent) =>
+      value.putIfAbsent(key, ifAbsent);
 
   /// Adds all key/value pairs of [other] to this map.
   ///
@@ -383,7 +385,8 @@ extension ObjMapNullExt<K, V> on Obj<Map<K, V>?> {
   /// terrestrial.removeWhere((key, value) => value.startsWith('E'));
   /// print(terrestrial); // {1: Mercury, 2: Venus}
   /// ```
-  void removeWhere(bool Function(K key, V value) test) => value?.removeWhere(test);
+  void removeWhere(bool Function(K key, V value) test) =>
+      value?.removeWhere(test);
 
   /// Look up the value of [key], or add a new entry if it isn't there.
   ///
@@ -405,7 +408,8 @@ extension ObjMapNullExt<K, V> on Obj<Map<K, V>?> {
   /// print(diameters); // {1.0: Earth, 0.383: Mercury, 0.949: Venus}
   /// ```
   /// Calling [ifAbsent] must not add or remove keys from the map.
-  V? putIfAbsent(K key, V Function() ifAbsent) => value?.putIfAbsent(key, ifAbsent);
+  V? putIfAbsent(K key, V Function() ifAbsent) =>
+      value?.putIfAbsent(key, ifAbsent);
 
   /// Adds all key/value pairs of [other] to this map.
   ///

@@ -32,7 +32,7 @@ class TodoFilter extends StatelessWidget {
                         },
                         builder: (_, todoController, allCount, __) {
                           return RadioWithLabel(
-                            label: 'All($allCount)', 
+                            label: 'All($allCount)',
                             value: TodoListType.all,
                             groupValue: filteredBy,
                             onChanged: todoController.filterBy,
