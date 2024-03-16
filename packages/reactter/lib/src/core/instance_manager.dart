@@ -510,8 +510,8 @@ abstract class InstanceManager {
 
   /// Returns an instance of [InstanceRegister] of [T] type with an [id] optional.
   InstanceRegister<T?>? _getInstanceRegister<T extends Object?>([String? id]) {
-    return _instanceRegisters.lookup(InstanceRef<T?>(id))
-        as InstanceRegister<T?>?;
+    final InstanceRef instanceRef = InstanceRef<T?>(id);
+    return _instanceRegisters.lookup(instanceRef) as InstanceRegister<T?>?;
   }
 
   /// Returns an instance of [InstanceRegister] of [T] type with a given [instanceRef].
