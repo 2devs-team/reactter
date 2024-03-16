@@ -130,13 +130,5 @@ abstract class State implements StateBase {
     if (_instanceBinded == null) return;
 
     emit(_instanceBinded!, event, this);
-
-    if (_instanceBinded is! LifecycleObserver) return;
-
-    if (event == Lifecycle.willUpdate) {
-      (_instanceBinded as LifecycleObserver).onWillUpdate(this);
-    } else if (event == Lifecycle.didUpdate) {
-      (_instanceBinded as LifecycleObserver).onDidUpdate(this);
-    }
   }
 }

@@ -64,6 +64,10 @@ abstract class EventManager {
     final notifier = _getEventNotifier(instance, eventName);
     final notifierPartner = _getEventNotifierPartner(instance, eventName);
 
+    if (eventName is Lifecycle) {
+      _resolveLifecycleEvent(instance, eventName, param);
+    }
+
     if (notifier?._instanceRef == null) {
       notifier?.notifyListeners(param);
       notifierPartner?.notifyListeners(param);
@@ -126,5 +130,23 @@ abstract class EventManager {
 
     notifier.dispose();
     _notifiers.remove(notifier);
+  }
+
+  /// Resolves the lifecycle event for the given [instance].
+  void _resolveLifecycleEvent(
+    Object? instance,
+    Lifecycle lifecycle, [
+    StateBase? state,
+  ]) {
+    if (instance is LifecycleObserver) {
+      return _executeLifecycleObserver(instance, lifecycle, state);
+    }
+
+    if (instance is! InstanceRef) return;
+
+    final instanceObj =
+        instanceManager._getInstanceRegisterByInstanceRef(instance)?.instance;
+
+    return _resolveLifecycleEvent(instanceObj, lifecycle, state);
   }
 }

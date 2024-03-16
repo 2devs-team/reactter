@@ -28,3 +28,35 @@ abstract class LifecycleObserver {
   /// from the widget tree(exclusive to `flutter_reactter`).
   void onDidUnmount() {}
 }
+
+void _executeLifecycleObserver(
+  LifecycleObserver observer,
+  Lifecycle lifecycle, [
+  StateBase? state,
+]) {
+  switch (lifecycle) {
+    case Lifecycle.initialized:
+      observer.onInitialized();
+      break;
+    case Lifecycle.willMount:
+      observer.onWillMount();
+      break;
+    case Lifecycle.didMount:
+      observer.onDidMount();
+      break;
+    case Lifecycle.willUpdate:
+      observer.onWillUpdate(state);
+      break;
+    case Lifecycle.didUpdate:
+      observer.onDidUpdate(state);
+      break;
+    case Lifecycle.willUnmount:
+      observer.onWillUnmount();
+      break;
+    case Lifecycle.didUnmount:
+      observer.onDidUnmount();
+      break;
+    default:
+      break;
+  }
+}

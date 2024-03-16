@@ -193,20 +193,12 @@ class ProviderElement<T extends Object?> extends InheritedElement
 
     if (isRoot) {
       Reactter.emit(instance!, Lifecycle.willMount);
-
-      if (instance is LifecycleObserver) {
-        (instance as LifecycleObserver).onWillMount();
-      }
     }
 
     super.mount(parent, newSlot);
 
     if (isRoot) {
       Reactter.emit(instance!, Lifecycle.didMount);
-
-      if (instance is LifecycleObserver) {
-        (instance as LifecycleObserver).onDidMount();
-      }
     }
   }
 
@@ -231,20 +223,12 @@ class ProviderElement<T extends Object?> extends InheritedElement
     try {
       if (isRoot) {
         Reactter.emit(instance!, Lifecycle.willUnmount);
-
-        if (instance is LifecycleObserver) {
-          instance.onWillUnmount();
-        }
       }
 
       return super.unmount();
     } finally {
       if (isRoot) {
         Reactter.emit(instance!, Lifecycle.didUnmount);
-
-        if (instance is LifecycleObserver) {
-          instance.onDidUnmount();
-        }
       }
 
       Reactter.delete<T>(id, ref);

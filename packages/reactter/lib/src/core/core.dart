@@ -1,8 +1,7 @@
 import 'dart:async';
 import 'dart:collection';
 import 'package:meta/meta.dart';
-
-import '../types.dart';
+import 'package:reactter/reactter.dart';
 
 part 'event_manager.dart';
 part 'event_notifier.dart';
