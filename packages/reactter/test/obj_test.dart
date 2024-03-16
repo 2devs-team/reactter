@@ -1,7 +1,7 @@
 // ignore_for_file: unnecessary_null_comparison, unrelated_type_equality_checks
 
 import 'package:reactter/reactter.dart';
-import 'package:flutter_test/flutter_test.dart';
+import 'package:test/test.dart';
 
 import 'shareds/test_controllers.dart';
 

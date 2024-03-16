@@ -2,8 +2,8 @@
 
 import 'dart:async';
 
-import 'package:flutter_test/flutter_test.dart';
 import 'package:reactter/reactter.dart';
+import 'package:test/test.dart';
 
 typedef AryFunctionType<T> = FutureOr<T> Function<T>(Args<dynamic> args);
 

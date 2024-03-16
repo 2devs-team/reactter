@@ -1,5 +1,5 @@
-import 'package:flutter_test/flutter_test.dart';
 import 'package:reactter/reactter.dart';
+import 'package:test/test.dart';
 
 import '../shareds/test_controllers.dart';
 
@@ -430,6 +430,18 @@ void main() {
       expect(isRegistered, false);
 
       Reactter.destroy<TestController>(id: id);
+    });
+
+    test("should get hashcode ref by index", () {
+      final ref = 'myRef';
+
+      Reactter.create(() => TestController(), ref: ref);
+
+      final hashCodeRef = Reactter.getHashCodeRefAt<TestController>(0);
+      expect(hashCodeRef, isA<int>());
+      expect(hashCodeRef, ref.hashCode);
+
+      Reactter.destroy<TestController>();
     });
   });
 }
