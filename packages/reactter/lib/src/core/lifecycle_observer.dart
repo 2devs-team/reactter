@@ -1,5 +1,32 @@
 part of 'core.dart';
 
+/// {@template lifecycle_observer}
+/// It's a mixin that provides a set of methods that can be used to observe
+/// the lifecycle of an instance.
+///
+/// Example usage:
+/// ```dart
+/// class MyController with LifecycleObserver {
+///   final state = UseState('initial');
+///
+///   @override
+///   void onInitialized() {
+///     print('MyController has been initialized');
+///   }
+///
+///   @override
+///   void onDidUpdate(ReactterState? state) {
+///     print("$state has been changed");
+///   }
+/// }
+///
+/// // MyController has been initialized
+/// final myController = Reactter.create(() => MyController());
+/// // state has been changed
+/// myController.state.value = "value changed";
+/// ```
+
+/// {@endtemplate}
 abstract class LifecycleObserver {
   /// This method is called when the instance is initialized.
   void onInitialized() {}
