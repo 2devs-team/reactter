@@ -13,7 +13,6 @@ void defaultLogWriterCallback(
 /// A class that represents the interface for Reactter.
 ///
 /// It is intended to be used as a mixin with other classes.
-@internal
 class ReactterInterface
     with StateManager<ReactterState>, InstanceManager, EventManager, Logger {
   static final _reactterInterface = ReactterInterface._();
