@@ -166,7 +166,7 @@ void main() {
 
       await tester.pumpWidget(
         TestBuilder(
-          child: ReactterProvider<TestController>.lazy(
+          child: ReactterProvider.lazy(
             () => TestController(),
             builder: (context, child) {
               expect(
@@ -212,7 +212,7 @@ void main() {
 
       await tester.pumpWidget(
         TestBuilder(
-          child: ReactterProvider<TestController>.lazy(
+          child: ReactterProvider.lazy(
             () => TestController(),
             id: "uniqueId",
             builder: (context, child) {
@@ -260,11 +260,11 @@ void main() {
         TestBuilder(
           child: Column(
             children: [
-              ReactterProvider<TestController>.lazy(
+              ReactterProvider.lazy(
                 () => TestController(),
                 child: const Text("child"),
               ),
-              ReactterProvider<TestController>.lazy(
+              ReactterProvider.lazy(
                 () => TestController(),
                 child: const Text("child2"),
                 builder: (context, child) {
@@ -290,12 +290,12 @@ void main() {
         TestBuilder(
           child: Column(
             children: [
-              ReactterProvider<TestController>.lazy(
+              ReactterProvider.lazy(
                 () => TestController(),
                 id: "uniqueId",
                 child: const Text("child"),
               ),
-              ReactterProvider<TestController>.lazy(
+              ReactterProvider.lazy(
                 () => TestController(),
                 id: "uniqueId",
                 child: const Text("child2"),

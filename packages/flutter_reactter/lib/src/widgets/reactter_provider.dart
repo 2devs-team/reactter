@@ -3,80 +3,121 @@
 part of '../widgets.dart';
 
 /// {@template reactter_provider}
-/// A Widget that provides an instance of [T] type to widget tree
-/// that can be access through the methods [BuildContext] extension.
+/// A Widget that serves as a conduit for injecting an instance of [T] type
+/// into the widget tree. e.g.:
 ///
 /// ```dart
-/// ReactterProvider<AppController>(
-///   () => AppController(),
-///   builder: (context, appController, child) {
-///     return Text("StateA: ${appController.stateA.value}");
-///   },
-/// )
-/// ```
+/// class MyApp extends StatelessWidget {
+///   ...
+///   @override
+///   Widget build(context) {
+///     return ReactterProvider<MyController>(
+///       () => MyController(),
+///       builder: (context, myController, child) {
+///         return OtherWidget();
+///       },
+///     );
+///   }
+/// }
 ///
-/// Use [id] property to identify the [T] instance.
-///
-/// Use [child] property to pass a [Widget] which to be built once only.
-/// It will be sent through the [builder] callback, so you can incorporate it
-/// into your build:
-///
-/// ```dart
-/// ReactterProvider<AppController>(
-///   () => AppController(),
-///   child: Text("This widget build only once"),
-///   builder: (context, _, __) {
-///     final appController = context.watch<AppController>();
+/// class OtherWidget extends StatelessWidget {
+///   ...
+///   @override
+///   Widget build(context) {
+///     // Get the instance of `MyController` using the context.
+///     final myController = context.use<MyController>();
 ///
 ///     return Column(
 ///       children: [
-///         Text("state: ${appController.stateA.value}"),
-///         child,
+///         Text("StateA: ${myController.stateA.value}"),
+///         Builder(
+///           builder: (context){
+///             // Watch the `stateB` of `MyController` instance.
+///             context.watch<MyController>((inst) => [inst.stateB]);
+///
+///             return Text("StateB: ${myController.stateB.value}");
+///           },
+///         ),
 ///       ],
 ///     );
-///   },
-/// )
+///   }
+/// }
 /// ```
-/// > **RECOMMENDED:**
-/// > Dont's use Object with constructor parameters to prevent conflicts.
 ///
 /// > **NOTE:**
 /// > [ReactterProvider] is a "scoped". This mean that [ReactterProvider]
 /// exposes the instance of [T] type defined on second parameter([InstanceChildBuilder])
 /// through the [BuildContext] in the widget subtree:
 /// >
-/// > ```dart
-/// > ReactterProvider<AppController>(
-/// >   () => AppController(),
-/// >   builder: (context, appController, child) {
-/// >     return OtherWidget();
-/// >   }
-/// > );
-/// >
-/// > class OtherWidget extends StatelessWidget {
-/// >   ...
-/// >   Widget build(context) {
-/// >      final appController = context.use<AppController>();
-/// >
-/// >      return Column(
-/// >       children: [
-/// >         Text("StateA: ${appController.stateA.value}"),
-/// >         Builder(
-/// >           builder: (context){
-/// >             context.watch<AppController>((inst) => [inst.stateB]);
-/// >
-/// >             return Text("StateB: ${appController.stateB.value}");
-/// >           },
-/// >         ),
-/// >       ],
-/// >     );
-/// >   }
-/// > }
-/// > ```
-/// >
 /// > In the above example, stateA remains static while the [Builder] is rebuilt
-/// > according to the changes in stateB. Because the [Builder]'s context kept in
-/// > watch of stateB.
+/// > according to the changes in `stateB`. Because the [Builder]'s context kept in
+/// > watch of `stateB`.
+///
+/// > **RECOMMENDED:**
+/// > Dont's use Object with constructor parameters to prevent conflicts.
+///
+/// Use [id] property to identify the [T] instance. e.g.:
+///
+/// ```dart
+/// ...
+/// ReactterProvider<MyController>(
+///   () => MyController(),
+///   id: 'uniqueId,
+///   builder: (context, myController, child) {
+///     return OtherWidget();
+///   },
+/// );
+/// ...
+/// final myController = context.use<MyController>(id: 'uniqueId');
+/// ...
+/// ```
+///
+/// Use [child] property to pass a [Widget] which to be built once only.
+/// It will be sent through the [builder] callback, so you can incorporate it
+/// into your build:
+///
+/// ```dart
+/// ReactterProvider<MyController>(
+///   () => MyController(),
+///   child: Text("This widget build only once"),
+///   builder: (context, _, __) {
+///     final myController = context.watch<MyController>();
+///
+///     return Column(
+///       children: [
+///         Text("state: ${myController.stateA.value}"),
+///         child,
+///       ],
+///     );
+///   },
+/// )
+/// ```
+///
+/// Use [init] property as `true` to create the instance after mounting.
+///
+/// > **NOTE:**
+/// > The [init] property is `false` by default. This means that the instance
+/// will be created in the mounting.
+///
+/// Use [ReactterProvider.lazy] contructor for creating a lazy instance.
+/// This is particularly useful for optimizing performance
+/// by lazy-loading instance only when it is needed. e.g.:
+///
+/// ```dart
+/// ReactterProvider.lazy(
+///   () => MyController(),
+///   child: Text('Do Something'),
+///   builder: (context, child) {
+///     return ElevatedButton(
+///       onPressed: () {
+///         // The `MyController` instance is created here.
+///         context.use<MyController>.doSomething();
+///       },
+///       child: child,
+///     );
+///   },
+/// ),
+/// ```
 ///
 /// See also:
 ///
@@ -84,7 +125,7 @@ part of '../widgets.dart';
 /// {@endtemplate}
 class ReactterProvider<T extends Object?> extends ProviderBase<T>
     implements ProviderWrapper, ProviderRef {
-  /// {@macro reactter_provider}
+  /// Creates a instance of [T] type and provides it to tree widget.
   const ReactterProvider(
     InstanceBuilder<T> instanceBuilder, {
     Key? key,
@@ -103,7 +144,7 @@ class ReactterProvider<T extends Object?> extends ProviderBase<T>
           builder: builder,
         );
 
-  /// {@macro reactter_provider}
+  /// Creates a lazy instance of [T] type and provides it to tree widget.
   const ReactterProvider.lazy(
     InstanceBuilder<T> instanceBuilder, {
     Key? key,
