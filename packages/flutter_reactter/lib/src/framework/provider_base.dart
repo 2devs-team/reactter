@@ -65,7 +65,7 @@ abstract class ProviderBase<T extends Object?> extends Widget {
   /// {@template provider_base.init}
   /// The child widget that will be wrapped by the provider.
   /// The child widget can be accessed within the `builder` method of the provider.
-  /// {@template provider_base.child}
+  /// {@endtemplate}
   final Widget? child;
 
   const ProviderBase(
