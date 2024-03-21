@@ -1,4 +1,4 @@
-part of '../framework.dart';
+part of 'framework.dart';
 
 /// An abstract-class that provides the functionality of [ReactterState].
 ///
@@ -38,38 +38,22 @@ part of '../framework.dart';
 ///
 /// See also:
 /// * [ReactterState], adds state management features to [ReactterHook].
-abstract class ReactterHook with ReactterStateBase implements ReactterState {
-  /// This variable is used to register [ReactterHook]
-  /// and attach the [ReactterState] that are defined here.
-  ///
-  /// It must be defined as a final variable
-  /// and set with [ReactterHook.$register].
-  /// Like so:
-  ///
-  /// `final $ = ReactterHook.$register;`
-  @protected
-  _ReactterHookRegister get $;
-
-  /// This getter allows access to the [_ReactterHookRegister] instance
-  /// which is responsible for registering a [ReactterHook]
-  /// and attaching previously collected states to it.
-  static _ReactterHookRegister get $register => _ReactterHookRegister();
-
-  ReactterHook() {
-    $._end(this);
-  }
-
-  /// Executes [callback], and notify the listeners about to update.
+abstract class ReactterHook extends Hook implements ReactterState {
   @override
-  @mustCallSuper
-  void update([Function? callback]) {
-    return super.update(callback ?? () {});
-  }
-}
+  @internal
+  InstanceManager get instanceManager => Reactter;
+  @override
+  @internal
+  StateManager get stateManager => Reactter;
+  @override
+  @internal
+  EventManager get eventManager => Reactter;
+  @override
+  @internal
+  Logger get logger => Reactter;
 
-class _ReactterHookRegister extends ReactterZone {
-  void _end(ReactterHook reactterHook) {
-    this.attachInstance(reactterHook);
-    ReactterZone.recollectState(reactterHook);
-  }
+  /// This getter allows access to the [HookRegister] instance
+  /// which is responsible for registering a [Hook]
+  /// and attaching previously collected states to it.
+  static HookRegister get $register => HookRegister();
 }

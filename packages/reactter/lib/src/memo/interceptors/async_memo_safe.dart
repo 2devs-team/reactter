@@ -1,4 +1,4 @@
-part of '../../memo.dart';
+part of '../memo.dart';
 
 /// {@template async_memo_safe}
 /// It's a memoization interceptor that prevents saving in cache

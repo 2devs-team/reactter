@@ -12,7 +12,7 @@ class ShoppingCartPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ReactterProviders(
-      [
+      const [
         ReactterProvider(ProductsController.new),
         ReactterProvider(CartController.new),
       ],
@@ -22,7 +22,7 @@ class ShoppingCartPage extends StatelessWidget {
             title: const Text("Shopping cart"),
             actions: [
               ReactterConsumer<ProductsController>(
-                builder: (productsController, _, __) {
+                builder: (_, productsController, __) {
                   return CartAction(
                     onCheckout: productsController.loadProducts,
                   );
@@ -35,7 +35,7 @@ class ShoppingCartPage extends StatelessWidget {
               listenStates: (inst) => [
                 inst.uProducts,
               ],
-              builder: (productsController, _, __) {
+              builder: (_, productsController, __) {
                 final products = productsController.uProducts.value;
                 final crossAxisCount = (constraints.maxWidth / 140).floor();
 

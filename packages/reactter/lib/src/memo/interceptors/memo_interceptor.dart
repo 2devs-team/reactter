@@ -1,4 +1,4 @@
-part of '../../memo.dart';
+part of '../memo.dart';
 
 /// It allows for intercepting the memoizing function calls.
 abstract class MemoInterceptor<T, A> {

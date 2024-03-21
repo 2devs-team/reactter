@@ -1,10 +1,72 @@
 # Reactter
 
+## 7.0.0
+
+### Enhancements
+
+- **feat(core, framework):** Add [`Reactter.batch`](https://pub.dev/documentation/reactter/7.0.0/reactter/ReactterInterface/batch.html) and [`Reactter.untracked`](https://pub.dev/documentation/reactter/7.0.0/reactter/ReactterInterface/untracked.html) methods.
+  - [`Reactter.batch`](https://pub.dev/documentation/reactter/7.0.0/reactter/ReactterInterface/batch.html) hepls to execute the given `callback` function within a batch operation. A batch operation allows multiple state changes to be grouped together, ensuring that any associated side effects are only triggered once, improving performance and reducing unnecessary re-renders.
+  - [`Reactter.untracked`](https://pub.dev/documentation/reactter/7.0.0/reactter/ReactterInterface/untracked.html) hepls to execute the given `callback` function without tracking any state changes. This means that any state changes that occur inside the `callback` function will not trigger any side effects.
+- **refactor(framework):** Refactor lifecycle event handling and add lifecycle observer interface.
+  - Add [`LifecycleObserver`](https://pub.dev/documentation/reactter/7.0.0/reactter/LifecycleObserver-class.html) inteface for event handling of the instance.
+  - Add [`didUnmount`](https://pub.dev/documentation/reactter/7.0.0/reactter/Lifecycle.html) lifecycle.
+- **refactor(core, framework, types):** Add [`LogLevel`](https://pub.dev/documentation/reactter/7.0.0/reactter/LogLevel.html) enum and update [`defaultLogWriterCallback`](https://pub.dev/documentation/reactter/7.0.0/reactter/defaultLogWriterCallback.html) signature.
+- **refactor(hooks):** Improve [`UseEffect`](https://pub.dev/documentation/reactter/7.0.0/reactter/UseEffect-class.html) performance and readability.
+  - Add [`UseEffect.runOnInit`](https://pub.dev/documentation/reactter/7.0.0/reactter/UseEffect/UseEffect.runOnInit.html) constructor to execute callback effect on initialization.
+- **feat(framework, widgets):** Add [`ReactterProvider.lazy`](https://pub.dev/documentation/flutter_reactter/7.0.0/flutter_reactter/ReactterProvider/ReactterProvider.lazy.html) constructor for lazy instance initialization.
+- **refactor(widgets):** Add `id`property to [`ReactterComponent`](https://pub.dev/documentation/flutter_reactter/7.0.0/flutter_reactter/ReactterComponent-class.html) for debugging information.
+
+### Breakings
+
+- **refactor(extensions, hooks, objs, signals):** Remove features deprecated.
+  - Remove  [`List<ReactterState>.when`](https://pub.dev/documentation/flutter_reactter/6.2.0/flutter_reactter/ReactterStateListExtension/when.html), use [`context.select`](https://pub.dev/documentation/flutter_reactter/7.0.0/flutter_reactter/ReactterBuildContextExtension/select.html) or [`UseCompute`](https://pub.dev/documentation/reactter/7.0.0/reactter/UseCompute-class.html) instead.
+  - Remove [`UseContext`](https://pub.dev/documentation/reactter/6.2.0/reactter/UseContext.html), use [`UseInstance`](https://pub.dev/documentation/reactter/6.2.0/reactter/UseInstance-class.html) instead.
+  - Remove [`UseEvent`](https://pub.dev/documentation/reactter/6.2.0/reactter/UseEvent-class.html), use event shortcuts instead.
+  - Remove `initialState` and `reset` from [`UseState`](https://pub.dev/documentation/reactter/6.2.0/reactter/UseState-class.html).
+  - Remove [`.obj`](https://pub.dev/documentation/reactter/6.2.0/reactter/ObjGenericTypeExt.html), use  [`Obj`](https://pub.dev/documentation/reactter/7.0.0/reactter/Obj-class.html) class instead.
+  - Remove [`.signal`](https://pub.dev/documentation/reactter/6.2.0/reactter/SignalGenericTypeExt.html), use [`Signal`](https://pub.dev/documentation/reactter/7.0.0/reactter/Signal-class.html) class instead.
+- **refactor(framework, widgets, test):** Change the position of [`InstanceContextBuilder`](https://pub.dev/documentation/flutter_reactter/6.2.0/flutter_reactter/InstanceContextBuilder.html)([`InstanceChildBuilder`](https://pub.dev/documentation/reactter/7.0.0/reactter/InstanceChildBuilder.html) now) arguments.
+  - Move `context` to first argument on [`InstanceContextBuilder`](https://pub.dev/documentation/flutter_reactter/6.2.0/flutter_reactter/InstanceContextBuilder.html)([`InstanceChildBuilder`](https://pub.dev/documentation/reactter/7.0.0/reactter/InstanceChildBuilder.html) now).
+  - Adapt the [`InstanceContextBuilder`](https://pub.dev/documentation/flutter_reactter/6.2.0/flutter_reactter/InstanceContextBuilder.html)([`InstanceChildBuilder`](https://pub.dev/documentation/reactter/7.0.0/reactter/InstanceChildBuilder.html) now) of [`ReactterComponent`](https://pub.dev/documentation/flutter_reactter/7.0.0/flutter_reactter/ReactterComponent-class.html), [`ReactterConsumer`](https://pub.dev/documentation/flutter_reactter/7.0.0/flutter_reactter/ReactterConsumer-class.html) and [`ReactterProvider`](https://pub.dev/documentation/flutter_reactter/7.0.0/flutter_reactter/ReactterProvider-class.html) widgets.
+- **refactor(core, hooks):** Rename [`attachTo`](https://pub.dev/documentation/reactter/6.2.0/reactter/ReactterState/attachTo.html) to [`bind`](https://pub.dev/documentation/reactter/7.0.0/reactter/ReactterState/bind.html), [`detachInstance`](https://pub.dev/documentation/reactter/6.2.0/reactter/ReactterState/detachInstance.html) to [`unbind`](https://pub.dev/documentation/reactter/7.0.0/reactter/ReactterState/unbind.html) and [`instanceAttached`](https://pub.dev/documentation/reactter/6.2.0/reactter/ReactterState/instanceAttached.html) to [`instanceBinded`](https://pub.dev/documentation/reactter/7.0.0/reactter/ReactterState/instanceBinded.html).
+- **refactor(hooks):** Improve [`UseEffect`](https://pub.dev/documentation/reactter/7.0.0/reactter/UseEffect-class.html) performance and readability.
+  - Remove [`context`](https://pub.dev/documentation/reactter/6.2.0/reactter/UseEffect/context.html) argument from `UseEffect`. It is no longer useful. Can use [`bind`](https://pub.dev/documentation/reactter/7.0.0/reactter/ReactterState/bind.html) method instead.
+
+### Fixes
+
+- **fix(obj):** Fix equality comparison in `ObjBase` class.
+- **fix(core):** Resolve event for both types(instanceRef, instanceObj) and log event error.
+- **fix(core):** Find the instance registered by the instance manager when searching for the extended class.
+- **refactor(core):** Fix out-of-bounds index on `getHashCodeRefAt` method.
+
+### Internal
+
+- **refactor(framework, widgets, test):** Change the position of [`InstanceContextBuilder`](https://pub.dev/documentation/flutter_reactter/6.2.0/flutter_reactter/InstanceContextBuilder.html)([`InstanceChildBuilder`](https://pub.dev/documentation/reactter/7.0.0/reactter/InstanceChildBuilder.html) now) arguments.
+  - Adjust the tests about [`ReactterComponent`](https://pub.dev/documentation/flutter_reactter/7.0.0/flutter_reactter/ReactterComponent-class.html), [`ReactterConsumer`](https://pub.dev/documentation/flutter_reactter/7.0.0/flutter_reactter/ReactterConsumer-class.html) and [`ReactterProvider`](https://pub.dev/documentation/flutter_reactter/7.0.0/flutter_reactter/ReactterProvider-class.html) widgets.
+  - Adjust the documentation about [`ReactterComponent`](https://pub.dev/documentation/flutter_reactter/7.0.0/flutter_reactter/ReactterComponent-class.html), [`ReactterConsumer`](https://pub.dev/documentation/flutter_reactter/7.0.0/flutter_reactter/ReactterConsumer-class.html) and [`ReactterProvider`](https://pub.dev/documentation/flutter_reactter/7.0.0/flutter_reactter/ReactterProvider-class.html) widgets.
+- **refactor(framework, widgets, test):** Improve framework structure and simplify the [`ReactterProvider`](https://pub.dev/documentation/flutter_reactter/7.0.0/flutter_reactter/ReactterProvider-class.html) code.
+  - Remove `Reactter` prefix of the framework classes.
+  - Add `ProviderBase`, `ProviderImpl`, `ProviderElement` and `ProviderRef` class.
+  - Rename [`InstanceContextBuilder`](https://pub.dev/documentation/flutter_reactter/6.2.0/flutter_reactter/InstanceContextBuilder.html) to [`InstanceChildBuilder`](https://pub.dev/documentation/reactter/7.0.0/reactter/InstanceChildBuilder.html) and [`InstanceValueBuilder`](https://pub.dev/documentation/flutter_reactter/6.2.0/flutter_reactter/InstanceValueBuilder.html) to [`InstanceValueChildBuilder`](https://pub.dev/documentation/flutter_reactter/7.0.0/flutter_reactter/InstanceValueChildBuilder.html).
+  - Add [`ChildBuilder`](https://pub.dev/documentation/flutter_reactter/7.0.0/flutter_reactter/ChildBuilder.html) type.
+  - Add `Reactter.getHashCodeRef` method.
+- **refactor:** Refactor file structure and imports.
+- **refactor(core, framework, hooks, signal):** Rename variables of `ReactterZone` and improve `ReactterState` implementation.
+- **refactor(test):** Add `lazyState`, `untracked` and `batch` tests.
+- **refactor(core, test):** Fix lifecycle event handling and add lifecycle_observer test.
+- **refactor(core, framework, test):** Refactor event manager and remove unused code for 100% coverage.
+- **refactor(core, framework):** Add `BindingZone` class and update references.
+- **fix(core):** Fix generic type constraint in `_getInstanceRef` method.
+- **refactor(core):** Refactor event handling logic and optimize listener removal.
+- **test(core, hooks):** Add tests for signal usage on instance and binding to another instance.
+- **test(widgets):** Add [`ReactterProvider.lazy`](https://pub.dev/documentation/flutter_reactter/7.0.0/flutter_reactter/ReactterProvider/ReactterProvider.lazy.html) tests, update [`ReactterComponent`](https://pub.dev/documentation/flutter_reactter/7.0.0/flutter_reactter/ReactterComponent-class.html) tests and add [`LifecycleObserver`](https://pub.dev/documentation/reactter/7.0.0/reactter/LifecycleObserver-class.html) to `TestController`.
+- **fix(example):** Update dependencies and fix code formatting on examples.
+
 ## 6.2.0
 
 ### Breakings
 
-- **refactor:** Deprecate `.signal` and `.obj` extensions.
+- **refactor:** Deprecate [`.signal`](https://pub.dev/documentation/reactter/6.2.0/reactter/SignalGenericTypeExt.html) and [`.obj`](https://pub.dev/documentation/reactter/6.2.0/reactter/ObjGenericTypeExt.html) extensions, use [`Signal`](https://pub.dev/documentation/reactter/6.2.0/reactter/Signal-class.html) and [`Obj`](https://pub.dev/documentation/reactter/6.2.0/reactter/Obj-class.html) class instead.
 
 ### Internal
 
@@ -15,16 +77,16 @@
 
 ### Enhancements
 
-- **feat(framework, widgets, extensions):** Add `ReactterSelector` widget and `context.select` method extension.
-  - `ReactterSelect` and `context.select` help to control the rebuilding of widget tree using a `Selector` methods that allows to select a state specific for listening, and return a computed value.
-- **feat(widgets):** Add `ReactterScope` Widget.
+- **feat(framework, widgets, extensions):** Add [`ReactterSelector`](https://pub.dev/documentation/flutter_reactter/6.1.0/flutter_reactter/ReactterSelector-class.html) widget and [`context.select`](https://pub.dev/documentation/flutter_reactter/6.1.0/flutter_reactter/ReactterBuildContextExtension/select.html) method extension.
+  - [`ReactterSelector`](https://pub.dev/documentation/flutter_reactter/6.1.0/flutter_reactter/ReactterSelector-class.html) and [`context.select`](https://pub.dev/documentation/flutter_reactter/6.1.0/flutter_reactter/ReactterBuildContextExtension/select.html) help to control the rebuilding of widget tree using a `Selector` methods that allows to select a state specific for listening, and return a computed value.
+- **feat(widgets):** Add [`ReactterScope`](https://pub.dev/documentation/flutter_reactter/6.1.0/flutter_reactter/ReactterScope-class.html) Widget.
 If `ReactterProvider.contextOf` doesn't have a type defined, use `ReactterScope` to work correctly.
 
 ### Breakings
 
-- **perf(framework):** Remove `updateAsync` from `ReactterHook` and `ReactterState`.
-- **perf(framework):** Remove `emitAsync` from `ReactterEventManager`.
-- **refactor(extensions):** Deprecate `List<ReactterState>.when`.
+- **perf(framework):** Remove `updateAsync` from [`ReactterHook`](https://pub.dev/documentation/reactter/6.1.0/reactter/ReactterHook-class.html) and [`ReactterState`](https://pub.dev/documentation/reactter/6.1.0/reactter/ReactterState-class.html).
+- **perf(framework):** Remove `emitAsync` from [`ReactterEventManager`](https://pub.dev/documentation/reactter/6.1.0/reactter/ReactterEventManager-class.html).
+- **refactor(extensions):** Deprecate [`List<ReactterState>.when`](https://pub.dev/documentation/flutter_reactter/6.1.0/flutter_reactter/ReactterStateListExtension/when.html), use [`context.select`](https://pub.dev/documentation/flutter_reactter/6.1.0/flutter_reactter/ReactterBuildContextExtension/select.html) or [`UseCompute`](https://pub.dev/documentation/reactter/6.1.0/reactter/UseCompute-class.html) instead.
 
 ### Fixes
 

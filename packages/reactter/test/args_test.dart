@@ -1,7 +1,9 @@
+// ignore_for_file: avoid_shadowing_type_parameters
+
 import 'dart:async';
 
-import 'package:flutter_test/flutter_test.dart';
 import 'package:reactter/reactter.dart';
+import 'package:test/test.dart';
 
 typedef AryFunctionType<T> = FutureOr<T> Function<T>(Args<dynamic> args);
 

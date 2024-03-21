@@ -18,7 +18,7 @@ part of '../widgets.dart';
 ///```dart
 /// ReactterConsumer<AppController>(
 ///   listenStates: (inst) => [inst.stateA],
-///   builder: (context, child) {
+///   builder: (context, appController, child) {
 ///     return Column(
 ///       children: [
 ///         Text("state: ${appController.stateA.value}"),
@@ -37,7 +37,7 @@ part of '../widgets.dart';
 /// ReactterConsumer<AppController>(
 ///   listenAll: true,
 ///   child: Text("This widget build only once"),
-///   builder: (context, child) {
+///   builder: (context, appController, child) {
 ///     return Column(
 ///       children: [
 ///         Text("state: ${appController.stateA.value}"),
@@ -84,7 +84,7 @@ class ReactterConsumer<T extends Object?> extends StatelessWidget {
   ///
   /// Exposes the instance of type [T], the [BuildContext],
   /// and the [child] widget as arguments, and returns a widget.
-  final InstanceContextBuilder<T> builder;
+  final InstanceChildBuilder<T> builder;
 
   @override
   Widget build(BuildContext context) {
@@ -94,13 +94,13 @@ class ReactterConsumer<T extends Object?> extends StatelessWidget {
     );
 
     return builder(
+      context,
       ReactterProvider.contextOf<T>(
         context,
         id: id,
         listen: listenAll || listenStates != null,
         listenStates: listenStates,
       ),
-      context,
       child,
     );
   }

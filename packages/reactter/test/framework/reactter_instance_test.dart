@@ -1,7 +1,5 @@
-import 'package:flutter_test/flutter_test.dart';
-import 'package:reactter/src/framework.dart';
-import 'package:reactter/src/hooks.dart';
-import 'package:reactter/src/lifecycle.dart';
+import 'package:reactter/reactter.dart';
+import 'package:test/test.dart';
 
 import '../shareds/test_controllers.dart';
 

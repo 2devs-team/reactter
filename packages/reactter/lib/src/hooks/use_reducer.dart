@@ -1,4 +1,4 @@
-part of '../hooks.dart';
+part of 'hooks.dart';
 
 /// {@template reactter_action}
 /// A representation of an event that describes something

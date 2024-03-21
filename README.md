@@ -98,6 +98,8 @@ See more examples [here](https://zapp.run/pub/flutter_reactter)!
   - [BuildContext.select](#buildcontextselect)
 - [Custom hooks](#custom-hooks)
 - [Lazy state](#lazy-state)
+- [Batch](#batch)
+- [Untracked](#untracked)
 - [Generic arguments](#generic-arguments)
 - [Memo](#memo)
 - [Difference between Signal and UseState](#difference-between-signal-and-usestate)
@@ -792,7 +794,31 @@ This lifecycles linked events, which are:
 - `Lifecycle.willUpdate`: is triggered anytime the instance's state is about to be updated. The event parameter is a `ReactterState`.
 - `Lifecycle.didUpdate`: is triggered anytime the instance's state has been updated. The event parameter is a `ReactterState`.
 - `Lifecycle.willUnmount`(exclusive of `flutter_reactter`): is triggered when the instance is about to be unmounted from the widget tree.
+- `Lifecycle.didUnmount`(exclusive of `flutter_reactter`): is triggered when  the instance has been successfully unmounted from the widget tree.
 - `Lifecycle.destroyed`: is triggered when the instance has been destroyed.
+
+You can extend your instances with [`LifecycleObserver`](https://pub.dev/documentation/reactter/latest/reactter/LifecycleObserver-class.html) mixin for observing and reacting to the various lifecycle events. e.g:
+
+```dart
+class MyController with LifecycleObserver {
+  final state = UseState('initial');
+
+  @override
+  void onInitialized() {
+    print("MyController has been initialized");
+  }
+
+  @override
+  void onDidUpdate(ReactterState? state) {
+    print("$state has been changed");
+  }
+}
+
+final myController = Reactter.create(() => MyController());
+// MyController has been initialized
+myController.state.value = "value changed";
+// state has been changed
+```
 
 ### Shortcuts to manage events
 
@@ -856,9 +882,8 @@ Reactter.emit(myController, Lifecycle.didUpdate, 'test param');
 
 ```dart
 UseEffect(
-  <Function cleanup> Function callback,
+  <Function cleanup> Function() callback,
   List<ReactterState> dependencies,
-  [Object? instance],
 )
 ```
 
@@ -883,23 +908,19 @@ class MyController {
         // Cleanup - Execute before count state changed or 'Lifecycle.willUnmount' event
         print("Cleanup executed");
       };
-    }, [count], this);
+    }, [count]);
   }
 }
 ```
 
-Use `UseEffect.dispatchEffect` instead of instance argument to execute a `UseEffect` immediately.
+Use `UseEffect.runOnInit` to execute the callback effect on initialization.
 
 ```dart
-UseEffect(
-  () => print("Excute immediately or by hook changes"),
+UseEffect.runOnInit(
+  () => print("Excute immediately and by hook changes"),
   [someState],
-  UseEffect.dispatchEffect
 );
 ```
-
-> **NOTE:**
-> If you don't add an `instance` argument to `UseEffect`, the `callback` won't execute on `Lifecycle.didMount`, and the `cleanup` won't execute on `Lifecycle.willUnmount` (theses `Lifecycle` events are used with `flutter_reactter` only).
 
 ## Rendering control
 
@@ -928,7 +949,7 @@ ReactterProvider<T>(
   bool init = false,
   InstanceManageMode type = InstanceManageMode.builder,
   Widget? child,
-  required Widget builder(T instance, BuilderContext context, Widget? child),
+  required Widget builder(BuilderContext context, T instance, Widget? child),
 })
 ```
 
@@ -951,7 +972,7 @@ Here is an example:
 ReactterProvider<CounterController>(
   () => CounterController(),
   child: const Text('This widget is rendered once'),
-  builder: (counterController, context, child) {
+  builder: (context, counterController, child) {
     // `context.watch` listens any CounterController changes for rebuild this widget tree.
     context.watch<CounterController>();
 
@@ -967,6 +988,8 @@ ReactterProvider<CounterController>(
   },
 )
 ```
+
+Use [`ReactterProvider.lazy`](https://pub.dev/documentation/flutter_reactter/latest/flutter_reactter/ReactterProvider/ReactterProvider.lazy.html) to enable lazy-loading of the instance, ensuring it is only instantiated when necessary. While this feature enhances performance by deferring instantiation until required, it's important to note that it may result in the loss of lifecycle tracing.
 
 > **NOTE:**
 > `ReactteProvider` is "scoped". So, the `builder` method will be rebuild when the instance or any `ReactterState` specified in [`BuildContext.watch`](#buildcontextwatch) or [`BuildContext.select`](#buildcontextselect)  changes.
@@ -1020,7 +1043,7 @@ class CounterComponent extends ReactterComponent<CounterController> {
   void listenStates(counterController) => [counterController.count];
 
   @override
-  Widget render(counterController, context) {
+  Widget render(context, counterController) {
     return Text("Count: ${counterController.count.value}");
   }
 }
@@ -1050,7 +1073,7 @@ ReactterConsumer<T>({
   bool listenAll = false,
   List<ReactterState> listenStates(T instance)?,
   Widget? child,
-  required Widget builder(T instance, BuildContext context, Widget? child),
+  required Widget builder(BuildContext context, T instance, Widget? child),
 });
 ```
 
@@ -1071,7 +1094,7 @@ class ExampleWidget extends StatelessWidget {
     return ReactterConsumer<MyController>(
       listenStates: (inst) => [inst.stateA, inst.stateB],
       child: const Text('This widget is rendered once'),
-      builder: (myController, context, child) {
+      builder: (context, myController, child) {
         // This is built when stateA or stateB has changed.
         return Column(
           children: [
@@ -1128,7 +1151,7 @@ ReactterSelector<T, V>(
   - `child`: a `Widget` defined in the `child` property.
 
 `ReactterSelector` determines if the widget tree of `builder` needs to be rebuild again by comparing the previous and new result of `selector`.
-This evaluation only occurs if one of the selected states(`ReactterState`) gets updated, or by the instance if the `selector` does not have any selected states(`ReactterState`). e.g:
+This evaluation only occurs if one of the selected states(`ReactterState`) gets updated, or by the instance if the `selector` does not have any selected states(`ReactterState`). e.g.:
 
 ```dart
 class MyApp extends StatelessWidget {
@@ -1138,7 +1161,7 @@ class MyApp extends StatelessWidget {
   Widget? build(BuildContext context) {
     return ReactterProvider<MyController>(
       () => MyController(),
-      builder: (inst, context, child) {
+      builder: (context, inst, child) {
         return OtherWidget();
       }
     );
@@ -1161,7 +1184,7 @@ class OtherWidget extends StatelessWidget {
 }
 ```
 
-`ReactterSelector` typing can be ommited, but the app must be wrapper by `ReactterScope`. e.g:
+`ReactterSelector` typing can be ommited, but the app must be wrapper by `ReactterScope`. e.g.:
 
 ```dart
 [...]
@@ -1262,7 +1285,7 @@ class MyApp extends StatelessWidget {
   Widget? build(BuildContext context) {
     return ReactterProvider<MyController>(
       () => MyController(),
-      builder: (inst, context, child) {
+      builder: (context, inst, child) {
         return OtherWidget();
       }
     );
@@ -1281,13 +1304,13 @@ class OtherWidget extends StatelessWidget {
 }
 ```
 
-Use the first argument for obtaining the instance by `id`. e.g:
+Use the first argument for obtaining the instance by `id`. e.g.:
 
 ```dart
   final myControllerById = context.use<MyController>('uniqueId');
 ```
 
-Use the nullable type to safely get the instance, avoiding exceptions if the instance is not found, and get `null` instead. e.g:
+Use the nullable type to safely get the instance, avoiding exceptions if the instance is not found, and get `null` instead. e.g.:
 
 ```dart
   final myController = context.use<MyController?>();
@@ -1316,7 +1339,7 @@ class MyApp extends StatelessWidget {
   Widget? build(BuildContext context) {
     return ReactterProvider<MyController>(
       () => MyController(),
-      builder: (inst, context, child) {
+      builder: (context, inst, child) {
         return OtherWidget();
       }
     );
@@ -1335,7 +1358,7 @@ class OtherWidget extends StatelessWidget {
 }
 ```
 
-Use the first argument(`listenStates`) to specify the states that are to be listen on for rebuild. e.g:
+Use the first argument(`listenStates`) to specify the states that are to be listen on for rebuild. e.g.:
 
 ```dart
 [...]
@@ -1393,7 +1416,7 @@ V context.select<T, V>(
 - `id`: to uniquely identify the instance.
 
 `BuildContext.select` determines if the widget tree in scope of `BuildContext` needs to be rebuild again by comparing the previous and new result of `selector`.
-This evaluation only occurs if one of the selected states(`ReactterState`) gets updated, or by the instance if the `selector` does not have any selected states(`ReactterState`). e.g:
+This evaluation only occurs if one of the selected states(`ReactterState`) gets updated, or by the instance if the `selector` does not have any selected states(`ReactterState`). e.g.:
 
 ```dart
 class MyApp extends StatelessWidget {
@@ -1403,7 +1426,7 @@ class MyApp extends StatelessWidget {
   Widget? build(BuildContext context) {
     return ReactterProvider<MyController>(
       () => MyController(),
-      builder: (inst, context, child) {
+      builder: (context, inst, child) {
         return OtherWidget();
       }
     );
@@ -1424,7 +1447,7 @@ class OtherWidget extends StatelessWidget {
 }
 ```
 
-`BuildContext.select` typing can be ommited, but the app must be wrapper by `ReactterScope`. e.g:
+`BuildContext.select` typing can be ommited, but the app must be wrapper by `ReactterScope`. e.g.:
 
 ```dart
 [...]
@@ -1535,6 +1558,81 @@ class MyController {
 > **IMPORTANT**:
 > A state(`ReactterState`) declared with the `late` keyword and not using `Reactter.lazyState` is outside the context of the instance where it was declared, and therefore the instance does not notice about its changes.
 
+## Batch
+
+```dart
+T Reactter.batch<T>(T Function() callback)
+```
+
+The [`batch`](https://pub.dev/documentation/reactter/latest/reactter/ReactterInterface/batch.html) function allows you to combine multiple state changes to be grouped together, ensuring that any associated side effects are only triggered once, improving performance and reducing unnecessary re-renders. e.g.:
+
+```dart
+final stateA = UseState(0);
+final stateB = UseState(0);
+final computed = UseCompute(
+  () => stateA.value + stateB.value,
+  [stateA, stateB],
+);
+
+final batchReturned = Reactter.batch(() {
+  stateA.value = 1;
+  stateB.value = 2;
+
+  print(computed.value); // 0 -> because the batch operation is not completed yet.
+
+  return stateA.value + stateB.value;
+});
+
+print(batchReturned); // 3
+print(computed.value); // 3 -> because the batch operation is completed.
+```
+
+Batches can be nested and updates will be flushed when the outermost batch call completes. e.g.:
+
+```dart
+final stateA = UseState(0);
+final stateB = UseState(0);
+final computed = UseCompute(
+  () => stateA.value + stateB.value,
+  [stateA, stateB],
+);
+
+Reactter.batch(() {
+  stateA.value = 1;
+  print(computed.value); // 0;
+
+  Reactter.batch(() {
+    stateB.value = 2;
+    print(computed.value); // 0;
+  });
+
+  print(computed.value); // 0;
+});
+
+print(computed.value); // 3;
+```
+
+## Untracked
+
+```dart
+T Reactter.untracked<T>(T Function() callback)
+```
+
+The [`untracked`](https://pub.dev/documentation/reactter/latest/reactter/ReactterInterface/untracked.html) function helps you to execute the given `callback` function without tracking any state changes. This means that any state changes that occur inside the `callback` function will not trigger any side effects. e.g.:
+
+```dart
+final state = UseState(0);
+final computed = UseCompute(() => state.value + 1, [state]);
+
+Reactter.untracked(() {
+  state.value = 2;
+
+  print(computed.value); // 1 -> because the state change is not tracked
+});
+
+print(computed.value); // 1 -> because the state change is not tracked
+```
+
 ## Generic arguments
 
 Generic arguments are objects of the `Args` class that represent the arguments of the specified types.
@@ -1576,7 +1674,7 @@ In each of the methods it provides theses methods and properties:
 > typedef ArgX+n<T> = Args+n<T, (...), T>;
 > ```
 >
-> e.g 4 arguments:
+> e.g. 4 arguments:
 >
 > ```dart
 > class Args4<A, A2, A3, A4> extends Args3<A, A2, A3> {
@@ -1592,7 +1690,7 @@ In each of the methods it provides theses methods and properties:
 > ```
 
 > **NOTE:**
-> Use `ary` Function extention to convert any `Function` with positional arguments to `Function` with generic argument, e.g:
+> Use `ary` Function extention to convert any `Function` with positional arguments to `Function` with generic argument, e.g.:
 >
 > ```dart
 > int addNum(int num1, int num2) => num1 + num2;

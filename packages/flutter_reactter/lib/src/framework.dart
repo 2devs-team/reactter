@@ -9,11 +9,12 @@ import 'package:reactter/reactter.dart' as r show Reactter;
 import 'extensions.dart';
 import 'types.dart';
 
-part 'framework/reactter_dependency.dart';
-part 'framework/reactter_nested.dart';
-part 'framework/reactter_scope_element_mixin.dart';
-part 'framework/reactter_wrapper.dart';
-part 'framework/reacttter_provider.dart';
+part 'framework/provider_base.dart';
+part 'framework/provider_impl.dart';
+part 'framework/dependency.dart';
+part 'framework/nested.dart';
+part 'framework/scope_element_mixin.dart';
+part 'framework/wrapper.dart';
 
 // ignore: non_constant_identifier_names
 final Reactter = r.Reactter..isLogEnable = kDebugMode;

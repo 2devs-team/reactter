@@ -1,4 +1,4 @@
-part of '../hooks.dart';
+part of 'hooks.dart';
 
 /// {@template use_instance}
 /// A [ReactterHook] that allows to manages an instance of [T] with/without [id].
@@ -28,7 +28,7 @@ part of '../hooks.dart';
 /// }, [useAppController]);
 /// ```
 ///
-/// The instance must be created by [ReactterInstanceManager] using the following methods:
+/// The instance must be created by [InstanceManager] using the following methods:
 ///
 /// - **Reactter.get**:
 ///   {@macro get}
@@ -66,7 +66,7 @@ part of '../hooks.dart';
 /// > You should call [dispose] when it's no longer needed.
 ///
 /// See also:
-/// * [ReactterInstanceManager], a instances manager.
+/// * [InstanceManager], a instances manager.
 /// * [UseEffect], a side-effect manager.
 /// {@endtemplate}
 class UseInstance<T extends Object> extends ReactterHook {
@@ -191,6 +191,7 @@ class UseInstance<T extends Object> extends ReactterHook {
   }
 
   /// Call when this hook is no longer needed.
+  @override
   void dispose() {
     if (_isDisposed) return;
 

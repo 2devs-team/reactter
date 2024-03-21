@@ -1,4 +1,4 @@
-part of '../../memo.dart';
+part of '../memo.dart';
 
 /// {@template memo_interceptors}
 /// It allows multiple memoization interceptors to be used together.

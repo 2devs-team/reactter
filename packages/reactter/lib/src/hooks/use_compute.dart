@@ -1,4 +1,4 @@
-part of '../hooks.dart';
+part of 'hooks.dart';
 
 /// {@template use_compute}
 /// A [ReactterHook] that allows to compute a value

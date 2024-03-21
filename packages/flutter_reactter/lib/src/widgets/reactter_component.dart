@@ -12,7 +12,7 @@ part of '../widgets.dart';
 ///   get builder => () => AppController();
 ///
 ///   @override
-///   Widget render(AppController inst, BuildContext context) {
+///   Widget render(BuildContext context, AppController inst) {
 ///     return Text("State: ${inst.stateHook.value}");
 ///   }
 /// }
@@ -94,7 +94,7 @@ abstract class ReactterComponent<T extends Object> extends StatelessWidget {
   ///
   /// It should build a Widget based on the current [T] instance changes.
   @protected
-  Widget render(T inst, BuildContext context);
+  Widget render(BuildContext context, T inst);
 
   @protected
   @override
@@ -106,14 +106,13 @@ abstract class ReactterComponent<T extends Object> extends StatelessWidget {
     );
 
     if (builder == null) {
-      final T instance = _getInstance(context);
-      return render(instance, context);
+      return render(context, _getInstance(context));
     }
 
     return ReactterProvider<T>(
       builder!,
       id: id,
-      builder: (instance, context, _) => render(_getInstance(context), context),
+      builder: (context, instance, _) => render(context, _getInstance(context)),
     );
   }
 
@@ -125,5 +124,18 @@ abstract class ReactterComponent<T extends Object> extends StatelessWidget {
     return id == null
         ? context.watch<T>(listenStates)
         : context.watchId<T>(id!, listenStates);
+  }
+
+  @override
+  void debugFillProperties(properties) {
+    super.debugFillProperties(properties);
+
+    properties.add(
+      StringProperty(
+        'id',
+        id,
+        showName: true,
+      ),
+    );
   }
 }

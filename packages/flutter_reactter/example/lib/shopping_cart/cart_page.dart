@@ -19,7 +19,7 @@ class CartPage extends ReactterComponent<CartController> {
   get builder => CartController.new;
 
   @override
-  Widget render(cartController, context) {
+  Widget render(context, cartController) {
     return Scaffold(
       appBar: AppBar(
         title: const Text("My cart"),
@@ -70,7 +70,7 @@ class CartPage extends ReactterComponent<CartController> {
       ),
       bottomNavigationBar: ReactterConsumer<CartController>(
         listenStates: (inst) => [inst.uItems],
-        builder: (cartController, _, __) {
+        builder: (_, cartController, __) {
           final items = cartController.uItems.value;
           final itemsCount = cartController.uItemsCount.value;
           final total = cartController.uTotal.value;

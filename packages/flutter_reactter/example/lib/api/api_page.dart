@@ -16,7 +16,7 @@ class ApiPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return ReactterProvider(
       ApiController.new,
-      builder: (apiController, context, child) {
+      builder: (context, apiController, child) {
         return Scaffold(
           appBar: AppBar(
             title: const Text("Github search"),

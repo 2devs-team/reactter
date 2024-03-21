@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_reactter/src/extensions.dart';
-import 'package:flutter_reactter/src/widgets.dart';
+import 'package:flutter_reactter/flutter_reactter.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../shareds/reactter_provider_builder.dart';
@@ -43,7 +42,7 @@ void main() {
           await tester.pumpWidget(
             TestBuilder(
               child: ReactterConsumer<TestController?>(
-                builder: (inst, _, __) {
+                builder: (_, inst, __) {
                   instanceObtained = inst;
 
                   return Text(
@@ -72,7 +71,7 @@ void main() {
                 builder: (_, __, ___) {
                   return ReactterConsumer<TestController>(
                     listenAll: true,
-                    builder: (inst, _, __) {
+                    builder: (_, inst, __) {
                       instanceObtained = inst;
 
                       return Text("stateString: ${inst.stateString.value}");
@@ -106,7 +105,7 @@ void main() {
                 builder: (_, __, ___) {
                   return ReactterConsumer<TestController>(
                     listenStates: (inst) => [inst.stateInt],
-                    builder: (inst, _, __) {
+                    builder: (_, inst, __) {
                       instanceObtained = inst;
 
                       return Column(
@@ -153,12 +152,12 @@ void main() {
               child: ReactterProvidersBuilder(
                 builder: (_, __) {
                   return ReactterConsumer<TestController>(
-                    builder: (inst, _, __) {
+                    builder: (_, inst, __) {
                       instanceObtained = inst;
 
                       return ReactterConsumer<TestController>(
                         id: 'uniqueId',
-                        builder: (instWithId, _, __) {
+                        builder: (_, instWithId, __) {
                           instanceWithIdObtained = instWithId;
 
                           return Column(

@@ -1,6 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:flutter_reactter/src/extensions.dart';
-import 'package:flutter_reactter/src/widgets.dart';
+import 'package:flutter_reactter/flutter_reactter.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../shareds/iterable_extension.dart';
@@ -62,7 +61,7 @@ void main() {
       await tester.pumpWidget(
         TestBuilder(
           child: ReactterProviderBuilder(
-            builder: (_, context, __) {
+            builder: (context, _, __) {
               instanceObtained = context.watch<TestController>();
 
               return Text(
@@ -89,7 +88,7 @@ void main() {
       await tester.pumpWidget(
         TestBuilder(
           child: ReactterProviderBuilder(
-            builder: (_, context, __) {
+            builder: (context, _, __) {
               instanceObtained = context.watch<TestController>(
                 (inst) => [inst.stateInt],
               );

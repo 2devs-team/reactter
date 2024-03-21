@@ -26,7 +26,7 @@ class TreeItem extends ReactterComponent<TreeNode> {
   get builder => () => treeNode;
 
   @override
-  Widget render(treeContext, context) {
+  Widget render(context, treeContext) {
     return InkWell(
       onTap: () => _openDialog(context),
       child: Stack(

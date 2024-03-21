@@ -12,14 +12,6 @@ typedef SelectorAspect<T> = bool Function(InheritedElement inheritedElement);
 /// associated with that instance.
 typedef ListenStates<T> = List<ReactterState> Function(T instance);
 
-/// This function type can be used as a callback to build a widget tree
-/// based on an instance of [T] type.
-typedef InstanceContextBuilder<T> = Widget Function(
-  T inst,
-  BuildContext context,
-  Widget? child,
-);
-
 /// Identifies a [ReactterProvider] with id.
 typedef WithId = String;
 
@@ -36,9 +28,25 @@ typedef Selector<T, V> = V Function(
   Select select,
 );
 
+/// A builder that builds a widget given a child.
+///
+/// The child should typically be part of the returned widget tree.
+typedef ChildBuilder = Widget Function(
+  BuildContext context,
+  Widget? child,
+);
+
+/// This function type can be used as a callback to build a widget tree
+/// based on an instance of [T] type.
+typedef InstanceChildBuilder<T> = Widget Function(
+  BuildContext context,
+  T inst,
+  Widget? child,
+);
+
 /// This function type can be used as a callback to build a widget tree
 /// based on an instance of [T] type and a value of [V] type.
-typedef InstanceValueBuilder<T, V> = Widget Function(
+typedef InstanceValueChildBuilder<T, V> = Widget Function(
   BuildContext context,
   T inst,
   V value,
