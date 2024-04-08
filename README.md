@@ -53,7 +53,8 @@ void main() {
     MaterialApp(
       home: Scaffold(
         body: ReactterWatcher(
-          // It will be re-built, at each count change.
+          // Just use it, and puts it in listening mode
+          // for further rendering automatically.
           builder: (_, __) => Text("Count: $count"),
         ),
       ),
@@ -668,7 +669,7 @@ Reactter identifies the factory mode as [`InstanceManageMode.factory`](https://p
 
 ### Singleton
 
-Singleton is a ways  to manage a instance, which registers a builder function and creates the instance only once.
+Singleton is a ways to manage an instance, which registers a builder function and creates the instance only once.
 
 The singleton mode preserves the instance and its states, even if the dependency tree stops using it.
 
