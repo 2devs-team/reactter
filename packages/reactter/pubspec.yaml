@@ -1,6 +1,6 @@
 name: reactter
 description: A light, powerful and quick Reactive State Management, Dependency Injection and Event Management.
-version: 7.0.0
+version: 7.0.1
 license: MIT License
 repository: https://github.com/2devs-team/reactter/tree/master/packages/reactter
 

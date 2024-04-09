@@ -1,6 +1,6 @@
 name: flutter_reactter
 description: A light, powerful and quick Reactive State Management, Dependency Injection and Event Management.
-version: 7.0.0
+version: 7.0.1
 license: MIT License
 repository: https://github.com/2devs-team/reactter/tree/master/packages/flutter_reactter
 
@@ -12,7 +12,7 @@ dependencies:
   flutter:
     sdk: flutter
   meta: ^1.7.0
-  reactter: ^7.0.0
+  reactter: ^7.0.1
 
 dev_dependencies:
   flutter_driver:

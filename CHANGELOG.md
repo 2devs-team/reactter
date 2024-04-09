@@ -1,5 +1,12 @@
 # Reactter
 
+## 7.0.1
+
+### Internal
+
+- **test:** Refactor and structure examples.
+- **doc:** Update `ReactterWatcher` builder comments for clarity.
+
 ## 7.0.0
 
 ### Enhancements
