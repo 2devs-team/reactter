@@ -1,0 +1,48 @@
+[data-has-hero] header {
+  border-bottom: 1px solid transparent;
+  background: linear-gradient(180deg, var(--sl-color-bg-nav), transparent 150%);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+}
+
+[data-has-hero] .page {
+  background: linear-gradient(215deg, var(--sl-color-accent-low), transparent 40%),
+    radial-gradient(var(--sl-color-accent-low), transparent 40%) no-repeat -60vw -40vh / 105vw 200vh,
+    radial-gradient(var(--sl-color-accent-low), transparent 60%) no-repeat 50% calc(100% + 20rem) / 60rem 30rem;
+}
+
+[data-has-hero] .card {
+  border-radius: 12px;
+  position: relative;
+  background: radial-gradient(
+    300px circle at top left,
+    hsl(from var(--sl-color-accent) h s l / 15%) 20%,
+    transparent 100%
+  ),
+  radial-gradient(
+    300px circle at bottom right,
+    hsl(from var(--sl-color-accent-low) h s l / 20%) 20%,
+    transparent 100%
+  );
+}
+
+[data-has-hero] .card::before {
+  content: "";
+  position: absolute;
+  inset: 0px;
+  border-radius: inherit;
+  transition: opacity 400ms ease 0s;
+  will-change: background, opacity;
+  background: radial-gradient(
+    800px circle at var(--mouse-x) var(--mouse-y),
+    hsl(from var(--sl-color-accent) h s l / 20%),
+    transparent 40%
+  );
+  opacity: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+[data-has-hero] .card:hover::before {
+  opacity: 1;
+}
