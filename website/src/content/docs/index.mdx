@@ -1,36 +1,50 @@
 ---
-title: Welcome to Starlight
-description: Get started building your docs site with Starlight.
+title: Reactter
+description: A light, powerful and quick Reactive State Management, Dependency Injection and Event Management.
 template: splash
 hero:
-  tagline: Congrats on setting up a new Starlight project!
+  tagline: A light, powerful and quick Reactive State Management, Dependency Injection and Event Management.
   image:
-    file: ../../assets/houston.webp
+    file: ../../assets/reactter.svg
   actions:
-    - text: Example Guide
+    - text: Get Started
       link: /guides/example/
       icon: right-arrow
       variant: primary
-    - text: Read the Starlight docs
-      link: https://starlight.astro.build
+    - text: Explore on pub.dev
+      link: https://pub.dev/packages/reactter
       icon: external
 ---
 
-import { Card, CardGrid } from '@astrojs/starlight/components';
+import { Card, CardGrid } from "@astrojs/starlight/components";
+import TrackMouse from "../../components/TrackMouse.astro";
 
-## Next steps
+
+## Features
 
 <CardGrid stagger>
-	<Card title="Update content" icon="pencil">
-		Edit `src/content/docs/index.mdx` to see this page change.
-	</Card>
-	<Card title="Add new content" icon="add-document">
-		Add Markdown or MDX files to `src/content/docs` to create new pages.
-	</Card>
-	<Card title="Configure your site" icon="setting">
-		Edit your `sidebar` and other config in `astro.config.mjs`.
-	</Card>
-	<Card title="Read the docs" icon="open-book">
-		Learn more in [the Starlight Docs](https://starlight.astro.build/).
-	</Card>
+  <Card title="Fine-grained reactivity" icon="rocket">
+    React to changes at the finest level of granularity, providing precise control and responsiveness in your app.
+  </Card>
+  <Card title="Lightweight" icon="telegram">
+    Reactter boasts a minimal footprint, ensuring efficient performance without relying on any external dependencies.
+  </Card>
+  <Card title="No Boilerplate" icon="seti:html">
+    Reduce code significantly and simplify your app.
+  </Card>
+  <Card title="Easy to use" icon="star">
+    Just a few lines of code to get started.
+    Without code generation or complex configurations.
+  </Card>
+  <Card title="Highly-reusable" icon="seti:json">
+    Share states and logic across your app using Custom Hooks and Dependency Injection.
+  </Card>
+  <Card title="Compatible with latest Dart and Flutter" icon="seti:dart">
+    Supports Dart server, Dart JS (HTML), Flutter (Web, Mobile and Desktop), etc. Reactter can be used in any Dart project!
+  </Card>
+  <Card title="Fully testable" icon="approve-check">
+    Test your states and logic easily. Reactter is 100% test coverage.
+  </Card>
 </CardGrid>
+
+<TrackMouse />
