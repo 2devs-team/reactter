@@ -3,7 +3,13 @@ title: Reactter
 description: A light, powerful and quick Reactive State Management, Dependency Injection and Event Management.
 template: splash
 hero:
-  tagline: A light, powerful and quick Reactive State Management, Dependency Injection and Event Management.
+  title: <h1 class="text-5xl bg-gradient-to-b from-accent-200 to-accent-600 bg-clip-text text-transparent">Reactter</h1>
+  tagline:
+    A <span class="text-lg font-bold">lightweight</span>, <span class="text-lg font-bold">powerful</span>, and <span class="text-lg font-bold">reactive</span>
+    <br />
+    <span class="text-xl font-bold bg-gradient-to-b from-cyan-200 to-cyan-600 bg-clip-text text-transparent">State Management</span>,
+    <span class="text-xl font-bold bg-gradient-to-b from-teal-200 to-teal-600 bg-clip-text text-transparent">Dependency Injection</span>
+    and <span class="text-xl font-bold bg-gradient-to-b from-indigo-200 to-indigo-600 bg-clip-text text-transparent">Event Management</span>.
   image:
     file: ../../assets/reactter.svg
   actions:
@@ -17,8 +23,7 @@ hero:
 ---
 
 import { Card, CardGrid } from "@astrojs/starlight/components";
-import TrackMouse from "../../components/TrackMouse.astro";
-
+import ScriptIndex from "../../components/ScriptIndex.astro";
 
 ## Features
 
@@ -39,12 +44,21 @@ import TrackMouse from "../../components/TrackMouse.astro";
   <Card title="Highly-reusable" icon="seti:json">
     Share states and logic across your app using Custom Hooks and Dependency Injection.
   </Card>
-  <Card title="Compatible with latest Dart and Flutter" icon="seti:dart">
+  <Card title="100% Dart" icon="seti:dart">
     Supports Dart server, Dart JS (HTML), Flutter (Web, Mobile and Desktop), etc. Reactter can be used in any Dart project!
+    Compatible with latest Dart/Flutter versions.
   </Card>
   <Card title="Fully testable" icon="approve-check">
     Test your states and logic easily. Reactter is 100% test coverage.
   </Card>
 </CardGrid>
 
-<TrackMouse />
+
+
+<div class="flex flex-col items-start justify-start">
+  ## Try Reactter online
+  Experience the full potential of Reactter by trying it online on [Zapp](https://zapp.run/pub/flutter_reactter).
+  <iframe src="https://zapp.run/edit/zzm06d60n06?theme=dark&lazy=false&file=lib/examples/1_counter/counter_page.dart" class="w-full !h-[600px]" style="border: 0; overflow: hidden;"></iframe>
+</div>
+
+<ScriptIndex />
