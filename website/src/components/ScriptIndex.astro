@@ -15,4 +15,12 @@
     //@ts-ignore
     card.onmousemove = (e) => handleOnMouseMove(e);
   }
+
+  const header = document.querySelector(".header");
+  header?.classList.toggle("top", window.scrollY === 0);
+
+  window.addEventListener("scroll", () => {
+    const isTop = window.scrollY === 0;
+    header?.classList.toggle("top", isTop);
+  });
 </script>
