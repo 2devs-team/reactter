@@ -1,3 +1,15 @@
 {
-  "extends": "astro/tsconfigs/strict"
+  "extends": "astro/tsconfigs/strict",
+  "exclude": ["**/dist/**", "**/__coverage__/**"],
+  "compilerOptions": {
+    "moduleResolution": "node",
+    "jsx": "preserve",
+    "importHelpers": true,
+    "allowJs": true,
+    "checkJs": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  }
 }

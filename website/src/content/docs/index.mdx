@@ -5,16 +5,19 @@ template: splash
 hero:
   title: <h1 class="text-5xl bg-gradient-to-b from-accent-200 to-accent-600 bg-clip-text text-transparent">Reactter</h1>
   tagline:
-    A <span class="text-lg font-bold">lightweight</span>, <span class="text-lg font-bold">powerful</span>, and <span class="text-lg font-bold">reactive</span>
+    A
+    <span class="text-lg font-bold bg-gradient-to-b from-slate-50 to-slate-400 bg-clip-text text-transparent">lightweight</span>, 
+    <span class="text-lg font-bold bg-gradient-to-b from-slate-50 to-slate-400 bg-clip-text text-transparent">powerful</span>, and
+    <span class="text-lg font-bold bg-gradient-to-b from-slate-50 to-slate-400 bg-clip-text text-transparent">reactive</span>
     <br />
-    <span class="text-xl font-bold bg-gradient-to-b from-cyan-200 to-cyan-600 bg-clip-text text-transparent">State Management</span>,
-    <span class="text-xl font-bold bg-gradient-to-b from-teal-200 to-teal-600 bg-clip-text text-transparent">Dependency Injection</span>
-    and <span class="text-xl font-bold bg-gradient-to-b from-indigo-200 to-indigo-600 bg-clip-text text-transparent">Event Management</span>.
+    <span class="text-xl font-bold bg-gradient-to-b from-emerald-200 to-emerald-600 bg-clip-text text-transparent">State Management</span>,
+    <span class="text-xl font-bold bg-gradient-to-b  from-yellow-200 to-yellow-600 bg-clip-text text-transparent">Dependency Injection</span>
+    and <span class="text-xl font-bold bg-gradient-to-b from-purple-200 to-purple-600 bg-clip-text text-transparent">Event Management</span>.
   image:
     file: ../../assets/reactter.svg
   actions:
     - text: Get Started
-      link: /guides/example/
+      link: /getting_started/
       icon: right-arrow
       variant: primary
     - text: Explore on pub.dev
@@ -22,43 +25,50 @@ hero:
       icon: external
 ---
 
-import { Card, CardGrid } from "@astrojs/starlight/components";
-import ScriptIndex from "../../components/ScriptIndex.astro";
+import { CardGrid } from "@astrojs/starlight/components";
+import Card from "@/components/Card.astro";
+import ScriptIndex from "@/components/ScriptIndex.astro";
 
 ## Features
 
 <CardGrid stagger>
   <Card title="Fine-grained reactivity" icon="rocket">
-    React to changes at the finest level of granularity, providing precise control and responsiveness in your app.
+    React to changes at the finest level of granularity, providing precise
+    control and responsiveness in your app.
   </Card>
   <Card title="Lightweight" icon="telegram">
-    Reactter boasts a minimal footprint, ensuring efficient performance without relying on any external dependencies.
+    Reactter boasts a minimal footprint, ensuring efficient performance without
+    relying on any external dependencies.
   </Card>
   <Card title="No Boilerplate" icon="seti:html">
     Reduce code significantly and simplify your app.
   </Card>
   <Card title="Easy to use" icon="star">
-    Just a few lines of code to get started.
-    Without code generation or complex configurations.
+    Just a few lines of code to get started. Without code generation or complex
+    configurations.
   </Card>
-  <Card title="Highly-reusable" icon="seti:json">
-    Share states and logic across your app using Custom Hooks and Dependency Injection.
+  <Card title="Highly reusable" icon="seti:json">
+    Share states and logic across your app using Custom Hooks and Dependency
+    Injection.
   </Card>
   <Card title="100% Dart" icon="seti:dart">
-    Supports Dart server, Dart JS (HTML), Flutter (Web, Mobile and Desktop), etc. Reactter can be used in any Dart project!
-    Compatible with latest Dart/Flutter versions.
+    Supports Dart server, Dart JS (HTML), Flutter (Web, Mobile and Desktop),
+    etc. Reactter can be used in any Dart project! Compatible with latest
+    Dart/Flutter versions.
   </Card>
   <Card title="Fully testable" icon="approve-check">
     Test your states and logic easily. Reactter is 100% test coverage.
   </Card>
 </CardGrid>
 
-
-
 <div class="flex flex-col items-start justify-start">
-  ## Try Reactter online
-  Experience the full potential of Reactter by trying it online on [Zapp](https://zapp.run/pub/flutter_reactter).
-  <iframe src="https://zapp.run/edit/zzm06d60n06?theme=dark&lazy=false&file=lib/examples/1_counter/counter_page.dart" class="w-full !h-[600px]" style="border: 0; overflow: hidden;"></iframe>
+  ## Try Reactter online Experience the full potential of Reactter by trying it
+  online on [Zapp](https://zapp.run/pub/flutter_reactter).
+  <iframe
+    src="https://zapp.run/edit/zzm06d60n06?theme=dark&lazy=false&file=lib/examples/1_counter/counter_page.dart"
+    class="w-full !h-[600px]"
+    style="border: 0; overflow: hidden;"
+  ></iframe>
 </div>
 
 <ScriptIndex />
