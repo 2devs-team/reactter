@@ -1,0 +1,51 @@
+---
+import { Icon } from "astro-icon/components";
+import { TAB_ITEM_TAG_NAME } from "./tabs";
+
+interface Props {
+  name?: string;
+  icon?: string;
+  label: string;
+}
+
+const { icon, label } = Astro.props;
+
+if (!label) {
+  throw new Error("Missing prop `label` on `<TabItem>` component.");
+}
+
+const {name} = Astro.props;
+---
+
+<TAB_ITEM_TAG_NAME data-name={name} class={name}>
+  <li role="presentation" class="tab">
+    <div role="tab" aria-selected="false" tabindex="-1" class="cursor-pointer">
+      {icon && <Icon name={icon} />}<span>{label}</span>
+    </div>
+  </li>
+
+  <section role="tabpanel" class="tab-content">
+    <slot />
+  </section>
+</TAB_ITEM_TAG_NAME>
+
+<style>
+	.tab {
+		margin-bottom: -2px;
+	}
+	.tab > [role='tab'] {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		padding: 0 1.25rem;
+		text-decoration: none;
+		border-bottom: 2px solid var(--sl-color-gray-5);
+		color: var(--sl-color-gray-3);
+		outline-offset: var(--sl-outline-offset-inside);
+	}
+	.tab [role='tab'][aria-selected='true'] {
+		color: var(--sl-color-white);
+		border-color: var(--sl-color-text-accent);
+		font-weight: 600;
+	}
+</style>
