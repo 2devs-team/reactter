@@ -1,6 +1,6 @@
 part of 'core.dart';
 
-/// A abstract-class that adds events management features to classes that use it.
+/// A abstract-class that adds event handler features to classes that use it.
 ///
 /// It contains methods for adding, removing, and triggering events,
 /// as well as storing event callbacks.

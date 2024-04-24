@@ -12,7 +12,7 @@ ____
 [![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/2devs-team/reactter/dart.yml?branch=master)](https://github.com/2devs-team/reactter/actions)
 [![Codecov](https://img.shields.io/codecov/c/github/2devs-team/reactter?logo=codecov)](https://app.codecov.io/gh/2devs-team/reactter)
 
-**A light, powerful and quick Reactive State Management, Dependency Injection and Event Management.**
+**A light, powerful and quick Reactive State Management, Dependency Injection and Event Handler.**
 
 ## Features
 
@@ -83,7 +83,7 @@ See more examples [here](https://zapp.run/pub/flutter_reactter)!
   - [Singleton](#singleton)
   - [Shortcuts to manage instances](#shortcuts-to-manage-instances)
   - [UseInstance](#useinstance)
-- [Event management](#event-management)
+- [Event handler](#event-handler)
   - [Lifecycles](#lifecycles)
   - [Shortcuts to manage events](#shortcuts-to-manage-events)
   - [UseEffect](#useeffect)
@@ -196,7 +196,7 @@ Reactter is a light and powerful solution for Dart and Flutter. It is composed o
 
 - [State management](#state-management)
 - [Dependency injection](#dependency-injection)
-- [Event management](#event-management)
+- [Event handler](#event-handler)
 
 Moreover, Reactter offers an extensive collection of widgets and extensions, granting advanced [rendering control](#rendering-control) through the `flutter_reactter` package.
 
@@ -761,12 +761,12 @@ In each of the contructors or factories above shown, it provides the `id` proper
 > The scope of the registered instances is global.
 > This indicates that using the [shortcuts to manage instance](#shortcuts-to-manage-events) or [`UseInstance`](#useinstance) will allow you to access them from anywhere in the project.
 
-## Event management
+## Event handler
 
-In Reactter, event management plays a pivotal role in facilitating seamless communication and coordination between various components within the application.
-The event management system is designed to ensure efficient handling of states and instances, fostering a cohesive ecosystem where different parts of the application can interact harmoniously.
+In Reactter, event handler plays a pivotal role in facilitating seamless communication and coordination between various components within the application.
+The event handler system is designed to ensure efficient handling of states and instances, fostering a cohesive ecosystem where different parts of the application can interact harmoniously.
 
-One of the key aspects of event management in Reactter is the introduction of [lifecycles](#lifecycles) linked to events.
+One of the key aspects of event handler in Reactter is the introduction of [lifecycles](#lifecycles) linked to events.
 These lifecycles define the different stages through which a state or instance passes, offering a structured flow and effective handling of changes.
 
 Additionally, Reactter offers the following event managers:
