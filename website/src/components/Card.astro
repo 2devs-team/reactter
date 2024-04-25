@@ -26,12 +26,12 @@ const { icon, title } = Astro.props;
 
 <style>
   .card {
-    --sl-card-border: var(--sl-color-purple);
-    --sl-card-bg: var(--sl-color-purple-low);
+    --sl-card-border: var(--sl-color-accent-high);
+    --sl-card-bg: var(--sl-color-accent);
     position: relative;
     box-sizing: border-box;
   }
-  .card:nth-child(4n + 1) {
+  /* .card:nth-child(4n + 1) {
     --sl-card-border: var(--sl-color-orange);
     --sl-card-bg: var(--sl-color-orange-low);
   }
@@ -46,7 +46,7 @@ const { icon, title } = Astro.props;
   .card:nth-child(4n + 5) {
     --sl-card-border: var(--sl-color-blue);
     --sl-card-bg: var(--sl-color-blue-low);
-  }
+  } */
 
   .card .card-inner {
     position: relative;
@@ -54,20 +54,21 @@ const { icon, title } = Astro.props;
     gap: clamp(0.5rem, calc(0.125rem + 1vw), 1rem);
     box-sizing: border-box;
 
-    --tw-gradient-from: hsl(from var(--sl-color-black) h s l / 80%)
+    --tw-gradient-from: hsl(from var(--sl-color-accent-low) h s l / 100%)
       var(--tw-gradient-from-position);
-    --tw-gradient-to: hsl(from var(--sl-color-black) h s l / 40%)
-      var(--tw-gradient-to-position);
+    --tw-gradient-to: transparent var(--tw-gradient-to-position);
 
     --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
-    background-image: linear-gradient(to left bottom, var(--tw-gradient-stops));
+    background-image: linear-gradient(to left bottom, var(--tw-gradient-stops)),
+      linear-gradient(
+        to left bottom,
+        hsl(from var(--sl-color-accent-low) h s l / 100%),
+        hsl(from var(--sl-color-accent-low) h s l / 15%)
+      );
   }
 
   .card:hover .card-inner {
-    --tw-gradient-from: hsl(from var(--sl-color-black) h s l / 85%)
-      var(--tw-gradient-from-position);
-    --tw-gradient-to: hsl(from var(--sl-color-black) h s l / 45%)
-      var(--tw-gradient-to-position);
+    background-image: linear-gradient(to left bottom, var(--tw-gradient-stops));
   }
 
   .card::before {
@@ -89,8 +90,8 @@ const { icon, title } = Astro.props;
 
     background-image: linear-gradient(
       45deg,
-      hsl(from var(--sl-color-accent) h s l / 40%),
-      hsl(from var(--sl-color-accent) h s l / 40%)
+      hsl(from var(--sl-color-accent) h s l / 50%),
+      hsl(from var(--sl-color-accent) h s l / 50%)
     );
   }
 
@@ -104,8 +105,8 @@ const { icon, title } = Astro.props;
       ),
       linear-gradient(
         45deg,
-        hsl(from var(--sl-color-accent) h s l / 60%),
-        hsl(from var(--sl-color-accent) h s l / 60%)
+        hsl(from var(--sl-color-accent) h s l / 40%),
+        hsl(from var(--sl-color-accent) h s l / 40%)
       );
   }
 

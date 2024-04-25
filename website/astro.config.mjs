@@ -2,6 +2,7 @@ import { defineConfig } from "astro/config";
 import starlight from "@astrojs/starlight";
 import tailwind from "@astrojs/tailwind";
 import alpinejs from "@astrojs/alpinejs";
+import astroExpressiveCode from "astro-expressive-code";
 
 import icon from "astro-icon";
 
@@ -75,6 +76,15 @@ export default defineConfig({
           },
         },
         {
+          label: "Hooks",
+          translations: {
+            es: "Hooks",
+          },
+          autogenerate: {
+            directory: "hooks",
+          },
+        },
+        {
           label: "Methods",
           translations: {
             es: "Métodos",
@@ -108,12 +118,23 @@ export default defineConfig({
           ],
         },
         {
-          label: "For Flutter",
+          label: "Widgets",
+          badge: "flutter",
           translations: {
-            es: "Para Flutter",
+            es: "Widgets",
           },
           autogenerate: {
-            directory: "for_flutter",
+            directory: "widgets",
+          },
+        },
+        {
+          label: "Extensions",
+          badge: "flutter",
+          translations: {
+            es: "Extensiones",
+          },
+          autogenerate: {
+            directory: "extensions",
           },
         },
       ],
