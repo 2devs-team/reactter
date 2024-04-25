@@ -2,8 +2,15 @@ import starlightPlugin from "@astrojs/starlight-tailwind";
 import colors from "tailwindcss/colors";
 
 const accent = {
+  50: "#f0f9ff",
+  100: "#d0e7ff",
   200: "#92d1fe",
+  300: "#6abfff",
+  400: "#4ea3e0",
+  500: "#0073aa",
   600: "#0073aa",
+  700: "#005a84",
+  800: "#004366",
   900: "#003653",
   950: "#00273d",
 };
