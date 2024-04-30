@@ -11,6 +11,9 @@ export default defineConfig({
   integrations: [
     starlight({
       title: "Reactter",
+      editLink: {
+        baseUrl: "https://github.com/2devs-team/reactter/blob/master/website/",
+      },
       logo: {
         src: "./src/assets/reactter.svg",
       },
