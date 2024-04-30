@@ -7,6 +7,8 @@ import icon from "astro-icon";
 
 // https://astro.build/config
 export default defineConfig({
+  site: "https://2devs-team.github.io",
+  base: "reactter",
   integrations: [
     starlight({
       title: "Reactter",
