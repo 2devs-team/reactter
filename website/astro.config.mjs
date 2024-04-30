@@ -14,7 +14,7 @@ export default defineConfig({
       logo: {
         src: "./src/assets/reactter.svg",
       },
-      customCss: ["./src/styles/tailwind.css", "./src/styles/custom.css"],
+      customCss: ["./src/styles/custom.css"],
       defaultLocale: "root",
       components: {
         SiteTitle: "./src/components/SiteTitle.astro",
@@ -138,9 +138,7 @@ export default defineConfig({
         },
       ],
     }),
-    tailwind({
-      applyBaseStyles: false,
-    }),
+    tailwind(),
     alpine(),
     icon(),
   ],
