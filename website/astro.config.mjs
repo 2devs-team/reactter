@@ -1,8 +1,7 @@
 import { defineConfig } from "astro/config";
 import starlight from "@astrojs/starlight";
 import tailwind from "@astrojs/tailwind";
-import alpinejs from "@astrojs/alpinejs";
-import astroExpressiveCode from "astro-expressive-code";
+import alpine from "@astrojs/alpinejs";
 
 import icon from "astro-icon";
 
@@ -17,7 +16,6 @@ export default defineConfig({
       customCss: ["./src/styles/tailwind.css", "./src/styles/custom.css"],
       defaultLocale: "root",
       components: {
-        Card: "./src/components/Card.astro",
         SiteTitle: "./src/components/SiteTitle.astro",
         ThemeProvider: "./src/components/ThemeProvider.astro",
         ThemeSelect: "./src/components/ThemeSelect.astro",
@@ -142,7 +140,7 @@ export default defineConfig({
     tailwind({
       applyBaseStyles: false,
     }),
-    alpinejs(),
+    alpine(),
     icon(),
   ],
 });

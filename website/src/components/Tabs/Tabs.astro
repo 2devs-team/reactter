@@ -1,6 +1,12 @@
 ---
 import { parseHTML } from "linkedom";
-import { TAB_ITEM_TAG_NAME, getTabId as getTabKey, getStoreKey, getStore,getXData, } from "./tabs";
+import {
+  TAB_ITEM_TAG_NAME,
+  getTabId as getTabKey,
+  getStoreKey,
+  getStore,
+  getXData,
+} from "./tabs";
 
 interface Props {
   groupName?: string;
@@ -33,19 +39,13 @@ Array.from(document.children).forEach((child) => {
     $tabPresentation.setAttribute("x-init", `activeTab = "${tabKey}"`);
   }
 
-  $tabPresentation.setAttribute(
-    "x-on:click",
-    `activeTab = "${tabKey}"`
-  );
+  $tabPresentation.setAttribute("x-on:click", `activeTab = "${tabKey}"`);
 
   $tab?.setAttribute(
     "x-bind:aria-selected",
     `activeTab === "${tabKey}" ? "true" : "false"`
   );
-  $tab?.setAttribute(
-    "x-bind:tabindex",
-    `activeTab === "${tabKey}" ? 0 : -1`
-  );
+  $tab?.setAttribute("x-bind:tabindex", `activeTab === "${tabKey}" ? 0 : -1`);
   $tab?.setAttribute("id", tabKey);
 
   $tabPanel?.setAttribute("aria-labelledby", tabKey);
@@ -60,44 +60,60 @@ const tabSectionsHtml = $tabSections.innerHTML;
 const { groupName }: Props = Astro.props;
 ---
 
-<div class="tabs" x-data={getXData(groupName)}>
-  <div class="tablist-wrapper not-content" >
-    <ul role="tablist">
-      <Fragment client:only set:html={tabPresentationsHtml} />
-    </ul>
+<astro-tabs
+  data-store-key={groupName && getStoreKey(groupName)}
+  data-store={getStore()}
+>
+  <div class="tabs" x-data={getXData(groupName)}>
+    <div class="tablist-wrapper not-content">
+      <ul role="tablist">
+        <Fragment client:only set:html={tabPresentationsHtml} />
+      </ul>
+    </div>
+    <Fragment client:only set:html={tabSectionsHtml} />
   </div>
-  <Fragment client:only set:html={tabSectionsHtml} />
-</div>
+</astro-tabs>
 
-{
-  groupName && (
-    <script define:vars={{ storeKey: getStoreKey(groupName), data: getStore() }} is:inline>
-      document.addEventListener("alpine:init", () => {
-        if (!Alpine.store(storeKey)) {
-          Alpine.store( storeKey, data);
-        }
-      });
-    </script>
-  )
-}
+<script>
+  import Alpine from "alpinejs";
+
+  class AstroTabs extends HTMLElement {
+    constructor() {
+      super();
+
+      const storeKey = this.dataset.storeKey;
+      const storeData = this.dataset.store;
+
+      if (storeKey) {
+        document.addEventListener("alpine:init", () => {
+          if (!Alpine.store(storeKey)) {
+            Alpine.store(storeKey, storeData);
+          }
+        });
+      }
+    }
+  }
+
+  customElements.define("astro-tabs", AstroTabs);
+</script>
 
 <style>
-	div.tabs {
-		display: block;
-	}
+  div.tabs {
+    display: block;
+  }
 
-	.tablist-wrapper {
-		overflow-x: auto;
-	}
+  .tablist-wrapper {
+    overflow-x: auto;
+  }
 
-	[role='tablist'] {
-		display: flex;
-		list-style: none;
-		border-bottom: 2px solid var(--sl-color-gray-5);
-		padding: 0;
-	}
+  [role="tablist"] {
+    display: flex;
+    list-style: none;
+    border-bottom: 2px solid var(--sl-color-gray-5);
+    padding: 0;
+  }
 
-	.tablist-wrapper ~ :global([role='tabpanel']) {
-		margin-top: 1rem;
-	}
+  .tablist-wrapper ~ :global([role="tabpanel"]) {
+    margin-top: 1rem;
+  }
 </style>
