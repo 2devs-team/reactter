@@ -54,14 +54,22 @@ and Reactter offers two fundamental approaches for creating states: [Signal](/cl
 This class provides some methods for managing states, which are:
 
 - [update](https://pub.dev/documentation/reactter/latest/reactter/ReactterState/update.html): Executes a callback function and notify its listeners that the state has changed.
-Emits two events: `Lifecycle.willUpdate` firts and `Lifecycle.didUpdate` last.
+When it is invoked, it emits two events to signal the state transition:
+`Lifecycle.willUpdate` is emitted first, indicating the impending update, followed by `Lifecycle.didUpdate` once the update process is complete.
 - [refresh](https://pub.dev/documentation/reactter/latest/reactter/ReactterState/refresh.html): Forces the state to notify its listeners that it has changed.
-Only emits the `Lifecycle.didUpdate` event.
-- [bind](https://pub.dev/documentation/reactter/latest/reactter/ReactterState/bind.html): Binds the state to the instance.
-- [unbind](https://pub.dev/documentation/reactter/latest/reactter/ReactterState/unbind.html): Unbinds the state from the instance.
-- [dispose](https://pub.dev/documentation/reactter/latest/reactter/ReactterState/dispose.html): Disposes the state and its listeners.
+Unlike `update`, it emits only the `Lifecycle.didUpdate` event, as it doesn't involve any preparatory steps before the notification.
+- [bind](https://pub.dev/documentation/reactter/latest/reactter/ReactterState/bind.html): Establishes a connection between the state and a specific instance.
+This connection allows the instance to reactively update based on changes to the state.
+By binding the state, the instance becomes aware of changes to the state and can appropriately reflect those changes in its behavior.
+- [unbind](https://pub.dev/documentation/reactter/latest/reactter/ReactterState/unbind.html): Releases the connection between the state and the instance.
+When unbinding, the instance will no longer receive updates from the state.
+This can be useful when an instance is no longer actively using the state or when it needs to detach from the state temporarily or permanently.
+- [dispose](https://pub.dev/documentation/reactter/latest/reactter/ReactterState/dispose.html): Is responsible for cleaning up the state and any associated listeners or resources.
+Disposing of the state ensures that it is properly released and no longer consumes memory or processing resources unnecessarily.
 
-Although thease methods are available, it's not necessary to use them directly, as Reactter handles state management for you.
+Although theses methods are available, it's not necessary to use them directly, as Reactter handles state management for you.
+
+### Example
 
 Let's see an example of how a `Signal` state is used and what happens under the hood.
 
@@ -118,8 +126,10 @@ class Signal<T> extends ReactterState[...] {
 }
 ```
 
+<Aside>
 The `bind`, `unbind` and `dispose` methods are normally used to manage the [lifecycle](/core_concepts/lifecycle) of a state.
 However, Reactter handles this automatically, when the state is declared inside an instance that is in the Reactter context using dependecy injection, so you don't need to worry about it.
+</Aside>
 
 <Aside type="tip">
   Learn about [Lifecycle](/core_concepts/lifecycles).
@@ -168,28 +178,59 @@ If you are using Flutter, go to [Rendering Control](/core_concepts/rendering_con
 
 Reactter manages the dependencies through a centralized mechanism.
 This core component serves as a central repository for registering, resolving, and providing dependencies across the app.
-To comprehend this mechanism thoroughly, let's break down the process into six steps:
+To comprehend this mechanism thoroughly, let's break down the process into five stages:
 
-1. **Registration**: The first step involves registering the dependency into Reactter's context with the specified `id` and `mode` params.
-The `Lifecycle.registered` event is emitted.
-2. **Resolving**: When there is a request for a dependency, Reactter gets it according to `id` and the `mode` with which it was registered.
-3. **Initialization**: If the dependency with/without `id` is not yet created, Reactter initializes it based on registry.
-The following events are fired:
-    - `Lifecycle.initialized`
-    - `Lifecycle.willMount`
-    - `Lifecycle.didMount`
-4. **Usage**: The dependency is then used across the app as needed.
-Some of these events may occur:
-    - `Lifecycle.willUpdate`
-    - `Lifecycle.didUpdate`
-5. **Destroying**: When the dependency with/without `id` is no longer required, Reactter destroys it.
-The following events are fired:
-    - `Lifecycle.willUnmount`
-    - `Lifecycle.didUnmount`
-    - `Lifecycle.destroyed`
-6. **Unregistration**: This is the final step in the process.
-When the dependency with/without `id` is no longer required and depending on `mode`, Reactter unregisters it.
-The `Lifecycle.unregistered` event is emitted.
+1. **Registration**: This stage involves registering the dependency into Reactter's context with the specified `id` and `mode` params.
+
+    For this, you can use the following methods:
+      - [`register`](/methods/to_manage_instance/register)
+      - [`lazyBuilder`](/methods/to_manage_instance/lazy_builder)(registers with `builder` mode)
+      - [`lazyFactory`](/methods/to_manage_instance/lazy_factory)(registers with `factory` mode)
+      - [`lazySingleton`](/methods/to_manage_instance/lazy_singleton)(registers with `singleton` mode)
+
+    The `Lifecycle.registered` event is emitted.
+
+2. **Resolving**: When there is a request for getting a dependency, Reactter gets it according to `id` and the `mode` through the registry.
+If the dependency with/without `id` is not yet created, Reactter initializes it based on registry(this condition doesn't apply to `find` method).
+
+    For this, you can use the following methods:
+      - [`get`](/methods/to_manage_instance/get)
+      - [`find`](/methods/to_manage_instance/find)(doesn't create the instance)
+      - [`create`](/methods/to_manage_instance/create)(registers if not found in registry)
+      - [`builder`](/methods/to_manage_instance/builder)(registers with `builder` mode if not found in registry)
+      - [`factory`](/methods/to_manage_instance/factory)(registers with `factory` mode if not found in registry)
+      - [`singleton`](/methods/to_manage_instance/singleton)(registers with `singleton` mode if not found in registry)
+
+    The following events are fired(only if the dependency is created):
+      - `Lifecycle.initialized`
+      - `Lifecycle.willMount`
+      - `Lifecycle.didMount`
+
+3. **Usage**: The dependency is then used across the app as needed.
+
+    Some of these events may occur:
+      - `Lifecycle.willUpdate`
+      - `Lifecycle.didUpdate`
+
+4. **Deleting**: When the dependency with/without `id` is no longer required, Reactter destroys it.
+
+    For this, you can use the following methods:
+      - [`delete`](/methods/to_manage_instance/delete)
+      - [`destroy`](/methods/to_manage_instance/destroy)(delete & unregister)
+
+    The following events are fired:
+      - `Lifecycle.willUnmount`
+      - `Lifecycle.didUnmount`
+      - `Lifecycle.destroyed`
+
+5. **Unregistration**: When the dependency with/without `id` is no longer required and depending on `mode`, Reactter unregisters it.
+
+    For this, you can use the following methods:
+      - [`unregister`](/methods/to_manage_instance/unregister)
+      - [`delete`](/methods/to_manage_instance/delete)
+      - [`destroy`](/methods/to_manage_instance/destroy)
+
+    The `Lifecycle.unregistered` event is emitted.
 
 <Aside>
 `id` and `mode` are optional parameters.
@@ -207,6 +248,7 @@ A **dependency** in Reactter is referred to as an **instance** of specific type.
   Learn about [Lifecycle](/core_concepts/lifecycles).
 </Aside>
 
+### Example
 
 To understand it better, we will return to the countdown example seen from the session on [how state management works](#how-it-works),
 but now using the dependency injection:
