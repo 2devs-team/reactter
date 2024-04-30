@@ -23,23 +23,23 @@ Reactter provides a variety of mechanisms for state management,
 including classes, hooks, and methods:
 
 - Classes
-  - [Signal](/classes/signal)
+  - [Signal](/reactter/classes/signal)
 - Hooks
-  - [UseState](/hooks/use_state)
-  - [UseAsyncState](/hooks/use_async_state)
-  - [UseReducer](/hooks/use_reducer)
-  - [UseCompute](/hooks/use_compute)
+  - [UseState](/reactter/hooks/use_state)
+  - [UseAsyncState](/reactter/hooks/use_async_state)
+  - [UseReducer](/reactter/hooks/use_reducer)
+  - [UseCompute](/reactter/hooks/use_compute)
 - Methods
-  - [lazyState](/methods/to_manage_state/lazy_state)
-  - [batch](/methods/to_manage_state/batch)
-  - [untracked](/methods/to_manage_state/untracked)
+  - [lazyState](/reactter/methods/to_manage_state/lazy_state)
+  - [batch](/reactter/methods/to_manage_state/batch)
+  - [untracked](/reactter/methods/to_manage_state/untracked)
 
 <Aside>
   The **hooks** (also known as [`ReactterHook`](https://pub.dev/documentation/reactter/latest/reactter/ReactterHook-class.html)) are named with the prefix `Use` according to convention.
 </Aside>
 
 <Aside type="tip">
-  Learn about [Custom Hook](/core_concepts/custom_hook).
+  Learn about [Custom Hook](/reactter/core_concepts/custom_hook).
 </Aside>
 
 ### How it works
@@ -50,7 +50,7 @@ Reactter greatly simplifies this process.
 To dive into the concept, let's start by exploring what constitutes a state in Reactter.
 
 All state in Reactter are classes that inherit [`ReactterState`](https://pub.dev/documentation/reactter/latest/reactter/ReactterState-class.html),
-and Reactter offers two fundamental approaches for creating states: [Signal](/classes/signal) and Hooks.
+and Reactter offers two fundamental approaches for creating states: [Signal](/reactter/classes/signal) and Hooks.
 This class provides some methods for managing states, which are:
 
 - [update](https://pub.dev/documentation/reactter/latest/reactter/ReactterState/update.html): Executes a callback function and notify its listeners that the state has changed.
@@ -127,12 +127,12 @@ class Signal<T> extends ReactterState[...] {
 ```
 
 <Aside>
-The `bind`, `unbind` and `dispose` methods are normally used to manage the [lifecycle](/core_concepts/lifecycle) of a state.
+The `bind`, `unbind` and `dispose` methods are normally used to manage the [lifecycle](/reactter/core_concepts/lifecycle) of a state.
 However, Reactter handles this automatically, when the state is declared inside an instance that is in the Reactter context using dependecy injection, so you don't need to worry about it.
 </Aside>
 
 <Aside type="tip">
-  Learn about [Lifecycle](/core_concepts/lifecycles).
+  Learn about [Lifecycle](/reactter/core_concepts/lifecycles).
 </Aside>
 
 ## Dependency Injection
@@ -151,27 +151,27 @@ from individual classes, making them more focused on their core functionality.
 Reactter provides the following dependencies injection mechanisms:
 
 - Hooks
-  - [UseInstance](/hooks/UseInstance)
+  - [UseInstance](/reactter/hooks/UseInstance)
 - Methods
-  * [register](/methods/to_manage_instance/register)
-  * [lazyBuilder](/methods/to_manage_instance/lazy_builder)
-  * [lazyFactory](/methods/to_manage_instance/lazy_factory)
-  * [lazySingleton](/methods/to_manage_instance/lazy_singleton)
-  * [create](/methods/to_manage_instance/create)
-  * [builder](/methods/to_manage_instance/builder)
-  * [factory](/methods/to_manage_instance/factory)
-  * [singleton](/methods/to_manage_instance/singleton)
-  * [get](/methods/to_manage_instance/get)
-  * [delete](/methods/to_manage_instance/delete)
-  * [unregister](/methods/to_manage_instance/unregister)
-  * [destroy](/methods/to_manage_instance/destroy)
-  * [find](/methods/to_manage_instance/find)
-  * [isRegistered](/methods/to_manage_instance/is_registered)
-  * [getInstanceManageMode](/methods/to_manage_instance/get_instance_manage_mode)
+  * [register](/reactter/methods/to_manage_instance/register)
+  * [lazyBuilder](/reactter/methods/to_manage_instance/lazy_builder)
+  * [lazyFactory](/reactter/methods/to_manage_instance/lazy_factory)
+  * [lazySingleton](/reactter/methods/to_manage_instance/lazy_singleton)
+  * [create](/reactter/methods/to_manage_instance/create)
+  * [builder](/reactter/methods/to_manage_instance/builder)
+  * [factory](/reactter/methods/to_manage_instance/factory)
+  * [singleton](/reactter/methods/to_manage_instance/singleton)
+  * [get](/reactter/methods/to_manage_instance/get)
+  * [delete](/reactter/methods/to_manage_instance/delete)
+  * [unregister](/reactter/methods/to_manage_instance/unregister)
+  * [destroy](/reactter/methods/to_manage_instance/destroy)
+  * [find](/reactter/methods/to_manage_instance/find)
+  * [isRegistered](/reactter/methods/to_manage_instance/is_registered)
+  * [getInstanceManageMode](/reactter/methods/to_manage_instance/get_instance_manage_mode)
 
 
 <Aside type="tip">
-If you are using Flutter, go to [Rendering Control](/core_concepts/rendering_control) to learn how it manage instances through Widgets and BuildContext extension methods.
+If you are using Flutter, go to [Rendering Control](/reactter/core_concepts/rendering_control) to learn how it manage instances through Widgets and BuildContext extension methods.
 </Aside>
 
 ### How it works
@@ -183,10 +183,10 @@ To comprehend this mechanism thoroughly, let's break down the process into five 
 1. **Registration**: This stage involves registering the dependency into Reactter's context with the specified `id` and `mode` params.
 
     For this, you can use the following methods:
-      - [`register`](/methods/to_manage_instance/register)
-      - [`lazyBuilder`](/methods/to_manage_instance/lazy_builder)(registers with `builder` mode)
-      - [`lazyFactory`](/methods/to_manage_instance/lazy_factory)(registers with `factory` mode)
-      - [`lazySingleton`](/methods/to_manage_instance/lazy_singleton)(registers with `singleton` mode)
+      - [`register`](/reactter/methods/to_manage_instance/register)
+      - [`lazyBuilder`](/reactter/methods/to_manage_instance/lazy_builder)(registers with `builder` mode)
+      - [`lazyFactory`](/reactter/methods/to_manage_instance/lazy_factory)(registers with `factory` mode)
+      - [`lazySingleton`](/reactter/methods/to_manage_instance/lazy_singleton)(registers with `singleton` mode)
 
     The `Lifecycle.registered` event is emitted.
 
@@ -194,12 +194,12 @@ To comprehend this mechanism thoroughly, let's break down the process into five 
 If the dependency with/without `id` is not yet created, Reactter initializes it based on registry(this condition doesn't apply to `find` method).
 
     For this, you can use the following methods:
-      - [`get`](/methods/to_manage_instance/get)
-      - [`find`](/methods/to_manage_instance/find)(doesn't create the instance)
-      - [`create`](/methods/to_manage_instance/create)(registers if not found in registry)
-      - [`builder`](/methods/to_manage_instance/builder)(registers with `builder` mode if not found in registry)
-      - [`factory`](/methods/to_manage_instance/factory)(registers with `factory` mode if not found in registry)
-      - [`singleton`](/methods/to_manage_instance/singleton)(registers with `singleton` mode if not found in registry)
+      - [`get`](/reactter/methods/to_manage_instance/get)
+      - [`find`](/reactter/methods/to_manage_instance/find)(doesn't create the instance)
+      - [`create`](/reactter/methods/to_manage_instance/create)(registers if not found in registry)
+      - [`builder`](/reactter/methods/to_manage_instance/builder)(registers with `builder` mode if not found in registry)
+      - [`factory`](/reactter/methods/to_manage_instance/factory)(registers with `factory` mode if not found in registry)
+      - [`singleton`](/reactter/methods/to_manage_instance/singleton)(registers with `singleton` mode if not found in registry)
 
     The following events are fired(only if the dependency is created):
       - `Lifecycle.initialized`
@@ -215,8 +215,8 @@ If the dependency with/without `id` is not yet created, Reactter initializes it 
 4. **Deleting**: When the dependency with/without `id` is no longer required, Reactter destroys it.
 
     For this, you can use the following methods:
-      - [`delete`](/methods/to_manage_instance/delete)
-      - [`destroy`](/methods/to_manage_instance/destroy)(delete & unregister)
+      - [`delete`](/reactter/methods/to_manage_instance/delete)
+      - [`destroy`](/reactter/methods/to_manage_instance/destroy)(delete & unregister)
 
     The following events are fired:
       - `Lifecycle.willUnmount`
@@ -226,9 +226,9 @@ If the dependency with/without `id` is not yet created, Reactter initializes it 
 5. **Unregistration**: When the dependency with/without `id` is no longer required and depending on `mode`, Reactter unregisters it.
 
     For this, you can use the following methods:
-      - [`unregister`](/methods/to_manage_instance/unregister)
-      - [`delete`](/methods/to_manage_instance/delete)
-      - [`destroy`](/methods/to_manage_instance/destroy)
+      - [`unregister`](/reactter/methods/to_manage_instance/unregister)
+      - [`delete`](/reactter/methods/to_manage_instance/delete)
+      - [`destroy`](/reactter/methods/to_manage_instance/destroy)
 
     The `Lifecycle.unregistered` event is emitted.
 
@@ -245,7 +245,7 @@ A **dependency** in Reactter is referred to as an **instance** of specific type.
 </Aside>
 
 <Aside type="tip">
-  Learn about [Lifecycle](/core_concepts/lifecycles).
+  Learn about [Lifecycle](/reactter/core_concepts/lifecycles).
 </Aside>
 
 ### Example
@@ -405,8 +405,8 @@ the instance is deleted and the builder function is kept in the register.
 
 Reactter identifies the factory mode as
 [`InstanceManageMode.factory`](https://pub.dev/documentation/reactter/6.0.0/InstanceManageMode/InstanceManageMode.factory.html)
-and to active it,set it in the `mode` argument of [`Reactter.register`](/methods/to_manage_instance/register) and [`Reactter.create`](/methods/to_manage_instance/create),
-or use [`Reactter.lazyFactory`](/methods/to_manage_instance/lazy_factory),  [`Reactter.factory`](/methods/to_manage_instance/factory).
+and to active it,set it in the `mode` argument of [`Reactter.register`](/reactter/methods/to_manage_instance/register) and [`Reactter.create`](/reactter/methods/to_manage_instance/create),
+or use [`Reactter.lazyFactory`](/reactter/methods/to_manage_instance/lazy_factory),  [`Reactter.factory`](/reactter/methods/to_manage_instance/factory).
 
 <Aside>
   **Factory** uses more RAM than [Builder](#builder)
@@ -426,8 +426,8 @@ even if the dependency tree stops using it.
 Reactter identifies the singleton mode as
 [`InstanceManageMode.singleton`](https://pub.dev/documentation/reactter/6.0.0/InstanceManageMode/InstanceManageMode.singleton.html)
 and to active it,
-set it in the `mode` argument of [`Reactter.register`](/methods/to_manage_instance/register) and [`Reactter.create`](/methods/to_manage_instance/create),
-or use [`Reactter.lazySingleton`](/methods/to_manage_instance/lazy_singleton), [`Reactter.singleton`](/methods/to_manage_instance/singleton).
+set it in the `mode` argument of [`Reactter.register`](/reactter/methods/to_manage_instance/register) and [`Reactter.create`](/reactter/methods/to_manage_instance/create),
+or use [`Reactter.lazySingleton`](/reactter/methods/to_manage_instance/lazy_singleton), [`Reactter.singleton`](/reactter/methods/to_manage_instance/singleton).
 
 <Aside>
   **Singleton** consumes less CPU than [Builder](#builder) and [Factory](#factory),
@@ -435,7 +435,7 @@ or use [`Reactter.lazySingleton`](/methods/to_manage_instance/lazy_singleton), [
 </Aside>
 
 <Aside type="tip">
-  Use [`Reactter.destroy`](/methods/to_manage_instance/destroy) if you want to force destroy the instance and its register.
+  Use [`Reactter.destroy`](/reactter/methods/to_manage_instance/destroy) if you want to force destroy the instance and its register.
 </Aside>
 
 ## Event Handler
@@ -448,13 +448,13 @@ fostering a cohesive ecosystem where different parts of the application can inte
 Reactter offers the following event handler mechanisms:
 
 - Hooks
-  - [UseEffect](/hooks/UseEffect)
+  - [UseEffect](/reactter/hooks/UseEffect)
 - Methods
-  - [on](/methods/to_manage_event/on)
-  - [one](/methods/to_manage_event/one)
-  - [off](/methods/to_manage_event/off)
-  - [offAll](/methods/to_manage_event/offAll)
-  - [emit](/methods/to_manage_event/emit)
+  - [on](/reactter/methods/to_manage_event/on)
+  - [one](/reactter/methods/to_manage_event/one)
+  - [off](/reactter/methods/to_manage_event/off)
+  - [offAll](/reactter/methods/to_manage_event/offAll)
+  - [emit](/reactter/methods/to_manage_event/emit)
 
 ### How it works
 
@@ -507,7 +507,7 @@ Here, we can't see the emitter, because it's encapsulated within the `Signal` cl
 This mechanism is made possible by the underlying state management system.
 
 <Aside type="tip">
-  Learn about [Lifecycle](/core_concepts/lifecycles).
+  Learn about [Lifecycle](/reactter/core_concepts/lifecycles).
 </Aside>
 
 Now, we do a small tweak to add an emitter:
