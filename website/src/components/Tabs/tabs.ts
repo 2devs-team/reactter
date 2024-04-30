@@ -15,9 +15,12 @@ export const getXData = (groupName?: string) => {
       return Alpine.store("${storeKey}")?.activeTab ?? '';
     },
     set activeTab(value) {
-      if (Alpine.store("${storeKey}")) {
-        Alpine.store("${storeKey}").activeTab = value;
+      if (!Alpine.store("${storeKey}")) {
+        Alpine.store("${storeKey}", ${JSON.stringify(getStore())});
       }
+
+
+      Alpine.store("${storeKey}").activeTab = value;
     },
   }`;
 };

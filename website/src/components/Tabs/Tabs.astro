@@ -60,42 +60,14 @@ const tabSectionsHtml = $tabSections.innerHTML;
 const { groupName }: Props = Astro.props;
 ---
 
-<astro-tabs
-  data-store-key={groupName && getStoreKey(groupName)}
-  data-store={getStore()}
->
-  <div class="tabs" x-data={getXData(groupName)}>
-    <div class="tablist-wrapper not-content">
-      <ul role="tablist">
-        <Fragment client:only set:html={tabPresentationsHtml} />
-      </ul>
-    </div>
-    <Fragment client:only set:html={tabSectionsHtml} />
+<div class="tabs" x-data={getXData(groupName)}>
+  <div class="tablist-wrapper not-content">
+    <ul role="tablist">
+      <Fragment client:only set:html={tabPresentationsHtml} />
+    </ul>
   </div>
-</astro-tabs>
-
-<script>
-  import Alpine from "alpinejs";
-
-  class AstroTabs extends HTMLElement {
-    constructor() {
-      super();
-
-      const storeKey = this.dataset.storeKey;
-      const storeData = this.dataset.store;
-
-      if (storeKey) {
-        document.addEventListener("alpine:init", () => {
-          if (!Alpine.store(storeKey)) {
-            Alpine.store(storeKey, storeData);
-          }
-        });
-      }
-    }
-  }
-
-  customElements.define("astro-tabs", AstroTabs);
-</script>
+  <Fragment client:only set:html={tabSectionsHtml} />
+</div>
 
 <style>
   div.tabs {
