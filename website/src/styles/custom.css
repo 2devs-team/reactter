@@ -36,3 +36,7 @@
   --sl-color-text-accent: linear-gradient(45deg, var(--sl-color-accent), var(--sl-color-accent-low));
   color: var(--sl-color-white);
 }
+
+ol ul:last-child {
+  margin-bottom: 1rem;
+}
