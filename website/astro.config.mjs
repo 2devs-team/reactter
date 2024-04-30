@@ -6,9 +6,9 @@ import alpine from "@astrojs/alpinejs";
 import icon from "astro-icon";
 
 export default defineConfig({
+  site: "https://2devs-team.github.io/reactter",
   integrations: [
     starlight({
-      site: "https://2devs-team.github.io/reactter",
       title: "Reactter",
       logo: {
         src: "./src/assets/reactter.svg",
