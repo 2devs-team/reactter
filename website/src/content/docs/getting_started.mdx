@@ -54,12 +54,12 @@ Add the package on your project by running the following command:
 
 <Tabs groupName="project_type">
   <TabItem name="dart" label="Only Dart" icon="dart">
-    ```shell
+    ```shell showLineNumbers=false
     dart pub add reactter
     ```
   </TabItem>
   <TabItem name="flutter" label="With Flutter" icon="flutter">
-    ```shell
+    ```shell showLineNumbers=false
     flutter pub add flutter_reactter
     ```
   </TabItem>
@@ -75,6 +75,7 @@ Add the package on your project by adding the following line to your `pubspec.ya
     <Code
       title="pubspec.yaml"
       lang="yaml"
+      showLineNumbers={false}
       code={`
 dependencies:
   reactter: ${reactterVersion ? `^${reactterVersion}` : "# add version here"}
@@ -85,6 +86,7 @@ dependencies:
     <Code
       title="pubspec.yaml"
       lang="yaml"
+      showLineNumbers={false}
       code={`
 dependencies:
   flutter_reactter: ${flutterReactterVersion ? `^${flutterReactterVersion}` : "# add version here"}
@@ -97,12 +99,12 @@ After adding the package to your `pubspec.yaml` file, run the following command 
 
 <Tabs groupName="project_type">
   <TabItem name="dart" label="Only Dart" icon="dart">
-    ```shell
+    ```shell showLineNumbers=false
 dart pub get
     ```
   </TabItem>
   <TabItem name="flutter" label="With Flutter" icon="flutter">
-    ```shell
+    ```shell showLineNumbers=false
 flutter pub get
     ```
   </TabItem>
@@ -112,7 +114,7 @@ flutter pub get
 
 This step is optional but recommended. Use the <span class="inline-block align-middle">[![Reactter Lint](https://img.shields.io/pub/v/reactter_lint?color=1d7fac&labelColor=29b6f6&label=reactter_lint&logo=dart)](https://pub.dev/packages/reactter_lint)</span> package to enforce best practices and conventions in your project:
 
-```shell
+```shell showLineNumbers=false
 dart pub add reactter_lint
 ```
 
@@ -145,10 +147,8 @@ If you are new to Reactter, you can start by reading the core concepts section.
 This will help you understand the basic concepts of Reactter and how to use them in your project.
 
 In this section, the topics you will learn about are:
-- [Reactter's Three Pillars](/reactter/core_concepts/three_pillars)
+- [Reactter's Three Pillars](/reactter/core_concepts/reactter_three_pillars)
 - [Rendering Control](/reactter/core_concepts/rendering_control)
 - [Lifecycle](/reactter/core_concepts/lifecycle)
 - [Custom Hooks](/reactter/core_concepts/custom_hooks)
-
-
 

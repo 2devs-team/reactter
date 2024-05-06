@@ -4,3 +4,265 @@ description: The lifecycle of a component in React.
 sidebar:
   order: 3
 ---
+In Reactter, both the states and the dependency (managed by the [`dependency injection`](/reactter/core_concepts/reactter_three_pillars/#dependency-injection)) contain different stages,
+also known as <a href="https://pub.dev/documentation/reactter/latest/reactter/Lifecycle.html" target="_blank">`Lifecycle`</a>.
+The lifecycle entails events emitted through the [event handler](/reactter/core_concepts/reactter_three_pillars/#event-handler).
+
+Let's explore the lifecycle events of a dependency:
+
+- `Lifecycle.registered`: is triggered when the instance has been registered.
+- `Lifecycle.unregistered`: is triggered when the instance is no longer registered.
+- `Lifecycle.initialized`: is triggered when the instance has been initialized.
+- `Lifecycle.willMount` (exclusive of `flutter_reactter`): is triggered when the instance is going to be mounted in the widget tree.
+- `Lifecycle.didMount` (exclusive of `flutter_reactter`): is triggered after the instance has been successfully mounted in the widget tree.
+- `Lifecycle.willUpdate`: is triggered anytime the instance's state is about to be updated. The event parameter is a `ReactterState`.
+- `Lifecycle.didUpdate`: is triggered anytime the instance's state has been updated. The event parameter is a `ReactterState`.
+- `Lifecycle.willUnmount`(exclusive of `flutter_reactter`): is triggered when the instance is about to be unmounted from the widget tree.
+- `Lifecycle.didUnmount`(exclusive of `flutter_reactter`): is triggered when  the instance has been successfully unmounted from the widget tree.
+- `Lifecycle.destroyed`: is triggered when the instance has been destroyed.
+
+## Using Event Handler
+
+You can listen to the lifecycle events of a dependency by using the `on` method of the event handler. e.g:
+
+```dart title="main.dart"
+import 'package:reactter/reactter.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    Reactter.on(
+      ReactterDependency<Counter>(),
+      Lifecycle.unregistered,
+      (_, __) => print('Counter unregistered'),
+    );
+
+    Reactter.on(
+      ReactterDependency<Counter>(),
+      Lifecycle.registered,
+      (_, __) => print('Counter registered'),
+    );
+
+    Reactter.on(
+      ReactterDependency<Counter>(),
+      Lifecycle.initialized,
+      (_, __) => print('Counter initialized'),
+    );
+
+    Reactter.on(
+      ReactterDependency<Counter>(),
+      Lifecycle.destroyed,
+      (_, __) => print('Counter destroyed'),
+    );
+
+    return MaterialApp(
+      home: CounterApp(),
+    );
+  }
+}
+```
+
+:::note
+  The `ReactterDependency` is a generic class that takes the type of the dependency and optionally pass an `id`.
+  This class is used to identify the dependency in the event handler.
+  It ideal to use the `ReactterDependency` class when the dependency is not initialize yet.
+:::
+
+```dart title="counter.dart"
+import 'package:reactter/reactter.dart';
+
+class Counter extends Reactter {
+  final count = Signal(0);
+
+  counter() {
+    Reactter.on(this, Lifecycle.willMount, (_, __) {
+      print('Counter will mount');
+    });
+
+    Reactter.on(this, Lifecycle.didMount, (_, __) {
+      print('Counter mounted');
+    });
+
+    Reactter.on(this, Lifecycle.willUpdate, (_, state) {
+      print('Counter will update by $state');
+    });
+
+    Reactter.on(this, Lifecycle.didUpdate, (_, state) {
+      print('Counter did update by $state');
+    });
+
+    Reactter.on(this, Lifecycle.willUnmount, (_, __) {
+      print('Counter will unmount');
+    });
+
+    Reactter.on(this, Lifecycle.didUnmount, (_, __) {
+      print('Counter did unmount');
+    });
+  }
+
+  void increment() {
+    count.value++;
+  }
+
+  void decrement() {
+    count.value--;
+  }
+}
+```
+
+```dart title="counter_app.dart"
+import 'package:flutter/material.dart';
+import 'package:flutter_reactter/flutter_reactter.dart';
+
+class CounterPage extends StatelessWidget {
+  const CounterPage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ReactterProvider<Counter>(
+      () => Counter(),
+      builder: (context, counter, child) {
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text("Counter"),
+          ),
+          body: Row(
+            children: [
+              ElevatedButton(
+                onPressed: counter.decrement,
+                child: Icon(Icons.remove),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ReactterConsumer<Counter>(
+                  listenStates: (counter) => [counter.count],
+                  builder: (context, counter, child) {
+                    return Text("${counter.count}");
+                  },
+                ),
+              ),
+              ElevatedButton(
+                onPressed: counter.increment,
+                child: Icon(Icons.add),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+}
+```
+
+## Using LifecycleObserver
+
+You can extend your instances with <a href="https://pub.dev/documentation/reactter/latest/reactter/LifecycleObserver-class.html" target="_blank">`LifecycleObserver`</a> mixin for observing and reacting to the various lifecycle events. e.g:
+
+```dart title="counter.dart" "LifecycleObserver"
+import 'package:reactter/reactter.dart';
+
+class Counter extends LifecycleObserver  {
+  final count = Signal(0);
+
+  void increment() {
+    count.value++;
+  }
+
+  void decrement() {
+    count.value--;
+  }
+
+  void onInitialized() {
+    print('Counter initialized');
+  }
+
+  void onDidMount() {
+    print('Counter mounted');
+  }
+
+  void onWillMount() {
+    print('Counter will mount');
+  }
+
+  void onWillUpdate(ReactterState state) {
+    print('Counter will update by $state');
+  }
+
+  void onDidUpdate(ReactterState state) {
+    print('Counter did update by $state');
+  }
+
+  void onWillUnmount() {
+    print('Counter will unmount');
+  }
+
+  void onDidUnmount() {
+    print('Counter did unmount');
+  }
+}
+```
+
+```dart title="main.dart"
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: CounterApp(),
+    );
+  }
+}
+```
+
+```dart title="counter_app.dart"
+import 'package:flutter/material.dart';
+import 'package:flutter_reactter/flutter_reactter.dart';
+
+class CounterPage extends StatelessWidget {
+  const CounterPage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ReactterProvider<Counter>(
+      () => Counter(),
+      builder: (context, counter, child) {
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text("Counter"),
+          ),
+          body: Row(
+            children: [
+              ElevatedButton(
+                onPressed: counter.decrement,
+                child: Icon(Icons.remove),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ReactterConsumer<Counter>(
+                  listenStates: (counter) => [counter.count],
+                  builder: (context, counter, child) {
+                    return Text("${counter.count}");
+                  },
+                ),
+              ),
+              ElevatedButton(
+                onPressed: counter.increment,
+                child: Icon(Icons.add),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+}
+```

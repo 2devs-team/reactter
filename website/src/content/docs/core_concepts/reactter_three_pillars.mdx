@@ -4,8 +4,7 @@ description: Learn about the three pillars of Reactter.
 sidebar:
   order: 1
 ---
-
-import { Aside } from '@astrojs/starlight/components';
+import StateMethods from '@/content/docs/shareds/state_methods.mdx';
 
 Reactter is built on three pillars: **State Management**,
 **Dependency Injection**, and **Event Handler**.
@@ -34,13 +33,13 @@ including classes, hooks, and methods:
   - [batch](/reactter/methods/to_manage_state/batch)
   - [untracked](/reactter/methods/to_manage_state/untracked)
 
-<Aside>
-  The **hooks** (also known as [`ReactterHook`](https://pub.dev/documentation/reactter/latest/reactter/ReactterHook-class.html)) are named with the prefix `Use` according to convention.
-</Aside>
+:::note
+  The **hooks** (also known as <a href="https://pub.dev/documentation/reactter/latest/reactter/ReactterHook-class.html" target="_blank">`ReactterHook`</a>) are named with the prefix `Use` according to convention.
+:::
 
-<Aside type="tip">
+:::tip
   Learn about [Custom Hook](/reactter/core_concepts/custom_hook).
-</Aside>
+:::
 
 ### How it works
 
@@ -49,25 +48,11 @@ Contrary to the prevailing notion that implementing reactive programming in Dart
 Reactter greatly simplifies this process.
 To dive into the concept, let's start by exploring what constitutes a state in Reactter.
 
-All state in Reactter are classes that inherit [`ReactterState`](https://pub.dev/documentation/reactter/latest/reactter/ReactterState-class.html),
+All state in Reactter are classes that inherit <a href="https://pub.dev/documentation/reactter/latest/reactter/ReactterState-class.html" target="_blank">`ReactterState`</a>,
 and Reactter offers two fundamental approaches for creating states: [Signal](/reactter/classes/signal) and Hooks.
 This class provides some methods for managing states, which are:
 
-- [update](https://pub.dev/documentation/reactter/latest/reactter/ReactterState/update.html): Executes a callback function and notify its listeners that the state has changed.
-When it is invoked, it emits two events to signal the state transition:
-`Lifecycle.willUpdate` is emitted first, indicating the impending update, followed by `Lifecycle.didUpdate` once the update process is complete.
-- [refresh](https://pub.dev/documentation/reactter/latest/reactter/ReactterState/refresh.html): Forces the state to notify its listeners that it has changed.
-Unlike `update`, it emits only the `Lifecycle.didUpdate` event, as it doesn't involve any preparatory steps before the notification.
-- [bind](https://pub.dev/documentation/reactter/latest/reactter/ReactterState/bind.html): Establishes a connection between the state and a specific instance.
-This connection allows the instance to reactively update based on changes to the state.
-By binding the state, the instance becomes aware of changes to the state and can appropriately reflect those changes in its behavior.
-- [unbind](https://pub.dev/documentation/reactter/latest/reactter/ReactterState/unbind.html): Releases the connection between the state and the instance.
-When unbinding, the instance will no longer receive updates from the state.
-This can be useful when an instance is no longer actively using the state or when it needs to detach from the state temporarily or permanently.
-- [dispose](https://pub.dev/documentation/reactter/latest/reactter/ReactterState/dispose.html): Is responsible for cleaning up the state and any associated listeners or resources.
-Disposing of the state ensures that it is properly released and no longer consumes memory or processing resources unnecessarily.
-
-Although theses methods are available, it's not necessary to use them directly, as Reactter handles state management for you.
+<StateMethods />
 
 ### Example
 
@@ -126,14 +111,9 @@ class Signal<T> extends ReactterState[...] {
 }
 ```
 
-<Aside>
-The `bind`, `unbind` and `dispose` methods are normally used to manage the [lifecycle](/reactter/core_concepts/lifecycle) of a state.
-However, Reactter handles this automatically, when the state is declared inside an instance that is in the Reactter context using dependecy injection, so you don't need to worry about it.
-</Aside>
-
-<Aside type="tip">
+:::tip
   Learn about [Lifecycle](/reactter/core_concepts/lifecycles).
-</Aside>
+:::
 
 ## Dependency Injection
 
@@ -170,9 +150,9 @@ Reactter provides the following dependencies injection mechanisms:
   * [getInstanceManageMode](/reactter/methods/to_manage_instance/get_instance_manage_mode)
 
 
-<Aside type="tip">
+:::tip[With Flutter]
 If you are using Flutter, go to [Rendering Control](/reactter/core_concepts/rendering_control) to learn how it manage instances through Widgets and BuildContext extension methods.
-</Aside>
+:::
 
 ### How it works
 
@@ -232,21 +212,21 @@ If the dependency with/without `id` is not yet created, Reactter initializes it 
 
     The `Lifecycle.unregistered` event is emitted.
 
-<Aside>
+:::note
 `id` and `mode` are optional parameters.
 
 If `id` is not provided, Reactter will resolve the dependency based on the type of the class only.
 
 If `mode` is not provided, Reactter will use the default mode, which is `InstanceManageMode.builder`.
-</Aside>
+:::
 
-<Aside>
+:::note
 A **dependency** in Reactter is referred to as an **instance** of specific type.
-</Aside>
+:::
 
-<Aside type="tip">
+:::tip
   Learn about [Lifecycle](/reactter/core_concepts/lifecycles).
-</Aside>
+:::
 
 ### Example
 
@@ -386,13 +366,13 @@ it is completely deleted,
 including unregistration (deleting the builder function).
 
 Reactter identifies the builder mode as
-[`InstanceManageMode.builder`](https://pub.dev/documentation/reactter/6.0.0/InstanceManageMode/InstanceManageMode.builder.html)
+<a href="https://pub.dev/documentation/reactter/6.0.0/InstanceManageMode/InstanceManageMode.builder.html" target="_blank">`InstanceManageMode.builder`</a>
 and it's using for default.
 
-<Aside>
+:::note
   **Builder** uses less RAM than [Factory](#factory) and [Singleton](#singleton),
   but it consumes more CPU than the other modes.
-</Aside>
+:::
 
 ### Factory
 
@@ -404,16 +384,16 @@ In factory mode, when the dependency tree no longer needs it,
 the instance is deleted and the builder function is kept in the register.
 
 Reactter identifies the factory mode as
-[`InstanceManageMode.factory`](https://pub.dev/documentation/reactter/6.0.0/InstanceManageMode/InstanceManageMode.factory.html)
+<a href="https://pub.dev/documentation/reactter/6.0.0/InstanceManageMode/InstanceManageMode.factory.html" target="_blank">`InstanceManageMode.factory`</a>
 and to active it,set it in the `mode` argument of [`Reactter.register`](/reactter/methods/to_manage_instance/register) and [`Reactter.create`](/reactter/methods/to_manage_instance/create),
 or use [`Reactter.lazyFactory`](/reactter/methods/to_manage_instance/lazy_factory),  [`Reactter.factory`](/reactter/methods/to_manage_instance/factory).
 
-<Aside>
+:::note
   **Factory** uses more RAM than [Builder](#builder)
   but not more than [Singleton](#singleton),
   and consumes more CPU than [Singleton](#singleton)
   but not more than [Builder](#builder).
-</Aside>
+:::
 
 ### Singleton
 
@@ -424,19 +404,19 @@ The singleton mode preserves the instance and its states,
 even if the dependency tree stops using it.
 
 Reactter identifies the singleton mode as
-[`InstanceManageMode.singleton`](https://pub.dev/documentation/reactter/6.0.0/InstanceManageMode/InstanceManageMode.singleton.html)
+<a href="https://pub.dev/documentation/reactter/6.0.0/InstanceManageMode/InstanceManageMode.singleton.html" target="_blank">`InstanceManageMode.singleton`</a>
 and to active it,
 set it in the `mode` argument of [`Reactter.register`](/reactter/methods/to_manage_instance/register) and [`Reactter.create`](/reactter/methods/to_manage_instance/create),
 or use [`Reactter.lazySingleton`](/reactter/methods/to_manage_instance/lazy_singleton), [`Reactter.singleton`](/reactter/methods/to_manage_instance/singleton).
 
-<Aside>
+:::note
   **Singleton** consumes less CPU than [Builder](#builder) and [Factory](#factory),
   but uses more RAM than the other modes.
-</Aside>
+:::
 
-<Aside type="tip">
+:::note
   Use [`Reactter.destroy`](/reactter/methods/to_manage_instance/destroy) if you want to force destroy the instance and its register.
-</Aside>
+:::
 
 ## Event Handler
 
@@ -506,9 +486,9 @@ Whenever the `count` state changes, the **listener** function is invoked, printi
 Here, we can't see the emitter, because it's encapsulated within the `Signal` class, and it's called when the `value` of the `count` state changes.
 This mechanism is made possible by the underlying state management system.
 
-<Aside type="tip">
+:::tip
   Learn about [Lifecycle](/reactter/core_concepts/lifecycles).
-</Aside>
+:::
 
 Now, we do a small tweak to add an emitter:
 
