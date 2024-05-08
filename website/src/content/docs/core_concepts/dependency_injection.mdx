@@ -1,0 +1,306 @@
+---
+title: Dependency Injection
+description: Reactter provides a dependency injection system that allows you to manage instances across the app.
+sidebar:
+  order: 2
+---
+
+
+With Reactter, managing objects becomes straightforward. You can create, delete, and access desired objects from a single centralized location, accessible from anywhere in your code, all thanks to Reactter's robust dependency injection system.
+
+Dependency injection offers several benefits.
+
+- **Inversion of Control**: It adheres to the principle of inversion of control, where the responsibility for object creation and management is delegated to Reactter. This results in improved code modularity, reusability, and testability.
+- **Simplified Code**: By offloading the responsibility of creating dependencies from individual classes, dependency injection simplifies code, allowing classes to focus more on their core functionality.
+
+Reactter provides the following dependencies injection mechanisms:
+
+- Hooks
+  - [`UseInstance`](/reactter/hooks/UseInstance)
+- Methods
+  - [`Reactter.register`](/reactter/methods/to_manage_instance/register)
+  - [`Reactter.lazyBuilder`](/reactter/methods/to_manage_instance/lazy_builder)
+  - [`Reactter.lazyFactory`](/reactter/methods/to_manage_instance/lazy_factory)
+  - [`Reactter.lazySingleton`](/reactter/methods/to_manage_instance/lazy_singleton)
+  - [`Reactter.create`](/reactter/methods/to_manage_instance/create)
+  - [`Reactter.builder`](/reactter/methods/to_manage_instance/builder)
+  - [`Reactter.factory`](/reactter/methods/to_manage_instance/factory)
+  - [`Reactter.singleton`](/reactter/methods/to_manage_instance/singleton)
+  - [`Reactter.get`](/reactter/methods/to_manage_instance/get)
+  - [`Reactter.delete`](/reactter/methods/to_manage_instance/delete)
+  - [`Reactter.unregister`](/reactter/methods/to_manage_instance/unregister)
+  - [`Reactter.destroy`](/reactter/methods/to_manage_instance/destroy)
+  - [`Reactter.find`](/reactter/methods/to_manage_instance/find)
+  - [`Reactter.isRegistered`](/reactter/methods/to_manage_instance/is_registered)
+  - [`Reactter.getInstanceManageMode`](/reactter/methods/to_manage_instance/get_instance_manage_mode)
+
+
+:::tip[With Flutter]
+If you are using Flutter, go to [Rendering Control](/reactter/core_concepts/rendering_control) to learn how it manage instances through Widgets and BuildContext extension methods.
+:::
+
+## How it works
+
+Reactter manages the dependencies through a centralized mechanism.
+This core component serves as a central repository for registering, resolving, and providing dependencies across the app.
+To comprehend this mechanism thoroughly, let's break down the process into five stages:
+
+1. **Registration**: This stage involves registering the dependency into Reactter's context with the specified `id` and `mode` params.
+
+    For this, you can use the following methods:
+      - [`Reactter.register`](/reactter/methods/to_manage_instance/register)
+      - [`Reactter.lazyBuilder`](/reactter/methods/to_manage_instance/lazy_builder)(registers with `builder` mode)
+      - [`Reactter.lazyFactory`](/reactter/methods/to_manage_instance/lazy_factory)(registers with `factory` mode)
+      - [`Reactter.lazySingleton`](/reactter/methods/to_manage_instance/lazy_singleton)(registers with `singleton` mode)
+
+    The `Lifecycle.registered` event is emitted.
+
+2. **Resolving**: When there is a request for getting a dependency, Reactter gets it according to `id` and the `mode` through the registry.
+If the dependency with/without `id` is not yet created, Reactter initializes it based on registry(this condition doesn't apply to `find` method).
+
+    For this, you can use the following methods:
+      - [`Reactter.get`](/reactter/methods/to_manage_instance/get)
+      - [`Reactter.find`](/reactter/methods/to_manage_instance/find)(doesn't create the instance)
+      - [`Reactter.create`](/reactter/methods/to_manage_instance/create)(registers if not found in registry)
+      - [`Reactter.builder`](/reactter/methods/to_manage_instance/builder)(registers with `builder` mode if not found in registry)
+      - [`Reactter.factory`](/reactter/methods/to_manage_instance/factory)(registers with `factory` mode if not found in registry)
+      - [`Reactter.singleton`](/reactter/methods/to_manage_instance/singleton)(registers with `singleton` mode if not found in registry)
+
+    The following events are fired(only if the dependency is created):
+      - `Lifecycle.initialized`
+      - `Lifecycle.willMount`
+      - `Lifecycle.didMount`
+
+3. **Usage**: The dependency is then used across the app as needed.
+
+    Some of these events may occur:
+      - `Lifecycle.willUpdate`
+      - `Lifecycle.didUpdate`
+
+4. **Deleting**: When the dependency with/without `id` is no longer required, Reactter destroys it.
+
+    For this, you can use the following methods:
+      - [`Reactter.delete`](/reactter/methods/to_manage_instance/delete)
+      - [`Reactter.destroy`](/reactter/methods/to_manage_instance/destroy)(delete & unregister)
+
+    The following events are fired:
+      - `Lifecycle.willUnmount`
+      - `Lifecycle.didUnmount`
+      - `Lifecycle.destroyed`
+
+5. **Unregistration**: When the dependency with/without `id` is no longer required and depending on `mode`, Reactter unregisters it.
+
+    For this, you can use the following methods:
+      - [`Reactter.unregister`](/reactter/methods/to_manage_instance/unregister)
+      - [`Reactter.delete`](/reactter/methods/to_manage_instance/delete)
+      - [`Reactter.destroy`](/reactter/methods/to_manage_instance/destroy)
+
+    The `Lifecycle.unregistered` event is emitted.
+
+:::note
+`id` and `mode` are optional parameters.
+
+If `id` is not provided, Reactter will resolve the dependency based on the type of the class only.
+
+If `mode` is not provided, Reactter will use the default mode, which is `InstanceManageMode.builder`.
+:::
+
+:::note
+A **dependency** in Reactter is referred to as an **instance** of specific type.
+:::
+
+:::tip
+  Learn about [Lifecycle](/reactter/core_concepts/lifecycle).
+:::
+
+### Example
+
+To understand it better, we will return to the countdown example seen from the [State Management](/reactter/core_concepts/state_management/#example) page,
+but now using the dependency injection:
+
+```dart title="counter.dart" /((_*)count)(?!down)(?!er)(?!\u0060)/ "count.value" "Reactter.on" "Lifecycle.didUpdate"
+import 'package:reactter/reactter.dart';
+
+/// A class that represents a counter with a count state
+class Counter {
+  final Signal<int> _count;
+
+  int get count => _count.value;
+
+  const Counter(int initialValue) : _count = Signal(initialValue);
+
+  void decrement() => _count.value -= 1;
+}
+```
+
+```dart title="countdown.dart" "UseInstance.create" "Reactter.delete" "Reactter.on" "counter.count" "counter.decrement" "uCounter" "uCounter.instance" /Counter(?!\u0060)/ /(counter)[, ]/ "Lifecycle.didUpdate"
+import 'package:reactter/reactter.dart';
+import 'counter.dart';
+
+/// A class that represents a countdown using a counter
+class Countdown {
+  // Create an instance of the `Counter` class using the `UseInstance` hook
+  // and initialize it with an initial value of 10
+  final uCounter = UseInstance.create<Counter>(() => Counter(10));
+
+  // Get the instance of the `Counter` class
+  Counter get counter => uCounter.instance;
+
+  /// Start the countdown
+  Future<void> run() {
+    // Listen to the `didUpdate` event of the `counter` instance
+    // and print the current `value` of `count` each time it changes
+    Reactter.on(
+      counter,
+      Lifecycle.didUpdate,
+      (_, __) => print('Count: ${counter.count}'),
+    );
+
+    // Create a timer that decrements the `count` state by 1
+    // every second until it reaches 0
+    return Timer.periodic(Duration(seconds: 1), _countdown);
+  }
+
+  // Decrement the `count` state by 1 each time the timer ticks
+  // and delete the `Counter` instance when the count value reaches 0
+  void _countdown(Timer timer) {
+    counter.decrement();
+
+    if (counter.count == 0) {
+      timer.cancel();
+      Reactter.delete<Counter>();
+    }
+  }
+}
+```
+
+```dart title="main.dart" "Reactter.create" /Countdown(?!\u0060)/ /(countdown) =/ "countdown.run"
+import 'package:reactter/reactter.dart';
+import 'countdown.dart';
+
+void main() async {
+  // Create an instance of the `Countdown` class
+  final countdown = Reactter.create(() => Countdown())!;
+  // Start the countdown
+  await countdown.run();
+}
+```
+
+In this example, we have create a countdown of 10 seconds, and when it reaches 0, the `Counter` instance is deleted.
+But we will make a small tweak to change the countdown behavior.
+
+```dart title="main.dart" ins={3, 6-7} collapse={8-11} "Reactter.register" "Reactter.create" /Counter(?!\u0060)/ /Countdown(?!\u0060)/ /(countdown) =/ "countdown.run"
+import 'package:reactter/reactter.dart';
+import 'countdown.dart';
+import 'counter.dart';
+
+void main() async {
+  // Register the `Counter` class with an initial value of 20
+  Reactter.register(() => Counter(20));
+  // Create an instance of the `Countdown` class
+  final countdown = Reactter.create(() => Countdown())!;
+  // Start the countdown
+  await countdown.run();
+}
+```
+
+Now, the countdown will start from 20 and when it reaches 0, the `Counter` instance is deleted.
+What happens is that the `Counter` instance is registered with an initial value of 20,
+and when the `Countdown` instance is created, it uses the `Counter` instance registered.
+
+Ok, but what if we want to use the `Counter` instance in another part of the code? Let's look:
+
+```dart title="main.dart" ins={12-15} collapse={6-11} "Reactter.register" "Reactter.create" "Reactter.get" /counter(?!\\.)/ "counter?.count" /Counter(?!\u0060)(?! )/ /Countdown(?!\u0060)/ /(countdown) =/ "countdown.run"
+import 'package:reactter/reactter.dart';
+import 'countdown.dart';
+import 'counter.dart';
+
+void main() async {
+  // Register the `Counter` class with an initial value of 20
+  Reactter.register(() => Counter(20));
+  // Create an instance of the `Countdown` class
+  final countdown = Reactter.create(() => Countdown())!;
+  // Start the countdown
+  await countdown.run();
+  // Get the instance of the `Counter` class
+  final counter = Reactter.get<Counter>();
+  // Try to print the current count value
+  print('Count: ${counter?.count ?? 'Counter instance not found'}');
+}
+```
+In this case, the countdown will work as before, but when trying to get the `Counter` instance to print its value,
+the ouput will be _“Counter instance not found”_.
+This occurs because `Counter` was registered as `InstanceManageMode.builder`(the default mode),
+so when it was deleted at the end of the countdown its registration was also deleted.
+If we want to get the `Counter` instance to print its value, we need to register using the `InstanceManageMode.singleton` mode.
+
+Let's now delve into the **modes** of dependency registration.
+
+The **mode** with which a dependency is registered determines how it is managed by Reactter. There are three modes:
+
+- [Builder](#builder)
+- [Factory](#factory)
+- [Singleton](#singleton)
+
+## Builder
+
+Builder is a ways to manage an instance,
+which registers a builder function and creates the instance,
+unless it has already done so.
+
+In builder mode, when the dependency tree no longer needs it,
+it is completely deleted,
+including unregistration (deleting the builder function).
+
+Reactter identifies the builder mode as
+<a href="https://pub.dev/documentation/reactter/6.0.0/InstanceManageMode/InstanceManageMode.builder.html" target="_blank">`InstanceManageMode.builder`</a>
+and it's using for default.
+
+:::note
+  **Builder** uses less RAM than [Factory](#factory) and [Singleton](#singleton),
+  but it consumes more CPU than the other modes.
+:::
+
+## Factory
+
+Factory is a ways to manage an instance,
+which registers a builder function only once
+and creates the instance if not already done.
+
+In factory mode, when the dependency tree no longer needs it,
+the instance is deleted and the builder function is kept in the register.
+
+Reactter identifies the factory mode as
+<a href="https://pub.dev/documentation/reactter/6.0.0/InstanceManageMode/InstanceManageMode.factory.html" target="_blank">`InstanceManageMode.factory`</a>
+and to active it,set it in the `mode` argument of [`Reactter.register`](/reactter/methods/to_manage_instance/register) and [`Reactter.create`](/reactter/methods/to_manage_instance/create),
+or use [`Reactter.lazyFactory`](/reactter/methods/to_manage_instance/lazy_factory),  [`Reactter.factory`](/reactter/methods/to_manage_instance/factory).
+
+:::note
+  **Factory** uses more RAM than [Builder](#builder)
+  but not more than [Singleton](#singleton),
+  and consumes more CPU than [Singleton](#singleton)
+  but not more than [Builder](#builder).
+:::
+
+## Singleton
+
+Singleton is a ways to manage an instance,
+which registers a builder function and creates the instance only once.
+
+The singleton mode preserves the instance and its states,
+even if the dependency tree stops using it.
+
+Reactter identifies the singleton mode as
+<a href="https://pub.dev/documentation/reactter/6.0.0/InstanceManageMode/InstanceManageMode.singleton.html" target="_blank">`InstanceManageMode.singleton`</a>
+and to active it,
+set it in the `mode` argument of [`Reactter.register`](/reactter/methods/to_manage_instance/register) and [`Reactter.create`](/reactter/methods/to_manage_instance/create),
+or use [`Reactter.lazySingleton`](/reactter/methods/to_manage_instance/lazy_singleton), [`Reactter.singleton`](/reactter/methods/to_manage_instance/singleton).
+
+:::note
+  **Singleton** consumes less CPU than [Builder](#builder) and [Factory](#factory),
+  but uses more RAM than the other modes.
+:::
+
+:::note
+  Use [`Reactter.destroy`](/reactter/methods/to_manage_instance/destroy) if you want to force destroy the instance and its register.
+:::

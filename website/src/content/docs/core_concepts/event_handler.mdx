@@ -1,0 +1,131 @@
+---
+title: "Event Handler"
+description: "The base class for all event handlers in Reactter."
+sidebar:
+  order: 3
+---
+
+In Reactter, event handler plays a pivotal role in facilitating seamless communication
+and coordination between various components within the application.
+Designed to ensure efficient state management and dependency injection,
+fostering a cohesive ecosystem where different parts of the application can interact harmoniously.
+
+Reactter offers the following event handler mechanisms:
+
+- Hooks
+  - [`UseEffect`](/reactter/hooks/UseEffect)
+- Methods
+  - [`Reactter.on`](/reactter/methods/to_manage_event/on)
+  - [`Reactter.one`](/reactter/methods/to_manage_event/one)
+  - [`Reactter.off`](/reactter/methods/to_manage_event/off)
+  - [`Reactter.offAll`](/reactter/methods/to_manage_event/offAll)
+  - [`Reactter.emit`](/reactter/methods/to_manage_event/emit)
+
+## How it works
+
+Event handler in Reactter is based on a few fundamental concepts:
+
+- **Event**: An event is a enum that represents a specific action or occurrence in the application.
+- **Instance**: An instance is an object that emits and listens to events.
+- **Listener**: A listener is a function that is executed when an event is emitted.
+
+Understanding these concepts is crucial for effectively managing event-driven interactions in Reactter apps.
+
+### Example
+
+To illustrate this, let's take a countdown example seen from the [State Management](/reactter/core_concepts/state_management/#example) page:
+
+```dart title="main.dart" {10-14} /count(?!down)(?!\u0060)/ "count.value" "Reactter.on" "Lifecycle.didUpdate"
+import 'dart:async';
+import 'package:reactter/reactter.dart';
+
+// Create a reactive state called `count` using the `Signal` class
+final count = Signal(10);
+
+void main() async {
+  // Listen to the `didUpdate` event of the `count` state
+  // and print the `value` of `count` each time it changes
+  Reactter.on(
+    count,
+    Lifecycle.didUpdate,
+    (_, __) => print('Count: $count')
+  );
+
+  // Create a timer that decrements the `value` of `count`
+  // by 1 every second until it reaches 0
+  await Timer.periodic(Duration(seconds: 1), countdown);
+}
+
+// Decrement the `value` of `count` by 1 each time the timer ticks
+// and cancel the `timer` when the `value` of `count` reaches 0
+void countdown(Timer timer) {
+  count.value -= 1;
+
+  if (count.value == 0) {
+    timer.cancel();
+  }
+}
+```
+
+In this example, the line 10 to 14, we see that the `Reactter.on` method is used to subscribe to the `Lifecycle.didUpdate` **event** of the `count` **instance**.
+Whenever the `count` state changes, the **listener** function is invoked, printing the current `value` of the `count` state.
+
+Here, we can't see the emitter, because it's encapsulated within the `Signal` class, and it's called when the `value` of the `count` state changes.
+This mechanism is made possible by the underlying state management system.
+
+:::tip
+  Learn about [Lifecycle](/reactter/core_concepts/lifecycles).
+:::
+
+Now, we do a small tweak to add an emitter:
+
+```dart title="main.dart" ins={4,18-24,38-39} /count(?!down)(?!\u0060)/ "count.value" "Reactter.on" "Lifecycle.didUpdate" "Reactter.emit" /(CustomEvent) / /(CustomEvent(\.countdownFinished))(?!\u0060)/
+import 'dart:async';
+import 'package:reactter/reactter.dart';
+
+enum CustomEvent { countdownFinished }
+
+// Create a reactive state called `count` using the `Signal` class
+final count = Signal(10);
+
+void main() async {
+  // Listen to the `didUpdate` event of the `count` state
+  // and print the `value` of `count` each time it changes
+  Reactter.on(
+    count,
+    Lifecycle.didUpdate,
+    (_, __) => print('Count: $count')
+  );
+
+  // Listen to the `countdownFinished` event
+  // and print a message when the countdown is finished
+  Reactter.on(
+    count,
+    CustomEvent.countdownFinished,
+    (_, __) => print('Countdown finished!')
+  );
+
+  // Create a timer that decrements the `value` of `count`
+  // by 1 every second until it reaches 0
+  await Timer.periodic(Duration(seconds: 1), countdown);
+}
+
+// Decrement the `value` of `count` by 1 each time the timer ticks
+// and cancel the `timer` when the `value` of `count` reaches 0
+void countdown(Timer timer) {
+  count.value -= 1;
+
+  if (count.value == 0) {
+    timer.cancel();
+    // Emit the `CustomEvent.countdownFinished` event
+    Reactter.emit(count, CustomEvent.countdownFinished);
+  }
+}
+```
+
+We added a new **event** called `CustomEvent.countdownFinished` and a new **listener** that prints a message when the countdown is finished.
+When the countdown reaches 0, the `count` **instance** emits the `CustomEvent.countdownFinished` event, and the **listener** function is invoked, printing the message.
+
+This example demonstrates how the event handler system in Reactter enables seamless communication between different parts of the application,
+facilitating efficient coordination and interaction.
+
