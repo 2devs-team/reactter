@@ -2,7 +2,7 @@
 title: Rendering Control
 description: Learn how to control the rendering of components in Reactter.
 sidebar:
-  order: 2
+  order: 4
   badge:
     text: flutter
 ---
@@ -13,18 +13,18 @@ Reactter provides a way to easily control the rendering of components in the wid
 This package provides a collection of `Widgets` and some `BuildContext` methods:
 
 - Widgets
-  - `ReactterScope`
-  - `ReactterWatcher`
-  - `ReactterProvider`
-  - `ReactterProviders`
-  - `ReactterConsumer`
-  - `ReactterSelector`
-  - `ReactterComponent`
-- `BuildContext` methods
-  - `use`
-  - `watch`
-  - `watchId`
-  - `select`
+  - [`ReactterScope`](/reactter/widgets/reactter_scope)
+  - [`ReactterWatcher`](/reactter/widgets/reactter_watcher)
+  - [`ReactterProvider`](/reactter/widgets/reactter_provider)
+  - [`ReactterProviders`](/reactter/widgets/reactter_providers)
+  - [`ReactterConsumer`](/reactter/widgets/reactter_consumer)
+  - [`ReactterSelector`](/reactter/widgets/reactter_selector)
+  - [`ReactterComponent`](/reactter/widgets/reactter_component)
+- Extensions
+  - [`BuilderContext.use`](/reactter/extensions/builder_context_use)
+  - [`BuilderContext.watch`](/reactter/extensions/builder_context_watch)
+  - [`BuilderContext.watchId`](/reactter/extensions/builder_context_watch_id)
+  - [`BuilderContext.select`](/reactter/extensions/builder_context_select)
 
 ## How it works
 
@@ -37,31 +37,15 @@ This allows descendant widgets to access these dependencies as needed.
 Reactter widgets like `ReactterConsumer`, `ReactterSelector`, and `ReactterComponent` use these methods to observe dependencies or states.
 Whenever the dependency or any observed state undergoes a change, these widgets promptly trigger the rebuilding of the widget tree to reflect the updated state.
 
-## Example
+### Example
 
 Let's create a simple counter app using Reactter to demonstrate how to control the rendering of the widget tree in Flutter.
 
-```dart title="main.dart"
-import 'package:flutter/material.dart';
-
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: CounterApp(),
-    );
-  }
-}
-```
-
-```dart title="counter.dart"
+```dart title="counter.dart" "count"
 import 'package:reactter/reactter.dart';
 
 class Counter {
+  // Create a reactive state using the `Signal` class
   final count = Signal(0);
 
   void increment() {
@@ -74,7 +58,7 @@ class Counter {
 }
 ```
 
-```dart title="counter_app.dart"
+```dart title="counter_app.dart" /Counter(?!\u0060)(?!Page)/ "Counter()" "counter" "counter.increment" "counter.decrement" "counter.count" "ReactterProvider" "ReactterConsumer"
 import 'package:flutter/material.dart';
 import 'package:flutter_reactter/flutter_reactter.dart';
 
@@ -83,8 +67,9 @@ class CounterPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Provide the `Counter` dependency to the widget tree
     return ReactterProvider<Counter>(
-      () => Counter(),
+      () => Counter(), // Create an instance of the `Counter` class
       builder: (context, counter, child) {
         return Scaffold(
           appBar: AppBar(
@@ -99,8 +84,10 @@ class CounterPage extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: ReactterConsumer<Counter>(
+                  // Observe the `count` property of the `Counter` object
                   listenStates: (counter) => [counter.count],
                   builder: (context, counter, child) {
+                    // Rebuild the widget tree when the `count` value changes
                     return Text("${counter.count}");
                   },
                 ),
@@ -118,11 +105,22 @@ class CounterPage extends StatelessWidget {
 }
 ```
 
-In this example, we have done the following:
-- We have created a `Counter` class with a `count` property that is a `Signal` object.
-The `Signal` object is a reactive object that notifies its listeners when its value changes.
-- We have also created a `CounterPage` widget that uses the `ReactterProvider` widget to provide the `Counter` dependency to its descendant widgets.
-- The `ReactterConsumer` widget observes the `count` property of the `Counter` object and rebuilds the widget tree when the `count` value changes.
+```dart title="main.dart" collapse={1-100}
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: CounterApp(),
+    );
+  }
+}
+```
 
 Now, when you run the app, you will see a counter app with two buttons to increment and decrement the counter value.
 
@@ -134,7 +132,7 @@ but we can do the same functionality by using the `watch` method of the `BuildCo
 
 Here's how we can refactor the code to use the `watch` method along with a `Builder` widget to achieve the same outcome:
 
-```dart title="counter_app.dart" ins={27-33} del={24-26}
+```dart title="counter_app.dart" collapse={1-22, 40-50} del={25-28} ins={29-34} /Counter(?!\u0060)(?!Page)/ "counter" "counter.increment" "counter.decrement" "counter.count" "ReactterProvider" "ReactterConsumer" "context.watch"
 import 'package:flutter/material.dart';
 import 'package:flutter_reactter/flutter_reactter.dart';
 
@@ -143,8 +141,9 @@ class CounterPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Provide the `Counter` dependency to the widget tree
     return ReactterProvider<Counter>(
-      () => Counter(),
+      () => Counter(), // Create an instance of the `Counter` class
       builder: (context, counter, child) {
         return Scaffold(
           appBar: AppBar(
@@ -159,14 +158,16 @@ class CounterPage extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: ReactterConsumer<Counter>(
+                  // Observe the `count` property of the `Counter` object
                   listenStates: (counter) => [counter.count],
                   builder: (context, counter, child) {
                 child: Builder(
                   builder: (context) {
                     final counter = context.watch<Counter>(
+                      // Observe the `count` property of the `Counter` object
                       (counter) => [counter.count],
                     );
-
+                    // Rebuild the widget tree when the `count` value changes
                     return Text("${counter.count}");
                   },
                 ),
