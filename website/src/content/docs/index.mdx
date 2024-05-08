@@ -24,11 +24,23 @@ hero:
     - text: Explore on pub.dev
       link: https://pub.dev/packages/reactter
       icon: external
+      attrs:
+        target: _blank
 ---
 
 import { CardGrid } from "@astrojs/starlight/components";
 import Card from "@/components/Card.astro";
 import ScriptIndex from "@/components/ScriptIndex.astro";
+
+<div class="flex flex-col items-start justify-start">
+  ## Try it
+  Experience the full potential of Reactter by trying it online on <a href="https://zapp.run/pub/flutter_reactter" target="_blank">Zapp</a>.
+  <iframe
+    src="https://zapp.run/edit/zzm06d60n06?theme=dark&lazy=false&file=lib/examples/1_counter/counter_page.dart"
+    class="w-full !h-[600px]"
+    style="border: 0; overflow: hidden;"
+  ></iframe>
+</div>
 
 ## Features
 
@@ -61,15 +73,5 @@ import ScriptIndex from "@/components/ScriptIndex.astro";
     Test your states and logic easily. Reactter is 100% test coverage.
   </Card>
 </CardGrid>
-
-<div class="flex flex-col items-start justify-start">
-  ## Try Reactter online
-  Experience the full potential of Reactter by trying it online on [Zapp](https://zapp.run/pub/flutter_reactter).
-  <iframe
-    src="https://zapp.run/edit/zzm06d60n06?theme=dark&lazy=false&file=lib/examples/1_counter/counter_page.dart"
-    class="w-full !h-[600px]"
-    style="border: 0; overflow: hidden;"
-  ></iframe>
-</div>
 
 <ScriptIndex />
