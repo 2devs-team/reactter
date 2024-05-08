@@ -5,6 +5,7 @@
     "@astrojs/starlight": "^0.22.1",
     "@astrojs/starlight-tailwind": "^2.0.2",
     "@astrojs/tailwind": "^5.1.0",
+    "@expressive-code/plugin-collapsible-sections": "^0.35.3",
     "@expressive-code/plugin-line-numbers": "^0.35.3",
     "@types/alpinejs": "^3.13.10",
     "alpinejs": "^3.13.10",

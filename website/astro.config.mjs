@@ -20,6 +20,8 @@ export default defineConfig({
       customCss: ["./src/styles/custom.css"],
       defaultLocale: "root",
       components: {
+        // Hero: "./src/components/Hero.astro",
+        Search: "./src/components/Search.astro",
         SiteTitle: "./src/components/SiteTitle.astro",
         ThemeProvider: "./src/components/ThemeProvider.astro",
         ThemeSelect: "./src/components/ThemeSelect.astro",
