@@ -78,9 +78,10 @@ class Counter extends Reactter {
 }
 ```
 
-```dart title="counter_app.dart" collapse={1-100}
+```dart title="counter_app.dart" collapse={1-100} /Counter(?!\u0060)(?!Page)/ "Counter()" /counter(?!\\.dart)/ "counter.increment" "counter.decrement" "counter.count" "ReactterProvider" "ReactterConsumer"
 import 'package:flutter/material.dart';
 import 'package:flutter_reactter/flutter_reactter.dart';
+import 'counter.dart';
 
 class CounterPage extends StatelessWidget {
   const CounterPage({Key? key}) : super(key: key);
@@ -121,8 +122,11 @@ class CounterPage extends StatelessWidget {
   }
 }
 ```
-```dart title="main.dart" "Reactter.on" "ReactterDependency" "Lifecycle.unregistered" "Lifecycle.registered" "Lifecycle.initialized" "Lifecycle.destroyed"
+```dart title="main.dart" "Reactter.on" "ReactterDependency" "Lifecycle.unregistered" "Lifecycle.registered" "Lifecycle.initialized" "Lifecycle.destroyed" /(Counter)\\>/
+import 'package:flutter/material.dart';
 import 'package:reactter/reactter.dart';
+import 'counter_app.dart';
+import 'counter.dart';
 
 void main() {
   runApp(MyApp());
@@ -222,9 +226,10 @@ class Counter extends LifecycleObserver  {
 }
 ```
 
-```dart title="counter_app.dart"  collapse={1-100}
+```dart title="counter_app.dart"  collapse={1-100} /Counter(?!\u0060)(?!Page)/ "Counter()" /counter(?!\\.dart)/ "counter.increment" "counter.decrement" "counter.count" "ReactterProvider" "ReactterConsumer"
 import 'package:flutter/material.dart';
 import 'package:flutter_reactter/flutter_reactter.dart';
+import 'counter.dart';
 
 class CounterPage extends StatelessWidget {
   const CounterPage({Key? key}) : super(key: key);
@@ -268,6 +273,7 @@ class CounterPage extends StatelessWidget {
 
 ```dart title="main.dart"  collapse={1-100}
 import 'package:flutter/material.dart';
+import 'counter_app.dart';
 
 void main() {
   runApp(MyApp());

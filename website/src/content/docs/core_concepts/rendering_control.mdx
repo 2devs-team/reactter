@@ -58,9 +58,10 @@ class Counter {
 }
 ```
 
-```dart title="counter_app.dart" /Counter(?!\u0060)(?!Page)/ "Counter()" "counter" "counter.increment" "counter.decrement" "counter.count" "ReactterProvider" "ReactterConsumer"
+```dart title="counter_app.dart" /Counter(?!\u0060)(?!Page)/ "Counter()" /counter(?!\\.dart)/ "counter.increment" "counter.decrement" "counter.count" "ReactterProvider" "ReactterConsumer"
 import 'package:flutter/material.dart';
 import 'package:flutter_reactter/flutter_reactter.dart';
+import 'counter.dart';
 
 class CounterPage extends StatelessWidget {
   const CounterPage({Key? key}) : super(key: key);
@@ -107,6 +108,7 @@ class CounterPage extends StatelessWidget {
 
 ```dart title="main.dart" collapse={1-100}
 import 'package:flutter/material.dart';
+import 'counter_app.dart';
 
 void main() {
   runApp(MyApp());
@@ -132,9 +134,10 @@ but we can do the same functionality by using the `watch` method of the `BuildCo
 
 Here's how we can refactor the code to use the `watch` method along with a `Builder` widget to achieve the same outcome:
 
-```dart title="counter_app.dart" collapse={1-22, 40-50} del={25-28} ins={29-34} /Counter(?!\u0060)(?!Page)/ "counter" "counter.increment" "counter.decrement" "counter.count" "ReactterProvider" "ReactterConsumer" "context.watch"
+```dart title="counter_app.dart" collapse={1-25, 40-51} del={26-29} ins={30-35} /Counter(?!\u0060)(?!Page)/ /counter(?!\\.dart)/ "counter.increment" "counter.decrement" "counter.count" "ReactterProvider" "ReactterConsumer" "context.watch"
 import 'package:flutter/material.dart';
 import 'package:flutter_reactter/flutter_reactter.dart';
+import 'counter.dart';
 
 class CounterPage extends StatelessWidget {
   const CounterPage({Key? key}) : super(key: key);

@@ -35,7 +35,9 @@ To create a custom hook, you need to create a class that extends `ReactterHook` 
 
 Here's an example of a custom hook that increments and decrements a value:
 
-```dart title="use_count.dart" "ReactterHook" "ReactterHook.$register" {"* This line is REQUIRED!!":2-3} "update"
+```dart title="use_count.dart" "ReactterHook" "ReactterHook.$register" {"* This line is REQUIRED!!":4-5} "update" "_count"
+import 'package:reactter/reactter.dart';
+
 class UseCount extends ReactterHook {
 
   final $ = ReactterHook.$register;
@@ -74,7 +76,11 @@ To avoid this, it's recommended to place this line as the first line in the clas
 
 You can then call that custom hook from anywhere in the code and get access to its shared logic:
 
-```dart title="my_controller.dart" "UseCount" "count"
+```dart title="my_controller.dart" "UseCount" /count(?! )(?!.dart)/ "count.value"
+import 'dart:async';
+import 'package:reactter/reactter.dart';
+import 'use_count.dart';
+
 class MyController {
   final count = UseCount(0);
 

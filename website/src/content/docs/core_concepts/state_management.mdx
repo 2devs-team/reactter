@@ -86,7 +86,7 @@ void countdown(Timer timer) {
 During the process, as the `value` of `count` changes and triggers the `didUpdate` event,
 internally within the `Signal` class, the `update` method is invoked to notify its listeners(in line 11 of the code below), as follows:
 
-```dart "ReactterState" "_value" {11}
+```dart "ReactterState" "_value" "update"
 class Signal<T> extends ReactterState[...] {
   T _value;
 
