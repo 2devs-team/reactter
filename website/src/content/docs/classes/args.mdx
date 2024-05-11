@@ -4,3 +4,169 @@ description: Learn how to use generic arguments in Reactter.
 sidebar:
   order: 0.4
 ---
+
+<a href="https://pub.dev/documentation/reactter/6.0.0/reactter/Args-class.html" target="_blank">`Args`</a>, also known as *Generic Arguments*, is a class designed to represent arguments of specified types.
+It behaves as an immutable aggregate type like [`Record`](https://dart.dev/language/records#record-types), albeit with a maximum of three arguments.
+
+:::tip
+If your project supports [`Record`](https://dart.dev/language/records#record-types), it is recommended to use it instead of the generic arguments.
+:::
+
+It is usefult to use in the following cases:
+
+- **Function Argument Bundling**: When you need to pass multiple arguments to a function via a single argument.
+- **Argument Extraction**: When you required to get the arguments of a function as a list.
+- **Adaptation for Single-Argument Expectation**: In situations where a class or function anticipates a function with a single argument, but you need to provide it with a function that accepts multiple arguments, the [`Ary`](#ary-function) method is very useful.
+This adaptation is particularly valuable in contexts like employing the [`Memo`](/reactter/classes/memo) class or the [`UseAsyncState.withArg`](/reactter/hooks/use_async_state) hook, where compatibility hinges on transforming a multi-argument function into a single-argument one.
+
+## Classes
+
+Reactter provides theses generic arguments classes:
+
+- <a href="https://pub.dev/documentation/reactter/6.0.0/reactter/Args-class.html" target="_blank">`Args<A>`</a>: represents one or more arguments of `A` type.
+- <a href="https://pub.dev/documentation/reactter/6.0.0/reactter/Args1-class.html" target="_blank">`Args1<A>`</a> : represents a argument of `A` type.
+- <a href="https://pub.dev/documentation/reactter/6.0.0/reactter/Args2-class.html" target="_blank">`Args2<A, A2>`</a>: represents two arguments of `A`, `A2` type consecutively.
+- <a href="https://pub.dev/documentation/reactter/6.0.0/reactter/Args3-class.html" target="_blank">`Args3<A, A2, A3>`</a>: represents three arguments of `A`, `A2`, `A3` type consecutively.
+- <a href="https://pub.dev/documentation/reactter/6.0.0/reactter/ArgsX2.html" target="_blank">`ArgsX2<A>`</a>: represents two arguments of `A` type.
+- <a href="https://pub.dev/documentation/reactter/6.0.0/reactter/ArgsX3.html" target="_blank">`ArgsX3<A>`</a>: represents three arguments of `A` type.
+
+
+## Properties & Methods
+
+In each of the methods it provides theses properties and methods:
+
+- `arguments`: gets the list of arguments.
+- `toList<T>()`: gets the list of arguments `T` type.
+- `arg1`: gets the first argument.
+- `arg2`(`Args2`, `Args3`, `ArgsX2`, `ArgsX3` only): gets the second argument.
+- `arg3`(`Args3`, `ArgsX3` only): gets the third argument.
+
+## Usage
+
+To use it, you can create an instance and provide the specified types of arguments, e.g.:
+
+```dart
+void myFunction(Args2<int, String> args) {
+  print(args.arguments); // [1, "test"]
+}
+
+myFunction(Args2(1, "test"));
+```
+
+Alternatively, you can access the `arg1`, `arg2`, `arg3` properties to retrieve individual arguments, like so:
+
+```dart
+void myFunction(Args3<int, String, bool> args) {
+  print(args.arg1); // 1
+  print(args.arg2); // "test"
+  print(args.arg3); // true
+}
+
+myFunction(Args3(1, "test", true));
+```
+
+The `ArgsX2` and `ArgsX3` classes are similar to the `Args2` and `Args3` classes, but these classes are set to the same type of arguments.
+
+```dart
+void myFunction(ArgsX3<int> args) {
+  // get the list of arguments
+  print(args.arguments); // [1, 2, 3]
+  // or get the individual arguments
+  print(args.arg1); // 1
+  print(args.arg2); // 2
+  print(args.arg3); // 3
+}
+
+myFunction(ArgsX3(1, 2, 3));
+```
+
+## Type compatibility
+
+The `Args` classes are compatible with each other, so you can pass an `Args` instance to a function that expects an `Args` instance with fewer arguments, e.g.:
+
+```dart
+void myFunction(Args2<int, String> args) {
+  print(args.arg1); // 1
+  print(args.arg2); // "hello"
+}
+
+myFunction(Args3(1, "hello", false));
+```
+
+The `ArgsX2` and `ArgsX3` classes are compatible with the `Args2` and `Args3` classes, respectively, so you can pass an `ArgsX2` instance to a function that expects an `Args2` instance with the same type arguments, e.g.:
+
+```dart del="Args([1, 2])" del="Args1(1)" del="\"foo\"" del="\"bar\""
+void myFunction(ArgsX2<int> args) {
+  print(args.arg1); // 1
+  print(args.arg2); // 2
+}
+
+// theses are valid
+myFunction(Args2(1, 2));
+myFunction(Args3(1, 2, 3));
+myFunction(ArgsX3(1, 2, 3));
+
+// theses are invalid
+myFunction(Args([1, 2]));
+myFunction(Args1(1));
+myFunction(Args2(1, "foo"));
+myFunction(Args3(1, "bar", false));
+```
+
+## Equality Comparation
+
+The `Args` classes are comparable, so you can compare them with each other.
+Two Args instances are considered equal if they contain the same number of arguments and the values in each corresponding position match, e.g.:
+
+```dart del=/Args1\\((2)\\)\\); \\/\\/ false/ del=/Args1\\((\\{"foo": "bar"\\})\\)\\); \\/\\/ false/ del=/(Args1)\\((\\[1, 2\\])\\)\\); \\/\\/ false/ del=/(Args3)\\(2, "foo"(, false)\\)\\); \\/\\/ false/ del=/Args3\\(("bar"), (3), false\\)\\); \\/\\/ false/ del=/Args\\(\\[1, "foo", false, ("bar")\\]\\)\\); \\/\\/ false/
+// Theses are equal
+print(Args1(1) == Args1(1)); // true
+print(Args2(2, "foo") == Args2(2, "foo")); // true
+print(ArgsX3(3, "bar", false) == ArgsX3(3, "bar", false)); // true
+print(Args([1, "foo"]) == Args2(1, "foo")); // true
+print(Args2(2, "bar") == ArgsX2(2, "bar")); // true
+print(ArgsX3(3, "foo", false) == Args([3, "foo", false])); // true
+
+// The argument does not match
+print(Args1(1) == Args1(2)); // false
+// The argument does not match because Map object has a different reference
+print(Args1({"foo": "bar"}) == Args1({"foo": "bar"})); // false
+// Different number of arguments
+print(Args([1, 2]) == Args1([1, 2])); // false
+print(Args2(2, "foo") == Args3(2, "foo", false)); // false
+print(Args3(1, "foo", false) == Args([1, "foo", false, "bar"])); // false
+// Different type of arguments
+print(ArgsX3(3, "bar", false) == Args3("bar", 3, false)); // false
+```
+
+## Ary Function
+
+> The **arity** or **adicity** of a function is the number of arguments (i.e. inputs or parameters) it takes.
+
+Use `ary` Function extention to convert any `Function` with **_positional arguments_** to `Function` with generic argument, e.g.:
+
+```dart
+int addNum(int num1, int num2) => num1 + num2;
+
+final addNumAry = myFunction.ary; // It converted to `int Function(Args2(int, int))`
+addNumAry(Arg2(1, 1)); // 2
+
+// Can call it directly
+addNum.ary(ArgX2(2, 2)); // 4
+
+// Can convert to any function with any number of arguments
+void foo(int arg1, String arg2, bool arg3, List<int> arg4) => print("$arg1, $arg2, $arg3, $arg4");
+void bar(int arg1, int arg2, int arg3, int arg4, int arg5) => print("$arg1, $arg2, $arg3, $arg4, $arg5");
+
+final fooAry = foo.ary; // It converted to `void Function(Args<dynamic> args)`
+fooAry(Args([1, "test", true, [1, 2, 3]])); // 1, test, true, [1, 2, 3]
+
+final barAry = bar.ary; // It converted to `void Function(Args<int> args)`
+barAry(Args([1, 2, 3, 4, 5])); // 1, 2, 3, 4, 5
+```
+
+:::danger[IMPORTANT!!]
+The `ary` does not support functions with *named arguments*.
+If it is used with a `Function` with *named arguments*, it will throw an **ERROR** in runtime.
+So, make sure to use it with a function with *positional arguments* only.
+:::

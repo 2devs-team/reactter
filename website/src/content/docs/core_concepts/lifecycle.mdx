@@ -14,22 +14,22 @@ In Reactter, both the states and the dependency (managed by the [dependency inje
 also known as <a href="https://pub.dev/documentation/reactter/latest/reactter/Lifecycle.html" target="_blank">`Lifecycle`</a>.
 The lifecycle entails events emitted through the [event handler](/reactter/core_concepts/event_handler).
 
-Let's explore the lifecycle events of a dependency:
+Let's explore the lifecycle events:
 
-- `Lifecycle.registered`: is triggered when the instance has been registered.
-- `Lifecycle.unregistered`: is triggered when the instance is no longer registered.
-- `Lifecycle.initialized`: is triggered when the instance has been initialized.
-- `Lifecycle.willMount` (exclusive of `flutter_reactter`): is triggered when the instance is going to be mounted in the widget tree.
-- `Lifecycle.didMount` (exclusive of `flutter_reactter`): is triggered after the instance has been successfully mounted in the widget tree.
-- `Lifecycle.willUpdate`: is triggered anytime the instance's state is about to be updated. The event parameter is a `ReactterState`.
-- `Lifecycle.didUpdate`: is triggered anytime the instance's state has been updated. The event parameter is a `ReactterState`.
-- `Lifecycle.willUnmount`(exclusive of `flutter_reactter`): is triggered when the instance is about to be unmounted from the widget tree.
-- `Lifecycle.didUnmount`(exclusive of `flutter_reactter`): is triggered when  the instance has been successfully unmounted from the widget tree.
-- `Lifecycle.destroyed`: is triggered when the instance has been destroyed.
+- `Lifecycle.registered`: is triggered when the dependency has been registered.
+- `Lifecycle.unregistered`: is triggered when the dependency is no longer registered.
+- `Lifecycle.initialized`: is triggered when the dependency has been initialized.
+- `Lifecycle.willMount` (exclusive of `flutter_reactter`): is triggered when the dependency is going to be mounted in the widget tree.
+- `Lifecycle.didMount` (exclusive of `flutter_reactter`): is triggered after the dependency has been successfully mounted in the widget tree.
+- `Lifecycle.willUpdate`: is triggered anytime the state or the dependency is about to be updated. The event parameter is a `ReactterState`.
+- `Lifecycle.didUpdate`: is triggered anytime the state or the dependency has been updated. The event parameter is a `ReactterState`.
+- `Lifecycle.willUnmount`(exclusive of `flutter_reactter`): is triggered when the dependency is about to be unmounted from the widget tree.
+- `Lifecycle.didUnmount`(exclusive of `flutter_reactter`): is triggered when  the dependency has been successfully unmounted from the widget tree.
+- `Lifecycle.destroyed`: is triggered when the dependency has been destroyed.
 
 ## Using Event Handler
 
-You can listen to the lifecycle events of a dependency by using the `Reactter.on` method of the event handler. e.g:
+You can listen to the lifecycle events of a dependency by using `Reactter.on` or `Reactter.one` method of the event handler. e.g:
 
 :::note
 This example is taken from [Rendering Control](http://localhost:4321/reactter/core_concepts/rendering_control/#example) page.
@@ -153,7 +153,7 @@ class MyApp extends StatelessWidget {
       (_, __) => print('Counter initialized'),
     );
 
-    Reactter.on(
+    Reactter.one(
       ReactterDependency<Counter>(),
       Lifecycle.destroyed,
       (_, __) => print('Counter destroyed'),
