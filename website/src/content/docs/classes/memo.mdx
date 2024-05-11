@@ -5,7 +5,7 @@ sidebar:
   order: 0.2
 ---
 
-<a href="https://pub.dev/documentation/reactter/latest/reactter/Memo-class.html" target="_blank">`Memo`</a> is a class callable with memoization logic which it stores computation results in cacbe, and retrieve that same information from the cache the next time it's needed instead of computing it again.
+<a href="https://pub.dev/documentation/reactter/latest/reactter/Memo-class.html" target="_blank">`Memo`</a> is a class callable with memoization logic which it stores computation results in cache, and retrieve that same information from the cache the next time it's needed instead of computing it again.
 
 > Memoization is a powerful trick that can help speed up our code, especially when dealing with repetitive and heavy computing functions.
 
@@ -44,7 +44,7 @@ Here's an example of factorial using `Memo`:
 late final factorialMemo = Memo(calculateFactorial);
 
 /// A factorial(n!) represents the multiplication of all numbers between 1 and n.
-///For example, factorial(3) equals 3 x 2 x 1, which is 6.
+/// For example, factorial(3) equals 3 x 2 x 1, which is 6.
 BigInt calculateFactorial(int number) {
   if (number == 0) return BigInt.one;
   return BigInt.from(number) * factorialMemo(number - 1);

@@ -1704,7 +1704,7 @@ In each of the methods it provides theses methods and properties:
 
 ### Memo
 
-[`Memo`](https://pub.dev/documentation/reactter/latest/reactter/Memo-class.html) is a class callable with memoization logic which it stores computation results in cacbe, and retrieve that same information from the cache the next time it's needed instead of computing it again.
+[`Memo`](https://pub.dev/documentation/reactter/latest/reactter/Memo-class.html) is a class callable with memoization logic which it stores computation results in cache, and retrieve that same information from the cache the next time it's needed instead of computing it again.
 
 > **NOTE:**
 > Memoization is a powerful trick that can help speed up our code, especially when dealing with repetitive and heavy computing functions.
