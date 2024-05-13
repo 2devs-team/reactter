@@ -23,10 +23,10 @@ Memo<T, A>(
 - `computeValue`: A method that takes an argument of type `A` and returns a value of  `T` type. This is the core function that will be memoized.
 - `interceptor`: A <a href="https://pub.dev/documentation/reactter/6.0.0/reactter/MemoInterceptor-class.html" target="_blank">`MemoInterceptor`</a> that allows you to intercept the memoization function calls and modify the memoization process.
   Reactter providers some interceptors:
-  - <a href="https://pub.dev/documentation/reactter/6.0.0/reactter/MemoInterceptors-class.html" target="_blank">`MemoInterceptors`</a>: allows multiple memoization interceptors to be used together.
-  - <a href="https://pub.dev/documentation/reactter/6.0.0/reactter/MemoInterceptorWrapper-class.html" target="_blank">`MemoInterceptorWrapper`</a>: a wrapper for a memoized function that allows you to define callbacks for initialization, successful completion, error handling, and finishing.
-  - <a href="https://pub.dev/documentation/reactter/6.0.0/reactter/AsyncMemoSafe-class.html" target="_blank">`AsyncMemoSafe`</a>: prevents saving in cache if the `Future` calculation function throws an error during execution.
+  - <a href="https://pub.dev/documentation/reactter/6.0.0/reactter/AsyncMemoSafe-class.html" target="_blank">`AsyncMemoSafe`</a>: prevents caching if the `Future` calculation function throws an error during execution.
   - <a href="https://pub.dev/documentation/reactter/6.0.0/reactter/TemporaryCacheMemo-class.html" target="_blank">`TemporaryCacheMemo`</a>: removes memoized values from the cache after a specified duration.
+  - <a href="https://pub.dev/documentation/reactter/6.0.0/reactter/MemoInterceptorWrapper-class.html" target="_blank">`MemoInterceptorWrapper`</a>: Wraps a memoized function, enabling the definition of callbacks for initialization, successful completion, error handling, and finishing.
+  - <a href="https://pub.dev/documentation/reactter/6.0.0/reactter/MemoInterceptors-class.html" target="_blank">`MemoInterceptors`</a>: allows multiple memoization interceptors to be used together.
 
 ## Methods
 
