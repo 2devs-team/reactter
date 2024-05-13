@@ -146,23 +146,20 @@ print(ArgsX3(3, "bar", false) == Args3("bar", 3, false)); // false
 Use `ary` Function extention to convert any `Function` with **_positional arguments_** to `Function` with generic argument, e.g.:
 
 ```dart
-int addNum(int num1, int num2) => num1 + num2;
+import 'package:reactter/reactter.dart';
 
-final addNumAry = myFunction.ary; // It converted to `int Function(Args2(int, int))`
+// The `ary` extension is available for all functions with positional arguments
+int addNum(int num1, int num2) => num1 + num2;
+final addNumAry = myFunction.ary; // int Function(Args2(int, int))
 addNumAry(Arg2(1, 1)); // 2
 
-// Can call it directly
+// Alternatively, it can be called directly
 addNum.ary(ArgX2(2, 2)); // 4
 
-// Can convert to any function with any number of arguments
+// Any function with any number of arguments can be converted
 void foo(int arg1, String arg2, bool arg3, List<int> arg4) => print("$arg1, $arg2, $arg3, $arg4");
-void bar(int arg1, int arg2, int arg3, int arg4, int arg5) => print("$arg1, $arg2, $arg3, $arg4, $arg5");
-
-final fooAry = foo.ary; // It converted to `void Function(Args<dynamic> args)`
+final fooAry = foo.ary; // void Function(Args<dynamic> args)
 fooAry(Args([1, "test", true, [1, 2, 3]])); // 1, test, true, [1, 2, 3]
-
-final barAry = bar.ary; // It converted to `void Function(Args<int> args)`
-barAry(Args([1, 2, 3, 4, 5])); // 1, 2, 3, 4, 5
 ```
 
 :::danger[IMPORTANT!!]
