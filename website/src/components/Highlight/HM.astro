@@ -1,0 +1,29 @@
+---
+/// Highlight for method code
+
+import { parseHTML } from "linkedom";
+
+let html = await Astro.slots.render("default");
+const { document } = parseHTML(`<div id="highlight-wrapper">${html}</div>`);
+
+const $wrapper = document.querySelector("#highlight-wrapper");
+const $scopeElement =
+  document.querySelector("code") ?? $wrapper.firstElementChild ?? $wrapper;
+const $innerHTML = $scopeElement?.innerHTML;
+const $htmlSplit = $innerHTML.split(".");
+const $htmlBuiltin = $htmlSplit
+  .map((item, index) =>
+    index === 0 && $htmlSplit.length > 1
+      ? `<span class='highlight text-[#FFCB6B]'>${item}</span>`
+      : `<span class="highlight text-[#82AAFF]">${item}</span>`
+  )
+  .join("<span class='highlight text-[#89DDFF]'>.</span>")
+  .trim();
+
+$scopeElement.innerHTML = $htmlBuiltin;
+html = $wrapper.innerHTML;
+---
+
+<span class="highlight">
+  <Fragment client:only set:html={html} />
+</span>
