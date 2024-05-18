@@ -4,6 +4,7 @@ description: Reactter provides a simple and efficient way to manage the state of
 sidebar:
   order: 1
 ---
+import { HE, HM, HT } from '@/components/Highlight/index.ts';
 import StateMethods from '@/content/docs/shareds/state_methods.mdx';
 
 State management is a critical aspect of any application.
@@ -12,46 +13,46 @@ It allows you to manage the state of your application, and facilitates seamless 
 Reactter provides a variety of mechanisms for state management, including classes, hooks, and methods:
 
 - Classes
-  - [`Signal`](/reactter/classes/signal)
+  - <HT>[`Signal`](/reactter/classes/signal)</HT>
 - Hooks
-  - [`UseState`](/reactter/hooks/use_state)
-  - [`UseAsyncState`](/reactter/hooks/use_async_state)
-  - [`UseReducer`](/reactter/hooks/use_reducer)
-  - [`UseCompute`](/reactter/hooks/use_compute)
+  - <HT>[`UseState`](/reactter/hooks/use_state)</HT>
+  - <HT>[`UseAsyncState`](/reactter/hooks/use_async_state)</HT>
+  - <HT>[`UseReducer`](/reactter/hooks/use_reducer)</HT>
+  - <HT>[`UseCompute`](/reactter/hooks/use_compute)</HT>
 - Methods
-  - [`Reactter.lazyState`](/reactter/methods/to_manage_state/lazy_state)
-  - [`Reactter.batch`](/reactter/methods/to_manage_state/batch)
-  - [`Reactter.untracked`](/reactter/methods/to_manage_state/untracked)
+  - <HM>[`Reactter.lazyState`](/reactter/methods/to_manage_state/lazy_state)</HM>
+  - <HM>[`Reactter.batch`](/reactter/methods/to_manage_state/batch)</HM>
+  - <HM>[`Reactter.untracked`](/reactter/methods/to_manage_state/untracked)</HM>
 
 :::tip
-  Learn about [Hooks](/reactter/core_concepts/hooks).
+  Learn about <HT>[Hooks](/reactter/core_concepts/hooks)</HT>.
 :::
 
 ## How it works
 
-Reactter's state management system is based on the concept of **reactivity**.
+Reactter's state management system is based on the concept of _reactivity_.
 Contrary to the prevailing notion that implementing reactive programming in Dart can be challenging,
 Reactter greatly simplifies this process.
 To dive into the concept, let's start by exploring what constitutes a state in Reactter.
 
 ### State
 
-All state in Reactter are classes that inherit <a href="https://pub.dev/documentation/reactter/latest/reactter/ReactterState-class.html" target="_blank">`ReactterState`</a>, which encapsulates the data and behavior of a particular state, and provides a way to notify observers when the state changes.
+All state in Reactter are classes that inherit <HT><a href="https://pub.dev/documentation/reactter/latest/reactter/ReactterState-class.html" target="_blank">`ReactterState`</a></HT>,
+which encapsulates the data and behavior of a particular state, and provides a way to notify observers when the state changes.
 
-Reactter offers two fundamental approaches for creating states: [Signal](/reactter/classes/signal) and [Hooks](/reactter/core_concepts/hooks).
+Reactter offers two fundamental approaches for creating states: <HT>[`Signal`](/reactter/classes/signal)</HT> and <HT>[`Hooks`](/reactter/core_concepts/hooks)</HT>.
 
 ### State methods
 
-<a href="https://pub.dev/documentation/reactter/latest/reactter/ReactterState-class.html" target="_blank">`ReactterState`</a> class provides some methods for managing states, which are:
+<HT><a href="https://pub.dev/documentation/reactter/latest/reactter/ReactterState-class.html" target="_blank">`ReactterState`</a></HT> class provides some methods for managing states, which are:
 
 <StateMethods />
 
-
 ### Example
 
-Let's see an example of how a `Signal` state is used and what happens under the hood.
+Let's see an example of how a <HT>`Signal`</HT> state is used and what happens under the hood.
 
-```dart title="main.dart" /count(?!down)(?!\u0060)/ "count.value" "Reactter.on" "Lifecycle.didUpdate"
+```dart title="main.dart" /(Signal)(?!\u0060)/ /count(?!down)(?!\u0060)/ "count.value" "Reactter.on" "Lifecycle.didUpdate"
 import 'dart:async';
 import 'package:reactter/reactter.dart';
 
@@ -83,8 +84,8 @@ void countdown(Timer timer) {
 }
 ```
 
-During the process, as the `value` of `count` changes and triggers the `didUpdate` event,
-internally within the `Signal` class, the `update` method is invoked to notify its listeners(in line 11 of the code below), as follows:
+During the process, as the `value` of `count` changes and triggers the <HE>`Lifecycle.didUpdate`</HE> event,
+internally within the <HT>`Signal`</HT> class, the <HM>`update`</HM> method is invoked to notify its listeners(in line 11 of the code below), as follows:
 
 ```dart "ReactterState" "_value" "update"
 class Signal<T> extends ReactterState[...] {
@@ -105,5 +106,5 @@ class Signal<T> extends ReactterState[...] {
 ```
 
 :::tip
-  Learn about [Lifecycle](/reactter/core_concepts/lifecycle).
+  Learn about <HT>[Lifecycle](/reactter/core_concepts/lifecycle)</HT>.
 :::

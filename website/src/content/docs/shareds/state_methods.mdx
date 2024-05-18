@@ -1,22 +1,23 @@
 ---
 title: State Methods
 ---
+import { HE, HM, HT } from '@/components/Highlight/index.ts';
 
-- <a href="https://pub.dev/documentation/reactter/latest/reactter/ReactterState/update.html" target="_blank">`update`</a>: Executes a callback function and notify its listeners that the state has changed.
+- <HM><a href="https://pub.dev/documentation/reactter/latest/reactter/ReactterState/update.html" target="_blank">`update`</a></HM>: Executes a callback function and notify its listeners that the state has changed.
 When it is invoked, it emits two events to signal the state transition:
-`Lifecycle.willUpdate` is emitted first, indicating the impending update, followed by `Lifecycle.didUpdate` once the update process is complete.
-- <a href="https://pub.dev/documentation/reactter/latest/reactter/ReactterState/refresh.html" target="_blank">`refresh`</a>: Forces the state to notify its listeners that it has changed.
-Unlike `update`, it emits only the `Lifecycle.didUpdate` event, as it doesn't involve any preparatory steps before the notification.
-- <a href="https://pub.dev/documentation/reactter/latest/reactter/ReactterState/bind.html" target="_blank">`bind`</a>: Establishes a connection between the state and a specific instance.
+<HE>`Lifecycle.willUpdate`</HE> is emitted first, indicating the impending update, followed by <HE>`Lifecycle.didUpdate`</HE> once the update process is complete.
+- <HM><a href="https://pub.dev/documentation/reactter/latest/reactter/ReactterState/refresh.html" target="_blank">`refresh`</a></HM>: Forces the state to notify its listeners that it has changed.
+Unlike <HM>`update`</HM>, it emits only the <HE>`Lifecycle.didUpdate`</HE> event, as it doesn't involve any preparatory steps before the notification.
+- <HM><a href="https://pub.dev/documentation/reactter/latest/reactter/ReactterState/bind.html" target="_blank">`bind`</a></HM>: Establishes a connection between the state and a specific instance.
 This connection allows the instance to reactively update based on changes to the state.
 By binding the state, the instance becomes aware of changes to the state and can appropriately reflect those changes in its behavior.
-- <a href="https://pub.dev/documentation/reactter/latest/reactter/ReactterState/unbind.html" target="_blank">`unbind`</a>: Releases the connection between the state and the instance.
+- <HM><a href="https://pub.dev/documentation/reactter/latest/reactter/ReactterState/unbind.html" target="_blank">`unbind`</a></HM>: Releases the connection between the state and the instance.
 When unbinding, the instance will no longer receive updates from the state.
 This can be useful when an instance is no longer actively using the state or when it needs to detach from the state temporarily or permanently.
-- <a href="https://pub.dev/documentation/reactter/latest/reactter/ReactterState/dispose.html" target="_blank">`dispose`</a>: Is responsible for cleaning up the state and any associated listeners or resources.
+- <HM><a href="https://pub.dev/documentation/reactter/latest/reactter/ReactterState/dispose.html" target="_blank">`dispose`</a></HM>: Is responsible for cleaning up the state and any associated listeners or resources.
 Disposing of the state ensures that it is properly released and no longer consumes memory or processing resources unnecessarily.
 
 :::note
-The `bind`, `unbind` and `dispose` methods are normally used to manage the [lifecycle](/reactter/core_concepts/lifecycle) of a state.
+The <HM>`bind`</HM>, <HM>`unbind`</HM> and <HM>`dispose`</HM> methods are normally used to manage the <HT>[Lifecycle](/reactter/core_concepts/lifecycle)</HT> of a state.
 However, Reactter handles this automatically, when the state is declared inside an instance that exists within Reactter's context via the [dependecy injection](/reactter/core_concepts/reactter_three_pillars/#dependency-injection), so you don't need to worry about it.
 :::

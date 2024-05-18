@@ -4,6 +4,7 @@ description: "The base class for all event handlers in Reactter."
 sidebar:
   order: 3
 ---
+import { HE, HM, HT } from '@/components/Highlight/index.ts';
 
 In Reactter, event handler plays a pivotal role in facilitating seamless communication
 and coordination between various components within the application.
@@ -13,13 +14,13 @@ fostering a cohesive ecosystem where different parts of the application can inte
 Reactter offers the following event handler mechanisms:
 
 - Hooks
-  - [`UseEffect`](/reactter/hooks/UseEffect)
+  - <HT>[`UseEffect`](/reactter/hooks/UseEffect)</HT>
 - Methods
-  - [`Reactter.on`](/reactter/methods/to_manage_event/on)
-  - [`Reactter.one`](/reactter/methods/to_manage_event/one)
-  - [`Reactter.off`](/reactter/methods/to_manage_event/off)
-  - [`Reactter.offAll`](/reactter/methods/to_manage_event/offAll)
-  - [`Reactter.emit`](/reactter/methods/to_manage_event/emit)
+  - <HM>[`Reactter.on`](/reactter/methods/to_manage_event/on)</HM>
+  - <HM>[`Reactter.one`](/reactter/methods/to_manage_event/one)</HM>
+  - <HM>[`Reactter.off`](/reactter/methods/to_manage_event/off)</HM>
+  - <HM>[`Reactter.offAll`](/reactter/methods/to_manage_event/offAll)</HM>
+  - <HM>[`Reactter.emit`](/reactter/methods/to_manage_event/emit)</HM>
 
 ## How it works
 
@@ -67,10 +68,10 @@ void countdown(Timer timer) {
 }
 ```
 
-In this example, the line 10 to 14, we see that the `Reactter.on` method is used to subscribe to the `Lifecycle.didUpdate` **event** of the `count` **instance**.
+In this example, the line 10 to 14, we see that the <HM>`Reactter.on`</HM> method is used to subscribe to the <HE>`Lifecycle.didUpdate`</HE> **event** of the `count` **instance**.
 Whenever the `count` state changes, the **listener** function is invoked, printing the current `value` of the `count` state.
 
-Here, we can't see the emitter, because it's encapsulated within the `Signal` class, and it's called when the `value` of the `count` state changes.
+Here, we can't see the emitter, because it's encapsulated within the <HT>`Signal`</HT> class, and it's called when the `value` of the `count` state changes.
 This mechanism is made possible by the underlying state management system.
 
 :::tip
@@ -123,8 +124,8 @@ void countdown(Timer timer) {
 }
 ```
 
-We added a new **event** called `CustomEvent.countdownFinished` and a new **listener** that prints a message when the countdown is finished.
-When the countdown reaches 0, the `count` **instance** emits the `CustomEvent.countdownFinished` event, and the **listener** function is invoked, printing the message.
+We added a new **event** called <HE>`CustomEvent.countdownFinished`</HE> and a new **listener** that prints a message when the countdown is finished.
+When the countdown reaches 0, the `count` **instance** emits the <HE>`CustomEvent.countdownFinished`</HE> event, and the **listener** function is invoked, printing the message.
 
 This example demonstrates how the event handler system in Reactter enables seamless communication between different parts of the application,
 facilitating efficient coordination and interaction.

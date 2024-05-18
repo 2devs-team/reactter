@@ -4,25 +4,24 @@ description: Learn how to create a custom hook in Reactter.
 sidebar:
   order: 6
 ---
+import { HE, HM, HN, HT } from '@/components/Highlight/index.ts';
 
-import StateMethods from '@/content/docs/shareds/state_methods.mdx';
-
-Hooks are classes that extend [`ReactterHook`](https://pub.dev/documentation/reactter/latest/reactter/ReactterHook-class.html), follow a special naming convention with the `use` prefix and can contain state logic, effects or any other custom code.
+Hooks are classes that extend <HT>[`ReactterHook`](https://pub.dev/documentation/reactter/latest/reactter/ReactterHook-class.html)</HT>, follow a special naming convention with the <HT>`Use`</HT> prefix and can contain state logic, effects or any other custom code.
 
 Reactter provider some hooks to manage the state and side effects of the application, such as:
 
-- [`UseState`](/reactter/hooks/use_state)
-- [`UseAsyncState`](/reactter/hooks/use_async_state)
-- [`UseReducer`](/reactter/hooks/use_reducer)
-- [`UseCompute`](/reactter/hooks/use_compute)
-- [`UseEffect`](/reactter/hooks/use_effect)
-- [`UseInstance`](/reactter/hooks/use_instance)
+- <HT>[`UseState`](/reactter/hooks/use_state)</HT>
+- <HT>[`UseAsyncState`](/reactter/hooks/use_async_state)</HT>
+- <HT>[`UseReducer`](/reactter/hooks/use_reducer)</HT>
+- <HT>[`UseCompute`](/reactter/hooks/use_compute)</HT>
+- <HT>[`UseEffect`](/reactter/hooks/use_effect)</HT>
+- <HT>[`UseInstance`](/reactter/hooks/use_instance)</HT>
 
 ## Custom hook
 
-Reactter provides a way to create custom hooks to encapsulate logic that can be reused across the application.
+Reactter provides a way to create _**Custom Hooks**_ to encapsulate logic that can be reused across the application.
 
-There are several advantages to using Custom Hooks:
+There are several advantages to using _**Custom Hooks**_:
 
 - **Reusability**: to use the same hook again and again, without the need to write it twice.
 - **Clean Code**: extracting part of code into a hook will provide a cleaner codebase.
@@ -31,9 +30,9 @@ There are several advantages to using Custom Hooks:
 
 ### Creating a custom hook
 
-To create a custom hook, you need to create a class that extends `ReactterHook` and follow the naming convention with the `use` prefix.
+To create a _**Custom hook**_, you need to create a class that extends <HT>`ReactterHook`</HT> and follow the naming convention with the <HT>`Use`</HT> prefix.
 
-Here's an example of a custom hook that increments and decrements a value:
+Here's an example of a _**Custom Hook**_ that increments and decrements a value:
 
 ```dart title="use_count.dart" "ReactterHook" "ReactterHook.$register" {"* This line is REQUIRED!!":4-5} "update" "_count"
 import 'package:reactter/reactter.dart';
@@ -52,17 +51,17 @@ class UseCount extends ReactterHook {
 }
 ```
 
-In above example, we have used the `update` method to update the value of the `_count` variable.
-This methods is a part of the `ReactterHook` class that allows you to update the state of the hook.
+In above example, we have used the <HM>`update`</HM> method to update the value of the `_count` variable.
+This methods is a part of the <HT>`ReactterHook`</HT> class that allows you to update the state of the hook.
 
 :::note
-`ReactterHook` is a class that inherits from `ReactterState`.
+<HT>`ReactterHook`</HT> is a class that inherits from <HT>`ReactterState`</HT>.
 It provides a set of methods to manage the state and lifecycle of the hook.
 Learn more about [State methods](/reactter/core_concepts/state_management/#state-methods).
 :::
 
 :::caution[Attention!!]
-To create a custom hook(`ReactterHook`), you need to register it by adding the following line:
+To create a _**Custom Hook**_(<HT>`ReactterHook`</HT>), you need to register it by adding the following line:
 
 ```dart showLineNumbers=false
 final $ = ReactterHook.$register;
@@ -74,7 +73,7 @@ To avoid this, it's recommended to place this line as the first line in the clas
 
 ### Using a custom hook
 
-You can then call that custom hook from anywhere in the code and get access to its shared logic:
+You can then call that _**Custom Hook**_ from anywhere in the code and get access to its shared logic:
 
 ```dart title="my_controller.dart" "Reactter.on" "Lifecycle.didUpdate" "UseCount" /count(?! )(?!.dart)/ "count.value" "count.increment"
 import 'dart:async';
@@ -97,6 +96,6 @@ class MyController {
 }
 ```
 
-In this example, the `MyController` class uses the `UseCount` custom hook to manage the state of the `count` variable.
-The `count` variable is initialized with an initial value of `0` and is incremented by `1` every second using a timer.
-The `didUpdate` event of the `count` state is subscribed to, and the current value of the `count` state is printed every second.
+In this example, the <HT>`MyController`</HT> class uses the <HT>`UseCount`</HT> custom hook to manage the state of the `count` variable.
+The `count` variable is initialized with an initial value of <HN>`0`</HN> and is incremented by <HN>`1`</HN> every second using a timer.
+The <HE>`Lifecycle.didUpdate`</HE> event of the `count` state is subscribed to, and the current value of the `count` state is printed every second.

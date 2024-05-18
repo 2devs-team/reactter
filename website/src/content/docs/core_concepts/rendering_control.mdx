@@ -6,35 +6,35 @@ sidebar:
   badge:
     text: flutter
 ---
-
+import { HE, HM, HT } from '@/components/Highlight/index.ts';
 
 In Flutter, efficient rendering control is essential for crafting high-performance, responsive, and scalable applications.
-Reactter provides a way to easily control the rendering of components in the widget tree behavior effortlessly, using the `flutter_reactter` package.
-This package provides a collection of `Widgets` and some `BuildContext` methods:
+Reactter provides a way to easily control the rendering of components in the widget tree behavior effortlessly, using the _**flutter_reactter**_ package.
+This package provides a collection of <HT>`Widgets`</HT> and some <HT>`BuildContext`</HT> methods:
 
 - Widgets
-  - [`ReactterScope`](/reactter/widgets/reactter_scope)
-  - [`ReactterWatcher`](/reactter/widgets/reactter_watcher)
-  - [`ReactterProvider`](/reactter/widgets/reactter_provider)
-  - [`ReactterProviders`](/reactter/widgets/reactter_providers)
-  - [`ReactterConsumer`](/reactter/widgets/reactter_consumer)
-  - [`ReactterSelector`](/reactter/widgets/reactter_selector)
-  - [`ReactterComponent`](/reactter/widgets/reactter_component)
+  - <HT>[`ReactterScope`](/reactter/widgets/reactter_scope)</HT>
+  - <HT>[`ReactterWatcher`](/reactter/widgets/reactter_watcher)</HT>
+  - <HT>[`ReactterProvider`](/reactter/widgets/reactter_provider)</HT>
+  - <HT>[`ReactterProviders`](/reactter/widgets/reactter_providers)</HT>
+  - <HT>[`ReactterConsumer`](/reactter/widgets/reactter_consumer)</HT>
+  - <HT>[`ReactterSelector`](/reactter/widgets/reactter_selector)</HT>
+  - <HT>[`ReactterComponent`](/reactter/widgets/reactter_component)</HT>
 - Extensions
-  - [`BuilderContext.use`](/reactter/extensions/builder_context_use)
-  - [`BuilderContext.watch`](/reactter/extensions/builder_context_watch)
-  - [`BuilderContext.watchId`](/reactter/extensions/builder_context_watch_id)
-  - [`BuilderContext.select`](/reactter/extensions/builder_context_select)
+  - <HM>[`BuilderContext.use`](/reactter/extensions/builder_context_use)</HM>
+  - <HM>[`BuilderContext.watch`](/reactter/extensions/builder_context_watch)</HM>
+  - <HM>[`BuilderContext.watchId`](/reactter/extensions/builder_context_watch_id)</HM>
+  - <HM>[`BuilderContext.select`](/reactter/extensions/builder_context_select)</HM>
 
 ## How it works
 
 The rendering control in Reactter is based on two core concepts of Flutter:
 
 - **InheritedWidget**: This powerful mechanism efficiently shares data across the widget tree.
-Reactter extends this capability with the `ReactterProvider` widget, which stores dependencies using the dependency injection system.
+Reactter extends this capability with the <HT>`ReactterProvider`</HT> widget, which stores dependencies using the dependency injection system.
 This allows descendant widgets to access these dependencies as needed.
 - **BuildContext Methods**: These methods facilitate dependency access and rendering control within the widget tree.
-Reactter widgets like `ReactterConsumer`, `ReactterSelector`, and `ReactterComponent` use these methods to observe dependencies or states.
+Reactter widgets like <HT>`ReactterConsumer`</HT>, <HT>`ReactterSelector`</HT>, and <HT>`ReactterComponent`</HT> use these methods to observe dependencies or states.
 Whenever the dependency or any observed state undergoes a change, these widgets promptly trigger the rebuilding of the widget tree to reflect the updated state.
 
 ### Example
@@ -126,13 +126,13 @@ class MyApp extends StatelessWidget {
 
 Now, when you run the app, you will see a counter app with two buttons to increment and decrement the counter value.
 
-In this scenario, only the `text` widget will be rebuilt when the `count` value changes, not the entire widget tree.
-This is because the `ReactterConsumer` widget observes the `count` property and triggers the rebuilding of the widget tree when the `count` value changes.
+In this scenario, only the <HT>`Text`</HT> widget will be rebuilt when the `count` value changes, not the entire <HT>`CounterPage`</HT> widget.
+This is because the <HT>`ReactterConsumer`</HT> widget observes the `count` property and triggers the rebuilding of the widget tree when the `count` value changes.
 
-In example, we used the `ReactterConsumer` widget to observe the `count` property of the `counter` instance,
-but we can do the same functionality by using the `watch` method of the `BuildContext` class.
+In example, we used the <HT>`ReactterConsumer`</HT> widget to observe the `count` property of the `counter` instance,
+but we can do the same functionality by using the <HM>`watch`</HM> method of the <HT>`BuildContext`</HT> class.
 
-Here's how we can refactor the code to use the `watch` method along with a `Builder` widget to achieve the same outcome:
+Here's how we can refactor the code to use the <HM>`watch`</HM> method along with a <HT>`Builder`</HT> widget to achieve the same outcome:
 
 ```dart title="counter_app.dart" collapse={1-25, 40-51} del={26-29} ins={30-35} /Counter(?!\u0060)(?!Page)/ /counter(?!\\.dart)/ "counter.increment" "counter.decrement" "counter.count" "ReactterProvider" "ReactterConsumer" "context.watch"
 import 'package:flutter/material.dart';
@@ -188,9 +188,9 @@ class CounterPage extends StatelessWidget {
 }
 ```
 
-Although the `watch` method can be directly employed within the builder method of the `ReactterProvider` widget,
-it's advisable to utilize it alongside a `Builder` widget to prevent unnecessary rebuilds of the widget tree.
-This practice leverages the `BuildContext` scope, offering a more granular approach to rendering control within the widget tree.
+Although the <HM>`watch`</HM> method can be directly employed within the builder method of the <HT>`ReactterProvider`</HT> widget,
+it's advisable to utilize it alongside a <HT>`Builder`</HT> widget to prevent unnecessary rebuilds of the widget tree.
+This practice leverages the <HT>`BuildContext`</HT> scope, offering a more granular approach to rendering control within the widget tree.
 
-For more advanced use cases, you can employ other Reactter widgets and `BuildContext` methods to further refine the rendering control of the widget tree.
+For more advanced use cases, you can employ other Reactter's widgets and <HT>`BuildContext`</HT> methods to further refine the rendering control of the widget tree.
 By embracing these strategies, you can optimize the performance and efficiency of your Flutter applications while ensuring a seamless user experience.
