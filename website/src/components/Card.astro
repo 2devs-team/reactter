@@ -1,9 +1,8 @@
 ---
 import { Icon } from "@astrojs/starlight/components";
-import type { Icons } from "@astrojs/starlight/components/Icons";
 
 interface Props {
-  icon?: keyof typeof Icons;
+  icon?: string;
   title: string;
 }
 
@@ -17,7 +16,7 @@ const { icon, title } = Astro.props;
     class="card-inner flex flex-col relative w-full h-full overflow-hidden rounded-2xl transition duration-300"
   >
     <p class="title sl-flex">
-      {icon && <Icon name={icon} class="icon" size="1.333em" />}
+      {icon && <Icon name={icon as any} class="icon" size="1.333em" />}
       <span set:html={title} />
     </p>
     <div class="body"><slot /></div>

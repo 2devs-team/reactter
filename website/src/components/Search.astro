@@ -134,8 +134,7 @@ const pagefindTranslations = {
           const onIdle =
             window.requestIdleCallback || ((cb) => setTimeout(cb, 1));
           onIdle(async () => {
-            // @ts-expect-error — Missing types for @pagefind/default-ui package.
-            const { PagefindUI } = await import("@pagefind/default-ui");
+            const { PagefindUI } = await import("@pagefind/default-ui" as any);
             new PagefindUI({
               element: "#starlight__search",
               baseUrl: import.meta.env.BASE_URL,

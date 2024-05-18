@@ -13,7 +13,7 @@
 
   for (const card of document.querySelectorAll(".card")) {
     //@ts-ignore
-    card.onmousemove = (e) => handleOnMouseMove(e);
+    card.onmousemove = (e: any) => handleOnMouseMove(e);
   }
 
   const header = document.querySelector(".header");
