@@ -4,10 +4,11 @@ description: Learn how to use memoization in Reactter.
 sidebar:
   order: 0.2
 ---
+import { HM, HT } from '@/components/Highlight/index.ts';
 
-<a href="https://pub.dev/documentation/reactter/latest/reactter/Memo-class.html" target="_blank">`Memo`</a> is a class callable with memoization logic which it stores computation results in cache, and retrieve that same information from the cache the next time it's needed instead of computing it again.
+<HT><a href="https://pub.dev/documentation/reactter/latest/reactter/Memo-class.html" target="_blank">`Memo`</a></HT> is a class callable with _**memoization**_ logic which it stores computation results in cache, and retrieve that same information from the cache the next time it's needed instead of computing it again.
 
-> Memoization is a powerful trick that can help speed up our code, especially when dealing with repetitive and heavy computing functions.
+> _**Memoization**_ is a powerful trick that can help speed up our code, especially when dealing with repetitive and heavy computing functions.
 
 ## Syntax
 
@@ -18,27 +19,39 @@ Memo<T, A>(
 ]);
 ```
 
-`Memo` accepts theses properties:
+<HT>`Memo`</HT> accepts theses properties:
 
-- `computeValue`: A method that takes an argument of type `A` and returns a value of  `T` type. This is the core function that will be memoized.
-- `interceptor`: A <a href="https://pub.dev/documentation/reactter/6.0.0/reactter/MemoInterceptor-class.html" target="_blank">`MemoInterceptor`</a> that allows you to intercept the memoization function calls and modify the memoization process.
+- <HM>`computeValue`</HM>: A method that takes an argument of type <HT>`A`</HT> and returns a value of <HT>`T`</HT> type. This is the core function that will be memoized.
+- `interceptor`: A <HT><a href="https://pub.dev/documentation/reactter/latest/reactter/MemoInterceptor-class.html" target="_blank">`MemoInterceptor`</a></HT> that allows you to intercept the memoization function calls and modify the memoization process.
   Reactter providers some interceptors:
-  - <a href="https://pub.dev/documentation/reactter/6.0.0/reactter/AsyncMemoSafe-class.html" target="_blank">`AsyncMemoSafe`</a>: prevents caching if the `Future` calculation function throws an error during execution.
-  - <a href="https://pub.dev/documentation/reactter/6.0.0/reactter/TemporaryCacheMemo-class.html" target="_blank">`TemporaryCacheMemo`</a>: removes memoized values from the cache after a specified duration.
-  - <a href="https://pub.dev/documentation/reactter/6.0.0/reactter/MemoInterceptorWrapper-class.html" target="_blank">`MemoInterceptorWrapper`</a>: Wraps a memoized function, enabling the definition of callbacks for initialization, successful completion, error handling, and finishing.
-  - <a href="https://pub.dev/documentation/reactter/6.0.0/reactter/MemoInterceptors-class.html" target="_blank">`MemoInterceptors`</a>: allows multiple memoization interceptors to be used together.
+  - <HT><a href="https://pub.dev/documentation/reactter/latest/reactter/AsyncMemoSafe-class.html" target="_blank">`AsyncMemoSafe`</a></HT>: prevents caching if the <HT>`Future`</HT> calculation function throws an error during execution.
+  - <HT><a href="https://pub.dev/documentation/reactter/latest/reactter/TemporaryCacheMemo-class.html" target="_blank">`TemporaryCacheMemo`</a></HT>: removes memoized values from the cache after a specified duration.
+  - <HT><a href="https://pub.dev/documentation/reactter/latest/reactter/MemoInterceptorWrapper-class.html" target="_blank">`MemoInterceptorWrapper`</a></HT>: Wraps a memoized function, enabling the definition of callbacks for initialization, successful completion, error handling, and finishing.
+  - <HT><a href="https://pub.dev/documentation/reactter/latest/reactter/MemoInterceptors-class.html" target="_blank">`MemoInterceptors`</a></HT>: allows multiple memoization interceptors to be used together.
 
 ## Methods
 
-`Memo` provides the following methods that will help you manipulate the cache as you wish:
+<HT>`Memo`</HT> provides the following methods that will help you manipulate the cache as you wish:
 
-- `T? get(A arg)`: returns the cached value by `arg`.
-- `T? remove(A arg)`: removes the cached value by `arg`.
-- `clear`: removes all cached data.
+- <HM>`get`</HM>: Returns the cached value by argument passed.
+  - Syntax:
+    ```dart showLineNumbers=false
+    T? get(A arg);
+    ```
+- <HM>`remove`</HM>: Removes the cached value by argument passed.
+  - Syntax:
+    ```dart showLineNumbers=false
+    T? remove(A arg);
+    ```
+- <HM>`clear`</HM>: Removes all cached data.
+  - Syntax:
+    ```dart showLineNumbers=false
+    void clear();
+    ```
 
 ## Example
 
-Here's an example of factorial using `Memo`:
+Here's an example of factorial using <HT>`Memo`</HT>:
 
 ```dart
 late final factorialMemo = Memo(calculateFactorial);
@@ -71,16 +84,16 @@ void main() {
 }
 ```
 
-In the above example, the `factorialMemo` function is called with different numbers, and the results are stored in the cache.
-When the same number is passed to the `factorialMemo` function again, the result is retrieved from the cache instead of recalculating it.
+In the above example, the <HM>`factorialMemo`</HM> function is called with different numbers, and the results are stored in the cache.
+When the same number is passed to the <HM>`factorialMemo`</HM> function again, the result is retrieved from the cache instead of recalculating it.
 
 :::note
-The `computeValue` of `Memo` accepts one argument only.
-If you want to add more arguments, you can supply it using the <a href="https://dart.dev/language/records" target="_blank">`Record`</a>(if your proyect support) 
-or [`Args`](/reactter/classes/args)(provided by Reactter).
+The `computeValue` of <HT>`Memo`</HT> accepts one argument only.
+If you want to add more arguments, you can supply it using the <HT><a href="https://dart.dev/language/records" target="_blank">`Record`</a></HT>(if your proyect support)
+or <HT>[`Args`](/reactter/classes/args)</HT>(A generic arguments provided by Reactter).
 :::
 
 :::note
-Use <a href="https://pub.dev/documentation/reactter/6.0.0/reactter/Memo/inline.html" target="_blank">`Memo.inline`</a> in case there is a typing conflict,
-e.g. with the [`UseAsyncState`](/reactter/hooks/use_async_state) and [`UseCompute`](/reactter/hooks/use_compute) hooks which a `Function` type is required.
+Use <HM><a href="https://pub.dev/documentation/reactter/latest/reactter/Memo/inline.html" target="_blank">`Memo.inline`</a></HM> in case there is a typing conflict,
+e.g. with the <HT>[`UseAsyncState`](/reactter/hooks/use_async_state)</HT> and <HT>[`UseCompute`](/reactter/hooks/use_compute)</HT> hooks which a <HT>`Function`</HT> type is required.
 :::
