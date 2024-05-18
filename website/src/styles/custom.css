@@ -40,3 +40,27 @@
 ol ul:last-child {
   margin-bottom: 1rem;
 }
+
+.expressive-code .ec-line .code mark {
+  background-color: transparent;
+}
+
+.expressive-code  .ec-line.highlight.mark {
+  background-color: var(--sl-color-accent-low);
+}
+
+.expressive-code pre {
+  --ec-brdRad: 0.2rem;
+  --ec-brdWd: 1px;
+}
+
+.expressive-code .frame {
+  --ec-brdRad: 0.2rem;
+  --ec-brdWd: 1px;
+  --header-border-radius: calc(var(--ec-brdRad) + var(--ec-brdWd));
+  --tab-border-radius: calc(var(--ec-frm-edTabBrdRad) + var(--ec-brdWd));
+  --button-spacing: 0.4rem;
+  --code-background: var(--ec-frm-edBg);
+  border-radius: var(--header-border-radius);
+  box-shadow: var(--ec-frm-frameBoxShdCssVal);
+}

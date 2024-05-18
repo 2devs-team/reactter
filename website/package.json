@@ -1,4 +1,14 @@
 {
+  "type": "module",
+  "version": "0.0.1",
+  "name": "website_reactter",
+  "scripts": {
+    "astro": "astro",
+    "build": "astro check && astro build",
+    "dev": "astro dev",
+    "preview": "astro preview",
+    "start": "astro dev"
+  },
   "dependencies": {
     "@astrojs/alpinejs": "^0.4.0",
     "@astrojs/check": "^0.5.10",
@@ -20,15 +30,5 @@
     "prettier": "^3.2.5",
     "prettier-plugin-astro": "^0.13.0",
     "sass": "^1.76.0"
-  },
-  "name": "website_reactter",
-  "scripts": {
-    "astro": "astro",
-    "build": "astro check && astro build",
-    "dev": "astro dev",
-    "preview": "astro preview",
-    "start": "astro dev"
-  },
-  "type": "module",
-  "version": "0.0.1"
+  }
 }
