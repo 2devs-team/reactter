@@ -4,10 +4,13 @@ description: Learn how to use the `useState` hook in Reactter.
 sidebar:
   order: 1
 ---
+import { HK, HM, HT } from '@/components/Highlight';
+import MDXRedry from '@/components/MDXRedry.astro';
+import StateMethodsLite from '@/content/docs/shareds/state_methods_lite.mdx';
+import * as NoteStateValueNotifies from '@/content/docs/shareds/note_state_value_notifies.mdx';
+import * as ListeningChangesHook from '@/content/docs/shareds/listening_changes_hook.mdx';
 
-import StateMethodsShort from '@/content/docs/shareds/state_methods_short.mdx';
-
-<a href="https://pub.dev/documentation/reactter/latest/reactter/UseState-class.html">`UseState`</a> is a [hook](/reactter/core_concepts/hooks) that allows to declare state variables and manipulate its `value`, which in turn notifies about its changes to listeners.
+<HT><a href="https://pub.dev/documentation/reactter/latest/reactter/UseState-class.html">`UseState`</a></HT> is a [hook](/reactter/core_concepts/hooks) that allows to declare state variables and manipulate its `value`, which in turn notifies about its changes to listeners.
 
 ## Syntax
 
@@ -15,29 +18,30 @@ import StateMethodsShort from '@/content/docs/shareds/state_methods_short.mdx';
 UseState<T>(T initialValue);
 ```
 
-`UseState` accepts this property:
+<HT>`UseState`</HT> accepts this property:
 
 - `initialValue`: Initial value of `T` type that it will hold.
 
-## Methods
+## Properties & Methods
 
-`UseState` provides the following methods:
+<HT>`UseState`</HT> provides the following properties and methods:
 
-- `value`: A property that allows to read and write its state.
-- `ReactterState` methods(Learn more [here](/reactter/core_concepts/state_management/#state-methods)):
-  <StateMethodsShort/>
+- `value`: A getter/setter that allows to read and write its state.
+<StateMethodsLite/>
 
-## Declaration
+## Usage
 
-`UseState` can be initialized using the constructor class:
+### Declaration
 
-```dart showLineNumbers=false
+<HT>`UseState`</HT> can be initialized using the constructor class:
+
+```dart showLineNumbers=false "UseState"
 final intState = UseState<int>(0);
 final strState = UseState("initial value");
 final userState = UseState(User());
 ```
 :::note
-To appropriately use the `late` hook inside a class registered via the [dependency injection](/reactter/core_concepts/dependency_injection), use `Reactter.lazyState`.
+To appropriately use the <HK>`late`</HK> hook inside a class registered via the [dependency injection](/reactter/core_concepts/dependency_injection), use <HM>`Reactter.lazyState`</HM>.
 Learn more about it [here](/reactter/methods/to_manage_state/lazy_state). e.g:
 
   ```dart title="Counter.dart" "Reactter.lazyState" "UseState"
@@ -50,49 +54,37 @@ Learn more about it [here](/reactter/methods/to_manage_state/lazy_state). e.g:
   ```
 :::
 
-## Reading and writing the value
+### Reading and writing the value
 
-`UseState` has a `value` property that allows to read and write its state:
+<HT>`UseState`</HT> has a `value` property that allows to read and write its state:
 
-```dart showLineNumbers=false
+```dart showLineNumbers=false ".value"
 intState.value = 10;
 print("Current state: ${intState.value}");
 ```
-:::note
-`UseState` notifies that its `value` has changed when the previous `value` is different from the current `value`.
-If its `value` is an `Object`, it does not detect internal changes, only when `value` is setted to another `Object`.
-:::
+<MDXRedry mdx={NoteStateValueNotifies} vars={{
+  hookName: 'UseState',
+}}/>
 
-## Updating the value
+### Updating the value
 
-Use `update` method to notify changes after run a set of instructions:
+Use <HM>`update`</HM> method to notify changes after run a set of instructions:
 
-```dart showLineNumbers=false
-userState.update((user) {
-  user.firstname = "Firstname";
-  user.lastname = "Lastname";
+```dart showLineNumbers=false ".update"
+uState.update((value) {
+  uState.value = "New value";
 });
 ```
 
-Use `refresh` method to force to notify changes.
+Use <HM>`refresh`</HM> method to force to notify changes.
 
-```dart showLineNumbers=false
+```dart showLineNumbers=false ".refresh"
 userState.refresh();
 ```
 
-## Listening to changes
+### Listening to changes
 
-When `value` has changed, the `UseState` will emit the following events(learn about it [here](/reactter/core_concepts/lifecycle/)):
-
-- `Lifecycle.willUpdate` event is triggered before the `value` change or `update`, `refresh` methods have been invoked.
-- `Lifecycle.didUpdate` event is triggered after the `value` change or `update`, `refresh` methods have been invoked.
-
-Example of listening to changes:
-
-```dart showLineNumbers=false
-Reactter.on(
-  userState,
-  Lifecycle.didUpdate,
-  (user, _) => print("User: ${user.firstname} ${user.lastname}"),
-);
-```
+<MDXRedry mdx={ListeningChangesHook} vars={{
+  hookName: 'UseState',
+  hookVariable: 'myState',
+}}/>
