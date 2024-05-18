@@ -1,0 +1,23 @@
+---
+import type { AstroComponentFactory } from "astro/runtime/server/index.js";
+import MDXVariable from "./MDXVariable.astro";
+
+type Props = {
+  mdx: {
+    Content: AstroComponentFactory;
+    frontmatter: Record<string, any>;
+  };
+  vars?: Record<string, string>;
+};
+
+const { mdx, vars }: Props = Astro.props;
+
+const {
+  Content,
+  frontmatter: { vars: frontmatterVars },
+} = mdx;
+---
+
+<MDXVariable vars={{ ...(frontmatterVars ?? {}), ...vars }}>
+  <Content />
+</MDXVariable>

@@ -1,0 +1,15 @@
+---
+type Props = {
+  vars?: Record<string, string>;
+};
+
+const { vars }: Props = Astro.props;
+let contentHtml = await Astro.slots.render("default");
+
+for (const key in vars ?? {}) {
+  const value = vars[key];
+  contentHtml = contentHtml.replaceAll(`[[${key}]]`, value);
+}
+---
+
+<Fragment client:only set:html={contentHtml} />
