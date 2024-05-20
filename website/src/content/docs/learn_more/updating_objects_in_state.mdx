@@ -1,0 +1,162 @@
+---
+title: Updating Objects in State
+description: Updating objects in state
+---
+import { HM, HN, HS, HT } from '@/components/Highlight/index.ts';
+
+States(<HT>`ReactterState`</HT>) like <HT>`Signal`</HT>, <HT>`UseState`</HT>, <HT>`UseAsyncState`</HT>, <HT>`UseReducer`</HT> and <HT>`UseCompute`</HT> can hold any type of Dart value, including objects.
+However, you should not modify objects held in the Reactter state directly,
+when you need to update an object, create a new one or make a copy of the existing object,
+and then set the state to use this new or copied object.
+
+## What is a mutation?
+
+You can store any kind of JavaScript value in state.
+
+```dart showLineNumbers=false
+final count = Signal(0);
+```
+
+So far you've been working with numbers, strings, and booleans.
+These kinds of Dart values are _**immutable**_, meaning unchangeable or _**read-only**_.
+You can trigger a re-render to replace a value:
+
+```dart showLineNumbers=false
+count.value = 2;
+```
+
+The `count` state changed from <HN>`0`</HN> to <HN>`2`</HN>, but the number <HN>`0`</HN> itself did not change.
+It's not possible to make any changes to the built-in primitive values like numbers, strings, and booleans in Dart.
+
+Now consider an object in state:
+
+```dart showLineNumbers=false collapse={1-7}
+class User {
+  final String name;
+  final int age;
+
+  const User({required this.name, required this.age});
+}
+
+final user = Signal(User(name: 'Jane Doe', age: 25));
+```
+
+Technically, it is possible to change the contents of the object itself. This is called a mutation:
+
+```dart showLineNumbers=false
+user.value.name = 'John Doe';
+```
+
+However, although objects in Reactter state are technically mutable, you should treat them as if they were immutable—like numbers, booleans, and strings.
+Instead of mutating them, you should always replace them.
+
+## Treat state as read-only
+
+In other words, you should treat any Dart object that you put into state as read-only.
+
+This example holds an object in state to represent the user.
+The user's name is changed from <HS>`'Jane Doe'`</HS> to <HS>`'John Doe'`</HS> when you click the button.
+But the user's name stays the same.
+
+```dart title="main.dart"
+import 'package:flutter/material.dart';
+import 'package:reactter/reactter.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+final user = Signal(User(name: 'Jane Doe', age: 25));
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(title: Text('User State')),
+        body: Center(
+          child: ReactterWatcher((){
+            return Column(
+              children: [
+                Text('Name: ${user.value.name}'),
+                Text('Age: ${user.value.age}'),
+                ElevatedButton(
+                  onPressed: () {
+                    user.value.name = 'John Doe';
+                  },
+                  child: Text('Change Name'),
+                ),
+              ],
+            );
+          }),
+        ),
+      ),
+    );
+  }
+}
+```
+
+The problem is with this bit of code.
+
+```dart startLineNumber=24
+user.value.name = 'John Doe';
+```
+
+This code modifies the object assigned to a new `name` when the button is clicked
+but it doesn't trigger a re-render because the object itself hasn't changed.
+The `name` property of the object has changed, but the object itself hasn't.
+And Reactter doesn't know that the object has changed because it's still the same object.
+While mutating state can work in some cases, we don't recommend it.
+You should treat the state value you have access as read-only.
+
+To actually trigger a re-render in this case, create a new object and pass it to the state setting function:
+
+```dart startLineNumber=24
+user.value = User(name: 'John Doe', age: user.value.age);
+```
+
+When `value` is set to a new object, Reactter knows that the state has changed and triggers a re-render.
+
+## Copying objects
+
+In the previous example, you created a new object with the same `age` and a different `name`.
+But what if you want to change the `age` and keep the `name` the same?. You can do that too:
+
+```dart showLineNumbers=false
+user.value = User(name: user.value.name, age: 30);
+```
+
+This is a common pattern when working with objects in state.
+However, creating a new object every time you want to change a property can be cumbersome.
+To simplify this process, you can add the following method to the <HT>`User`</HT> class:
+
+```dart showLineNumbers=false collapse={2-6}
+class User {
+  final String name;
+  final int age;
+
+  const User({required this.name, required this.age});
+
+  User copyWith({String? name, int? age}) {
+    return User(
+      name: name ?? this.name,
+      age: age ?? this.age,
+    );
+  }
+}
+```
+
+This method creates a new object with the same properties as the original object, except for the properties you specify.
+You can then use this method to create a new object with the same `name` and a different `age`:
+
+```dart showLineNumbers=false
+user.value = user.value.copyWith(age: 30);
+```
+
+## Recap
+
+- Treat objects in state as read-only.
+- When you need to update an object, create a new one or make a copy of the existing object, and then set the state to use this new or copied object.
+- Avoid mutating objects in state directly.
+- Create a new object and pass it to the state setting function to trigger a re-render.
+- Use the <HM>`copyWith`</HM> method to create a new object with the same properties as the original object, except for the properties you specify.

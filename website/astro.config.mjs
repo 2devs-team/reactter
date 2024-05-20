@@ -31,7 +31,6 @@ export default defineConfig({
         themes: [myTheme],
       },
       components: {
-        // Hero: "./src/components/Hero.astro",
         Search: "./src/components/Search.astro",
         SiteTitle: "./src/components/SiteTitle.astro",
         ThemeProvider: "./src/components/ThemeProvider.astro",
@@ -150,6 +149,15 @@ export default defineConfig({
           },
           autogenerate: {
             directory: "extensions",
+          },
+        },
+        {
+          label: "Learn More",
+          translations: {
+            es: "Aprende más",
+          },
+          autogenerate: {
+            directory: "learn_more",
           },
         },
       ],
