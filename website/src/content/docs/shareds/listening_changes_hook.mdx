@@ -1,12 +1,12 @@
 ---
 title: Hook
 vars:
-  hookName: hook
-  hookVariable: uState
+  stateName: hook
+  stateVariable: uState
 ---
 import { HE, HM, HT } from '@/components/Highlight/index.ts';
 
-When `value` has changed, the <HT>`[[hookName]]`</HT> will emit the following events(learn about it [here](/reactter/core_concepts/lifecycle/)):
+When `value` has changed, the <HT>`[[stateName]]`</HT> will emit the following events(learn about it [here](/reactter/core_concepts/lifecycle/)):
 
 - <HE>`Lifecycle.willUpdate`</HE> event is triggered before the `value` change or <HM>`update`</HM>, <HM>`refresh`</HM> methods have been invoked.
 - <HE>`Lifecycle.didUpdate`</HE> event is triggered after the `value` change or <HM>`update`</HM>, <HM>`refresh`</HM>  methods have been invoked.
@@ -15,7 +15,7 @@ Example of listening to changes:
 
 ```dart "Reactter.on" "Lifecycle.didUpdate" 
 Reactter.on(
-  [[hookVariable]],
+  [[stateVariable]],
   Lifecycle.didUpdate,
   (_, state) => print("State value has changed to: ${state.value}"),
 );
