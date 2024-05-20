@@ -1,0 +1,145 @@
+---
+title: UseReducer
+description: The useReducer hook is a more advanced way to manage state in Reactter.
+---
+import { HM, HT } from '@/components/Highlight';
+import { Code } from "@astrojs/starlight/components";
+import MDXRedry from '@/components/MDXRedry.astro';
+import StateMethodsLite from '@/content/docs/shareds/state_methods_lite.mdx';
+import UseReducerExample from '@/examples/use_reducer_example.dart.code?raw';
+import * as NoteStateValueNotifies from '@/content/docs/shareds/note_state_value_notifies.mdx';
+import * as ListeningChangesHook from '@/content/docs/shareds/listening_changes_hook.mdx';
+
+export const mark = ["UserAction", "UseReducer", "ReactterAction", /([^u]User)/g, "reducer", ".dispatch", ".value"];
+
+<HT><a href="https://pub.dev/documentation/reactter/latest/reactter/UseReducer-class.html" target="_blank">`UseReducer`</a></HT> is a [hook](/reactter/core_concepts/hooks) that manages state using reducer method. 
+An alternative to <HT>[`UseState`](/reactter/hooks/use_state)</HT>.
+
+:::tip
+<HT>`UseReducer`</HT> is usually preferable over <HT>`UseState`</HT> when you have complex state logic that involves multiple sub-values or when the next state depends on the previous one.
+:::
+
+## Syntax
+
+```dart showLineNumbers=false
+UseReducer<T>(
+  T reducer(T state, ReactterAction action),
+  T initialValue,
+);
+```
+
+<HT>`UseReducer`</HT> accepts two properties:
+
+- <HM>`reducer`</HM>: A function that takes the current `state` and an `action`, and returns a new state.
+- `initialState`: Initial value of <HT>`T`</HT> type that it will hold.
+
+## Properties & Methods
+
+<HT>`UseReducer`</HT> provides the following properties and methods:
+
+- `value`: A getter that allows to read its state.
+- <HM>`dispatch`</HM>: A method that allows to dispatch an action to update the state.
+  - Syntax:
+    ```dart
+    void dispatch(ReactterAction action);
+    ```
+<StateMethodsLite />
+
+## Usage
+
+### Declaration
+
+<HT>`UseReducer`</HT> can be initialized using the constructor class:
+
+<Code code={UseReducerExample} lang="dart" mark={mark} collapse={["1-29", "37-100"]} />
+
+### Writting the action
+
+The action is a class that inherits from the <HT>`ReactterAction`</HT> class.
+
+This class contains the action `type` and `payload` that will be dispatched to the <HM>`reducer`</HM> method.
+
+<Code code={UseReducerExample} lang="dart" mark={mark} collapse={["1-12", "18-100"]} />
+
+### Writting the reducer method
+
+The <HM>`reducer`</HM> method is a function that takes the current `state` and an `action`, and returns a new state.
+This method is responsible for updating the `state` based on the `action` dispatched.
+The `state` is immutable, so it should return a new `state` object.
+
+<Code code={UseReducerExample} lang="dart" mark={mark} collapse={["1-18", "29-100"]} />
+
+### Dispatching an action and reading the state
+
+The <HM>`dispatch`</HM> method is responsible for dispatching an action to the <HM>`reducer`</HM> method.
+After dispatching an action, you can read the state using the `value` property.
+
+<Code code={UseReducerExample} lang="dart" mark={mark} collapse={["1-37"]} />
+
+<MDXRedry mdx={NoteStateValueNotifies} vars={{
+  stateName: 'UseReducer',
+}}/>
+
+### Using the action callable
+
+The actions can be created as a callable class, extending from <HT>`ReactterActionCallable`</HT> e.g.:
+
+```dart "ReactterActionCallable" "call" "type" "payload"
+class IncrementedEgeUserAction extends ReactterActionCallable<User, void> {
+  const IncrementedEgeUserAction()
+    : super(type: 'incremented_ege', payload: null);
+
+  @override
+  User call(User state) => User(name: state.name, age: state.age + 1);
+}
+
+class ChangedNameUserAction extends ReactterActionCallable<User, String> {
+  final String name;
+
+  const ChangedNameUserAction(this.name)
+    : super(type: 'changed_name', payload: name);
+
+  @override
+  User call(User state) => User(name: payload, age: state.age);
+}
+```
+
+<HT>`ReactterActionCallable`</HT> has a <HM>`call`</HM> method that returns the new state based on the `state` and `payload`.
+
+The action callable can be applied in reducer method:
+
+```dart "ReactterActionCallable"
+User reducer(User state, ReactterAction action) {
+  if (action is ReactterActionCallable) return action(state);
+  return state;
+}
+```
+And dispatched as:
+
+```dart ".dispatch"
+userState.dispatch(IncrementedEgeUserAction());
+userState.dispatch(ChangedNameUserAction('Jane Doe'));
+```
+
+### Updating the state
+
+Use <HM>`update`</HM> method to notify changes after run a set of instructions:
+
+```dart showLineNumbers=false ".update"
+uState.update((value) {
+  uState.value = "New value";
+});
+```
+
+Use <HM>`refresh`</HM> method to force to notify changes.
+
+```dart showLineNumbers=false ".refresh"
+userState.refresh();
+```
+
+### Listening to changes
+
+<MDXRedry mdx={ListeningChangesHook} vars={{
+  stateName: 'UseReducer',
+  stateVariable: 'uUser',
+}}/>

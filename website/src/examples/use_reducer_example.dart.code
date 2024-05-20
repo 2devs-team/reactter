@@ -1,0 +1,44 @@
+import 'package:reactter/reactter.dart';
+
+class User {
+  final String name;
+  final int age;
+
+  const User({required this.name, required this.age});
+
+  @override
+  String toString() => "User(name: $name, age: $age)";
+}
+
+class UserAction extends ReactterAction {
+  UserAction.incrementedAge() : super(type: 'incremented_age', payload: null);
+  UserAction.changedName(String name)
+      : super(type: 'changed_name', payload: name);
+}
+
+User reducer(User state, ReactterAction action) {
+  switch (action.type) {
+    case "incremented_age":
+      return User(state.name, state.age + 1);
+    case "changed_name":
+      return User(action.payload as String, state.age);
+    default:
+      return state;
+  }
+}
+
+final uUser = UseReducer<User>(
+  reducer,
+  const User(
+    name: "John Doe",
+    age: 17,
+  ),
+);
+
+void main() {
+  print("${uUser.value}") // User(name: "John Doe", age: 17)
+  uUser.dispatch(UserAction.incrementedAge());
+  print("${uUser.value}"); // User(name: "John Doe", age: 18)
+  uUser.dispatch(UserAction.changedName("Jane Doe"));
+  print("${uUser.value}"); // User(name: "Jane Done", age: 18)
+}
