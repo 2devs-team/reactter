@@ -63,10 +63,10 @@ intState.value = 10;
 print("Current state: ${intState.value}");
 ```
 <MDXRedry mdx={NoteStateValueNotifies} vars={{
-  hookName: 'UseState',
+  stateName: 'UseState',
 }}/>
 
-### Updating the value
+### Updating the state
 
 Use <HM>`update`</HM> method to notify changes after run a set of instructions:
 
@@ -85,6 +85,6 @@ userState.refresh();
 ### Listening to changes
 
 <MDXRedry mdx={ListeningChangesHook} vars={{
-  hookName: 'UseState',
-  hookVariable: 'myState',
+  stateName: 'UseState',
+  stateVariable: 'myState',
 }}/>

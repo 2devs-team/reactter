@@ -8,6 +8,7 @@ sidebar:
 import { HM, HT } from '@/components/Highlight/index.ts';
 import MDXRedry from '@/components/MDXRedry.astro';
 import StateMethodsLite from '@/content/docs/shareds/state_methods_lite.mdx';
+import * as NoteStateValueNotifies from '@/content/docs/shareds/note_state_value_notifies.mdx';
 import * as ListeningChangesHook from '@/content/docs/shareds/listening_changes_hook.mdx';
 
 <HT><a href="https://pub.dev/documentation/reactter/latest/reactter/Signal-class.html" target="_blank">`Signal`</a></HT> is reactive state that encapsulate a `value` changing over time. When the `value` of a signal changes, it automatically notifies its observers.
@@ -63,10 +64,9 @@ or simply use <HM>`.toString()`</HM> implicit to get its `value` as String:
 print("Current state: $intSignal");
 ```
 
-:::note
-<HT>`Signal`</HT> notifies that its `value` has changed when the previous `value` is different from the current `value`.
-If its `value` is an <HT>`Object`</HT>, it does not detect internal changes, only when `value` is setted to another <HT>`Object`</HT>.
-:::
+<MDXRedry mdx={NoteStateValueNotifies} vars={{
+  stateName: 'Signal',
+}}/>
 
 ### Updating the value
 
@@ -88,8 +88,8 @@ userSignal.refresh();
 ### Listening to changes
 
 <MDXRedry mdx={ListeningChangesHook} vars={{
-  hookName: 'Signal',
-  hookVariable: 'mySignal',
+  stateName: 'Signal',
+  stateVariable: 'mySignal',
 }}/>
 
 :::note[With Flutter]

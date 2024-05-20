@@ -84,19 +84,19 @@ Future<String> asyncFunction() async {
 }
 ```
 
-### Resolving & reading the value
+### Resolving & reading the state
 
 <HT>`UseAsyncState`</HT> has a <HM>`resolve`</HM> method that updates the state asynchronously by calling the <HM>`asyncFunction`</HM> function.
 After resolving the state, you can read the `value`, like this:
 
 ```dart
-print("Current state: ${uAsyncState.value}"); // Initial value
+print("${uAsyncState.value}"); // Initial value
 await uAsyncState.resolve();
-print("Current state: ${uAsyncState.value}"); // Resolved value
+print("${uAsyncState.value}"); // Resolved value
 ```
 
 <MDXRedry mdx={NoteStateValueNotifies} vars={{
-  hookName: 'UseAsyncState',
+  stateName: 'UseAsyncState',
 }}/>
 
 ### Usage with argument
@@ -127,7 +127,7 @@ print("Current state: ${uAsyncStateWithArg.value}"); // Resolved value with arg:
 ```
 
 <MDXRedry mdx={NoteStateValueNotifies} vars={{
-  hookName: 'UseAsyncState',
+  stateName: 'UseAsyncState',
 }}/>
 
 ### Updating the value
@@ -186,6 +186,6 @@ Learn more about [Rendering Control](/reactter/core_concepts/rendering_control) 
 ### Listening to changes
 
 <MDXRedry mdx={ListeningChangesHook} vars={{
-  hookName: 'UseAsyncState',
-  hookVariable: 'myAsyncState',
+  stateName: 'UseAsyncState',
+  stateVariable: 'myAsyncState',
 }}/>
