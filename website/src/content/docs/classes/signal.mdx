@@ -8,8 +8,9 @@ sidebar:
 import { HM, HT } from '@/components/Highlight/index.ts';
 import MDXRedry from '@/components/MDXRedry.astro';
 import StateMethodsLite from '@/content/docs/shareds/state_methods_lite.mdx';
+import * as NoteLateState from '@/content/docs/shareds/note_late_state.mdx';
 import * as NoteStateValueNotifies from '@/content/docs/shareds/note_state_value_notifies.mdx';
-import * as ListeningChangesHook from '@/content/docs/shareds/listening_changes_hook.mdx';
+import * as ListeningChangesState from '@/content/docs/shareds/listening_changes_state.mdx';
 
 <HT><a href="https://pub.dev/documentation/reactter/latest/reactter/Signal-class.html" target="_blank">`Signal`</a></HT> is reactive state that encapsulate a `value` changing over time. When the `value` of a signal changes, it automatically notifies its observers.
 
@@ -41,6 +42,23 @@ final intSignal = Signal<int>(0);
 final strSignal = Signal("initial value");
 final userSignal = Signal(User());
 ```
+
+<MDXRedry mdx={NoteLateState} vars={{stateName: 'Signal'}}>
+  <Fragment slot="exampleCode">
+```dart title="counter_controller.dart" collapse={1-3, 8-10} "late" "Reactter.lazyState" "Signal"
+class CounterController {
+  final int initialCount;
+
+  late final count = Reactter.lazyState(
+    () => Signal(this.initialCount),
+    this
+  );
+
+  Counter([this.initialCount = 0]);
+}
+```
+  </Fragment>
+</MDXRedry>
 
 ### Reading and writing the value
 
@@ -87,7 +105,7 @@ userSignal.refresh();
 
 ### Listening to changes
 
-<MDXRedry mdx={ListeningChangesHook} vars={{
+<MDXRedry mdx={ListeningChangesState} vars={{
   stateName: 'Signal',
   stateVariable: 'mySignal',
 }}/>

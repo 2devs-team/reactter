@@ -7,14 +7,15 @@ sidebar:
 import { HE, HK, HM, HT } from '@/components/Highlight';
 import MDXRedry from '@/components/MDXRedry.astro';
 import StateMethodsLite from '@/content/docs/shareds/state_methods_lite.mdx';
+import * as NoteLateState from '@/content/docs/shareds/note_late_state.mdx';
 import * as NoteStateValueNotifies from '@/content/docs/shareds/note_state_value_notifies.mdx';
-import * as ListeningChangesHook from '@/content/docs/shareds/listening_changes_hook.mdx';
+import * as ListeningChangesState from '@/content/docs/shareds/listening_changes_state.mdx';
 
 <HT><a href="https://pub.dev/documentation/reactter/latest/reactter/UseAsyncState-class.html">`UseAsyncState`</a></HT> is a [hook](/reactter/core_concepts/hooks) that allows to declare state variables and manipulate its `value` asynchronously, which in turn notifies about its changes to listeners.
 
 ## Syntax
 
-```dart
+```dart showLineNumbers=false
 UseAsyncState<T>(
   T initialValue,
   Future<T> asyncFunction(),
@@ -46,14 +47,14 @@ UseAsyncState<T, A>.withArg(
 - `error`: A getter that allows to get the error object when the <HM>`asyncFunction`</HM> fails.
 - <HM>`resolve`</HM>: A method that updates the state asynchronously by calling the <HM>`asyncFunction`</HM> function.
   - Syntax:
-    ```dart
+    ```dart showLineNumbers=false
     FutureOr<T?> resolve();
     // for UseAsyncState.withArg
     FutureOr<T?> resolve(A arg);
     ```
 - <HM>`when`</HM>: A method that allows to computed a value depending on its status.
   - Syntax:
-    ```dart
+    ```dart showLineNumbers=false
     R? when<R>({
       WhenValueReturn<T, R>? standby,
       WhenValueReturn<T, R>? loading,
@@ -75,7 +76,7 @@ UseAsyncState<T, A>.withArg(
 
 <HT>`UseAsyncState`</HT> can be initialized using the constructor class:
 
-```dart "UseAsyncState"
+```dart showLineNumbers=false "UseAsyncState" "asyncFunction"
 final uAsyncState = UseAsyncState<String>('Initial value', asyncFunction);
 
 Future<String> asyncFunction() async {
@@ -84,12 +85,36 @@ Future<String> asyncFunction() async {
 }
 ```
 
+<MDXRedry mdx={NoteLateState} vars={{stateName: "UseAsyncState"}}>
+  <Fragment slot="exampleCode">
+```dart title="user_controller.dart" collapse={1-3, 8-18} "late" "Reactter.lazyState" "UseAsyncState"
+class UserController {
+  final String userId;
+
+  late final uUser = Reactter.lazyState(
+    () => UseAsyncState<User?>.withArg(null, this.getUser),
+    this,
+  );
+
+  UserController(required this.userId) {
+    uUser.resolve(this.userId);
+  }
+
+  Future<User> getUser(String userId) async {
+    await Future.delayed(Duration(seconds: 2));
+    return User(id: userId, name: 'John Doe');
+  }
+}
+```
+  </Fragment>
+</MDXRedry>
+
 ### Resolving & reading the state
 
 <HT>`UseAsyncState`</HT> has a <HM>`resolve`</HM> method that updates the state asynchronously by calling the <HM>`asyncFunction`</HM> function.
 After resolving the state, you can read the `value`, like this:
 
-```dart
+```dart showLineNumbers=false ".value" ".resolve"
 print("${uAsyncState.value}"); // Initial value
 await uAsyncState.resolve();
 print("${uAsyncState.value}"); // Resolved value
@@ -99,11 +124,11 @@ print("${uAsyncState.value}"); // Resolved value
   stateName: 'UseAsyncState',
 }}/>
 
-### Usage with argument
+### Using with argument
 
 <HT>`UseAsyncState`</HT> can be used with arguments by using the <HM>`withArg`</HM> constructor:
 
-```dart
+```dart showLineNumbers=false "UseAsyncState.withArg" "asyncFunctionWithArg"
 final uAsyncStateWithArg = UseAsyncState.withArg<String, int>(
   'Initial value',
   asyncFunctionWithArg
@@ -115,42 +140,67 @@ Future<String> asyncFunctionWithArg(int arg) async {
 }
 ```
 
-### Resolving with argument & reading the value
-
-<HT>`UseAsyncState`</HT> has a <HM>`resolve`</HM> method that updates the state asynchronously by calling the <HM>`asyncFunctionWithArg`</HM> function.
+To resolve the state with an argument, you can use the <HM>`resolve`</HM> method with the argument.
 After resolving the state, you can read the `value`, like this:
 
-```dart
-print("Current state: ${uAsyncStateWithArg.value}"); // Initial value
+```dart showLineNumbers=false ".value" ".resolve"
+print("${uAsyncStateWithArg.value}"); // Initial value
 await uAsyncStateWithArg.resolve(10);
-print("Current state: ${uAsyncStateWithArg.value}"); // Resolved value with arg: 10
+print("${uAsyncStateWithArg.value}"); // Resolved value with arg: 10
 ```
 
 <MDXRedry mdx={NoteStateValueNotifies} vars={{
   stateName: 'UseAsyncState',
 }}/>
 
-### Updating the value
+If you want to add more arguments, you can supply it using the <HT><a href="https://dart.dev/language/records" target="_blank">`Record`</a></HT>(if your proyect support)
+or <HT>[`Args`](/reactter/classes/args)</HT>(A generic arguments provided by Reactter), e.g.:
 
-Use <HM>`update`</HM> method to notify changes after run a set of instructions:
+```dart showLineNumbers=false "UseAsyncState.withArg" "asyncFunctionWithArgs" ".resolve" ".value"
+final uAsyncStateWithArgs = UseAsyncState.withArg<String, ArgsX3<String>>(
+  'Initial value',
+  asyncFunctionWithArgs
+);
 
-```dart
-uAsyncState.update((value) {
-  uAsyncState.value = "New value";
-});
+Future<String> asyncFunctionWithArgs(ArgsX3<String> args) async {
+  await Future.delayed(Duration(seconds: 2));
+  return "Resolved value with args: ${args.arg}, ${args.arg2}, ${args.arg3}";
+}
+
+print("${uAsyncStateWithArgs.value}"); // Initial value
+await uAsyncStateWithArgs.resolve(ArgsX3('arg1', 'arg2', 'arg3'));
+print("${uAsyncStateWithArgs.value}"); // Resolved value with args: arg1, arg2, arg3
 ```
 
-Use <HM>`refresh`</HM> method to force to notify changes.
+### Using with Memo
 
-```dart
-uAsyncState.refresh();
+<HT>`UseAsyncState`</HT> does not cache the resolving `value`, meaning that it will resolve the `value` every time <HM>`resolve`</HM> is called, potentially impacting performance, especially if the <HM>`asyncFunction`</HM> is expensive. In this case, you should consider using <HT>[`Memo`](/reactter/classes/memo)</HT> to cache the resolving `value`, e.g.:
+
+```dart "UseAsyncState" "Memo.inline"
+final translateState = UseAsyncState.withArg<String?, ArgsX3<String>>(
+  null,
+  /// `Memo` stores the value resolved in cache,
+  /// and retrieving that same value from the cache the next time
+  /// it's needed instead of resolving it again.
+  Memo.inline(
+    (ArgsX3<String> args) async {
+      final text = args.arg;
+      final from = args.arg2;
+      final to = args.arg3;
+      // this is fake code, which simulates a request to API
+      return await api.translate(text, from, to);
+    },
+    AsyncMemoSafe(), // avoid to save in cache when throw a error
+  ),
+);
 ```
+
 
 ### Using `when` method
 
 <HT>`UseAsyncState`</HT> provides a <HM>`when`</HM> method that allows to computed a value depending on its status:
 
-```dart
+```dart showLineNumbers=false ".when"
 final result = uAsyncState.when(
   standby: (value) => "Standby",
   loading: (value) => "Loading",
@@ -183,9 +233,25 @@ Builder(
 Learn more about [Rendering Control](/reactter/core_concepts/rendering_control) in Reactter.
 :::
 
+### Updating the value
+
+Use <HM>`update`</HM> method to notify changes after run a set of instructions:
+
+```dart showLineNumbers=false ".update"
+uAsyncState.update((value) {
+  uAsyncState.value = "New value";
+});
+```
+
+Use <HM>`refresh`</HM> method to force to notify changes.
+
+```dart showLineNumbers=false ".refresh"
+uAsyncState.refresh();
+```
+
 ### Listening to changes
 
-<MDXRedry mdx={ListeningChangesHook} vars={{
+<MDXRedry mdx={ListeningChangesState} vars={{
   stateName: 'UseAsyncState',
   stateVariable: 'myAsyncState',
 }}/>

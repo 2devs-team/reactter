@@ -4,11 +4,13 @@ description: Learn how to use the `useState` hook in Reactter.
 sidebar:
   order: 1
 ---
+import { Code } from "@astrojs/starlight/components";
 import { HK, HM, HT } from '@/components/Highlight';
 import MDXRedry from '@/components/MDXRedry.astro';
 import StateMethodsLite from '@/content/docs/shareds/state_methods_lite.mdx';
+import * as NoteLateState from '@/content/docs/shareds/note_late_state.mdx';
 import * as NoteStateValueNotifies from '@/content/docs/shareds/note_state_value_notifies.mdx';
-import * as ListeningChangesHook from '@/content/docs/shareds/listening_changes_hook.mdx';
+import * as ListeningChangesState from '@/content/docs/shareds/listening_changes_state.mdx';
 
 <HT><a href="https://pub.dev/documentation/reactter/latest/reactter/UseState-class.html">`UseState`</a></HT> is a [hook](/reactter/core_concepts/hooks) that allows to declare state variables and manipulate its `value`, which in turn notifies about its changes to listeners.
 
@@ -40,19 +42,23 @@ final intState = UseState<int>(0);
 final strState = UseState("initial value");
 final userState = UseState(User());
 ```
-:::note
-To appropriately use the <HK>`late`</HK> hook inside a class registered via the [dependency injection](/reactter/core_concepts/dependency_injection), use <HM>`Reactter.lazyState`</HM>.
-Learn more about it [here](/reactter/methods/to_manage_state/lazy_state). e.g:
 
-  ```dart title="Counter.dart" "Reactter.lazyState" "UseState"
-  class Counter {
-    final int initialCount;
-    late final count = Reactter.lazyState(() => UseState(initialCount), this);
+<MDXRedry mdx={NoteLateState} vars={{stateName: 'UseState'}}>
+  <Fragment slot="exampleCode">
+```dart title="counter_controller.dart" collapse={1-3, 8-10} "late" "Reactter.lazyState" "UseState"
+class CounterController {
+  final int initialCount;
 
-    Counter([this.initialCount = 0]);
-  }
-  ```
-:::
+  late final count = Reactter.lazyState(
+    () => UseState(this.initialCount),
+    this,
+  );
+
+  Counter([this.initialCount = 0]);
+}
+```
+  </Fragment>
+</MDXRedry>
 
 ### Reading and writing the value
 
@@ -84,7 +90,7 @@ userState.refresh();
 
 ### Listening to changes
 
-<MDXRedry mdx={ListeningChangesHook} vars={{
+<MDXRedry mdx={ListeningChangesState} vars={{
   stateName: 'UseState',
   stateVariable: 'myState',
 }}/>
