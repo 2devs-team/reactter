@@ -7,17 +7,25 @@ type Props = {
     Content: AstroComponentFactory;
     frontmatter: Record<string, any>;
   };
-  vars?: Record<string, string>;
+  vars?: Record<string, any>;
 };
 
-const { mdx, vars }: Props = Astro.props;
+const slotVars = {};
+for (const slot in Astro.slots) {
+  const html = await Astro.slots.render(slot);
+  slotVars[slot] = html;
+}
+
+const { mdx, vars: propVars }: Props = Astro.props;
 
 const {
   Content,
   frontmatter: { vars: frontmatterVars },
 } = mdx;
+
+const vars = { ...(frontmatterVars ?? {}), ...propVars, ...slotVars };
 ---
 
-<MDXVariable vars={{ ...(frontmatterVars ?? {}), ...vars }}>
+<MDXVariable vars={vars}>
   <Content />
 </MDXVariable>
