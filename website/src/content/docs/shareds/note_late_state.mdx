@@ -1,0 +1,16 @@
+---
+title: Late State
+vars:
+  stateName: ReactterState
+  exampleCode: 'example code'
+---
+
+import { HK, HM, HT } from '@/components/Highlight';
+
+:::note
+In some cases, you may need to declare a state variable that will be initialized later. For this, you can use the <HK>`late`</HK> keyword.
+When using <HT>`[[stateName]]`</HT> as <HK>`late`</HK> within a class registered via the [dependency injection](/reactter/core_concepts/dependency_injection), use <HM>`Reactter.lazyState`</HM>.
+Learn more about it [here](/reactter/methods/to_manage_state/lazy_state). e.g:
+
+[[exampleCode]]
+:::
