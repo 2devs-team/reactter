@@ -96,7 +96,7 @@ class UserController {
     this,
   );
 
-  UserController(required this.userId) {
+  UserController(this.userId) {
     uUser.resolve(this.userId);
   }
 
@@ -194,7 +194,6 @@ final translateState = UseAsyncState.withArg<String?, ArgsX3<String>>(
   ),
 );
 ```
-
 
 ### Using `when` method
 

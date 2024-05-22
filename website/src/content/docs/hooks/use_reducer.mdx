@@ -1,6 +1,8 @@
 ---
 title: UseReducer
 description: The useReducer hook is a more advanced way to manage state in Reactter.
+sidebar:
+  order: 3
 ---
 import { HM, HT } from '@/components/Highlight';
 import { Code } from "@astrojs/starlight/components";
@@ -13,7 +15,7 @@ import * as ListeningChangesState from '@/content/docs/shareds/listening_changes
 
 export const mark = ["UserAction", "UseReducer", "ReactterAction", /([^u]User)/g, "reducer", ".dispatch", ".value"];
 
-<HT><a href="https://pub.dev/documentation/reactter/latest/reactter/UseReducer-class.html" target="_blank">`UseReducer`</a></HT> is a [hook](/reactter/core_concepts/hooks) that manages state using reducer method. 
+<HT><a href="https://pub.dev/documentation/reactter/latest/reactter/UseReducer-class.html" target="_blank">`UseReducer`</a></HT> is a [hook](/reactter/core_concepts/hooks) that manages state using reducer function.
 An alternative to <HT>[`UseState`](/reactter/hooks/use_state)</HT>.
 
 :::tip
@@ -66,7 +68,7 @@ class UserController {
     this,
   );
 
-  UserController(required this.userId);
+  UserController(this.userId);
 
   User? reducer(User? state, ReactterAction action) {
     if (action is IncrementedEgeUserAction) {
