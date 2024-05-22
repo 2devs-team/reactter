@@ -11,7 +11,7 @@ and then set the state to use this new or copied object.
 
 ## What is a mutation?
 
-You can store any kind of JavaScript value in state.
+You can store any kind of Dart value in state.
 
 ```dart showLineNumbers=false
 final count = Signal(0);
@@ -32,19 +32,19 @@ Now consider an object in state:
 
 ```dart showLineNumbers=false collapse={1-7}
 class User {
-  final String name;
-  final int age;
+  String name;
+  int age;
 
-  const User({required this.name, required this.age});
+  User({required this.name, required this.age});
 }
 
-final user = Signal(User(name: 'Jane Doe', age: 25));
+final user = Signal(User(name: "Jane Doe", age: 25));
 ```
 
 Technically, it is possible to change the contents of the object itself. This is called a mutation:
 
 ```dart showLineNumbers=false
-user.value.name = 'John Doe';
+user.value.name = "John Doe";
 ```
 
 However, although objects in Reactter state are technically mutable, you should treat them as if they were immutable—like numbers, booleans, and strings.
@@ -55,10 +55,10 @@ Instead of mutating them, you should always replace them.
 In other words, you should treat any Dart object that you put into state as read-only.
 
 This example holds an object in state to represent the user.
-The user's name is changed from <HS>`'Jane Doe'`</HS> to <HS>`'John Doe'`</HS> when you click the button.
+The user's name is changed from <HS>`"Jane Doe"`</HS> to <HS>`"John Doe"`</HS> when you click the button.
 But the user's name stays the same.
 
-```dart title="main.dart"
+```dart title="main.dart" "Signal" "User" "ReactterWatcher" "user.value.name" "user.value.age" "user" mark={31}
 import 'package:flutter/material.dart';
 import 'package:reactter/reactter.dart';
 
@@ -66,14 +66,21 @@ void main() {
   runApp(MyApp());
 }
 
-final user = Signal(User(name: 'Jane Doe', age: 25));
+class User {
+  String name;
+  int age;
+
+  User({required this.name, required this.age});
+}
+
+final user = Signal(User(name: "Jane Doe", age: 25));
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(title: Text('User State')),
+        appBar: AppBar(title: Text("Inmutable state example")),
         body: Center(
           child: ReactterWatcher((){
             return Column(
@@ -82,9 +89,9 @@ class MyApp extends StatelessWidget {
                 Text('Age: ${user.value.age}'),
                 ElevatedButton(
                   onPressed: () {
-                    user.value.name = 'John Doe';
+                    user.value.name = "John Doe";
                   },
-                  child: Text('Change Name'),
+                  child: Text("Change Name"),
                 ),
               ],
             );
@@ -99,7 +106,7 @@ class MyApp extends StatelessWidget {
 The problem is with this bit of code.
 
 ```dart startLineNumber=24
-user.value.name = 'John Doe';
+user.value.name = "John Doe";
 ```
 
 This code modifies the object assigned to a new `name` when the button is clicked
@@ -112,7 +119,7 @@ You should treat the state value you have access as read-only.
 To actually trigger a re-render in this case, create a new object and pass it to the state setting function:
 
 ```dart startLineNumber=24
-user.value = User(name: 'John Doe', age: user.value.age);
+user.value = User(name: "John Doe", age: user.value.age);
 ```
 
 When `value` is set to a new object, Reactter knows that the state has changed and triggers a re-render.
@@ -130,7 +137,7 @@ This is a common pattern when working with objects in state.
 However, creating a new object every time you want to change a property can be cumbersome.
 To simplify this process, you can add the following method to the <HT>`User`</HT> class:
 
-```dart showLineNumbers=false collapse={2-6}
+```dart collapse={2-6} ins="final" ins={7-13} mark={2-3} mark="copyWith"
 class User {
   final String name;
   final int age;
@@ -149,7 +156,7 @@ class User {
 This method creates a new object with the same properties as the original object, except for the properties you specify.
 You can then use this method to create a new object with the same `name` and a different `age`:
 
-```dart showLineNumbers=false
+```dart showLineNumbers=false ".copyWith"
 user.value = user.value.copyWith(age: 30);
 ```
 
