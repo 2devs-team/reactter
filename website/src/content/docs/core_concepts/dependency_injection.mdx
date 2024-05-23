@@ -68,8 +68,8 @@ If the dependency with/without `id` is not yet created, Reactter initializes it 
 
     The following events are fired(only if the dependency is created):
       - <HE>`Lifecycle.initialized`</HE>
-      - <HE>`Lifecycle.willMount`</HE>
-      - <HE>`Lifecycle.didMount`</HE>
+      - <HE>`Lifecycle.willMount`</HE>(_flutter_reactter_ only)
+      - <HE>`Lifecycle.didMount`</HE>(_flutter_reactter_ only)
 
 3. **Usage**: The dependency is then used across the app as needed.
 
@@ -84,8 +84,8 @@ If the dependency with/without `id` is not yet created, Reactter initializes it 
       - <HM>[`Reactter.destroy`](/reactter/methods/to_manage_instance/destroy)</HM>(delete & unregister)
 
     The following events are fired:
-      - <HE>`Lifecycle.willUnmount`</HE>
-      - <HE>`Lifecycle.didUnmount`</HE>
+      - <HE>`Lifecycle.willUnmount`</HE>(_flutter_reactter_ only)
+      - <HE>`Lifecycle.didUnmount`</HE>(_flutter_reactter_ only)
       - <HE>`Lifecycle.destroyed`</HE>
 
 5. **Unregistration**: When the dependency with/without `id` is no longer required and depending on `mode`, Reactter unregisters it.

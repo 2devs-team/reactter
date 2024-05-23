@@ -5,11 +5,7 @@ sidebar:
   order: 5
 ---
 import { HE, HM, HT } from '@/components/Highlight/index.ts';
-
-:::note
-This page assumes you've already read the [Rendering Control](/reactter/core_concepts/rendering_control) page.
-Read first if you are new to Reactter.
-:::
+import NoteLifeExample from '@/content/docs/shareds/note_lifecycle_example.mdx';
 
 In Reactter, both the states and the dependency (managed by the [dependency injection](/reactter/core_concepts/dependency_injection)) contain different stages,
 also known as <HT><a href="https://pub.dev/documentation/reactter/latest/reactter/Lifecycle.html" target="_blank">`Lifecycle`</a></HT>.
@@ -32,10 +28,7 @@ Let's explore the lifecycle events:
 
 You can listen to the lifecycle events of a dependency by using <HM>`Reactter.on`</HM> or <HM>`Reactter.one`</HM> method of the event handler. e.g:
 
-:::note
-This example is taken from [Rendering Control](http://localhost:4321/reactter/core_concepts/rendering_control/#example) page.
-It's recommended to read that page first before proceeding.
-:::
+<NoteLifeExample />
 
 ```dart title="counter.dart" "Reactter.on" "Lifecycle.willMount" "Lifecycle.didMount" "Lifecycle.willUpdate" "Lifecycle.didUpdate" "Lifecycle.willUnmount" "Lifecycle.didUnmount"
 import 'package:reactter/reactter.dart';
@@ -178,10 +171,7 @@ class MyApp extends StatelessWidget {
 Extend your instances with <HT><a href="https://pub.dev/documentation/reactter/latest/reactter/LifecycleObserver-class.html" target="_blank">`LifecycleObserver`</a></HT>
 and use its methods to observe the lifecycle events. e.g:
 
-:::note
-This example is taken from [Rendering Control](http://localhost:4321/reactter/core_concepts/rendering_control/#example) page.
-It's recommended to read that page first before proceeding.
-:::
+<NoteLifeExample />
 
 ```dart title="counter.dart" "LifecycleObserver" "onInitialized" "onDidMount" "onWillMount" "onWillUpdate" "onDidUpdate" "onWillUnmount" "onDidUnmount"
 import 'package:reactter/reactter.dart';
@@ -289,3 +279,99 @@ class MyApp extends StatelessWidget {
   }
 }
 ```
+
+## Using UseEffect
+
+The <HT>`UseEffect`</HT> hook can be used to listen to the lifecycle events of a dependency. e.g:
+
+<NoteLifeExample />
+
+```dart title="counter.dart" "UseEffect" /(count)(?!\u0060)/
+import 'package:reactter/reactter.dart';
+
+class Counter extends Reactter {
+  final count = Signal(0);
+
+  const Counter() {
+    UseEffect(() {
+      print('Counter mounted(`Lifecycle.didMount`)');
+
+      return () {
+        print('Counter will unmount(`Lifecycle.willUnmount`)');
+      };
+    }, []);
+  }
+
+  void increment() {
+    count.value++;
+  }
+
+  void decrement() {
+    count.value--;
+  }
+}
+```
+
+```dart title="counter_app.dart"  collapse={1-100} /Counter(?!\u0060)(?!Page)/ "Counter()" /counter(?!\\.dart)/ "counter.increment" "counter.decrement" "counter.count" "ReactterProvider" "ReactterConsumer"
+import 'package:flutter/material.dart';
+import 'package:flutter_reactter/flutter_reactter.dart';
+import 'counter.dart';
+
+class CounterPage extends StatelessWidget {
+  const CounterPage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ReactterProvider<Counter>(
+      () => Counter(),
+      builder: (context, counter, child) {
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text("Counter"),
+          ),
+          body: Row(
+            children: [
+              ElevatedButton(
+                onPressed: counter.decrement,
+                child: Icon(Icons.remove),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ReactterConsumer<Counter>(
+                  listenStates: (counter) => [counter.count],
+                  builder: (context, counter, child) {
+                    return Text("${counter.count}");
+                  },
+                ),
+              ),
+              ElevatedButton(
+                onPressed: counter.increment,
+                child: Icon(Icons.add),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+}
+```
+
+```dart title="main.dart"  collapse={1-100}
+import 'package:flutter/material.dart';
+import 'counter_app.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: CounterApp(),
+    );
+  }
+}
+```
+
