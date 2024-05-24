@@ -69,6 +69,8 @@ See more examples [here](https://zapp.run/pub/flutter_reactter)!
 
 ## Contents
 
+- [Features](#features)
+- [Contents](#contents)
 - [Quickstart](#quickstart)
 - [About Reactter](#about-reactter)
 - [State management](#state-management)
@@ -82,18 +84,18 @@ See more examples [here](https://zapp.run/pub/flutter_reactter)!
   - [Factory](#factory)
   - [Singleton](#singleton)
   - [Shortcuts to manage instances](#shortcuts-to-manage-instances)
-  - [UseInstance](#useinstance)
+  - [UseDependency](#usedependency)
 - [Event handler](#event-handler)
   - [Lifecycles](#lifecycles)
   - [Shortcuts to manage events](#shortcuts-to-manage-events)
   - [UseEffect](#useeffect)
-- [Rendering control](#rendering-control) (`flutter_reactter`)
+- [Rendering control](#rendering-control)
   - [ReactterProvider](#reactterprovider)
   - [ReactterProviders](#reactterproviders)
   - [ReactterComponent](#reacttercomponent)
   - [ReactterConsumer](#reactterconsumer)
-  - [ReactterWatcher](#reactterwatcher)
   - [ReactterSelector](#reactterselector)
+  - [ReactterWatcher](#reactterwatcher)
   - [BuildContext.use](#buildcontextuse)
   - [BuildContext.watch](#buildcontextwatch)
   - [BuildContext.select](#buildcontextselect)
@@ -636,7 +638,7 @@ Reactter has three ways to manage an instance, which are:
 Reactter offers the following several instance managers:
 
 - [Shorcuts to manage instances](#shortcuts-to-manage-instances)
-- [UseInstance](#useinstance)
+- [UseDependency](#usedependency)
 
 by `flutter_reactter`:
 
@@ -651,7 +653,7 @@ Builder is a ways to manage an instance, which registers a builder function and 
 
 In builder mode, when the dependency tree no longer needs it, it is completely deleted, including deregistration (deleting the builder function).
 
-Reactter identifies the builder mode as [`InstanceManageMode.builder`](https://pub.dev/documentation/reactter/6.0.0/InstanceManageMode/InstanceManageMode.builder.html) and it's using for default.
+Reactter identifies the builder mode as [`DependencyMode.builder`](https://pub.dev/documentation/reactter/6.0.0/DependencyMode/DependencyMode.builder.html) and it's using for default.
 
 > **NOTE:**
 > **Builder** uses less RAM than [Factory](#factory) and [Singleton](#singleton), but it consumes more CPU than the other modes.
@@ -662,7 +664,7 @@ Factory is a ways to manage an instance, which registers a builder function only
 
 In factory mode, when the dependency tree no longer needs it, the instance is deleted and the builder function is kept in the register.
 
-Reactter identifies the factory mode as [`InstanceManageMode.factory`](https://pub.dev/documentation/reactter/6.0.0/InstanceManageMode/InstanceManageMode.factory.html) and to active it, set it in the `mode` argument of `Reactter.register` and `Reactter.create`, or  use `Reactter.lazyFactory`,  `Reactter.factory`.
+Reactter identifies the factory mode as [`DependencyMode.factory`](https://pub.dev/documentation/reactter/6.0.0/DependencyMode/DependencyMode.factory.html) and to active it, set it in the `mode` argument of `Reactter.register` and `Reactter.create`, or  use `Reactter.lazyFactory`,  `Reactter.factory`.
 
 > **NOTE:**
 > **Factory** uses more RAM than [Builder](#builder) but not more than [Singleton](#singleton), and consumes more CPU than [Singleton](#singleton) but not more than [Builder](#builder).
@@ -673,7 +675,7 @@ Singleton is a ways to manage an instance, which registers a builder function an
 
 The singleton mode preserves the instance and its states, even if the dependency tree stops using it.
 
-Reactter identifies the singleton mode as [`InstanceManageMode.singleton`](https://pub.dev/documentation/reactter/6.0.0/InstanceManageMode/InstanceManageMode.singleton.html) and to active it, set it in the `mode` argument of `Reactter.register` and `Reactter.create`, or use `Reactter.lazySingleton`, `Reactter.singleton`.
+Reactter identifies the singleton mode as [`DependencyMode.singleton`](https://pub.dev/documentation/reactter/6.0.0/DependencyMode/DependencyMode.singleton.html) and to active it, set it in the `mode` argument of `Reactter.register` and `Reactter.create`, or use `Reactter.lazySingleton`, `Reactter.singleton`.
 
 > **NOTE:**
 > Use `Reactter.destroy` if you want to force destroy the instance and its register.
@@ -685,34 +687,34 @@ Reactter identifies the singleton mode as [`InstanceManageMode.singleton`](https
 
 Reactter offers several convenient shortcuts for managing instances:
 
-- [`Reactter.register`](https://pub.dev/documentation/reactter/latest/reactter/ReactterInstanceManager/register.html): Registers a builder function, for creating a new instance using `[Reactter|UseInstance].[get|create|builder|factory|singleton]`.
-- [`Reactter.lazyBuilder`](https://pub.dev/documentation/reactter/latest/reactter/ReactterInstanceManager/lazyBuilder.html): Registers a builder function, for creating a new instance as [Builder](#builder) mode using `[Reactter|UseInstance].[get|create|builder]`.
-- [`Reactter.lazyFactory`](https://pub.dev/documentation/reactter/latest/reactter/ReactterInstanceManager/lazyFactory.html): Registers a builder function, for creating a new instance as [Factory](#factory) mode using `[Reactter|UseInstance].[get|create|factory]`.
-- [`Reactter.lazySingleton`](https://pub.dev/documentation/reactter/latest/reactter/ReactterInstanceManager/lazySingleton.html): Registers a builder function, for creating a new instance as [Singleton](#singleton) mode using `[Reactter|UseInstance].[get|create|singleton]`.
-- [`Reactter.create`](https://pub.dev/documentation/reactter/latest/reactter/ReactterInstanceManager/create.html): Registers, creates and returns the instance directly.
-- [`Reactter.builder`](https://pub.dev/documentation/reactter/latest/reactter/ReactterInstanceManager/builder.html): Registers, creates and returns the instance as [Builder](#builder) directly.
-- [`Reactter.factory`](https://pub.dev/documentation/reactter/latest/reactter/ReactterInstanceManager/factory.html): Registers, creates and returns the instance as [Factory](#factory) directly.
-- [`Reactter.singleton`](https://pub.dev/documentation/reactter/latest/reactter/ReactterInstanceManager/singleton.html): Registers, creates and returns the instance as [Singleton](#singleton) directly.
-- [`Reactter.get`](https://pub.dev/documentation/reactter/latest/reactter/ReactterInstanceManager/get.html): Returns a previously created instance or creates a new instance from the builder function registered by `[Reactter|UseInstance].[register|lazyBuilder|lazyFactory|lazySingleton]`.
-- [`Reactter.delete`](https://pub.dev/documentation/reactter/latest/reactter/ReactterInstanceManager/delete.html): Deletes the instance but keeps the builder function.
-- [`Reactter.unregister`](https://pub.dev/documentation/reactter/latest/reactter/ReactterInstanceManager/factory.html): Removes the builder function, preventing the creation of the instance.
-- [`Reactter.destroy`](https://pub.dev/documentation/reactter/latest/reactter/ReactterInstanceManager/destroy.html): Destroys the instance and the builder function.
-- [`Reactter.find`](https://pub.dev/documentation/reactter/latest/reactter/ReactterInstanceManager/find.html): Gets the instance.
-- [`Reactter.isRegistered`](https://pub.dev/documentation/reactter/latest/reactter/ReactterInstanceManager/isRegistered.html): Checks if an instance is registered in Reactter.
-- [`Reactter.getInstanceManageMode`](https://pub.dev/documentation/reactter/latest/reactter/ReactterInstanceManager/getInstanceManageMode.html): Returns the `InstanceManageMode` of the instance.
+- [`Reactter.register`](https://pub.dev/documentation/reactter/latest/reactter/ReactterInstanceInjectionon/register.html): Registers a builder function, for creating a new instance using `[Reactter|UseDependency].[get|create|builder|factory|singleton]`.
+- [`Reactter.lazyBuilder`](https://pub.dev/documentation/reactter/latest/reactter/ReactterInstanceInjectionon/lazyBuilder.html): Registers a builder function, for creating a new instance as [Builder](#builder) mode using `[Reactter|UseDependency].[get|create|builder]`.
+- [`Reactter.lazyFactory`](https://pub.dev/documentation/reactter/latest/reactter/ReactterInstanceInjectionon/lazyFactory.html): Registers a builder function, for creating a new instance as [Factory](#factory) mode using `[Reactter|UseDependency].[get|create|factory]`.
+- [`Reactter.lazySingleton`](https://pub.dev/documentation/reactter/latest/reactter/ReactterInstanceInjectionon/lazySingleton.html): Registers a builder function, for creating a new instance as [Singleton](#singleton) mode using `[Reactter|UseDependency].[get|create|singleton]`.
+- [`Reactter.create`](https://pub.dev/documentation/reactter/latest/reactter/ReactterInstanceInjectionon/create.html): Registers, creates and returns the instance directly.
+- [`Reactter.builder`](https://pub.dev/documentation/reactter/latest/reactter/ReactterInstanceInjectionon/builder.html): Registers, creates and returns the instance as [Builder](#builder) directly.
+- [`Reactter.factory`](https://pub.dev/documentation/reactter/latest/reactter/ReactterInstanceInjectionon/factory.html): Registers, creates and returns the instance as [Factory](#factory) directly.
+- [`Reactter.singleton`](https://pub.dev/documentation/reactter/latest/reactter/ReactterInstanceInjectionon/singleton.html): Registers, creates and returns the instance as [Singleton](#singleton) directly.
+- [`Reactter.get`](https://pub.dev/documentation/reactter/latest/reactter/ReactterInstanceInjectionon/get.html): Returns a previously created instance or creates a new instance from the builder function registered by `[Reactter|UseDependency].[register|lazyBuilder|lazyFactory|lazySingleton]`.
+- [`Reactter.delete`](https://pub.dev/documentation/reactter/latest/reactter/ReactterInstanceInjectionon/delete.html): Deletes the instance but keeps the builder function.
+- [`Reactter.unregister`](https://pub.dev/documentation/reactter/latest/reactter/ReactterInstanceInjectionon/factory.html): Removes the builder function, preventing the creation of the instance.
+- [`Reactter.destroy`](https://pub.dev/documentation/reactter/latest/reactter/ReactterInstanceInjectionon/destroy.html): Destroys the instance and the builder function.
+- [`Reactter.find`](https://pub.dev/documentation/reactter/latest/reactter/ReactterInstanceInjectionon/find.html): Gets the instance.
+- [`Reactter.isRegistered`](https://pub.dev/documentation/reactter/latest/reactter/ReactterInstanceInjectionon/isRegistered.html): Checks if an instance is registered in Reactter.
+- [`Reactter.getDependencyMode`](https://pub.dev/documentation/reactter/latest/reactter/ReactterInstanceInjectionon/getDependencyMode.html): Returns the `DependencyMode` of the instance.
 
-In each of the events methods shown above (except `Reactter.isRegister` and `Reactter.getInstanceManageMode`), it provides the `id` argument for managing the instances of the same type by a unique identity.
+In each of the events methods shown above (except `Reactter.isRegister` and `Reactter.getDependencyMode`), it provides the `id` argument for managing the instances of the same type by a unique identity.
 
 > **NOTE:**
 > The scope of the registered instances is global.
-> This indicates that using the [shortcuts to manage instance](#shortcuts-to-manage-events) or [`UseInstance`](#useinstance) will allow you to access them from anywhere in the project.
+> This indicates that using the [shortcuts to manage instance](#shortcuts-to-manage-events) or [`UseDependency`](#usedependency) will allow you to access them from anywhere in the project.
 
-### UseInstance
+### UseDependency
 
-[`UseInstance`](https://pub.dev/documentation/reactter/latest/reactter/UseInstance-class.html) is a hook([`ReactterHook`](https://pub.dev/documentation/reactter/latest/reactter/ReactterHook-class.html)) that allows to manage an instance.
+[`UseDependency`](https://pub.dev/documentation/reactter/latest/reactter/UseDependency-class.html) is a hook([`ReactterHook`](https://pub.dev/documentation/reactter/latest/reactter/ReactterHook-class.html)) that allows to manage an instance.
 
 ```dart
-UseInstance<T>([String? id]);
+UseDependency<T>([String? id]);
 ```
 
 The default constructor uses `Reactter.find` to get the instance of the `T` type with or without `id` that is available.
@@ -726,8 +728,8 @@ Here is an example using `UseIntance`:
 
 ```dart
 class MyController {
-  final useAuthController = UseInstance<AuthController>();
-  // final useOtherControllerWithId = UseInstance<OtherController>("UniqueId");
+  final useAuthController = UseDependency<AuthController>();
+  // final useOtherControllerWithId = UseDependency<OtherController>("UniqueId");
 
   AuthController? authController = useAuthController.instance;
 
@@ -743,23 +745,23 @@ class MyController {
 > **NOTE:**
 > In the example above uses [`UseEffect`](#useeffect) hook, to wait for the `instance` to become available.
 
-`UseInstance` provides some constructors and factories for managing an instance, which are:
+`UseDependency` provides some constructors and factories for managing an instance, which are:
 
-- [`UseInstance.register`](https://pub.dev/documentation/reactter/latest/reactter/UseInstance/register.html): Registers a builder function, for creating a new instance using `[Reactter|UseInstance].[get|create|builder|factory|singleton]`.
-- [`UseInstance.lazyBuilder`](https://pub.dev/documentation/reactter/latest/reactter/UseInstance/lazyBuilder.html): Registers a builder function, for creating a new instance as [Builder](#builder) mode using `[Reactter|UseInstance].[get|create|builder]`.
-- [`UseInstance.lazyFactory`](https://pub.dev/documentation/reactter/latest/reactter/UseInstance/lazyFactory.html): Registers a builder function, for creating a new instance as [Factory](#factory) mode using `[Reactter|UseInstance].[get|create|factory]`.
-- [`UseInstance.lazySingleton`](https://pub.dev/documentation/reactter/latest/reactter/UseInstance/lazySingleton.html): Registers a builder function, for creating a new instance as [Singleton](#singleton) mode using `[Reactter|UseInstance].[get|create|singleton]`.
-- [`UseInstance.create`](https://pub.dev/documentation/reactter/latest/reactter/UseInstance/create.html): Registers, creates and returns the instance directly.
-- [`UseInstance.builder`](https://pub.dev/documentation/reactter/latest/reactter/UseInstance/builder.html): Registers, creates and returns the instance as [Builder](#builder) directly.
-- [`UseInstance.factory`](https://pub.dev/documentation/reactter/latest/reactter/UseInstance/factory.html): Registers, creates and returns the instance as [Factory](#factory) directly.
-- [`UseInstance.singleton`](https://pub.dev/documentation/reactter/latest/reactter/UseInstance/singleton.html): Registers, creates and returns the instance as [Singleton](#singleton) directly.
-- [`UseInstance.get`](https://pub.dev/documentation/reactter/latest/reactter/UseInstance/get.html): Returns a previously created instance or creates a new instance from the builder function registered by `[Reactter|UseInstance].[register|lazyBuilder|lazyFactory|lazySingleton]`.
+- [`UseDependency.register`](https://pub.dev/documentation/reactter/latest/reactter/UseDependency/register.html): Registers a builder function, for creating a new instance using `[Reactter|UseDependency].[get|create|builder|factory|singleton]`.
+- [`UseDependency.lazyBuilder`](https://pub.dev/documentation/reactter/latest/reactter/UseDependency/lazyBuilder.html): Registers a builder function, for creating a new instance as [Builder](#builder) mode using `[Reactter|UseDependency].[get|create|builder]`.
+- [`UseDependency.lazyFactory`](https://pub.dev/documentation/reactter/latest/reactter/UseDependency/lazyFactory.html): Registers a builder function, for creating a new instance as [Factory](#factory) mode using `[Reactter|UseDependency].[get|create|factory]`.
+- [`UseDependency.lazySingleton`](https://pub.dev/documentation/reactter/latest/reactter/UseDependency/lazySingleton.html): Registers a builder function, for creating a new instance as [Singleton](#singleton) mode using `[Reactter|UseDependency].[get|create|singleton]`.
+- [`UseDependency.create`](https://pub.dev/documentation/reactter/latest/reactter/UseDependency/create.html): Registers, creates and returns the instance directly.
+- [`UseDependency.builder`](https://pub.dev/documentation/reactter/latest/reactter/UseDependency/builder.html): Registers, creates and returns the instance as [Builder](#builder) directly.
+- [`UseDependency.factory`](https://pub.dev/documentation/reactter/latest/reactter/UseDependency/factory.html): Registers, creates and returns the instance as [Factory](#factory) directly.
+- [`UseDependency.singleton`](https://pub.dev/documentation/reactter/latest/reactter/UseDependency/singleton.html): Registers, creates and returns the instance as [Singleton](#singleton) directly.
+- [`UseDependency.get`](https://pub.dev/documentation/reactter/latest/reactter/UseDependency/get.html): Returns a previously created instance or creates a new instance from the builder function registered by `[Reactter|UseDependency].[register|lazyBuilder|lazyFactory|lazySingleton]`.
 
 In each of the contructors or factories above shown, it provides the `id` property for managing the instances of the same type by a unique identity.
 
 > **NOTE:**
 > The scope of the registered instances is global.
-> This indicates that using the [shortcuts to manage instance](#shortcuts-to-manage-events) or [`UseInstance`](#useinstance) will allow you to access them from anywhere in the project.
+> This indicates that using the [shortcuts to manage instance](#shortcuts-to-manage-events) or [`UseDependency`](#usedependency) will allow you to access them from anywhere in the project.
 
 ## Event handler
 
@@ -825,25 +827,25 @@ myController.state.value = "value changed";
 
 Reactter offers several convenient shortcuts for managing events:
 
-- [`Reactter.on`](https://pub.dev/documentation/reactter/latest/reactter/ReactterEventManager/on.html): turns on the listen event. When the `event` of `instance` is emitted, the `callback` is called:
+- [`Reactter.on`](https://pub.dev/documentation/reactter/latest/reactter/ReactterEventHandler/on.html): turns on the listen event. When the `event` of `instance` is emitted, the `callback` is called:
 
   ```dart
   Reactter.on<T, P>(Object instance, Enum event, callback(T inst, P params));
   ```
 
-- [`Reactter.one`](https://pub.dev/documentation/reactter/latest/reactter/ReactterEventManager/one.html): turns on the listen event for only once. When the `event` of `instance` is emitted, the `callback` is called and then removed.
+- [`Reactter.one`](https://pub.dev/documentation/reactter/latest/reactter/ReactterEventHandler/one.html): turns on the listen event for only once. When the `event` of `instance` is emitted, the `callback` is called and then removed.
 
   ```dart
   Reactter.one<T, P>(Object instance, Enum event, callback(T inst, P param));
   ```
 
-- [`Reactter.off`](https://pub.dev/documentation/reactter/latest/reactter/ReactterEventManager/off.html): removes the `callback` from `event` of `instance`.
+- [`Reactter.off`](https://pub.dev/documentation/reactter/latest/reactter/ReactterEventHandler/off.html): removes the `callback` from `event` of `instance`.
 
   ```dart
   Reactter.off<T, P>(Object instance, Enum event, callback(T instance, P param));
   ```
 
-- [`Reactter.offAll`](https://pub.dev/documentation/reactter/latest/reactter/ReactterEventManager/offAll.html): removes all events of `instance`.
+- [`Reactter.offAll`](https://pub.dev/documentation/reactter/latest/reactter/ReactterEventHandler/offAll.html): removes all events of `instance`.
 
   ```dart
   Reactter.offAll(Object instance);
@@ -852,7 +854,7 @@ Reactter offers several convenient shortcuts for managing events:
   > **IMPORTANT**:
   > Don't use it, if you're not sure. Because it will remove all events, even those events that Reactter needs to work properly. Instead, use `Reactter.off` to remove the specific events.
 
-- [`Reactter.emit`](https://pub.dev/documentation/reactter/latest/reactter/ReactterEventManager/emit.html): triggers an `event` of `instance` with or without the `param` given.
+- [`Reactter.emit`](https://pub.dev/documentation/reactter/latest/reactter/ReactterEventHandler/emit.html): triggers an `event` of `instance` with or without the `param` given.
 
   ```dart
   Reactter.emit(Object instance, Enum event, [dynamic param]);
@@ -948,7 +950,7 @@ ReactterProvider<T>(
   T instanceBuilder(), {
   String? id,
   bool init = false,
-  InstanceManageMode type = InstanceManageMode.builder,
+  DependencyMode type = DependencyMode.builder,
   Widget? child,
   required Widget builder(BuilderContext context, T instance, Widget? child),
 })
@@ -1702,7 +1704,7 @@ In each of the methods it provides theses methods and properties:
 > addNum.ary(ArgX2(2, 2));
 > ```
 
-### Memo
+## Memo
 
 [`Memo`](https://pub.dev/documentation/reactter/latest/reactter/Memo-class.html) is a class callable with memoization logic which it stores computation results in cache, and retrieve that same information from the cache the next time it's needed instead of computing it again.
 

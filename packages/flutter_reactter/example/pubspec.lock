@@ -170,10 +170,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_reactter
-      sha256: c9a8164baa34fd5d375e8f81e7b833f6b7669ca556159396c70a4b452bf47eda
+      sha256: "8a67a0f7124eb7f439408909eaaf31ebbddd11c17f34e0cfa39e98c75a4f11e6"
       url: "https://pub.dev"
     source: hosted
-    version: "7.0.0"
+    version: "7.1.0"
   flutter_web_plugins:
     dependency: transitive
     description: flutter
@@ -319,10 +319,10 @@ packages:
     dependency: transitive
     description:
       name: reactter
-      sha256: "6a6338b5fe60044477b941f7a1dd506ebfa5b4c3015f5d14e28a7197d5f83203"
+      sha256: "2d9ba8a6fc2639739b13cbe6bf67a6f795773a6f75c3c1ce88ad73096844956e"
       url: "https://pub.dev"
     source: hosted
-    version: "7.0.0"
+    version: "7.1.0"
   reactter_lint:
     dependency: "direct dev"
     description:

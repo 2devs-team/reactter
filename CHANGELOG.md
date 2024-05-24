@@ -1,5 +1,22 @@
 # Reactter
 
+## 7.1.0
+
+### Breakings
+
+- **refactor(core,framework,hooks,test):** Deprecate and replace some classes and methods to use the right concept.
+  - Deprecated [`UseInstance`](https://pub.dev/documentation/reactter/7.0.1/reactter/UseInstance-class.html) hook, use [`UseDependency`](https://pub.dev/documentation/reactter/7.1.0-pre/reactter/UseDependency-class.html) hook instead.
+  - Deprecated [`InstanceManageMode`](https://pub.dev/documentation/reactter/7.0.1/reactter/InstanceManageMode.html) enum, use [`DependencyMode`](https://pub.dev/documentation/reactter/7.1.0-pre/reactter/DependencyMode.html) enum instead.
+  - Deprecated [`ReactterInstance`](https://pub.dev/documentation/reactter/7.0.1/reactter/ReactterInstance-class.html) class, use [`ReactterDependency`](https://pub.dev/documentation/reactter/7.1.0-pre/reactter/ReactterDependency-class.html) class instead.
+  - Deprecated [`getInstanceManageMode`](https://pub.dev/documentation/reactter/7.0.1/reactter/ReactterInterface/getInstanceManageMode.html) method, use [`getDependencyMode`](https://pub.dev/documentation/reactter/7.1.0-pre/reactter/ReactterInterface/getDependencyMode.html) method instead.
+
+### Internal
+
+- **refactor(core,framework,hooks,test):** Deprecate and replace some classes and methods to use the right concept.
+  - Renamed `InstanceManager` class to `DependencyInjection`.
+  - Renamed `EventManager` class to `EventHandler`.
+  - Renamed `StateManager` class to `StateManagement`.
+
 ## 7.0.1
 
 ### Internal
