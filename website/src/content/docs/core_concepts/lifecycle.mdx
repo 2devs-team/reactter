@@ -30,10 +30,10 @@ You can listen to the lifecycle events of a dependency by using <HM>`Reactter.on
 
 <NoteLifeExample />
 
-```dart title="counter.dart" "Reactter.on" "Lifecycle.willMount" "Lifecycle.didMount" "Lifecycle.willUpdate" "Lifecycle.didUpdate" "Lifecycle.willUnmount" "Lifecycle.didUnmount"
+```dart title="counter_controller.dart" "Reactter.on" "Lifecycle.willMount" "Lifecycle.didMount" "Lifecycle.willUpdate" "Lifecycle.didUpdate" "Lifecycle.willUnmount" "Lifecycle.didUnmount"
 import 'package:reactter/reactter.dart';
 
-class Counter extends Reactter {
+class CounterController extends Reactter {
   final count = Signal(0);
 
   counter() {
@@ -72,18 +72,18 @@ class Counter extends Reactter {
 }
 ```
 
-```dart title="counter_app.dart" collapse={1-100} /Counter(?!\u0060)(?!Page)/ "Counter()" /counter(?!\\.dart)/ "counter.increment" "counter.decrement" "counter.count" "ReactterProvider" "ReactterConsumer"
+```dart title="counter_app.dart" collapse={1-100} /CounterController(?!\u0060)(?!Page)/ "CounterController()" /counter(?!\\.dart)/ "counter.increment" "counter.decrement" "counter.count" "ReactterProvider" "ReactterConsumer"
 import 'package:flutter/material.dart';
 import 'package:flutter_reactter/flutter_reactter.dart';
-import 'counter.dart';
+import 'counter_controller.dart';
 
 class CounterPage extends StatelessWidget {
   const CounterPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return ReactterProvider<Counter>(
-      () => Counter(),
+    return ReactterProvider<CounterController>(
+      () => CounterController(),
       builder: (context, counter, child) {
         return Scaffold(
           appBar: AppBar(
@@ -97,7 +97,7 @@ class CounterPage extends StatelessWidget {
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: ReactterConsumer<Counter>(
+                child: ReactterConsumer<CounterController>(
                   listenStates: (counter) => [counter.count],
                   builder: (context, counter, child) {
                     return Text("${counter.count}");
@@ -116,6 +116,7 @@ class CounterPage extends StatelessWidget {
   }
 }
 ```
+
 ```dart title="main.dart" "Reactter.on" "ReactterDependency" "Lifecycle.unregistered" "Lifecycle.registered" "Lifecycle.initialized" "Lifecycle.destroyed" /(Counter)\\>/
 import 'package:flutter/material.dart';
 import 'package:reactter/reactter.dart';
@@ -130,31 +131,31 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Reactter.on(
-      ReactterDependency<Counter>(),
+      ReactterDependency<CounterController>(),
       Lifecycle.unregistered,
       (_, __) => print('Counter unregistered'),
     );
 
     Reactter.on(
-      ReactterDependency<Counter>(),
+      ReactterDependency<CounterController>(),
       Lifecycle.registered,
       (_, __) => print('Counter registered'),
     );
 
     Reactter.on(
-      ReactterDependency<Counter>(),
+      ReactterDependency<CounterController>(),
       Lifecycle.initialized,
       (_, __) => print('Counter initialized'),
     );
 
     Reactter.one(
-      ReactterDependency<Counter>(),
+      ReactterDependency<CounterController>(),
       Lifecycle.destroyed,
       (_, __) => print('Counter destroyed'),
     );
 
     return MaterialApp(
-      home: CounterApp(),
+      home: CounterControllerApp(),
     );
   }
 }
@@ -173,10 +174,10 @@ and use its methods to observe the lifecycle events. e.g:
 
 <NoteLifeExample />
 
-```dart title="counter.dart" "LifecycleObserver" "onInitialized" "onDidMount" "onWillMount" "onWillUpdate" "onDidUpdate" "onWillUnmount" "onDidUnmount"
+```dart title="counter_controller.dart" "LifecycleObserver" "onInitialized" "onDidMount" "onWillMount" "onWillUpdate" "onDidUpdate" "onWillUnmount" "onDidUnmount"
 import 'package:reactter/reactter.dart';
 
-class Counter extends LifecycleObserver  {
+class CounterController extends LifecycleObserver  {
   final count = Signal(0);
 
   void onInitialized() {
@@ -217,18 +218,18 @@ class Counter extends LifecycleObserver  {
 }
 ```
 
-```dart title="counter_app.dart"  collapse={1-100} /Counter(?!\u0060)(?!Page)/ "Counter()" /counter(?!\\.dart)/ "counter.increment" "counter.decrement" "counter.count" "ReactterProvider" "ReactterConsumer"
+```dart title="counter_app.dart"  collapse={1-100} /CounterController(?!\u0060)(?!Page)/ "CounterController()" /counter(?!\\.dart)/ "counter.increment" "counter.decrement" "counter.count" "ReactterProvider" "ReactterConsumer"
 import 'package:flutter/material.dart';
 import 'package:flutter_reactter/flutter_reactter.dart';
-import 'counter.dart';
+import 'counter_controller.dart';
 
 class CounterPage extends StatelessWidget {
   const CounterPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return ReactterProvider<Counter>(
-      () => Counter(),
+    return ReactterProvider<CounterController>(
+      () => CounterController(),
       builder: (context, counter, child) {
         return Scaffold(
           appBar: AppBar(
@@ -242,7 +243,7 @@ class CounterPage extends StatelessWidget {
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: ReactterConsumer<Counter>(
+                child: ReactterConsumer<CounterController>(
                   listenStates: (counter) => [counter.count],
                   builder: (context, counter, child) {
                     return Text("${counter.count}");
@@ -312,18 +313,18 @@ class Counter extends Reactter {
 }
 ```
 
-```dart title="counter_app.dart"  collapse={1-100} /Counter(?!\u0060)(?!Page)/ "Counter()" /counter(?!\\.dart)/ "counter.increment" "counter.decrement" "counter.count" "ReactterProvider" "ReactterConsumer"
+```dart title="counter_app.dart"  collapse={1-100} /CounterController(?!\u0060)(?!Page)/ "CounterController()" /counter(?!\\.dart)/ "counter.increment" "counter.decrement" "counter.count" "ReactterProvider" "ReactterConsumer"
 import 'package:flutter/material.dart';
 import 'package:flutter_reactter/flutter_reactter.dart';
-import 'counter.dart';
+import 'counter_controller.dart';
 
 class CounterPage extends StatelessWidget {
   const CounterPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return ReactterProvider<Counter>(
-      () => Counter(),
+    return ReactterProvider<CounterController>(
+      () => CounterController(),
       builder: (context, counter, child) {
         return Scaffold(
           appBar: AppBar(
@@ -337,7 +338,7 @@ class CounterPage extends StatelessWidget {
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: ReactterConsumer<Counter>(
+                child: ReactterConsumer<CounterController>(
                   listenStates: (counter) => [counter.count],
                   builder: (context, counter, child) {
                     return Text("${counter.count}");
@@ -374,4 +375,3 @@ class MyApp extends StatelessWidget {
   }
 }
 ```
-

@@ -16,7 +16,7 @@ Dependency injection offers several benefits.
 Reactter provides the following dependencies injection mechanisms:
 
 - Hooks
-  - <HT>[`UseInstance`](/reactter/hooks/UseInstance)</HT>
+  - <HT>[`UseDependency`](/reactter/hooks/UseDependency)</HT>
 - Methods
   - <HM>[`Reactter.register`](/reactter/methods/to_manage_instance/register)</HM>
   - <HM>[`Reactter.lazyBuilder`](/reactter/methods/to_manage_instance/lazy_builder)</HM>
@@ -133,15 +133,15 @@ class Counter {
 }
 ```
 
-```dart title="countdown.dart" "UseInstance.create" "Reactter.delete" "Reactter.on" "counter.count" "counter.decrement" "uCounter" "uCounter.instance" /Counter(?!\u0060)/ /(counter)[, ]/ "Lifecycle.didUpdate"
+```dart title="countdown.dart" "UseDependency.create" "Reactter.delete" "Reactter.on" "counter.count" "counter.decrement" "uCounter" "uCounter.instance" /Counter(?!\u0060)/ /(counter)[, ]/ "Lifecycle.didUpdate"
 import 'package:reactter/reactter.dart';
 import 'counter.dart';
 
 /// A class that represents a countdown using a counter
 class Countdown {
-  // Create an instance of the `Counter` class using the `UseInstance` hook
+  // Create an instance of the `Counter` class using the `UseDependency` hook
   // and initialize it with an initial value of 10
-  final uCounter = UseInstance.create<Counter>(() => Counter(10));
+  final uCounter = UseDependency.create<Counter>(() => Counter(10));
 
   // Get the instance of the `Counter` class
   Counter get counter => uCounter.instance;
