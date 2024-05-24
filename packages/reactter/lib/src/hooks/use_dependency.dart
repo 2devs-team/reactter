@@ -1,17 +1,23 @@
 part of 'hooks.dart';
 
-/// {@template use_instance}
+@Deprecated(
+  'Use `UseDependency` instead. '
+  'This feature was deprecated after v7.1.0.',
+)
+typedef UseInstance<T extends Object> = UseDependency<T>;
+
+/// {@template use_dependency}
 /// A [ReactterHook] that allows to manages an instance of [T] with/without [id].
 ///
 /// ```dart
-/// final useAppController = UseInstance<AppController>();
-/// final useOtherControllerWithId = UseInstance<OtherController>('uniqueId');
+/// final useAppController = UseDependency<AppController>();
+/// final useOtherControllerWithId = UseDependency<OtherController>('uniqueId');
 /// ```
 ///
 /// Use [instance] getter to get the [T] instance:
 ///
 /// ```dart
-/// final useAppController = UseInstance<AppController>();
+/// final useAppController = UseDependency<AppController>();
 /// print(useAppController.instance);
 /// ```
 ///
@@ -20,7 +26,7 @@ part of 'hooks.dart';
 /// You can wait for the [instance] to be created, using [UseEffect]:
 ///
 /// ```dart
-/// final useAppController = UseInstance<AppController>();
+/// final useAppController = UseDependency<AppController>();
 /// print(useAppController.instance); // return null
 ///
 /// UseEffect(() {
@@ -28,7 +34,7 @@ part of 'hooks.dart';
 /// }, [useAppController]);
 /// ```
 ///
-/// The instance must be created by [InstanceManager] using the following methods:
+/// The instance must be created by [DependencyInjection] using the following methods:
 ///
 /// - **Reactter.get**:
 ///   {@macro get}
@@ -41,35 +47,35 @@ part of 'hooks.dart';
 ///
 /// or created by [ReactterProvider] of [`flutter_reactter`](https://pub.dev/packages/flutter_reactter)
 ///
-/// [UseInstance] providers the following constructors:
+/// [UseDependency] providers the following constructors:
 ///
-/// - **[UseInstance.register]**:
+/// - **[UseDependency.register]**:
 ///   {@macro register}
-/// - **[UseInstance.lazyBuilder]**:
+/// - **[UseDependency.lazyBuilder]**:
 ///   {@macro lazy_builder}
-/// - **[UseInstance.lazyFactory]**:
+/// - **[UseDependency.lazyFactory]**:
 ///   {@macro lazy_factory}
-/// - **[UseInstance.lazySingleton]**:
+/// - **[UseDependency.lazySingleton]**:
 ///   {@macro lazy_singleton}
-/// - **[UseInstance.create]**:
+/// - **[UseDependency.create]**:
 ///   {@macro create}
-/// - **[UseInstance.builder]**:
+/// - **[UseDependency.builder]**:
 ///   {@macro builder}
-/// - **[UseInstance.factory]**:
+/// - **[UseDependency.factory]**:
 ///   {@macro factory}
-/// - **[UseInstance.singleton]**:
+/// - **[UseDependency.singleton]**:
 ///   {@macro singleton}
-/// - **[UseInstance.get]**:
+/// - **[UseDependency.get]**:
 ///   {@macro get}
 ///
 /// > **IMPORTANT**
 /// > You should call [dispose] when it's no longer needed.
 ///
 /// See also:
-/// * [InstanceManager], a instances manager.
+/// * [DependencyInjection], a instances manager.
 /// * [UseEffect], a side-effect manager.
 /// {@endtemplate}
-class UseInstance<T extends Object> extends ReactterHook {
+class UseDependency<T extends Object> extends ReactterHook {
   @protected
   @override
   final $ = ReactterHook.$register;
@@ -101,16 +107,16 @@ class UseInstance<T extends Object> extends ReactterHook {
   /// It's used to identify the instance of [T] type.
   final String? id;
 
-  /// {@macro use_instance}
-  UseInstance([this.id]) {
+  /// {@macro use_dependency}
+  UseDependency([this.id]) {
     _instance = Reactter.find<T>(id);
     _listen();
   }
 
   /// {@macro register}
-  UseInstance.register(
+  UseDependency.register(
     InstanceBuilder<T> builder, {
-    InstanceManageMode mode = InstanceManageMode.builder,
+    DependencyMode mode = DependencyMode.builder,
     this.id,
   }) {
     Reactter.register(
@@ -122,34 +128,35 @@ class UseInstance<T extends Object> extends ReactterHook {
   }
 
   /// {@macro lazy_builder}
-  factory UseInstance.lazyBuilder(InstanceBuilder<T> builder, [String? id]) =>
-      UseInstance.register(
+  factory UseDependency.lazyBuilder(InstanceBuilder<T> builder, [String? id]) =>
+      UseDependency.register(
         builder,
-        mode: InstanceManageMode.builder,
+        mode: DependencyMode.builder,
         id: id,
       );
 
   /// {@macro lazy_factory}
-  factory UseInstance.lazyFactory(InstanceBuilder<T> builder, [String? id]) =>
-      UseInstance.register(
+  factory UseDependency.lazyFactory(InstanceBuilder<T> builder, [String? id]) =>
+      UseDependency.register(
         builder,
-        mode: InstanceManageMode.factory,
+        mode: DependencyMode.factory,
         id: id,
       );
 
   /// {@macro lazy_singleton}
-  factory UseInstance.lazySingleton(InstanceBuilder<T> builder, [String? id]) =>
-      UseInstance.register(
+  factory UseDependency.lazySingleton(InstanceBuilder<T> builder,
+          [String? id]) =>
+      UseDependency.register(
         builder,
-        mode: InstanceManageMode.singleton,
+        mode: DependencyMode.singleton,
         id: id,
       );
 
   /// {@macro create}
-  UseInstance.create(
+  UseDependency.create(
     InstanceBuilder<T> builder, {
     this.id,
-    InstanceManageMode mode = InstanceManageMode.builder,
+    DependencyMode mode = DependencyMode.builder,
   }) {
     _instance = Reactter.create(
       builder,
@@ -161,31 +168,31 @@ class UseInstance<T extends Object> extends ReactterHook {
   }
 
   /// {@macro builder}
-  factory UseInstance.builder(InstanceBuilder<T> builder, [String? id]) =>
-      UseInstance.create(
+  factory UseDependency.builder(InstanceBuilder<T> builder, [String? id]) =>
+      UseDependency.create(
         builder,
         id: id,
-        mode: InstanceManageMode.builder,
+        mode: DependencyMode.builder,
       );
 
   /// {@macro factory}
-  factory UseInstance.factory(InstanceBuilder<T> builder, [String? id]) =>
-      UseInstance.create(
+  factory UseDependency.factory(InstanceBuilder<T> builder, [String? id]) =>
+      UseDependency.create(
         builder,
         id: id,
-        mode: InstanceManageMode.factory,
+        mode: DependencyMode.factory,
       );
 
   /// {@macro singleton}
-  factory UseInstance.singleton(InstanceBuilder<T> builder, [String? id]) =>
-      UseInstance.create(
+  factory UseDependency.singleton(InstanceBuilder<T> builder, [String? id]) =>
+      UseDependency.create(
         builder,
         id: id,
-        mode: InstanceManageMode.singleton,
+        mode: DependencyMode.singleton,
       );
 
   /// {@macro get}
-  UseInstance.get([this.id]) {
+  UseDependency.get([this.id]) {
     _instance = Reactter.get(id, this);
     _listen();
   }
@@ -206,15 +213,15 @@ class UseInstance<T extends Object> extends ReactterHook {
   }
 
   void _listen() {
-    Reactter.on(ReactterInstance<T>(id), Lifecycle.initialized, _onInstance);
-    Reactter.on(ReactterInstance<T>(id), Lifecycle.willMount, _onInstance);
-    Reactter.on(ReactterInstance<T>(id), Lifecycle.destroyed, _onInstance);
+    Reactter.on(ReactterDependency<T>(id), Lifecycle.initialized, _onInstance);
+    Reactter.on(ReactterDependency<T>(id), Lifecycle.willMount, _onInstance);
+    Reactter.on(ReactterDependency<T>(id), Lifecycle.destroyed, _onInstance);
   }
 
   void _unlisten() {
-    Reactter.off(ReactterInstance<T>(id), Lifecycle.initialized, _onInstance);
-    Reactter.off(ReactterInstance<T>(id), Lifecycle.willMount, _onInstance);
-    Reactter.off(ReactterInstance<T>(id), Lifecycle.destroyed, _onInstance);
+    Reactter.off(ReactterDependency<T>(id), Lifecycle.initialized, _onInstance);
+    Reactter.off(ReactterDependency<T>(id), Lifecycle.willMount, _onInstance);
+    Reactter.off(ReactterDependency<T>(id), Lifecycle.destroyed, _onInstance);
   }
 
   void _onInstance(inst, param) {

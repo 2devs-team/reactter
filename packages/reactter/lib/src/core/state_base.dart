@@ -4,11 +4,11 @@ part of 'core.dart';
 @internal
 abstract class StateBase {
   @internal
-  InstanceManager get instanceManager;
+  DependencyInjection get instanceInjection;
   @internal
-  StateManager get stateManager;
+  StateManagement get stateManagment;
   @internal
-  EventManager get eventManager;
+  EventHandler get eventHandler;
   @internal
   Logger get logger;
 

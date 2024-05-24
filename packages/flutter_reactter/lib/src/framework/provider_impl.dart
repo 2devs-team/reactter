@@ -15,7 +15,7 @@ class ProvideImpl<T extends Object?, I extends String?> extends ProviderBase<T>
     required this.ref,
     Key? key,
     I? id,
-    InstanceManageMode mode = InstanceManageMode.builder,
+    DependencyMode mode = DependencyMode.builder,
     bool init = false,
     bool isLazy = false,
     Widget? child,
@@ -130,13 +130,13 @@ class ProvideImpl<T extends Object?, I extends String?> extends ProviderBase<T>
   }
 }
 
-/// [ProviderElement] is a class that manages the lifecycle of the [ReactterInstance] and
-/// provides the [ReactterInstance] to its descendants
+/// [ProviderElement] is a class that manages the lifecycle of the [ReactterDependency] and
+/// provides the [ReactterDependency] to its descendants
 @internal
 class ProviderElement<T extends Object?> extends InheritedElement
     with ScopeElementMixin {
   Widget? prevChild;
-  HashMap<ReactterInstance, ProviderElement<T>>? _inheritedElementsWithId;
+  HashMap<ReactterDependency, ProviderElement<T>>? _inheritedElementsWithId;
   bool _isLazyInstanceObtained = false;
 
   bool get isRoot {
@@ -238,11 +238,11 @@ class ProviderElement<T extends Object?> extends InheritedElement
     }
   }
 
-  /// Gets [ProviderElement] that it has the [ReactterInstance]'s id.
+  /// Gets [ProviderElement] that it has the [ReactterDependency]'s id.
   ProviderElement<T>? getInheritedElementOfExactId(
     String id,
   ) =>
-      _inheritedElementsWithId?[ReactterInstance<T?>(id)];
+      _inheritedElementsWithId?[ReactterDependency<T?>(id)];
 
   /// updates [inheritedElementsWithId]
   /// with all ancestor [ProviderElement] with id
@@ -255,15 +255,15 @@ class ProviderElement<T extends Object?> extends InheritedElement
 
     if (ancestorInheritedElement?._inheritedElementsWithId != null) {
       _inheritedElementsWithId =
-          HashMap<ReactterInstance, ProviderElement<T>>.of(
+          HashMap<ReactterDependency, ProviderElement<T>>.of(
         ancestorInheritedElement!._inheritedElementsWithId!,
       );
     } else {
       _inheritedElementsWithId =
-          HashMap<ReactterInstance, ProviderElement<T>>();
+          HashMap<ReactterDependency, ProviderElement<T>>();
     }
 
-    _inheritedElementsWithId![ReactterInstance<T?>(widget.id)] = this;
+    _inheritedElementsWithId![ReactterDependency<T?>(widget.id)] = this;
   }
 }
 

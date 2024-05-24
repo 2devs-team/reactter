@@ -1,20 +1,22 @@
 part of 'core.dart';
 
-/// A class that represents an event notifier reference for the [EventManager].
+/// A class that represents an event notifier reference for the [EventHandler].
 class EventNotifierRef {
-  final InstanceRef? _instanceRef;
+  final DependencyRef? _dependencyRef;
   final Object? _instanceObj;
   final Enum event;
 
   EventNotifierRef(
-    Object? instanceOrObj,
+    Object? dependencyOrObj,
     this.event,
-  )   : _instanceRef = instanceOrObj is InstanceRef ? instanceOrObj : null,
-        _instanceObj = instanceOrObj is! InstanceRef ? instanceOrObj : null;
+  )   : _dependencyRef =
+            dependencyOrObj is DependencyRef ? dependencyOrObj : null,
+        _instanceObj =
+            dependencyOrObj is! DependencyRef ? dependencyOrObj : null;
 
   @override
   int get hashCode => Object.hash(
-        _instanceRef.hashCode,
+        _dependencyRef.hashCode,
         _instanceObj.hashCode,
         event.hashCode,
       );
@@ -26,8 +28,8 @@ class EventNotifierRef {
         return false;
       }
 
-      if (_instanceRef != null && other._instanceRef != null) {
-        return _instanceRef == other._instanceRef;
+      if (_dependencyRef != null && other._dependencyRef != null) {
+        return _dependencyRef == other._dependencyRef;
       }
 
       return _instanceObj == other._instanceObj;
@@ -70,28 +72,28 @@ class EventNotifier extends EventNotifierRef {
   int _reentrantlyRemovedListeners = 0;
   bool _debugDisposed = false;
 
-  final InstanceManager instanceManager;
+  final DependencyInjection instanceInjection;
   final Logger logger;
   final void Function(EventNotifier notifier) onNotifyComplete;
 
   EventNotifier(
     Object? instanceOrObj,
     Enum event,
-    this.instanceManager,
+    this.instanceInjection,
     this.logger,
     this.onNotifyComplete,
   ) : super(instanceOrObj, event);
 
-  InstanceRef? get instanceRef =>
-      _instanceRef ?? instanceManager._getInstanceRef(_instanceObj);
+  DependencyRef? get instanceRef =>
+      _dependencyRef ?? instanceInjection._getDependencyRef(_instanceObj);
 
   Object? get instanceObj =>
       _instanceObj ??
-      instanceManager._getInstanceRegisterByInstanceRef(_instanceRef)?.instance;
+      instanceInjection._getDependencyRegisterByRef(_dependencyRef)?.instance;
 
   @override
   int get hashCode => Object.hash(
-        _instanceRef.hashCode,
+        _dependencyRef.hashCode,
         _instanceObj.hashCode,
         event.hashCode,
       );
@@ -102,14 +104,14 @@ class EventNotifier extends EventNotifierRef {
       return super == other;
     }
 
-    if (other is InstanceRef) {
+    if (other is DependencyRef) {
       return instanceRef == other;
     }
 
     final instanceRefSelf = instanceRef;
 
     if (instanceRefSelf != null) {
-      return instanceRefSelf == instanceManager._getInstanceRef(other);
+      return instanceRefSelf == instanceInjection._getDependencyRef(other);
     }
 
     return instanceObj == other;

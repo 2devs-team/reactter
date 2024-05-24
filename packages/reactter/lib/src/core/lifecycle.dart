@@ -1,13 +1,13 @@
 part of 'core.dart';
 
 enum Lifecycle {
-  /// This event is triggered when the [InstanceManager] registers the instance.
+  /// This event is triggered when the [DependencyInjection] registers the instance.
   registered,
 
-  /// This event is triggered when the [InstanceManager] unregisters the instance.
+  /// This event is triggered when the [DependencyInjection] unregisters the instance.
   unregistered,
 
-  /// This event is triggered when the [InstanceManager] initializes the instance.
+  /// This event is triggered when the [DependencyInjection] initializes the instance.
   initialized,
 
   /// This event(exclusive to `flutter_reactter`) happens when the instance is going to be mounted in the widget tree.
@@ -28,6 +28,6 @@ enum Lifecycle {
   /// This event(exclusive to `flutter_reactter`) happens when the instance has been successfully unmounted from the widget tree.
   didUnmount,
 
-  /// This event is triggered when the [InstanceManager] destroys the instance.
+  /// This event is triggered when the [DependencyInjection] destroys the instance.
   destroyed,
 }

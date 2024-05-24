@@ -6,7 +6,7 @@ import 'package:examples/examples/4_shopping_cart/models/cart_item.dart';
 import 'package:examples/examples/4_shopping_cart/repositories/store_repository.dart';
 
 class CartController {
-  final uStoreRepository = UseInstance.create(StoreRepository.new);
+  final uStoreRepository = UseDependency.create(StoreRepository.new);
   final uCartItems = UseState<List<CartItem>>([]);
   final uCartItemsCount = UseState<int>(0);
   final uTotal = UseState<double>(0.0);

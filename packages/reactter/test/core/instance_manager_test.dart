@@ -4,7 +4,7 @@ import 'package:test/test.dart';
 import '../shareds/test_controllers.dart';
 
 void main() {
-  group("ReactterInstanceManager", () {
+  group("ReactterInstanceInjection", () {
     test("should register an instance builder", () {
       bool registered = Reactter.register(() => TestController());
       expect(registered, true);
@@ -313,8 +313,8 @@ void main() {
       final instance = Reactter.builder(() => TestController());
       expect(instance, isA<TestController>());
 
-      final instanceManageMode = Reactter.getInstanceManageMode(instance);
-      expect(instanceManageMode, InstanceManageMode.builder);
+      final dependencyMode = Reactter.getDependencyMode(instance);
+      expect(dependencyMode, DependencyMode.builder);
 
       final isDeleted = Reactter.delete<TestController>();
       expect(isDeleted, true);
@@ -334,8 +334,8 @@ void main() {
       final instance = Reactter.builder(() => TestController(), id: id);
       expect(instance, isA<TestController>());
 
-      final instanceManageMode = Reactter.getInstanceManageMode(instance);
-      expect(instanceManageMode, InstanceManageMode.builder);
+      final dependencyMode = Reactter.getDependencyMode(instance);
+      expect(dependencyMode, DependencyMode.builder);
 
       final isDeleted = Reactter.delete<TestController>(id);
       expect(isDeleted, true);
@@ -353,8 +353,8 @@ void main() {
       final instance = Reactter.factory(() => TestController());
       expect(instance, isA<TestController>());
 
-      final instanceManageMode = Reactter.getInstanceManageMode(instance);
-      expect(instanceManageMode, InstanceManageMode.factory);
+      final dependencyMode = Reactter.getDependencyMode(instance);
+      expect(dependencyMode, DependencyMode.factory);
 
       final isDeleted = Reactter.delete<TestController>();
       expect(isDeleted, true);
@@ -374,8 +374,8 @@ void main() {
       final instance = Reactter.factory(() => TestController(), id: id);
       expect(instance, isA<TestController>());
 
-      final instanceManageMode = Reactter.getInstanceManageMode(instance);
-      expect(instanceManageMode, InstanceManageMode.factory);
+      final dependencyMode = Reactter.getDependencyMode(instance);
+      expect(dependencyMode, DependencyMode.factory);
 
       final isDeleted = Reactter.delete<TestController>(id);
       expect(isDeleted, true);
@@ -393,8 +393,8 @@ void main() {
       final instance = Reactter.singleton(() => TestController());
       expect(instance, isA<TestController>());
 
-      final instanceManageMode = Reactter.getInstanceManageMode(instance);
-      expect(instanceManageMode, InstanceManageMode.singleton);
+      final dependencyMode = Reactter.getDependencyMode(instance);
+      expect(dependencyMode, DependencyMode.singleton);
 
       final isDeleted = Reactter.delete<TestController>();
       expect(isDeleted, false);
@@ -415,8 +415,8 @@ void main() {
       final instance = Reactter.singleton(() => TestController(), id: id);
       expect(instance, isA<TestController>());
 
-      final nstanceManageMode = Reactter.getInstanceManageMode(instance);
-      expect(nstanceManageMode, InstanceManageMode.singleton);
+      final nstanceManageMode = Reactter.getDependencyMode(instance);
+      expect(nstanceManageMode, DependencyMode.singleton);
 
       final isDeleted = Reactter.delete<TestController>(id);
       expect(isDeleted, false);

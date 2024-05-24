@@ -5,9 +5,9 @@ part of 'core.dart';
 /// It contains methods for adding, removing, and triggering events,
 /// as well as storing event callbacks.
 @internal
-abstract class EventManager {
+abstract class EventHandler {
   @internal
-  InstanceManager get instanceManager;
+  DependencyInjection get instanceInjection;
 
   @internal
   Logger get logger;
@@ -68,7 +68,7 @@ abstract class EventManager {
       _resolveLifecycleEvent(instance, eventName, param);
     }
 
-    if (notifier?._instanceRef == null) {
+    if (notifier?._dependencyRef == null) {
       notifier?.notifyListeners(param);
       notifierPartner?.notifyListeners(param);
       return;
@@ -100,7 +100,7 @@ abstract class EventManager {
         EventNotifier(
           instance,
           eventName,
-          instanceManager,
+          instanceInjection,
           logger,
           _offEventNotifier,
         );
@@ -115,9 +115,9 @@ abstract class EventManager {
   /// Retrieves the [EventNotifier] partner for the given [instance] and [eventName].
   /// If the [EventNotifier] does not exist in the lookup table, it creates a new one.
   EventNotifier? _getEventNotifierPartner(Object? instance, Enum eventName) {
-    final instancePartner = instance is InstanceRef
-        ? instanceManager._getInstanceRegisterByInstanceRef(instance)?.instance
-        : instanceManager._getInstanceRef(instance);
+    final instancePartner = instance is DependencyRef
+        ? instanceInjection._getDependencyRegisterByRef(instance)?.instance
+        : instanceInjection._getDependencyRef(instance);
 
     if (instancePartner == null) return null;
 
@@ -142,10 +142,10 @@ abstract class EventManager {
       return _executeLifecycleObserver(instance, lifecycle, state);
     }
 
-    if (instance is! InstanceRef) return;
+    if (instance is! DependencyRef) return;
 
     final instanceObj =
-        instanceManager._getInstanceRegisterByInstanceRef(instance)?.instance;
+        instanceInjection._getDependencyRegisterByRef(instance)?.instance;
 
     return _resolveLifecycleEvent(instanceObj, lifecycle, state);
   }

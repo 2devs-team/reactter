@@ -189,7 +189,7 @@ class TestLifecycleController extends LifecycleObserver {
 }
 
 class Test2Controller {
-  final testController = UseInstance<TestController>();
+  final testController = UseDependency<TestController>();
 
   Test2Controller() {
     Reactter.create(() => TestController());
@@ -197,14 +197,14 @@ class Test2Controller {
 }
 
 class Test3Controller {
-  final test2Controller = UseInstance<Test2Controller>();
+  final test2Controller = UseDependency<Test2Controller>();
 
   Test3Controller() {
     Reactter.create(() => Test2Controller());
   }
 }
 
-final test3Controller = UseInstance<Test3Controller>();
+final test3Controller = UseDependency<Test3Controller>();
 
 class FakeInterceptorForCoverage<T, A> extends MemoInterceptor<T, A> {
   @override

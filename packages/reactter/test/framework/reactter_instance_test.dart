@@ -4,7 +4,7 @@ import 'package:test/test.dart';
 import '../shareds/test_controllers.dart';
 
 void main() {
-  group("ReactterInstance", () {
+  group("ReactterDependency", () {
     test("should throw the life-cycle events", () async {
       late TestController? instance;
       late bool willUpdateChecked;
@@ -12,14 +12,14 @@ void main() {
       late bool isDestroyed;
 
       Reactter.on(
-        ReactterInstance<TestController>(),
+        ReactterDependency<TestController>(),
         Lifecycle.initialized,
         (TestController? inst, __) {
           instance = inst;
         },
       );
       Reactter.on(
-        ReactterInstance<TestController>(),
+        ReactterDependency<TestController>(),
         Lifecycle.willUpdate,
         (TestController? inst, UseState hook) {
           willUpdateChecked = true;
@@ -28,7 +28,7 @@ void main() {
         },
       );
       Reactter.on(
-        ReactterInstance<TestController>(),
+        ReactterDependency<TestController>(),
         Lifecycle.didUpdate,
         (TestController? inst, UseState hook) {
           didUpdateChecked = true;
@@ -37,7 +37,7 @@ void main() {
         },
       );
       Reactter.on(
-        ReactterInstance<TestController>(),
+        ReactterDependency<TestController>(),
         Lifecycle.destroyed,
         (_, __) {
           isDestroyed = true;

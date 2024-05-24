@@ -8,13 +8,13 @@ part of 'framework.dart';
 abstract class ReactterState extends State {
   @override
   @internal
-  InstanceManager get instanceManager => Reactter;
+  DependencyInjection get instanceInjection => Reactter;
   @override
   @internal
-  StateManager get stateManager => Reactter;
+  StateManagement get stateManagment => Reactter;
   @override
   @internal
-  EventManager get eventManager => Reactter;
+  EventHandler get eventHandler => Reactter;
   @override
   @internal
   Logger get logger => Reactter;

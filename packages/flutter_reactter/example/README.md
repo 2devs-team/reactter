@@ -46,7 +46,7 @@ Add, remove product to cart and checkout.
 
 [![Shopping cart example](https://raw.githubusercontent.com/2devs-team/reactter_assets/main/examples/cart_example.gif)](https://github.com/2devs-team/reactter/tree/master/packages/flutter_reactter/example/lib/shopping_cart)
 
-Implements: `ReactterComponent`, `ReactterConsumer`, `ReactterProvider`, `ReactterProviders`, `ReactterSelector`, `UseInstance`, `UseState`.
+Implements: `ReactterComponent`, `ReactterConsumer`, `ReactterProvider`, `ReactterProviders`, `ReactterSelector`, `UseDependencycy`, `UseState`.
 
 ## Tree widget
 

@@ -14,17 +14,21 @@ void defaultLogWriterCallback(
 ///
 /// It is intended to be used as a mixin with other classes.
 class ReactterInterface
-    with StateManager<ReactterState>, InstanceManager, EventManager, Logger {
+    with
+        StateManagement<ReactterState>,
+        DependencyInjection,
+        EventHandler,
+        Logger {
   static final _reactterInterface = ReactterInterface._();
   factory ReactterInterface() => _reactterInterface;
   ReactterInterface._();
 
   @override
   @internal
-  InstanceManager get instanceManager => this;
+  DependencyInjection get instanceInjection => this;
   @override
   @internal
-  EventManager get eventManager => this;
+  EventHandler get eventHandler => this;
   @override
   @internal
   Logger get logger => this;

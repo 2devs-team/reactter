@@ -1,9 +1,9 @@
 part of 'core.dart';
 
 @internal
-abstract class StateManager<S extends StateBase> {
+abstract class StateManagement<S extends StateBase> {
   @internal
-  EventManager get eventManager;
+  EventHandler get eventHandler;
 
   bool _isUntrackedRunning = false;
   bool _isBatchRunning = false;
@@ -138,7 +138,7 @@ abstract class StateManager<S extends StateBase> {
 
   void _emitDefferred(Object? instance, Enum eventName, [dynamic param]) {
     _deferredEvents.putIfAbsent(
-      eventManager._getEventNotifierFallback(instance, eventName),
+      eventHandler._getEventNotifierFallback(instance, eventName),
       () => param,
     );
   }

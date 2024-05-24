@@ -19,10 +19,10 @@ abstract class ProviderBase<T extends Object?> extends Widget {
   /// {@template provider_base.mode}
   /// It's used to specify the type of instance creation for the provided object.
   ///
-  /// It is of mode [InstanceManageMode], which is an enum with three possible values:
-  /// [InstanceManageMode.builder], [InstanceManageMode.factory] and [InstanceManageMode.singleton].
+  /// It is of mode [DependencyMode], which is an enum with three possible values:
+  /// [DependencyMode.builder], [DependencyMode.factory] and [DependencyMode.singleton].
   /// {@endtemplate}
-  final InstanceManageMode mode;
+  final DependencyMode mode;
 
   /// {@template provider_base.instanceBuilder}
   /// Create a [T] instance.
@@ -72,7 +72,7 @@ abstract class ProviderBase<T extends Object?> extends Widget {
     this.instanceBuilder, {
     Key? key,
     this.id,
-    this.mode = InstanceManageMode.builder,
+    this.mode = DependencyMode.builder,
     this.init = false,
     this.isLazy = false,
     this.child,

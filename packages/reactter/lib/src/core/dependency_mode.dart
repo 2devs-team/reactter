@@ -1,7 +1,13 @@
 part of 'core.dart';
 
+@Deprecated(
+  'Use `DependencyMode` instead. '
+  'This feature was deprecated after v7.1.0.',
+)
+typedef InstanceManageMode = DependencyMode;
+
 /// Represents different ways for managing instances.
-enum InstanceManageMode {
+enum DependencyMode {
   /// {@template builder}
   /// It's a ways to manage an instance, which registers a builder function
   /// and creates the instance, unless it has already done so.
@@ -42,6 +48,6 @@ enum InstanceManageMode {
   singleton,
 }
 
-extension InstanceManageModeExt on InstanceManageMode {
+extension InstanceManageModeExt on DependencyMode {
   String get label => '$this'.split('.').last;
 }

@@ -15,8 +15,8 @@ abstract class State implements StateBase {
   bool _isDisposed = false;
 
   bool get _hasListeners =>
-      eventManager._hasListeners(this) ||
-      (_instanceBinded != null && eventManager._hasListeners(_instanceBinded));
+      eventHandler._hasListeners(this) ||
+      (_instanceBinded != null && eventHandler._hasListeners(_instanceBinded));
 
   @mustCallSuper
   @override
@@ -28,7 +28,7 @@ abstract class State implements StateBase {
       "Use `detachInstance` method, if you want to bind a new instance.",
     );
 
-    eventManager.one(instance, Lifecycle.destroyed, _onInstanceDestroyed);
+    eventHandler.one(instance, Lifecycle.destroyed, _onInstanceDestroyed);
     _instanceBinded = instance;
 
     if (BindingZone.currentZone == null) _validateInstanceBinded();
@@ -41,7 +41,7 @@ abstract class State implements StateBase {
 
     if (_instanceBinded == null) return;
 
-    eventManager.off(
+    eventHandler.off(
       _instanceBinded!,
       Lifecycle.destroyed,
       _onInstanceDestroyed,
@@ -86,7 +86,7 @@ abstract class State implements StateBase {
     _isDisposed = true;
 
     if (_instanceBinded != null) {
-      eventManager.off(
+      eventHandler.off(
         _instanceBinded!,
         Lifecycle.destroyed,
         _onInstanceDestroyed,
@@ -95,11 +95,11 @@ abstract class State implements StateBase {
       _instanceBinded = null;
     }
 
-    eventManager.offAll(this);
+    eventHandler.offAll(this);
   }
 
   void _validateInstanceBinded() {
-    if (instanceManager.isRegistered(instanceBinded)) return;
+    if (instanceInjection.isRegistered(instanceBinded)) return;
 
     logger.log(
       "The instance binded($instanceBinded) to $this is not in Reactter's context and cannot be disposed automatically.\n"
@@ -119,11 +119,11 @@ abstract class State implements StateBase {
   /// If [Reactter._isBatchRunning] is true, the notification is deferred until the batch is completed.
   /// The [event] is emitted using [Reactter.emit] for the current instance and [_instanceBinded].
   void _notify(Enum event) {
-    if (stateManager._isUntrackedRunning) return;
+    if (stateManagment._isUntrackedRunning) return;
 
-    final emit = stateManager._isBatchRunning
-        ? stateManager._emitDefferred
-        : eventManager.emit;
+    final emit = stateManagment._isBatchRunning
+        ? stateManagment._emitDefferred
+        : eventHandler.emit;
 
     emit(this, event, this);
 

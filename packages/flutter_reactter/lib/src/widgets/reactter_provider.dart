@@ -130,7 +130,7 @@ class ReactterProvider<T extends Object?> extends ProviderBase<T>
     InstanceBuilder<T> instanceBuilder, {
     Key? key,
     String? id,
-    InstanceManageMode mode = InstanceManageMode.builder,
+    DependencyMode mode = DependencyMode.builder,
     bool init = false,
     Widget? child,
     InstanceChildBuilder<T>? builder,
@@ -149,7 +149,7 @@ class ReactterProvider<T extends Object?> extends ProviderBase<T>
     InstanceBuilder<T> instanceBuilder, {
     Key? key,
     String? id,
-    InstanceManageMode mode = InstanceManageMode.builder,
+    DependencyMode mode = DependencyMode.builder,
     Widget? child,
     ChildBuilder? builder,
   }) : super(

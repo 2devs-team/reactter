@@ -21,7 +21,8 @@ class Args<A> {
   int get hashCode => Object.hashAll(arguments);
 
   @override
-  bool operator ==(Object other);
+  bool operator ==(Object other) =>
+      other is Args && this.hashCode == other.hashCode;
 }
 
 /// {@template args1}

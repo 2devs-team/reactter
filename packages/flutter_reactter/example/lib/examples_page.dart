@@ -62,7 +62,7 @@ final examples = [
       "ReactterProvider",
       "ReactterProviders",
       "ReactterSelector",
-      "UseInstance",
+      "UseDependency",
       "UseState",
     ],
     () => const ShoppingCartPage(),
