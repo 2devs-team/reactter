@@ -5,7 +5,7 @@ sidebar:
   order: 5
 ---
 import { HE, HM, HT } from '@/components/Highlight/index.ts';
-import NoteLifeExample from '@/content/docs/shareds/note_lifecycle_example.mdx';
+import TipLifecycleExample from '@/content/docs/shareds/tip_lifecycle_example.mdx';
 
 In Reactter, both the states and the dependency (managed by the [dependency injection](/reactter/core_concepts/dependency_injection)) contain different stages,
 also known as <HT><a href="https://pub.dev/documentation/reactter/latest/reactter/Lifecycle.html" target="_blank">`Lifecycle`</a></HT>.
@@ -28,7 +28,7 @@ Let's explore the lifecycle events:
 
 You can listen to the lifecycle events of a dependency by using <HM>`Reactter.on`</HM> or <HM>`Reactter.one`</HM> method of the event handler. e.g:
 
-<NoteLifeExample />
+<TipLifecycleExample />
 
 ```dart title="counter_controller.dart" "Reactter.on" "Lifecycle.willMount" "Lifecycle.didMount" "Lifecycle.willUpdate" "Lifecycle.didUpdate" "Lifecycle.willUnmount" "Lifecycle.didUnmount"
 import 'package:reactter/reactter.dart';
@@ -172,7 +172,7 @@ class MyApp extends StatelessWidget {
 Extend your instances with <HT><a href="https://pub.dev/documentation/reactter/latest/reactter/LifecycleObserver-class.html" target="_blank">`LifecycleObserver`</a></HT>
 and use its methods to observe the lifecycle events. e.g:
 
-<NoteLifeExample />
+<TipLifecycleExample />
 
 ```dart title="counter_controller.dart" "LifecycleObserver" "onInitialized" "onDidMount" "onWillMount" "onWillUpdate" "onDidUpdate" "onWillUnmount" "onDidUnmount"
 import 'package:reactter/reactter.dart';
@@ -285,7 +285,7 @@ class MyApp extends StatelessWidget {
 
 The <HT>`UseEffect`</HT> hook can be used to listen to the lifecycle events of a dependency. e.g:
 
-<NoteLifeExample />
+<TipLifecycleExample />
 
 ```dart title="counter.dart" "UseEffect" /(count)(?!\u0060)/
 import 'package:reactter/reactter.dart';
@@ -374,4 +374,4 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-```
+```@/content/docs/shareds/tip_lifecycle_example.mdx

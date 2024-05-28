@@ -1,6 +1,6 @@
 ---
 title: Dependency Injection
-description: Reactter provides a dependency injection system that allows you to manage instances across the app.
+description: Learn how to manage dependencies in Reactter.
 sidebar:
   order: 2
 ---
@@ -32,11 +32,11 @@ Reactter provides the following dependencies injection mechanisms:
   - <HM>[`Reactter.destroy`](/reactter/methods/to_manage_instance/destroy)</HM>
   - <HM>[`Reactter.find`](/reactter/methods/to_manage_instance/find)</HM>
   - <HM>[`Reactter.isRegistered`](/reactter/methods/to_manage_instance/is_registered)</HM>
-  - <HM>[`Reactter.getInstanceManageMode`](/reactter/methods/to_manage_instance/get_instance_manage_mode)</HM>
+  - <HM>[`Reactter.getDependencyMode`](/reactter/methods/to_manage_instance/get_dependency_mode)</HM>
 
 
 :::tip[With Flutter]
-If you are using Flutter, go to [Rendering Control](/reactter/core_concepts/rendering_control) to learn how it manage instances through Widgets and BuildContext extension methods.
+If you are using Flutter, go to [Rendering Control](/reactter/core_concepts/rendering_control) to learn how it manage dependencies through Widgets and BuildContext extension methods.
 :::
 
 ## How it works
@@ -60,7 +60,7 @@ If the dependency with/without `id` is not yet created, Reactter initializes it 
 
     For this, you can use the following methods:
       - <HM>[`Reactter.get`](/reactter/methods/to_manage_instance/get)</HM>
-      - <HM>[`Reactter.find`](/reactter/methods/to_manage_instance/find)</HM>(doesn't create the instance)
+      - <HM>[`Reactter.find`](/reactter/methods/to_manage_instance/find)</HM>(doesn't create the dependency)
       - <HM>[`Reactter.create`](/reactter/methods/to_manage_instance/create)</HM>(registers if not found in registry)
       - <HM>[`Reactter.builder`](/reactter/methods/to_manage_instance/builder)</HM>(registers with <HE>`builder`</HE> mode if not found in registry)
       - <HM>[`Reactter.factory`](/reactter/methods/to_manage_instance/factory)</HM>(registers with <HE>`factory`</HE> mode if not found in registry)
@@ -102,11 +102,11 @@ If the dependency with/without `id` is not yet created, Reactter initializes it 
 
 If `id` is not provided, Reactter will resolve the dependency based on the type of the class only.
 
-If `mode` is not provided, Reactter will use the default mode, which is <HE>`InstanceManageMode.builder`</HE>.
-:::
+If `mode` is not provided, Reactter will use the default mode, which is <HE>`DependencyMode.builder`</HE>.
 
-:::note
 A **dependency** in Reactter is referred to as an **instance** of specific type.
+
+The scope of the registered dependency is global. This indicates that using the [shortcuts to manage dependency](/reactter/shortcuts/dependency) or <HT>[`UseDependency`](/reactter/hooks/UseDependency)</HT> will allow you to access them from anywhere in the project.
 :::
 
 :::tip
@@ -230,9 +230,11 @@ void main() async {
 ```
 In this case, the countdown will work as before, but when trying to get the <HT>`Counter`</HT> instance to print itsvalue,
 the ouput will be _“Counter instance not found”_.
-This occurs because <HT>`Counter`</HT> was registered as  <HE>`InstanceManageMode.builder`</HE>(the default mode),
+This occurs because <HT>`Counter`</HT> was registered as  <HE>`DependencyMode.builder`</HE>(the default mode),
 so when it was deleted at the end of the countdown its registration was also deleted.
-If we want to get the <HT>`Counter`</HT> instance to print its value, we need to register using the <HE>`InstanceManageMode.singleton`</HE> mode.
+If we want to get the <HT>`Counter`</HT> instance to print its value, we need to register using the <HE>`DependencyMode.singleton`</HE> mode.
+
+## Dependency Modes
 
 Let's now delve into the **modes** of dependency registration.
 
@@ -242,9 +244,9 @@ The **mode** with which a dependency is registered determines how it is managed 
 - <HE>[Factory](#factory)</HE>
 - <HE>[Singleton](#singleton)</HE>
 
-## Builder
+### Builder
 
-Builder is a ways to manage an instance,
+Builder is a ways to manage a dependency,
 which registers a builder function and creates the instance,
 unless it has already done so.
 
@@ -253,7 +255,7 @@ it is completely deleted,
 including unregistration (deleting the builder function).
 
 Reactter identifies the builder mode as
-<HE><a href="https://pub.dev/documentation/reactter/latest/InstanceManageMode/InstanceManageMode.builder.html" target="_blank">`InstanceManageMode.builder`</a></HE>
+<HE><a href="https://pub.dev/documentation/reactter/latest/DependencyMode/DependencyMode.builder.html" target="_blank">`DependencyMode.builder`</a></HE>
 and it's using for default.
 
 :::note
@@ -261,9 +263,9 @@ and it's using for default.
   but it consumes more CPU than the other modes.
 :::
 
-## Factory
+### Factory
 
-Factory is a ways to manage an instance,
+Factory is a ways to manage a dependency,
 which registers a builder function only once
 and creates the instance if not already done.
 
@@ -271,7 +273,7 @@ In factory mode, when the dependency tree no longer needs it,
 the instance is deleted and the builder function is kept in the register.
 
 Reactter identifies the factory mode as
-<HE><a href="https://pub.dev/documentation/reactter/latest/InstanceManageMode/InstanceManageMode.factory.html" target="_blank">`InstanceManageMode.factory`</a></HE>
+<HE><a href="https://pub.dev/documentation/reactter/latest/DependencyMode/DependencyMode.factory.html" target="_blank">`DependencyMode.factory`</a></HE>
 and to active it,set it in the `mode` argument of <HM>[`Reactter.register`](/reactter/methods/to_manage_instance/register)</HM> and <HM>[`Reactter.create`](/reactter/methods/to_manage_instance/create)</HM>,
 or use <HM>[`Reactter.lazyFactory`](/reactter/methods/to_manage_instance/lazy_factory)</HM>,  <HM>[`Reactter.factory`](/reactter/methods/to_manage_instance/factory)</HM>.
 
@@ -282,16 +284,16 @@ or use <HM>[`Reactter.lazyFactory`](/reactter/methods/to_manage_instance/lazy_fa
   but not more than <HE>[Builder](#builder).</HE>
 :::
 
-## Singleton
+### Singleton
 
-Singleton is a ways to manage an instance,
+Singleton is a ways to manage a dependency,
 which registers a builder function and creates the instance only once.
 
 The singleton mode preserves the instance and its states,
 even if the dependency tree stops using it.
 
 Reactter identifies the singleton mode as
-<HE><a href="https://pub.dev/documentation/reactter/latest/InstanceManageMode/InstanceManageMode.singleton.html" target="_blank">`InstanceManageMode.singleton`</a></HE>
+<HE><a href="https://pub.dev/documentation/reactter/latest/DependencyMode/DependencyMode.singleton.html" target="_blank">`DependencyMode.singleton`</a></HE>
 and to active it,
 set it in the `mode` argument of <HM>[`Reactter.register`](/reactter/methods/to_manage_instance/register)</HM> and <HM>[`Reactter.create`](/reactter/methods/to_manage_instance/create)</HM>,
 or use <HM>[`Reactter.lazySingleton`](/reactter/methods/to_manage_instance/lazy_singleton)</HM>, <HM>[`Reactter.singleton`](/reactter/methods/to_manage_instance/singleton)</HM>.
