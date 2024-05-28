@@ -1,0 +1,466 @@
+---
+title: UseDependency
+description: UseDependency hook documentation.
+sidebar:
+  order: 6
+---
+
+import { HE, HM, HN, HS, HT } from '@/components/Highlight';
+import StateMethodsLite from '@/content/docs/shareds/state_methods_lite.mdx';
+
+:::tip
+Firts of all, you need to understand the concept of [dependency injection](/reactter/core_concepts/dependency_injection) to use this hook.
+:::
+
+<HT><a href="https://pub.dev/documentation/reactter/latest/reactter/UseDependency-class.html" target="_blank">`UseDependency`</a></HT> is a [hook](https://pub.dev/documentation/reactter/latest/reactter/ReactterHook-class.html) that allows to manage a dependency.
+
+## Constructors and factories
+
+- <HT>`UseDependency`</HT>: Default constructor to get the <HT>`T`</HT> dependency. It's similar to using <HM>`Reactter.find`</HM>.
+
+    ```dart showLineNumbers=false
+    UseDependency<T>([String? id]);
+    ```
+
+- <HT>`UseDependency.get`</HT>: Get a <HT>`T`</HT> dependency inmediately. It's similar to using <HM>`Reactter.get`</HM>.
+
+    ```dart showLineNumbers=false
+    UseDependency<T>.get([String? id]);
+    ```
+
+- <HT>`UseDependency.register`</HT>: Register a builder function to create a <HT>`T`</HT> dependency. It's similar to using <HM>`Reactter.register`</HM>.
+
+    ```dart showLineNumbers=false
+    UseDependency<T>.register(T Function() builder, {
+      String? id,
+      DependencyMode mode = DependencyMode.builder,
+    });
+    ```
+
+- <HT>`UseDependency.create`</HT>: Registers, creates and gets a <HT>`T`</HT> dependency inmediately. It's similar to using <HM>`Reactter.create`</HM>.
+
+    ```dart showLineNumbers=false
+    UseDependency<T>.create(T Function() builder, {
+      String? id,
+      DependencyMode mode = DependencyMode.builder,
+    });
+    ```
+
+- <HT>`UseDependency.lazyBuilder`</HT>: Registers a builder function, to create a instance of the <HT>`T`</HT> dependency as [Builder](/reactter/core_concepts/dependency_injection/#builder) mode. It's similar to using <HM>`Reactter.lazyBuilder`</HM>.
+
+    ```dart showLineNumbers=false
+    UseDependency<T>.lazyBuilder(T Function() builder, [String? id]);
+    ```
+
+- <HT>`UseDependency.lazyFactory`</HT>: Registers a builder function, to create a instance of the <HT>`T`</HT> dependency as [Factory](/reactter/core_concepts/dependency_injection/#factory) mode. It's similar to using <HM>`Reactter.lazyFactory`</HM>.
+
+    ```dart showLineNumbers=false
+    UseDependency<T>.lazyFactory(T Function() builder, [String? id]);
+    ```
+
+- <HT>`UseDependency.lazySingleton`</HT>: Registers a builder function, to create a instance of the <HT>`T`</HT> dependency as [Singleton](/reactter/core_concepts/dependency_injection/#singleton) mode. It's similar to using <HM>`Reactter.lazySingleton`</HM>.
+
+    ```dart showLineNumbers=false
+    UseDependency<T>.lazySingleton(T Function() builder, [String? id]);
+    ```
+
+- <HT>`UseDependency.builder`</HT>: Registers, creates and gets a <HT>`T`</HT> dependency inmediately as [Builder](/reactter/core_concepts/dependency_injection/#builder) mode. It's similar to using <HM>`Reactter.builder`</HM>.
+
+    ```dart showLineNumbers=false
+    UseDependency<T>.builder(T Function() builder, {
+      String? id,
+      DependencyMode mode = DependencyMode.builder,
+    });
+    ```
+
+- <HT>`UseDependency.factory`</HT>: Registers, creates and gets a <HT>`T`</HT> dependency inmediately as [Factory](/reactter/core_concepts/dependency_injection/#factory) mode. It's similar to using <HM>`Reactter.factory`</HM>.
+
+    ```dart showLineNumbers=false
+    UseDependency<T>.factory(T Function() builder, {
+      String? id,
+      DependencyMode mode = DependencyMode.builder,
+    });
+    ```
+
+- <HT>`UseDependency.singleton`</HT>: Registers, creates and gets a <HT>`T`</HT> dependency inmediately as [Singleton](/reactter/core_concepts/dependency_injection/#singleton) mode. It's similar to using <HM>`Reactter.singleton`</HM>.
+
+    ```dart showLineNumbers=false
+    UseDependency<T>.singleton(T Function() builder, {
+      String? id,
+      DependencyMode mode = DependencyMode.builder,
+    });
+    ```
+
+### Arguments
+
+- `id`: An optional <HT>`String`</HT> value to identify the dependency of <HT>`T`</HT> type.
+- <HM>`builder`</HM>: A function that returns an instance of the dependency of <HT>`T`</HT> type.
+- `mode`: An optional <HT>`DependencyMode`</HT> value to define the dependency mode. Default value is <HE>`DependencyMode.builder`</HE>.
+Learn more about it in [DependencyMode](/reactter/core_concepts/dependency_injection#dependency-modes).
+
+:::note
+Some constructors and factories don't have all the arguments. For example,
+<HM>`builder`</HM> is not available in <HT>`UseDependency`</HT> and <HT>`UseDependency.get`</HT>, and `mode` is available only in <HT>`UseDependency.register`</HT> and <HT>`UseDependency.create`</HT>.
+:::
+
+
+## Properties and methods
+
+- `instance`: A getter property to get the dependency instance of <HT>`T`</HT> type.
+<StateMethodsLite />
+
+## Usage
+
+### Finding a dependency
+
+You can use the default constructor to obtain the dependency of <HT>`T`</HT> type, e.g.:
+
+```dart collapse={1-3, 5-9} "UseDependency<MyDependency>"
+import 'package:reactter/reactter.dart';
+
+class MyController {
+  final uDependency = UseDependency<MyDependency>();
+
+  const MyController() {
+    print("Dependency instance: ${uDependency.instance}");
+  }
+}
+```
+
+:::note
+The default constructor only will find the dependency by <HT>`T`</HT> type. Note that the `instance` property will be <HN>`null`</HN> if the dependency is not created already.
+
+To register and create the dependency instance, using the <HT>`UseDependency.create`</HT> hook instead. Learn more about it in [Creating a dependency](/reactter/hooks/use_dependency#creating-a-dependency).
+
+If only you need to retrieve the dependency instance, using the <HT>`UseDependency.get`</HT> hook instead. Learn more about it in [Getting a dependency](/reactter/hooks/use_dependency#getting-a-dependency).
+:::
+
+:::tip
+The <HT>`UseDependency`</HT> hook is ideal for checking if a dependency has been created and waiting for it to become available using <HT>`UseEffect`</HT> hook, e.g.:
+
+```dart title="my_controller.dart" "UseDependency<MyDependency>" "UseEffect"
+import 'package:reactter/reactter.dart';
+
+class MyController {
+  final uDependency = UseDependency<MyDependency>();
+
+  const MyController() {
+    UseEffect.runOnInit(() {
+      print(
+        uDependency.instance != null
+        ? "MyDependency is available"
+        : "MyDependency is not available yet."
+      );
+    }, [uDependency]);
+  }
+}
+```
+:::
+
+### Identifying a dependency
+
+You can use the `id` argument to identify the dependency. For example, to obtain a dependency by <HS>`uniqueId`</HS>:
+
+```dart collapse={1-3, 5-9} "UseDependency<MyDependency>" ins="uniqueId"
+import 'package:reactter/reactter.dart';
+
+class MyController {
+  final uDependency = UseDependency<MyDependency>("uniqueId");
+
+  const MyController() {
+    print("Dependency instance: ${uDependency.instance}");
+  }
+}
+```
+
+:::tip
+The `id` argument is ideal for identifying dependencies, when you need to use the same dependency type in different places, e.g.:
+
+```dart title="my_controller.dart" "UseDependency<MyDependency>.get"
+import 'package:reactter/reactter.dart';
+
+class MyController {
+  final uDependency = UseDependency<MyDependency>.get();
+  final uDependency2 = UseDependency<MyDependency>.get("uniqueId");
+
+  const MyController() {
+    print("Dependency instance: ${uDependency.instance}");
+    print("Dependency instance with uniqueId: ${uDependency2.instance}");
+  }
+}
+```
+
+```dart title="my_app.dart" "ReactterProviders" "ReactterProvider"
+import 'package:flutter_reactter/flutter_reactter.dart';
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: ReactterProviders(
+        [
+          ReactterProvider(() => MyDependency()),
+          ReactterProvider(() => MyDependency(), id: "uniqueId"),
+          ReactterProvider(() => MyController()),
+        ],
+        build: (_, __) => MyHomePage(),
+      ),
+    ),
+  }
+}
+```
+:::
+
+### Using the dependency
+
+You can use the `instance` property to access the dependency.
+
+```dart collapse={1-6, 8-9} "UseDependency<MyDependency>" ".instance"
+import 'package:reactter/reactter.dart';
+
+class MyController {
+  final uDependency = UseDependency<MyDependency>();
+
+  const MyController() {
+    print("Dependency instance: ${uDependency.instance}");
+  }
+}
+```
+
+:::tip
+If the dependency is not registered and created, the `instance` property will be <HN>`null`</HN>.
+
+To avoid this, you can use the <HT>`UseEffect`</HT> hook to get the dependency when it is created, e.g.:
+
+```dart title="my_controller.dart" "UseDependency<MyDependency>" "UseEffect"
+import 'package:reactter/reactter.dart';
+
+class MyController {
+  final uDependency = UseDependency<MyDependency>();
+
+  const MyController() {
+    UseEffect.runOnInit(() {
+      if (uDependency.instance != null) {
+        print("Dependency instance: ${uDependency.instance}");
+      }
+    }, [uDependency]);
+  }
+}
+```
+:::
+
+### Getting a dependency
+
+You can use the <HT>`UseDependency.get`</HT> hook to get the dependency instance, e.g.:
+
+```dart collapse={1-3, 5-9} "UseDependency" "UseDependency<MyDependency>.get"
+import 'package:reactter/reactter.dart';
+
+class MyController {
+  final uDependency = UseDependency<MyDependency>.get();
+
+  const MyController() {
+    print("Dependency instance: ${uDependency.instance}");
+  }
+}
+```
+
+:::note
+<HT>`UseDependency.get`</HT> hook will get the dependency instance inmediately. If the dependency is not created yet, it will create it, but if the dependency is not registered, the `instance` property will be <HN>`null`</HN>.
+
+To ensure that the dependency is created, you can using the <HT>`UseDependency.create`</HT> hook instead. Learn more about it in [Creating a dependency](/reactter/hooks/use_dependency#creating-a-dependency).
+:::
+
+:::tip
+The <HT>`UseDependency.get`</HT> hook is ideal for accessing a dependency, when you are sure that it is already registered before, e.g.:
+
+```dart title="my_app.dart" "ReactterProviders" "ReactterProvider"
+import 'package:flutter_reactter/flutter_reactter.dart';
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: ReactterProviders(
+        [
+          ReactterProvider(() => MyDependency()),
+          ReactterProvider(() => MyController()),
+        ],
+        build: (_, __) => MyHomePage(),
+      ),
+    ),
+  }
+}
+```
+
+```dart title="my_controller.dart" "UseDependency<MyDependency>.get"
+import 'package:flutter_reactter/flutter_reactter.dart';
+
+class MyController {
+  final uDependency = UseDependency<MyDependency>.get();
+
+  const MyController() {
+    print("Dependency instance: ${uDependency.instance}");
+  }
+}
+```
+:::
+
+### Registering a dependency
+
+You can use the <HT>`UseDependency.register`</HT> hook to register a builder function to create the dependency instance, e.g.:
+
+```dart collapse={1-3, 5-9} "UseDependency<MyDependency>.register"
+import 'package:reactter/reactter.dart';
+
+class MyController {
+  final uDependency = UseDependency<MyDependency>.register(() => MyDependency());
+
+  const MyController() {
+    print("Dependency instance: ${uDependency.instance}");
+  }
+}
+```
+
+:::note
+In above example, it will print <HS>_Dependency instance: null_</HS>, because <HT>`UseDependency.register`</HT> hook does not create the dependency instance immediately.
+
+For creating the dependency instance, using the <HT>`Reactter.get`</HT> method, e.g.:
+
+```dart title="my_controller.dart" ins={7} "UseDependency<MyDependency>.register" "Reactter.get"
+import 'package:reactter/reactter.dart';
+
+class MyController {
+  final uDependency = UseDependency<MyDependency>.register(() => MyDependency());
+
+  const MyController() {
+    Reactter.get<MyDependency>();
+    print("Dependency instance: ${uDependency.instance}");
+  }
+}
+```
+
+Also, you can create the dependency instance inmediately by using the <HT>`UseDependency.create`</HT> hook instead. Learn more about it in [Creating a dependency](/reactter/hooks/use_dependency#creating-a-dependency).
+:::
+
+:::tip
+The <HT>`UseDependency.register`</HT> hook is ideal for registering dependencies in a single location, e.g.:
+
+```dart title="dependencies_registers.dart" "UseDependency<MyDependency>.register" "UseDependency<MyOtherDependency>.register"
+import 'package:reactter/reactter.dart';
+
+class DependenciesRegisters {
+  DependenciesRegisters() {
+    UseDependency<MyDependency>.register(() => MyDependency());
+    UseDependency<MyOtherDependency>.register(() => MyOtherDependency(), mode: DependencyMode.singleton);
+    UseDependency<MyController>.register(() => MyController());
+  }
+}
+```
+
+```dart title="my_app.dart" "ReactterProviders" "ReactterProvider" "DependenciesRegisters"
+import 'package:flutter_reactter/flutter_reactter.dart';
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: ReactterProvider(
+        () => DependenciesRegisters(),
+        build: (_, __, ___) => MyHomePage(),
+      ),
+    ),
+  }
+}
+```
+:::
+
+### Creating a dependency
+
+You can use the <HT>`UseDependency.create`</HT> hook to create a dependency instance inmediately, e.g.:
+
+```dart collapse={1-3, 5-9} "UseDependency<MyDependency>.create"
+import 'package:reactter/reactter.dart';
+
+class MyController {
+  final uDependency = UseDependency<MyDependency>.create(() => MyDependency());
+
+  const MyController() {
+    print("Dependency instance: ${uDependency.instance}");
+  }
+}
+```
+
+:::tip
+The <HT>`UseDependency.create`</HT> hook is ideal for immediately creating the dependency instance, ensuring that the dependency is available before using it.
+:::
+
+### Defining the dependency mode
+
+You can use the `mode` argument to define the dependency mode. For example, to create a singleton dependency:
+
+```dart collapse={1-3, 8-12} "UseDependency<MyDependency>.create" "DependencyMode.singleton"
+import 'package:reactter/reactter.dart';
+
+class MyController {
+  final uDependency = UseDependency<MyDependency>.create(
+    () => MyDependency(),
+    mode: DependencyMode.singleton,
+  );
+
+  const MyController() {
+    print("Dependency instance: ${uDependency.instance}");
+  }
+}
+```
+
+:::note
+The `mode` argument is available only in <HT>`UseDependency.register`</HT> and <HT>`UseDependency.create`</HT> hooks.
+
+If you need to define the dependency mode directly, use the <HT>`UseDependency.lazyBuilder`</HT>, <HT>`UseDependency.lazyFactory`</HT>, <HT>`UseDependency.lazySingleton`</HT> hooks for registering a dependency in its respective mode.
+Likewise, use the <HT>`UseDependency.builder`</HT>, <HT>`UseDependency.factory`</HT> and <HT>`UseDependency.singleton`</HT> hooks instead, for creating a dependency in its respective mode. Learn more about it in [Dependency Modes](/reactter/core_concepts/dependency_injection#dependency-modes), e.g.:
+
+```dart title="dependencies_registers.dart" "UseDependency<MyDependency>.lazyFactory" "UseDependency<MyOtherDependency>.lazySingleton" "UseDependency<MyController>.builder"
+import 'package:reactter/reactter.dart';
+
+class DependenciesRegisters {
+  DependenciesRegisters() {
+    UseDependency<MyDependency>.lazyFactory(() => MyDependency());
+    UseDependency<MyOtherDependency>.lazySingleton(() => MyOtherDependency());
+    UseDependency<MyController>.builder(() => MyController());
+  }
+}
+```
+
+```dart title="my_app.dart" "ReactterProviders" "ReactterProvider" "DependenciesRegisters"
+import 'package:flutter_reactter/flutter_reactter.dart';
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: ReactterProvider(
+        () => DependenciesRegisters(),
+        build: (_, __, ___) => MyHomePage(),
+      ),
+    ),
+  }
+}
+```
+
+```dart title="my_controller.dart" "UseDependency<MyDependency>.get" "UseDependency<MyOtherDependency>.get"
+import 'package:reactter/reactter.dart';
+
+class MyController {
+  /// Get MyDependency as Factory mode.
+  final uDependency = UseDependency<MyDependency>.get();
+  /// Get MyOtherDependency as Singleton mode.
+  final uOtherDependency = UseDependency<MyOtherDependency>.get();
+
+  const MyController() {
+    print("Dependency instance using Factory mode: ${uDependency.instance}");
+    print("Dependency instance using Singleton mode: ${uOtherDependency.instance}");
+  }
+}
+```
+:::
