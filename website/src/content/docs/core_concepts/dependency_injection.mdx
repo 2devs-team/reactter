@@ -18,21 +18,21 @@ Reactter provides the following dependencies injection mechanisms:
 - Hooks
   - <HT>[`UseDependency`](/reactter/hooks/UseDependency)</HT>
 - Methods
-  - <HM>[`Reactter.register`](/reactter/methods/to_manage_instance/register)</HM>
-  - <HM>[`Reactter.lazyBuilder`](/reactter/methods/to_manage_instance/lazy_builder)</HM>
-  - <HM>[`Reactter.lazyFactory`](/reactter/methods/to_manage_instance/lazy_factory)</HM>
-  - <HM>[`Reactter.lazySingleton`](/reactter/methods/to_manage_instance/lazy_singleton)</HM>
-  - <HM>[`Reactter.create`](/reactter/methods/to_manage_instance/create)</HM>
-  - <HM>[`Reactter.builder`](/reactter/methods/to_manage_instance/builder)</HM>
-  - <HM>[`Reactter.factory`](/reactter/methods/to_manage_instance/factory)</HM>
-  - <HM>[`Reactter.singleton`](/reactter/methods/to_manage_instance/singleton)</HM>
-  - <HM>[`Reactter.get`](/reactter/methods/to_manage_instance/get)</HM>
-  - <HM>[`Reactter.delete`](/reactter/methods/to_manage_instance/delete)</HM>
-  - <HM>[`Reactter.unregister`](/reactter/methods/to_manage_instance/unregister)</HM>
-  - <HM>[`Reactter.destroy`](/reactter/methods/to_manage_instance/destroy)</HM>
-  - <HM>[`Reactter.find`](/reactter/methods/to_manage_instance/find)</HM>
-  - <HM>[`Reactter.isRegistered`](/reactter/methods/to_manage_instance/is_registered)</HM>
-  - <HM>[`Reactter.getDependencyMode`](/reactter/methods/to_manage_instance/get_dependency_mode)</HM>
+  - <HM>[`Reactter.register`](/reactter/methods/dependency_injection_methods/#reactterregister)</HM>
+  - <HM>[`Reactter.lazyBuilder`](/reactter/methods/dependency_injection_methods/#reactterlazy_builder)</HM>
+  - <HM>[`Reactter.lazyFactory`](/reactter/methods/dependency_injection_methods/#reactterlazy_factory)</HM>
+  - <HM>[`Reactter.lazySingleton`](/reactter/methods/dependency_injection_methods/#reactterlazy_singleton)</HM>
+  - <HM>[`Reactter.create`](/reactter/methods/dependency_injection_methods/#reacttercreate)</HM>
+  - <HM>[`Reactter.builder`](/reactter/methods/dependency_injection_methods/#reactterbuilder)</HM>
+  - <HM>[`Reactter.factory`](/reactter/methods/dependency_injection_methods/#reactterfactory)</HM>
+  - <HM>[`Reactter.singleton`](/reactter/methods/dependency_injection_methods/#reacttersingleton)</HM>
+  - <HM>[`Reactter.get`](/reactter/methods/dependency_injection_methods/#reactterget)</HM>
+  - <HM>[`Reactter.delete`](/reactter/methods/dependency_injection_methods/#reactterdelete)</HM>
+  - <HM>[`Reactter.unregister`](/reactter/methods/dependency_injection_methods/#reactterunregister)</HM>
+  - <HM>[`Reactter.destroy`](/reactter/methods/dependency_injection_methods/#reactterdestroy)</HM>
+  - <HM>[`Reactter.find`](/reactter/methods/dependency_injection_methods/#reactterfind)</HM>
+  - <HM>[`Reactter.isRegistered`](/reactter/methods/dependency_injection_methods/#reactteris_registered)</HM>
+  - <HM>[`Reactter.getDependencyMode`](/reactter/methods/dependency_injection_methods/#reactterget_dependency_mode)</HM>
 
 
 :::tip[With Flutter]
@@ -48,10 +48,10 @@ To comprehend this mechanism thoroughly, let's break down the process into five 
 1. **Registration**: This stage involves registering the dependency into Reactter's context with the specified `id` and `mode` params.
 
     For this, you can use the following methods:
-      - <HM>[`Reactter.register`](/reactter/methods/to_manage_instance/register)</HM>
-      - <HM>[`Reactter.lazyBuilder`](/reactter/methods/to_manage_instance/lazy_builder)</HM>(registers with <HE>`builder`</HE> mode)
-      - <HM>[`Reactter.lazyFactory`](/reactter/methods/to_manage_instance/lazy_factory)</HM>(registers with <HE>`factory`</HE> mode)
-      - <HM>[`Reactter.lazySingleton`](/reactter/methods/to_manage_instance/lazy_singleton)</HM>(registers with <HE>`singleton`</HE> mode)
+      - <HM>[`Reactter.register`](/reactter/methods/dependency_injection_methods/#reactterregister)</HM>
+      - <HM>[`Reactter.lazyBuilder`](/reactter/methods/dependency_injection_methods/#reactterlazy_builder)</HM>(registers with <HE>`builder`</HE> mode)
+      - <HM>[`Reactter.lazyFactory`](/reactter/methods/dependency_injection_methods/#reactterlazy_factory)</HM>(registers with <HE>`factory`</HE> mode)
+      - <HM>[`Reactter.lazySingleton`](/reactter/methods/dependency_injection_methods/#reactterlazy_singleton)</HM>(registers with <HE>`singleton`</HE> mode)
 
     The <HE>`Lifecycle.registered`</HE> event is emitted.
 
@@ -59,12 +59,12 @@ To comprehend this mechanism thoroughly, let's break down the process into five 
 If the dependency with/without `id` is not yet created, Reactter initializes it based on registry(this condition doesn't apply to <HM>`find`</HM> method).
 
     For this, you can use the following methods:
-      - <HM>[`Reactter.get`](/reactter/methods/to_manage_instance/get)</HM>
-      - <HM>[`Reactter.find`](/reactter/methods/to_manage_instance/find)</HM>(doesn't create the dependency)
-      - <HM>[`Reactter.create`](/reactter/methods/to_manage_instance/create)</HM>(registers if not found in registry)
-      - <HM>[`Reactter.builder`](/reactter/methods/to_manage_instance/builder)</HM>(registers with <HE>`builder`</HE> mode if not found in registry)
-      - <HM>[`Reactter.factory`](/reactter/methods/to_manage_instance/factory)</HM>(registers with <HE>`factory`</HE> mode if not found in registry)
-      - <HM>[`Reactter.singleton`](/reactter/methods/to_manage_instance/singleton)</HM>(registers with <HE>`singleton`</HE> mode if not found in registry)
+      - <HM>[`Reactter.get`](/reactter/methods/dependency_injection_methods/#reactterget)</HM>
+      - <HM>[`Reactter.find`](/reactter/methods/dependency_injection_methods/#reactterfind)</HM>(doesn't create the dependency)
+      - <HM>[`Reactter.create`](/reactter/methods/dependency_injection_methods/#reacttercreate)</HM>(registers if not found in registry)
+      - <HM>[`Reactter.builder`](/reactter/methods/dependency_injection_methods/#reactterbuilder)</HM>(registers with <HE>`builder`</HE> mode if not found in registry)
+      - <HM>[`Reactter.factory`](/reactter/methods/dependency_injection_methods/#reactterfactory)</HM>(registers with <HE>`factory`</HE> mode if not found in registry)
+      - <HM>[`Reactter.singleton`](/reactter/methods/dependency_injection_methods/#reacttersingleton)</HM>(registers with <HE>`singleton`</HE> mode if not found in registry)
 
     The following events are fired(only if the dependency is created):
       - <HE>`Lifecycle.initialized`</HE>
@@ -80,8 +80,8 @@ If the dependency with/without `id` is not yet created, Reactter initializes it 
 4. **Deleting**: When the dependency with/without `id` is no longer required, Reactter deletes it.
 
     For this, you can use the following methods:
-      - <HM>[`Reactter.delete`](/reactter/methods/to_manage_instance/delete)</HM>
-      - <HM>[`Reactter.destroy`](/reactter/methods/to_manage_instance/destroy)</HM>(delete & unregister)
+      - <HM>[`Reactter.delete`](/reactter/methods/dependency_injection_methods/#reactterdelete)</HM>
+      - <HM>[`Reactter.destroy`](/reactter/methods/dependency_injection_methods/#reactterdestroy)</HM>(delete & unregister)
 
     The following events are fired:
       - <HE>`Lifecycle.willUnmount`</HE>(_flutter_reactter_ only)
@@ -91,9 +91,9 @@ If the dependency with/without `id` is not yet created, Reactter initializes it 
 5. **Unregistration**: When the dependency with/without `id` is no longer required and depending on `mode`, Reactter unregisters it.
 
     For this, you can use the following methods:
-      - <HM>[`Reactter.unregister`](/reactter/methods/to_manage_instance/unregister)</HM>
-      - <HM>[`Reactter.delete`](/reactter/methods/to_manage_instance/delete)</HM>
-      - <HM>[`Reactter.destroy`](/reactter/methods/to_manage_instance/destroy)</HM>
+      - <HM>[`Reactter.unregister`](/reactter/methods/dependency_injection_methods/#reactterunregister)</HM>
+      - <HM>[`Reactter.delete`](/reactter/methods/dependency_injection_methods/#reactterdelete)</HM>
+      - <HM>[`Reactter.destroy`](/reactter/methods/dependency_injection_methods/#reactterdestroy)</HM>
 
     The <HE>`Lifecycle.unregistered`</HE> event is emitted.
 
@@ -274,8 +274,8 @@ the instance is deleted and the builder function is kept in the register.
 
 Reactter identifies the factory mode as
 <HE><a href="https://pub.dev/documentation/reactter/latest/DependencyMode/DependencyMode.factory.html" target="_blank">`DependencyMode.factory`</a></HE>
-and to active it,set it in the `mode` argument of <HM>[`Reactter.register`](/reactter/methods/to_manage_instance/register)</HM> and <HM>[`Reactter.create`](/reactter/methods/to_manage_instance/create)</HM>,
-or use <HM>[`Reactter.lazyFactory`](/reactter/methods/to_manage_instance/lazy_factory)</HM>,  <HM>[`Reactter.factory`](/reactter/methods/to_manage_instance/factory)</HM>.
+and to active it,set it in the `mode` argument of <HM>[`Reactter.register`](/reactter/methods/dependency_injection_methods/#reactterregister)</HM> and <HM>[`Reactter.create`](/reactter/methods/dependency_injection_methods/#reacttercreate)</HM>,
+or use <HM>[`Reactter.lazyFactory`](/reactter/methods/dependency_injection_methods/#reactterlazy_factory)</HM>,  <HM>[`Reactter.factory`](/reactter/methods/dependency_injection_methods/#reactterfactory)</HM>.
 
 :::note
   **Factory** uses more RAM than <HE>[Builder](#builder)</HE>
@@ -295,8 +295,8 @@ even if the dependency tree stops using it.
 Reactter identifies the singleton mode as
 <HE><a href="https://pub.dev/documentation/reactter/latest/DependencyMode/DependencyMode.singleton.html" target="_blank">`DependencyMode.singleton`</a></HE>
 and to active it,
-set it in the `mode` argument of <HM>[`Reactter.register`](/reactter/methods/to_manage_instance/register)</HM> and <HM>[`Reactter.create`](/reactter/methods/to_manage_instance/create)</HM>,
-or use <HM>[`Reactter.lazySingleton`](/reactter/methods/to_manage_instance/lazy_singleton)</HM>, <HM>[`Reactter.singleton`](/reactter/methods/to_manage_instance/singleton)</HM>.
+set it in the `mode` argument of <HM>[`Reactter.register`](/reactter/methods/dependency_injection_methods/#reactterregister)</HM> and <HM>[`Reactter.create`](/reactter/methods/dependency_injection_methods/#reacttercreate)</HM>,
+or use <HM>[`Reactter.lazySingleton`](/reactter/methods/dependency_injection_methods/#reactterlazy_singleton)</HM>, <HM>[`Reactter.singleton`](/reactter/methods/dependency_injection_methods/#reacttersingleton)</HM>.
 
 :::note
   **Singleton** consumes less CPU than <HE>[Builder](#builder)</HE> and <HE>[Factory](#factory)</HE>,
@@ -304,5 +304,5 @@ or use <HM>[`Reactter.lazySingleton`](/reactter/methods/to_manage_instance/lazy_
 :::
 
 :::note
-  Use <HM>[`Reactter.destroy`](/reactter/methods/to_manage_instance/destroy)</HM> if you want to force destroy the instance and its register.
+  Use <HM>[`Reactter.destroy`](/reactter/methods/dependency_injection_methods/#reactterdestroy)</HM> if you want to force destroy the instance and its register.
 :::
