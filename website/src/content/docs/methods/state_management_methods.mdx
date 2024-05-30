@@ -1,0 +1,73 @@
+---
+title: State Management Methods
+description: Documentation of State Management Methods in Reactter.
+sidebar:
+  order: 1
+---
+import { HE, HK, HM, HN, HS, HT } from '@/components/Highlight';
+
+:::tip
+This documentation assumes you've already read the [State Management](/reactter/core_concepts/state_management).
+It's recommended read that first if you're new in Reactter.
+:::
+
+Reactter provides several methods to manage states in a more efficient way. These methods are used to create and manipulate states in a more organized way.
+
+## <HM>`Reactter.lazyState`</HM>
+
+<HM>`Reactter.lazyState`</HM> is a method that allows to create a state lazily in a dependency(class registered via the [dependency injection](/reactter/core_concepts/dependency_injection)).
+It's useful when you want to create a state that depends on other states or variables.
+
+<HM>`Reactter.lazyState`</HM> is generally used in states declared with the <HK>`late`</HK> keyword.
+
+### Syntax
+
+```dart
+T Reactter.lazyState<T extends ReactterState>(T stateFn(), Object instance);
+```
+
+### Example
+
+For example, you can create a state lazily in a class like this:
+
+```dart title="counter_controller.dart" "Reactter.lazyState" "UseState"
+import "package:reactter/reactter.dart";
+
+class CountController {
+  final int initialCount;
+
+  late final uCount = Reactter.lazyState(
+    () => UseState(this.initialCount),
+    this,
+  );
+
+  CountController([this.initialCount = 0]) {
+    UseEffect(() {
+      print("Count: ${uCount.value}");
+    }, [uCount]);
+  }
+}
+```
+and then use it like this:
+
+```dart title="main.dart" "Reactter.create" "Reactter.delete"
+import "./counter_controller.dart";
+
+void main() {
+  final controller = Reactter.create(() => CounterController(10));
+  controller.uCount.value += 2; // Count: 12
+  Reactter.delete<CounterController>();
+  controller.uCount.value += 3; // Error: "Can't update when it's been disposed"
+}
+```
+
+In the example, the `uCount` state is lazily declared inside the <HT>`CountController`</HT> class using <HM>Reactter.lazyState</HM>. It's accessed after creating the <HT>`CountController`</HT> instance, and when the instance is deleted, the state is automatically disposed, ensuring efficient resource management.
+
+## <HM>`Reactter.batch`</HM>
+
+_TODO: Complete this section._
+
+## <HM>`Reactter.untracked`</HM>
+
+_TODO: Complete this section._
+

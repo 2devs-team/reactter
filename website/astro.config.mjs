@@ -103,33 +103,9 @@ export default defineConfig({
           translations: {
             es: "Métodos",
           },
-          items: [
-            {
-              label: "To manage states",
-              translations: {
-                es: "Para gestionar estados",
-              },
-              link: "/methods/shortcuts_to_manage_state",
-            },
-            {
-              label: "To manage instances",
-              translations: {
-                es: "Para gestionar instancias",
-              },
-              link: "/methods/shortcuts_to_manage_effects",
-            },
-            {
-              label: "To manage events",
-              translations: {
-                es: "Para gestionar eventos",
-              },
-              link: "/methods/shortcuts_to_manage_events",
-            },
-            {
-              label: "Memo",
-              link: "/methods/memo",
-            },
-          ],
+          autogenerate: {
+            directory: "methods",
+          },
         },
         {
           label: "Widgets",
