@@ -5,10 +5,11 @@ sidebar:
   order: 6
 ---
 import { HE, HM, HN, HT } from '@/components/Highlight/index.ts';
+import StateMethodsLite from '@/content/docs/shareds/state_methods_lite.mdx';
 
-Hooks are classes that extend <HT>[`ReactterHook`](https://pub.dev/documentation/reactter/latest/reactter/ReactterHook-class.html)</HT>, follow a special naming convention with the <HT>`Use`</HT> prefix and can contain state logic, effects or any other custom code.
+Hooks are classes with the ability to use states and manage side effects. They are a fundamental concept in Reactter and are used to encapsulate logic that can be reused across the application.
 
-Reactter provider some hooks to manage the state and side effects of the application, such as:
+Reactter provider some hooks to manage the state and side effects of the application, which are:
 
 - <HT>[`UseState`](/reactter/hooks/use_state)</HT>
 - <HT>[`UseAsyncState`](/reactter/hooks/use_async_state)</HT>
@@ -19,7 +20,13 @@ Reactter provider some hooks to manage the state and side effects of the applica
 
 ## How it works
 
-_TODO: Complete this section_
+Hooks in Reactter are classes that extend <HT><a href="https://pub.dev/documentation/reactter/latest/reactter/ReactterHook-class.html" target="_blank">`ReactterHook`</a></HT> and follow a special naming convention with the  <HT>`Use`</HT>  prefix. The <HT>`ReactterHook`</HT> class is responsible for binding the hook to other hooks and states, and managing the lifecycle of the hook.
+
+Hooks in Reactter are essentially stateful entities because <HT>`ReactterHook`</HT> inherits from <HT>`ReactterState`</HT> this inheritance allows hooks to manage both state and lifecycle methods efficiently.
+
+To manage these aspects, Hooks provide the following:
+<StateMethodsLite/>
+
 
 ## Custom hook
 
