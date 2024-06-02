@@ -23,7 +23,7 @@ export default defineConfig({
         baseUrl: "https://github.com/2devs-team/reactter/blob/master/website/",
       },
       logo: {
-        src: "./src/assets/reactter.svg",
+        src: "./public/logo.svg",
       },
       customCss: ["./src/styles/custom.css"],
       defaultLocale: "root",
@@ -31,6 +31,7 @@ export default defineConfig({
         themes: [myTheme],
       },
       components: {
+        SocialIcons: "./src/components/SocialIcons.astro",
         Search: "./src/components/Search.astro",
         SiteTitle: "./src/components/SiteTitle.astro",
         ThemeProvider: "./src/components/ThemeProvider.astro",
