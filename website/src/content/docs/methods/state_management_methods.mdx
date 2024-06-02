@@ -20,13 +20,13 @@ It's useful when you want to create a state that depends on other states or vari
 
 <HM>`Reactter.lazyState`</HM> is generally used in states declared with the <HK>`late`</HK> keyword.
 
-### Syntax
+#### Syntax
 
 ```dart
 T Reactter.lazyState<T extends ReactterState>(T stateFn(), Object instance);
 ```
 
-### Example
+#### Example
 
 For example, you can create a state lazily in a class like this:
 
@@ -65,9 +65,97 @@ In the example, the `uCount` state is lazily declared inside the <HT>`CountContr
 
 ## <HM>`Reactter.batch`</HM>
 
-_TODO: Complete this section._
+The <HM>`Reactter.batch`</HM> method allows multiple state changes to be grouped together, triggering them all at the end when the <HM>`callback`</HM> completes. This ensures that associated side effects occur only once, improving performance and reducing unnecessary re-renders.
+
+#### Syntax
+
+```dart
+T Reactter.batch(T Function() callback);
+```
+
+#### Example
+
+In this example, the <HT>`UserController`</HT> class demonstrates how to use the <HM>`Reactter.batch`</HM> method to manage state updates efficiently.
+
+```dart title="user_controller.dart" "Reactter.batch" "UseState" "UseEffect"
+import "package:reactter/reactter.dart";
+
+class UserController {
+  final uName = UseState("John");
+  final uAge = UseState(25);
+
+  UserController() {
+    UseEffect(() {
+      print("Name: ${uName.value}, Age: ${uAge.value}");
+    }, [uName, uAge]);
+  }
+
+  void updateUserInfo(String name, int age) {
+    Reactter.batch(() {
+      uName.value = name;
+      uAge.value = age;
+    });
+  }
+}
+```
+
+By using <HM>`Reactter.batch`</HM>, the updates to `uName` and `uAge` are grouped together, ensuring that the <HT>`UseEffect`</HT> hook's callback is triggered only once after both state changes have been made.
+This improves performance by reducing unnecessary re-renders and ensuring that side effects, like printing the updated values, occur only once per batch of state changes.
+
+:::note
+<HM>`Reactter.batch`</HM> supports nested batching, meaning you can call <HM>`Reactter.batch`</HM> within another <HM>`Reactter.batch`</HM>. In such cases, the inner batch will be executed immediately, but the outer batch will delay the side effects until it completes.
+This ensures that all grouped state changes are applied efficiently and side effects are still minimized, e.g.:
+
+```dart
+void updateUserInfo(String name, int age, String email) {
+  Reactter.batch(() {
+    uName.value = name;
+    uAge.value = age;
+
+    Reactter.batch(() {
+      uEmail.value = email;
+    });
+  });
+}
+```
+:::
 
 ## <HM>`Reactter.untracked`</HM>
 
-_TODO: Complete this section._
+The <HM>`Reactter.untracked`</HM> method allows you to perform multiple state changes that are not tracked by the Reactter framework.
+This means that changes made using this method won't trigger associated side effects or re-renders typically observed in reactive state management systems.
 
+#### Syntax
+
+```dart
+T Reactter.untracked(T Function() callback);
+```
+
+#### Example
+
+In this example, the <HT>`UserController`</HT> class demonstrates how to use the <HM>`Reactter.untracked`</HM> method to update the states without triggering the associated side effects.
+
+```dart title="user_controller.dart" "Reactter.untracked" "UseState" "UseEffect"
+import "package:reactter/reactter.dart";
+
+class UserController {
+  final uName = UseState("John");
+  final uAge = UseState(25);
+
+  UserController() {
+    UseEffect(() {
+      print("Name: ${uName.value}, Age: ${uAge.value}");
+    }, [uName, uAge]);
+  }
+
+  void updateUserInfo(String name, int age) {
+    Reactter.untracked(() {
+      uName.value = name;
+      uAge.value = age;
+    });
+  }
+}
+```
+
+By using <HM>`Reactter.untracked`</HM>, the updates to `uName` and `uAge` are made without triggering the associated side effects, ensuring that the <HT>`UseEffect`</HT> hook's callback is not triggered after these state changes.
+This is useful when you want to update states without causing re-renders or side effects, e.g., when initializing states or performing batch updates.
