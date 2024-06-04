@@ -27,12 +27,13 @@ Reactter provides the following dependencies injection mechanisms:
   - <HM>[`Reactter.factory`](/reactter/methods/dependency_injection_methods/#reactterfactory)</HM>
   - <HM>[`Reactter.singleton`](/reactter/methods/dependency_injection_methods/#reacttersingleton)</HM>
   - <HM>[`Reactter.get`](/reactter/methods/dependency_injection_methods/#reactterget)</HM>
-  - <HM>[`Reactter.delete`](/reactter/methods/dependency_injection_methods/#reactterdelete)</HM>
-  - <HM>[`Reactter.unregister`](/reactter/methods/dependency_injection_methods/#reactterunregister)</HM>
-  - <HM>[`Reactter.destroy`](/reactter/methods/dependency_injection_methods/#reactterdestroy)</HM>
   - <HM>[`Reactter.find`](/reactter/methods/dependency_injection_methods/#reactterfind)</HM>
-  - <HM>[`Reactter.isRegistered`](/reactter/methods/dependency_injection_methods/#reactteris_registered)</HM>
+  - <HM>[`Reactter.exists`](/reactter/methods/dependency_injection_methods/#reactterexists)</HM>
   - <HM>[`Reactter.getDependencyMode`](/reactter/methods/dependency_injection_methods/#reactterget_dependency_mode)</HM>
+  - <HM>[`Reactter.delete`](/reactter/methods/dependency_injection_methods/#reactterdelete)</HM>
+  - <HM>[`Reactter.destroy`](/reactter/methods/dependency_injection_methods/#reactterdestroy)</HM>
+  - <HM>[`Reactter.unregister`](/reactter/methods/dependency_injection_methods/#reactterunregister)</HM>
+  - <HM>[`Reactter.isRegistered`](/reactter/methods/dependency_injection_methods/#reactteris_registered)</HM>
 
 
 :::tip[With Flutter]
@@ -234,9 +235,9 @@ This occurs because <HT>`Counter`</HT> was registered as  <HE>`DependencyMode.bu
 so when it was deleted at the end of the countdown its registration was also deleted.
 If we want to get the <HT>`Counter`</HT> instance to print its value, we need to register using the <HE>`DependencyMode.singleton`</HE> mode.
 
-## Dependency Modes
-
 Let's now delve into the **modes** of dependency registration.
+
+## Dependency Modes
 
 The **mode** with which a dependency is registered determines how it is managed by Reactter. There are three modes:
 
