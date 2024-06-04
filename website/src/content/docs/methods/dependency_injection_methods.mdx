@@ -17,7 +17,7 @@ These methods are used to create and manipulate dependencies in a more organized
 
 ## <HM>`Reactter.register`</HM>
 
-The <HM>`Reactter.register`</HM> method is used to register a new dependency in the Reactter.
+The <HM>`Reactter.register`</HM> method is used to register a new dependency in Reactter.
 It returns <HN>`true`</HN> if the dependency is registered successfully, otherwise return <HN>`false`</HN>.
 
 #### Syntax
@@ -57,7 +57,7 @@ class CountController {
 }
 ```
 
-```dart title="main.dart" collapse={1-4, 7-33, 36-43, 46-100} "Reactter.register" "Reactter.get" "Reactter.delete" "Reactter.on" "Lifecycle.didUpdate" "DependencyMode.singleton"
+```dart title="main.dart" collapse={1-4, 7-33, 36-43, 46-100} "Reactter.register" "Reactter.get" "Reactter.delete" "Reactter.on" "Lifecycle.didUpdate" "DependencyMode.singleton" "Reactter.destroy"
 import 'package:reactter/reactter.dart';
 import 'count_controller.dart';
 
@@ -129,7 +129,7 @@ void main() {
 
 ## <HM>`Reactter.lazyBuilder`</HM>
 
-The <HM>`Reactter.lazyBuilder`</HM> method is used to register a new dependency as [<HE>`DependencyMode.builder`</HE>](/reactter/core_concepts/dependency_injection/#builder) in the Reactter.
+The <HM>`Reactter.lazyBuilder`</HM> method is used to register a new dependency as [<HE>`DependencyMode.builder`</HE>](/reactter/core_concepts/dependency_injection/#builder) in Reactter.
 It returns <HN>`true`</HN> if the dependency is registered successfully, otherwise return <HN>`false`</HN>.
 
 This method is similar to the <HM>`Reactter.register`</HM> method.
@@ -216,7 +216,7 @@ void main() {
 
 ## <HM>`Reactter.lazyFactory`</HM>
 
-The <HM>`Reactter.lazyFactory`</HM> method is used to register a new dependency as [<HE>`DependencyMode.factory`</HE>](/reactter/core_concepts/dependency_injection/#factory) in the Reactter.
+The <HM>`Reactter.lazyFactory`</HM> method is used to register a new dependency as [<HE>`DependencyMode.factory`</HE>](/reactter/core_concepts/dependency_injection/#factory) in Reactter.
 It returns <HN>`true`</HN> if the dependency is registered successfully, otherwise return <HN>`false`</HN>.
 
 This method is similar to the <HM>`Reactter.register`</HM> method but with the <HE>`DependencyMode.factory`</HE> mode.
@@ -255,7 +255,7 @@ class CountController {
 }
 ```
 
-```dart title="main.dart" collapse={1-4, 7-33, 36-100} "Reactter.get" "Reactter.delete" "Reactter.on" "Lifecycle.didUpdate"
+```dart title="main.dart" collapse={1-4, 7-33, 36-100} "Reactter.lazyFactory" "Reactter.get" "Reactter.delete" "Reactter.on" "Lifecycle.didUpdate" "Reactter.destroy"
 import 'package:reactter/reactter.dart';
 import 'count_controller.dart';
 
@@ -296,14 +296,14 @@ void main() {
   final countControllerById = Reactter.get<CountController>('count2')!;
   print("countControllerById: $countControllerById");
 
-  // Delete the dependency by using `id` parameter
-  Reactter.delete<CountController>('count2');
+  // Delete the dependency by using `id` parameter fully
+  Reactter.destroy<CountController>('count2');
 }
 ```
 
 ## <HM>`Reactter.lazySingleton`</HM>
 
-The <HM>`Reactter.lazySingleton`</HM> method is used to register a new dependency as [<HE>`DependencyMode.singleton`</HE>](/reactter/core_concepts/dependency_injection/#singleton) in the Reactter.
+The <HM>`Reactter.lazySingleton`</HM> method is used to register a new dependency as [<HE>`DependencyMode.singleton`</HE>](/reactter/core_concepts/dependency_injection/#singleton) in Reactter.
 It returns <HN>`true`</HN> if the dependency is registered successfully, otherwise return <HN>`false`</HN>.
 
 This method is similar to the <HM>`Reactter.register`</HM> method but with the <HE>`DependencyMode.singleton`</HE> mode.
@@ -342,7 +342,7 @@ class CountController {
 }
 ```
 
-```dart title="main.dart" collapse={1-4, 7-33, 36-100} "Reactter.lazySingleton" "Reactter.get" "Reactter.delete" "Reactter.on" "Lifecycle.didUpdate"
+```dart title="main.dart" collapse={1-4, 7-33, 36-100} "Reactter.lazySingleton" "Reactter.get" "Reactter.delete" "Reactter.on" "Lifecycle.didUpdate" "Reactter.destroy"
 import 'package:reactter/reactter.dart';
 import 'count_controller.dart';
 
@@ -617,7 +617,7 @@ class CountController {
 }
 ```
 
-```dart title="main.dart" collapse={1-4, 8-28, 35-41, 48-100} "Reactter.factory" "Reactter.get" "Reactter.delete" "Reactter.on" "Lifecycle.didUpdate"
+```dart title="main.dart" collapse={1-4, 8-28, 35-41, 48-100} "Reactter.factory" "Reactter.get" "Reactter.delete" "Reactter.on" "Lifecycle.didUpdate" "Reactter.destroy"
 import 'package:reactter/reactter.dart';
 import 'count_controller.dart';
 
@@ -653,8 +653,8 @@ void main() {
   );
   print("countControllerById: $countControllerById");
 
-  // Delete the dependency by using `id` parameter
-  Reactter.delete<CountController>('count2');
+  // Delete the dependency by using `id` parameter fully
+  Reactter.destroy<CountController>('count2');
 }
 ```
 
@@ -697,7 +697,7 @@ class CountController {
 }
 ```
 
-```dart title="main.dart" collapse={1-4, 8-31, 38-100} "Reactter.singleton" "Reactter.get" "Reactter.delete" "Reactter.on" "Lifecycle.didUpdate"
+```dart title="main.dart" collapse={1-4, 8-31, 38-100} "Reactter.singleton" "Reactter.get" "Reactter.delete" "Reactter.on" "Lifecycle.didUpdate" "Reactter.destroy"
 import 'package:reactter/reactter.dart';
 import 'count_controller.dart';
 
@@ -878,7 +878,7 @@ class CountController {
 }
 ```
 
-```dart title="main.dart" collapse={1-7, 11-15, 19-42, 46-49, 53-100} "Reactter.register" "Reactter.get" "Reactter.find" "Reactter.on" "Lifecycle.didUpdate"
+```dart title="main.dart" collapse={1-7, 11-15, 19-42, 46-49, 53-100} "Reactter.register" "Reactter.get" "Reactter.find" "Reactter.on" "Lifecycle.didUpdate" "Reactter.delete"
 import 'package:reactter/reactter.dart';
 import 'count_controller.dart';
 
@@ -939,7 +939,7 @@ void main() {
 
 ## <HM>`Reactter.exists`</HM>
 
-The <HM>`Reactter.exists`</HM> method is used to check if the dependency instance exists in the Reactter.
+The <HM>`Reactter.exists`</HM> method is used to check if the dependency instance exists in Reactter.
 It returns <HN>`true`</HN> if the dependency instance exists, otherwise return <HN>`false`</HN>.
 
 #### Syntax
@@ -972,7 +972,7 @@ class CountController {
 }
 ```
 
-```dart title="main.dart" collapse={1-7, 11-15, 19-42, 46-49, 53-100} "Reactter.register" "Reactter.get" "Reactter.exists" "Reactter.on" "Lifecycle.didUpdate"
+```dart title="main.dart" collapse={1-7, 11-15, 19-42, 46-49, 53-100} "Reactter.register" "Reactter.get" "Reactter.exists" "Reactter.on" "Lifecycle.didUpdate" "Reactter.delete"
 import 'package:reactter/reactter.dart';
 import 'count_controller.dart';
 
@@ -1264,7 +1264,7 @@ class CountController {
 }
 ```
 
-```dart title="main.dart" collapse={1-20, 23-26, 29-40, 43-100} "Reactter.register" "Reactter.get" "Reactter.destroy" "Reactter.on" "Lifecycle.didUpdate"
+```dart title="main.dart" collapse={1-20, 23-26, 29-40, 43-100} "Reactter.register" "Reactter.get" "Reactter.destroy" "Reactter.on" "Lifecycle.didUpdate" "Reactter.singleton"
 import 'package:reactter/reactter.dart';
 import 'count_controller.dart';
 
@@ -1349,7 +1349,7 @@ class CountController {
 }
 ```
 
-```dart title="main.dart" collapse={1-20, 23-30, 33-47, 50-100} "Reactter.register" "Reactter.get" "Reactter.unregister" "Reactter.on" "Lifecycle.didUpdate"
+```dart title="main.dart" collapse={1-20, 23-30, 33-47, 50-100} "Reactter.register" "Reactter.get" "Reactter.unregister" "Reactter.on" "Lifecycle.didUpdate" "Reactter.delete"
 import 'package:reactter/reactter.dart';
 import 'count_controller.dart';
 
@@ -1408,7 +1408,7 @@ void main() {
 
 ## <HM>`Reactter.isRegistered`</HM>
 
-The <HM>`Reactter.isRegistered`</HM> method is used to check if the dependency is registered in the Reactter.
+The <HM>`Reactter.isRegistered`</HM> method is used to check if the dependency is registered in Reactter.
 It returns <HN>`true`</HN> if the dependency is registered, otherwise return <HN>`false`</HN>.
 
 #### Syntax
@@ -1441,7 +1441,7 @@ class CountController {
 }
 ```
 
-```dart title="main.dart" collapse={1-4, 8-11, 15-35, 39-56, 60-100} "Reactter.register" "Reactter.get" "Reactter.isRegistered" "Reactter.on" "Lifecycle.didUpdate"
+```dart title="main.dart" collapse={1-4, 8-11, 15-35, 39-56, 60-100} "Reactter.register" "Reactter.get" "Reactter.isRegistered" "Reactter.on" "Lifecycle.didUpdate" "Reactter.lazyFactory" "Reactter.factory" "Reactter.delete" "Reactter.unregister"
 import 'package:reactter/reactter.dart';
 import 'count_controller.dart';
 
