@@ -5,7 +5,11 @@ sidebar:
   order: 5
 ---
 import { HE, HM, HT } from '@/components/Highlight/index.ts';
+import { Code } from "@astrojs/starlight/components";
+import counterViewCode from '@/examples/counter/counter_view.dart.code?raw';
+import counterMainCode from '@/examples/counter/main.dart.code?raw';
 import TipLifecycleExample from '@/content/docs/shareds/tip_lifecycle_example.mdx';
+import { counterViewMark } from '@/examples/counter/marks.ts';
 
 In Reactter, both the states and the dependency (managed by the [dependency injection](/reactter/core_concepts/dependency_injection)) contain different stages,
 also known as <HT><a href="https://pub.dev/documentation/reactter/latest/reactter/Lifecycle.html" target="_blank">`Lifecycle`</a></HT>.
@@ -72,55 +76,12 @@ class CounterController extends Reactter {
 }
 ```
 
-```dart title="counter_app.dart" collapse={1-100} /CounterController(?!\u0060)(?!Page)/ "CounterController()" /counter(?!\\.dart)/ "counter.increment" "counter.decrement" "counter.count" "ReactterProvider" "ReactterConsumer"
-import 'package:flutter/material.dart';
-import 'package:flutter_reactter/flutter_reactter.dart';
-import 'counter_controller.dart';
-
-class CounterPage extends StatelessWidget {
-  const CounterPage({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return ReactterProvider<CounterController>(
-      () => CounterController(),
-      builder: (context, counter, child) {
-        return Scaffold(
-          appBar: AppBar(
-            title: const Text("Counter"),
-          ),
-          body: Row(
-            children: [
-              ElevatedButton(
-                onPressed: counter.decrement,
-                child: Icon(Icons.remove),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ReactterConsumer<CounterController>(
-                  listenStates: (counter) => [counter.count],
-                  builder: (context, counter, child) {
-                    return Text("${counter.count}");
-                  },
-                ),
-              ),
-              ElevatedButton(
-                onPressed: counter.increment,
-                child: Icon(Icons.add),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-}
-```
+<Code title="counter_view.dart" code={counterViewCode} lang="dart" mark={counterViewMark} collapse={["1-100"]} />
 
 ```dart title="main.dart" "Reactter.on" "ReactterDependency" "Lifecycle.unregistered" "Lifecycle.registered" "Lifecycle.initialized" "Lifecycle.destroyed" /(Counter)\\>/
 import 'package:flutter/material.dart';
 import 'package:reactter/reactter.dart';
-import 'counter_app.dart';
+import 'counter_view.dart';
 import 'counter.dart';
 
 void main() {
@@ -218,68 +179,9 @@ class CounterController extends LifecycleObserver  {
 }
 ```
 
-```dart title="counter_app.dart"  collapse={1-100} /CounterController(?!\u0060)(?!Page)/ "CounterController()" /counter(?!\\.dart)/ "counter.increment" "counter.decrement" "counter.count" "ReactterProvider" "ReactterConsumer"
-import 'package:flutter/material.dart';
-import 'package:flutter_reactter/flutter_reactter.dart';
-import 'counter_controller.dart';
+<Code title="counter_view.dart" code={counterViewCode} lang="dart" mark={counterViewMark} collapse={["1-100"]} />
 
-class CounterPage extends StatelessWidget {
-  const CounterPage({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return ReactterProvider<CounterController>(
-      () => CounterController(),
-      builder: (context, counter, child) {
-        return Scaffold(
-          appBar: AppBar(
-            title: const Text("Counter"),
-          ),
-          body: Row(
-            children: [
-              ElevatedButton(
-                onPressed: counter.decrement,
-                child: Icon(Icons.remove),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ReactterConsumer<CounterController>(
-                  listenStates: (counter) => [counter.count],
-                  builder: (context, counter, child) {
-                    return Text("${counter.count}");
-                  },
-                ),
-              ),
-              ElevatedButton(
-                onPressed: counter.increment,
-                child: Icon(Icons.add),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-}
-```
-
-```dart title="main.dart"  collapse={1-100}
-import 'package:flutter/material.dart';
-import 'counter_app.dart';
-
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: CounterApp(),
-    );
-  }
-}
-```
+<Code title="main.dart" code={counterMainCode} lang="dart" collapse={["1-100"]} />
 
 ## Using UseEffect
 
@@ -313,65 +215,6 @@ class Counter extends Reactter {
 }
 ```
 
-```dart title="counter_app.dart"  collapse={1-100} /CounterController(?!\u0060)(?!Page)/ "CounterController()" /counter(?!\\.dart)/ "counter.increment" "counter.decrement" "counter.count" "ReactterProvider" "ReactterConsumer"
-import 'package:flutter/material.dart';
-import 'package:flutter_reactter/flutter_reactter.dart';
-import 'counter_controller.dart';
+<Code title="counter_view.dart" code={counterViewCode} lang="dart" mark={counterViewMark} collapse={["1-100"]} />
 
-class CounterPage extends StatelessWidget {
-  const CounterPage({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return ReactterProvider<CounterController>(
-      () => CounterController(),
-      builder: (context, counter, child) {
-        return Scaffold(
-          appBar: AppBar(
-            title: const Text("Counter"),
-          ),
-          body: Row(
-            children: [
-              ElevatedButton(
-                onPressed: counter.decrement,
-                child: Icon(Icons.remove),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ReactterConsumer<CounterController>(
-                  listenStates: (counter) => [counter.count],
-                  builder: (context, counter, child) {
-                    return Text("${counter.count}");
-                  },
-                ),
-              ),
-              ElevatedButton(
-                onPressed: counter.increment,
-                child: Icon(Icons.add),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-}
-```
-
-```dart title="main.dart"  collapse={1-100}
-import 'package:flutter/material.dart';
-import 'counter_app.dart';
-
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: CounterApp(),
-    );
-  }
-}
-```@/content/docs/shareds/tip_lifecycle_example.mdx
+<Code title="main.dart" code={counterMainCode} lang="dart" collapse={["1-100"]} />

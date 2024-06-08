@@ -8,12 +8,11 @@ import { HM, HT } from '@/components/Highlight';
 import { Code } from "@astrojs/starlight/components";
 import MDXRedry from '@/components/MDXRedry.astro';
 import StateMethodsLite from '@/content/docs/shareds/state_methods_lite.mdx';
-import UseReducerExample from '@/examples/use_reducer_example.dart.code?raw';
+import useReducerExampleCode from '@/examples/use_reducer/use_reducer_example.dart.code?raw';
+import { useReducerExampleMark } from '@/examples/use_reducer/marks.ts';
 import * as NoteLateState from '@/content/docs/shareds/note_late_state.mdx';
 import * as NoteStateValueNotifies from '@/content/docs/shareds/note_state_value_notifies.mdx';
 import * as ListeningChangesState from '@/content/docs/shareds/listening_changes_state.mdx';
-
-export const mark = ["UserAction", "UseReducer", "ReactterAction", /([^u]User)/g, "reducer", ".dispatch", ".value"];
 
 <HT><a href="https://pub.dev/documentation/reactter/latest/reactter/UseReducer-class.html" target="_blank">`UseReducer`</a></HT> is a [hook](/reactter/core_concepts/hooks) that manages state using reducer function.
 An alternative to <HT>[`UseState`](/reactter/hooks/use_state)</HT>.
@@ -54,8 +53,7 @@ UseReducer<T>(
 
 <HT>`UseReducer`</HT> can be initialized using the constructor class:
 
-<Code code={UseReducerExample} lang="dart" mark={mark} collapse={["1-29", "37-100"]} />
-
+<Code code={useReducerExampleCode} lang="dart" mark={useReducerExampleMark} collapse={["1-29", "37-100"]} />
 
 <MDXRedry mdx={NoteLateState} vars={{stateName: 'UseReducer'}}>
   <Fragment slot="exampleCode">
@@ -89,7 +87,7 @@ The action is a class that inherits from the <HT>`ReactterAction`</HT> class.
 
 This class contains the action `type` and `payload` that will be dispatched to the <HM>`reducer`</HM> method.
 
-<Code code={UseReducerExample} lang="dart" mark={mark} collapse={["1-12", "18-100"]} />
+<Code code={useReducerExampleCode} lang="dart" mark={useReducerExampleMark} collapse={["1-12", "18-100"]} />
 
 ### Writting the reducer method
 
@@ -97,14 +95,14 @@ The <HM>`reducer`</HM> method is a function that takes the current `state` and a
 This method is responsible for updating the `state` based on the `action` dispatched.
 The `state` is immutable, so it should return a new `state` object.
 
-<Code code={UseReducerExample} lang="dart" mark={mark} collapse={["1-18", "29-100"]} />
+<Code code={useReducerExampleCode} lang="dart" mark={useReducerExampleMark} collapse={["1-18", "29-100"]} />
 
 ### Dispatching an action and reading the state
 
 The <HM>`dispatch`</HM> method is responsible for dispatching an action to the <HM>`reducer`</HM> method.
 After dispatching an action, you can read the state using the `value` property.
 
-<Code code={UseReducerExample} lang="dart" mark={mark} collapse={["1-37"]} />
+<Code code={useReducerExampleCode} lang="dart" mark={useReducerExampleMark} collapse={["1-37"]} />
 
 <MDXRedry mdx={NoteStateValueNotifies} vars={{
   stateName: 'UseReducer',

@@ -7,6 +7,11 @@ sidebar:
     text: flutter
 ---
 import { HE, HM, HT } from '@/components/Highlight/index.ts';
+import { Code } from "@astrojs/starlight/components";
+import counterControllerCode from '@/examples/counter/counter_controller.dart.code?raw';
+import counterViewCode from '@/examples/counter/counter_view.dart.code?raw';
+import counterMainCode from '@/examples/counter/main.dart.code?raw';
+import { counterViewMark } from '@/examples/counter/marks.ts';
 
 In Flutter, efficient rendering control is essential for crafting high-performance, responsive, and scalable applications.
 Reactter provides a way to easily control the rendering of components in the widget tree behavior effortlessly, using the _**flutter_reactter**_ package.
@@ -41,118 +46,41 @@ Whenever the dependency or any observed state undergoes a change, these widgets 
 
 Let's create a simple counter app using Reactter to demonstrate how to control the rendering of the widget tree in Flutter.
 
-```dart title="counter_controller.dart" "count"
-import 'package:reactter/reactter.dart';
+<Code title="counter_controller.dart" code={counterControllerCode} lang="dart" mark={["count", "Signal"]} />
 
-class CounterController {
-  // Create a reactive state using the `Signal` class
-  final count = Signal(0);
+<Code title="counter_view.dart" code={counterViewCode} lang="dart" mark={counterViewMark} />
 
-  void increment() {
-    count.value++;
-  }
+<Code title="main.dart" code={counterMainCode} lang="dart" />
 
-  void decrement() {
-    count.value--;
-  }
-}
-```
+Now, when you run the app, you will see a counter app with two buttons to increment and decrement the `count` value.
 
-```dart title="counter_app.dart" /CounterController(?!\u0060)(?!Page)/ "CounterController()" /counter(?!\\.dart)/ "counter.increment" "counter.decrement" "counter.count" "ReactterProvider" "ReactterConsumer"
-import 'package:flutter/material.dart';
-import 'package:flutter_reactter/flutter_reactter.dart';
-import 'counter_controller.dart';
-
-class CounterPage extends StatelessWidget {
-  const CounterPage({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    // Provide the `CounterController` dependency to the widget tree
-    return ReactterProvider<CounterController>(
-      () => CounterController(), // Create an instance of the `CounterController` class
-      builder: (context, counter, child) {
-        return Scaffold(
-          appBar: AppBar(
-            title: const Text("Counter"),
-          ),
-          body: Row(
-            children: [
-              ElevatedButton(
-                onPressed: counter.decrement,
-                child: Icon(Icons.remove),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ReactterConsumer<CounterController>(
-                  // Observe the `count` property of the `counter` instance
-                  listenStates: (counter) => [counter.count],
-                  builder: (context, counter, child) {
-                    // Rebuild the widget tree when the `count` value changes
-                    return Text("${counter.count}");
-                  },
-                ),
-              ),
-              ElevatedButton(
-                onPressed: counter.increment,
-                child: Icon(Icons.add),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-}
-```
-
-```dart title="main.dart" collapse={1-100}
-import 'package:flutter/material.dart';
-import 'counter_app.dart';
-
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: CounterApp(),
-    );
-  }
-}
-```
-
-Now, when you run the app, you will see a counter app with two buttons to increment and decrement the counter value.
-
-In this scenario, only the <HT>`Text`</HT> widget will be rebuilt when the `count` value changes, not the entire <HT>`CounterPage`</HT> widget.
+In this scenario, only the <HT>`Text`</HT> widget will be rebuilt when the `count` value changes, not the entire <HT>`CounterView`</HT> widget.
 This is because the <HT>`ReactterConsumer`</HT> widget observes the `count` property and triggers the rebuilding of the widget tree when the `count` value changes.
 
-In example, we used the <HT>`ReactterConsumer`</HT> widget to observe the `count` property of the `counter` instance,
+In example, we used the <HT>`ReactterConsumer`</HT> widget to observe the `count` property of the `counterController` instance,
 but we can do the same functionality by using the <HM>`watch`</HM> method of the <HT>`BuildContext`</HT> class.
 
 Here's how we can refactor the code to use the <HM>`watch`</HM> method along with a <HT>`Builder`</HT> widget to achieve the same outcome:
 
-```dart title="counter_app.dart" collapse={1-25, 40-51} del={26-29} ins={30-35} /CounterController(?!\u0060)(?!Page)/ /counter(?!\\.dart)/ "counter.increment" "counter.decrement" "counter.count" "ReactterProvider" "ReactterConsumer" "context.watch"
+```dart title="counter_view.dart" collapse={1-25, 40-51} del={26-29} ins={30-35} "ReactterProvider" "ReactterConsumer" "context.watch" "CounterController" "counterController" "counterController.increment" "counterController.decrement" "counterController.count"
 import 'package:flutter/material.dart';
 import 'package:flutter_reactter/flutter_reactter.dart';
 import 'counter_controller.dart';
 
-class CounterPage extends StatelessWidget {
-  const CounterPage({Key? key}) : super(key: key);
+class CounterView extends StatelessWidget {
+  const CounterView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    // Provide the `Counter` dependency to the widget tree
-    return ReactterProvider<CounterController>(
-      () => CounterController(), // Create an instance of the `CounterController` class
-      builder: (context, counter, child) {
-        return Scaffold(
-          appBar: AppBar(
-            title: const Text("Counter"),
-          ),
-          body: Row(
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Counter"),
+      ),
+      // Provides the `Counter` dependency to the widget tree
+      body: ReactterProvider<CounterController>(
+        () => CounterController(), // Registers the `CounterController` dependency
+        builder: (context, counter, child) {
+          return Row(
             children: [
               ElevatedButton(
                 onPressed: counter.decrement,
@@ -161,28 +89,28 @@ class CounterPage extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: ReactterConsumer<CounterController>(
-                  // Observe the `count` property of the `counter` instance
-                  listenStates: (counter) => [counter.count],
-                  builder: (context, counter, child) {
+                  // Observes the `count` property of the `counterController` instance
+                  listenStates: (counterController) => [counterController.count],
+                  builder: (context, counterController, child) {
                 child: Builder(
                   builder: (context) {
-                    final counter = context.watch<CounterController>(
-                      // Observe the `count` property of the `counter` instance
-                      (counter) => [counter.count],
+                    final counterController = context.watch<CounterController>(
+                      // Observes the `count` property of the `counterController` instance
+                      (counterController) => [counterController.count],
                     );
-                    // Rebuild the widget tree when the `count` value changes
-                    return Text("${counter.count}");
+                    // Rebuilds the widget tree when the `count` value changes
+                    return Text("${counterController.count}");
                   },
                 ),
               ),
               ElevatedButton(
-                onPressed: counter.increment,
+                onPressed: counterController.increment,
                 child: Icon(Icons.add),
               ),
             ],
           ),
-        );
-      },
+        },
+      );
     );
   }
 }
