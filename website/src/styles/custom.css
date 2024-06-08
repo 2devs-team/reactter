@@ -70,14 +70,11 @@ ol ul:last-child {
   background-color: var(--sl-color-accent-low);
 }
 
-.expressive-code pre {
-  --ec-brdRad: 0.2rem;
-  --ec-brdWd: 1px;
-}
-
 .expressive-code .frame {
-  --ec-brdRad: 0.2rem;
+  --ec-brdRad: 0.4rem;
   --ec-brdWd: 1px;
+  --ec-frm-edActTabIndHt: 2px;
+  --ec-frm-edTabBrdRad: 0.4rem;
   --header-border-radius: calc(var(--ec-brdRad) + var(--ec-brdWd));
   --tab-border-radius: calc(var(--ec-frm-edTabBrdRad) + var(--ec-brdWd));
   --button-spacing: 0.4rem;
