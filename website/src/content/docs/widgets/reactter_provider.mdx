@@ -1,8 +1,10 @@
 ---
 title: ReactterProvider
 description: Learn how to use a ReactterProvider in Reactter.
+sidebar:
+  order: 2
 ---
-import { HE, HM, HT } from '@/components/Highlight/index.ts';
+import { HE, HM, HT } from '@/components/Highlight';
 import { Code } from "@astrojs/starlight/components";
 import counterControllerCode from '@/examples/counter/counter_controller.dart.code?raw';
 import counterViewCode from '@/examples/counter/counter_view.dart.code?raw';
@@ -51,7 +53,7 @@ The <HT>`ReactterProvider`</HT> class has two constructors:
 - <HM>`instanceBuilder`</HM>: A function that creates an instance of the <HT>`T`</HT> dependency. This function is registered by [Dependency Injection](/reactter/core_concepts/dependency_injection).
 - `key`: An optional <HT>`Key`</HT> to use for identifying the widget.
 - `id`: An optional identifier for the dependency. If not provided, the dependency will be registered with the type of the dependency.
-- `mode`: The mode of the dependency injection. By default, it uses the builder mode(<HE>`DependecyMode.builder`</HE>).
+- `mode`: The mode of the dependency injection. By default, it uses the builder mode(<HE>`DependecyMode.builder`</HE>). Learn more about the [dependency modes](/reactter/core_concepts/dependency_injection/#dependency-modes).
 - `child`: An optional <HT>`Widget`</HT> that does not rebuild when the dependency changes. This widget is sent through the arguments of <HT>`builder`</HT> function.
 - <HM>`builder`</HM>: A function that builds the widget tree based on the dependency.
 It receives the following arguments:
@@ -129,7 +131,7 @@ class Counter extends StatelessWidget {
 
 <Code title="main.dart" code={counterMainCode} lang="dart" collapse={["1-100"]} />
 
-### Using id
+### Using `id`
 
 The <HT>`ReactterProvider`</HT> widget provides an `id` argument that allows you to provide an identifier for the dependency. 
 It is useful when you want to create multiple instances of the same dependency.
@@ -214,7 +216,7 @@ class Counter extends StatelessWidget {
 
 <Code title="main.dart" code={counterMainCode} lang="dart" collapse={["1-100"]} />
 
-### Using child
+### Using `child`
 
 The <HT>`ReactterProvider`</HT> widget provides a `child` argument that does not rebuild when the dependency changes.
 It is useful when you want to provide a widget that does not rebuild when the dependency changes.
@@ -225,7 +227,75 @@ The `child` argument can't accessed to the dependency instance.
 
 Here's an example of how to use the <HT>`ReactterProvider`</HT> widget with the `child` argument:
 
-### Lazy Initialization
+<Code title="counter_controller.dart" code={counterControllerCode} lang="dart" mark={["count", "Signal"]} collapse={["1-100"]}  />
+
+```dart title="counter_view.dart" collapse={1-18, 33-55} "ReactterProvider" "context.watch" "CounterController" "counterController" "counterController.increment" "counterController.decrement" "counterController.count"
+import 'package:flutter/material.dart';
+import 'package:flutter_reactter/flutter_reactter.dart';
+import 'counter_controller.dart';
+
+class CounterView extends StatelessWidget {
+  const CounterView({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Counter"),
+      ),
+      body: Center(child: Counter()),
+    );
+  }
+}
+
+class Counter extends StatelessWidget {
+  const Counter({Key? key}) : super(key: key);
+
+  Widget build(BuildContext context) {
+    // Provides the `CounterController` dependency to the widget tree
+    return ReactterProvider<CounterController>(
+      () => CounterController(), // Registers the `CounterController` dependency
+      child: Text("This is a child widget"),
+      builder: (context, counterController, child) {
+        print("CounterController created: ${counterController}");
+
+        return Column(
+          children: [
+            child!,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  onPressed: counterController.decrement,
+                  child: Icon(Icons.remove),
+                ),
+                SizedBox(width: 8),
+                ReactterConsumer<CounterController>(
+                  // Observes the `count` property of the `counterController` instance
+                  listenStates: (counterController) => [counterController.count],
+                  builder: (context, counterController, child) {
+                    // Rebuilds the widget tree when the `count` value changes
+                    return Text("${counterController.count}");
+                  },
+                ),
+                SizedBox(width: 8),
+                ElevatedButton(
+                  onPressed: counterController.increment,
+                  child: Icon(Icons.add),
+                ),
+              ],
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
+```
+
+<Code title="main.dart" code={counterMainCode} lang="dart" collapse={["1-100"]} />
+
+### Initialization lazily
 
 The <HT>`ReactterProvider.lazy`</HT> constructor initializes the dependency lazily. It creates the dependency only when it is accessed for the first time.
 
@@ -305,7 +375,7 @@ class Counter extends StatelessWidget {
 
 <Code title="main.dart" code={counterMainCode} lang="dart" collapse={["1-100"]} />
 
-### Initializing with different modes
+### Initialization modes
 
 The <HT>`ReactterProvider`</HT> widget provides a `mode` argument that allows you to initialize the dependency with different [modes](/reactter/core_concepts/dependency_injection/#dependency-modes).
 
