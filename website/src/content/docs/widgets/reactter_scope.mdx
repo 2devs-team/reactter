@@ -1,0 +1,93 @@
+---
+title: ReactterScope
+description: Learn how to use the ReactterScope in Reactter.
+sidebar:
+  order: 1
+---
+import { HM, HT } from '@/components/Highlight';
+
+The <HT>`ReactterScope`</HT> widget serves as an entry point for Reactter, allowing you to use any consumer(such as <HT>`ReactterConsumer`</HT>, <HT>`ReactterSelect`</HT>, <HT>`ReactterComponent`</HT>, <HM>`BuildContext.watch`</HM>, <HM>`BuildContext.select`</HM>) to observe state changes within the subtree of the widget it wraps, without the need to explicitly define dependencies.
+
+:::caution
+The <HT>`ReactterScope`</HT> widget is not mandatory but if you use any consumers without defining dependencies, and their ancestor widgets are not wrapped by the <HT>`ReactterScope`</HT> widget, it will throw <HT>`ReactterScopeNotFoundException`</HT> error. Therefore, always ensure that the <HT>`ReactterScope`</HT> widget is correctly placed in the widget tree hierarchy.
+
+To prevent such errors, it is recommended to wrap the root widget of your application with the <HT>`ReactterScope`</HT> widget.
+:::
+
+## Syntax
+
+```dart
+ReactterScope({
+  Key? key,
+  required Widget child,
+})
+```
+
+## Properties
+
+- `key`: An optional <HT>`Key`</HT> to use for identifying the widget.
+- `child`: The <HT>`Widget`</HT> that is to be wrapped by the <HT>`ReactterScope`</HT> widget.
+
+## Example
+
+In the following example, we have a simple counter application that uses the <HT>`ReactterScope`</HT> widget to listen to the state changes of the counter value.
+
+```dart title="main.dart" collapse={8-100} "ReactterScope"
+void main() {
+  runApp(
+    const ReactterScope(
+      child: const MyApp(),
+    ),
+  );
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return const MaterialApp(
+      home: const CounterView(),
+    );
+  }
+}
+```
+
+```dart title="counter_view.dart" collapse={8-18, 25-32} "UseState" "ReactterConsumer"
+
+final uCount = UseState(0);
+
+class CounterView extends StatelessWidget {
+  const CounterView({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Counter"),
+      ),
+      body: Row(
+        children: [
+          ElevatedButton(
+            onPressed: () => uCount.value--,
+            child: Text('Decrement'),
+          ),
+          SizedBox(width: 8),
+          ReactterConsumer(
+            listenStates: (_) => [uCount],
+            builder: (_, __, __) {
+              return Text('Count: ${uCount.value}'),
+            },
+          ),
+          SizedBox(width: 8),
+          ElevatedButton(
+            onPressed: () => uCount.value++,
+            child: Text('Increment'),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+```
