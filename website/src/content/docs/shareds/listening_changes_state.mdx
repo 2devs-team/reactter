@@ -4,7 +4,7 @@ vars:
   stateName: hook
   stateVariable: uState
 ---
-import { HE, HM, HT } from '@/components/Highlight/index.ts';
+import { HE, HM, HT } from '@/components/Highlight';
 
 When `value` has changed, the <HT>`[[stateName]]`</HT> will emit the following events(learn about it [here](/reactter/core_concepts/lifecycle/)):
 
@@ -13,7 +13,7 @@ When `value` has changed, the <HT>`[[stateName]]`</HT> will emit the following e
 
 Example of listening to changes:
 
-```dart "Reactter.on" "Lifecycle.didUpdate" 
+```dart "Reactter.on" "Lifecycle.didUpdate"
 Reactter.on(
   [[stateVariable]],
   Lifecycle.didUpdate,
