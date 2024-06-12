@@ -9,9 +9,9 @@ import { HM, HT } from '@/components/Highlight';
 The <HT>`ReactterScope`</HT> widget serves as an entry point for Reactter, allowing you to use any consumer(such as <HT>`ReactterConsumer`</HT>, <HT>`ReactterSelect`</HT>, <HT>`ReactterComponent`</HT>, <HM>`BuildContext.watch`</HM>, <HM>`BuildContext.select`</HM>) to observe state changes within the subtree of the widget it wraps, without the need to explicitly define dependencies.
 
 :::caution
-The <HT>`ReactterScope`</HT> widget is not mandatory but if you use any consumers without defining dependencies, and their ancestor widgets are not wrapped by the <HT>`ReactterScope`</HT> widget, it will throw <HT>`ReactterScopeNotFoundException`</HT> error. Therefore, always ensure that the <HT>`ReactterScope`</HT> widget is correctly placed in the widget tree hierarchy.
+The <HT>`ReactterScope`</HT> widget is optional, but if you use any consumers without defining dependencies and their ancestor widgets are not wrapped by it, a ReactterScopeNotFoundException error will be thrown. Therefore, make sure this widget is correctly placed in the widget tree hierarchy.
 
-To prevent such errors, it is recommended to wrap the root widget of your application with the <HT>`ReactterScope`</HT> widget.
+To avoid such errors, it is advisable to wrap your application's root widget with it.
 :::
 
 ## Syntax
