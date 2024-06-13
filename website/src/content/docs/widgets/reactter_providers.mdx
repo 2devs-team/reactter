@@ -4,7 +4,142 @@ dscription: Learn how to use the ReactterProviders in Reactter.
 sidebar:
   order: 3
 ---
+import { HM, HT } from '@/components/Highlight';
+import { Code } from "@astrojs/starlight/components";
+import counterControllerCode from '@/examples/counter/counter_controller.dart.code?raw';
 
-:::tip[TODO]
-This page is still in progress.
-:::
+The <HT>`ReactterProviders`</HT> widget is a container for multiple providers that allows you to provide multiple dependencies to the widget tree. 
+It is a more efficient way to provide multiple dependencies to the widget tree than using multiple <HT>`ReactterProvider`</HT> widgets.
+
+## Syntax
+
+```dart
+ReactterProviders(
+  List<ReactterProvider> providers, {
+  Key? key,
+  Widget? child,
+  Widget builder(BuildContext context, Widget child)?,
+})
+```
+
+## Properties
+
+- `providers`: A list of <HT>`ReactterProvider`</HT> widgets that are to be wrapped by the <HT>`ReactterProviders`</HT>.
+- `key`: An optional <HT>`Key`</HT> to use for identifying the widget.
+- `child`: An optional <HT>`Widget`</HT> which is independent of the <HT>`ReactterProviders`</HT>. It is passed to the <HM>`builder`</HM> function if it is defined.
+- <HM>`builder`</HM>: An optional function which builds a widget depending on the <HT>`ReactterProviders`</HT>.
+It receives the following arguments:
+  - `context`: The <HM>`BuildContext`</HM> of the widget. A handle to the location of <HT>`ReactterProviders`</HT> in the widget tree.
+  - `child`: The `child` widget passed to the <HT>`ReactterProviders`</HT> widget.
+
+## Example
+
+In the following example, we have a simple counter application that uses the <HT>`ReactterProviders`</HT> widget to provide multiple dependencies to the widget tree.
+
+<Code title="counter_controller.dart" code={counterControllerCode} lang="dart" mark={["count", "Signal"]} collapse={["1-100"]}  />
+
+```dart title="counter_view.dart" collapse={1-100} "ReactterConsumer" "context.use"
+class CounterView extends StatelessWidget {
+  const CounterView({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Counter"),
+      ),
+      body: Center(
+        child: Column(
+          children: [
+            Counter(),
+            FutureBuilder(
+              future: Future.delayed(Duration(seconds: 1)),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState != ConnectionState.done) {
+                  return const CircularProgressIndicator();
+                }
+
+                return Counter(id: "counterLazy");
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class Counter extends StatelessWidget {
+  final String? id;
+
+  const Counter({Key? key, this.id}) : super(key: key);
+
+  Widget build(BuildContext context) {
+    final counterController = context.use<CounterController>(id);
+
+    if (counterController == null) {
+      return const Text('CounterController is not provided');
+    }
+
+    print(
+      'CounterController created: ${counterController}, '
+      '${id == null ? '' : 'with id: $id'}'
+    );
+
+    return Column(
+      children: [
+        Text("Counter id: $id"),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ElevatedButton(
+              onPressed: counterController.decrement,
+              child: Icon(Icons.remove),
+            ),
+            SizedBox(width: 8),
+            ReactterConsumer<CounterController>(
+              id: id,
+              // Observes the `count` property of the `counterController` instance
+              listenStates: (counterController) => [counterController.count],
+              builder: (context, counterController, child) {
+                // Rebuilds the widget tree when the `count` value changes
+                return Text("${counterController.count}");
+              },
+            ),
+            SizedBox(width: 8),
+            ElevatedButton(
+              onPressed: counterController.increment,
+              child: Icon(Icons.add),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+}
+```
+
+```dart title="main.dart" collapse={12-22} "ReactterProviders" "ReactterProvider" "ReactterProvider.lazy"
+void main() {
+  runApp(
+    const ReactterProviders(
+      [
+        ReactterProvider(() => CounterController()),
+        ReactterProvider.lazy(() => CounterController(), id: 'counterLazy'),
+      ],
+      child: const MyApp(),
+    ),
+  );
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return const MaterialApp(
+      home: const CounterView(),
+    );
+  }
+}
+```
