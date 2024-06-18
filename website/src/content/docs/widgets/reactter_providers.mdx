@@ -9,11 +9,14 @@ import { Code } from "@astrojs/starlight/components";
 import counterControllerCode from '@/examples/counter/counter_controller.dart.code?raw';
 
 The <HT>`ReactterProviders`</HT> widget is a container for multiple providers that allows you to provide multiple dependencies to the widget tree. 
-It is a more efficient way to provide multiple dependencies to the widget tree than using multiple <HT>`ReactterProvider`</HT> widgets.
+
+:::note
+The <HT>`ReactterProviders`</HT> widget is a more efficient way to provide multiple dependencies to the widget tree than using multiple <HT>`ReactterProvider`</HT> widgets.
+:::
 
 ## Syntax
 
-```dart
+```dart showLineNumbers=false
 ReactterProviders(
   List<ReactterProvider> providers, {
   Key? key,
@@ -26,7 +29,8 @@ ReactterProviders(
 
 - `providers`: A list of <HT>`ReactterProvider`</HT> widgets that are to be wrapped by the <HT>`ReactterProviders`</HT>.
 - `key`: An optional <HT>`Key`</HT> to use for identifying the widget.
-- `child`: An optional <HT>`Widget`</HT> which is independent of the <HT>`ReactterProviders`</HT>. It is passed to the <HM>`builder`</HM> function if it is defined.
+- `child`: An optional <HT>`Widget`</HT> which is independent of the <HT>`ReactterProviders`</HT>.
+  If defined, it is passed to the <HM>`builder`</HM> function if it is defined.
 - <HM>`builder`</HM>: An optional function which builds a widget depending on the <HT>`ReactterProviders`</HT>.
 It receives the following arguments:
   - `context`: The <HM>`BuildContext`</HM> of the widget. A handle to the location of <HT>`ReactterProviders`</HT> in the widget tree.
