@@ -4,7 +4,486 @@ description: Learn how to use the ReactterConsumer in Reactter.
 sidebar:
   order: 4
 ---
+import { HM, HN, HS, HT } from '@/components/Highlight';
+import { Code } from "@astrojs/starlight/components";
+import counterControllerCode from '@/examples/counter/counter_controller.dart.code?raw';
+import counterMainCode from '@/examples/counter/main.dart.code?raw';
 
-:::tip[TODO]
-This page is still in progress.
+The <HT>`ReactterConsumer`</HT> widget obtains the dependency provided by the closest <HT>`ReactterProvider`</HT> widget and rebuilds itself whenever there are changes in the dependency or any defined states.
+
+:::note
+The <HT>`ReactterConsumer`</HT> widget is similar to the <HM>[`BuildContext.use`](/reactter/extensions/builder_context_use)</HM> and <HM>[`BuildContext.watch`](/reactter/extensions/builder_context_watch)</HM> functions, but it is designed to be used within the widget tree.
 :::
+
+## Syntax
+
+```dart showLineNumbers=false
+ReactterConsumer<T>({
+  Key? key,
+  String? id,
+  bool listenAll = false,
+  List<ReactterState> listenStates(T instance),
+  Widget? child,
+  required Widget builder(BuildContext context, T instance, Widget? child),
+})
+```
+
+## Properties
+
+- `key`: An optional <HT>`Key`</HT> to use for identifying the widget.
+- `id`: An optional identifier for the dependency.
+  If omitted, the dependency will be located by its type(<HT>`T`</HT>).
+- `listenAll`: A boolean that determines whether to listen to all states provided by the <HT>`T`</HT> dependency.
+  If set to <HN>`true`</HN>, the <HM>`listenStates`</HM> function is ignored.
+  The default value is <HN>`false`</HN>.
+- <HM>`listenStates`</HM>: A function that returns a list of state(<HT>`ReactterState`</HT>) to listen to.
+  It takes the instance of the <HT>`T`</HT> dependency as an argument.
+  If omitted, the `listenAll` property is checked.
+- `child`: An optional <HT>`Widget`</HT> that is independent of the <HT>`ReactterConsumer`</HT>.
+  If defined, it is passed to the <HM>`builder`</HM> function if it is defined.
+- <HM>`builder`</HM>: A function that builds a widget depending on the <HT>`ReactterConsumer`</HT>.
+  It receives the following arguments:
+  - `context`: The <HT>`BuildContext`</HT> of the widget. A handle to the location of <HT>`ReactterConsumer`</HT> in the widget tree.
+  - `instance`: The instance of <HT>`T`</HT> dependency provided by the closest <HT>`ReactterProvider`</HT> widget.
+  - `child`: The `child` widget passed to the <HT>`ReactterConsumer`</HT> widget.
+
+## Usage
+
+### Basic Usage
+
+To use the <HT>`ReactterConsumer`</HT> widget, you need to provide the <HT>`T`</HT> dependency using the <HT>`ReactterProvider`</HT> widget.
+
+:::note
+Ensure that the <HT>`ReactterProvider`</HT> widget is placed higher in the widget tree than any <HT>`ReactterConsumer`</HT> instances needing access to the <HT>`T`</HT> dependency.
+:::
+
+Here's an example of how to use it:
+
+<Code title="counter_controller.dart" code={counterControllerCode} lang="dart" mark={["count", "Signal"]} collapse={["1-100"]} />
+
+```dart title="counter_view.dart" "ReactterProvider" "ReactterConsumer" "context.watch" "CounterController" "counterController" "counterController.increment" "counterController.decrement" "counterController.count"
+import 'package:flutter/material.dart';
+import 'package:flutter_reactter/flutter_reactter.dart';
+import 'counter_controller.dart';
+
+class CounterView extends StatelessWidget {
+  const CounterView({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    // Provides the `CounterController` dependency to the widget tree
+    return ReactterProvider<CounterController>(
+      () => CounterController(),
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text("Counter"),
+        ),
+        body: Center(child: Counter()),
+      ),
+    );
+  }
+}
+
+class Counter extends StatelessWidget {
+  const Counter({Key? key}) : super(key: key);
+
+  Widget build(BuildContext context) {
+    // Locales the `CounterController` dependency
+    return ReactterConsumer<CounterController>(
+      builder: (context, counterController, child) {
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ElevatedButton(
+              onPressed: counterController.decrement,
+              child: Icon(Icons.remove),
+            ),
+            SizedBox(width: 8),
+            Text("${counterController.count}"),
+            SizedBox(width: 8),
+            ElevatedButton(
+              onPressed: counterController.increment,
+              child: Icon(Icons.add),
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
+```
+
+<Code title="main.dart" code={counterMainCode} lang="dart" collapse={["1-100"]} />
+
+In the example above, the <HT>`ReactterConsumer`</HT> widget is used only to access the <HT>`CounterController`</HT> dependency within the <HT>`Counter`</HT> widget.
+Consequently, it does not rebuild whenever there are changes in the `count` state of the <HT>`CounterController`</HT> dependency.
+
+:::note
+For specific state listening, you can use the <HM>`listenStates`</HM> property(see the [Listening to specific states](#listening-to-specific-states) section).
+
+Alternatively, you can set the `listenAll` property to <HN>`true`</HN> to listen to all states provided by the <HT>`CounterController`</HT> dependency(see the [Listening to all states](#listening-to-all-states) section).
+:::
+
+### Listening to all state
+
+The <HT>`ReactterConsumer`</HT> widget can listen to all states provided by the <HT>`T`</HT> dependency by setting the `listenAll` property to <HN>`true`</HN>.
+
+:::caution
+Using the `listenAll` property indiscriminately is not recommended, especially when some states are not directly involved in rendering the widget subtree.
+Instead, it is advisable to use <HM>`listenStates`</HM> to specifically define which states to listen(see the [Listening to specific states](#listening-to-specific-states) section).
+:::
+
+Here's an example of how to use it:
+
+<Code title="counter_controller.dart" code={counterControllerCode} lang="dart" mark={["count", "Signal"]} collapse={["1-100"]} />
+
+```dart title="counter_view.dart" collapse={1-23} {30} "ReactterProvider" "ReactterConsumer" "CounterController" "counterController" "counterController.increment" "counterController.decrement" "counterController.count"
+import 'package:flutter/material.dart';
+import 'package:flutter_reactter/flutter_reactter.dart';
+import 'counter_controller.dart';
+
+class CounterView extends StatelessWidget {
+  const CounterView({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    // Provides the `CounterController` dependency to the widget tree
+    return ReactterProvider<CounterController>(
+      // Registers the `CounterController` dependency
+      () => CounterController(),
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text("Counter"),
+        ),
+        body: Center(child: Counter()),
+      ),
+    );
+  }
+}
+
+class Counter extends StatelessWidget {
+  const Counter({Key? key}) : super(key: key);
+
+  Widget build(BuildContext context) {
+    return ReactterConsumer<CounterController>(
+      // Listens to all states provided by the `CounterController` dependency
+      listenAll: true,
+      // Rebuilds whenever there are changes any state of the `CounterController` dependency
+      builder: (context, counterController, child) {
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ElevatedButton(
+              onPressed: counterController.decrement,
+              child: Icon(Icons.remove),
+            ),
+            SizedBox(width: 8),
+            Text("${counterController.count}"),
+            SizedBox(width: 8),
+            ElevatedButton(
+              onPressed: counterController.increment,
+              child: Icon(Icons.add),
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
+```
+<Code title="main.dart" code={counterMainCode} lang="dart" collapse={["1-100"]} />
+
+In the example above, the <HT>`ReactterConsumer`</HT> widget will trigger a rebuild of the widget subtree(the <HT>`Row`</HT> widget and each of its children) whenever there are changes in any state of the <HT>`CounterController`</HT> dependency.
+
+So, that approach lacks performance efficient.
+It is advisable to optimize by selectively wrapping only the necessary widgets with the <HT>`ReactterConsumer`</HT> widget, utilizing either active or non-active listening as appropriate, e.g.:
+
+```dart startLineNumber=23 del={6-7, 17} ins={18-25} "ReactterConsumer" "CounterController" "counterController" "counterController.increment" "counterController.decrement" "counterController.count"
+class Counter extends StatelessWidget {
+  const Counter({Key? key}) : super(key: key);
+
+  Widget build(BuildContext context) {
+    return ReactterConsumer<CounterController>(
+      // Listens to all states provided by the `CounterController` dependency
+      listenAll: true,
+      builder: (context, counterController, child) {
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ElevatedButton(
+              onPressed: counterController.decrement,
+              child: Icon(Icons.remove),
+            ),
+            SizedBox(width: 8),
+            Text("${counterController.count}"),
+            ReactterConsumer<CounterController>(
+              // Listens to all states provided by the `CounterController` dependency
+              listenAll: true,
+              // Rebuilds whenever there are changes any state of the `CounterController` dependency
+              builder: (context, counterController, child) {
+                return Text("${counterController.count}");
+              },
+            ),
+            SizedBox(width: 8),
+            ElevatedButton(
+              onPressed: counterController.increment,
+              child: Icon(Icons.add),
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
+```
+
+### Listening to specific states
+
+The <HT>`ReactterConsumer`</HT> widget can listen to specific states provided by the <HT>`T`</HT> dependency by defining the <HM>`listenStates`</HM> property.
+
+Here's an example of how to use it:
+
+<Code title="counter_controller.dart" code={counterControllerCode} lang="dart" mark={["count", "Signal"]} collapse={["1-100"]} />
+
+```dart title="counter_view.dart" collapse={1-22} {40} "ReactterProvider" "ReactterConsumer" "CounterController" "counterController" "counterController.increment" "counterController.decrement" "counterController.count"
+import 'package:flutter/material.dart';
+import 'package:flutter_reactter/flutter_reactter.dart';
+import 'counter_controller.dart';
+
+class CounterView extends StatelessWidget {
+  const CounterView({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    // Provides the `CounterController` dependency to the widget tree
+    return ReactterProvider<CounterController>(
+      () => CounterController(),
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text("Counter"),
+        ),
+        body: Center(child: Counter()),
+      ),
+    );
+  }
+}
+
+class Counter extends StatelessWidget {
+  const Counter({Key? key}) : super(key: key);
+
+  Widget build(BuildContext context) {+
+    // Locales the `CounterController` dependency
+    return ReactterConsumer<CounterController>(
+      builder: (context, counterController, child) {
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ElevatedButton(
+              onPressed: counterController.decrement,
+              child: Icon(Icons.remove),
+            ),
+            SizedBox(width: 8),
+            ReactterConsumer<CounterController>(
+              // Listens to the `count` state of the `CounterController` dependency
+              listenStates: (counterController) => [counterController.count],
+              // Rebuilds whenever there are changes in the `count` state of the `CounterController` dependency
+              builder: (context, counterController, child) {
+                return Text("${counterController.count}");
+              },
+            ),
+            SizedBox(width: 8),
+            ElevatedButton(
+              onPressed: counterController.increment,
+              child: Icon(Icons.add),
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
+```
+
+<Code title="main.dart" code={counterMainCode} lang="dart" collapse={["1-100"]} />
+
+In the example above, the <HT>`ReactterConsumer`</HT> widget will trigger a rebuild of the <HT>`Text`</HT> widget whenever there are changes in the `count` state of the <HT>`CounterController`</HT> dependency.
+
+### Using `id`
+
+The <HT>`ReactterConsumer`</HT> widget can use the `id` property to locate the <HT>`T`</HT> dependency by its identifier. 
+It is useful when there are multiple instances of the same type of dependency in the widget tree.
+
+Here's an example of how to use it:
+
+<Code title="counter_controller.dart" code={counterControllerCode} lang="dart" mark={["count", "Signal"]} collapse={["1-100"]} />
+
+```dart title="counter_view.dart" collapse={1-32} {41,53} "ReactterProvider" "ReactterConsumer" "CounterController" "counterController" "counterController.increment" "counterController.decrement" "counterController.count"
+import 'package:flutter/material.dart';
+import 'package:flutter_reactter/flutter_reactter.dart';
+import 'counter_controller.dart';
+
+class CounterView extends StatelessWidget {
+  const CounterView({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    // Provides the `CounterController` dependencies to the widget tree
+    return ReactterProviders(
+      [
+        ReactterProvider(() => CounterController(), id: "counter1"),
+        ReactterProvider(() => CounterController(), id: "counter2"),
+      ],
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text("Counter"),
+        ),
+        body: Center(
+          child: Column(
+            children: [
+              Counter(id: "counter1"),
+              Counter(id: "counter2"),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class Counter extends StatelessWidget {
+  final String? id;
+
+  const Counter({Key? key, this.id}) : super(key: key);
+
+  Widget build(BuildContext context) {
+    return ReactterConsumer<CounterController>(
+      // Locates the `CounterController` dependency by its identifier
+      id: id,
+      builder: (context, counterController, child) {
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ElevatedButton(
+              onPressed: counterController.decrement,
+              child: Icon(Icons.remove),
+            ),
+            SizedBox(width: 8),
+            ReactterConsumer<CounterController>(
+              // Locates the `CounterController` dependency by its identifier
+              id: id,
+              // Listens to the `count` state of the `CounterController` dependency
+              listenStates: (counterController) => [counterController.count],
+              // Rebuilds whenever there are changes in the `count` state of the `CounterController` dependency
+              builder: (context, counterController, child) {
+                return Text("${counterController.count}");
+              },
+            ),
+            SizedBox(width: 8),
+            ElevatedButton(
+              onPressed: counterController.increment,
+              child: Icon(Icons.add),
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
+```
+
+<Code title="main.dart" code={counterMainCode} lang="dart" collapse={["1-100"]} />
+
+In the example above, the <HT>`ReactterConsumer`</HT> widget uses the `id` property to locate the <HT>`CounterController`</HT> dependency by the <HS>`counter1`</HS> and <HS>`counter2`</HS> identifiers.
+
+:::note
+Ensure that the `id` property is located in the <HT>`ReactterProvider`</HT> widget that provides the <HT>`T`</HT> dependency.
+:::
+
+### Using `child`
+
+The <HT>`ReactterConsumer`</HT> widget can accept a `child` property that is independent of the <HT>`ReactterConsumer`</HT> widget.
+It is useful when you want to provide a widget that does not rebuild when the dependency changes.
+
+:::note
+The `child` argument can't accessed to the dependency instance.
+:::
+
+Here's an example of how to use it:
+
+<Code title="counter_controller.dart" code={counterControllerCode} lang="dart" mark={["count", "Signal"]} collapse={["1-100"]} />
+
+```dart title="counter_view.dart" collapse={1-23} {48,53} "ReactterProvider" "ReactterConsumer" "CounterController" "counterController" "counterController.increment" "counterController.decrement" "counterController.count"
+import 'package:flutter/material.dart';
+import 'package:flutter_reactter/flutter_reactter.dart';
+import 'counter_controller.dart';
+
+class CounterView extends StatelessWidget {
+  const CounterView({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    // Provides the `CounterController` dependency to the widget tree
+    return ReactterProvider<CounterController>(
+      // Registers the `CounterController` dependency
+      () => CounterController(),
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text("Counter"),
+        ),
+        body: Center(child: Counter()),
+      ),
+    );
+  }
+}
+
+class Counter extends StatelessWidget {
+  final String? id;
+
+  const Counter({Key? key, this.id}) : super(key: key);
+
+  Widget build(BuildContext context) {
+    return ReactterConsumer<CounterController>(
+      // Locates the `CounterController` dependency by its identifier
+      id: id,
+      builder: (context, counterController, child) {
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ElevatedButton(
+              onPressed: counterController.decrement,
+              child: Icon(Icons.remove),
+            ),
+            SizedBox(width: 8),
+            ReactterConsumer<CounterController>(
+              // Locates the `CounterController` dependency by its identifier
+              id: id,
+              // Listens to the `count` state of the `CounterController` dependency
+              listenStates: (counterController) => [counterController.count],
+              // Passes the `child` widget to the `builder` function
+              child: Text("Count[$id]: "),
+              // Rebuilds whenever there are changes in the `count` state of the `CounterController` dependency
+              builder: (context, counterController, child) {
+                return Row(
+                  children: [
+                    child!,
+                    Text("${counterController.count}"),
+                  ],
+                );
+              },
+            ),
+            SizedBox(width: 8),
+            ElevatedButton(
+              onPressed: counterController.increment,
+              child: Icon(Icons.add),
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
+```
+
+<Code title="main.dart" code={counterMainCode} lang="dart" collapse={["1-100"]} />
+
+In the example above, the <HT>`ReactterConsumer`</HT> widget uses the `child` property to pass the <HT>`Text`</HT> widget to the <HM>`builder`</HM> function.
