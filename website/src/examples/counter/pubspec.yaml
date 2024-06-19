@@ -9,3 +9,6 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_reactter: ^7.1.0
+
+flutter:
+  uses-material-design: true
