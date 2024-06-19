@@ -1,0 +1,24 @@
+---
+import { Icon } from "astro-icon/components";
+
+interface Props {
+  path?: string;
+}
+
+const { path } = Astro.props;
+---
+
+<zapp-button>
+  <a
+    href={`https://zapp.run/github/2devs-team/reactter/tree/master/website/src/${path}`}
+    target="_blank"
+    rel="noopener"
+  >
+    <div
+      class="p-2 bg-black-500 rounded-tr-lg border bg-slate-900 border-gray-500 hover:opacity-100 opacity-50 cursor-pointer"
+      title="Trying it on Zapp"
+    >
+      <Icon name="zapp" size={20} />
+    </div>
+  </a>
+</zapp-button>

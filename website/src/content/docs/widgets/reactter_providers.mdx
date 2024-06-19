@@ -6,7 +6,7 @@ sidebar:
 ---
 import { HM, HT } from '@/components/Highlight';
 import { Code } from "@astrojs/starlight/components";
-import counterControllerCode from '@/examples/counter/counter_controller.dart.code?raw';
+import counterControllerCode from '@/examples/counter/lib/counter_controller.dart?raw';
 
 The <HT>`ReactterProviders`</HT> widget is a container for multiple providers that allows you to provide multiple dependencies to the widget tree. 
 
@@ -21,7 +21,10 @@ ReactterProviders(
   List<ReactterProvider> providers, {
   Key? key,
   Widget? child,
-  Widget builder(BuildContext context, Widget child)?,
+  Widget builder(
+    BuildContext context,
+    Widget child,
+  )?,
 })
 ```
 
@@ -55,7 +58,7 @@ class CounterView extends StatelessWidget {
       body: Center(
         child: Column(
           children: [
-            Counter(),
+            const Counter(),
             FutureBuilder(
               future: Future.delayed(Duration(seconds: 1)),
               builder: (context, snapshot) {
@@ -63,7 +66,7 @@ class CounterView extends StatelessWidget {
                   return const CircularProgressIndicator();
                 }
 
-                return Counter(id: "counterLazy");
+                return const Counter(id: "counterLazy");
               },
             ),
           ],
@@ -98,9 +101,9 @@ class Counter extends StatelessWidget {
           children: [
             ElevatedButton(
               onPressed: counterController.decrement,
-              child: Icon(Icons.remove),
+              child: const Icon(Icons.remove),
             ),
-            SizedBox(width: 8),
+            const SizedBox(width: 8),
             ReactterConsumer<CounterController>(
               id: id,
               // Observes the `count` property of the `counterController` instance
@@ -110,10 +113,10 @@ class Counter extends StatelessWidget {
                 return Text("${counterController.count}");
               },
             ),
-            SizedBox(width: 8),
+            const SizedBox(width: 8),
             ElevatedButton(
               onPressed: counterController.increment,
-              child: Icon(Icons.add),
+              child: const Icon(Icons.add),
             ),
           ],
         ),
@@ -126,7 +129,7 @@ class Counter extends StatelessWidget {
 ```dart title="main.dart" collapse={12-22} "ReactterProviders" "ReactterProvider" "ReactterProvider.lazy"
 void main() {
   runApp(
-    const ReactterProviders(
+    ReactterProviders(
       [
         ReactterProvider(() => CounterController()),
         ReactterProvider.lazy(() => CounterController(), id: 'counterLazy'),
@@ -142,7 +145,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      home: const CounterView(),
+      home: CounterView(),
     );
   }
 }

@@ -6,10 +6,10 @@ sidebar:
 ---
 import { HM, HN, HS, HT } from '@/components/Highlight';
 import { Code } from "@astrojs/starlight/components";
-import counterControllerCode from '@/examples/counter/counter_controller.dart.code?raw';
-import counterMainCode from '@/examples/counter/main.dart.code?raw';
+import counterControllerCode from '@/examples/counter/lib/counter_controller.dart?raw';
+import counterMainCode from '@/examples/counter/lib/main.dart?raw';
 
-The <HT>`ReactterConsumer`</HT> widget obtains the dependency provided by the closest <HT>`ReactterProvider`</HT> widget and rebuilds itself whenever there are changes in the dependency or any defined states.
+The <HT>`ReactterConsumer`</HT> widget obtains the dependency provided by the closest <HT>[`ReactterProvider`](/reactter/widgets/reactter_provider)</HT> widget and rebuilds itself whenever there are changes in the dependency or any defined states.
 
 :::note
 The <HT>`ReactterConsumer`</HT> widget is similar to the <HM>[`BuildContext.use`](/reactter/extensions/builder_context_use)</HM> and <HM>[`BuildContext.watch`](/reactter/extensions/builder_context_watch)</HM> functions, but it is designed to be used within the widget tree.
@@ -21,10 +21,16 @@ The <HT>`ReactterConsumer`</HT> widget is similar to the <HM>[`BuildContext.use`
 ReactterConsumer<T>({
   Key? key,
   String? id,
-  bool listenAll = false,
-  List<ReactterState> listenStates(T instance),
   Widget? child,
-  required Widget builder(BuildContext context, T instance, Widget? child),
+  bool listenAll = false,
+  List<ReactterState> listenStates(
+    T instance,
+  ),
+  required Widget builder(
+    BuildContext context,
+    T instance,
+    Widget? child,
+  ),
 })
 ```
 
@@ -33,14 +39,14 @@ ReactterConsumer<T>({
 - `key`: An optional <HT>`Key`</HT> to use for identifying the widget.
 - `id`: An optional identifier for the dependency.
   If omitted, the dependency will be located by its type(<HT>`T`</HT>).
+- `child`: An optional <HT>`Widget`</HT> that is independent of the <HT>`ReactterConsumer`</HT>.
+  If defined, it is passed to the <HM>`builder`</HM> function if it is defined.
 - `listenAll`: A boolean that determines whether to listen to all states provided by the <HT>`T`</HT> dependency.
   If set to <HN>`true`</HN>, the <HM>`listenStates`</HM> function is ignored.
   The default value is <HN>`false`</HN>.
 - <HM>`listenStates`</HM>: A function that returns a list of state(<HT>`ReactterState`</HT>) to listen to.
-  It takes the instance of the <HT>`T`</HT> dependency as an argument.
+  It takes the instance of the <HT>`T`</HT> dependency as an åargument.
   If omitted, the `listenAll` property is checked.
-- `child`: An optional <HT>`Widget`</HT> that is independent of the <HT>`ReactterConsumer`</HT>.
-  If defined, it is passed to the <HM>`builder`</HM> function if it is defined.
 - <HM>`builder`</HM>: A function that builds a widget depending on the <HT>`ReactterConsumer`</HT>.
   It receives the following arguments:
   - `context`: The <HT>`BuildContext`</HT> of the widget. A handle to the location of <HT>`ReactterConsumer`</HT> in the widget tree.
@@ -78,7 +84,9 @@ class CounterView extends StatelessWidget {
         appBar: AppBar(
           title: const Text("Counter"),
         ),
-        body: Center(child: Counter()),
+        body: const Center(
+          child: Counter(),
+        ),
       ),
     );
   }
@@ -96,14 +104,14 @@ class Counter extends StatelessWidget {
           children: [
             ElevatedButton(
               onPressed: counterController.decrement,
-              child: Icon(Icons.remove),
+              child: const Icon(Icons.remove),
             ),
-            SizedBox(width: 8),
+            const SizedBox(width: 8),
             Text("${counterController.count}"),
-            SizedBox(width: 8),
+            const SizedBox(width: 8),
             ElevatedButton(
               onPressed: counterController.increment,
-              child: Icon(Icons.add),
+              child: const Icon(Icons.add),
             ),
           ],
         );
@@ -137,7 +145,7 @@ Here's an example of how to use it:
 
 <Code title="counter_controller.dart" code={counterControllerCode} lang="dart" mark={["count", "Signal"]} collapse={["1-100"]} />
 
-```dart title="counter_view.dart" collapse={1-23} {30} "ReactterProvider" "ReactterConsumer" "CounterController" "counterController" "counterController.increment" "counterController.decrement" "counterController.count"
+```dart title="counter_view.dart" collapse={1-25} {32} "ReactterProvider" "ReactterConsumer" "CounterController" "counterController" "counterController.increment" "counterController.decrement" "counterController.count"
 import 'package:flutter/material.dart';
 import 'package:flutter_reactter/flutter_reactter.dart';
 import 'counter_controller.dart';
@@ -155,7 +163,9 @@ class CounterView extends StatelessWidget {
         appBar: AppBar(
           title: const Text("Counter"),
         ),
-        body: Center(child: Counter()),
+        body: const Center(
+          child: Counter(),
+        ),
       ),
     );
   }
@@ -175,14 +185,14 @@ class Counter extends StatelessWidget {
           children: [
             ElevatedButton(
               onPressed: counterController.decrement,
-              child: Icon(Icons.remove),
+              child: const Icon(Icons.remove),
             ),
-            SizedBox(width: 8),
+            const SizedBox(width: 8),
             Text("${counterController.count}"),
-            SizedBox(width: 8),
+            const SizedBox(width: 8),
             ElevatedButton(
               onPressed: counterController.increment,
-              child: Icon(Icons.add),
+              child: const Icon(Icons.add),
             ),
           ],
         );
@@ -212,9 +222,9 @@ class Counter extends StatelessWidget {
           children: [
             ElevatedButton(
               onPressed: counterController.decrement,
-              child: Icon(Icons.remove),
+              child: const Icon(Icons.remove),
             ),
-            SizedBox(width: 8),
+            const SizedBox(width: 8),
             Text("${counterController.count}"),
             ReactterConsumer<CounterController>(
               // Listens to all states provided by the `CounterController` dependency
@@ -224,10 +234,10 @@ class Counter extends StatelessWidget {
                 return Text("${counterController.count}");
               },
             ),
-            SizedBox(width: 8),
+            const SizedBox(width: 8),
             ElevatedButton(
               onPressed: counterController.increment,
-              child: Icon(Icons.add),
+              child: const Icon(Icons.add),
             ),
           ],
         );
@@ -245,7 +255,7 @@ Here's an example of how to use it:
 
 <Code title="counter_controller.dart" code={counterControllerCode} lang="dart" mark={["count", "Signal"]} collapse={["1-100"]} />
 
-```dart title="counter_view.dart" collapse={1-22} {40} "ReactterProvider" "ReactterConsumer" "CounterController" "counterController" "counterController.increment" "counterController.decrement" "counterController.count"
+```dart title="counter_view.dart" collapse={1-24} {42} "ReactterProvider" "ReactterConsumer" "CounterController" "counterController" "counterController.increment" "counterController.decrement" "counterController.count"
 import 'package:flutter/material.dart';
 import 'package:flutter_reactter/flutter_reactter.dart';
 import 'counter_controller.dart';
@@ -262,7 +272,9 @@ class CounterView extends StatelessWidget {
         appBar: AppBar(
           title: const Text("Counter"),
         ),
-        body: Center(child: Counter()),
+        body: const Center(
+          child: const Counter(),
+        ),
       ),
     );
   }
@@ -280,9 +292,9 @@ class Counter extends StatelessWidget {
           children: [
             ElevatedButton(
               onPressed: counterController.decrement,
-              child: Icon(Icons.remove),
+              child: const Icon(Icons.remove),
             ),
-            SizedBox(width: 8),
+            const SizedBox(width: 8),
             ReactterConsumer<CounterController>(
               // Listens to the `count` state of the `CounterController` dependency
               listenStates: (counterController) => [counterController.count],
@@ -291,10 +303,10 @@ class Counter extends StatelessWidget {
                 return Text("${counterController.count}");
               },
             ),
-            SizedBox(width: 8),
+            const SizedBox(width: 8),
             ElevatedButton(
               onPressed: counterController.increment,
-              child: Icon(Icons.add),
+              child: const Icon(Icons.add),
             ),
           ],
         );
@@ -337,11 +349,11 @@ class CounterView extends StatelessWidget {
         appBar: AppBar(
           title: const Text("Counter"),
         ),
-        body: Center(
+        body: const Center(
           child: Column(
             children: [
-              Counter(id: "counter1"),
-              Counter(id: "counter2"),
+              const Counter(id: "counter1"),
+              const Counter(id: "counter2"),
             ],
           ),
         ),
@@ -365,9 +377,9 @@ class Counter extends StatelessWidget {
           children: [
             ElevatedButton(
               onPressed: counterController.decrement,
-              child: Icon(Icons.remove),
+              child: const Icon(Icons.remove),
             ),
-            SizedBox(width: 8),
+            const SizedBox(width: 8),
             ReactterConsumer<CounterController>(
               // Locates the `CounterController` dependency by its identifier
               id: id,
@@ -378,10 +390,10 @@ class Counter extends StatelessWidget {
                 return Text("${counterController.count}");
               },
             ),
-            SizedBox(width: 8),
+            const SizedBox(width: 8),
             ElevatedButton(
               onPressed: counterController.increment,
-              child: Icon(Icons.add),
+              child: const Icon(Icons.add),
             ),
           ],
         );
@@ -412,7 +424,7 @@ Here's an example of how to use it:
 
 <Code title="counter_controller.dart" code={counterControllerCode} lang="dart" mark={["count", "Signal"]} collapse={["1-100"]} />
 
-```dart title="counter_view.dart" collapse={1-23} {48,53} "ReactterProvider" "ReactterConsumer" "CounterController" "counterController" "counterController.increment" "counterController.decrement" "counterController.count"
+```dart title="counter_view.dart" collapse={1-25} {50,55} "ReactterProvider" "ReactterConsumer" "CounterController" "counterController" "counterController.increment" "counterController.decrement" "counterController.count"
 import 'package:flutter/material.dart';
 import 'package:flutter_reactter/flutter_reactter.dart';
 import 'counter_controller.dart';
@@ -430,7 +442,9 @@ class CounterView extends StatelessWidget {
         appBar: AppBar(
           title: const Text("Counter"),
         ),
-        body: Center(child: Counter()),
+        body: const Center(
+          child: Counter(),
+        ),
       ),
     );
   }
@@ -451,9 +465,9 @@ class Counter extends StatelessWidget {
           children: [
             ElevatedButton(
               onPressed: counterController.decrement,
-              child: Icon(Icons.remove),
+              child: const Icon(Icons.remove),
             ),
-            SizedBox(width: 8),
+            const SizedBox(width: 8),
             ReactterConsumer<CounterController>(
               // Locates the `CounterController` dependency by its identifier
               id: id,
@@ -471,10 +485,10 @@ class Counter extends StatelessWidget {
                 );
               },
             ),
-            SizedBox(width: 8),
+            const SizedBox(width: 8),
             ElevatedButton(
               onPressed: counterController.increment,
-              child: Icon(Icons.add),
+              child: const Icon(Icons.add),
             ),
           ],
         );
