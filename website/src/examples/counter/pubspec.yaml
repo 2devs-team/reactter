@@ -1,0 +1,11 @@
+name: Counter
+description: A simple counter example
+version: 0.1.0
+
+environment:
+  sdk: ">=2.19.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_reactter: ^7.1.0
