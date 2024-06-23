@@ -4,12 +4,28 @@ description: The lifecycle of a component in React.
 sidebar:
   order: 5
 ---
-import { HE, HM, HT } from '@/components/Highlight';
+import { HE, HM, HT, HS } from '@/components/Highlight';
 import { Code } from "@astrojs/starlight/components";
-import counterViewCode from '@/examples/counter/lib/counter_view.dart?raw';
-import counterMainCode from '@/examples/counter/lib/main.dart?raw';
+import { Tabs, TabItem } from "@/components/Tabs";
+import ZappButton from "@/components/ZappButton.astro";
+import { marks } from '@/examples/marks.ts'
 import TipLifecycleExample from '@/content/docs/shareds/tip_lifecycle_example.mdx';
 import { counterViewMark } from '@/examples/counter/marks.ts';
+
+import counterControllerEventHandlerCode from '@/examples/lifecycle_event_handler/lib/counter_controller.dart?raw';
+import counterEventHandlerCode from '@/examples/lifecycle_event_handler/lib/counter.dart?raw';
+import counterViewEventHandlerCode from '@/examples/lifecycle_event_handler/lib/counter_view.dart?raw';
+import counterMainEventHandlerCode from '@/examples/lifecycle_event_handler/lib/main.dart?raw';
+
+import counterControllerLifecycleObserverCode from '@/examples/lifecycle_observer/lib/counter_controller.dart?raw';
+import counterLifecycleObserverCode from '@/examples/lifecycle_observer/lib/counter.dart?raw';
+import counterViewLifecycleObserverCode from '@/examples/lifecycle_observer/lib/counter_view.dart?raw';
+import counterMainLifecycleObserverCode from '@/examples/lifecycle_observer/lib/main.dart?raw';
+
+import counterControllerLifecycleUseEffectCode from '@/examples/lifecycle_use_effect/lib/counter_controller.dart?raw';
+import counterLifecycleUseEffectCode from '@/examples/lifecycle_use_effect/lib/counter.dart?raw';
+import counterViewLifecycleUseEffectCode from '@/examples/lifecycle_use_effect/lib/counter_view.dart?raw';
+import counterMainLifecycleUseEffectCode from '@/examples/lifecycle_use_effect/lib/main.dart?raw';
 
 In Reactter, both the states and the dependency (managed by the [dependency injection](/reactter/core_concepts/dependency_injection)) contain different stages,
 also known as <HT><a href="https://pub.dev/documentation/reactter/latest/reactter/Lifecycle.html" target="_blank">`Lifecycle`</a></HT>.
@@ -34,93 +50,29 @@ You can listen to the lifecycle events of a dependency by using <HM>`Reactter.on
 
 <TipLifecycleExample />
 
-```dart title="counter_controller.dart" "Reactter.on" "Lifecycle.willMount" "Lifecycle.didMount" "Lifecycle.willUpdate" "Lifecycle.didUpdate" "Lifecycle.willUnmount" "Lifecycle.didUnmount"
-import 'package:reactter/reactter.dart';
+<div class="code-tabs">
+  <ZappButton path="examples/lifecycle_event_handler"/>
 
-class CounterController extends Reactter {
-  final count = Signal(0);
+  <Tabs>
+    <TabItem>
+      <HM single slot="label">counter_view.dart</HM>
+      <Code code={counterViewEventHandlerCode} lang="dart" collapse={["34-60"]} mark={[...marks, {range: "11-15"}, {range: "17-21"}, {range: "23-27"}, {range: "29-33"}]} />
+    </TabItem>
 
-  counter() {
-    Reactter.on(this, Lifecycle.willMount, (_, __) {
-      print('Counter will mount');
-    });
+    <TabItem>
+      <HM single slot="label">counter_controller.dart</HM>
+      <Code code={counterControllerEventHandlerCode} lang="dart" mark={[...marks, {range: "7-9"}, {range: "11-13"}, {range: "15-17"}, {range: "19-21"}, {range: "23-25"}, {range: "27-29"}]}/>
+    </TabItem>
 
-    Reactter.on(this, Lifecycle.didMount, (_, __) {
-      print('Counter mounted');
-    });
+    <TabItem label="counter.dart">
+      <Code code={counterEventHandlerCode} lang="dart" mark={marks} />
+    </TabItem>
 
-    Reactter.on(this, Lifecycle.willUpdate, (_, state) {
-      print('Counter will update by $state');
-    });
-
-    Reactter.on(this, Lifecycle.didUpdate, (_, state) {
-      print('Counter did update by $state');
-    });
-
-    Reactter.on(this, Lifecycle.willUnmount, (_, __) {
-      print('Counter will unmount');
-    });
-
-    Reactter.on(this, Lifecycle.didUnmount, (_, __) {
-      print('Counter did unmount');
-    });
-  }
-
-  void increment() {
-    count.value++;
-  }
-
-  void decrement() {
-    count.value--;
-  }
-}
-```
-
-<Code title="counter_view.dart" code={counterViewCode} lang="dart" mark={counterViewMark} collapse={["1-100"]} />
-
-```dart title="main.dart" "Reactter.on" "ReactterDependency" "Lifecycle.unregistered" "Lifecycle.registered" "Lifecycle.initialized" "Lifecycle.destroyed" /(Counter)\\>/
-import 'package:flutter/material.dart';
-import 'package:reactter/reactter.dart';
-import 'counter_view.dart';
-import 'counter.dart';
-
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    Reactter.on(
-      ReactterDependency<CounterController>(),
-      Lifecycle.unregistered,
-      (_, __) => print('Counter unregistered'),
-    );
-
-    Reactter.on(
-      ReactterDependency<CounterController>(),
-      Lifecycle.registered,
-      (_, __) => print('Counter registered'),
-    );
-
-    Reactter.on(
-      ReactterDependency<CounterController>(),
-      Lifecycle.initialized,
-      (_, __) => print('Counter initialized'),
-    );
-
-    Reactter.one(
-      ReactterDependency<CounterController>(),
-      Lifecycle.destroyed,
-      (_, __) => print('Counter destroyed'),
-    );
-
-    return MaterialApp(
-      home: CounterControllerApp(),
-    );
-  }
-}
-```
+    <TabItem label="main.dart">
+      <Code code={counterMainEventHandlerCode} lang="dart" mark={marks} />
+    </TabItem>
+  </Tabs>
+</div>
 
 :::note
   The <HT>`ReactterDependency`</HT> is a generic class that takes the type of the dependency and optionally pass an `id`.
@@ -135,86 +87,54 @@ and use its methods to observe the lifecycle events. e.g:
 
 <TipLifecycleExample />
 
-```dart title="counter_controller.dart" "LifecycleObserver" "onInitialized" "onDidMount" "onWillMount" "onWillUpdate" "onDidUpdate" "onWillUnmount" "onDidUnmount"
-import 'package:reactter/reactter.dart';
+<div class="code-tabs">
+  <ZappButton path="examples/lifecycle_observer"/>
 
-class CounterController extends LifecycleObserver  {
-  final count = Signal(0);
+  <Tabs>
+    <TabItem>
+      <HM single slot="label">counter_controller.dart</HM>
+      <Code code={counterControllerLifecycleObserverCode} lang="dart" mark={[...marks, {range: "6-8"}, {range: "10-12"}, {range: "14-16"}, {range: "18-20"}, {range: "22-24"}, {range: "26-28"}, {range: "30-32"}]}/>
+    </TabItem>
 
-  void onInitialized() {
-    print('Counter initialized');
-  }
+    <TabItem label="counter_view.dart">
+      <Code code={counterViewLifecycleObserverCode} lang="dart" mark={marks} />
+    </TabItem>
 
-  void onDidMount() {
-    print('Counter mounted');
-  }
+    <TabItem label="counter.dart">
+      <Code code={counterLifecycleObserverCode} lang="dart" mark={marks} />
+    </TabItem>
 
-  void onWillMount() {
-    print('Counter will mount');
-  }
-
-  void onWillUpdate(ReactterState state) {
-    print('Counter will update by $state');
-  }
-
-  void onDidUpdate(ReactterState state) {
-    print('Counter did update by $state');
-  }
-
-  void onWillUnmount() {
-    print('Counter will unmount');
-  }
-
-  void onDidUnmount() {
-    print('Counter did unmount');
-  }
-
-  void increment() {
-    count.value++;
-  }
-
-  void decrement() {
-    count.value--;
-  }
-}
-```
-
-<Code title="counter_view.dart" code={counterViewCode} lang="dart" mark={counterViewMark} collapse={["1-100"]} />
-
-<Code title="main.dart" code={counterMainCode} lang="dart" collapse={["1-100"]} />
+    <TabItem label="main.dart">
+      <Code code={counterMainLifecycleObserverCode} lang="dart" mark={marks} />
+    </TabItem>
+  </Tabs>
+</div>
 
 ## Using UseEffect
 
-The <HT>`UseEffect`</HT> hook can be used to listen to the lifecycle events of a dependency. e.g:
+The <HT>[`UseEffect`](/reactter/hooks/use_effect)</HT> hook can be used to listen to the lifecycle events of a dependency. e.g:
 
 <TipLifecycleExample />
 
-```dart title="counter.dart" "UseEffect" /(count)(?!\u0060)/
-import 'package:reactter/reactter.dart';
+<div class="code-tabs">
+  <ZappButton path="examples/lifecycle_use_effect"/>
 
-class Counter extends Reactter {
-  final count = Signal(0);
+  <Tabs>
+    <TabItem>
+      <HM single slot="label">counter_controller.dart</HM>
+      <Code code={counterControllerLifecycleUseEffectCode} lang="dart" mark={[...marks, {range: "7-13"}, {range: "15-19"}]}/>
+    </TabItem>
 
-  const Counter() {
-    UseEffect(() {
-      print('Counter mounted(`Lifecycle.didMount`)');
+    <TabItem label="counter_view.dart">
+      <Code code={counterViewLifecycleUseEffectCode} lang="dart" mark={marks} />
+    </TabItem>
 
-      return () {
-        print('Counter will unmount(`Lifecycle.willUnmount`)');
-      };
-    }, []);
-  }
+    <TabItem label="counter.dart">
+      <Code code={counterLifecycleUseEffectCode} lang="dart" mark={marks} />
+    </TabItem>
 
-  void increment() {
-    count.value++;
-  }
-
-  void decrement() {
-    count.value--;
-  }
-}
-```
-
-<Code title="counter_view.dart" code={counterViewCode} lang="dart" mark={counterViewMark} collapse={["1-100"]} />
-
-<Code title="main.dart" code={counterMainCode} lang="dart" collapse={["1-100"]} />
+    <TabItem label="main.dart">
+      <Code code={counterMainLifecycleUseEffectCode} lang="dart" mark={marks} />
+    </TabItem>
+  </Tabs>
+</div>
