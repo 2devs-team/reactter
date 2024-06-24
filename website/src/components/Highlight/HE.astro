@@ -2,6 +2,10 @@
 /// Highlight for enum code
 import { parseHTML } from "linkedom";
 
+interface Props {
+  single?: boolean;
+}
+
 let html = await Astro.slots.render("default");
 const { document } = parseHTML(`<div id="highlight-wrapper">${html}</div>`);
 
@@ -12,7 +16,7 @@ const $innerHTML = $scopeElement?.innerHTML;
 const $htmlSplit = $innerHTML.split(".");
 const $htmlBuiltin = $htmlSplit
   .map((item, index) =>
-    index === 0 && $htmlSplit.length > 1
+    !Astro.props.single && index === 0 && $htmlSplit.length > 1
       ? `<span class='highlight text-[#FFCB6B]'>${item}</span>`
       : `<span class="highlight text-[#BCC3CA]">${item}</span>`
   )

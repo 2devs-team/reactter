@@ -3,6 +3,10 @@
 
 import { parseHTML } from "linkedom";
 
+interface Props {
+  single?: boolean;
+}
+
 let html = await Astro.slots.render("default");
 const { document } = parseHTML(`<div id="highlight-wrapper">${html}</div>`);
 
@@ -13,7 +17,7 @@ const $innerHTML = $scopeElement?.innerHTML;
 const $htmlSplit = $innerHTML.split(".");
 const $htmlBuiltin = $htmlSplit
   .map((item, index) =>
-    index === 0
+    !Astro.props.single && index === 0
       ? `<span class='highlight text-[#FFCB6B]'>${item}</span>`
       : `<span class="highlight text-[#82AAFF]">${item}</span>`
   )
