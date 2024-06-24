@@ -5,7 +5,16 @@ sidebar:
   order: 6
 ---
 import { HE, HM, HN, HT } from '@/components/Highlight';
+import { Code } from "@astrojs/starlight/components";
+import { Tabs, TabItem } from "@/components/Tabs";
+import ZappButton from "@/components/ZappButton.astro";
 import StateMethodsLite from '@/content/docs/shareds/state_methods_lite.mdx';
+import { marks } from '@/examples/marks.ts';
+
+import MainCode from '@/examples/custom_hook/lib/main.dart?raw';
+import MyCustomFormCode from '@/examples/custom_hook/lib/my_custom_form.dart?raw';
+import MyControllerCode from '@/examples/custom_hook/lib/my_controller.dart?raw';
+import UseTextInputCode from '@/examples/custom_hook/lib/use_text_input.dart?raw';
 
 Hooks are classes with the ability to use states and manage side effects. They are a fundamental concept in Reactter and are used to encapsulate logic that can be reused across the application.
 
@@ -27,7 +36,6 @@ Hooks in Reactter are essentially stateful entities because <HT>`ReactterHook`</
 To manage these aspects, Hooks provide the following:
 <StateMethodsLite/>
 
-
 ## Custom hook
 
 Reactter provides a way to create _**Custom Hooks**_ to encapsulate logic that can be reused across the application.
@@ -38,31 +46,17 @@ There are several advantages to using _**Custom Hooks**_:
 - **Clean Code**: extracting part of code into a hook will provide a cleaner codebase.
 - **Maintainability**: easier to maintain. if you need to change the logic of the hook, you only need to change it once.
 
-
 ### Creating a custom hook
 
 To create a _**Custom hook**_, you need to create a class that extends <HT>`ReactterHook`</HT> and follow the naming convention with the <HT>`Use`</HT> prefix.
 
-Here's an example of a _**Custom Hook**_ that increments and decrements a value:
+Here's an example of a _**Custom Hook**_ that manages the state of a text input:
 
-```dart title="use_count.dart" "ReactterHook" "ReactterHook.$register" {"* This line is REQUIRED!!":4-5} "update" "_count"
-import 'package:reactter/reactter.dart';
+<Code code={UseTextInputCode} lang="dart" mark={[...marks, {range: "5-6", label: "*      This line is REQUIRED!        "}]} />
 
-class UseCount extends ReactterHook {
+As shown in the example above, we can utilize other hooks such as <HT>[`UseEffect`](/reactter/hooks/use_effect)</HT> to monitor changes in the text input's controller and ensure it is disposed when the hook is destroyed.
 
-  final $ = ReactterHook.$register;
-
-  int _count = 0;
-  int get value => _count;
-
-  UseCount(int initial) : _count = initial;
-
-  void increment() => update(() => _count += 1);
-  void decrement() => update(() => _count -= 1);
-}
-```
-
-In above example, we have used the <HM>`update`</HM> method to update the value of the `_count` variable.
+The <HM>`update`</HM> method is used to set the internal `_value` to the current text in the controller, which keeps the state synchronized with the input.
 This methods is a part of the <HT>`ReactterHook`</HT> class that allows you to update the state of the hook.
 
 :::note
@@ -86,27 +80,31 @@ To avoid this, it's recommended to place this line as the first line in the clas
 
 You can then call that _**Custom Hook**_ from anywhere in the code and get access to its shared logic:
 
-```dart title="my_controller.dart" "Reactter.on" "Lifecycle.didUpdate" "UseCount" /count(?! )(?!.dart)/ "count.value" "count.increment"
-import 'dart:async';
-import 'package:reactter/reactter.dart';
-import 'use_count.dart';
+<div class="code-tabs">
+  <ZappButton path="examples/custom_hook"/>
 
-class MyController {
-  final count = UseCount(0);
+  <Tabs>
+    <TabItem>
+      <HM single slot="label">my_controller.dart</HM>
+      <Code code={MyControllerCode} lang="dart" mark={[...marks, {range: "5-6"}, 11, 12]}/>
+    </TabItem>
 
-  MyController() {
-    Timer.periodic(Duration(seconds: 1), (_) => count.increment());
+    <TabItem>
+      <HM single slot="label">my_custom_form.dart</HM>
+      <Code code={MyCustomFormCode} lang="dart" mark={[...marks, 43, 49]}/>
+    </TabItem>
 
-    // Print count value every second
-    Reactter.on(
-      count,
-      Lifecycle.didUpdate,
-      (_, __) => print("Count: ${count.value}",
-    );
-  }
-}
-```
+    <TabItem label="use_text_input.dart">
+      <Code code={UseTextInputCode} lang="dart" mark={[...marks]}/>
+    </TabItem>
 
-In this example, the <HT>`MyController`</HT> class uses the <HT>`UseCount`</HT> custom hook to manage the state of the `count` variable.
-The `count` variable is initialized with an initial value of <HN>`0`</HN> and is incremented by <HN>`1`</HN> every second using a timer.
-The <HE>`Lifecycle.didUpdate`</HE> event of the `count` state is subscribed to, and the current value of the `count` state is printed every second.
+    <TabItem label="main.dart">
+      <Code code={MainCode} lang="dart" mark={marks} />
+    </TabItem>
+  </Tabs>
+</div>
+
+In the example above, the form captures first and last name inputs, combines them into a full name, and displays the result.
+<HT>`MyController`</HT> uses <HT>`UseTextInput`</HT> hook for capturing the first and last name.
+The `fullName` state is defined using <HT>[`UseCompute`](/reactter/hooks/use_compute)</HT> to compute the full name based on the values of `firstNameInput` and `lastNameInput`. This ensures the full name is automatically updated whenever either input changes.
+

@@ -23,6 +23,7 @@ export const marks = [
   "Reactter.emit",
   "Reactter.off",
   "Reactter.offAll",
+  "ReactterHook",
   "ReactterState",
   "ReactterDependency",
   "ReactterDependencyMode",
