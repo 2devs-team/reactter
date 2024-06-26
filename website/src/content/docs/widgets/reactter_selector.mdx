@@ -5,6 +5,133 @@ sidebar:
   order: 5
 ---
 
-:::tip[TODO]
-This page is still in progress.
-:::
+import { HM, HT } from '@/components/Highlight';
+import { Code } from "@astrojs/starlight/components";
+import counterControllerCode from '@/examples/counter/lib/counter_controller.dart?raw';
+
+The <HT>`ReactterSelector`</HT> widget is an similarly to <HT>[`ReactterConsumer`](/reactter/widgets/reactter_consumer)</HT>. It obtains the dependency provided by the closest <HT>[`ReactterProvider`](/reactter/widgets/reactter_provider)</HT> widget and allows you to select a specific value from the state to rebuild the widget tree when the value changes.
+
+
+## Syntax
+
+```dart showLineNumbers=false
+ReactterSelector<T, V>({
+  Key? key,
+  String? id,
+  Widget? child,
+  required V selector(
+    T instance,
+    ReactterState select(ReactterState state),
+  ),
+  required Widget builder(
+    BuildContext context,
+    T instance,
+    V value,
+    Widget? child,
+  ),
+})
+```
+
+## Properties
+
+- `key`: An optional <HT>`Key`</HT> to use for identifying the widget.
+- `id`: An optional <HT>`String`</HT> to identify the selector.
+- `child`: An optional <HT>`Widget`</HT> which is independent of the <HT>`ReactterSelector`</HT>.
+  If defined, it is passed to the <HM>`builder`</HM> function.
+- <HM>`selector`</HM>: A function that computes a value <HT>`V`</HT> from one or more states and listens for changes to rebuild the widget tree when the value changes.
+  It receives the following arguments:
+  - `instance`: The instance of <HT>`T`</HT> dependency provided by the closest <HT>`ReactterProvider`</HT> widget.
+  - `select`: A function that allows you to wrap the state to be listened for changes and returns it.
+- <HM>`builder`</HM>: A function that builds a widget depending on the <HT>`ReactterSelector`</HT>.
+It receives the following arguments:
+  - `context`: The <HT>`BuildContext`</HT> of the widget. A handle to the location of <HT>`ReactterSelector`</HT> in the widget tree.
+  - `instance`: The instance of <HT>`T`</HT> dependency provided by the closest <HT>`ReactterProvider`</HT> widget.
+  - `value`: The selected value computed <HT>`V`</HT> by the <HM>`selector`</HM> function.
+  - `child`: The `child` widget passed to the <HT>`ReactterSelector`</HT> widget.
+
+
+## Usage
+
+### Basic Usage
+
+In the following example, we have a simple counter application that uses the <HT>`ReactterSelector`</HT> widget to select a specific value from the state to rebuild the widget tree when the value changes.
+
+<Code title="counter_controller.dart" code={counterControllerCode} lang="dart" mark={["count", "Signal"]} collapse={["1-100"]}  />
+
+```dart title="counter_view.dart" collapse={1-24, 29-32, 35-58} "ReactterSelector" "context.use" "ReactterConsumer" "ReactterProvider" "CounterController"
+import 'package:flutter/material.dart';
+import 'package:flutter_reactter/flutter_reactter.dart';
+import 'counter_controller.dart';
+
+class CounterView extends StatelessWidget {
+  const CounterView({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    // Provides the `CounterController` dependency to the widget tree
+    return ReactterProvider<CounterController>(
+      () => CounterController(),
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text("Counter"),
+        ),
+        body: const Center(
+          child: Counter(),
+        ),
+      ),
+    );
+  }
+}
+
+class Counter extends StatelessWidget {
+  const Counter({Key? key}) : super(key: key);
+
+  Widget build(BuildContext context) {
+    // Obtains the `CounterController` dependency
+    // provided by the closest `ReactterProvider` widget
+    final counterController = context.use<CounterController>();
+
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ElevatedButton(
+              onPressed: counterController.decrement,
+              child: const Icon(Icons.remove),
+            ),
+            const SizedBox(width: 8),
+            // Listens the `CounterController`
+            // and rebuilds the widget tree when it changes
+            ReactterConsumer<CounterController>(
+              listenAll: true,
+              builder: (context, counterController, child) {
+                return Text("${counterController.count}");
+              },
+            ),
+            const SizedBox(width: 8),
+            ElevatedButton(
+              onPressed: counterController.increment,
+              child: const Icon(Icons.add),
+            ),
+          ],
+        ),
+        const SizedBox(height: 8),
+        // Selects the `count` state from the `CounterController`,
+        // calculates if the `count` is divided by 3
+        // and rebuilds the widget tree when the value(`isDividedBy3`) changes
+        ReactterSelector<CounterController, bool>(
+          selector: (counterController, select) {
+            return select(counterController.count).value % 3 == 0;
+          },
+          builder: (context, counterController, isDividedBy3, child) {
+            return Text(
+              isDividedBy3 ? "Divided by 3" : "Not divided by 3",
+            );
+          },
+        ),
+      ],
+    );
+  }
+}
+```
