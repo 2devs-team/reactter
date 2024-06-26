@@ -5,9 +5,10 @@ sidebar:
   order: 5
 ---
 import { HE, HM, HT, HS } from '@/components/Highlight';
-import { Code } from "@astrojs/starlight/components";
+import CodeTabs from '@/components/CodeTabs.astro';
 import { Tabs, TabItem } from "@/components/Tabs";
 import ZappButton from "@/components/ZappButton.astro";
+import { Code } from "@astrojs/starlight/components";
 import { marks } from '@/examples/marks.ts'
 
 import TipLifecycleExample from '@/content/docs/shareds/tip_lifecycle_example.mdx';
@@ -50,7 +51,7 @@ You can listen to the lifecycle events of a dependency by using <HM>`Reactter.on
 
 <TipLifecycleExample />
 
-<div class="code-tabs">
+<CodeTabs>
   <ZappButton path="examples/lifecycle_event_handler"/>
 
   <Tabs>
@@ -72,7 +73,7 @@ You can listen to the lifecycle events of a dependency by using <HM>`Reactter.on
       <Code code={counterMainEventHandlerCode} lang="dart" mark={marks} />
     </TabItem>
   </Tabs>
-</div>
+</CodeTabs>
 
 :::note
   The <HT>`ReactterDependency`</HT> is a generic class that takes the type of the dependency and optionally pass an `id`.
@@ -87,7 +88,7 @@ and use its methods to observe the lifecycle events. e.g:
 
 <TipLifecycleExample />
 
-<div class="code-tabs">
+<CodeTabs>
   <ZappButton path="examples/lifecycle_observer"/>
 
   <Tabs>
@@ -108,7 +109,7 @@ and use its methods to observe the lifecycle events. e.g:
       <Code code={counterMainLifecycleObserverCode} lang="dart" mark={marks} />
     </TabItem>
   </Tabs>
-</div>
+</CodeTabs>
 
 ## Using UseEffect
 
@@ -116,7 +117,7 @@ The <HT>[`UseEffect`](/reactter/hooks/use_effect)</HT> hook can be used to liste
 
 <TipLifecycleExample />
 
-<div class="code-tabs">
+<CodeTabs>
   <ZappButton path="examples/lifecycle_use_effect"/>
 
   <Tabs>
@@ -137,4 +138,4 @@ The <HT>[`UseEffect`](/reactter/hooks/use_effect)</HT> hook can be used to liste
       <Code code={counterMainLifecycleUseEffectCode} lang="dart" mark={marks} />
     </TabItem>
   </Tabs>
-</div>
+</CodeTabs>

@@ -5,11 +5,13 @@ sidebar:
   order: 6
 ---
 import { HE, HM, HN, HT } from '@/components/Highlight';
-import { Code } from "@astrojs/starlight/components";
+import CodeTabs from '@/components/CodeTabs.astro';
 import { Tabs, TabItem } from "@/components/Tabs";
 import ZappButton from "@/components/ZappButton.astro";
+import { Code } from "@astrojs/starlight/components";
+import { marks } from '@/examples/marks.ts'
+
 import StateMethodsLite from '@/content/docs/shareds/state_methods_lite.mdx';
-import { marks } from '@/examples/marks.ts';
 
 import MainCode from '@/examples/custom_hook/lib/main.dart?raw';
 import MyCustomFormCode from '@/examples/custom_hook/lib/my_custom_form.dart?raw';
@@ -80,7 +82,7 @@ To avoid this, it's recommended to place this line as the first line in the clas
 
 You can then call that _**Custom Hook**_ from anywhere in the code and get access to its shared logic:
 
-<div class="code-tabs">
+<CodeTabs>
   <ZappButton path="examples/custom_hook"/>
 
   <Tabs>
@@ -102,7 +104,7 @@ You can then call that _**Custom Hook**_ from anywhere in the code and get acces
       <Code code={MainCode} lang="dart" mark={marks} />
     </TabItem>
   </Tabs>
-</div>
+</CodeTabs>
 
 In the example above, the form captures first and last name inputs, combines them into a full name, and displays the result.
 <HT>`MyController`</HT> uses <HT>`UseTextInput`</HT> hook for capturing the first and last name.

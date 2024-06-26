@@ -5,9 +5,10 @@ sidebar:
   order: 2
 ---
 import { HE, HM, HN, HT } from '@/components/Highlight';
-import { Code } from "@astrojs/starlight/components";
+import CodeTabs from '@/components/CodeTabs.astro';
 import { Tabs, TabItem } from "@/components/Tabs";
-import { marks } from '@/examples/marks.ts';
+import { Code } from "@astrojs/starlight/components";
+import { marks } from '@/examples/marks.ts'
 
 With Reactter, managing objects becomes straightforward. You can create, delete, and access desired objects from a single centralized location, accessible from anywhere in your code, all thanks to Reactter's robust dependency injection system.
 
@@ -122,7 +123,7 @@ The scope of the registered dependency is global. This indicates that using the 
 To understand it better, we will return to the countdown example seen from the [State Management](/reactter/core_concepts/state_management/#example) page,
 but now using the dependency injection:
 
-<div class="code-tabs">
+<CodeTabs>
   <Tabs>
     <TabItem label="main.dart">
       <Code code={`
@@ -198,7 +199,7 @@ class Counter {
       `} lang="dart" mark={marks} />
     </TabItem>
   </Tabs>
-</div>
+</CodeTabs>
 
 In this example, we have create a countdown of <HN>`10`</HN> seconds, and when it reaches <HN>`0`</HN>, the <HT>`Counter`</HT> instance is deleted.
 But we will make a small tweak to change the countdown behavior.

@@ -7,10 +7,12 @@ sidebar:
     text: flutter
 ---
 import { HE, HM, HT } from '@/components/Highlight';
-import { Code } from "@astrojs/starlight/components";
+import CodeTabs from '@/components/CodeTabs.astro';
 import { Tabs, TabItem } from "@/components/Tabs";
 import ZappButton from "@/components/ZappButton.astro";
-import { marks } from '@/examples/marks.ts';
+import { Code } from "@astrojs/starlight/components";
+import { marks } from '@/examples/marks.ts'
+
 import counterControllerCode from '@/examples/counter/lib/counter_controller.dart?raw';
 import counterCode from '@/examples/counter/lib/counter.dart?raw';
 import counterViewCode from '@/examples/counter/lib/counter_view.dart?raw';
@@ -49,7 +51,7 @@ Whenever the dependency or any observed state undergoes a change, these widgets 
 
 Let's create a simple counter app using Reactter to demonstrate how to control the rendering of the widget tree in Flutter.
 
-<div class="code-tabs">
+<CodeTabs>
   <ZappButton path="examples/counter"/>
 
   <Tabs>
@@ -69,7 +71,7 @@ Let's create a simple counter app using Reactter to demonstrate how to control t
       <Code code={counterMainCode} lang="dart" mark={marks} />
     </TabItem>
   </Tabs>
-</div>
+</CodeTabs>
 
 Now, when you run the app, you will see a counter app with two buttons to increment and decrement the `count` value.
 
