@@ -41,7 +41,7 @@ part of 'framework.dart';
 abstract class ReactterHook extends Hook implements ReactterState {
   @override
   @internal
-  DependencyInjection get instanceInjection => Reactter;
+  DependencyInjection get dependencyInjection => Reactter;
   @override
   @internal
   StateManagement get stateManagment => Reactter;

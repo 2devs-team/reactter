@@ -8,8 +8,8 @@ typedef InstanceManageMode = DependencyMode;
 
 /// Represents different ways for managing instances.
 enum DependencyMode {
-  /// {@template builder}
-  /// It's a ways to manage an instance, which registers a builder function
+  /// {@template dependency_mode.builder}
+  /// It's a ways to manage a dependency, which registers a builder function
   /// and creates the instance, unless it has already done so.
   ///
   /// When the dependency tree no longer needs it, it is completely deleted,
@@ -20,8 +20,8 @@ enum DependencyMode {
   /// {@endtemplate}
   builder,
 
-  /// {@template factory}
-  /// It's a ways to manage an instance, which registers
+  /// {@template dependency_mode.factory}
+  /// It's a ways to manage a dependency, which registers
   /// a builder function only once and creates the instance if not already done.
   ///
   /// When the dependency tree no longer needs it,
@@ -32,8 +32,8 @@ enum DependencyMode {
   /// {@endtemplate}
   factory,
 
-  /// {@template singleton}
-  /// It's a ways to manage a instance, which registers a builder function
+  /// {@template dependency_mode.singleton}
+  /// It's a ways to manage a dependency, which registers a builder function
   /// and creates the instance only once.
   ///
   /// This mode preserves the instance and its states,
@@ -48,6 +48,6 @@ enum DependencyMode {
   singleton,
 }
 
-extension InstanceManageModeExt on DependencyMode {
+extension DependencyModeExt on DependencyMode {
   String get label => '$this'.split('.').last;
 }

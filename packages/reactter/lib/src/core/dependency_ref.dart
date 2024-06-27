@@ -1,6 +1,6 @@
 part of 'core.dart';
 
-/// A generic class that represents the reference to an dependency in Reactter's context.
+/// A generic class that represents the reference to a dependency in Reactter's context.
 /// Provides an optional [id] parameter for identifying the dependency.
 ///
 /// This class is used by the dependency injection and event manager to identify dependency

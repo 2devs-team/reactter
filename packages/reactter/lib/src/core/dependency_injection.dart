@@ -90,7 +90,7 @@ abstract class DependencyInjection {
   }
 
   /// {@template lazy_factory}
-  /// Register a [builder] function of the [t] dependency with/without [id]
+  /// Register a [builder] function of the [T] dependency with/without [id]
   /// as [DependencyMode.factory].
   /// {@endtemplate}
   ///
@@ -120,7 +120,7 @@ abstract class DependencyInjection {
   }
 
   /// {@template lazy_singleton}
-  /// Register a [builder] function of the [t] dependency with/without [id]
+  /// Register a [builder] function of the [T] dependency with/without [id]
   /// as [DependencyMode.singleton].
   /// {@endtemplate}
   ///
@@ -150,7 +150,7 @@ abstract class DependencyInjection {
   }
 
   /// {@template create}
-  /// Register a [builder] function of the [t] dependency with/without [id]
+  /// Register a [builder] function of the [T] dependency with/without [id]
   /// and creates the instance if it isn't already registered,
   /// else gets its instance only.
   /// {@endtemplate}
@@ -177,7 +177,7 @@ abstract class DependencyInjection {
   }
 
   /// {@template builder}
-  /// Register a [builder] function of the [t] dependency with/without [id]
+  /// Register a [builder] function of the [T] dependency with/without [id]
   /// as [DependencyMode.builder]
   /// and creates the instance if it isn't already registered,
   /// else gets its instance only.
@@ -213,7 +213,7 @@ abstract class DependencyInjection {
   }
 
   /// {@template factory}
-  /// Register a [builder] function of the [t] dependency with/without [id]
+  /// Register a [builder] function of the [T] dependency with/without [id]
   /// as [DependencyMode.factory]
   /// and creates the instance if it isn't already registered,
   /// else gets its instance only.
@@ -248,7 +248,7 @@ abstract class DependencyInjection {
   }
 
   /// {@template singleton}
-  /// Register a [builder] function of the [t] dependency with/without [id]
+  /// Register a [builder] function of the [T] dependency with/without [id]
   /// as [DependencyMode.singleton]
   /// and creates the instance if it isn't already registered,
   /// else gets its instance only.
@@ -427,7 +427,7 @@ abstract class DependencyInjection {
     return _getDependencyRegister<T>(id)?.instance;
   }
 
-  /// Checks if the instance of dependencu [T] with/without [id] exists.
+  /// Checks if the instance of [T] dependencu with/without [id] exists.
   bool exists<T extends Object?>([String? id]) {
     return _getDependencyRegister<T>(id)?.instance != null;
   }

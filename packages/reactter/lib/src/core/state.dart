@@ -99,13 +99,13 @@ abstract class State implements StateBase {
   }
 
   void _validateInstanceBinded() {
-    if (instanceInjection.isRegistered(instanceBinded)) return;
+    if (dependencyInjection.isRegistered(instanceBinded)) return;
 
     logger.log(
       "The instance binded($instanceBinded) to $this is not in Reactter's context and cannot be disposed automatically.\n"
       "You can solve this problem in two ways:\n"
       "1. Call the 'dispose' method manually when $this is no longer needed.\n"
-      "2. Create $instanceBinded using the instance manager methods.\n"
+      "2. Create $instanceBinded using the dependency injection methods.\n"
       "**Ignore this message if you are sure that it will be disposed.**",
       level: LogLevel.warning,
     );

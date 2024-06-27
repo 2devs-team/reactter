@@ -7,7 +7,7 @@ part of 'hooks.dart';
 typedef UseInstance<T extends Object> = UseDependency<T>;
 
 /// {@template use_dependency}
-/// A [ReactterHook] that allows to manages an instance of [T] with/without [id].
+/// A [ReactterHook] that allows to manages a dependency of [T] with/without [id].
 ///
 /// ```dart
 /// final useAppController = UseDependency<AppController>();
@@ -21,7 +21,7 @@ typedef UseInstance<T extends Object> = UseDependency<T>;
 /// print(useAppController.instance);
 /// ```
 ///
-/// The [instance] getter returns `null`, if the [T] instance is not found
+/// The [instance] getter returns `null`, if the [T] dependency is not found
 /// or it hasn't created yet.
 /// You can wait for the [instance] to be created, using [UseEffect]:
 ///
@@ -72,7 +72,7 @@ typedef UseInstance<T extends Object> = UseDependency<T>;
 /// > You should call [dispose] when it's no longer needed.
 ///
 /// See also:
-/// * [DependencyInjection], a instances manager.
+/// * [DependencyInjection], a dependency manager.
 /// * [UseEffect], a side-effect manager.
 /// {@endtemplate}
 class UseDependency<T extends Object> extends ReactterHook {
@@ -83,7 +83,8 @@ class UseDependency<T extends Object> extends ReactterHook {
   bool _isDisposed = false;
   T? _instance;
 
-  /// Returns the instance if found it, or `null` if the instance is not found it
+  /// Returns the instance if found the dependency,
+  /// or `null` if the dependency is not found it
   /// or has not been created yet.
   T? get instance {
     assert(!_isDisposed);
@@ -104,7 +105,7 @@ class UseDependency<T extends Object> extends ReactterHook {
     return _instance;
   }
 
-  /// It's used to identify the instance of [T] type.
+  /// It's used to identify the instance of [T] dependency.
   final String? id;
 
   /// {@macro use_dependency}

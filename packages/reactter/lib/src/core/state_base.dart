@@ -4,7 +4,7 @@ part of 'core.dart';
 @internal
 abstract class StateBase {
   @internal
-  DependencyInjection get instanceInjection;
+  DependencyInjection get dependencyInjection;
   @internal
   StateManagement get stateManagment;
   @internal

@@ -25,7 +25,7 @@ class ReactterInterface
 
   @override
   @internal
-  DependencyInjection get instanceInjection => this;
+  DependencyInjection get dependencyInjection => this;
   @override
   @internal
   EventHandler get eventHandler => this;

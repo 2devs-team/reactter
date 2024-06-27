@@ -7,7 +7,7 @@ part of 'core.dart';
 @internal
 abstract class EventHandler {
   @internal
-  DependencyInjection get instanceInjection;
+  DependencyInjection get dependencyInjection;
 
   @internal
   Logger get logger;
@@ -100,7 +100,7 @@ abstract class EventHandler {
         EventNotifier(
           instance,
           eventName,
-          instanceInjection,
+          dependencyInjection,
           logger,
           _offEventNotifier,
         );
@@ -116,8 +116,8 @@ abstract class EventHandler {
   /// If the [EventNotifier] does not exist in the lookup table, it creates a new one.
   EventNotifier? _getEventNotifierPartner(Object? instance, Enum eventName) {
     final instancePartner = instance is DependencyRef
-        ? instanceInjection._getDependencyRegisterByRef(instance)?.instance
-        : instanceInjection._getDependencyRef(instance);
+        ? dependencyInjection._getDependencyRegisterByRef(instance)?.instance
+        : dependencyInjection._getDependencyRef(instance);
 
     if (instancePartner == null) return null;
 
@@ -145,7 +145,7 @@ abstract class EventHandler {
     if (instance is! DependencyRef) return;
 
     final instanceObj =
-        instanceInjection._getDependencyRegisterByRef(instance)?.instance;
+        dependencyInjection._getDependencyRegisterByRef(instance)?.instance;
 
     return _resolveLifecycleEvent(instanceObj, lifecycle, state);
   }

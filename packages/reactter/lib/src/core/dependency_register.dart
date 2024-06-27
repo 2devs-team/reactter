@@ -1,12 +1,13 @@
 part of 'core.dart';
 
-/// A class that represents an dependency register in Reactter.
+/// A class that represents a dependency register in Reactter.
 ///
-/// An dependency register is responsible for managing an instance of type [T].
+/// a dependency register is responsible for managing a dependency of [T] type.
 /// It stores the mode of managing the dependency and the refs where the dependency was created.
-/// The instance can be accessed through the [instance] getter.
+/// The instance of the dependency can be accessed through the [instance] getter.
 ///
-/// > **FYI**: A dependency contains a builder function and can contains an instance, this is created by [DependencyInjection]
+/// > **FYI**: A dependency contains a builder function,
+/// > and can contains an instance if it's created by [DependencyInjection]
 ///
 @internal
 class DependencyRegister<T> extends DependencyRef<T?> {

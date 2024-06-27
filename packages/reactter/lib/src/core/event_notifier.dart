@@ -72,24 +72,24 @@ class EventNotifier extends EventNotifierRef {
   int _reentrantlyRemovedListeners = 0;
   bool _debugDisposed = false;
 
-  final DependencyInjection instanceInjection;
+  final DependencyInjection dependencyInjection;
   final Logger logger;
   final void Function(EventNotifier notifier) onNotifyComplete;
 
   EventNotifier(
     Object? instanceOrObj,
     Enum event,
-    this.instanceInjection,
+    this.dependencyInjection,
     this.logger,
     this.onNotifyComplete,
   ) : super(instanceOrObj, event);
 
   DependencyRef? get instanceRef =>
-      _dependencyRef ?? instanceInjection._getDependencyRef(_instanceObj);
+      _dependencyRef ?? dependencyInjection._getDependencyRef(_instanceObj);
 
   Object? get instanceObj =>
       _instanceObj ??
-      instanceInjection._getDependencyRegisterByRef(_dependencyRef)?.instance;
+      dependencyInjection._getDependencyRegisterByRef(_dependencyRef)?.instance;
 
   @override
   int get hashCode => Object.hash(
@@ -111,7 +111,7 @@ class EventNotifier extends EventNotifierRef {
     final instanceRefSelf = instanceRef;
 
     if (instanceRefSelf != null) {
-      return instanceRefSelf == instanceInjection._getDependencyRef(other);
+      return instanceRefSelf == dependencyInjection._getDependencyRef(other);
     }
 
     return instanceObj == other;
