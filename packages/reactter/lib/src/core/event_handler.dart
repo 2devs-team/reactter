@@ -79,8 +79,12 @@ abstract class EventHandler {
   }
 
   /// Removes all instance's events
-  void offAll(Object? instance) {
-    final notifiers = _notifiers.where((notifier) => notifier == instance);
+  void offAll(Object? instance, [bool generic = false]) {
+    final notifiers = _notifiers.where((notifier) {
+      if (!generic && notifier._dependencyRef != null) return false;
+
+      return notifier == instance;
+    });
 
     for (final notifier in {...notifiers}) {
       notifier.dispose();
