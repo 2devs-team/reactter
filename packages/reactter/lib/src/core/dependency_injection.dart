@@ -6,7 +6,7 @@ part of 'core.dart';
 /// It allows registering, unregistering, getting, creating,
 /// and deleting dependencies of a certain type.
 ///
-/// It also provides methods to check if an dependency exists
+/// It also provides methods to check if a dependency exists
 /// and to get the dependency of a certain type with a given ID.
 ///
 /// It stores dependencies and their builders, and
@@ -66,8 +66,6 @@ abstract class DependencyInjection {
   ///
   /// Returns `true` when dependency has been registered.
   ///
-  /// {@macro builder}
-  ///
   /// This method is equivalent to calling:
   ///
   /// ```dart
@@ -77,6 +75,9 @@ abstract class DependencyInjection {
   ///   mode: DependencyMode.builder,
   /// );
   /// ```
+  ///
+  /// - [DependencyMode.builder]:
+  /// {@macro dependency_mode.builder}
   bool lazyBuilder<T extends Object?>(
     InstanceBuilder<T> builder, {
     String? id,
@@ -95,8 +96,6 @@ abstract class DependencyInjection {
   ///
   /// Returns `true` when dependency has been registered.
   ///
-  /// {@macro factory}
-  ///
   /// This method is equivalent to calling:
   ///
   /// ```dart
@@ -106,6 +105,9 @@ abstract class DependencyInjection {
   ///   mode: DependencyMode.factory,
   /// );
   /// ```
+  ///
+  /// - [DependencyMode.factory]:
+  /// {@macro dependency_mode.factory}
   bool lazyFactory<T extends Object?>(
     InstanceBuilder<T> builder, {
     String? id,
@@ -124,8 +126,6 @@ abstract class DependencyInjection {
   ///
   /// Returns `true` when dependency has been registered.
   ///
-  /// {@macro singleton}
-  ///
   /// This method is equivalent to calling:
   ///
   /// ```dart
@@ -135,6 +135,9 @@ abstract class DependencyInjection {
   ///   mode: DependencyMode.singleton,
   /// );
   /// ```
+  ///
+  /// - [DependencyMode.sigleton]:
+  /// {@macro dependency_mode.sigleton}
   bool lazySingleton<T extends Object?>(
     InstanceBuilder<T> builder, {
     String? id,
@@ -178,11 +181,10 @@ abstract class DependencyInjection {
   /// as [DependencyMode.builder]
   /// and creates the instance if it isn't already registered,
   /// else gets its instance only.
+  ///
   /// {@endtemplate}
   ///
   /// {@macro create_conditions}
-  ///
-  /// {@macro builder}
   ///
   /// This method is equivalent to calling:
   ///
@@ -194,6 +196,9 @@ abstract class DependencyInjection {
   ///   mode: DependencyMode.builder,
   /// );
   /// ```
+  ///
+  /// - [DependencyMode.builder]:
+  /// {@macro dependency_mode.builder}
   T? builder<T extends Object?>(
     InstanceBuilder<T> builder, {
     String? id,
@@ -216,8 +221,6 @@ abstract class DependencyInjection {
   ///
   /// {@macro create_conditions}
   ///
-  /// {@macro factory}
-  ///
   /// This method is equivalent to calling:
   ///
   /// ```dart
@@ -228,6 +231,9 @@ abstract class DependencyInjection {
   ///   mode: DependencyMode.factory,
   /// );
   /// ```
+  ///
+  /// - [DependencyMode.factory]:
+  /// {@macro dependency_mode.factory}
   T? factory<T extends Object?>(
     InstanceBuilder<T> builder, {
     String? id,
@@ -250,8 +256,6 @@ abstract class DependencyInjection {
   ///
   /// {@macro create_conditions}
   ///
-  /// {@macro singleton}
-  ///
   /// This method is equivalent to calling:
   ///
   /// ```dart
@@ -262,6 +266,9 @@ abstract class DependencyInjection {
   ///   mode: DependencyMode.singleton,
   /// );
   /// ```
+  ///
+  /// - [DependencyMode.sigleton]:
+  /// {@macro dependency_mode.sigleton}
   T? singleton<T extends Object?>(
     InstanceBuilder<T> builder, {
     String? id,
@@ -420,7 +427,7 @@ abstract class DependencyInjection {
     return _getDependencyRegister<T>(id)?.instance;
   }
 
-  /// Valids if the instance of [T] type with [id] optional exists.
+  /// Checks if the instance of dependencu [T] with/without [id] exists.
   bool exists<T extends Object?>([String? id]) {
     return _getDependencyRegister<T>(id)?.instance != null;
   }
@@ -428,6 +435,12 @@ abstract class DependencyInjection {
   /// Checks if an instance is registered in Reactter.
   bool isRegistered(Object? instance) {
     return _instances[instance] != null;
+  }
+
+  /// Checks if the dependency [T] with/without [id] is registered in Reactter.
+  bool hasRegister<T extends Object?>([String? id]) {
+    final DependencyRef dependencyRef = DependencyRef<T?>(id);
+    return _dependencyRegisters.lookup(dependencyRef) != null;
   }
 
   @Deprecated(
