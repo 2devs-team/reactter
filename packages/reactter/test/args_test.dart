@@ -213,4 +213,25 @@ void main() {
       ],
     );
   });
+
+  test("should be comparable to other", () {
+    // Theses are equal
+    expect(Args1(1) == Args1(1), true);
+    expect(Args2(2, "foo") == Args2(2, "foo"), true);
+    expect(ArgsX3(3, "bar", false) == ArgsX3(3, "bar", false), true);
+    expect(Args([1, "foo"]) == Args2(1, "foo"), true);
+    expect(Args2(2, "bar") == ArgsX2(2, "bar"), true);
+    expect(ArgsX3(3, "foo", false) == Args([3, "foo", false]), true);
+
+    // The argument does not match
+    expect(Args1(1) == Args1(2), false);
+    // The argument does not match because Map object has a different reference
+    expect(Args1({"foo": "bar"}) == Args1({"foo": "bar"}), false);
+    // Different number of arguments
+    expect(Args([1, 2]) == Args1([1, 2]), false);
+    expect(Args2(2, "foo") == Args3(2, "foo", false), false);
+    expect(Args3(1, "foo", false) == Args([1, "foo", false, "bar"]), false);
+    // Different type of arguments
+    expect(ArgsX3(3, "bar", false) == Args3("bar", 3, false), false);
+  });
 }
