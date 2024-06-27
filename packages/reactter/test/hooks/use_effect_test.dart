@@ -59,7 +59,7 @@ void main() {
         nCalls += 1;
 
         if (nCalls == 1) {
-          expect(stateA.value, false);
+          expect(stateA.value, true);
           expect(stateB.value, 0);
         } else {
           expect(stateA.value, true);

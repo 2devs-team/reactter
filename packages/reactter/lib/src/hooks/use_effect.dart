@@ -253,28 +253,36 @@ class UseEffect extends ReactterHook {
 
     _isUpdating = true;
 
+    _runCleanup(_, __);
+
     try {
-      _cleanupCallback?.call();
+      final cleanupCallback = callback();
+
+      if (cleanupCallback is Function) {
+        _cleanupCallback = cleanupCallback;
+      }
+    } catch (error) {
+      logger.log(
+        'An error occurred while executing the effect',
+        level: LogLevel.error,
+      );
+
+      rethrow;
     } finally {
-      _cleanupCallback = null;
+      _isUpdating = false;
     }
-
-    final cleanupCallback = callback();
-
-    if (cleanupCallback is Function) {
-      _cleanupCallback = cleanupCallback;
-    }
-
-    _isUpdating = false;
   }
 
   void _runCleanup(_, __) {
-    if (!_isUpdating) return;
-
-    _isUpdating = false;
-
     try {
       _cleanupCallback?.call();
+    } catch (error) {
+      logger.log(
+        'An error occurred while executing the cleanup effect',
+        level: LogLevel.error,
+      );
+
+      rethrow;
     } finally {
       _cleanupCallback = null;
     }
