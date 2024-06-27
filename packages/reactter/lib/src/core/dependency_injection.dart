@@ -443,13 +443,14 @@ abstract class DependencyInjection {
     return _dependencyRegisters.lookup(dependencyRef) != null;
   }
 
+  // coverage:ignore-start
   @Deprecated(
     'Use `getDependencyMode` instead. '
     'This feature was deprecated after v7.1.0.',
   )
-  InstanceManageMode? getInstanceManageMode(Object? instance) {
-    return _instances[instance]?.mode;
-  }
+  InstanceManageMode? getInstanceManageMode(Object? instance) =>
+      getDependencyMode(instance);
+  // coverage:ignore-end
 
   /// Returns [DependencyMode] of instance parameter.
   DependencyMode? getDependencyMode(Object? instance) {

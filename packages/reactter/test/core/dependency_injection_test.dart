@@ -241,7 +241,7 @@ void main() {
       Reactter.destroy<TestController>(id: id);
     });
 
-    test("should check if a dependency is registered", () {
+    test("should check if an instance is registered", () {
       final testController = TestController();
       bool isRegisted = Reactter.isRegistered(testController);
       expect(isRegisted, false);
@@ -251,6 +251,20 @@ void main() {
 
       isRegisted = Reactter.isRegistered(testController);
       expect(isRegisted, true);
+
+      Reactter.destroy<TestController>();
+    });
+
+    test("should check if a dependency is registered", () {
+      final testController = TestController();
+      bool hasRegister = Reactter.hasRegister<TestController>();
+      expect(hasRegister, false);
+
+      final instance = Reactter.create(() => testController);
+      expect(instance, testController);
+
+      hasRegister = Reactter.hasRegister<TestController>();
+      expect(hasRegister, true);
 
       Reactter.destroy<TestController>();
     });
