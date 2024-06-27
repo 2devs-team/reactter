@@ -4,8 +4,8 @@ import 'package:test/test.dart';
 import '../shareds/test_controllers.dart';
 
 void main() {
-  group("ReactterInstanceInjection", () {
-    test("should register an instance builder", () {
+  group("DependencyInjection", () {
+    test("should register a dependency", () {
       bool registered = Reactter.register(() => TestController());
       expect(registered, true);
 
@@ -15,7 +15,7 @@ void main() {
       Reactter.destroy<TestController>();
     });
 
-    test("should register an instance builder with id", () {
+    test("should register a dependency with id", () {
       final id = 'uniqueId';
 
       bool registered = Reactter.register(
@@ -33,7 +33,7 @@ void main() {
       Reactter.destroy<TestController>(id: id);
     });
 
-    test("should unregister an instance builder", () {
+    test("should unregister a dependency", () {
       Reactter.register(() => TestController());
 
       bool unregistered = Reactter.unregister<TestController>();
@@ -56,7 +56,7 @@ void main() {
       expect(unregistered, false);
     });
 
-    test("should unregister and instance builder with id", () {
+    test("should unregister a dependency with id", () {
       final id = 'uniqueId';
 
       Reactter.register(() => TestController(), id: id);
@@ -81,7 +81,7 @@ void main() {
       expect(unregistered, false);
     });
 
-    test("should get the instance", () {
+    test("should get a dependency", () {
       var instance = Reactter.get<TestController>();
       expect(instance, null);
 
@@ -100,7 +100,7 @@ void main() {
       Reactter.destroy<TestController>();
     });
 
-    test("should get the instance with id", () {
+    test("should get a dependency with id", () {
       final id = 'uniqueId';
 
       var instance = Reactter.get<TestController>(id);
@@ -114,7 +114,7 @@ void main() {
       Reactter.destroy<TestController>(id: id);
     });
 
-    test("should create an instance", () {
+    test("should create a dependency", () {
       final ref = #ref;
 
       final instance = Reactter.create(() => TestController(), ref: ref);
@@ -123,7 +123,7 @@ void main() {
       Reactter.destroy<TestController>();
     });
 
-    test("should create an instance with id", () {
+    test("should create a dependency with id", () {
       final id = 'uniqueId';
       final ref = #ref;
 
@@ -138,7 +138,7 @@ void main() {
       Reactter.destroy<TestController>(id: id);
     });
 
-    test("should delete an instance", () {
+    test("should delete a dependency", () {
       final ref = #ref;
 
       Reactter.create(() => TestController(), ref: ref);
@@ -152,7 +152,7 @@ void main() {
       Reactter.destroy<TestController>();
     });
 
-    test("should delete an instance with id", () {
+    test("should delete a dependency with id", () {
       final ref = #ref;
       final id = 'uniqueId';
 
@@ -167,37 +167,7 @@ void main() {
       Reactter.destroy<TestController>(id: id);
     });
 
-    test("should create instance with id", () {
-      final id = 'uniqueId';
-      final ref = #ref;
-
-      final instance = Reactter.create(
-        () => TestController(),
-        id: id,
-        ref: ref,
-      );
-
-      expect(instance, isA<TestController>());
-
-      Reactter.destroy<TestController>(id: id);
-    });
-
-    test("should delete instance with id", () {
-      final id = 'uniqueId';
-      final ref = #ref;
-
-      Reactter.create(() => TestController(), id: id, ref: ref);
-
-      bool isDeleted = Reactter.delete<TestController>(id, ref);
-      expect(isDeleted, true);
-
-      isDeleted = Reactter.delete<TestController>(id, ref);
-      expect(isDeleted, false);
-
-      Reactter.destroy<TestController>(id: id);
-    });
-
-    test("should destroy the instance and the builder", () {
+    test("should destroy a dependency", () {
       var isDestroyed = Reactter.destroy<TestController>();
       expect(isDestroyed, false);
 
@@ -218,7 +188,7 @@ void main() {
       expect(isDestroyed, true);
     });
 
-    test("should destroy the instance and the builder with id", () {
+    test("should destroy a dependency with id", () {
       final id = 'UniqueId';
 
       var isDestroyed = Reactter.destroy<TestController>(id: id);
@@ -247,7 +217,7 @@ void main() {
       expect(isDestroyed, true);
     });
 
-    test("should find the instance", () {
+    test("should find a dependency", () {
       var instance = Reactter.find<TestController>();
       expect(instance, null);
 
@@ -259,7 +229,7 @@ void main() {
       Reactter.destroy<TestController>();
     });
 
-    test("should find the instance with id", () {
+    test("should find a dependency with id", () {
       final id = 'uniqueId';
       var instance = Reactter.find<TestController>(id);
       expect(instance, null);
@@ -271,7 +241,7 @@ void main() {
       Reactter.destroy<TestController>(id: id);
     });
 
-    test("should check if a instance is registered", () {
+    test("should check if a dependency is registered", () {
       final testController = TestController();
       bool isRegisted = Reactter.isRegistered(testController);
       expect(isRegisted, false);
@@ -285,7 +255,7 @@ void main() {
       Reactter.destroy<TestController>();
     });
 
-    test("should check if exist the instance", () {
+    test("should check if exist a dependency", () {
       bool isExistInstance = Reactter.exists<TestController>();
       expect(isExistInstance, false);
 
@@ -296,7 +266,7 @@ void main() {
       Reactter.destroy<TestController>();
     });
 
-    test("should check if exist the instance with id", () {
+    test("should check if exist a dependency with id", () {
       final id = 'uniqueId';
 
       bool isExistInstance = Reactter.exists<TestController>(id);
@@ -309,7 +279,7 @@ void main() {
       Reactter.destroy<TestController>(id: id);
     });
 
-    test("should create the instance in builder mode", () {
+    test("should create a dependency in builder mode", () {
       final instance = Reactter.builder(() => TestController());
       expect(instance, isA<TestController>());
 
@@ -328,7 +298,7 @@ void main() {
       Reactter.destroy<TestController>();
     });
 
-    test("should create the instance with id in builder mode", () {
+    test("should create a dependency with id in builder mode", () {
       final id = 'uniqueId';
 
       final instance = Reactter.builder(() => TestController(), id: id);
@@ -349,7 +319,7 @@ void main() {
       Reactter.destroy<TestController>(id: id);
     });
 
-    test("should create the instance in factory mode", () {
+    test("should create a dependency in factory mode", () {
       final instance = Reactter.factory(() => TestController());
       expect(instance, isA<TestController>());
 
@@ -368,7 +338,7 @@ void main() {
       Reactter.destroy<TestController>();
     });
 
-    test("should create the instance with id in factory mode", () {
+    test("should create a dependency with id in factory mode", () {
       final id = 'uniqueId';
 
       final instance = Reactter.factory(() => TestController(), id: id);
@@ -389,7 +359,7 @@ void main() {
       Reactter.destroy<TestController>(id: id);
     });
 
-    test("should create the instance in singleton mode", () {
+    test("should create a dependency in singleton mode", () {
       final instance = Reactter.singleton(() => TestController());
       expect(instance, isA<TestController>());
 
@@ -409,7 +379,7 @@ void main() {
       Reactter.destroy<TestController>();
     });
 
-    test("should create the instance with id in singleton mode", () {
+    test("should create a dependency with id in singleton mode", () {
       final id = 'uniqueId';
 
       final instance = Reactter.singleton(() => TestController(), id: id);

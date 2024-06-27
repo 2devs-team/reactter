@@ -14,8 +14,8 @@ const TEST_EVENT_COUNT = 3;
 const TEST_EVENT2_COUNT = 2;
 
 void main() {
-  group("ReactterEventHandler", () {
-    test("should listen and emit event using the instance", () {
+  group("EventHandler", () {
+    test("should listen and emit event using dependency", () {
       final testController = Reactter.create(() => TestController())!;
 
       _testListenAndEmitEvent(
@@ -27,7 +27,7 @@ void main() {
       Reactter.delete<TestController>();
     });
 
-    test("should listen and emit event using the instance with id", () {
+    test("should listen and emit event using dependency with id", () {
       final testController = Reactter.create(
         () => TestController(),
         id: 'uniqueId',
@@ -43,7 +43,7 @@ void main() {
     });
 
     test(
-      "should listen and emit event using ReactterInstance",
+      "should listen and emit event using ReactterDependency",
       () {
         _testListenAndEmitEvent(
           ReactterDependency<TestController>(),
@@ -88,7 +88,7 @@ void main() {
     );
 
     test(
-      "should listen event using the instance and emit event using ReactterDependency",
+      "should listen event using dependency and emit event using ReactterDependency",
       () {
         final testController = Reactter.create(() => TestController())!;
 
@@ -103,7 +103,7 @@ void main() {
     );
 
     test(
-      "should listen event using the instance and emit event using ReactterDependency with id",
+      "should listen event using the dependency and emit event using ReactterDependency with id",
       () {
         final testController = Reactter.create(
           () => TestController(),
@@ -121,7 +121,7 @@ void main() {
     );
 
     test(
-      "should listen event using ReactterDependency and emit event using the instance",
+      "should listen event using ReactterDependency and emit event using the dependency",
       () {
         final testController = Reactter.create(() => TestController())!;
 
@@ -136,7 +136,7 @@ void main() {
     );
 
     test(
-      "should listen event using ReactterDependency and emit event using the instance with id",
+      "should listen event using ReactterDependency and emit event using the dependency with id",
       () {
         final testController = Reactter.create(
           () => TestController(),
@@ -273,7 +273,7 @@ void _testListenAndEmitEvent(
     expect(countEvent2, isOnce ? 1 : i + 1);
   }
 
-  Reactter.offAll(instListen);
+  Reactter.offAll(instListen, true);
 }
 
 void _testUnlistenEvent({bool withId = false}) {
