@@ -107,7 +107,7 @@ abstract class ReactterActionCallable<T, P> extends ReactterAction<P> {
 /// Contains a [value] of type [T] which represents the current state.
 ///
 /// When [value] is different to previous state,
-/// [UseReducer] execute [update] to notify to container instance
+/// [UseReducer] execute [update] to notify to listeners
 /// that has changed and in turn executes [onWillUpdate] and [onDidUpdate].
 ///
 /// Example:

@@ -5,7 +5,7 @@ import 'core/core.dart' show LogLevel;
 import 'hooks/hooks.dart' show ReactterAction;
 import 'memo/memo.dart' show Memo;
 
-/// A function to generate the instance of [T]
+/// A function to generate the instance of [T] dependency.
 typedef InstanceBuilder<T> = T Function();
 
 /// Reactter.log type

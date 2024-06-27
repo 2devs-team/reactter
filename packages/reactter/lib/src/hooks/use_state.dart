@@ -6,7 +6,7 @@ part of 'hooks.dart';
 /// Contains a [value] of type [T] which represents the current state.
 ///
 /// When [value] is different to previous state,
-/// [UseState] execute [update] to notify container instance
+/// [UseState] execute [update] to notify listeners
 /// that has changed and in turn executes [onWillUpdate] and [onDidUpdate].
 ///
 /// This example produces one simple [UseState]:
