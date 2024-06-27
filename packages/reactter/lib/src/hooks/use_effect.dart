@@ -101,13 +101,13 @@ part of 'hooks.dart';
 ///
 /// **NOTE**: A [UseEffect] instance can only be binded to one instance at a time.
 /// When create a new instance of [UseEffect] on the instance that is created
-/// by instance manager, this instance will be binded to it automatically.
+/// by dependency injection, this instance will be binded to it automatically.
 ///
 /// **NOTE**: The [UseEffect] instance will be disposed automatically when
-/// the instance binded is destroyed by instance manager.
+/// the instance binded is destroyed by dependency injection.
 ///
 /// If the [UseEffect] instance didn't have an instance binded or
-/// the instance binded is not created by instance manager,
+/// the instance binded is not created by dependency injection,
 /// you must dispose it manually, using the [dispose] method:
 ///
 /// ```dart
@@ -264,6 +264,8 @@ class UseEffect extends ReactterHook {
     if (cleanupCallback is Function) {
       _cleanupCallback = cleanupCallback;
     }
+
+    _isUpdating = false;
   }
 
   void _runCleanup(_, __) {
