@@ -134,7 +134,7 @@ class TestLifecycleController extends LifecycleObserver {
   final stateString = UseState("initial");
   final stateInt = UseState(0);
 
-  int onInitializedCalledCount = 0;
+  int onCreatedCalledCount = 0;
   int onWillMountCalledCount = 0;
   int onDidMountCalledCount = 0;
   int onWillUpdateCalledCount = 0;
@@ -144,9 +144,9 @@ class TestLifecycleController extends LifecycleObserver {
   ReactterState? lastState;
 
   @override
-  void onInitialized() {
-    onInitializedCalledCount++;
-    super.onInitialized();
+  void onCreated() {
+    onCreatedCalledCount++;
+    super.onCreated();
   }
 
   @override

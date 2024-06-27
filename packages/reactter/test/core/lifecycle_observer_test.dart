@@ -25,7 +25,7 @@ void main() {
           Lifecycle.willMount,
         );
 
-        expect(testLifecycleController.onInitializedCalledCount, 1);
+        expect(testLifecycleController.onCreatedCalledCount, 1);
         expect(testLifecycleController.onWillMountCalledCount, 1);
         expect(testLifecycleController.onDidMountCalledCount, 0);
         expect(testLifecycleController.onWillUpdateCalledCount, 0);
@@ -39,7 +39,7 @@ void main() {
           Lifecycle.didMount,
         );
 
-        expect(testLifecycleController.onInitializedCalledCount, 1);
+        expect(testLifecycleController.onCreatedCalledCount, 1);
         expect(testLifecycleController.onWillMountCalledCount, 1);
         expect(testLifecycleController.onDidMountCalledCount, 1);
         expect(testLifecycleController.onWillUpdateCalledCount, 0);
@@ -50,7 +50,7 @@ void main() {
 
         testLifecycleController.stateInt.value += 1;
 
-        expect(testLifecycleController.onInitializedCalledCount, 1);
+        expect(testLifecycleController.onCreatedCalledCount, 1);
         expect(testLifecycleController.onWillMountCalledCount, 1);
         expect(testLifecycleController.onDidMountCalledCount, 1);
         expect(testLifecycleController.onWillUpdateCalledCount, 1);
@@ -64,7 +64,7 @@ void main() {
 
         testLifecycleController.stateString.value = "new value";
 
-        expect(testLifecycleController.onInitializedCalledCount, 1);
+        expect(testLifecycleController.onCreatedCalledCount, 1);
         expect(testLifecycleController.onWillMountCalledCount, 1);
         expect(testLifecycleController.onDidMountCalledCount, 1);
         expect(testLifecycleController.onWillUpdateCalledCount, 2);
@@ -81,7 +81,7 @@ void main() {
           Lifecycle.willUnmount,
         );
 
-        expect(testLifecycleController.onInitializedCalledCount, 1);
+        expect(testLifecycleController.onCreatedCalledCount, 1);
         expect(testLifecycleController.onWillMountCalledCount, 1);
         expect(testLifecycleController.onDidMountCalledCount, 1);
         expect(testLifecycleController.onWillUpdateCalledCount, 2);
@@ -98,7 +98,7 @@ void main() {
           Lifecycle.didUnmount,
         );
 
-        expect(testLifecycleController.onInitializedCalledCount, 1);
+        expect(testLifecycleController.onCreatedCalledCount, 1);
         expect(testLifecycleController.onWillMountCalledCount, 1);
         expect(testLifecycleController.onDidMountCalledCount, 1);
         expect(testLifecycleController.onWillUpdateCalledCount, 2);

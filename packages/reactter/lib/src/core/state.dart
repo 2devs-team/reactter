@@ -28,7 +28,7 @@ abstract class State implements StateBase {
       "Use `detachInstance` method, if you want to bind a new instance.",
     );
 
-    eventHandler.one(instance, Lifecycle.destroyed, _onInstanceDestroyed);
+    eventHandler.one(instance, Lifecycle.deleted, _onInstanceDeleted);
     _instanceBinded = instance;
 
     if (BindingZone.currentZone == null) _validateInstanceBinded();
@@ -41,11 +41,7 @@ abstract class State implements StateBase {
 
     if (_instanceBinded == null) return;
 
-    eventHandler.off(
-      _instanceBinded!,
-      Lifecycle.destroyed,
-      _onInstanceDestroyed,
-    );
+    eventHandler.off(_instanceBinded!, Lifecycle.deleted, _onInstanceDeleted);
     _instanceBinded = null;
   }
 
@@ -86,12 +82,7 @@ abstract class State implements StateBase {
     _isDisposed = true;
 
     if (_instanceBinded != null) {
-      eventHandler.off(
-        _instanceBinded!,
-        Lifecycle.destroyed,
-        _onInstanceDestroyed,
-      );
-
+      eventHandler.off(_instanceBinded!, Lifecycle.deleted, _onInstanceDeleted);
       _instanceBinded = null;
     }
 
@@ -112,7 +103,7 @@ abstract class State implements StateBase {
   }
 
   /// When the instance is destroyed, this object is dispose.
-  void _onInstanceDestroyed(_, __) => dispose();
+  void _onInstanceDeleted(_, __) => dispose();
 
   /// Notifies the listeners about the specified [event].
   /// If [Reactter._isUntrackedRunning] is true, the notification is skipped.

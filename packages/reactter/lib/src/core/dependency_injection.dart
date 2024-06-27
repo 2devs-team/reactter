@@ -391,7 +391,7 @@ abstract class DependencyInjection {
   /// Destroys the instance and builder function
   /// of the [T] dependency with/without [id].
   ///
-  /// If [onlyInstance] is `true`, ignores to deresgisters the builder.
+  /// If [onlyInstance] is `true`, ignores to deregister the builder.
   ///
   /// Returns `true` if it was successfully.
   bool destroy<T extends Object?>({
@@ -427,7 +427,7 @@ abstract class DependencyInjection {
     return _getDependencyRegister<T>(id)?.instance;
   }
 
-  /// Checks if the instance of [T] dependencu with/without [id] exists.
+  /// Checks if the instance of [T] dependency with/without [id] exists.
   bool exists<T extends Object?>([String? id]) {
     return _getDependencyRegister<T>(id)?.instance != null;
   }
@@ -437,7 +437,7 @@ abstract class DependencyInjection {
     return _instances[instance] != null;
   }
 
-  /// Checks if the dependency [T] with/without [id] is registered in Reactter.
+  /// Checks if the [T] dependency with/without [id] is registered in Reactter.
   bool hasRegister<T extends Object?>([String? id]) {
     final DependencyRef dependencyRef = DependencyRef<T?>(id);
     return _dependencyRegisters.lookup(dependencyRef) != null;
@@ -501,7 +501,9 @@ abstract class DependencyInjection {
       instanceRegister.refs.add(ref.hashCode);
     }
 
+    // TODO: Remove this line after v8.0.0
     eventHandler.emit(instanceRegister, Lifecycle.initialized);
+    eventHandler.emit(instanceRegister, Lifecycle.created);
 
     logger.log('The "$instanceRegister" instance has been created.');
 
@@ -526,9 +528,12 @@ abstract class DependencyInjection {
     dependencyRegister._instance = null;
 
     _instances.remove(instance);
-
+    // TODO: Remove this line after v8.0.0
     eventHandler.emit(instance, Lifecycle.destroyed);
+    eventHandler.emit(instance, Lifecycle.deleted);
+    // TODO: Remove this line after v8.0.0
     eventHandler.emit(dependencyRegister, Lifecycle.destroyed);
+    eventHandler.emit(dependencyRegister, Lifecycle.deleted);
     logger.log(log);
 
     if (instance is StateBase) instance.dispose();

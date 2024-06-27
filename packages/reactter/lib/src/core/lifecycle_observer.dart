@@ -2,7 +2,7 @@ part of 'core.dart';
 
 /// {@template lifecycle_observer}
 /// It's a mixin that provides a set of methods that can be used to observe
-/// the lifecycle of an instance.
+/// the lifecycle of a dependency.
 ///
 /// Example usage:
 /// ```dart
@@ -28,30 +28,37 @@ part of 'core.dart';
 
 /// {@endtemplate}
 abstract class LifecycleObserver {
-  /// This method is called when the instance is initialized.
+  /// This method is called when the dependency is initialized.
+  @Deprecated(
+    'Use `onCreated` instead. '
+    'This feature was deprecated after v7.2.0.',
+  )
   void onInitialized() {}
 
-  /// This method is called when the instance is going to be mounted
+  /// This method is called when the dependency instance is created.
+  void onCreated() {}
+
+  /// This method is called when the dependency is going to be mounted
   /// in the widget tree(exclusive to `flutter_reactter`).
   void onWillMount() {}
 
-  /// This method is called when the instance has been successfully mounted
+  /// This method is called when the dependency has been successfully mounted
   /// in the widget tree(exclusive to `flutter_reactter`).
   void onDidMount() {}
 
-  /// This method is called when the instance's state is about to be updated.
+  /// This method is called when the dependency's state is about to be updated.
   /// The parameter is a [StateBase].
   void onWillUpdate(covariant StateBase? state) {}
 
-  /// This method is called when the instance's state has been updated.
+  /// This method is called when the dependency's state has been updated.
   /// The parameter is a [StateBase].
   void onDidUpdate(covariant StateBase? state) {}
 
-  /// This method is called when the instance is going to be unmounted
+  /// This method is called when the dependency is going to be unmounted
   /// from the widget tree(exclusive to `flutter_reactter`).
   void onWillUnmount() {}
 
-  /// This method is called when the instance has been successfully unmounted
+  /// This method is called when the dependency has been successfully unmounted
   /// from the widget tree(exclusive to `flutter_reactter`).
   void onDidUnmount() {}
 }
@@ -62,8 +69,12 @@ void _executeLifecycleObserver(
   StateBase? state,
 ]) {
   switch (lifecycle) {
+    // TODO: Remove this case after v8.0.0
     case Lifecycle.initialized:
       observer.onInitialized();
+      break;
+    case Lifecycle.created:
+      observer.onCreated();
       break;
     case Lifecycle.willMount:
       observer.onWillMount();

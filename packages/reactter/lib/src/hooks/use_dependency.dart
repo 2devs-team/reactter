@@ -214,15 +214,15 @@ class UseDependency<T extends Object> extends ReactterHook {
   }
 
   void _listen() {
-    Reactter.on(ReactterDependency<T>(id), Lifecycle.initialized, _onInstance);
+    Reactter.on(ReactterDependency<T>(id), Lifecycle.created, _onInstance);
     Reactter.on(ReactterDependency<T>(id), Lifecycle.willMount, _onInstance);
-    Reactter.on(ReactterDependency<T>(id), Lifecycle.destroyed, _onInstance);
+    Reactter.on(ReactterDependency<T>(id), Lifecycle.deleted, _onInstance);
   }
 
   void _unlisten() {
-    Reactter.off(ReactterDependency<T>(id), Lifecycle.initialized, _onInstance);
+    Reactter.off(ReactterDependency<T>(id), Lifecycle.created, _onInstance);
     Reactter.off(ReactterDependency<T>(id), Lifecycle.willMount, _onInstance);
-    Reactter.off(ReactterDependency<T>(id), Lifecycle.destroyed, _onInstance);
+    Reactter.off(ReactterDependency<T>(id), Lifecycle.deleted, _onInstance);
   }
 
   void _onInstance(inst, param) {

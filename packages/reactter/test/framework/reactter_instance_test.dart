@@ -9,11 +9,11 @@ void main() {
       late TestController? instance;
       late bool willUpdateChecked;
       late bool didUpdateChecked;
-      late bool isDestroyed;
+      late bool isDeleted;
 
       Reactter.on(
         ReactterDependency<TestController>(),
-        Lifecycle.initialized,
+        Lifecycle.created,
         (TestController? inst, __) {
           instance = inst;
         },
@@ -38,9 +38,9 @@ void main() {
       );
       Reactter.on(
         ReactterDependency<TestController>(),
-        Lifecycle.destroyed,
+        Lifecycle.deleted,
         (_, __) {
-          isDestroyed = true;
+          isDeleted = true;
         },
       );
 
@@ -53,7 +53,7 @@ void main() {
       expectLater(instance, testController);
       expectLater(willUpdateChecked, true);
       expectLater(didUpdateChecked, true);
-      expectLater(isDestroyed, true);
+      expectLater(isDeleted, true);
     });
 
     test("should be created as nested way", () {
