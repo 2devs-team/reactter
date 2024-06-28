@@ -35,28 +35,36 @@ class ProvideImpl<T extends Object?, I extends String?> extends ProviderBase<T>
 
   @override
   Widget get child {
-    return Builder(
-      builder: (context) {
-        assert(
-          super.child != null ||
-              (!super.isLazy && super.builder != null ||
-                  super.isLazy && super.lazyBuilder != null),
-        );
-
-        return lazyBuilder?.call(context, super.child) ??
-            builder?.call(context, context.use<T>(id), super.child) ??
-            super.child!;
-      },
+    assert(
+      super.child != null ||
+          (!super.isLazy && super.builder != null ||
+              super.isLazy && super.lazyBuilder != null),
     );
+
+    if (super.isLazy && super.lazyBuilder != null) {
+      return Builder(
+        builder: (context) {
+          return super.lazyBuilder!(context, super.child);
+        },
+      );
+    }
+
+    if (super.builder != null) {
+      return Builder(
+        builder: (context) {
+          return super.builder!(context, context.use<T>(id), super.child);
+        },
+      );
+    }
+
+    return super.child!;
   }
 
   @override
   bool updateShouldNotify(covariant InheritedWidget oldWidget) => false;
 
   @override
-  ProviderElement<T> createElement() => ProviderElement<T>(
-        widget: this,
-      );
+  ProviderElement<T> createElement() => ProviderElement<T>(widget: this);
 
   /// Returns an instance of [T]
   /// and sets the [BuildContext] to listen for when it should be re-rendered.
@@ -101,17 +109,17 @@ class ProvideImpl<T extends Object?, I extends String?> extends ProviderBase<T>
 
   /// Returns the [ProviderElement] of the [ReactterProvider] that is
   /// closest to the [BuildContext] that was passed as arguments.
-  static ProviderElement<T>? getProviderInheritedElement<T extends Object?>(
+  static ProviderElement<T?>? getProviderInheritedElement<T extends Object?>(
     BuildContext context, [
     String? id,
   ]) {
-    ProviderElement<T>? providerInheritedElement;
+    ProviderElement<T?>? providerInheritedElement;
 
     // To find it with id, is O(2) complexity(O(1)*2)
     if (id != null) {
-      final inheritedElementNotSure = context
-              .getElementForInheritedWidgetOfExactType<ProvideImpl<T, WithId>>()
-          as ProviderElement<T>?;
+      final inheritedElementNotSure =
+          context.getElementForInheritedWidgetOfExactType<
+              ProvideImpl<T?, WithId>>() as ProviderElement<T?>?;
 
       providerInheritedElement =
           inheritedElementNotSure?.getInheritedElementOfExactId(id);
@@ -119,11 +127,11 @@ class ProvideImpl<T extends Object?, I extends String?> extends ProviderBase<T>
       // To find it without id, is O(1) complexity
       providerInheritedElement =
           context.getElementForInheritedWidgetOfExactType<
-              ProvideImpl<T, WithoutId>>() as ProviderElement<T>?;
+              ProvideImpl<T?, WithoutId>>() as ProviderElement<T?>?;
     }
 
     if (providerInheritedElement?.instance == null && null is! T) {
-      throw ReactterInstanceNotFoundException(T, context.widget.runtimeType);
+      throw ReactterDependencyNotFoundException(T, context.widget.runtimeType);
     }
 
     return providerInheritedElement;
@@ -166,6 +174,7 @@ class ProviderElement<T extends Object?> extends InheritedElement
     String? id,
   }) : super(widget) {
     if (widget.init && !widget.isLazy) {
+      // TODO: Remove this when the `init` property is removed
       Reactter.create<T>(
         widget.instanceBuilder,
         id: widget.id,
@@ -268,9 +277,9 @@ class ProviderElement<T extends Object?> extends InheritedElement
 }
 
 /// The error that will be thrown if [ReactterProvider.contextOf] fails
-/// to find the instance from ancestor of the [BuildContext] used.
-class ReactterInstanceNotFoundException implements Exception {
-  const ReactterInstanceNotFoundException(
+/// to find the dependency from ancestor of the [BuildContext] used.
+class ReactterDependencyNotFoundException implements Exception {
+  const ReactterDependencyNotFoundException(
     this.valueType,
     this.widgetType,
   );
@@ -286,20 +295,20 @@ class ReactterInstanceNotFoundException implements Exception {
     return '''
 Error: Could not find the correct `ReactterProvider<$valueType>` above this `$widgetType` Widget
 
-This happens because you used a `BuildContext` that does not include the instance of your choice.
+This happens because you used a `BuildContext` that does not include the dependency of your choice.
 There are a few common scenarios:
 
 - You added a new `ReactterProvider` in your `main.dart` and perform a hot-restart.
 
-- The instance you are trying to read is in a different route.
+- The dependency you are trying to read is in a different route.
 
   `ReactterProvider` is a "scoped". So if you insert of `ReactterProvider` inside a route, then
-  other routes will not be able to access that instance.
+  other routes will not be able to access that dependency.
 
 - You used a `BuildContext` that is an ancestor of the `ReactterProvider` you are trying to read.
 
   Make sure that `$widgetType` is under your `ReactterProvider<$valueType>`.
-  This usually happens when you are creating a instance and trying to read it immediately.
+  This usually happens when you are creating an instance of the dependency and trying to read it immediately.
 
   For example, instead of:
 
@@ -307,14 +316,14 @@ There are a few common scenarios:
   Widget build(BuildContext context) {
     return ReactterProvider(
       () => AppController(),
-      // Will throw a `ReactterInstanceNotFoundException`,
+      // Will throw a `ReactterDependencyNotFoundException`,
       // because `context` is out of `ReactterProvider`'s scope.
       child: Text(context.watch<AppController>().state.value),
     ),
   }
   ```
 
-  Try to use `builder` propery of `ReactterProvider` to access the instance inmedately as it created, like so:
+  Try to use `builder` propery of `ReactterProvider` to access the dependency inmedately as it created, like so:
 
   ```
   Widget build(BuildContext context) {
