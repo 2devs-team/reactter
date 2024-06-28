@@ -10,7 +10,7 @@ import '../shareds/test_controller.dart';
 
 void main() {
   group("context.use", () {
-    testWidgets("should throw exception when instance not found",
+    testWidgets("should throw exception when dependency not found",
         (tester) async {
       await tester.pumpWidget(
         TestBuilder(
@@ -26,12 +26,37 @@ void main() {
 
       expect(
         tester.takeException(),
-        isInstanceOf<ReactterInstanceNotFoundException>(),
+        isInstanceOf<ReactterDependencyNotFoundException>(),
       );
       expect(find.text("Rendered"), findsNothing);
     });
 
-    testWidgets("should get null when instance not found", (tester) async {
+    testWidgets("should get dependency instance", (tester) async {
+      late TestController instanceObtained;
+
+      await tester.pumpWidget(
+        TestBuilder(
+          child: ReactterProviderBuilder(
+            builder: (context, _, __) {
+              instanceObtained = context.use<TestController>();
+              final testController = context.use<TestController?>();
+
+              expect(testController, isNotNull);
+              expect(testController, instanceObtained);
+              expect(testController, isInstanceOf<TestController>());
+
+              return const Text("Rendered");
+            },
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expectLater(instanceObtained, isInstanceOf<TestController>());
+      expect(find.text("Rendered"), findsOneWidget);
+    });
+
+    testWidgets("should get null when dependency not found", (tester) async {
       late TestController? instanceObtained;
 
       await tester.pumpWidget(
@@ -55,7 +80,7 @@ void main() {
   });
 
   group("context.watch", () {
-    testWidgets("should watch instance changes", (tester) async {
+    testWidgets("should watch dependency changes", (tester) async {
       late TestController instanceObtained;
 
       await tester.pumpWidget(
@@ -82,7 +107,7 @@ void main() {
       expect(find.text("stateString: new value"), findsOneWidget);
     });
 
-    testWidgets("should watch instance's states", (tester) async {
+    testWidgets("should watch dependency's states", (tester) async {
       late TestController instanceObtained;
 
       await tester.pumpWidget(
@@ -123,7 +148,7 @@ void main() {
     });
 
     testWidgets(
-        "should watch multiple instance's states, using different context.watch",
+        "should watch multiple dependency's states, using different context.watch",
         (tester) async {
       late TestController instanceObtained;
       late TestController instanceObtainedWithId;
@@ -267,7 +292,7 @@ void main() {
     );
 
     testWidgets(
-      "should throw exception when instance not found",
+      "should throw exception when dependency not found",
       (tester) async {
         await tester.pumpWidget(
           TestBuilder(
@@ -283,7 +308,7 @@ void main() {
 
         expect(
           tester.takeException(),
-          isInstanceOf<ReactterInstanceNotFoundException>(),
+          isInstanceOf<ReactterDependencyNotFoundException>(),
         );
         expect(find.text("Rendered"), findsNothing);
       },

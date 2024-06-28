@@ -10,7 +10,7 @@ void main() {
   group("ReactterComponent", () {
     late TestController instanceObtained;
 
-    testWidgets("should render and get instance", (tester) async {
+    testWidgets("should render and get dependency", (tester) async {
       await tester.pumpWidget(
         TestBuilder(
           child: TestBuilder(
@@ -26,7 +26,7 @@ void main() {
       await _testReactterComponent(tester: tester, instance: instanceObtained);
     });
 
-    testWidgets("should renders and get instance by id", (tester) async {
+    testWidgets("should renders and get dependency by id", (tester) async {
       late TestController instanceObtained;
 
       await tester.pumpWidget(
@@ -61,7 +61,7 @@ void main() {
       expect(diagnostic?['id'], '"uniqueId"');
     });
 
-    testWidgets("should render and get instance without builder instance",
+    testWidgets("should render and get dependency without instance builder",
         (tester) async {
       late TestController instanceObtained;
 
@@ -83,7 +83,7 @@ void main() {
       await _testReactterComponent(tester: tester, instance: instanceObtained);
     });
 
-    testWidgets("should render and get instance without listen hooks",
+    testWidgets("should render and get dependency without listen states",
         (tester) async {
       late TestController instanceObtained;
 

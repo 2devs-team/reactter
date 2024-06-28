@@ -12,7 +12,7 @@ void main() {
     "ReactterConsumer",
     () {
       testWidgets(
-        "should throw exception when instance not found",
+        "should throw exception when dependency not found",
         (tester) async {
           await tester.pumpWidget(
             TestBuilder(
@@ -28,14 +28,14 @@ void main() {
 
           expect(
             tester.takeException(),
-            isInstanceOf<ReactterInstanceNotFoundException>(),
+            isInstanceOf<ReactterDependencyNotFoundException>(),
           );
           expect(find.text("Rendered"), findsNothing);
         },
       );
 
       testWidgets(
-        "should get null when instance not found",
+        "should get null when dependency not found",
         (tester) async {
           late TestController? instanceObtained;
 
@@ -61,7 +61,7 @@ void main() {
       );
 
       testWidgets(
-        "should watch instance changes",
+        "should watch dependency changes",
         (tester) async {
           late TestController instanceObtained;
 
@@ -95,7 +95,7 @@ void main() {
       );
 
       testWidgets(
-        "should watch instance's states",
+        "should watch dependency's states",
         (tester) async {
           late TestController instanceObtained;
 
@@ -142,7 +142,7 @@ void main() {
       );
 
       testWidgets(
-        "should watch multiple instance's states, using different context.watch",
+        "should watch multiple dependency's states, using different context.watch",
         (tester) async {
           late TestController instanceObtained;
           late TestController instanceWithIdObtained;

@@ -22,9 +22,8 @@ class _ReactterProvidersBuilderState extends State<ReactterProvidersBuilder> {
     return ReactterScope(
       child: ReactterProviders(
         [
-          ReactterProvider(
+          ReactterProvider.init(
             () => TestController(),
-            init: true,
           ),
           ReactterProvider(
             () {
