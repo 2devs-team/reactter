@@ -31,6 +31,30 @@ void main() {
       expect(find.text("stateString: initial"), findsOneWidget);
     });
 
+    testWidgets("should get instance from context as nullish", (tester) async {
+      late TestController? instanceObtained;
+
+      await tester.pumpWidget(
+        TestBuilder(
+          child: ReactterProviderBuilder(
+            builder: (context, _, __) {
+              instanceObtained = context.use<TestController?>();
+
+              return Text(
+                  "stateString: ${instanceObtained?.stateString.value}");
+            },
+          ),
+        ),
+      );
+
+      await tester.pumpAndSettle();
+
+      await tester.pumpAndSettle();
+
+      expectLater(instanceObtained, isInstanceOf<TestController>());
+      expect(find.text("stateString: initial"), findsOneWidget);
+    });
+
     testWidgets("should get the instance by id from context", (tester) async {
       late TestController instanceObtained;
 
