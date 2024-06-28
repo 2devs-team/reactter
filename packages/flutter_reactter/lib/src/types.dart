@@ -8,8 +8,8 @@ import 'package:reactter/reactter.dart' hide Reactter;
 typedef SelectorAspect<T> = bool Function(InheritedElement inheritedElement);
 
 /// This function type can be used as a callback to listen to the states of an
-/// instance of [T] type and return a list of [ReactterState] objects
-/// associated with that instance.
+/// instance of [T] dependency and return a list of [ReactterState] objects
+/// associated with the dependency.
 typedef ListenStates<T> = List<ReactterState> Function(T instance);
 
 /// Identifies a [ReactterProvider] with id.
@@ -37,7 +37,7 @@ typedef ChildBuilder = Widget Function(
 );
 
 /// This function type can be used as a callback to build a widget tree
-/// based on an instance of [T] type.
+/// based on an instance of [T] dependency.
 typedef InstanceChildBuilder<T> = Widget Function(
   BuildContext context,
   T inst,
@@ -45,7 +45,7 @@ typedef InstanceChildBuilder<T> = Widget Function(
 );
 
 /// This function type can be used as a callback to build a widget tree
-/// based on an instance of [T] type and a value of [V] type.
+/// based on an instance of [T] dependency and a value of [V] type.
 typedef InstanceValueChildBuilder<T, V> = Widget Function(
   BuildContext context,
   T inst,

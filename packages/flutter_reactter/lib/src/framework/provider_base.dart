@@ -5,19 +5,19 @@ part of '../framework.dart';
 @internal
 abstract class ProviderBase<T extends Object?> extends Widget {
   /// {@template provider_base.id}
-  /// It's used to identify the instance of [T] type
+  /// It's used to identify the dependency of [T] type
   /// that is provided by the provider.
   ///
-  /// It allows you to have multiple instances of the same [T] type in
+  /// It allows you to have multiple dependencies of the same [T] type in
   /// your widget tree and differentiate between them.
   ///
   /// This can be useful when you want to provide
-  /// different instances of a class to different parts of your application.
+  /// different dependencies of a class to different parts of your application.
   /// {@endtemplate}
   final String? id;
 
   /// {@template provider_base.mode}
-  /// It's used to specify the type of instance creation for the provided object.
+  /// It's used to specify the type of dependency creation for the provided object.
   ///
   /// It is of mode [DependencyMode], which is an enum with three possible values:
   /// [DependencyMode.builder], [DependencyMode.factory] and [DependencyMode.singleton].
@@ -31,14 +31,14 @@ abstract class ProviderBase<T extends Object?> extends Widget {
   final InstanceBuilder<T> instanceBuilder;
 
   /// {@template provider_base.init}
-  /// Immediately create the instance defined
+  /// Immediately create the dependency defined
   /// on firts parameter([instanceBuilder]).
   /// {@endtemplate}
   @protected
   final bool init;
 
   /// {@template provider_base.isLazy}
-  /// Lazily create the instance defined
+  /// Lazily create the dependency defined
   /// on firts parameter([instanceBuilder]).
   /// {@endtemplate}
   @protected
@@ -47,7 +47,7 @@ abstract class ProviderBase<T extends Object?> extends Widget {
   /// {@template provider_base.builder}
   /// Method which has the render logic
   ///
-  /// Exposes [BuilderContext], the instance and [child] widget as arguments.
+  /// Exposes [BuilderContext], instance of the dependency and [child] widget as arguments.
   /// and returns a widget.
   /// {@endtemplate}
   @protected

@@ -1,18 +1,18 @@
 part of '../widgets.dart';
 
 /// {@template reactter_consumer}
-/// A [StatelessWidget] that allows to obtain an instance of [T] type
+/// A [StatelessWidget] that allows to obtain the instance of the [T] dependency
 /// from the closest ancestor [ReactterProvider] and passes the instance
 /// to [builder].
 ///
-/// Also, listens for instance changes or a [ReactterState] list
+/// Also, listens for dependency changes or a [ReactterState] list
 /// to rebuild the widget tree.
 ///
 /// [ReactterConsumer] has same functionality as [ReactterProvider.contextOf].
 ///
-/// Use [id] property to identify the [T] instance.
+/// Use [id] property to identify the [T] dependency.
 ///
-/// Use [listenAll] property to listen changes to the instance
+/// Use [listenAll] property to listen changes to the dependency
 /// or the states defined in [listenStates] property:
 ///
 ///```dart
@@ -51,7 +51,7 @@ part of '../widgets.dart';
 /// See also:
 ///
 /// * [ReactterState], a state in reactter.
-/// * [ReactterProvider], a widget that provides a [T] instance through Widget.
+/// * [ReactterProvider], a widget that provides a [T] dependency through Widget.
 /// tree.
 ///{@endtemplate}
 class ReactterConsumer<T extends Object?> extends StatelessWidget {
@@ -82,7 +82,7 @@ class ReactterConsumer<T extends Object?> extends StatelessWidget {
 
   /// Method which is responsible for building the widget tree.
   ///
-  /// Exposes the instance of type [T], the [BuildContext],
+  /// Exposes the [BuildContext], the instance of the [T] dependency,
   /// and the [child] widget as arguments, and returns a widget.
   final InstanceChildBuilder<T> builder;
 

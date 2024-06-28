@@ -2,7 +2,7 @@ part of '../widgets.dart';
 
 /// {@template reactter_component}
 /// A abstract [StatelessWidget] class that provides [ReactterProvider] features,
-/// whose instance of [T] type defined is exposing trough [render] method.
+/// whose dependency of [T] type defined is exposing trough [render] method.
 ///
 /// ```dart
 /// class App extends ReactterComponent<AppController> {
@@ -18,7 +18,7 @@ part of '../widgets.dart';
 /// }
 /// ```
 ///
-/// Use [builder] getter to define the instance creating method.
+/// Use [builder] getter to define the dependency creating method.
 ///
 /// ```dart
 /// class App extends ReactterComponent<AppController> {
@@ -29,11 +29,11 @@ part of '../widgets.dart';
 /// ```
 ///
 /// > **NOTE:**
-/// > If you don't use [builder] getter, the [T] instance is not created
+/// > If you don't use [builder] getter, the [T] dependency is not created
 /// and instead tried to be found it in the nearest ancestor
 /// where it was created.
 ///
-/// Use [id] getter to identify the [T] instance:
+/// Use [id] getter to identify the [T] dependency:
 ///
 /// ```dart
 /// class App extends ReactterComponent<AppController> {
@@ -54,7 +54,7 @@ part of '../widgets.dart';
 /// }
 /// ```
 ///
-/// Use [listenAll] getter as `true` to listen all instance changes to rebuild
+/// Use [listenAll] getter as `true` to listen all dependency changes to rebuild
 /// the Widget tree defined in [render] method.
 ///
 /// ```dart
@@ -70,16 +70,16 @@ part of '../widgets.dart';
 ///
 /// See also:
 ///
-/// * [ReactterProvider], a [StatelessWidget] that provides an instance of [T] type
+/// * [ReactterProvider], a [StatelessWidget] that provides an [T] dependency
 /// to widget tree that can be access through the [BuildContext].
 /// {@endtemplate}
 abstract class ReactterComponent<T extends Object> extends StatelessWidget {
   const ReactterComponent({Key? key}) : super(key: key);
 
-  /// Id for instance of [T].
+  /// An indentify of the [T] dependency.
   String? get id => null;
 
-  /// How to builder the instance of [T].
+  /// How to builder the [T] dependency.
   InstanceBuilder<T>? get builder => null;
 
   /// Listens states to re-build [render] method.
@@ -90,9 +90,9 @@ abstract class ReactterComponent<T extends Object> extends StatelessWidget {
 
   /// Replaces a build method.
   ///
-  /// Provides the [T] instance along with the [BuildContext].
+  /// Provides the [T] dependency along with the [BuildContext].
   ///
-  /// It should build a Widget based on the current [T] instance changes.
+  /// It builds the Widgets tree based on the current [T] dependency.
   @protected
   Widget render(BuildContext context, T inst);
 

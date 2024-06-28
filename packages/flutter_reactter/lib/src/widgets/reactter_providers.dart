@@ -55,7 +55,7 @@ abstract class ProviderWrapper implements WrapperWidget {}
 ///
 /// See also:
 ///
-/// * [ReactterProvider], a widget that provides an instance type to widget tree.
+/// * [ReactterProvider], a widget that provides a [T] dependency to widget tree.
 /// {@endtemplate}
 class ReactterProviders extends StatelessWidget implements ProviderWrapper {
   /// {@macro reactter_providers}

@@ -78,13 +78,12 @@ class ReactterScopeNotFoundException implements Exception {
     return '''
 Error: Could not find the correct `ReactterScope` above this `$widgetType` Widget
 
-This happens because you used a `BuildContext` that does not include the instance of your choice.
-There are a few common scenarios:
+This happens because you used a `BuildContext` without dependency defined:
 
 - You added a new `ReactterScope` in your `main.dart` and perform a hot-restart.
 
   `ReactterScope` is a "scoped". So if you insert of `ReactterScope` inside a route, then
-  other routes will not be able to access that instance.
+  other routes will not be able to access it.
 
 If none of these solutions work, consider asking for help on StackOverflow:
 https://stackoverflow.com/questions/tagged/flutter
