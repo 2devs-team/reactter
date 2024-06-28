@@ -224,13 +224,13 @@ class UseEffect extends ReactterHook {
     );
   }
 
-  void _runCallbackAndWatchDependencies([_, __]) {
-    _runCallback(_, __);
+  void _runCallbackAndWatchDependencies([inst, param]) {
+    _runCallback(inst, param);
     _watchDependencies();
   }
 
-  void _runCleanupAndUnwatchDependencies([_, __]) {
-    _runCleanup(_, __);
+  void _runCleanupAndUnwatchDependencies([inst, param]) {
+    _runCleanup(inst, param);
     _unwatchDependencies();
   }
 
@@ -248,12 +248,12 @@ class UseEffect extends ReactterHook {
     }
   }
 
-  void _runCallback(_, __) {
+  void _runCallback(inst, param) {
     if (_isUpdating) return;
 
     _isUpdating = true;
 
-    _runCleanup(_, __);
+    _runCleanup(inst, param);
 
     try {
       final cleanupCallback = callback();
@@ -273,7 +273,7 @@ class UseEffect extends ReactterHook {
     }
   }
 
-  void _runCleanup(_, __) {
+  void _runCleanup(inst, param) {
     try {
       _cleanupCallback?.call();
     } catch (error) {

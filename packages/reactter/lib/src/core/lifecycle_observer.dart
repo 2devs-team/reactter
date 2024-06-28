@@ -69,8 +69,9 @@ void _executeLifecycleObserver(
   StateBase? state,
 ]) {
   switch (lifecycle) {
-    // TODO: Remove this case after v8.0.0
+    // ignore: deprecated_member_use_from_same_package
     case Lifecycle.initialized:
+      // ignore: deprecated_member_use_from_same_package
       observer.onInitialized();
       break;
     case Lifecycle.created:

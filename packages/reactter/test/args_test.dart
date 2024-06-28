@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_shadowing_type_parameters
+// ignore_for_file: avoid_shadowing_type_parameters, unrelated_type_equality_checks
 
 import 'dart:async';
 

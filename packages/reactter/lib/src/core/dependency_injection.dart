@@ -502,7 +502,7 @@ abstract class DependencyInjection {
       instanceRegister.refs.add(ref.hashCode);
     }
 
-    // TODO: Remove this line after v8.0.0
+    // ignore: deprecated_member_use_from_same_package
     eventHandler.emit(instanceRegister, Lifecycle.initialized);
     eventHandler.emit(instanceRegister, Lifecycle.created);
 
@@ -529,10 +529,12 @@ abstract class DependencyInjection {
     dependencyRegister._instance = null;
 
     _instances.remove(instance);
-    // TODO: Remove this line after v8.0.0
+
+    // ignore: deprecated_member_use_from_same_package
     eventHandler.emit(instance, Lifecycle.destroyed);
     eventHandler.emit(instance, Lifecycle.deleted);
-    // TODO: Remove this line after v8.0.0
+
+    // ignore: deprecated_member_use_from_same_package
     eventHandler.emit(dependencyRegister, Lifecycle.destroyed);
     eventHandler.emit(dependencyRegister, Lifecycle.deleted);
     logger.log(log);
