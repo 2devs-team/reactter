@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_reactter/src/extensions.dart';
-import 'package:flutter_reactter/src/widgets.dart';
+import 'package:flutter_reactter/flutter_reactter.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../shareds/reactter_providers_builder.dart';
@@ -9,7 +8,7 @@ import '../shareds/test_controller.dart';
 
 void main() {
   group("ReactterProviders", () {
-    testWidgets("should get instance form different ReactterProvider",
+    testWidgets("should get dependency form different ReactterProvider",
         (tester) async {
       late TestController instanceObtained;
       late TestController instanceObtainedWithId;
@@ -76,6 +75,137 @@ void main() {
 
       expect(find.text("Provider stateString: initial"), findsOneWidget);
       expect(find.text("Provider2 stateString: changed"), findsOneWidget);
+
+      final reactterProviderInheritedElement =
+          tester.element(find.bySubtype<ReactterProvider>().first)
+            ..deactivate()
+            ..activate();
+
+      final diagnostic = reactterProviderInheritedElement
+          .toDiagnosticsNode()
+          .toTimelineArguments();
+
+      expect(diagnostic?['id'], "null");
+      expect(diagnostic?['isRoot'], "true");
+    });
+
+    testWidgets("should get dependency from ReactterProvider siblings",
+        (tester) async {
+      late TestController instanceObtained;
+      late TestController instanceObtainedWithId;
+
+      await tester.pumpWidget(
+        TestBuilder(
+          child: ReactterProviders(
+            [
+              ReactterProvider(
+                () => TestController(),
+              ),
+              ReactterProvider(
+                () {
+                  final instFromProviderSibling =
+                      Reactter.find<TestController>();
+
+                  expect(instFromProviderSibling, isNotNull);
+
+                  final inst = TestController();
+                  inst.stateString.value = "from uniqueId";
+                  return inst;
+                },
+                id: 'uniqueId',
+              ),
+            ],
+            builder: (BuildContext context, Widget? child) {
+              instanceObtained = context.watch<TestController>();
+              instanceObtainedWithId = context.use<TestController>("uniqueId");
+
+              return Column(
+                children: [
+                  if (child != null) child,
+                  Text(
+                    "Provider stateString: ${instanceObtained.stateString.value}",
+                  ),
+                  Text(
+                    "ProviderWithId stateString: ${instanceObtainedWithId.stateString.value}",
+                  ),
+                ],
+              );
+            },
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expectLater(instanceObtained, isInstanceOf<TestController>());
+      expect(
+        find.text("Provider stateString: initial"),
+        findsOneWidget,
+      );
+      expect(
+        find.text("ProviderWithId stateString: from uniqueId"),
+        findsOneWidget,
+      );
+
+      instanceObtained.stateString.value = "changed";
+      await tester.pumpAndSettle();
+
+      expect(find.text("Provider stateString: changed"), findsOneWidget);
+      expect(
+        find.text("ProviderWithId stateString: from uniqueId"),
+        findsOneWidget,
+      );
+
+      final reactterProviderInheritedElement =
+          tester.element(find.bySubtype<ReactterProvider>().first)
+            ..deactivate()
+            ..activate();
+
+      final diagnostic = reactterProviderInheritedElement
+          .toDiagnosticsNode()
+          .toTimelineArguments();
+
+      expect(diagnostic?['id'], "null");
+      expect(diagnostic?['isRoot'], "true");
+    });
+
+    testWidgets("should use child widget", (tester) async {
+      await tester.pumpWidget(
+        TestBuilder(
+          child: Column(
+            children: [
+              ReactterProviders(
+                [
+                  ReactterProvider.init(() => TestController()),
+                ],
+                child: Builder(
+                  builder: (context) {
+                    final testController = context.use<TestController>();
+
+                    expect(
+                      testController,
+                      isInstanceOf<TestController>(),
+                    );
+                    return const Text("child");
+                  },
+                ),
+                builder: (BuildContext context, Widget? child) {
+                  return Column(
+                    children: [
+                      if (child != null) child,
+                      Text(
+                          "Provider stateString: ${context.use<TestController>().stateString.value}"),
+                    ],
+                  );
+                },
+              ),
+            ],
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text("child"), findsOneWidget);
+      expect(find.text("Provider stateString: initial"), findsOneWidget);
 
       final reactterProviderInheritedElement =
           tester.element(find.bySubtype<ReactterProvider>().first)
