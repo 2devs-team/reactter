@@ -13,12 +13,21 @@ ____
 
 ## Contents
 
+- [Contents](#contents)
 - [Quickstart](#quickstart)
 - [Lints](#lints)
-  - [hook_late_convention](#hook_late_convention)
-  - [hook_name_convention](#hook_name_convention)
-  - [invalid_hook_position](#invalid_hook_position)
-  - [invalid_hook_register](#invalid_hook_register)
+  - [hook\_late\_convention](#hook_late_convention)
+    - [Bad](#bad)
+    - [Good](#good)
+  - [hook\_name\_convention](#hook_name_convention)
+    - [Bad](#bad-1)
+    - [Good](#good-1)
+  - [invalid\_hook\_position](#invalid_hook_position)
+    - [Bad](#bad-2)
+    - [Good](#good-2)
+  - [invalid\_hook\_register](#invalid_hook_register)
+    - [Bad](#bad-3)
+    - [Good](#good-3)
 
 ## Quickstart
 
@@ -62,7 +71,7 @@ class AppController {
 
 #### Good
 
-Fix: Use `Reactter.lazyState` for attaching a instance.
+Fix: Use `Reactter.lazyState` for attaching an instance.
 
 ```dart
 class AppController {
