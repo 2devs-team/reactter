@@ -4,7 +4,7 @@ homepage: https://2devs-team.github.io/reactter/
 documentation: https://2devs-team.github.io/reactter/
 repository: https://github.com/2devs-team/reactter/tree/master/packages/flutter_reactter
 license: MIT License
-version: 7.1.0
+version: 7.2.0
 
 environment:
   sdk: ">=2.14.0 <4.0.0"
@@ -14,7 +14,7 @@ dependencies:
   flutter:
     sdk: flutter
   meta: ^1.7.0
-  reactter: ^7.1.0
+  reactter: ^7.2.0
 
 dev_dependencies:
   flutter_driver:

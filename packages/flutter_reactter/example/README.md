@@ -32,7 +32,7 @@ Implements: `ReactterWatcher`, `Signal`.
 
 Performs simple arithmetic operations on numbers
 
-> Learn how to provide and consume an instance.
+> Learn how to provide and consume a dependency
 
 [![Counter example](https://raw.githubusercontent.com/2devs-team/reactter_assets/main/examples/calculator_example.png)](https://github.com/2devs-team/reactter/tree/master/packages/flutter_reactter/example/lib/calculator)
 
@@ -42,7 +42,7 @@ Implements: `BuildContext.use`, `ReactterConsumer`, `ReactterProvider`, `Reactte
 
 Add, remove product to cart and checkout.
 
-> Learn how to access to other instance and keep its state.
+> Learn how to access to other dependency and keep its state.
 
 [![Shopping cart example](https://raw.githubusercontent.com/2devs-team/reactter_assets/main/examples/cart_example.gif)](https://github.com/2devs-team/reactter/tree/master/packages/flutter_reactter/example/lib/shopping_cart)
 
@@ -52,7 +52,7 @@ Implements: `ReactterComponent`, `ReactterConsumer`, `ReactterProvider`, `Reactt
 
 Add, remove and hide child widget with counter.
 
-> Learn how to add or remove instance dynamic and keep its state.
+> Learn how to add or remove dependency dynamic and keep its state.
 
 [![Tree widget example](https://raw.githubusercontent.com/2devs-team/reactter_assets/main/examples/tree_example.gif)](https://github.com/2devs-team/reactter/tree/master/packages/flutter_reactter/example/lib/tree)
 

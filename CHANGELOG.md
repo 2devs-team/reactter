@@ -1,14 +1,53 @@
 # Reactter
 
+## 7.2.0
+
+### Breakings
+
+- **refactor(core,hooks,test):** Deprecate and replace some enums and methods on Lifecycle to use the right concept.
+  - Deprecated `Lifecycle.initialized`, use `Lifecycle.created` instead.
+  - Deprecated `Lifecycle.destroyed`, use `Lifecycle.deleted` instead.
+  - Deprecated [`onInitialized`](https://pub.dev/documentation/reactter/7.1.0/reactter/LifecycleObserver/onInitialized.html) method of `LifecycleObserver`, use [`onCreated`](https://pub.dev/documentation/reactter/7.2.0/reactter/LifecycleObserver/onCreated.html) method instead.
+  - Deprecated [`onDestroyed`](https://pub.dev/documentation/reactter/7.1.0/reactter/LifecycleObserver/onDestroyed.html) method of `LifecycleObserver`, use [`onDeleted`](https://pub.dev/documentation/reactter/7.2.0/reactter/LifecycleObserver/onDeleted.html) method instead.
+- **refactor(widgets):** Update  [`ReactterProvider`](https://pub.dev/documentation/flutter_reactter/7.1.0/flutter_reactter/ReactterProvider/ReactterProvider.html) to use [`ReactterProvider.init`](https://pub.dev/documentation/flutter_reactter/7.2.0/flutter_reactter/ReactterProvider/ReactterProvider.init.html) constructor instead of `init` property.
+  - Deprecated `init` property of [`ReactterProvider`](https://pub.dev/documentation/flutter_reactter/7.1.0/flutter_reactter/ReactterProvider/ReactterProvider.html), use [`ReactterProvider.init`](https://pub.dev/documentation/flutter_reactter/7.2.0/flutter_reactter/ReactterProvider/ReactterProvider.init.html) instead.
+
+### Enhancements
+
+- **feat(core):** Add [`Reactter.hasRegister`](https://pub.dev/documentation/reactter/7.2.0/reactter/ReactterInterface/hasRegister.html) method to check if the dependency is registered in Reactter.
+- **refactor(framework):** Improve lazy loading performance in `ProviderImpl`, update implementation to reduce unnecessary checks and streamline widget rendering.
+
+### Fixes
+
+- **fix(core):** Prevent all `ReactterDependency` events from being deleted after deregistering a dependency.
+  - Update [`offAll`](https://pub.dev/documentation/reactter/7.2.0/reactter/ReactterInterface/offAll.html) method in `EventHandler` to support generic removal.
+- **fix(hooks):** Ensure that the callback is executed by the `dependencies` of  `UseEffect`.
+- **refactor(hooks):** Improve error handling in `UseEffect`.
+
+### Internal
+
+- **refactor(core,framework,hooks):** Update `dependencyInjection` getter names in Reactter codebase.
+- **refactor(framework,test):** Rename `reactter_instance` to `reactter_dependency` and fix imports and exports.
+- **doc(hooks):** Update `UseReducer` and `UseState` documentation to improve clarity and consistency.
+- **test(core,hooks):** Rename some files and update the descriptions.
+- **test(core):** Add [`Reactter.hasRegister`](https://pub.dev/documentation/reactter/7.2.0/reactter/ReactterInterface/hasRegister.html) test.
+- **refactor:** Remove unnecessary 'late' modifier in `TestController`.
+- **test:** Add comparable test cases for `Args`.
+- **refactor:** :memo: Improve some comments and documentation for clarity and consistency.
+- **test:** :memo: Update the descriptions of some test for clarity and consistency.
+- **test(widgets):** Add test case for nullish dependency obtained from context.
+- **test(widgets):** Add test case for getting dependency form `ReactterProvider` siblings.
+- **refactor:** Resolve lints and formatting issues.
+
 ## 7.1.0
 
 ### Breakings
 
 - **refactor(core,framework,hooks,test):** Deprecate and replace some classes and methods to use the right concept.
-  - Deprecated [`UseInstance`](https://pub.dev/documentation/reactter/7.0.1/reactter/UseInstance-class.html) hook, use [`UseDependency`](https://pub.dev/documentation/reactter/7.1.0-pre/reactter/UseDependency-class.html) hook instead.
-  - Deprecated [`InstanceManageMode`](https://pub.dev/documentation/reactter/7.0.1/reactter/InstanceManageMode.html) enum, use [`DependencyMode`](https://pub.dev/documentation/reactter/7.1.0-pre/reactter/DependencyMode.html) enum instead.
-  - Deprecated [`ReactterInstance`](https://pub.dev/documentation/reactter/7.0.1/reactter/ReactterInstance-class.html) class, use [`ReactterDependency`](https://pub.dev/documentation/reactter/7.1.0-pre/reactter/ReactterDependency-class.html) class instead.
-  - Deprecated [`getInstanceManageMode`](https://pub.dev/documentation/reactter/7.0.1/reactter/ReactterInterface/getInstanceManageMode.html) method, use [`getDependencyMode`](https://pub.dev/documentation/reactter/7.1.0-pre/reactter/ReactterInterface/getDependencyMode.html) method instead.
+  - Deprecated [`UseInstance`](https://pub.dev/documentation/reactter/7.0.1/reactter/UseInstance-class.html) hook, use [`UseDependency`](https://pub.dev/documentation/reactter/7.1.0/reactter/UseDependency-class.html) hook instead.
+  - Deprecated [`InstanceManageMode`](https://pub.dev/documentation/reactter/7.0.1/reactter/InstanceManageMode.html) enum, use [`DependencyMode`](https://pub.dev/documentation/reactter/7.1.0/reactter/DependencyMode.html) enum instead.
+  - Deprecated [`ReactterInstance`](https://pub.dev/documentation/reactter/7.0.1/reactter/ReactterInstance-class.html) class, use [`ReactterDependency`](https://pub.dev/documentation/reactter/7.1.0/reactter/ReactterDependency-class.html) class instead.
+  - Deprecated [`getInstanceManageMode`](https://pub.dev/documentation/reactter/7.0.1/reactter/ReactterInterface/getInstanceManageMode.html) method, use [`getDependencyMode`](https://pub.dev/documentation/reactter/7.1.0/reactter/ReactterInterface/getDependencyMode.html) method instead.
 
 ### Internal
 
