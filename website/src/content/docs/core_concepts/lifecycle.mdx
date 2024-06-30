@@ -35,15 +35,15 @@ The lifecycle entails events emitted through the [event handler](/reactter/core_
 Let's explore the lifecycle events:
 
 - <HE>`Lifecycle.registered`</HE>: is triggered when the dependency has been registered.
-- <HE>`Lifecycle.unregistered`</HE>: is triggered when the dependency is no longer registered.
-- <HE>`Lifecycle.initialized`</HE>: is triggered when the dependency has been initialized.
+- <HE>`Lifecycle.created`</HE>: is triggered when the dependency instance has been created.
 - <HE>`Lifecycle.willMount`</HE> (exclusive of _**flutter_reactter**_ package): is triggered when the dependency is going to be mounted in the widget tree.
 - <HE>`Lifecycle.didMount`</HE> (exclusive of _**flutter_reactter**_ package): is triggered after the dependency has been successfully mounted in the widget tree.
 - <HE>`Lifecycle.willUpdate`</HE>: is triggered anytime the state or the dependency is about to be updated. The event parameter is a <HT>`ReactterState`</HT>.
 - <HE>`Lifecycle.didUpdate`</HE>: is triggered anytime the state or the dependency has been updated. The event parameter is a <HT>`ReactterState`</HT>.
 - <HE>`Lifecycle.willUnmount`</HE>(exclusive of _**flutter_reactter**_ package): is triggered when the dependency is about to be unmounted from the widget tree.
 - <HE>`Lifecycle.didUnmount`</HE>(exclusive of _**flutter_reactter**_ package): is triggered when  the dependency has been successfully unmounted from the widget tree.
-- <HE>`Lifecycle.destroyed`</HE>: is triggered when the dependency has been destroyed.
+- <HE>`Lifecycle.deleted`</HE>: is triggered when the dependency instance has been deleted.
+- <HE>`Lifecycle.unregistered`</HE>: is triggered when the dependency is no longer registered.
 
 ## Using Event Handler
 

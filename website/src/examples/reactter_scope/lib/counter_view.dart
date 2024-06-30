@@ -24,7 +24,7 @@ class CounterView extends StatelessWidget {
             ReactterConsumer(
               listenStates: (_) => [count],
               builder: (_, __, ___) {
-                return Text('Count: ${count}');
+                return Text('$count');
               },
             ),
             const SizedBox(width: 8),

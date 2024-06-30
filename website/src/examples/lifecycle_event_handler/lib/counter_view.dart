@@ -22,14 +22,14 @@ class CounterView extends StatelessWidget {
 
     Reactter.on(
       ReactterDependency<CounterController>(),
-      Lifecycle.initialized,
-      (_, __) => print('CounterController initialized'),
+      Lifecycle.created,
+      (_, __) => print('CounterController created'),
     );
 
     Reactter.on(
       ReactterDependency<CounterController>(),
-      Lifecycle.destroyed,
-      (_, __) => print('CounterController destroyed'),
+      Lifecycle.deleted,
+      (_, __) => print('CounterController deleted'),
     );
 
     final showCounter = Signal(false);

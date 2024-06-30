@@ -71,8 +71,8 @@ If the dependency with/without `id` is not yet created, Reactter initializes it 
       - <HM>[`Reactter.factory`](/reactter/methods/dependency_injection_methods/#reactterfactory)</HM>(registers with <HE>`factory`</HE> mode if not found in registry)
       - <HM>[`Reactter.singleton`](/reactter/methods/dependency_injection_methods/#reacttersingleton)</HM>(registers with <HE>`singleton`</HE> mode if not found in registry)
 
-    The following events are fired(only if the dependency is created):
-      - <HE>`Lifecycle.initialized`</HE>
+    The following events are fired(only if the dependency instance is created):
+      - <HE>`Lifecycle.created`</HE>
       - <HE>`Lifecycle.willMount`</HE>(_flutter_reactter_ only)
       - <HE>`Lifecycle.didMount`</HE>(_flutter_reactter_ only)
 
@@ -91,7 +91,7 @@ If the dependency with/without `id` is not yet created, Reactter initializes it 
     The following events are fired:
       - <HE>`Lifecycle.willUnmount`</HE>(_flutter_reactter_ only)
       - <HE>`Lifecycle.didUnmount`</HE>(_flutter_reactter_ only)
-      - <HE>`Lifecycle.destroyed`</HE>
+      - <HE>`Lifecycle.deleted`</HE>
 
 5. **Unregistration**: When the dependency with/without `id` is no longer required and depending on `mode`, Reactter unregisters it.
 
