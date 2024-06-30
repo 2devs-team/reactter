@@ -5,9 +5,44 @@ sidebar:
   order: 2
 ---
 import { HE, HM, HT } from '@/components/Highlight';
+import CodeTabs from '@/components/CodeTabs.astro';
+import { Tabs, TabItem } from "@/components/Tabs";
+import ZappButton from "@/components/ZappButton.astro";
 import { Code } from "@astrojs/starlight/components";
+import { marks } from '@/examples/marks.ts'
+
 import counterControllerCode from '@/examples/counter/lib/counter_controller.dart?raw';
+import counterCode from '@/examples/counter/lib/counter.dart?raw';
+import counterViewCode from '@/examples/counter/lib/counter_view.dart?raw';
 import counterMainCode from '@/examples/counter/lib/main.dart?raw';
+
+import counterControllerUsingIdCode from '@/examples/reactter_provider_using_id/lib/counter_controller.dart?raw';
+import counterUsingIdCode from '@/examples/reactter_provider_using_id/lib/counter.dart?raw';
+import counterViewUsingIdCode from '@/examples/reactter_provider_using_id/lib/counter_view.dart?raw';
+import counterMainUsingIdCode from '@/examples/reactter_provider_using_id/lib/main.dart?raw';
+
+import counterControllerUsingChildCode from '@/examples/reactter_provider_using_child/lib/counter_controller.dart?raw';
+import counterUsingChildCode from '@/examples/reactter_provider_using_child/lib/counter.dart?raw';
+import counterWithButtonsUsingChildCode from '@/examples/reactter_provider_using_child/lib/counter_with_buttons.dart?raw';
+import counterViewUsingChildCode from '@/examples/reactter_provider_using_child/lib/counter_view.dart?raw';
+import counterMainUsingChildCode from '@/examples/reactter_provider_using_child/lib/main.dart?raw';
+
+import counterControllerLazyCode from '@/examples/reactter_provider_lazy/lib/counter_controller.dart?raw';
+import counterLazyCode from '@/examples/reactter_provider_lazy/lib/counter.dart?raw';
+import counterViewLazyCode from '@/examples/reactter_provider_lazy/lib/counter_view.dart?raw';
+import counterMainLazyCode from '@/examples/reactter_provider_lazy/lib/main.dart?raw';
+
+import counterControllerInitCode from '@/examples/reactter_provider_init/lib/counter_controller.dart?raw';
+import counterInitCode from '@/examples/reactter_provider_init/lib/counter.dart?raw';
+import counterViewInitCode from '@/examples/reactter_provider_init/lib/counter_view.dart?raw';
+import counterMainInitCode from '@/examples/reactter_provider_init/lib/main.dart?raw';
+
+import counterControllerUsingModeCode from '@/examples/reactter_provider_using_mode/lib/counter_controller.dart?raw';
+import counterUsingModeCode from '@/examples/reactter_provider_using_mode/lib/counter.dart?raw';
+import counterViewUsingModeCode from '@/examples/reactter_provider_using_mode/lib/counter_view.dart?raw';
+import counterMainUsingModeCode from '@/examples/reactter_provider_using_mode/lib/main.dart?raw';
+
+
 
 :::tip
 This documentation assumes you've already read the [Dependency Injection](/reactter/core_concepts/dependency_injection) and [Rendering Control](/reactter/core_concepts/rendering_control).
@@ -18,9 +53,9 @@ The <HT>`ReactterProvider`</HT> widget injects a dependency into its descendant 
 
 ## Syntax
 
-The <HT>`ReactterProvider`</HT> class has two constructors:
+The <HT>`ReactterProvider`</HT> class has three constructors, each catering to different dependency injection needs.
 
-- <HT>`ReactterProvider`</HT>: Default constructor that provides a despencency using a builder function.
+- <HT>`ReactterProvider`</HT>: Default constructor that provides a dependency using a builder function.
 
   ```dart showLineNumbers=false
   ReactterProvider<T>(
@@ -37,7 +72,28 @@ The <HT>`ReactterProvider`</HT> class has two constructors:
   })
   ```
 
-- <HT>`ReactterProvider.lazy`</HT>: Constructor that provides a despencency using a builder function lazily.
+- <HT>`ReactterProvider.init`</HT>: This constructor initializes the dependency instance before it is mounted.
+
+  ```dart showLineNumbers=false
+  ReactterProvider<T>.init(
+    T instanceBuilder(), {
+    Key? key,
+    String? id,
+    DependencyMode mode = DependencyMode.builder,
+    Widget? child,
+    Widget builder(
+      BuildContext context,
+      T instance,
+      Widget? child,
+    )?,
+  })
+  ```
+
+- <HT>`ReactterProvider.lazy`</HT>: This constructor defers the instantiation of the dependency until it is accessed for the first time.
+
+  :::caution
+  While lazy-loading enhances performance by deferring instantiation until required, it's important to note that it may result in the loss of lifecycle mount tracing.
+  :::
 
   ```dart showLineNumbers=false
   ReactterProvider<T>.lazy(
@@ -53,6 +109,7 @@ The <HT>`ReactterProvider`</HT> class has two constructors:
   })
   ```
 
+
 ## Properties
 
 - <HM>`instanceBuilder`</HM>: A function that creates an instance of the <HT>`T`</HT> dependency. This function is registered by [Dependency Injection](/reactter/core_concepts/dependency_injection).
@@ -63,7 +120,7 @@ The <HT>`ReactterProvider`</HT> class has two constructors:
   Learn more about the [dependency modes](/reactter/core_concepts/dependency_injection/#dependency-modes).
 - `child`: An optional <HT>`Widget`</HT> which is independent of the <HT>`ReactterProvider`</HT>.
   If defined, it is passed to the <HM>`builder`</HM> function if it is defined.
-- <HM>`builder`</HM>: An optional function which builds a widget based on the dependency.
+- <HM>`builder`</HM>: An optional function which builds a widget based on the dependency. If it not defined, the <HT>`child`</HT> widget is returned.
 It receives the following arguments:
   - `context`: The <HM>`BuildContext`</HM> of the widget. A handle to the location of <HT>`ReactterProvider`</HT> in the widget tree.
   - `instance`: The instance of the <HT>`T`</HT> dependency. It is available only to default constructor.
@@ -77,69 +134,28 @@ To use the <HT>`ReactterProvider`</HT> widget, wrap it around the widget tree wh
 
 Here's an example of how to use it:
 
-<Code title="counter_controller.dart" code={counterControllerCode} lang="dart" mark={["count", "Signal"]} collapse={["1-100"]}  />
+<CodeTabs>
+  <ZappButton path="examples/counter"/>
 
-```dart title="counter_view.dart" collapse={1-20, 30-53} "ReactterProvider" "ReactterConsumer" "context.watch" "CounterController" "counterController" "counterController.increment" "counterController.decrement" "counterController.count"
-import 'package:flutter/material.dart';
-import 'package:flutter_reactter/flutter_reactter.dart';
-import 'counter_controller.dart';
+  <Tabs>
+    <TabItem>
+      <HM single slot="label">counter.dart</HM>
+      <Code code={counterCode} lang="dart" mark={[...marks, {range: "11-13, 37-38"}]} collapse={"14-36"} />
+    </TabItem>
 
-class CounterView extends StatelessWidget {
-  const CounterView({Key? key}) : super(key: key);
+    <TabItem label="counter_controller.dart">
+      <Code code={counterControllerCode} lang="dart" mark={marks} />
+    </TabItem>
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Counter"),
-      ),
-      body: const Center(
-        child: Counter()
-      ),
-    );
-  }
-}
+    <TabItem label="counter_view.dart">
+      <Code code={counterViewCode} lang="dart" mark={marks} />
+    </TabItem>
 
-class Counter extends StatelessWidget {
-  const Counter({Key? key}) : super(key: key);
-
-  Widget build(BuildContext context) {
-    // Provides the `CounterController` dependency to the widget tree
-    return ReactterProvider<CounterController>(
-      () => CounterController(), // Registers the `CounterController` dependency
-      builder: (context, counterController, child) {
-        print("CounterController created: ${counterController}");
-
-        return Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ElevatedButton(
-              onPressed: counterController.decrement,
-              child: const Icon(Icons.remove),
-            ),
-            const const SizedBox(width: 8),
-            ReactterConsumer<CounterController>(
-              // Observes the `count` property of the `counterController` instance
-              listenStates: (counterController) => [counterController.count],
-              builder: (context, counterController, child) {
-                // Rebuilds the widget tree when the `count` value changes
-                return Text("${counterController.count}");
-              },
-            ),
-            const SizedBox(width: 8),
-            ElevatedButton(
-              onPressed: counterController.increment,
-              child: const Icon(Icons.add),
-            ),
-          ],
-        );
-      },
-    );
-  }
-}
-```
-
-<Code title="main.dart" code={counterMainCode} lang="dart" collapse={["1-100"]} />
+    <TabItem label="main.dart">
+      <Code code={counterMainCode} lang="dart" mark={marks} />
+    </TabItem>
+  </Tabs>
+</CodeTabs>
 
 ### Using `id`
 
@@ -148,164 +164,98 @@ It is useful when you want to create multiple instances of the same dependency.
 
 Here's an example of how to use it:
 
-<Code title="counter_controller.dart" code={counterControllerCode} lang="dart" mark={["count", "Signal"]} collapse={["1-100"]}  />
+<CodeTabs>
+  <ZappButton path="examples/reactter_provider_using_id"/>
 
-```dart title="counter_view.dart" collapse={1-25, 38-67} {35} "ReactterProvider" "context.watch" "CounterController" "counterController" "counterController.increment" "counterController.decrement" "counterController.count"
-import 'package:flutter/material.dart';
-import 'package:flutter_reactter/flutter_reactter.dart';
-import 'counter_controller.dart';
+  <Tabs>
+    <TabItem>
+      <HM single slot="label">counter.dart</HM>
+      <Code code={counterUsingIdCode} lang="dart" mark={[...marks, {range: "13-16, 41-42"}]} collapse={"17-40"} />
+    </TabItem>
 
-class CounterView extends StatelessWidget {
-  const CounterView({Key? key}) : super(key: key);
+    <TabItem>
+      <HM single slot="label">counter_view.dart</HM>
+      <Code code={counterViewUsingIdCode} lang="dart" mark={[...marks, {range: "17, 19, 21"}]} />
+    </TabItem>
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Counter"),
-      ),
-      body: const Center(
-        child: Column(
-          children: [
-            Counter(id: "counter1"),
-            Counter(id: "counter2"),
-          ],
-        ),
-      ),
-    );
-  }
-}
+    <TabItem label="counter_controller.dart">
+      <Code code={counterControllerUsingIdCode} lang="dart" mark={marks} />
+    </TabItem>
 
-class Counter extends StatelessWidget {
-  final String id;
-
-  const Counter({Key? key, required this.id}) : super(key: key);
-
-  Widget build(BuildContext context) {
-    // Provides the `CounterController` dependency to the widget tree
-    return ReactterProvider<CounterController>(
-      () => CounterController(), // Registers the `CounterController` dependency
-      id: id,
-      builder: (context, counterController, child) {
-        print("CounterController created: ${counterController} with id: $id");
-
-        return Column(
-          children: [
-            Text("Counter id: $id"),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ElevatedButton(
-                  onPressed: counterController.decrement,
-                  child: const Icon(Icons.remove),
-                ),
-                const SizedBox(width: 8),
-                ReactterConsumer<CounterController>(
-                  id: id,
-                  // Observes the `count` property of the `counterController` instance
-                  listenStates: (counterController) => [counterController.count],
-                  builder: (context, counterController, child) {
-                    // Rebuilds the widget tree when the `count` value changes
-                    return Text("${counterController.count}");
-                  },
-                ),
-                const SizedBox(width: 8),
-                ElevatedButton(
-                  onPressed: counterController.increment,
-                  child: const Icon(Icons.add),
-                ),
-              ],
-            ),
-          ],
-        );
-      },
-    );
-  }
-}
-```
-
-<Code title="main.dart" code={counterMainCode} lang="dart" collapse={["1-100"]} />
+    <TabItem label="main.dart">
+      <Code code={counterMainUsingIdCode} lang="dart" mark={marks} />
+    </TabItem>
+  </Tabs>
+</CodeTabs>
 
 ### Using `child`
 
 The <HT>`ReactterProvider`</HT> widget provides a `child` argument that does not rebuild when the dependency changes.
-It is useful when you want to provide a widget that does not rebuild when the dependency changes.
+It is useful when you want to reuse a widget.
 
 :::note
-The `child` argument can't accessed to the dependency instance.
+The `child` argument can't accessed to the dependency instance without a consumer.
 :::
 
 Here's an example of how to use it:
 
-<Code title="counter_controller.dart" code={counterControllerCode} lang="dart" mark={["count", "Signal"]} collapse={["1-100"]}  />
+<CodeTabs>
+  <ZappButton path="examples/reactter_provider_using_child"/>
 
-```dart title="counter_view.dart" collapse={1-20, 35-57} {28, 34} "ReactterProvider" "context.watch" "CounterController" "counterController" "counterController.increment" "counterController.decrement" "counterController.count"
-import 'package:flutter/material.dart';
-import 'package:flutter_reactter/flutter_reactter.dart';
-import 'counter_controller.dart';
+  <Tabs>
+    <TabItem>
+      <HM single slot="label">counter.dart</HM>
+      <Code code={counterUsingChildCode} lang="dart" mark={[...marks, {range: "12-23"}]}/>
+    </TabItem>
 
-class CounterView extends StatelessWidget {
-  const CounterView({Key? key}) : super(key: key);
+    <TabItem>
+      <HM single slot="label">counter_with_buttons.dart</HM>
+      <Code code={counterWithButtonsUsingChildCode} lang="dart" mark={[...marks, {range: "21, 8-9, 31-32"}]} />
+    </TabItem>
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Counter"),
-      ),
-      body: const Center(
-        child: Counter()
-      ),
-    );
-  }
-}
+    <TabItem>
+      <HM single slot="label">counter_view.dart</HM>
+      <Code code={counterViewUsingChildCode} lang="dart" mark={[...marks, {range: "15, 18"}]} />
+    </TabItem>
 
-class Counter extends StatelessWidget {
-  const Counter({Key? key}) : super(key: key);
+    <TabItem label="counter_controller.dart">
+      <Code code={counterControllerUsingChildCode} lang="dart" mark={marks} />
+    </TabItem>
 
-  Widget build(BuildContext context) {
-    // Provides the `CounterController` dependency to the widget tree
-    return ReactterProvider<CounterController>(
-      () => CounterController(), // Registers the `CounterController` dependency
-      child: Text("This is a child widget"),
-      builder: (context, counterController, child) {
-        print("CounterController created: ${counterController}");
+    <TabItem label="main.dart">
+      <Code code={counterMainUsingChildCode} lang="dart" mark={marks} />
+    </TabItem>
+  </Tabs>
+</CodeTabs>
 
-        return Column(
-          children: [
-            child!,
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ElevatedButton(
-                  onPressed: counterController.decrement,
-                  child: const Icon(Icons.remove),
-                ),
-                const SizedBox(width: 8),
-                ReactterConsumer<CounterController>(
-                  // Observes the `count` property of the `counterController` instance
-                  listenStates: (counterController) => [counterController.count],
-                  builder: (context, counterController, child) {
-                    // Rebuilds the widget tree when the `count` value changes
-                    return Text("${counterController.count}");
-                  },
-                ),
-                const SizedBox(width: 8),
-                ElevatedButton(
-                  onPressed: counterController.increment,
-                  child: const Icon(Icons.add),
-                ),
-              ],
-            ),
-          ],
-        );
-      },
-    );
-  }
-}
-```
+### Immediate initialization
 
-<Code title="main.dart" code={counterMainCode} lang="dart" collapse={["1-100"]} />
+The <HT>`ReactterProvider.init`</HT> constructor initializes the dependency before it is mounted. It is useful when you want to initialize the dependency immediately.
+
+Here's an example of how to use it:
+
+<CodeTabs>
+  <ZappButton path="examples/reactter_provider_init"/>
+
+  <Tabs>
+    <TabItem>
+      <HM single slot="label">counter.dart</HM>
+      <Code code={counterInitCode} lang="dart" mark={[...marks, {range: "11-16, 40-41, 51, 60"}]} collapse={"17-39"} />
+    </TabItem>
+
+    <TabItem label="counter_controller.dart">
+      <Code code={counterControllerInitCode} lang="dart" mark={marks} />
+    </TabItem>
+
+    <TabItem label="counter_view.dart">
+      <Code code={counterViewInitCode} lang="dart" mark={marks} />
+    </TabItem>
+
+    <TabItem label="main.dart">
+      <Code code={counterMainInitCode} lang="dart" mark={marks} />
+    </TabItem>
+  </Tabs>
+</CodeTabs>
 
 ### Initialization lazily
 
@@ -313,81 +263,28 @@ The <HT>`ReactterProvider.lazy`</HT> constructor initializes the dependency lazi
 
 Here's an example of how to use it:
 
-<Code title="counter_controller.dart" code={counterControllerCode} lang="dart" mark={["count", "Signal"]} collapse={["1-100"]}  />
+<CodeTabs>
+  <ZappButton path="examples/reactter_provider_lazy"/>
 
-```dart title="counter_view.dart" collapse={1-20, 30-64} "ReactterProvider<CounterController>.lazy" "ReactterProvider" "context.use" "context.watch" "CounterController" "counterController" "counterController.increment" "counterController.decrement" "counterController.count"
-import 'package:flutter/material.dart';
-import 'package:flutter_reactter/flutter_reactter.dart';
-import 'counter_controller.dart';
+  <Tabs>
+    <TabItem>
+      <HM single slot="label">counter.dart</HM>
+      <Code code={counterLazyCode} lang="dart" mark={[...marks, {range: "11-16, 57-58"}]} collapse={"32-53"} />
+    </TabItem>
 
-class CounterView extends StatelessWidget {
-  const CounterView({Key? key}) : super(key: key);
+    <TabItem label="counter_controller.dart">
+      <Code code={counterControllerLazyCode} lang="dart" mark={marks} />
+    </TabItem>
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Counter"),
-      ),
-      body: const Center(
-        child: Counter(),
-      ),
-    );
-  }
-}
+    <TabItem label="counter_view.dart">
+      <Code code={counterViewLazyCode} lang="dart" mark={marks} />
+    </TabItem>
 
-class Counter extends StatelessWidget {
-  const Counter({Key? key}) : super(key: key);
-
-  Widget build(BuildContext context) {
-    // Provides the `CounterController` dependency to the widget tree
-    return ReactterProvider<CounterController>.lazy(
-      () => CounterController(), // Registers the `CounterController` dependency
-      builder: (context, child) {
-        return FutureBuilder<String>(
-          // Simulates rendering delay
-          future: Future.delayed(Duration(seconds: 2), () => "Ready!"),
-          builder: (context, snapshot) {
-            if (!snapshot.hasData) {
-              return const Center(child: CircularProgressIndicator());
-            }
-
-            // In this point, the `CounterController` dependency is created
-            final counterController = context.use<CounterController>();
-            print("CounterController created: ${counterController}");
-
-            return Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ElevatedButton(
-                  onPressed: counterController.decrement,
-                  child: const Icon(Icons.remove),
-                ),
-                const SizedBox(width: 8),
-                ReactterConsumer<CounterController>(
-                  // Observes the `count` property of the `counterController` instance
-                  listenStates: (counterController) => [counterController.count],
-                  builder: (context, counterController, child) {
-                    // Rebuilds the widget tree when the `count` value changes
-                    return Text("${counterController.count}");
-                  },
-                ),
-                const SizedBox(width: 8),
-                ElevatedButton(
-                  onPressed: counterController.increment,
-                  child: const Icon(Icons.add),
-                ),
-              ],
-            );
-          }
-        ),
-      },
-    );
-  }
-}
-```
-
-<Code title="main.dart" code={counterMainCode} lang="dart" collapse={["1-100"]} />
+    <TabItem label="main.dart">
+      <Code code={counterMainLazyCode} lang="dart" mark={marks} />
+    </TabItem>
+  </Tabs>
+</CodeTabs>
 
 ### Initialization modes
 
@@ -395,121 +292,26 @@ The <HT>`ReactterProvider`</HT> widget provides a `mode` argument that allows yo
 
 Here's an example of how to use it:
 
-<Code title="counter_controller.dart" code={counterControllerCode} lang="dart" mark={["count", "Signal"]} collapse={["1-100"]}  />
+<CodeTabs>
+  <ZappButton path="examples/reactter_provider_using_mode"/>
 
-```dart title="counter_view.dart" collapse={1-18, 75-108} {37, 42, 48, 73} "Signal" "ReactterWatcher" "DependencyMode" "ReactterProvider" "context.watch" "CounterController" "counterController" "counterController.increment" "counterController.decrement" "counterController.count"
-import 'package:flutter/material.dart';
-import 'package:flutter_reactter/flutter_reactter.dart';
-import 'counter_controller.dart';
+  <Tabs>
+    <TabItem>
+      <HM single slot="label">counter.dart</HM>
+      <Code code={counterUsingModeCode} lang="dart" mark={[...marks, {range: "13-17, 42-43"}]} collapse={"18-41"} />
+    </TabItem>
 
-class CounterView extends StatelessWidget {
-  const CounterView({Key? key}) : super(key: key);
+    <TabItem>
+      <HM single slot="label">counter_view.dart</HM>
+      <Code code={counterViewUsingModeCode} lang="dart" mark={[...marks, {range: "32, 37, 43"}]}  />
+    </TabItem>
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Counter"),
-      ),
-      body: CounterModes(),
-    );
-  }
-}
+    <TabItem label="counter_controller.dart">
+      <Code code={counterControllerUsingModeCode} lang="dart" mark={marks} />
+    </TabItem>
 
-class CounterModes extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    final showCounter = Signal(true);
-
-    return Center(
-      child: ReactterWatcher(
-        child: ElevatedButton(
-          onPressed: () => showCounter.value = !showCounter.value,
-          child: Text("Toggle Counters"),
-        ),
-        builder: (context, child) {
-          return Column(
-            children: [
-              child!,
-              // Will register and create the `CounterController` dependency each time.
-              if (showCounter.value)
-                const Counter(
-                  mode: DependencyMode.builder,
-                ),
-              // Will register the `CounterController` dependency only once.
-              if (showCounter.value)
-                const Counter(
-                  mode: DependencyMode.factory,
-                ),
-              // Will register and create the `CounterController` dependency only once,
-              // this keeps the counter value between rebuilds
-              if (showCounter.value)
-                const Counter(
-                  mode: DependencyMode.singleton,
-                ),
-            ],
-          );
-        },
-      ),
-    );
-  }
-}
-
-class Counter extends StatelessWidget {
-  final DependencyMode mode;
-
-  const Counter({
-    Key? key,
-    required this.mode,
-  }) : super(key: key);
-
-  Widget build(BuildContext context) {
-    final id = mode.toString();
-    // Provides the `CounterController` dependency to the widget tree
-    return ReactterProvider<CounterController>(
-      // Registers the `CounterController` dependency
-      () => CounterController(),
-      id: id,
-      mode: mode,
-      builder: (context, counterController, child) {
-        print(
-          "CounterController created: ${counterController} with mode: $mode",
-        );
-
-        return Column(
-          children: [
-            Text("Counter mode: $mode"),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ElevatedButton(
-                  onPressed: counterController.decrement,
-                  child: const Icon(Icons.remove),
-                ),
-                const SizedBox(width: 8),
-                ReactterConsumer<CounterController>(
-                  id: id,
-                  // Observes the `count` property of the `counterController` instance
-                  listenStates: (counterController) =>
-                      [counterController.count],
-                  builder: (context, counterController, child) {
-                    // Rebuilds the widget tree when the `count` value changes
-                    return Text("${counterController.count}");
-                  },
-                ),
-                const SizedBox(width: 8),
-                ElevatedButton(
-                  onPressed: counterController.increment,
-                  child: const Icon(Icons.add),
-                ),
-              ],
-            ),
-          ],
-        );
-      },
-    );
-  }
-}
-```
-
-<Code title="main.dart" code={counterMainCode} lang="dart" collapse={["1-100"]} />
+    <TabItem label="main.dart">
+      <Code code={counterMainUsingModeCode} lang="dart" mark={marks} />
+    </TabItem>
+  </Tabs>
+</CodeTabs>
