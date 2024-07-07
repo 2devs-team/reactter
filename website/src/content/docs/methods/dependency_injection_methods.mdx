@@ -6,8 +6,59 @@ sidebar:
 ---
 
 import { HE, HK, HM, HN, HS, HT } from '@/components/Highlight';
+import CodeTabs from '@/components/CodeTabs.astro';
+import { Tabs, TabItem } from "@/components/Tabs";
+import ZappButton from "@/components/ZappButton.astro";
 import { Code } from "@astrojs/starlight/components";
-import counterControllerCode from '@/examples/counter/lib/counter_controller.dart?raw';
+import { marks } from '@/examples/marks.ts'
+
+import counterRegisterCode from '@/examples/dependency_injection_register/lib/counter.dart?raw';
+import mainRegisterCode from '@/examples/dependency_injection_register/lib/main.dart?raw';
+
+import counterLazyBuilderCode from '@/examples/dependency_injection_lazy_builder/lib/counter.dart?raw';
+import mainLazyBuilderCode from '@/examples/dependency_injection_lazy_builder/lib/main.dart?raw';
+
+import counterLazyFactoryCode from '@/examples/dependency_injection_lazy_factory/lib/counter.dart?raw';
+import mainLazyFactoryCode from '@/examples/dependency_injection_lazy_factory/lib/main.dart?raw';
+
+import counterLazySingletonCode from '@/examples/dependency_injection_lazy_singleton/lib/counter.dart?raw';
+import mainLazySingletonCode from '@/examples/dependency_injection_lazy_singleton/lib/main.dart?raw';
+
+import counterCreateCode from '@/examples/dependency_injection_create/lib/counter.dart?raw';
+import mainCreateCode from '@/examples/dependency_injection_create/lib/main.dart?raw';
+
+import counterBuilderCode from '@/examples/dependency_injection_builder/lib/counter.dart?raw';
+import mainBuilderCode from '@/examples/dependency_injection_builder/lib/main.dart?raw';
+
+import counterFactoryCode from '@/examples/dependency_injection_factory/lib/counter.dart?raw';
+import mainFactoryCode from '@/examples/dependency_injection_factory/lib/main.dart?raw';
+
+import counterSingletonCode from '@/examples/dependency_injection_singleton/lib/counter.dart?raw';
+import mainSingletonCode from '@/examples/dependency_injection_singleton/lib/main.dart?raw';
+
+import counterGetCode from '@/examples/dependency_injection_get/lib/counter.dart?raw';
+import mainGetCode from '@/examples/dependency_injection_get/lib/main.dart?raw';
+
+import counterFindCode from '@/examples/dependency_injection_find/lib/counter.dart?raw';
+import mainFindCode from '@/examples/dependency_injection_find/lib/main.dart?raw';
+
+import counterExistsCode from '@/examples/dependency_injection_exists/lib/counter.dart?raw';
+import mainExistsCode from '@/examples/dependency_injection_exists/lib/main.dart?raw';
+
+import counterGetDependencyModeCode from '@/examples/dependency_injection_get_dependency_mode/lib/counter.dart?raw';
+import mainGetDependencyModeCode from '@/examples/dependency_injection_get_dependency_mode/lib/main.dart?raw';
+
+import counterDeleteCode from '@/examples/dependency_injection_delete/lib/counter.dart?raw';
+import mainDeleteCode from '@/examples/dependency_injection_delete/lib/main.dart?raw';
+
+import counterDestroyCode from '@/examples/dependency_injection_destroy/lib/counter.dart?raw';
+import mainDestroyCode from '@/examples/dependency_injection_destroy/lib/main.dart?raw';
+
+import counterUnregisterCode from '@/examples/dependency_injection_unregister/lib/counter.dart?raw';
+import mainUnregisterCode from '@/examples/dependency_injection_unregister/lib/main.dart?raw';
+
+import counterIsRegisteredCode from '@/examples/dependency_injection_is_registered/lib/counter.dart?raw';
+import mainIsRegisteredCode from '@/examples/dependency_injection_is_registered/lib/main.dart?raw';
 
 :::tip
 This documentation assumes you've already read the [Dependency Injection](/reactter/core_concepts/dependency_injection).
@@ -19,7 +70,7 @@ These methods are used to create and manipulate dependencies in a more organized
 
 ## <HM>`Reactter.register`</HM>
 
-The <HM>`Reactter.register`</HM> method is used to register a new dependency in Reactter.
+The <HM>`Reactter.register`</HM> method registers a new dependency.
 It returns <HN>`true`</HN> if the dependency is registered successfully, otherwise return <HN>`false`</HN>.
 
 #### Syntax
@@ -35,7 +86,7 @@ bool Reactter.register<T>(
 #### Parameters
 
 - <HM>`builder`</HM>: A function that returns an instance of the <HT>`T`</HT> dependency.
-- `id`: An optional identifier for the <HT>`T`</HT> dependency. If not provided, the dependency will be registered with the type of the dependency.
+- `id`: An optional identifier for the <HT>`T`</HT> dependency. If not provided, the dependency is registered by its type(<HT>`T`</HT>).
 - `mode`: The mode of the dependency. It can be <HE>`DependencyMode.builder`</HE>, <HE>`DependencyMode.factory`</HE>, or <HE>`DependencyMode.singleton`</HE>. 
 The default value is <HE>`DependencyMode.builder`</HE>. Learn more about it in [DependencyMode](/reactter/core_concepts/dependency_injection#dependency-modes).
 
@@ -43,84 +94,27 @@ The default value is <HE>`DependencyMode.builder`</HE>. Learn more about it in [
 
 See the example below to understand how to use the <HM>`Reactter.register`</HM> method in different scenarios.
 
-<Code title="counter_controller.dart" code={counterControllerCode} lang="dart" mark={["count", "Signal"]} collapse={["1-100"]}/>
+<CodeTabs>
+  <ZappButton path="examples/dependency_injection_register"/>
 
-```dart title="main.dart" collapse={1-4, 7-33, 36-43, 46-100} "Reactter.register" "Reactter.get" "Reactter.delete" "Reactter.on" "Lifecycle.didUpdate" "DependencyMode.singleton" "Reactter.destroy"
-import 'package:reactter/reactter.dart';
-import 'counter_controller.dart';
+  <Tabs>
+    <TabItem>
+      <HM single slot="label">main.dart</HM>
+      <Code code={mainRegisterCode} lang="dart" mark={[...marks, {range: "7, 37, 47"}]} collapse={["8-35", "38-45", "48-74", "76-100"]} />
+    </TabItem>
 
-void main() {
-  // Register a dependency
-  Reactter.register<CounterController>(() => CounterController());
-
-  // Get the dependency
-  final counterController = Reactter.get<CounterController>()!;
-
-  // Listen to the state changes
-  Reactter.on(
-    counterController.count,
-    Lifecycle.didUpdate,
-    (_, __) {
-      print('Count: ${counterController.count.value}');
-    },
-  );
-
-  // Update the state
-  counterController.increment();
-  counterController.decrement();
-
-  // Delete the dependency
-  Reactter.delete<CounterController>();
-
-  // Error: "Can't update when it's been disposed", because the dependency instance was deleted
-  // counterController.increment();
-
-  // Can't get the dependency instance, because the dependency register was deleted
-  final counterController2 = Reactter.get<CounterController>();
-  print("counterController2: $counterController2"); // counterController2: null
-
-  // Register a dependency by using `id` parameter
-  Reactter.register(() => CounterController(), id: 'count2');
-
-  // Get the dependency by using `id` parameter
-  final counterControllerById = Reactter.get<CounterController>('count2')!;
-  print("counterControllerById: $counterControllerById");
-
-  // Delete the dependency by using `id` parameter
-  Reactter.delete<CounterController>('count2');
-
-  // Register a dependency by using `mode` parameter as singleton mode
-  Reactter.register(() => CounterController(), mode: DependencyMode.singleton);
-
-  // Get the dependency
-  final counterControllerBySingletonMode = Reactter.get<CounterController>()!;
-  print("counterControllerBySingletonMode: $counterControllerBySingletonMode");
-
-  // Delete the dependency
-  Reactter.delete<CounterController>();
-
-  // Can get the dependency again, because it's singleton mode
-  final counterControllerBySingletonMode2 = Reactter.get<CounterController>()!;
-  print("counterControllerBySingletonMode2: $counterControllerBySingletonMode2");
-
-  // Use `onlyDependency` parameter to delete the dependency instance only
-  Reactter.destroy<CounterController>(onlyDependency: true);
-
-  // Can't get the dependency instance, because the dependency register was destroyed
-  final counterControllerBySingletonMode3 = Reactter.get<CounterController>();
-  print("counterControllerBySingletonMode3: $counterControllerBySingletonMode3"); // counterControllerBySingletonMode3: null
-
-  // If you need to delete the dependency fully, use `Reactter.destroy` method by forcing it, because it's singleton mode
-  Reactter.destroy<CounterController>();
-}
-```
+    <TabItem label="counter.dart">
+      <Code code={counterRegisterCode} lang="dart" mark={marks} />
+    </TabItem>
+  </Tabs>
+</CodeTabs>
 
 ## <HM>`Reactter.lazyBuilder`</HM>
 
-The <HM>`Reactter.lazyBuilder`</HM> method is used to register a new dependency as [<HE>`DependencyMode.builder`</HE>](/reactter/core_concepts/dependency_injection/#builder) in Reactter.
+The <HM>`Reactter.lazyBuilder`</HM> method registers a new dependency as [<HE>`DependencyMode.builder`</HE>](/reactter/core_concepts/dependency_injection/#builder).
 It returns <HN>`true`</HN> if the dependency is registered successfully, otherwise return <HN>`false`</HN>.
 
-This method is similar to the <HM>`Reactter.register`</HM> method.
+This method is similar to the <HM>`Reactter.register`</HM> method but with the <HE>`DependencyMode.builder`</HE> mode only.
 
 #### Syntax
 
@@ -134,66 +128,33 @@ bool Reactter.lazyBuilder<T>(
 #### Parameters
 
 - <HM>`builder`</HM>: A function that returns an instance of the <HT>`T`</HT> dependency.
-- `id`: An optional identifier for the <HT>`T`</HT> dependency. If not provided, the dependency will be registered with the type of the dependency.
+- `id`: An optional identifier for the <HT>`T`</HT> dependency. If not provided, the dependency is registered by its type(<HT>`T`</HT>).
 
 #### Example
 
 See the example below to understand how to use the <HM>`Reactter.lazyBuilder`</HM> method in different scenarios.
 
-<Code title="counter_controller.dart" code={counterControllerCode} lang="dart" mark={["count", "Signal"]} collapse={["1-100"]}/>
+<CodeTabs>
+  <ZappButton path="examples/dependency_injection_lazy_builder"/>
 
-```dart title="main.dart" collapse={1-4, 7-33, 36-100} "Reactter.lazyBuilder" "Reactter.get" "Reactter.delete" "Reactter.on" "Lifecycle.didUpdate"
-import 'package:reactter/reactter.dart';
-import 'counter_controller.dart';
+  <Tabs>
+    <TabItem>
+      <HM single slot="label">main.dart</HM>
+      <Code code={mainLazyBuilderCode} lang="dart" mark={[...marks, {range: "7, 37"}]} collapse={["8-35", "38-46", "48-100"]} />
+    </TabItem>
 
-void main() {
-  // Register a dependency as builder mode.
-  Reactter.lazyBuilder<CounterController>(() => CounterController());
-
-  // Get the dependency
-  final counterController = Reactter.get<CounterController>()!;
-
-  // Listen to the state changes
-  Reactter.on(
-    counterController.count,
-    Lifecycle.didUpdate,
-    (_, __) {
-      print('Count: ${counterController.count.value}');
-    },
-  );
-
-  // Update the state
-  counterController.increment();
-  counterController.decrement();
-
-  // Delete the dependency
-  Reactter.delete<CounterController>();
-
-  // Error: "Can't update when it's been disposed", because the dependency instance was deleted
-  // counterController.increment();
-
-  // Can't get the dependency instance, because the dependency register was deleted
-  final counterController2 = Reactter.get<CounterController>();
-  print("counterController2: $counterController2"); // counterController2: null
-
-  // Register a dependency by using `id` parameter as builder mode
-  Reactter.lazyBuilder(() => CounterController(), id: 'count2');
-
-  // Get the dependency by using `id` parameter
-  final counterControllerById = Reactter.get<CounterController>('count2')!;
-  print("counterControllerById: $counterControllerById");
-
-  // Delete the dependency by using `id` parameter
-  Reactter.delete<CounterController>('count2');
-}
-```
+    <TabItem label="counter.dart">
+      <Code code={counterLazyBuilderCode} lang="dart" mark={marks} />
+    </TabItem>
+  </Tabs>
+</CodeTabs>
 
 ## <HM>`Reactter.lazyFactory`</HM>
 
-The <HM>`Reactter.lazyFactory`</HM> method is used to register a new dependency as [<HE>`DependencyMode.factory`</HE>](/reactter/core_concepts/dependency_injection/#factory) in Reactter.
+The <HM>`Reactter.lazyFactory`</HM> method registers a new dependency as [<HE>`DependencyMode.factory`</HE>](/reactter/core_concepts/dependency_injection/#factory).
 It returns <HN>`true`</HN> if the dependency is registered successfully, otherwise return <HN>`false`</HN>.
 
-This method is similar to the <HM>`Reactter.register`</HM> method but with the <HE>`DependencyMode.factory`</HE> mode.
+This method is similar to the <HM>`Reactter.register`</HM> method but with the <HE>`DependencyMode.factory`</HE> mode only.
 
 #### Syntax
 
@@ -207,63 +168,30 @@ bool Reactter.lazyFactory<T>(
 #### Parameters
 
 - <HM>`builder`</HM>: A function that returns an instance of the <HT>`T`</HT> dependency.
-- `id`: An optional identifier for the <HT>`T`</HT> dependency. If not provided, the dependency will be registered with the type of the dependency.
+- `id`: An optional identifier for the <HT>`T`</HT> dependency. If not provided, the dependency is registered by its type(<HT>`T`</HT>).
 
 #### Example
 
 See the example below to understand how to use the <HM>`Reactter.lazyFactory`</HM> method in different scenarios.
 
-<Code title="counter_controller.dart" code={counterControllerCode} lang="dart" mark={["count", "Signal"]} collapse={["1-100"]}/>
+<CodeTabs>
+  <ZappButton path="examples/dependency_injection_lazy_factory"/>
 
-```dart title="main.dart" collapse={1-4, 7-33, 36-100} "Reactter.lazyFactory" "Reactter.get" "Reactter.delete" "Reactter.on" "Lifecycle.didUpdate" "Reactter.destroy"
-import 'package:reactter/reactter.dart';
-import 'counter_controller.dart';
+  <Tabs>
+    <TabItem>
+      <HM single slot="label">main.dart</HM>
+      <Code code={mainLazyFactoryCode} lang="dart" mark={[...marks, {range: "7, 44"}]} collapse={["8-42", "45-53", "55-100"]} />
+    </TabItem>
 
-void main() {
-  // Register a dependency as factory mode.
-  Reactter.lazyFactory<CounterController>(() => CounterController());
-
-  // Get the dependency
-  final counterController = Reactter.get<CounterController>()!;
-
-  // Listen to the state changes
-  Reactter.on(
-    counterController.count,
-    Lifecycle.didUpdate,
-    (_, __) {
-      print('Count: ${counterController.count.value}');
-    },
-  );
-
-  // Update the state
-  counterController.increment();
-  counterController.decrement();
-
-  // Delete the dependency
-  Reactter.delete<CounterController>();
-
-  // Error: "Can't update when it's been disposed", because the dependency instance was deleted
-  // counterController.increment();
-
-  // Can get the dependency again, because it's factory mode
-  final contController2 = Reactter.get<CounterController>();
-  print("contController2: $contController2");
-
-  // Register a dependency by using `id` parameter as factory mode
-  Reactter.lazyFactory(() => CounterController(), id: 'count2');
-
-  // Get the dependency by using `id` parameter
-  final counterControllerById = Reactter.get<CounterController>('count2')!;
-  print("counterControllerById: $counterControllerById");
-
-  // Delete the dependency by using `id` parameter fully
-  Reactter.destroy<CounterController>('count2');
-}
-```
+    <TabItem label="counter.dart">
+      <Code code={counterLazyFactoryCode} lang="dart" mark={marks} />
+    </TabItem>
+  </Tabs>
+</CodeTabs>
 
 ## <HM>`Reactter.lazySingleton`</HM>
 
-The <HM>`Reactter.lazySingleton`</HM> method is used to register a new dependency as [<HE>`DependencyMode.singleton`</HE>](/reactter/core_concepts/dependency_injection/#singleton) in Reactter.
+The <HM>`Reactter.lazySingleton`</HM> method registers a new dependency as [<HE>`DependencyMode.singleton`</HE>](/reactter/core_concepts/dependency_injection/#singleton).
 It returns <HN>`true`</HN> if the dependency is registered successfully, otherwise return <HN>`false`</HN>.
 
 This method is similar to the <HM>`Reactter.register`</HM> method but with the <HE>`DependencyMode.singleton`</HE> mode.
@@ -280,74 +208,30 @@ bool Reactter.lazySingleton<T>(
 #### Parameters
 
 - <HM>`builder`</HM>: A function that returns an instance of the <HT>`T`</HT> dependency.
-- `id`: An optional identifier for the <HT>`T`</HT> dependency. If not provided, the dependency will be registered with the type of the dependency.
+- `id`: An optional identifier for the <HT>`T`</HT> dependency. If not provided, the dependency is registered by its type(<HT>`T`</HT>).
 
 #### Example
 
 See the example below to understand how to use the <HM>`Reactter.lazySingleton`</HM> method in different scenarios.
 
-<Code title="counter_controller.dart" code={counterControllerCode} lang="dart" mark={["count", "Signal"]} collapse={["1-100"]}/>
+<CodeTabs>
+  <ZappButton path="examples/dependency_injection_lazy_singleton"/>
 
-```dart title="main.dart" collapse={1-4, 7-33, 36-100} "Reactter.lazySingleton" "Reactter.get" "Reactter.delete" "Reactter.on" "Lifecycle.didUpdate" "Reactter.destroy"
-import 'package:reactter/reactter.dart';
-import 'counter_controller.dart';
+  <Tabs>
+    <TabItem>
+      <HM single slot="label">main.dart</HM>
+      <Code code={mainLazySingletonCode} lang="dart" mark={[...marks, {range: "7, 51"}]} collapse={["8-49", "52-60", "62-100"]} />
+    </TabItem>
 
-void main() {
-  // Register a dependency as singleton mode.
-  Reactter.lazySingleton<CounterController>(() => CounterController());
-
-  // Get the dependency
-  final counterController = Reactter.get<CounterController>()!;
-
-  // Listen to the state changes
-  Reactter.on(
-    counterController.count,
-    Lifecycle.didUpdate,
-    (_, __) {
-      print('Count: ${counterController.count.value}');
-    },
-  );
-
-  // Update the state
-  counterController.increment();
-  counterController.decrement();
-
-  // Can't delete the dependency, because it's singleton mode
-  Reactter.delete<CounterController>();
-
-  // Can't update the state, because it's singleton mode
-  // counterController.increment();
-
-  // Can get the dependency again, because it's singleton mode
-  final contController2 = Reactter.get<CounterController>();
-  print("contController2: $contController2");
-
-  // Register a dependency by using `id` parameter as singleton mode
-  Reactter.lazySingleton(() => CounterController(), id: 'count2');
-
-  // Get the dependency by using `id` parameter
-  final counterControllerById = Reactter.get<CounterController>('count2')!;
-  print("counterControllerById: $counterControllerById");
-
-  // If you need to delete the dependency fully, use `Reactter.destroy` method by forcing it, because it's singleton mode
-  Reactter.destroy<CounterController>(id: 'count2');
-
-  // Use `onlyDependency` parameter to delete the dependency instance only
-  Reactter.destroy<CounterController>(onlyDependency: true);
-
-  // Can't get the dependency instance, because the dependency register was destroyed
-  final counterControllerById2 = Reactter.get<CounterController>('count2');
-  print("counterControllerById2: $counterControllerById2"); // counterControllerById2: null
-
-  // Can get the dependency again, because its register is skipped from destroying.
-  final counterController3 = Reactter.get<CounterController>()!;
-  print("counterController3: $counterController3");
-}
-```
+    <TabItem label="counter.dart">
+      <Code code={counterLazySingletonCode} lang="dart" mark={marks} />
+    </TabItem>
+  </Tabs>
+</CodeTabs>
 
 ## <HM>`Reactter.create`</HM>
 
-The <HM>`Reactter.create`</HM> method is used to register the dependency(if it is not already registered), create the dependency instance(if it hasn't been created yet) and then return it.
+The <HM>`Reactter.create`</HM> method registers a dependency(if not already registered), create its instance(if not created yet) and return it.
 
 #### Syntax
 
@@ -361,75 +245,30 @@ T Reactter.create<T>(T Function() builder, {
 #### Parameters
 
 - <HM>`builder`</HM>: A function that returns an instance of the <HT>`T`</HT> dependency.
-- `id`: An optional identifier for the <HT>`T`</HT> dependency. If not provided, the default instance of the dependency is used.
+- `id`: An optional identifier for the <HT>`T`</HT> dependency. If not provided, the default instance of the <HT>`T`</HT> dependency is used.
 
 #### Example
 
 See the example below to understand how to use the <HM>`Reactter.create`</HM> method in different scenarios.
 
-<Code title="counter_controller.dart" code={counterControllerCode} lang="dart" mark={["count", "Signal"]} collapse={["1-100"]}/>
+<CodeTabs>
+  <ZappButton path="examples/dependency_injection_create"/>
 
-```dart title="main.dart" collapse={1-4, 8-31, 38-41, 48-100} "Reactter.create" "Reactter.get" "Reactter.delete" "Reactter.on" "Lifecycle.didUpdate" "DependencyMode.singleton"
-import 'package:reactter/reactter.dart';
-import 'counter_controller.dart';
+  <Tabs>
+    <TabItem>
+      <HM single slot="label">main.dart</HM>
+      <Code code={mainCreateCode} lang="dart" mark={[...marks, {range: "7, 34, 41-44"}]} collapse={["8-32", "35-39", "45-68", "70-100"]} />
+    </TabItem>
 
-void main() {
-  // Create a dependency
-  final counterController = Reactter.create<CounterController>(() => CounterController());
-  print("counterController: $counterController");
-
-  // Listen to the state changes
-  Reactter.on(
-    counterController.count,
-    Lifecycle.didUpdate,
-    (_, __) {
-      print('Count: ${counterController.count.value}');
-    },
-  );
-
-  // Update the state
-  counterController.increment();
-  counterController.decrement();
-
-  // Delete the dependency
-  Reactter.delete<CounterController>();
-
-  // Can't update the state, because the dependency register was deleted
-  // counterController.increment();
-
-  // Can't get the dependency instance, because the dependency register was deleted
-  final counterController2 = Reactter.get<CounterController>();
-  print("counterController2: $counterController2"); // counterController2: null
-
-  // Create a dependency by using `id` parameter
-  final counterControllerById = Reactter.create(
-    () => CounterController(),
-    id: 'count2',
-  );
-  print("counterControllerById: $counterControllerById");
-
-  // Delete the dependency by using `id` parameter
-  Reactter.delete<CounterController>('count2');
-
-  // Create a dependency by using `mode` parameter as singleton mode
-  final counterControllerBySingletonMode = Reactter.create(
-    () => CounterController(),
-    mode: DependencyMode.singleton,
-  );
-  print("counterControllerBySingletonMode: $counterControllerBySingletonMode");
-
-  // Delete the dependency
-  Reactter.delete<CounterController>();
-
-  // Can get the dependency again, because it's dependency
-  final counterControllerBySingletonMode2 = Reactter.get<CounterController>()!;
-  print("counterControllerBySingletonMode2: $counterControllerBySingletonMode2");
-}
-```
+    <TabItem label="counter.dart">
+      <Code code={counterCreateCode} lang="dart" mark={marks} />
+    </TabItem>
+  </Tabs>
+</CodeTabs>
 
 ## <HM>`Reactter.builder`</HM>
 
-The <HM>`Reactter.create`</HM> method is used to register the dependency as [<HE>`DependencyMode.builder`</HE>](/reactter/core_concepts/dependency_injection/#builder)(if it is not already registered), create the dependency instance(if it hasn't been created yet) and then return it.
+The <HM>`Reactter.create`</HM> method registers a dependency as [<HE>`DependencyMode.builder`</HE>](/reactter/core_concepts/dependency_injection/#builder)(if not already registered), create its instance(if not created yet) and return it.
 
 This method is similar to the <HM>`Reactter.create`</HM> method.
 
@@ -444,61 +283,30 @@ T Reactter.builder<T>(T Function() builder, {
 #### Parameters
 
 - <HM>`builder`</HM>: A function that returns an instance of the <HT>`T`</HT> dependency.
-- `id`: An optional identifier for the <HT>`T`</HT> dependency. If not provided, the default instance of the dependency is used.
+- `id`: An optional identifier for the <HT>`T`</HT> dependency. If not provided, the default instance of the <HT>`T`</HT> dependency is used.
 
 #### Example
 
 See the example below to understand how to use the <HM>`Reactter.builder`</HM> method in different scenarios.
 
-<Code title="counter_controller.dart" code={counterControllerCode} lang="dart" mark={["count", "Signal"]} collapse={["1-100"]}/>
+<CodeTabs>
+  <ZappButton path="examples/dependency_injection_builder"/>
 
-```dart title="main.dart" collapse={1-4, 8-31, 38-41, 48-100} "Reactter.builder" "Reactter.get" "Reactter.delete" "Reactter.on" "Lifecycle.didUpdate" "DependencyMode.singleton"
-import 'package:reactter/reactter.dart';
-import 'counter_controller.dart';
+  <Tabs>
+    <TabItem>
+      <HM single slot="label">main.dart</HM>
+      <Code code={mainBuilderCode} lang="dart" mark={[...marks, {range: "7, 34-37"}]} collapse={["8-32", "38-43", "44-100"]} />
+    </TabItem>
 
-void main() {
-  // Create a dependency as builder mode.
-  final counterController = Reactter.builder<CounterController>(() => CounterController());
-  print("counterController: $counterController");
-
-  // Listen to the state changes
-  Reactter.on(
-    counterController.count,
-    Lifecycle.didUpdate,
-    (_, __) {
-      print('Count: ${counterController.count.value}');
-    },
-  );
-
-  // Update the state
-  counterController.increment();
-  counterController.decrement();
-
-  // Delete the dependency
-  Reactter.delete<CounterController>();
-
-  // Can't update the state, because the dependency register was deleted
-  // counterController.increment();
-
-  // Can't get the dependency instance, because the dependency register was deleted
-  final counterController2 = Reactter.get<CounterController>();
-  print("counterController2: $counterController2"); // counterController2: null
-
-  // Create a dependency by using `id` parameter as builder mode
-  final counterControllerById = Reactter.builder(
-    () => CounterController(),
-    id: 'count2',
-  );
-  print("counterControllerById: $counterControllerById");
-
-  // Delete the dependency by using `id` parameter
-  Reactter.delete<CounterController>('count2');
-}
-```
+    <TabItem label="counter.dart">
+      <Code code={counterBuilderCode} lang="dart" mark={marks} />
+    </TabItem>
+  </Tabs>
+</CodeTabs>
 
 ## <HM>`Reactter.factory`</HM>
 
-The <HM>`Reactter.factory`</HM> method is used to register the dependency as [<HE>`DependencyMode.factory`</HE>](/reactter/core_concepts/dependency_injection/#factory)(if it is not already registered), create the dependency instance(if it hasn't been created yet) and then return it.
+The <HM>`Reactter.factory`</HM> method registers a dependency as [<HE>`DependencyMode.factory`</HE>](/reactter/core_concepts/dependency_injection/#factory)(if not already registered), create its instance(if not created yet) and return it.
 
 This method is similar to the <HM>`Reactter.create`</HM> method but with the <HE>`DependencyMode.factory`</HE> mode.
 
@@ -513,58 +321,30 @@ T Reactter.factory<T>(T Function() builder, {
 #### Parameters
 
 - <HM>`builder`</HM>: A function that returns an instance of the <HT>`T`</HT> dependency.
-- `id`: An optional identifier for the <HT>`T`</HT> dependency. If not provided, the default instance of the dependency is used.
+- `id`: An optional identifier for the <HT>`T`</HT> dependency. If not provided, the default instance of the <HT>`T`</HT> dependency is used.
 
 #### Example
 
 See the example below to understand how to use the <HM>`Reactter.factory`</HM> method in different scenarios.
 
-<Code title="counter_controller.dart" code={counterControllerCode} lang="dart" mark={["count", "Signal"]} collapse={["1-100"]}/>
+<CodeTabs>
+  <ZappButton path="examples/dependency_injection_factory"/>
 
-```dart title="main.dart" collapse={1-4, 8-28, 35-41, 48-100} "Reactter.factory" "Reactter.get" "Reactter.delete" "Reactter.on" "Lifecycle.didUpdate" "Reactter.destroy"
-import 'package:reactter/reactter.dart';
-import 'counter_controller.dart';
+  <Tabs>
+    <TabItem>
+      <HM single slot="label">main.dart</HM>
+      <Code code={mainFactoryCode} lang="dart" mark={[...marks, {range: "7, 41-42"}]} collapse={["8-39", "42-47", "49-100"]} />
+    </TabItem>
 
-void main() {
-  // Create a dependency as factory mode.
-  final counterController = Reactter.factory<CounterController>(() => CounterController());
-  print("counterController: $counterController");
-
-  // Listen to the state changes
-  Reactter.on(
-    counterController.count,
-    Lifecycle.didUpdate,
-    (_, __) {
-      print('Count: ${counterController.count.value}');
-    },
-  );
-
-  // Update the state
-  counterController.increment();
-  counterController.decrement();
-
-  // Delete the dependency
-  Reactter.delete<CounterController>();
-
-  // Can get the dependency again, because it's factory mode
-  final contController2 = Reactter.get<CounterController>();
-  print("contController2: $contController2");
-
-  // Create a dependency by using `id` parameter as factory mode
-  final counterControllerById = Reactter.factory(
-    () => CounterController(),
-    id: 'count2',
-  );
-  print("counterControllerById: $counterControllerById");
-
-  // Delete the dependency by using `id` parameter fully
-  Reactter.destroy<CounterController>('count2');
-}
-```
+    <TabItem label="counter.dart">
+      <Code code={counterFactoryCode} lang="dart" mark={marks} />
+    </TabItem>
+  </Tabs>
+</CodeTabs>
 
 ## <HM>`Reactter.singleton`</HM>
 
-The <HM>`Reactter.singleton`</HM> method is used to register the dependency as [<HE>`DependencyMode.singleton`</HE>](/reactter/core_concepts/dependency_injection/#singleton)(if it is not already registered), create the dependency instance(if it hasn't been created yet) and then return it.
+The <HM>`Reactter.singleton`</HM> method registers a dependency as [<HE>`DependencyMode.singleton`</HE>](/reactter/core_concepts/dependency_injection/#singleton)(if not already registered), create its instance(if not created yet) and return it.
 
 This method is similar to the <HM>`Reactter.create`</HM> method but with the <HE>`DependencyMode.singleton`</HE> mode.
 
@@ -579,78 +359,31 @@ T Reactter.singleton<T>(T Function() builder, {
 #### Parameters
 
 - <HM>`builder`</HM>: A function that returns an instance of the <HT>`T`</HT> dependency.
-- `id`: An optional identifier for the <HT>`T`</HT> dependency. If not provided, the default instance of the dependency is used.
+- `id`: An optional identifier for the <HT>`T`</HT> dependency. If not provided, the default instance of the <HT>`T`</HT> dependency is used.
 
 #### Example
 
 See the example below to understand how to use the <HM>`Reactter.singleton`</HM> method in different scenarios.
 
-<Code title="counter_controller.dart" code={counterControllerCode} lang="dart" mark={["count", "Signal"]} collapse={["1-100"]}/>
+<CodeTabs>
+  <ZappButton path="examples/dependency_injection_singleton"/>
 
-```dart title="main.dart" collapse={1-4, 8-31, 38-100} "Reactter.singleton" "Reactter.get" "Reactter.delete" "Reactter.on" "Lifecycle.didUpdate" "Reactter.destroy"
-import 'package:reactter/reactter.dart';
-import 'counter_controller.dart';
+  <Tabs>
+    <TabItem>
+      <HM single slot="label">main.dart</HM>
+      <Code code={mainSingletonCode} lang="dart" mark={[...marks, {range: "7, 48"}]} collapse={["8-46", "49-54", "56-200"]} />
+    </TabItem>
 
-void main() {
-  // Create a dependency as singleton mode.
-  final counterController = Reactter.singleton<CounterController>(() => CounterController());
-  print("counterController: $counterController");
-
-  // Listen to the state changes
-  Reactter.on(
-    counterController.count,
-    Lifecycle.didUpdate,
-    (_, __) {
-      print('Count: ${counterController.count.value}');
-    },
-  );
-
-  // Update the state
-  counterController.increment();
-  counterController.decrement();
-
-  // Can't delete the dependency, because it's singleton mode
-  Reactter.delete<CounterController>();
-
-  // Can update the state, because it's singleton mode
-  counterController.increment();
-
-  // Can get the dependency again, because it's singleton mode
-  final contController2 = Reactter.get<CounterController>();
-  print("contController2: $contController2");
-
-  // Create a dependency by using `id` parameter as singleton mode
-  final counterControllerById = Reactter.singleton(
-    () => CounterController(),
-    id: 'count2',
-  );
-  print("counterControllerById: $counterControllerById");
-
-  // Delete the dependency by using `id` parameter
-  Reactter.delete<CounterController>('count2');
-
-  // Can get the dependency again, because it's singleton mode
-  final counterControllerById2 = Reactter.get<CounterController>('count2')!;
-
-  // If you need to delete the dependency fully, use `Reactter.destroy` method by forcing it, because it's singleton mode
-  Reactter.destroy<CounterController>(id: 'count2');
-
-  // Use `onlyDependency` parameter to delete the dependency instance only
-  Reactter.destroy<CounterController>(onlyDependency: true);
-
-  // Can't get the dependency instance, because the dependency register was destroyed
-  final counterControllerById3 = Reactter.get<CounterController>('count2');
-  print("counterControllerById3: $counterControllerById3"); // counterControllerById3: null
-
-  // Can get the dependency again, because its register is skipped from destroying.
-  final counterController3 = Reactter.get<CounterController>()!;
-  print("counterController3: $counterController3");
-}
-```
+    <TabItem label="counter.dart">
+      <Code code={counterSingletonCode} lang="dart" mark={marks} />
+    </TabItem>
+  </Tabs>
+</CodeTabs>
 
 ## <HM>`Reactter.get`</HM>
 
-The <HM>`Reactter.get`</HM> method is used to get the dependency instance from the Reactter. If the dependency is not registered, it will return <HN>`null`</HN>.
+The <HM>`Reactter.get`</HM> method creates the dependency instance(if not created yet), retrieves it, and then return it.
+If the dependency is not created, it will return <HN>`null`</HN>.
 
 #### Syntax
 
@@ -660,69 +393,30 @@ T? Reactter.get<T>([String? id]);
 
 #### Parameters
 
-- `id`: An optional identifier for the <HT>`T`</HT> dependency. If not provided, If not provided, the method will attempt to retrieve the dependency instance using the default identifier.
+- `id`: An optional identifier for the <HT>`T`</HT> dependency. If not provided, the default instance of the <HT>`T`</HT> dependency is used.
 
 #### Example
 
 See the example below to understand how to use the <HM>`Reactter.get`</HM> method in different scenarios.
 
-<Code title="counter_controller.dart" code={counterControllerCode} lang="dart" mark={["count", "Signal"]} collapse={["1-100"]}/>
+<CodeTabs>
+  <ZappButton path="examples/dependency_injection_get"/>
 
-```dart title="main.dart" collapse={1-7, 11-30, 34-37, 41-44, 48-100} "Reactter.register" "Reactter.get" "Reactter.delete" "Reactter.on" "Lifecycle.didUpdate"
-import 'package:reactter/reactter.dart';
-import 'counter_controller.dart';
+  <Tabs>
+    <TabItem>
+      <HM single slot="label">main.dart</HM>
+      <Code code={mainGetCode} lang="dart" mark={[...marks, {range: "10, 17, 24, 31"}]} collapse={["6-8", "11-15", "18-22", "25-29", "32-34", "36-100"]} />
+    </TabItem>
 
-void main() {
-  // Register a dependency
-  Reactter.register<CounterController>(() => CounterController());
-
-  // Get the dependency
-  final counterController = Reactter.get<CounterController>()!;
-  print("counterController: $counterController");
-
-  // Listen to the state changes
-  Reactter.on(
-    counterController.count,
-    Lifecycle.didUpdate,
-    (_, __) {
-      print('Count: ${counterController.count.value}');
-    },
-  );
-
-  // Update the state
-  counterController.increment();
-  counterController.decrement();
-
-  // Can't delete the dependency, because it's singleton mode
-  Reactter.delete<CounterController>();
-
-  // Can't update the state, because it's singleton mode
-  // counterController.increment();
-
-  // Can't get the dependency again, because the dependency register was deleted
-  final counterController2 = Reactter.get<CounterController>();
-  print("counterController2: $counterController2"); // counterController2: null
-
-  // Register a dependency by using `id` parameter as singleton mode
-  Reactter.register(() => CounterController(), id: 'count2');
-
-  // Get the dependency by using `id` parameter
-  final counterControllerById = Reactter.get<CounterController>('count2')!;
-  print("counterControllerById: $counterControllerById");
-
-  // Delete the dependency by using `id` parameter
-  Reactter.delete<CounterController>('count2');
-
-  // Get the dependency by using `id` parameter but its register doesn't exist
-  final counterControllerById2 = Reactter.get<CounterController>('foo');
-  print("counterControllerById2: $counterControllerById2"); // counterControllerById2: null
-}
-```
+    <TabItem label="counter.dart">
+      <Code code={counterGetCode} lang="dart" mark={marks} />
+    </TabItem>
+  </Tabs>
+</CodeTabs>
 
 ## <HM>`Reactter.find`</HM>
 
-The <HM>`Reactter.find`</HM> method is used to find the dependency instance from the Reactter.
-If the dependency is not created, it will return <HN>`null`</HN>.
+The <HM>`Reactter.find`</HM> method retrieves the created dependency instance and returns it. If the dependency is not created, returns <HN>`null`</HN>.
 
 #### Syntax
 
@@ -732,77 +426,30 @@ T? Reactter.find<T>([String? id]);
 
 #### Parameters
 
-- `id`: An optional identifier for the <HT>`T`</HT> dependency. If not provided, the method will attempt to find the default instance of the dependency.
+- `id`: An optional identifier for the <HT>`T`</HT> dependency. If not provided, the default instance of the <HT>`T`</HT> dependency is used.
 
 #### Example
 
 See the example below to understand how to use the <HM>`Reactter.find`</HM> method in different scenarios.
 
-<Code title="counter_controller.dart" code={counterControllerCode} lang="dart" mark={["count", "Signal"]} collapse={["1-100"]}/>
+<CodeTabs>
+  <ZappButton path="examples/dependency_injection_find"/>
 
-```dart title="main.dart" collapse={1-7, 11-15, 19-42, 46-49, 53-100} "Reactter.register" "Reactter.get" "Reactter.find" "Reactter.on" "Lifecycle.didUpdate" "Reactter.delete"
-import 'package:reactter/reactter.dart';
-import 'counter_controller.dart';
+  <Tabs>
+    <TabItem>
+      <HM single slot="label">main.dart</HM>
+      <Code code={mainFindCode} lang="dart" mark={[...marks, {range: "10, 17, 24, 31"}]} collapse={["6-8", "11-15", "18-22", "25-29", "32-34", "36-100"]} />
+    </TabItem>
 
-void main() {
-  // Register a dependency as factory mode
-  Reactter.lazyFactory<CounterController>(() => CounterController());
-
-  // Can't find the dependency instance, because the dependency is not created yet
-  final counterController = Reactter.find<CounterController>();
-  print("counterController: $counterController"); // counterController: null
-
-  // Create a dependency as factory mode
-  final counterController2 = Reactter.factory<CounterController>()!;
-  print("counterController2: $counterController2");
-
-  // Find the dependency
-  final counterController3 = Reactter.find<CounterController>()!;
-  print("counterController3: $counterController3");
-
-  // Listen to the state changes
-  Reactter.on(
-    counterController2.count,
-    Lifecycle.didUpdate,
-    (_, __) {
-      print('Count: ${counterController2.count.value}');
-    },
-  );
-
-  // Update the state
-  counterController2.increment();
-  counterController2.decrement();
-
-  // Delete the dependency
-  Reactter.delete<CounterController>();
-
-  // Can't update the state, because the dependency register was deleted
-  // counterController2.increment();
-
-  // Create a dependency by using `id` parameter as factory mode
-  final counterControllerById = Reactter.factory<CounterController>('count2')!;
-  print("counterControllerById: $counterControllerById");
-
-  // Find the dependency by using `id` parameter
-  final counterControllerById2 = Reactter.find<CounterController>('count2')!;
-  print("counterControllerById2: $counterControllerById2");
-
-  // Delete the dependency by using `id` parameter
-  Reactter.delete<CounterController>('count2');
-
-  // Can't find the dependency instance by using `id` parameter, because the dependency was deleted
-  final counterControllerById3 = Reactter.find<CounterController>('count2');
-  print("counterControllerById3: $counterControllerById3"); // counterControllerById3: null
-
-  // Can't update the state, because the dependency register was deleted
-  // counterControllerById.increment();
-}
-```
+    <TabItem label="counter.dart">
+      <Code code={counterFindCode} lang="dart" mark={marks} />
+    </TabItem>
+  </Tabs>
+</CodeTabs>
 
 ## <HM>`Reactter.exists`</HM>
 
-The <HM>`Reactter.exists`</HM> method is used to check if the dependency instance exists in Reactter.
-It returns <HN>`true`</HN> if the dependency instance exists, otherwise return <HN>`false`</HN>.
+The <HM>`Reactter.exists`</HM> method checks if the dependency instance exists in Reactter. It returns <HN>`true`</HN> if the dependency exists, otherwise return <HN>`false`</HN>.
 
 #### Syntax
 
@@ -812,76 +459,30 @@ bool Reactter.exists<T>([String? id]);
 
 #### Parameters
 
-- `id`: An optional identifier for the <HT>`T`</HT> dependency. If not provided, the method will attempt to check the default instance of the dependency.
+- `id`: An optional identifier for the <HT>`T`</HT> dependency. If not provided, the default instance of the <HT>`T`</HT> dependency is used.
 
 #### Example
 
 See the example below to understand how to use the <HM>`Reactter.exists`</HM> method in different scenarios.
 
-<Code title="counter_controller.dart" code={counterControllerCode} lang="dart" mark={["count", "Signal"]} collapse={["1-100"]}/>
+<CodeTabs>
+  <ZappButton path="examples/dependency_injection_exists"/>
 
-```dart title="main.dart" collapse={1-7, 11-15, 19-42, 46-49, 53-100} "Reactter.register" "Reactter.get" "Reactter.exists" "Reactter.on" "Lifecycle.didUpdate" "Reactter.delete"
-import 'package:reactter/reactter.dart';
-import 'counter_controller.dart';
+  <Tabs>
+    <TabItem>
+      <HM single slot="label">main.dart</HM>
+      <Code code={mainExistsCode} lang="dart" mark={[...marks, {range: "10, 17, 26, 33"}]} collapse={["6-8", "11-15", "18-24", "27-31", "34-38", "40-100"]} />
+    </TabItem>
 
-void main() {
-  // Register a dependency as factory mode
-  Reactter.lazyFactory<CounterController>(() => CounterController());
-
-  // Can't find the dependency instance, because the dependency is not created yet
-  final isExists = Reactter.exists<CounterController>();
-  print("CounterController exists: $isExists"); // CounterController exists: false
-
-  // Create a dependency as factory mode
-  final counterController = Reactter.factory<CounterController>()!;
-  print("counterController: $counterController");
-
-  // Find the dependency
-  final isExists2 = Reactter.exists<CounterController>();
-  print("CounterController exists: $isExists2"); // CountCountroller exists: true
-
-  // Listen to the state changes
-  Reactter.on(
-    counterController.count,
-    Lifecycle.didUpdate,
-    (_, __) {
-      print('Count: ${counterController.count.value}');
-    },
-  );
-
-  // Update the state
-  counterController.increment();
-  counterController.decrement();
-
-  // Delete the dependency
-  Reactter.delete<CounterController>();
-
-  // Can't update the state, because the dependency register was deleted
-  // counterController.increment();
-
-  // Create a dependency by using `id` parameter as factory mode
-  final counterControllerById = Reactter.factory<CounterController>('count2')!;
-  print("counterControllerById: $counterControllerById");
-
-  // Find the dependency by using `id` parameter
-  final isExistsById = Reactter.exists<CounterController>('count2');
-  print("CounterController exists: $isExistsById"); // CounterController exists: true
-
-  // Delete the dependency by using `id` parameter
-  Reactter.delete<CounterController>('count2');
-
-  // Can't find the dependency instance by using `id` parameter, because the dependency was deleted
-  final isExistsById2 = Reactter.exists<CounterController>('count2');
-  print("CounterController exists: $isExistsById2"); // CounterController exists: false
-
-  // Can't update the state, because the dependency register was deleted
-  // counterControllerById.increment();
-}
-```
+    <TabItem label="counter.dart">
+      <Code code={counterExistsCode} lang="dart" mark={marks} />
+    </TabItem>
+  </Tabs>
+</CodeTabs>
 
 ## <HM>`Reactter.getDependencyMode`</HM>
 
-The <HM>`Reactter.getDependencyMode`</HM> method is used to get the dependency mode of the dependency.
+The <HM>`Reactter.getDependencyMode`</HM> method retrieves the dependency mode of a registered dependency. If the dependency is not registered, it returns <HN>`null`</HN>.
 
 #### Syntax
 
@@ -891,92 +492,40 @@ DependencyMode? Reactter.getDependencyMode<T>([String? id]);
 
 #### Parameters
 
-- `id`: An optional identifier for the <HT>`T`</HT> dependency. If not provided, the method will attempt to get the default instance of the dependency.
+- `id`: An optional identifier for the <HT>`T`</HT> dependency. If not provided, the default instance of the <HT>`T`</HT> dependency is used.
 
 #### Example
 
 See the example below to understand how to use the <HM>`Reactter.getDependencyMode`</HM> method in different scenarios.
 
-<Code title="counter_controller.dart" code={counterControllerCode} lang="dart" mark={["count", "Signal"]} collapse={["1-100"]}/>
+<CodeTabs>
+  <ZappButton path="examples/dependency_injection_get_dependency_mode"/>
 
-```dart title="main.dart" collapse={1-11, 15-31, 35-45, 49-52, 56-60, 64-67, 71-100} "Reactter.register" "Reactter.get" "Reactter.getDependencyMode" "Reactter.on" "Lifecycle.didUpdate" "Reactter.singleton" "Reactter.delete" "Reactter.lazyFactory" "Reactter.builder" "Reactter.destroy"
-import 'package:reactter/reactter.dart';
-import 'counter_controller.dart';
+  <Tabs>
+    <TabItem>
+      <HM single slot="label">main.dart</HM>
+      <Code code={mainGetDependencyModeCode} lang="dart" mark={[...marks, {range: "16-19"}]} collapse={["20-34", "36-100"]} />
+    </TabItem>
 
-void main() {
-  // Register a dependency as builder mode
-  Reactter.builder<CounterController>(() => CounterController());
-
-  // Get the dependency
-  final counterController = Reactter.get<CounterController>()!;
-  print("counterController: $counterController");
-
-  // Get the dependency mode
-  final dependencyMode = Reactter.getDependencyMode<CounterController>();
-  print("Dependency mode: $dependencyMode"); // Dependency mode: DependencyMode.builder
-
-  // Listen to the state changes
-  Reactter.on(
-    counterController.count,
-    Lifecycle.didUpdate,
-    (_, __) {
-      print('Count: ${counterController.count.value}');
-    },
-  );
-
-  // Update the state
-  counterController.increment();
-  counterController.decrement();
-
-  // Delete the dependency
-  Reactter.delete<CounterController>();
-
-  // Can't get the dependency mode, because the dependency was deleted
-  final dependencyMode2 = Reactter.getDependencyMode<CounterController>();
-  print("Dependency mode: $dependencyMode2"); // Dependency mode: null
-
-  // Register a dependency by using `id` parameter as factory mode
-  Reactter.lazyFactory(() => CounterController(), id: 'count2');
-
-  // Get the dependency by using `id` parameter
-  final counterControllerById = Reactter.get<CounterController>('count2')!;
-  print("counterControllerById: $counterControllerById");
-
-  // Delete the dependency by using `id` parameter
-  Reactter.delete<CounterController>('count2');
-
-  // Get the dependency mode by using `id` parameter
-  final dependencyModeById2 = Reactter.getDependencyMode<CounterController>('count2');
-  print("Dependency mode: $dependencyModeById2"); // Dependency mode: DependencyMode.factory
-
-  // If you need to delete the dependency fully, use `Reactter.destroy` method by forcing it, because it's factory mode
-  Reactter.destroy<CounterController>(id: 'count2');
-
-  // Can't get the dependency mode, because the dependency was destroyed
-  final dependencyModeById2 = Reactter.getDependencyMode<CounterController>('count2');
-  print("Dependency mode: $dependencyModeById2"); // Dependency mode: null
-
-  // Create a dependency as singleton mode
-  final counterController2 = Reactter.singleton<CounterController>()!;
-  print("counterController2: $counterController2");
-
-  // Get the dependency mode by using `id` parameter
-  final dependencyMode3 = Reactter.getDependencyMode<CounterController>();
-  print("Dependency mode: $dependencyMode3"); // Dependency mode: DependencyMode.singleton
-
-  // If you need to delete the dependency fully, use `Reactter.destroy` method by forcing it, because it's singleton mode
-  Reactter.destroy<CounterController>();
-
-  // Can't get the dependency mode, because the dependency was destroyed
-  final dependencyMode4 = Reactter.getDependencyMode<CounterController>();
-  print("Dependency mode: $dependencyMode4"); // Dependency mode: null
-}
-```
+    <TabItem label="counter.dart">
+      <Code code={counterGetDependencyModeCode} lang="dart" mark={marks} />
+    </TabItem>
+  </Tabs>
+</CodeTabs>
 
 ## <HM>`Reactter.delete`</HM>
 
-The <HM>`Reactter.delete`</HM> method is used to delete the dependency instance from the Reactter.
-It returns <HN>`true`</HN> if the dependency is deleted successfully, otherwise return <HN>`false`</HN>.
+The <HM>`Reactter.delete`</HM> method removes the dependency instance and its registration from the Reactter based on the dependency mode.
+It returns <HN>`true`</HN> if the dependency is successfully deleted, otherwise return <HN>`false`</HN>.
+
+:::note
+The behavior of the <HM>`Reactter.delete`</HM> method depends on the dependency mode:
+- If the dependency is registered as <HE>Builder</HE> mode, both the dependency instance and its registration will be deleted.
+- If the dependency is registered as <HE>Factory</HE> mode, only the dependency instance will be deleted, but its registration remains.
+- If the dependency is registered as <HE>Singleton</HE> mode, nothing will be deleted.
+
+For more information about the dependency modes, refer to [Dependency Modes](/reactter/core_concepts/dependency_injection/#dependency-modes).
+:::
 
 #### Syntax
 
@@ -986,69 +535,31 @@ bool Reactter.delete<T>([String? id]);
 
 #### Parameters
 
-- `id`: An optional identifier for the <HT>`T`</HT> dependency. If not provided, the method will attempt to delete the default instance of the dependency.
+- `id`: An optional identifier for the <HT>`T`</HT> dependency. If not provided, the default instance of the <HT>`T`</HT> dependency is used.
 
 #### Example
 
 See the example below to understand how to use the <HM>`Reactter.delete`</HM> method in different scenarios.
 
-<Code title="counter_controller.dart" code={counterControllerCode} lang="dart" mark={["count", "Signal"]} collapse={["1-100"]}/>
+<CodeTabs>
+  <ZappButton path="examples/dependency_injection_delete"/>
 
-```dart title="main.dart" collapse={1-24, 27-41, 44-100} "Reactter.register" "Reactter.get" "Reactter.delete" "Reactter.on" "Lifecycle.didUpdate"
-import 'package:reactter/reactter.dart';
-import 'counter_controller.dart';
+  <Tabs>
+    <TabItem>
+      <HM single slot="label">main.dart</HM>
+      <Code code={mainDeleteCode} lang="dart" mark={[...marks, {range: "16-19"}]} collapse={["20-57", "59-100"]} />
+    </TabItem>
 
-void main() {
-  // Register a dependency
-  Reactter.register<CounterController>(() => CounterController());
-
-  // Get the dependency
-  final counterController = Reactter.get<CounterController>()!;
-  print("counterController: $counterController");
-
-  // Listen to the state changes
-  Reactter.on(
-    counterController.count,
-    Lifecycle.didUpdate,
-    (_, __) {
-      print('Count: ${counterController.count.value}');
-    },
-  );
-
-  // Update the state
-  counterController.increment();
-  counterController.decrement();
-
-  // Delete the dependency
-  Reactter.delete<CounterController>();
-
-  // Can't update the state, because the dependency register was deleted
-  // counterController.increment();
-
-  // Can't get the dependency instance, because the dependency register was deleted
-  final counterController2 = Reactter.get<CounterController>();
-  print("counterController2: $counterController2"); // counterController2: null
-
-  // Register a dependency by using `id` parameter
-  Reactter.register(() => CounterController(), id: 'count2');
-
-  // Get the dependency by using `id` parameter
-  final counterControllerById = Reactter.get<CounterController>('count2')!;
-  print("counterControllerById: $counterControllerById");
-
-  // Delete the dependency by using `id` parameter
-  Reactter.delete<CounterController>('count2');
-
-  // Get the dependency by using `id` parameter but its register doesn't exist
-  final counterControllerById2 = Reactter.get<CounterController>('foo');
-  print("counterControllerById2: $counterControllerById2"); // counterControllerById2: null
-}
-```
+    <TabItem label="counter.dart">
+      <Code code={counterDeleteCode} lang="dart" mark={marks} />
+    </TabItem>
+  </Tabs>
+</CodeTabs>
 
 ## <HM>`Reactter.destroy`</HM>
 
-The <HM>`Reactter.destroy`</HM> method is used to destroy the dependency instance and its register from the Reactter.
-It returns <HN>`true`</HN> if the dependency is destroyed successfully, otherwise return <HN>`false`</HN>.
+The <HM>`Reactter.destroy`</HM> method forcibly removes the dependency instance and its registration from the Reactter.
+It returns <HN>`true`</HN> if the dependency is successfully destroyed, otherwise return <HN>`false`</HN>.
 
 #### Syntax
 
@@ -1061,64 +572,27 @@ bool Reactter.destroy<T>({
 
 #### Parameters
 
-- `id`: An optional identifier for the <HT>`T`</HT> dependency. If not provided, the method will attempt to destroy the default instance of the dependency.
+- `id`: An optional identifier for the <HT>`T`</HT> dependency. If not provided, the default instance of the <HT>`T`</HT> dependency is used.
 - `onlyDependency`: An optional parameter to delete the dependency instance only. The default value is <HN>`false`</HN>.
 
 #### Example
 
 See the example below to understand how to use the <HM>`Reactter.destroy`</HM> method in different scenarios.
 
-<Code title="counter_controller.dart" code={counterControllerCode} lang="dart" mark={["count", "Signal"]} collapse={["1-100"]}/>
+<CodeTabs>
+  <ZappButton path="examples/dependency_injection_destroy"/>
 
-```dart title="main.dart" collapse={1-20, 23-26, 29-40, 43-100} "Reactter.register" "Reactter.get" "Reactter.destroy" "Reactter.on" "Lifecycle.didUpdate" "Reactter.singleton"
-import 'package:reactter/reactter.dart';
-import 'counter_controller.dart';
+  <Tabs>
+    <TabItem>
+      <HM single slot="label">main.dart</HM>
+      <Code code={mainDestroyCode} lang="dart" mark={[...marks, {range: "13-16"}]} collapse={["17-42", "44-100"]} />
+    </TabItem>
 
-void main() {
-  // Create a dependency as factory mode
-  final counterController = Reactter.singleton<CounterController>(() => CounterController());
-
-  // Listen to the state changes
-  Reactter.on(
-    counterController.count,
-    Lifecycle.didUpdate,
-    (_, __) {
-      print('Count: ${counterController.count.value}');
-    },
-  );
-
-  // Update the state
-  counterController.increment();
-  counterController.decrement();
-
-  // Destroy the dependency instance only
-  Reactter.destroy<CounterController>(onlyDependency: true);
-
-  // Can get the dependency again, because its register is skipped from destroying.
-  final counterController2 = Reactter.get<CounterController>()!;
-
-  // Destroy the dependency instance and its register
-  Reactter.destroy<CounterController>();
-
-  // Can't update the state, because the dependency register was destroyed
-  // counterController.increment();
-
-  // Can't get the dependency instance, because the dependency register was destroyed
-  final counterController2 = Reactter.get<CounterController>();
-  print("counterController2: $counterController2"); // counterController2: null
-
-  // Create a dependency by using `id` parameter as singleton mode
-  final counterControllerById = Reactter.singleton(() => CounterController(), id: 'count2');
-  print("counterControllerById: $counterControllerById");
-
-  // Destroy the dependency by using `id` parameter
-  Reactter.destroy<CounterController>(id: 'count2');
-
-  // Can't get the dependency instance, because the dependency register was destroyed
-  final counterControllerById2 = Reactter.get<CounterController>('count2');
-  print("counterControllerById2: $counterControllerById2"); // counterControllerById2: null
-}
-```
+    <TabItem label="counter.dart">
+      <Code code={counterDestroyCode} lang="dart" mark={marks} />
+    </TabItem>
+  </Tabs>
+</CodeTabs>
 
 ## <HM>`Reactter.unregister`</HM>
 
@@ -1139,64 +613,20 @@ bool Reactter.unregister<T>([String? id]);
 
 See the example below to understand how to use the <HM>`Reactter.unregister`</HM> method in different scenarios.
 
-<Code title="counter_controller.dart" code={counterControllerCode} lang="dart" mark={["count", "Signal"]} collapse={["1-100"]}/>
+<CodeTabs>
+  <ZappButton path="examples/dependency_injection_unregister"/>
 
-```dart title="main.dart" collapse={1-20, 23-30, 33-47, 50-100} "Reactter.register" "Reactter.get" "Reactter.unregister" "Reactter.on" "Lifecycle.didUpdate" "Reactter.delete"
-import 'package:reactter/reactter.dart';
-import 'counter_controller.dart';
+  <Tabs>
+    <TabItem>
+      <HM single slot="label">main.dart</HM>
+      <Code code={mainUnregisterCode} lang="dart" mark={[...marks, {range: "13-16, 31-34"}]} collapse={["17-23", "35-52", "54-100"]} />
+    </TabItem>
 
-void main() {
-  // Create a dependency as factory mode
-  final counterController = Reactter.factory<CounterController>(() => CounterController());
-
-  // Listen to the state changes
-  Reactter.on(
-    counterController.count,
-    Lifecycle.didUpdate,
-    (_, __) {
-      print('Count: ${counterController.count.value}');
-    },
-  );
-
-  // Update the state
-  counterController.increment();
-  counterController.decrement();
-
-  // Can't unregister the dependency, because the dependency is active
-  Reactter.unregister<CounterController>();
-
-  // Delete the dependency
-  Reactter.delete<CounterController>();
-
-  // Can get the dependency again, because it's factory mode
-  final contController2 = Reactter.get<CounterController>();
-  print("contController2: $contController2");
-
-  // Can unregister the dependency, because the dependency is deleted
-  Reactter.unregister<CounterController>();
-
-  // Can't update the state, because the dependency register was unregistered
-  // counterController.increment();
-
-  // Can't get the dependency instance, because the dependency register was unregistered
-  final counterController3 = Reactter.get<CounterController>();
-  print("counterController3: $counterController3"); // counterController2: null
-
-  // Create a dependency by using `id` parameter as factory mode
-  final counterControllerById = Reactter.factory(() => CounterController(), id: 'count2');
-  print("counterControllerById: $counterControllerById");
-
-  // Delete the dependency by using `id` parameter
-  Reactter.delete<CounterController>('count2');
-
-  // Unregister the dependency by using `id` parameter
-  Reactter.unregister<CounterController>('count2');
-
-  // Can't get the dependency instance, because the dependency register was unregistered
-  final counterControllerById2 = Reactter.get<CounterController>('count2');
-  print("counterControllerById2: $counterControllerById2"); // counterControllerById2: null
-}
-```
+    <TabItem label="counter.dart">
+      <Code code={counterUnregisterCode} lang="dart" mark={marks} />
+    </TabItem>
+  </Tabs>
+</CodeTabs>
 
 ## <HM>`Reactter.isRegistered`</HM>
 
@@ -1217,70 +647,17 @@ bool Reactter.isRegistered<T>([String? id]);
 
 See the example below to understand how to use the <HM>`Reactter.isRegistered`</HM> method in different scenarios.
 
-<Code title="counter_controller.dart" code={counterControllerCode} lang="dart" mark={["count", "Signal"]} collapse={["1-100"]}/>
+<CodeTabs>
+  <ZappButton path="examples/dependency_injection_is_registered"/>
 
-```dart title="main.dart" collapse={1-4, 8-11, 15-35, 39-56, 60-100} "Reactter.register" "Reactter.get" "Reactter.isRegistered" "Reactter.on" "Lifecycle.didUpdate" "Reactter.lazyFactory" "Reactter.factory" "Reactter.delete" "Reactter.unregister"
-import 'package:reactter/reactter.dart';
-import 'counter_controller.dart';
+  <Tabs>
+    <TabItem>
+      <HM single slot="label">main.dart</HM>
+      <Code code={mainIsRegisteredCode} lang="dart" mark={[...marks, {range: "16-19, 34-37"}]} collapse={["20-26", "38-53", "55-100"]} />
+    </TabItem>
 
-void main() {
-  // The dependency is not registered yet
-  final isRegistered = Reactter.isRegistered<CounterController>();
-  print("CounterController is registered: $isRegistered"); // CounterController is registered: false
-
-  // Register a dependency as factory mode
-  Reactter.lazyFactory<CounterController>(() => CounterController());
-
-  // The dependency is registered
-  final isRegistered2 = Reactter.isRegistered<CounterController>();
-  print("CounterController is registered: $isRegistered2"); // CounterController is registered: true
-
-  // Create a dependency as factory mode
-  final counterController = Reactter.factory<CounterController>()!;
-  print("counterController: $counterController");
-
-  // Listen to the state changes
-  Reactter.on(
-    counterController.count,
-    Lifecycle.didUpdate,
-    (_, __) {
-      print('Count: ${counterController.count.value}');
-    },
-  );
-
-  // Update the state
-  counterController.increment();
-  counterController.decrement();
-
-  // Delete the dependency
-  Reactter.delete<CounterController>();
-
-  // The dependency is registered, because it's factory mode
-  final isRegistered3 = Reactter.isRegistered<CounterController>();
-  print("CounterController is registered: $isRegistered3"); // CounterController is registered: true
-
-  // Can't update the state, because the dependency register was deleted
-  // counterController.increment();
-
-  // Create a dependency by using `id` parameter as factory mode
-  final counterControllerById = Reactter.factory<CounterController>('count2')!;
-  print("counterControllerById: $counterControllerById");
-
-  // Delete the dependency by using `id` parameter
-  Reactter.delete<CounterController>('count2');
-
-  // The dependency is registered
-  final isRegisteredById = Reactter.isRegistered<CounterController>('count2');
-  print("CounterController is registered: $isRegisteredById"); // CounterController is registered: true
-
-  // Unregister the dependency by using `id` parameter
-  Reactter.unregister<CounterController>('count2');
-
-  // The dependency is not registered
-  final isRegisteredById2 = Reactter.isRegistered<CounterController>('count2');
-  print("CounterController is registered: $isRegisteredById2"); // CounterController is registered: false
-
-  // Can't update the state, because the dependency register was deleted
-  // counterControllerById.increment();
-}
-```
+    <TabItem label="counter.dart">
+      <Code code={counterIsRegisteredCode} lang="dart" mark={marks} />
+    </TabItem>
+  </Tabs>
+</CodeTabs>
