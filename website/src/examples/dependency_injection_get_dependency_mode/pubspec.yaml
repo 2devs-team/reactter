@@ -1,5 +1,5 @@
-name: Get Dependency Mode method
-description: Get Dependency Mode method example
+name: GetDependencyMode
+description: GetDependencyMode method example
 version: 0.1.0
 
 environment:

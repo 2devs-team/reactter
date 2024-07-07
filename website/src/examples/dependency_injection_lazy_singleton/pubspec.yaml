@@ -1,5 +1,5 @@
-name: Lazy Singleton method
-description: Lazy Singleton method example
+name: LazySingleton
+description: LazySingleton method example
 version: 0.1.0
 
 environment:

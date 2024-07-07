@@ -1,5 +1,5 @@
-name: Lazy builder method
-description: Lazy builder method example
+name: LazyBuilder
+description: LazyBuilder method example
 version: 0.1.0
 
 environment:

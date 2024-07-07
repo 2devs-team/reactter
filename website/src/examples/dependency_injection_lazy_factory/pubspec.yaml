@@ -1,5 +1,5 @@
-name: Lazy factory method
-description: Lazy factory method example
+name: LazyFactory
+description: LazyFactory method example
 version: 0.1.0
 
 environment:

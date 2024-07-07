@@ -1,5 +1,5 @@
-name: Is registered method
-description: Is registered method example
+name: IsRegistered
+description: IsRegistered method example
 version: 0.1.0
 
 environment:
