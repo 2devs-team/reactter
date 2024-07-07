@@ -1,5 +1,5 @@
-name: MyCustomHook
-description: A simple counter example
+name: ReactterScope
+description: ReactterScope example
 version: 0.1.0
 
 environment:

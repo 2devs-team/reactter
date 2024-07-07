@@ -1,5 +1,5 @@
-name: Counter
-description: A simple counter using ReactterProvider
+name: ReactterProvider using child
+description: ReactterProvider using child example
 version: 0.1.0
 
 environment:

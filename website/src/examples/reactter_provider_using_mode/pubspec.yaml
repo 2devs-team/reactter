@@ -1,5 +1,5 @@
-name: Counter
-description: A simple counter using ReactterProvider
+name: ReactterProvider using mode
+description: ReactterProvider using mode example
 version: 0.1.0
 
 environment:

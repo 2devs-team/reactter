@@ -79,7 +79,7 @@ In this scenario, only the <HT>`Text`</HT> widget will be rebuilt when the `coun
 This is because the <HT>`ReactterConsumer`</HT> widget observes the `count` property and triggers the rebuilding of the widget tree when the `count` value changes.
 
 In example, we used the <HT>`ReactterConsumer`</HT> widget to observe the `count` property of the `counterController` instance,
-but we can do the same functionality by using the <HM>`watch`</HM> method of the <HT>`BuildContext`</HT> class.
+but we can do the same functionality using the <HM>`watch`</HM> method of the <HT>`BuildContext`</HT> class.
 
 Here's how we can refactor the code to use the <HM>`watch`</HM> method along with a <HT>`Builder`</HT> widget to achieve the same outcome:
 

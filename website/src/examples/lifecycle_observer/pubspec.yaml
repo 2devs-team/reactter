@@ -1,5 +1,5 @@
-name: Counter
-description: A event handler example
+name: LifecycleObserver
+description: LifecycleObserver example
 version: 0.1.0
 
 environment:

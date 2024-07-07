@@ -1,5 +1,5 @@
-name: Counter
-description: A simple counter using ReactterProvider
+name: ReactterProvider.init
+description: ReactterProvider.init example
 version: 0.1.0
 
 environment:
