@@ -1,4 +1,4 @@
-name: LazyBuilder
+name: DependencyInjectionLazyBuilder
 description: LazyBuilder method example
 version: 0.1.0
 

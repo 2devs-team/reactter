@@ -1,4 +1,4 @@
-name: Unregister
+name: DependencyInjectionUnregister
 description: Unregister method example
 version: 0.1.0
 

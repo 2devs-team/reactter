@@ -1,4 +1,4 @@
-name: LazySingleton
+name: DependencyInjectionLazySingleton
 description: LazySingleton method example
 version: 0.1.0
 

@@ -1,4 +1,4 @@
-name: Factory
+name: DependencyInjectionFactory
 description: Factory method example
 version: 0.1.0
 

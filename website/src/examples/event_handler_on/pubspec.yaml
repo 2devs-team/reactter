@@ -1,5 +1,5 @@
-name: DependencyInjectionFind
-description: Find method example
+name: EventHandlerOn
+description: Register method example
 version: 0.1.0
 
 environment:

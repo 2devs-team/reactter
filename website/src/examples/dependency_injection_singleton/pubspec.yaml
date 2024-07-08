@@ -1,4 +1,4 @@
-name: Singleton
+name: DependencyInjectionSingleton
 description: Singleton method example
 version: 0.1.0
 

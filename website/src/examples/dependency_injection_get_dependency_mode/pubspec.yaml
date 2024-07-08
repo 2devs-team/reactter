@@ -1,4 +1,4 @@
-name: GetDependencyMode
+name: DependencyInjectionGetDependencyMode
 description: GetDependencyMode method example
 version: 0.1.0
 
