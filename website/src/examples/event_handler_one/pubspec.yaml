@@ -1,5 +1,5 @@
-name: EventHandlerOn
-description: Register method example
+name: EventHandlerOne
+description: One method example
 version: 0.1.0
 
 environment:

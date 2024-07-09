@@ -6,6 +6,23 @@ sidebar:
 ---
 
 import { HE, HK, HM, HN, HS, HT } from '@/components/Highlight';
+import CodeTabs from '@/components/CodeTabs.astro';
+import { Tabs, TabItem } from "@/components/Tabs";
+import ZappButton from "@/components/ZappButton.astro";
+import { Code } from "@astrojs/starlight/components";
+import { marks } from '@/examples/marks.ts'
+
+import myDependencyOnEmitCode from '@/examples/event_handler_on_emit/lib/my_dependency.dart?raw';
+import mainOnEmitCode from '@/examples/event_handler_on_emit/lib/main.dart?raw';
+
+import myDependencyOneCode from '@/examples/event_handler_one/lib/my_dependency.dart?raw';
+import mainOneCode from '@/examples/event_handler_one/lib/main.dart?raw';
+
+import myDependencyOffCode from '@/examples/event_handler_off/lib/my_dependency.dart?raw';
+import mainOffCode from '@/examples/event_handler_off/lib/main.dart?raw';
+
+import myDependencyOffAllCode from '@/examples/event_handler_off_all/lib/my_dependency.dart?raw';
+import mainOffAllCode from '@/examples/event_handler_off_all/lib/main.dart?raw';
 
 :::tip
 This documentation assumes you've already read the [Event Handler](/reactter/core_concepts/event_handler).
@@ -40,83 +57,20 @@ void on<T, P>(
 
 See the example below to understand how to use the <HM>`Reactter.on`</HM> method:
 
-```dart title="my_controller.dart" collapse={1-100} "Signal"
-import 'package:reactter/reactter.dart';
+<CodeTabs>
+  <ZappButton path="examples/event_handler_on_emit"/>
 
-enum CustomEvent { myEvent }
+  <Tabs>
+    <TabItem>
+      <HM single slot="label">main.dart</HM>
+      <Code code={mainOnEmitCode} lang="dart" mark={[...marks, {range: "7-11,17-21,24-28,31-35"}]} collapse={["36-70", "72-100"]} />
+    </TabItem>
 
-class MyController {
-  final stateA = Signal(0);
-  final stateB = Signal('InitialValue');
-}
-```
-
-```dart title="main.dart" collapse={0-4, 13-16, 37-100} "Reactter.on" "Reactter.create" "Reactter.delete" "Reactter.emit" "Signal" "ReactterDependency" "Lifecycle.didUpdate"
-import 'package:reactter/reactter.dart';
-import './my_controller.dart';
-
-void main() {
-  // Listen to the `myEvent` event of the `MyController` instance before it's created
-  Reactter.on(
-    ReactterDependency<MyController>,
-    CustomEvent.myEvent,
-    (MyController instance, int param) {
-      print('Event emitted with param: $param');
-    },
-  );
-
-  // Create a new instance of `MyController`
-  final myController = Reactter.create(() => MyController())!;
-
-  // Listen to the `didUpdate` event of the `MyController` instance
-  Reactter.on<MyController, ReactterState>(
-    myController,
-    Lifecycle.didUpdate,
-    (instance, state) => print('State: ${state.runtimeType}'),
-  );
-
-  // Listen to the `didUpdate` event of the `stateA`
-  Reactter.on(
-    myController.stateA,
-    Lifecycle.didUpdate,
-    (MyController instance, Signal state) => print('State A updated: ${state.value}'),
-  );
-
-  // Listen to the `didUpdate` event of the `stateB`
-  Reactter.on(
-    myController.stateB,
-    Lifecycle.didUpdate,
-    (MyController instance, Signal state) => print('State B updated: ${state.value}'),
-  );
-
-  // Change the value of `stateA` to `10`
-  // Print:
-  // State: Signal<int>
-  // State A updated: 10
-  myController.stateA.value = 10;
-
-  // Change the value of `stateB` to `'Hello World!'`
-  // Print:
-  // State: Signal<String>
-  // State B updated: 'Hello World!'
-  myController.stateB.value = 'Hello World!';
-
-  // Emit the `myEvent` event with the parameter `42`
-  // Print: Event emitted with param: 42
-  Reactter.emit(ReactterDependency<MyController>, CustomEvent.myEvent, 42);
-
-  // Delete the `MyController`
-  Reactter.delete<MyController>();
-
-  // Can't change the value of `stateA`
-  // Error: "Can't update when it's been disposed"
-  // myController.stateA.value = 20;
-
-  // The `myEvent` event is not emitted,
-  // because the `MyController` together to the listeners were deleted.
-  Reactter.emit(ReactterDependency<MyController>, CustomEvent.myEvent, "test");
-}
-```
+    <TabItem label="my_dependency.dart">
+      <Code code={myDependencyOnEmitCode} lang="dart" mark={marks} />
+    </TabItem>
+  </Tabs>
+</CodeTabs>
 
 ## <HM>`Reactter.one`</HM>
 
@@ -144,73 +98,20 @@ void one<T, P>(
 
 See the example below to understand how to use the <HM>`Reactter.one`</HM> method:
 
-```dart title="main.dart" collapse={0-4, 13-16, 37-100} "Reactter.one" "Reactter.create" "Reactter.delete" "Reactter.emit" "Signal" "ReactterDependency" "Lifecycle.didUpdate"
-import 'package:reactter/reactter.dart';
-import './my_controller.dart';
+<CodeTabs>
+  <ZappButton path="examples/event_handler_one"/>
 
-void main() {
-  // Listen to the `myEvent` event of the `MyController` instance before it's created
-  Reactter.one(
-    ReactterDependency<MyController>,
-    CustomEvent.myEvent,
-    (MyController instance, int param) {
-      print('Event emitted with param: $param');
-    },
-  );
+  <Tabs>
+    <TabItem>
+      <HM single slot="label">main.dart</HM>
+      <Code code={mainOneCode} lang="dart" mark={[...marks, {range: "7-11,17-21,24-28,31-35"}]} collapse={["36-66", "68-100"]} />
+    </TabItem>
 
-  // Create a new instance of `MyController`
-  final myController = Reactter.create(() => MyController())!;
-
-  // Listen to the `didUpdate` event of the `MyController` instance
-  Reactter.one<MyController, ReactterState>(
-    myController,
-    Lifecycle.didUpdate,
-    (instance, state) => print('State: ${state.runtimeType}'),
-  );
-
-  // Listen to the `didUpdate` event of the `stateA`
-  Reactter.one(
-    myController.stateA,
-    Lifecycle.didUpdate,
-    (MyController instance, Signal state) => print('State A updated: ${state.value}'),
-  );
-
-  // Listen to the `didUpdate` event of the `stateB`
-  Reactter.one(
-    myController.stateB,
-    Lifecycle.didUpdate,
-    (MyController instance, Signal state) => print('State B updated: ${state.value}'),
-  );
-
-  // Change the value of `stateA` to `10`
-  // Print:
-  // State: Signal<int>
-  // State A updated: 10
-  myController.stateA.value = 10;
-
-  // Change the value of `stateB` to `'Hello World!'`
-  // Print:
-  // State B updated: 'Hello World!'
-  myController.stateB.value = 'Hello World!';
-
-  // Emit the `myEvent` event with the parameter `42`
-  // Print: Event emitted with param: 42
-  Reactter.emit(ReactterDependency<MyController>, CustomEvent.myEvent, 42);
-
-  // The `myEvent` event is not listened to again
-  Reactter.emit(ReactterDependency<MyController>, CustomEvent.myEvent, 'test');
-
-  // Delete the `MyController`
-  Reactter.delete<MyController>();
-
-  // Can't change the value of `stateA`
-  // Error: "Can't update when it's been disposed"
-  // myController.stateA.value = 20;
-
-  // The `myEvent` event is not listened to again
-  Reactter.emit(ReactterDependency<MyController>, CustomEvent.myEvent, "test");
-}
-```
+    <TabItem label="my_dependency.dart">
+      <Code code={myDependencyOneCode} lang="dart" mark={marks} />
+    </TabItem>
+  </Tabs>
+</CodeTabs>
 
 ## <HM>`Reactter.emit`</HM>
 
@@ -236,84 +137,20 @@ void emit(
 
 See the example below to understand how to use the <HM>`Reactter.emit`</HM> method:
 
-```dart title="my_controller.dart" collapse={1-100} "Signal"
-import 'package:reactter/reactter.dart';
+<CodeTabs>
+  <ZappButton path="examples/event_handler_on_emit"/>
 
-enum CustomEvent { myEvent }
+  <Tabs>
+    <TabItem>
+      <HM single slot="label">main.dart</HM>
+      <Code code={mainOnEmitCode} lang="dart" mark={[...marks, {range: "52,63,68"}]} collapse={["6-48", "53-60", "69-70", "72-100"]} />
+    </TabItem>
 
-class MyController {
-  final stateA = Signal(0);
-  final stateB = Signal('InitialValue');
-}
-```
-
-```dart title="main.dart" collapse={0-4, 13-16, 37-100} "Reactter.on" "Reactter.create" "Reactter.delete" "Reactter.emit" "Signal" "ReactterDependency" "Lifecycle.didUpdate"
-import 'package:reactter/reactter.dart';
-import './my_controller.dart';
-
-void main() {
-  // Listen to the `myEvent` event of the `MyController` instance before it's created
-  Reactter.on(
-    ReactterDependency<MyController>,
-    CustomEvent.myEvent,
-    (MyController instance, int param) {
-      print('Event emitted with param: $param');
-    },
-  );
-
-  // Create a new instance of `MyController`
-  final myController = Reactter.create(() => MyController())!;
-
-  // Listen to the `didUpdate` event of the `MyController` instance
-  Reactter.on<MyController, ReactterState>(
-    myController,
-    Lifecycle.didUpdate,
-    (instance, state) => print('State: ${state.runtimeType}'),
-  );
-
-  // Listen to the `didUpdate` event of the `stateA`
-  Reactter.on(
-    myController.stateA,
-    Lifecycle.didUpdate,
-    (MyController instance, Signal state) => print('State A updated: ${state.value}'),
-  );
-
-  // Listen to the `didUpdate` event of the `stateB`
-  Reactter.on(
-    myController.stateB,
-    Lifecycle.didUpdate,
-    (MyController instance, Signal state) => print('State B updated: ${state.value}'),
-  );
-
-  // Change the value of `stateA` to `10`
-  // Print:
-  // State: Signal<int>
-  // State A updated: 10
-  myController.stateA.value = 10;
-
-  // Change the value of `stateB` to `'Hello World!'`
-  // Print:
-  // State: Signal<String>
-  // State B updated: 'Hello World!'
-  myController.stateB.value = 'Hello World!';
-
-  // Emit the `myEvent` event with the parameter `42`
-  // Print: Event emitted with param: 42
-  Reactter.emit(ReactterDependency<MyController>, CustomEvent.myEvent, 42);
-
-  // Delete the `MyController`
-  Reactter.delete<MyController>();
-
-  // Can't change the value of `stateA`
-  // Error: "Can't update when it's been disposed"
-  // myController.stateA.value = 20;
-
-  // The `myEvent` event is not emitted,
-  // because the `MyController` together to the listeners were deleted.
-  Reactter.emit(ReactterDependency<MyController>, CustomEvent.myEvent, "test");
-}
-```
-
+    <TabItem label="my_dependency.dart">
+      <Code code={myDependencyOnEmitCode} lang="dart" mark={marks} />
+    </TabItem>
+  </Tabs>
+</CodeTabs>
 
 ## <HM>`Reactter.off`</HM>
 
@@ -341,119 +178,20 @@ void off<T, P>(
 
 See the example below to understand how to use the <HM>`Reactter.off`</HM> method:
 
-```dart title="my_controller.dart" collapse={1-100} "Signal"
-import 'package:reactter/reactter.dart';
+<CodeTabs>
+  <ZappButton path="examples/event_handler_off"/>
 
-enum CustomEvent { myEvent }
+  <Tabs>
+    <TabItem>
+      <HM single slot="label">main.dart</HM>
+      <Code code={mainOffCode} lang="dart" mark={[...marks, {range: "63-67,70,73"}]} collapse={["4-20", "22-61", "74-83", "85-100"]} />
+    </TabItem>
 
-class MyController {
-  final stateA = Signal(0);
-  final stateB = Signal('InitialValue');
-}
-```
-
-```dart title="main.dart" collapse={1-67, 74-78, 85-89, 96-100} "Reactter.on" "Reactter.off" "Reactter.create" "Reactter.delete" "Reactter.emit" "Signal" "ReactterDependency" "Lifecycle.didUpdate"
-import 'package:reactter/reactter.dart';
-import './my_controller.dart';
-
-void onMyEvent(instance, param) {
-  print('Event emitted with param: $param');
-}
-
-void onDidUpdate(instance, state) {
-  print('State: ${state.runtimeType}');
-}
-
-void onDidUpdateStateA(MyController instance, Signal state) {
-  print('State A updated: ${state.value}');
-}
-
-void onDidUpdateStateB(MyController instance, Signal state) {
-  print('State B updated: ${state.value}');
-}
-
-void main() {
-  // Listen to the `myEvent` event of the `MyController` instance before it's created
-  Reactter.on(
-    ReactterDependency<MyController>,
-    CustomEvent.myEvent,
-    onMyEvent,
-  );
-
-  // Create a new instance of `MyController`
-  final myController = Reactter.create(() => MyController())!;
-
-  // Listen to the `didUpdate` event of the `MyController` instance
-  Reactter.on<MyController, ReactterState>(
-    myController,
-    Lifecycle.didUpdate,
-    onDidUpdate,
-  );
-
-  // Listen to the `didUpdate` event of the `stateA`
-  Reactter.on(
-    myController.stateA,
-    Lifecycle.didUpdate,
-    onDidUpdateStateA,
-  );
-
-  // Listen to the `didUpdate` event of the `stateB`
-  Reactter.on(
-    myController.stateB,
-    Lifecycle.didUpdate,
-    didUpdateStateBListener,
-  );
-
-  // Change the value of `stateA` to `10`
-  // Print:
-  // State: Signal<int>
-  // State A updated: 10
-  myController.stateA.value = 10;
-
-  // Change the value of `stateB` to `'Hello World!'`
-  // Print:
-  // State: Signal<String>
-  // State B updated: 'Hello World!'
-  myController.stateB.value = 'Hello World!';
-
-  // Emit the `myEvent` event with the parameter `42`
-  // Print: Event emitted with param: 42
-  Reactter.emit(ReactterDependency<MyController>, CustomEvent.myEvent, 42);
-
-  // Stop listening to the `didUpdate` event of the `stateA`
-  Reactter.off(
-    myController.stateA,
-    Lifecycle.didUpdate,
-    onDidUpdateStateA,
-  );
-
-  // Change the value of `stateA` to `20`
-  // Print: State: Signal<int>
-  myController.stateA.value = 20;
-
-  // Stop listening to the `didUpdate` event of the `MyController` instance
-  Reactter.off(
-    myController,
-    Lifecycle.didUpdate,
-    onDidUpdate,
-  );
-
-  // Change the value of `stateB` to `'Hey you!'`
-  // Print: State B updated: 'Hey you!'
-  myController.stateB.value = 'Hey you!';
-
-  // Stop listening to the `myEvent` event of the `MyController` instance
-  Reactter.off(
-    ReactterDependency<MyController>,
-    CustomEvent.myEvent,
-    onMyEvent,
-  );
-
-  // Emit the `myEvent` event with the parameter `test`
-  // The `myEvent` event is not listened to again
-  Reactter.emit(ReactterDependency<MyController>, CustomEvent.myEvent, 'test');
-}
-```
+    <TabItem label="my_dependency.dart">
+      <Code code={myDependencyOffCode} lang="dart" mark={marks} />
+    </TabItem>
+  </Tabs>
+</CodeTabs>
 
 ## <HM>`Reactter.offAll`</HM>
 
@@ -473,86 +211,17 @@ void offAll<T>(Object? instance);
 
 See the example below to understand how to use the <HM>`Reactter.offAll`</HM> method:
 
-```dart title="my_controller.dart" collapse={1-100} "Signal"
-import 'package:reactter/reactter.dart';
+<CodeTabs>
+  <ZappButton path="examples/event_handler_off_all"/>
 
-enum CustomEvent { myEvent }
+  <Tabs>
+    <TabItem>
+      <HM single slot="label">main.dart</HM>
+      <Code code={mainOffAllCode} lang="dart" mark={[...marks, {range: "55,59"}]} collapse={["6-53", "60-75", "77-100"]} />
+    </TabItem>
 
-class MyController {
-  final stateA = Signal(0);
-  final stateB = Signal('InitialValue');
-}
-```
-
-```dart title="main.dart" collapse={1-51, 54-100} "Reactter.on" "Reactter.offAll" "Reactter.create" "Reactter.delete" "Reactter.emit" "Signal" "ReactterDependency" "Lifecycle.didUpdate"
-import 'package:reactter/reactter.dart';
-import './my_controller.dart';
-
-void main() {
-  // Listen to the `myEvent` event of the `MyController` instance before it's created
-  Reactter.on(
-    ReactterDependency<MyController>,
-    CustomEvent.myEvent,
-    (instance, param) => print('Event emitted with param: $param'),
-  );
-
-  // Create a new instance of `MyController`
-  final myController = Reactter.create(() => MyController())!;
-
-  // Listen to the `didUpdate` event of the `MyController` instance
-  Reactter.on<MyController, ReactterState>(
-    myController,
-    Lifecycle.didUpdate,
-    (instance, state) => print('State: ${state.runtimeType}'),
-  );
-
-  // Listen to the `didUpdate` event of the `stateA`
-  Reactter.on(
-    myController.stateA,
-    Lifecycle.didUpdate,
-    (MyController instance, Signal state) => print('State A updated: ${state.value}'),
-  );
-
-  // Listen to the `didUpdate` event of the `stateB`
-  Reactter.on(
-    myController.stateB,
-    Lifecycle.didUpdate,
-    (MyController instance, Signal state) => print('State B updated: ${state.value}'),
-  );
-
-  // Change the value of `stateA` to `10`
-  // Print:
-  // State: Signal<int>
-  // State A updated: 10
-  myController.stateA.value = 10;
-
-  // Change the value of `stateB` to `'Hello World!'`
-  // Print:
-  // State: Signal<String>
-  // State B updated: 'Hello World!'
-  myController.stateB.value = 'Hello World!';
-
-  // Emit the `myEvent` event with the parameter `42`
-  // Print: Event emitted with param: 42
-  Reactter.emit(ReactterDependency<MyController>, CustomEvent.myEvent, 42);
-
-  // Stop listening to all events of the `MyController` instance
-  Reactter.offAll(myController);
-
-  // Change the value of `stateA` to `20`
-  // The `didUpdate` event of `MyController` instance is not listened to
-  // Print:
-  // State A updated: 20
-  myController.stateA.value = 20;
-
-  // Change the value of `stateB` to `'Hey you!'`
-  // The `didUpdate` event of `MyController` instance is not listened to
-  // Print:
-  // State B updated: 'Hey you!'
-  myController.stateB.value = 'Hey you!';
-
-  // Emit the `myEvent` event with the parameter `test`
-  // The `myEvent` event of `MyController` instance is not listened to
-  Reactter.emit(ReactterDependency<MyController>, CustomEvent.myEvent, 'test');
-}
-```
+    <TabItem label="my_dependency.dart">
+      <Code code={myDependencyOffAllCode} lang="dart" mark={marks} />
+    </TabItem>
+  </Tabs>
+</CodeTabs>
