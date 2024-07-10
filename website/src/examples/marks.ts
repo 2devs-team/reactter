@@ -32,6 +32,8 @@ export const marks = [
   "ReactterDependencyMode.singleton",
   "ReactterScope",
   "ReactterProvider",
+  "ReactterProvider.lazy",
+  "ReactterProvider.init",
   "ReactterProviders",
   "ReactterConsumer",
   "ReactterSelector",
