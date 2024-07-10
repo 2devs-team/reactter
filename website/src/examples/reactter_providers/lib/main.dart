@@ -13,8 +13,17 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       home: ReactterProviders(
         [
-          ReactterProvider(() => CounterController()),
-          ReactterProvider.lazy(() => CounterController(), id: 'counterLazy'),
+          ReactterProvider(() {
+            print('CounterController created');
+            return CounterController();
+          }),
+          ReactterProvider.lazy(
+            () {
+              print('Lazy CounterController created');
+              return CounterController();
+            },
+            id: 'counterLazy',
+          ),
         ],
         builder: (context, child) {
           return CounterView();
