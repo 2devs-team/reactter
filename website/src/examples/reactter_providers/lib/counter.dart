@@ -9,6 +9,7 @@ class Counter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Locales the `CounterController` dependency
     return ReactterConsumer<CounterController>(
       id: id,
       builder: (context, counterController, child) {

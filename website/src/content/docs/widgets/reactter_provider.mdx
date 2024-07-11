@@ -16,16 +16,16 @@ import counterCode from '@/examples/counter/lib/counter.dart?raw';
 import counterViewCode from '@/examples/counter/lib/counter_view.dart?raw';
 import mainCode from '@/examples/counter/lib/main.dart?raw';
 
-import counterControllerUsingIdCode from '@/examples/reactter_provider_using_id/lib/counter_controller.dart?raw';
-import counterUsingIdCode from '@/examples/reactter_provider_using_id/lib/counter.dart?raw';
-import counterViewUsingIdCode from '@/examples/reactter_provider_using_id/lib/counter_view.dart?raw';
-import mainUsingIdCode from '@/examples/reactter_provider_using_id/lib/main.dart?raw';
+import counterControllerIdCode from '@/examples/reactter_provider_id/lib/counter_controller.dart?raw';
+import counterIdCode from '@/examples/reactter_provider_id/lib/counter.dart?raw';
+import counterViewIdCode from '@/examples/reactter_provider_id/lib/counter_view.dart?raw';
+import mainIdCode from '@/examples/reactter_provider_id/lib/main.dart?raw';
 
-import counterControllerUsingChildCode from '@/examples/reactter_provider_using_child/lib/counter_controller.dart?raw';
-import counterUsingChildCode from '@/examples/reactter_provider_using_child/lib/counter.dart?raw';
-import counterWithButtonsUsingChildCode from '@/examples/reactter_provider_using_child/lib/counter_with_buttons.dart?raw';
-import counterViewUsingChildCode from '@/examples/reactter_provider_using_child/lib/counter_view.dart?raw';
-import mainUsingChildCode from '@/examples/reactter_provider_using_child/lib/main.dart?raw';
+import counterControllerChildCode from '@/examples/reactter_provider_child/lib/counter_controller.dart?raw';
+import counterChildCode from '@/examples/reactter_provider_child/lib/counter.dart?raw';
+import counterWithButtonsChildCode from '@/examples/reactter_provider_child/lib/counter_with_buttons.dart?raw';
+import counterViewChildCode from '@/examples/reactter_provider_child/lib/counter_view.dart?raw';
+import mainChildCode from '@/examples/reactter_provider_child/lib/main.dart?raw';
 
 import counterControllerLazyCode from '@/examples/reactter_provider_lazy/lib/counter_controller.dart?raw';
 import counterLazyCode from '@/examples/reactter_provider_lazy/lib/counter.dart?raw';
@@ -37,12 +37,10 @@ import counterInitCode from '@/examples/reactter_provider_init/lib/counter.dart?
 import counterViewInitCode from '@/examples/reactter_provider_init/lib/counter_view.dart?raw';
 import mainInitCode from '@/examples/reactter_provider_init/lib/main.dart?raw';
 
-import counterControllerUsingModeCode from '@/examples/reactter_provider_using_mode/lib/counter_controller.dart?raw';
-import counterUsingModeCode from '@/examples/reactter_provider_using_mode/lib/counter.dart?raw';
-import counterViewUsingModeCode from '@/examples/reactter_provider_using_mode/lib/counter_view.dart?raw';
-import mainUsingModeCode from '@/examples/reactter_provider_using_mode/lib/main.dart?raw';
-
-
+import counterControllerModeCode from '@/examples/reactter_provider_mode/lib/counter_controller.dart?raw';
+import counterModeCode from '@/examples/reactter_provider_mode/lib/counter.dart?raw';
+import counterViewModeCode from '@/examples/reactter_provider_mode/lib/counter_view.dart?raw';
+import mainModeCode from '@/examples/reactter_provider_mode/lib/main.dart?raw';
 
 :::tip
 This documentation assumes you've already read the [Dependency Injection](/reactter/core_concepts/dependency_injection) and [Rendering Control](/reactter/core_concepts/rendering_control).
@@ -165,25 +163,25 @@ It is useful when you want to create multiple instances of the same dependency.
 Here's an example of how to use it:
 
 <CodeTabs>
-  <ZappButton path="examples/reactter_provider_using_id"/>
+  <ZappButton path="examples/reactter_provider_id"/>
 
   <Tabs>
     <TabItem>
       <HM single slot="label">counter.dart</HM>
-      <Code code={counterUsingIdCode} lang="dart" mark={[...marks, {range: "13-16, 41-42"}]} collapse={"17-40"} />
+      <Code code={counterIdCode} lang="dart" mark={[...marks, {range: "13-16, 41-42"}, {range: "15", label: "👉"}]} collapse={"17-40"} />
     </TabItem>
 
     <TabItem>
       <HM single slot="label">counter_view.dart</HM>
-      <Code code={counterViewUsingIdCode} lang="dart" mark={[...marks, {range: "17, 19, 21"}]} />
+      <Code code={counterViewIdCode} lang="dart" mark={[...marks, {range: "17, 19, 21"}]} />
     </TabItem>
 
     <TabItem label="counter_controller.dart">
-      <Code code={counterControllerUsingIdCode} lang="dart" mark={marks} />
+      <Code code={counterControllerIdCode} lang="dart" mark={marks} />
     </TabItem>
 
     <TabItem label="main.dart">
-      <Code code={mainUsingIdCode} lang="dart" mark={marks} />
+      <Code code={mainIdCode} lang="dart" mark={marks} />
     </TabItem>
   </Tabs>
 </CodeTabs>
@@ -200,30 +198,30 @@ The `child` argument can't accessed to the dependency instance without a consume
 Here's an example of how to use it:
 
 <CodeTabs>
-  <ZappButton path="examples/reactter_provider_using_child"/>
+  <ZappButton path="examples/reactter_provider_child"/>
 
   <Tabs>
     <TabItem>
       <HM single slot="label">counter.dart</HM>
-      <Code code={counterUsingChildCode} lang="dart" mark={[...marks, {range: "12-23"}]}/>
+      <Code code={counterChildCode} lang="dart" mark={[...marks, {range: "12-23"}, {range: "14", label: "👉"}]}/>
     </TabItem>
 
     <TabItem>
       <HM single slot="label">counter_with_buttons.dart</HM>
-      <Code code={counterWithButtonsUsingChildCode} lang="dart" mark={[...marks, {range: "21, 8-9, 31-32"}]} />
+      <Code code={counterWithButtonsChildCode} lang="dart" mark={[...marks, {range: "21, 8-9, 31-32"}]} />
     </TabItem>
 
     <TabItem>
       <HM single slot="label">counter_view.dart</HM>
-      <Code code={counterViewUsingChildCode} lang="dart" mark={[...marks, {range: "15, 18"}]} />
+      <Code code={counterViewChildCode} lang="dart" mark={[...marks, {range: "15, 18"}]} />
     </TabItem>
 
     <TabItem label="counter_controller.dart">
-      <Code code={counterControllerUsingChildCode} lang="dart" mark={marks} />
+      <Code code={counterControllerChildCode} lang="dart" mark={marks} />
     </TabItem>
 
     <TabItem label="main.dart">
-      <Code code={mainUsingChildCode} lang="dart" mark={marks} />
+      <Code code={mainChildCode} lang="dart" mark={marks} />
     </TabItem>
   </Tabs>
 </CodeTabs>
@@ -293,25 +291,25 @@ The <HT>`ReactterProvider`</HT> widget provides a `mode` argument that allows yo
 Here's an example of how to use it:
 
 <CodeTabs>
-  <ZappButton path="examples/reactter_provider_using_mode"/>
+  <ZappButton path="examples/reactter_provider_mode"/>
 
   <Tabs>
     <TabItem>
       <HM single slot="label">counter.dart</HM>
-      <Code code={counterUsingModeCode} lang="dart" mark={[...marks, {range: "13-17, 42-43"}]} collapse={"18-41"} />
+      <Code code={counterModeCode} lang="dart" mark={[...marks, {range: "13-17, 42-43"}, {range: "16", label: "👉"}]} collapse={"18-41"} />
     </TabItem>
 
     <TabItem>
       <HM single slot="label">counter_view.dart</HM>
-      <Code code={counterViewUsingModeCode} lang="dart" mark={[...marks, {range: "32, 37, 43"}]}  />
+      <Code code={counterViewModeCode} lang="dart" mark={[...marks, {range: "34, 37, 41"}]}  />
     </TabItem>
 
     <TabItem label="counter_controller.dart">
-      <Code code={counterControllerUsingModeCode} lang="dart" mark={marks} />
+      <Code code={counterControllerModeCode} lang="dart" mark={marks} />
     </TabItem>
 
     <TabItem label="main.dart">
-      <Code code={mainUsingModeCode} lang="dart" mark={marks} />
+      <Code code={mainModeCode} lang="dart" mark={marks} />
     </TabItem>
   </Tabs>
 </CodeTabs>

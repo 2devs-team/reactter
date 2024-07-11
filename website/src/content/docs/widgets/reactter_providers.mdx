@@ -57,7 +57,11 @@ In the following example, we have a simple counter application that uses the <HT
   <Tabs>
     <TabItem label="main.dart">
       <HM single slot="label">main.dart</HM>
-      <Code code={mainCode} lang="dart" mark={{...marks, range:  "14-19,21-22"}} />
+      <Code code={mainCode} lang="dart" mark={[...marks, {range:  "14-31"}]} />
+    </TabItem>
+
+    <TabItem label="counter_view.dart">
+      <Code code={counterViewCode} lang="dart" mark={marks} />
     </TabItem>
 
     <TabItem label="counter.dart">
@@ -66,10 +70,6 @@ In the following example, we have a simple counter application that uses the <HT
 
     <TabItem label="counter_controller.dart">
       <Code code={counterControllerCode} lang="dart" mark={marks} />
-    </TabItem>
-
-    <TabItem label="counter_view.dart">
-      <Code code={counterViewCode} lang="dart" mark={marks} />
     </TabItem>
   </Tabs>
 </CodeTabs>

@@ -31,20 +31,14 @@ class CounterView extends StatelessWidget {
                 if (showCounter.value) ...[
                   const SizedBox(height: 8),
                   // Will register and create the `CounterController` dependency each time.
-                  const Counter(
-                    mode: DependencyMode.builder,
-                  ),
+                  const Counter(mode: DependencyMode.builder),
                   const SizedBox(height: 8),
                   // Will register the `CounterController` dependency only once.
-                  const Counter(
-                    mode: DependencyMode.factory,
-                  ),
+                  const Counter(mode: DependencyMode.factory),
                   const SizedBox(height: 8),
                   // Will register and create the `CounterController` dependency only once,
                   // this keeps the counter value between rebuilds
-                  const Counter(
-                    mode: DependencyMode.singleton,
-                  ),
+                  const Counter(mode: DependencyMode.singleton),
                 ],
               ],
             );
