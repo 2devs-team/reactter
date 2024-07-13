@@ -11,7 +11,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      // Provides the `CounterController` dependency to the widget tree
+      // Provide the `CounterController` dependency to the widget tree
       home: ReactterProvider.lazy(
         () => CounterController(),
         builder: (context, child) {

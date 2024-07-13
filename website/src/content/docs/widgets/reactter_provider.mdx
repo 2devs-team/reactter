@@ -107,7 +107,6 @@ The <HT>`ReactterProvider`</HT> class has three constructors, each catering to d
   })
   ```
 
-
 ## Properties
 
 - <HM>`instanceBuilder`</HM>: A function that creates an instance of the <HT>`T`</HT> dependency. This function is registered by [Dependency Injection](/reactter/core_concepts/dependency_injection).
@@ -128,7 +127,7 @@ It receives the following arguments:
 
 ### Basic Usage
 
-To use the <HT>`ReactterProvider`</HT> widget, wrap it around the widget tree where you want to inject the dependency.
+To use <HT>`ReactterProvider`</HT>, wrap it around the widget tree where you want to inject the dependency.
 
 Here's an example of how to use it:
 
@@ -157,8 +156,8 @@ Here's an example of how to use it:
 
 ### Using `id`
 
-The <HT>`ReactterProvider`</HT> widget provides an `id` argument that allows you to provide an identifier for the dependency. 
-It is useful when you want to create multiple instances of the same dependency.
+<HT>`ReactterProvider`</HT> offers the `id` property that allows you to provide an identifier for the dependency.
+This is useful when you want to create multiple instances of the same dependency.
 
 Here's an example of how to use it:
 
@@ -188,8 +187,8 @@ Here's an example of how to use it:
 
 ### Using `child`
 
-The <HT>`ReactterProvider`</HT> widget provides a `child` argument that does not rebuild when the dependency changes.
-It is useful when you want to reuse a widget.
+<HT>`ReactterProvider`</HT> offers the `child` property to pass a widget that is independent of the <HT>`ReactterProvider`</HT> and is passed to the <HM>`builder`</HM> function.
+This is useful when you want to reuse a widget.
 
 :::note
 The `child` argument can't accessed to the dependency instance without a consumer.
@@ -285,8 +284,7 @@ Here's an example of how to use it:
 </CodeTabs>
 
 ### Initialization modes
-
-The <HT>`ReactterProvider`</HT> widget provides a `mode` argument that allows you to initialize the dependency with different [modes](/reactter/core_concepts/dependency_injection/#dependency-modes).
+<HT>`ReactterProvider`</HT> provides a `mode` property that allows you to initialize the dependency with different [modes](/reactter/core_concepts/dependency_injection/#dependency-modes).
 
 Here's an example of how to use it:
 

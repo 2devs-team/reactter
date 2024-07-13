@@ -84,15 +84,15 @@ but we can do the same functionality using the <HM>`watch`</HM> method of the <H
 Here's how we can refactor the code to use the <HM>`watch`</HM> method along with a <HT>`Builder`</HT> widget to achieve the same outcome:
 
 ```dart title="counter_view.dart" startLineNumber={23} del={1-5} ins={6-13} "ReactterConsumer" "context.watch"
-            // Observes the `count` property of the `counterController`
-            // and rebuilds the widget tree when the `count` value changes
+            // Observe the `count` property of the `counterController`
+            // and rebuild the widget tree when the `count` value changes
             ReactterConsumer<CounterController>(
               listenStates: (counterController) => [counterController.count],
               builder: (context, counterController, child) {
             Builder(
               builder: (context) {
-                // Observes the `count` property of the `counterController`
-                // and rebuilds the widget tree when the `count` value changes
+                // Observe the `count` property of the `counterController`
+                // and rebuild the widget tree when the `count` value changes
                 final counterController = context.watch<CounterController>(
                   (counterController) => [counterController.count],
                 );

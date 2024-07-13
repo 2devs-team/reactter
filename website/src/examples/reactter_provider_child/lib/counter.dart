@@ -8,11 +8,11 @@ class Counter extends StatelessWidget {
   const Counter({Key? key, this.builder}) : super(key: key);
 
   Widget build(BuildContext context) {
-    // Provides the `CounterController` dependency to the widget tree
+    // Provide the `CounterController` dependency to the widget tree
     return ReactterProvider<CounterController>(
       () => CounterController(), // Registers the `CounterController` dependency
       child: ReactterConsumer<CounterController>(
-        // Observes the `count` property of the `counterController` instance
+        // Observe the `count` property of the `counterController` instance
         listenStates: (counterController) => [counterController.count],
         builder: (context, counterController, child) {
           // Rebuilds the widget tree when the `count` value changes

@@ -44,7 +44,7 @@ import mainChildCode from '@/examples/reactter_consumer_child/lib/main.dart?raw'
 The <HT>`ReactterConsumer`</HT> widget obtains the dependency provided by the closest <HT>[`ReactterProvider`](/reactter/widgets/reactter_provider)</HT> widget and rebuilds itself whenever there are changes in the dependency or any defined states.
 
 :::note
-The <HT>`ReactterConsumer`</HT> widget is similar to the <HM>[`BuildContext.use`](/reactter/extensions/builder_context_use)</HM> and <HM>[`BuildContext.watch`](/reactter/extensions/builder_context_watch)</HM> functions, but it is designed to be used within the widget tree.
+<HT>`ReactterConsumer`</HT> is similar to the <HM>[`BuildContext.use`](/reactter/extensions/builder_context_use)</HM> and <HM>[`BuildContext.watch`](/reactter/extensions/builder_context_watch)</HM> functions, but it is designed to be used within the widget tree.
 :::
 
 ## Syntax
@@ -83,13 +83,13 @@ ReactterConsumer<T>({
   It receives the following arguments:
   - `context`: The <HT>`BuildContext`</HT> of the widget. A handle to the location of <HT>`ReactterConsumer`</HT> in the widget tree.
   - `instance`: The instance of <HT>`T`</HT> dependency provided by the closest <HT>`ReactterProvider`</HT> widget.
-  - `child`: The `child` widget passed to the <HT>`ReactterConsumer`</HT> widget.
+  - `child`: The `child` widget passed to <HT>`ReactterConsumer`</HT>.
 
 ## Usage
 
 ### Basic Usage
 
-To use the <HT>`ReactterConsumer`</HT> widget, you need to provide the <HT>`T`</HT> dependency using the <HT>`ReactterProvider`</HT> widget.
+To use <HT>`ReactterConsumer`</HT>, you need to provide the <HT>`T`</HT> dependency using the <HT>`ReactterProvider`</HT> widget.
 
 :::note
 Ensure that the <HT>`ReactterProvider`</HT> widget is placed higher in the widget tree than any <HT>`ReactterConsumer`</HT> instances needing access to the <HT>`T`</HT> dependency.
@@ -120,7 +120,7 @@ Here's an example of how to use it:
   </Tabs>
 </CodeTabs>
 
-In the example above, the <HT>`ReactterConsumer`</HT> widget is used only to access the <HT>`CounterController`</HT> dependency within the <HT>`Counter`</HT> widget.
+In the example above, <HT>`ReactterConsumer`</HT> is used only to access the <HT>`CounterController`</HT> dependency within the <HT>`Counter`</HT> widget.
 Consequently, it does not rebuild whenever there are changes in the `count` state of the <HT>`CounterController`</HT> dependency.
 
 :::note
@@ -131,7 +131,7 @@ Alternatively, you can set the `listenAll` property to <HN>`true`</HN> to listen
 
 ### Listening to all state
 
-The <HT>`ReactterConsumer`</HT> widget can listen to all states provided by the <HT>`T`</HT> dependency by setting the `listenAll` property to <HN>`true`</HN>.
+To listen to all states, set the `listenAll` property to <HN>`true`</HN>. This ensures that <HT>`ReactterConsumer`</HT> rebuilds whenever any state in the dependency changes.
 
 :::caution
 Using the `listenAll` property indiscriminately is not recommended, especially when some states are not directly involved in rendering the widget subtree.
@@ -163,10 +163,10 @@ Here's an example of how to use it:
   </Tabs>
 </CodeTabs>
 
-In the example above, the <HT>`ReactterConsumer`</HT> widget will trigger a rebuild of the widget subtree(the <HT>`Row`</HT> widget and each of its children) whenever there are changes in any state of the <HT>`CounterController`</HT> dependency.
+In the example above, <HT>`ReactterConsumer`</HT> will trigger a rebuild of the widget subtree(the <HT>`Row`</HT> widget and each of its children) whenever there are changes in any state of the <HT>`CounterController`</HT> dependency.
 
 So, that approach lacks performance efficient.
-It is advisable to optimize by selectively wrapping only the necessary widgets with the <HT>`ReactterConsumer`</HT> widget, utilizing either active or non-active listening as appropriate, e.g.:
+It is advisable to optimize by selectively wrapping only the necessary widgets with <HT>`ReactterConsumer`</HT>, utilizing either active or non-active listening as appropriate, e.g.:
 
 <CodeTabs>
   <ZappButton path="examples/reactter_consumer_listen_all_2"/>
@@ -193,7 +193,9 @@ It is advisable to optimize by selectively wrapping only the necessary widgets w
 
 ### Listening to specific states
 
-The <HT>`ReactterConsumer`</HT> widget can listen to specific states provided by the <HT>`T`</HT> dependency by defining the <HM>`listenStates`</HM> property.
+To listen to specific states, use the <HM>`listenStates`</HM> property.
+Define a function that returns a list of the states you want to listen to.
+This ensures that <HT>`ReactterConsumer`</HT> rebuilds only when the specified states change.
 
 Here's an example of how to use it:
 
@@ -220,12 +222,12 @@ Here's an example of how to use it:
   </Tabs>
 </CodeTabs>
 
-In the example above, the <HT>`ReactterConsumer`</HT> widget will trigger a rebuild of the <HT>`Text`</HT> widget whenever there are changes in the `count` state of the <HT>`CounterController`</HT> dependency.
+In the example above, <HT>`ReactterConsumer`</HT> will trigger a rebuild of the <HT>`Text`</HT> widget whenever there are changes in the `count` state of the <HT>`CounterController`</HT> dependency.
 
 ### Using `id`
 
-The <HT>`ReactterConsumer`</HT> widget can use the `id` property to locate the <HT>`T`</HT> dependency by its identifier.
-It is useful when there are multiple instances of the same type of dependency in the widget tree.
+<HT>`ReactterConsumer`</HT> offers the `id` property to locate the <HT>`T`</HT> dependency by its identifier.
+This is useful when you have multiple instances of the same dependency type and need to specify which one to use.
 
 Here's an example of how to use it:
 
@@ -254,7 +256,7 @@ Here's an example of how to use it:
   </Tabs>
 </CodeTabs>
 
-In the example above, the <HT>`ReactterConsumer`</HT> widget uses the `id` property to locate the <HT>`CounterController`</HT> dependency by the <HS>`counter1`</HS> and <HS>`counter2`</HS> identifiers.
+In the example above, <HT>`ReactterConsumer`</HT> uses the `id` property to locate the <HT>`CounterController`</HT> dependency by the <HS>`counter1`</HS> and <HS>`counter2`</HS> identifiers.
 
 :::note
 Ensure that the `id` property is located in the <HT>`ReactterProvider`</HT> widget that provides the <HT>`T`</HT> dependency.
@@ -262,8 +264,8 @@ Ensure that the `id` property is located in the <HT>`ReactterProvider`</HT> widg
 
 ### Using `child`
 
-The <HT>`ReactterConsumer`</HT> widget can accept a `child` property that is independent of the <HT>`ReactterConsumer`</HT> widget.
-It is useful when you want to provide a widget that does not rebuild when the dependency changes.
+<HT>`ReactterConsumer`</HT> offers the `child` property to pass a widget that is independent of the <HT>`ReactterConsumer`</HT> and is passed to the <HM>`builder`</HM> function.
+This is useful when you want to reuse a widget that does not need to rebuild when the dependency changes.
 
 :::note
 The `child` argument can't accessed to the dependency instance.
@@ -294,4 +296,4 @@ Here's an example of how to use it:
   </Tabs>
 </CodeTabs>
 
-In the example above, the <HT>`ReactterConsumer`</HT> widget uses the `child` property to pass the <HT>`Text`</HT> widget to the <HM>`builder`</HM> function.
+In the example above, <HT>`ReactterConsumer`</HT> uses the `child` property to pass the <HT>`Text`</HT> widget to the <HM>`builder`</HM> function.

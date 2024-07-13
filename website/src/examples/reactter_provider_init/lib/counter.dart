@@ -22,8 +22,8 @@ class Counter extends StatelessWidget {
               child: const Icon(Icons.remove),
             ),
             const SizedBox(width: 8),
-            // Observes the `count` property of the `counterController`
-            // and rebuilds the widget tree when the `count` value changes
+            // Observe the `count` property of the `counterController`
+            // and rebuild the widget tree when the `count` value changes
             ReactterConsumer<CounterController>(
               listenStates: (counterController) => [counterController.count],
               builder: (context, counterController, child) {
