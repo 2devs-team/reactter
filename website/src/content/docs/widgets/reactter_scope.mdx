@@ -14,7 +14,7 @@ import { marks } from '@/examples/marks.ts'
 import counterViewCode from '@/examples/reactter_scope/lib/counter_view.dart?raw';
 import mainCode from '@/examples/reactter_scope/lib/main.dart?raw';
 
-The <HT>`ReactterScope`</HT> widget serves as an entry point for Reactter, allowing you to use any consumer(such as <HT>`ReactterConsumer`</HT>, <HT>`ReactterSelect`</HT>, <HT>`ReactterComponent`</HT>, <HM>`BuildContext.watch`</HM>, <HM>`BuildContext.select`</HM>) to observe state changes within the subtree of the widget it wraps, without the need to explicitly define dependencies.
+The <HT><a href="https://pub.dev/documentation/flutter_reactter/latest/flutter_reactter/ReactterScope-class.html">`ReactterScope`</a></HT> widget serves as an entry point for Reactter, allowing you to use any consumer(such as <HT>[`ReactterConsumer`](/reactter/widgets/reactter_consumer)</HT>, <HT>[`ReactterSelector`](/reactter/widgets/reactter_selector)</HT>, <HT>[`ReactterComponent`](/reactter/widgets/reactter_component)</HT>, <HM>[`BuildContext.watch`](/reactter/extensions/builder_context_watch)</HM>, <HM>[`BuildContext.select`](/reactter/extensions/builder_context_select)</HM>) to observe state changes within the subtree of the widget it wraps, without the need to explicitly define dependencies.
 
 :::caution
 The <HT>`ReactterScope`</HT> widget is optional, but if you use any consumers without defining dependencies and their ancestor widgets are not wrapped by it, a <HT>`ReactterScopeNotFoundException`</HT> error will be thrown. Therefore, make sure this widget is correctly placed in the widget tree hierarchy.
@@ -36,7 +36,7 @@ ReactterScope({
 - `key`: An optional <HT>`Key`</HT> to use for identifying the widget.
 - `child`: The <HT>`Widget`</HT> that is to be wrapped by the <HT>`ReactterScope`</HT> widget.
 
-## Example
+## Usage
 
 In the following example, we have a simple counter application that uses the <HT>`ReactterScope`</HT> widget to listen to the state changes of the `count` value.
 

@@ -41,7 +41,7 @@ import counterChildCode from '@/examples/reactter_consumer_child/lib/counter.dar
 import counterViewChildCode from '@/examples/reactter_consumer_child/lib/counter_view.dart?raw';
 import mainChildCode from '@/examples/reactter_consumer_child/lib/main.dart?raw';
 
-The <HT>`ReactterConsumer`</HT> widget obtains the dependency provided by the closest <HT>[`ReactterProvider`](/reactter/widgets/reactter_provider)</HT> widget and rebuilds itself whenever there are changes in the dependency or any defined states.
+The <HT><a href="https://pub.dev/documentation/flutter_reactter/latest/flutter_reactter/ReactterConsumer-class.html">`ReactterConsumer`</a></HT> widget obtains the dependency provided by the closest <HT>[`ReactterProvider`](/reactter/widgets/reactter_provider)</HT> widget and rebuilds itself whenever there are changes in the dependency or any defined states.
 
 :::note
 <HT>`ReactterConsumer`</HT> is similar to the <HM>[`BuildContext.use`](/reactter/extensions/builder_context_use)</HM> and <HM>[`BuildContext.watch`](/reactter/extensions/builder_context_watch)</HM> functions, but it is designed to be used within the widget tree.
@@ -76,8 +76,8 @@ ReactterConsumer<T>({
 - `listenAll`: A boolean that determines whether to listen to all states provided by the <HT>`T`</HT> dependency.
   If set to <HN>`true`</HN>, the <HM>`listenStates`</HM> function is ignored.
   The default value is <HN>`false`</HN>.
-- <HM>`listenStates`</HM>: A function that returns a list of state(<HT>`ReactterState`</HT>) to listen to.
-  It takes the instance of the <HT>`T`</HT> dependency as an åargument.
+- <HM>`listenStates`</HM>: An optional function that returns a list of state(<HT>`ReactterState`</HT>) to listen to.
+  It takes the instance of the <HT>`T`</HT> dependency as an argument.
   If omitted, the `listenAll` property is checked.
 - <HM>`builder`</HM>: A function that builds a widget depending on the <HT>`ReactterConsumer`</HT>.
   It receives the following arguments:

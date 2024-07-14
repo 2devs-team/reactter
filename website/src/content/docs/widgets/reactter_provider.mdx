@@ -47,7 +47,7 @@ This documentation assumes you've already read the [Dependency Injection](/react
 It's recommended read that first if you're new in Reactter.
 :::
 
-The <HT>`ReactterProvider`</HT> widget injects a dependency into its descendant widgets, ensuring the dependency is accessible throughout its subtree. It facilitates sharing the dependency across multiple widgets seamlessly.
+The <HT><a href="https://pub.dev/documentation/flutter_reactter/latest/flutter_reactter/ReactterProvider-class.html">`ReactterProvider`</a></HT> widget injects a dependency into its descendant widgets, ensuring the dependency is accessible throughout its subtree. It facilitates sharing the dependency across multiple widgets seamlessly.
 
 ## Syntax
 
@@ -111,7 +111,7 @@ The <HT>`ReactterProvider`</HT> class has three constructors, each catering to d
 
 - <HM>`instanceBuilder`</HM>: A function that creates an instance of the <HT>`T`</HT> dependency. This function is registered by [Dependency Injection](/reactter/core_concepts/dependency_injection).
 - `key`: An optional <HT>`Key`</HT> to use for identifying the widget.
-- `id`: An optional identifier for the dependency.
+- `id`: An optional identifier for the <HT>`T`</HT> dependency.
   If omitted, the dependency will be located by its type(<HT>`T`</HT>).
 - `mode`: The mode of the dependency injection. By default, it uses the builder mode(<HE>`DependecyMode.builder`</HE>).
   Learn more about the [dependency modes](/reactter/core_concepts/dependency_injection/#dependency-modes).
