@@ -64,9 +64,9 @@ ReactterSelector<T, V>({
   It receives the following arguments:
   - `instance`: The instance of <HT>`T`</HT> dependency provided by the closest <HT>`ReactterProvider`</HT> widget.
   - `select`: A function that allows you to wrap the state to be listened for changes and returns it.
-- <HM>`builder`</HM>: A function that builds a widget depending on the <HT>`ReactterSelector`</HT>.
+- <HM>`builder`</HM>: A function that rebuilds a widget depending on the <HT>`ReactterSelector`</HT>.
 It receives the following arguments:
-  - `context`: The <HT>`BuildContext`</HT> of the widget. A handle to the location of <HT>`ReactterSelector`</HT> in the widget tree.
+  - `context`: The <HT>`BuildContext`</HT> of the <HT>`ReactterSelector`</HT> widget.
   - `instance`: The instance of <HT>`T`</HT> dependency provided by the closest <HT>`ReactterProvider`</HT> widget.
   - `value`: The selected value computed <HT>`V`</HT> by the <HM>`selector`</HM> function.
   - `child`: The `child` widget passed to <HT>`ReactterSelector`</HT>.

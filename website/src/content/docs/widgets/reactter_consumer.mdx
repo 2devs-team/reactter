@@ -72,16 +72,16 @@ ReactterConsumer<T>({
 - `id`: An optional identifier for the dependency.
   If omitted, the dependency will be located by its type(<HT>`T`</HT>).
 - `child`: An optional <HT>`Widget`</HT> that is independent of the <HT>`ReactterConsumer`</HT>.
-  If defined, it is passed to the <HM>`builder`</HM> function if it is defined.
+  It is passed to the <HM>`builder`</HM> function if it is defined.
 - `listenAll`: A boolean that determines whether to listen to all states provided by the <HT>`T`</HT> dependency.
   If set to <HN>`true`</HN>, the <HM>`listenStates`</HM> function is ignored.
   The default value is <HN>`false`</HN>.
 - <HM>`listenStates`</HM>: An optional function that returns a list of state(<HT>`ReactterState`</HT>) to listen to.
   It takes the instance of the <HT>`T`</HT> dependency as an argument.
   If omitted, the `listenAll` property is checked.
-- <HM>`builder`</HM>: A function that builds a widget depending on the <HT>`ReactterConsumer`</HT>.
+- <HM>`builder`</HM>: A function that rebuilds a widget depending on the <HT>`ReactterConsumer`</HT>.
   It receives the following arguments:
-  - `context`: The <HT>`BuildContext`</HT> of the widget. A handle to the location of <HT>`ReactterConsumer`</HT> in the widget tree.
+  - `context`: The <HT>`BuildContext`</HT> of the <HT>`ReactterConsumer`</HT> widget.
   - `instance`: The instance of <HT>`T`</HT> dependency provided by the closest <HT>`ReactterProvider`</HT> widget.
   - `child`: The `child` widget passed to <HT>`ReactterConsumer`</HT>.
 

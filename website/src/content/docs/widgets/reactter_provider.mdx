@@ -116,7 +116,7 @@ The <HT>`ReactterProvider`</HT> class has three constructors, each catering to d
 - `mode`: The mode of the dependency injection. By default, it uses the builder mode(<HE>`DependecyMode.builder`</HE>).
   Learn more about the [dependency modes](/reactter/core_concepts/dependency_injection/#dependency-modes).
 - `child`: An optional <HT>`Widget`</HT> which is independent of the <HT>`ReactterProvider`</HT>.
-  If defined, it is passed to the <HM>`builder`</HM> function if it is defined.
+  It is passed to the <HM>`builder`</HM> function if it is defined.
 - <HM>`builder`</HM>: An optional function which builds a widget based on the dependency. If it not defined, the <HT>`child`</HT> widget is returned.
 It receives the following arguments:
   - `context`: The <HM>`BuildContext`</HM> of the widget. A handle to the location of <HT>`ReactterProvider`</HT> in the widget tree.
