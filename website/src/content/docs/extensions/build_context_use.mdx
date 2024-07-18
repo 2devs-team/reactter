@@ -28,12 +28,15 @@ T context.use<T>([String? id]);
 ## Explanation
 
 - <HT>`T`</HT>: The type of the dependency you want to access.
+These are some points to consider:
+  - If the type is nullable, the method will return <HN>`null`</HN> if the dependency is not found.
+  - If the type is not nullable, the method will throw an exception if the dependency is not found.
 - `id`: An optional identifier for the <HT>`T`</HT> dependency. If omitted, the dependency will be located by its type(<HT>`T`</HT>).
 - `context`: The <HT>`BuildContext`</HT> object, which provides information about the current widget in the tree.
 
 ## Usage
 
-This following example demonstrates how to use <HT>`BuildContext.use`</HT> to get the instance of <HT>`Counter`</HT> from the nearest ancestor provider.
+This following example demonstrates how to use <HT>`BuildContext.use`</HT>.
 
 <CodeTabs>
   <ZappButton path="examples/build_context"/>
@@ -58,3 +61,5 @@ This following example demonstrates how to use <HT>`BuildContext.use`</HT> to ge
     </TabItem>
   </Tabs>
 </CodeTabs>
+
+In this example, the <HT>`Counter`</HT> widget uses <HT>`BuildContext.use`</HT> to get the instance of <HT>`CounterController`</HT> from the nearest ancestor provider(located in `main.dart`).
