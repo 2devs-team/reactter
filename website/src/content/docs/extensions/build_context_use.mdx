@@ -1,0 +1,60 @@
+---
+title: BuildContext.use
+description: Learn how to use a value in a BuildContext in Reactter.
+sidebar:
+  order: 1
+---
+
+import { HM, HT, HN } from '@/components/Highlight';
+import CodeTabs from '@/components/CodeTabs.astro';
+import { Tabs, TabItem } from "@/components/Tabs";
+import ZappButton from "@/components/ZappButton.astro";
+import { Code } from "@astrojs/starlight/components";
+import { marks } from '@/examples/marks.ts'
+
+import counterControllerCode from '@/examples/build_context/lib/counter_controller.dart?raw';
+import counterCode from '@/examples/build_context/lib/counter.dart?raw';
+import counterViewCode from '@/examples/build_context/lib/counter_view.dart?raw';
+import mainCode from '@/examples/build_context/lib/main.dart?raw';
+
+<HT><a href="https://pub.dev/documentation/flutter_reactter/latest/flutter_reactter/ReactterBuildContextExtension/use.html" target="_blank">`BuildContext.use`</a></HT> is a method that gets an instance of <HT>`T`</HT> dependency from the nearest ancestor provider(<HT>[`ReactterProvider`](/reactter/widgets/reactter_provider)</HT> or <HT>[`ReactterComponent`](/reactter/widgets/reactter_component)</HT>) of type <HT>`T`</HT>.
+
+## Syntax
+
+```dart showLineNumbers=false
+T context.use<T>([String? id]);
+```
+
+## Explanation
+
+- <HT>`T`</HT>: The type of the dependency you want to access.
+- `id`: An optional identifier for the <HT>`T`</HT> dependency. If omitted, the dependency will be located by its type(<HT>`T`</HT>).
+- `context`: The <HT>`BuildContext`</HT> object, which provides information about the current widget in the tree.
+
+## Usage
+
+This following example demonstrates how to use <HT>`BuildContext.use`</HT> to get the instance of <HT>`Counter`</HT> from the nearest ancestor provider.
+
+<CodeTabs>
+  <ZappButton path="examples/build_context"/>
+
+  <Tabs>
+    <TabItem>
+      <HM single slot="label">counter.dart</HM>
+      <Code code={counterCode} lang="dart" mark={[...marks, {range: "13"}]} collapse={["14-42"]} />
+    </TabItem>
+
+    <TabItem>
+      <HM single slot="label">counter_view.dart</HM>
+      <Code code={counterViewCode} lang="dart" mark={[...marks, {range: "17, 26"}]} />
+    </TabItem>
+
+    <TabItem label="counter_controller.dart">
+      <Code code={counterControllerCode} lang="dart" mark={marks} />
+    </TabItem>
+
+    <TabItem label="main.dart">
+      <Code code={mainCode} lang="dart" mark={marks} />
+    </TabItem>
+  </Tabs>
+</CodeTabs>
