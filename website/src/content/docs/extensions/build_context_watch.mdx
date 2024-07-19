@@ -21,6 +21,16 @@ import mainCode from '@/examples/build_context/lib/main.dart?raw';
 It not only retrieves the <HT>`T`</HT> dependency but also registers the current widget as a listener for any changes to the states set or otherwise any states of <HT>`T`</HT> dependency.
 Consequently, whenever changes, the widget using <HT>`BuildContext.watch`</HT> is automatically notified and rebuilt.
 
+:::tip
+You can optionally use <HT>`BuildContext.watch`</HT> with an `id`, but when you need to listen changes in a dependency's states using an `id`, it's better to use <HT>[`BuildContext.watchId`](/reactter/extensions/build_context_watch_id)</HT> for improved readability and clarity.
+
+```dart
+context.watch<MyDependency>(null, 'myId');
+// is equivalent to
+context.watchId<MyDependency>('myId');
+```
+:::
+
 ## Syntax
 
 ```dart showLineNumbers=false
