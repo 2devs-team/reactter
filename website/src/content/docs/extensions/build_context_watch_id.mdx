@@ -24,14 +24,14 @@ This approach is useful when you have multiple dependencies of the same type and
 
 While you can use <HT>[`BuildContext.watch`](/reactter/extensions/build_context_watch)</HT> with `id`, <HT>`BuildContext.watchId`</HT> is more readable and clear when an `id` is required.
 
-```dart
+```dart showLineNumbers=false
 context.watch<MyDependency>(null, 'myId');
 // is equivalent to
 context.watchId<MyDependency>('myId');
 ```
 :::
 
-## Syntax
+## Syntax & description
 
 ```dart showLineNumbers=false
 T context.watchId<T>(
@@ -40,17 +40,16 @@ T context.watchId<T>(
 );
 ```
 
-## Explanation
-
+- `context`: The <HT>`BuildContext`</HT> object, which provides information about the current widget in the tree.
 - <HT>`T`</HT>: The type of the dependency you want to access. These are some points to consider:
   - If the type is nullable, the method will return <HN>`null`</HN> if the dependency is not found.
   - If the type is not nullable, the method will throw an exception if the dependency is not found.
 - `id`: An identifier for the <HT>`T`</HT> dependency. The dependency will be located by its type(<HT>`T`</HT>) and the `id`.
-- <HM>`listenStates`</HM>: An optional list of <HT>`ReactterState`</HT> instances to listen for changes. If omitted, the method will listen to all states of <HT>`T`</HT> dependency.
+- <HM>`listenStates`</HM>: An optional function that returns a list of state(<HT>`ReactterState`</HT>) to listen for changes. If omitted, the method will listen for any changes in the <HT>`T`</HT> dependency.
 
 ## Usage
 
-This following example demonstrates how to use <HT>`BuildContext.watchId`</HT>.
+This following example demonstrates how to use <HT>`BuildContext.watchId`</HT>:
 
 <CodeTabs>
   <ZappButton path="examples/build_context"/>
@@ -75,3 +74,5 @@ This following example demonstrates how to use <HT>`BuildContext.watchId`</HT>.
     </TabItem>
   </Tabs>
 </CodeTabs>
+
+In this example, the <HT>`Counter`</HT> widget uses <HT>`BuildContext.watchId`</HT> to get the instance of <HT>`CounterController`</HT> by its `id` from the nearest ancestor provider(located in `main.dart`) and listen for changes in the `count` state.

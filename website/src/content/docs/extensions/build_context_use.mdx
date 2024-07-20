@@ -19,24 +19,22 @@ import mainCode from '@/examples/build_context/lib/main.dart?raw';
 
 <HT><a href="https://pub.dev/documentation/flutter_reactter/latest/flutter_reactter/ReactterBuildContextExtension/use.html" target="_blank">`BuildContext.use`</a></HT> is a method that gets an instance of <HT>`T`</HT> dependency from the nearest ancestor provider(<HT>[`ReactterProvider`](/reactter/widgets/reactter_provider)</HT> or <HT>[`ReactterComponent`](/reactter/widgets/reactter_component)</HT>) of type <HT>`T`</HT>.
 
-## Syntax
+## Syntax & description
 
 ```dart showLineNumbers=false
 T context.use<T>([String? id]);
 ```
 
-## Explanation
-
+- `context`: The <HT>`BuildContext`</HT> object, which provides information about the current widget in the tree.
 - <HT>`T`</HT>: The type of the dependency you want to access.
 These are some points to consider:
   - If the type is nullable, the method will return <HN>`null`</HN> if the dependency is not found.
   - If the type is not nullable, the method will throw an exception if the dependency is not found.
 - `id`: An optional identifier for the <HT>`T`</HT> dependency. If omitted, the dependency will be located by its type(<HT>`T`</HT>).
-- `context`: The <HT>`BuildContext`</HT> object, which provides information about the current widget in the tree.
 
 ## Usage
 
-This following example demonstrates how to use <HT>`BuildContext.use`</HT>.
+This following example demonstrates how to use <HT>`BuildContext.use`</HT>:
 
 <CodeTabs>
   <ZappButton path="examples/build_context"/>

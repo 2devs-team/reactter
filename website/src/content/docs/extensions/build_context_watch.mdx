@@ -6,32 +6,41 @@ sidebar:
 ---
 
 import { HM, HT, HN } from '@/components/Highlight';
+import MDXRedry from '@/components/MDXRedry.astro';
 import CodeTabs from '@/components/CodeTabs.astro';
 import { Tabs, TabItem } from "@/components/Tabs";
 import ZappButton from "@/components/ZappButton.astro";
 import { Code } from "@astrojs/starlight/components";
 import { marks } from '@/examples/marks.ts'
 
+import * as WatchVsSelectComparation from '@/content/docs/shareds/watch_vs_select_comparation.mdx';
 import counterControllerCode from '@/examples/build_context/lib/counter_controller.dart?raw';
 import counterCode from '@/examples/build_context/lib/counter.dart?raw';
 import counterViewCode from '@/examples/build_context/lib/counter_view.dart?raw';
 import mainCode from '@/examples/build_context/lib/main.dart?raw';
 
 <HT><a href="https://pub.dev/documentation/flutter_reactter/latest/flutter_reactter/BuildContextExtension/watch.html" target="_blank">`BuildContext.watch`</a></HT> is a method similar to <HT>[`BuildContext.use`](/reactter/extensions/build_context_use)</HT>, but with an added functionality.
-It not only retrieves the <HT>`T`</HT> dependency but also registers the current widget as a listener for any changes to the states set or otherwise any states of <HT>`T`</HT> dependency.
+It not only retrieves the <HT>`T`</HT> dependency but also registers the current widget as a listener for any changes to the states set or otherwise any changes in the <HT>`T`</HT> dependency.
 Consequently, whenever changes, the widget using <HT>`BuildContext.watch`</HT> is automatically notified and rebuilt.
 
 :::tip
 You can optionally use <HT>`BuildContext.watch`</HT> with an `id`, but when you need to listen changes in a dependency's states using an `id`, it's better to use <HT>[`BuildContext.watchId`](/reactter/extensions/build_context_watch_id)</HT> for improved readability and clarity.
 
-```dart
+```dart showLineNumbers=false
 context.watch<MyDependency>(null, 'myId');
 // is equivalent to
 context.watchId<MyDependency>('myId');
 ```
 :::
 
-## Syntax
+:::caution
+To render using a computed value based on multiple states, use <HT>[`BuildContext.select`](/reactter/extensions/build_context_select)</HT> instead of <HT>`BuildContext.watch`</HT> or pre-compute the value using <HT>[`UseCompute`](/reactter/hooks/use_compute)</HT> to prevent unnecessary rebuilds.
+
+<MDXRedry mdx={WatchVsSelectComparation} />
+:::
+
+
+## Syntax & description
 
 ```dart showLineNumbers=false
 T context.watch<T>([
@@ -39,18 +48,18 @@ T context.watch<T>([
   String? id,
 ]);
 ```
-## Explanation
 
+- `context`: The <HT>`BuildContext`</HT> object, which provides information about the current widget in the tree.
 - <HT>`T`</HT>: The type of the dependency you want to access.
 These are some points to consider:
   - If the type is nullable, the method will return <HN>`null`</HN> if the dependency is not found.
   - If the type is not nullable, the method will throw an exception if the dependency is not found.
-- <HM>`listenStates`</HM>: An optional list of <HT>`ReactterState`</HT> instances to listen for changes. If omitted, the method will listen to all states of <HT>`T`</HT> dependency.
+- <HM>`listenStates`</HM>: An optional function that returns a list of state(<HT>`ReactterState`</HT>) to listen for changes. If omitted, the method will listen for any changes in the <HT>`T`</HT> dependency.
 - `id`: An optional identifier for the <HT>`T`</HT> dependency. If omitted, the dependency will be located by its type(<HT>`T`</HT>).
 
 ## Usage
 
-This following example demonstrates how to use <HT>`BuildContext.watch`</HT>.
+This following example demonstrates how to use <HT>`BuildContext.watch`</HT>:
 
 <CodeTabs>
   <ZappButton path="examples/build_context"/>
