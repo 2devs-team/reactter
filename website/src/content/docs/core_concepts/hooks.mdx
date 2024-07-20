@@ -52,20 +52,15 @@ There are several advantages to using _**Custom Hooks**_:
 
 To create a _**Custom hook**_, you need to create a class that extends <HT>`ReactterHook`</HT> and follow the naming convention with the <HT>`Use`</HT> prefix.
 
-Here's an example of a _**Custom Hook**_ that manages the state of a text input:
-
-<Code code={UseTextInputCode} lang="dart" mark={[...marks, {range: "5-6", label: "*      This line is REQUIRED!        "}]} />
-
-As shown in the example above, we can utilize other hooks such as <HT>[`UseEffect`](/reactter/hooks/use_effect)</HT> to monitor changes in the text input's controller and ensure it is disposed when the hook is destroyed.
-
-The <HM>`update`</HM> method is used to set the internal `_value` to the current text in the controller, which keeps the state synchronized with the input.
-This methods is a part of the <HT>`ReactterHook`</HT> class that allows you to update the state of the hook.
-
 :::note
 <HT>`ReactterHook`</HT> is a class that inherits from <HT>`ReactterState`</HT>.
 It provides a set of methods to manage the state and lifecycle of the hook.
 Learn more about [State methods](/reactter/core_concepts/state_management/#state-methods).
 :::
+
+Here's an example of a _**Custom Hook**_ that manages the state of a text input:
+
+<Code code={UseTextInputCode} lang="dart" mark={[...marks, {range: "5-6", label: "*      This line is REQUIRED!        "}]} />
 
 :::caution[Attention!!]
 To create a _**Custom Hook**_(<HT>`ReactterHook`</HT>), you need to register it by adding the following line:
@@ -77,6 +72,11 @@ final $ = ReactterHook.$register;
 It's important to note that the states and hooks defined above this line are not linked to the hook.
 To avoid this, it's recommended to place this line as the first line in the class body.
 :::
+
+As shown in the example above, we can utilize other hooks such as <HT>[`UseEffect`](/reactter/hooks/use_effect)</HT> to monitor changes in the text input's controller and ensure it is disposed when the hook is destroyed.
+
+The <HM>`update`</HM> method is used to set the internal `_value` to the current text in the controller, which keeps the state synchronized with the input.
+This methods is a part of the <HT>`ReactterHook`</HT> class that allows you to update the state of the hook.
 
 ### Using a custom hook
 
