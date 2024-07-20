@@ -22,7 +22,7 @@ It's useful when you want to create a state that depends on other states or vari
 
 #### Syntax
 
-```dart
+```dart showLineNumbers=false
 T Reactter.lazyState<T extends ReactterState>(T stateFn(), Object instance);
 ```
 
@@ -61,7 +61,7 @@ void main() {
 }
 ```
 
-In the example, the `uCount` state is lazily declared inside the <HT>`CountController`</HT> class using <HM>Reactter.lazyState</HM>. It's accessed after creating the <HT>`CountController`</HT> instance, and when the instance is deleted, the state is automatically disposed, ensuring efficient resource management.
+In the example, the `uCount` state is lazily declared inside the <HT>`CountController`</HT> class using <HM>`Reactter.lazyState`</HM>. It's accessed after creating the <HT>`CountController`</HT> instance, and when the instance is deleted, the state is automatically disposed, ensuring efficient resource management.
 
 ## <HM>`Reactter.batch`</HM>
 
@@ -69,8 +69,8 @@ The <HM>`Reactter.batch`</HM> method allows multiple state changes to be grouped
 
 #### Syntax
 
-```dart
-T Reactter.batch(T Function() callback);
+```dart showLineNumbers=false
+T Reactter.batch(T callback());
 ```
 
 #### Example
@@ -127,8 +127,8 @@ This means that changes made using this method won't trigger associated side eff
 
 #### Syntax
 
-```dart
-T Reactter.untracked(T Function() callback);
+```dart showLineNumbers=false
+T Reactter.untracked(T callback());
 ```
 
 #### Example
