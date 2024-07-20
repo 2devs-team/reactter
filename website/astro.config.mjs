@@ -82,21 +82,21 @@ export default defineConfig({
           },
         },
         {
-          label: "Classes",
-          translations: {
-            es: "Clases",
-          },
-          autogenerate: {
-            directory: "classes",
-          },
-        },
-        {
           label: "Hooks",
           translations: {
             es: "Hooks",
           },
           autogenerate: {
             directory: "hooks",
+          },
+        },
+        {
+          label: "Classes",
+          translations: {
+            es: "Clases",
+          },
+          autogenerate: {
+            directory: "classes",
           },
         },
         {
