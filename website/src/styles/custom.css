@@ -58,6 +58,44 @@
   color: var(--sl-color-white);
 }
 
+[data-has-hero] .action.primary {
+  --clr-font-main: hsla(0 0% 20% / 100);
+  --btn-bg-1: rgb(43, 182, 246, 1);
+  --btn-bg-2: rgba(0, 87, 155, 0.25);
+  --btn-bg-color: hsla(360 100% 100% / 1);
+  --radii: 2.5em;
+  cursor: pointer;
+  padding: 0.9em 1.4em;
+  min-width: 120px;
+  min-height: 44px;
+  font-size: var(--size, 1rem);
+  font-family: "Segoe UI", system-ui, sans-serif;
+  font-weight: 500;
+  transition: 0.8s;
+  background-size: 280% auto;
+  background-image: linear-gradient(325deg, var(--btn-bg-2) 0%, var(--btn-bg-1) 55%, var(--btn-bg-2) 90%);
+  border: none;
+  border-radius: var(--radii);
+  color: var(--btn-bg-color);
+  box-shadow: 0px 0px 20px rgb(43, 182, 246, 0.5), 0px 5px 5px -1px rgba(0, 87, 155, 0.25), inset 4px 4px 8px rgb(83, 197, 248, 0.5), inset -4px -4px 8px rgba(0, 87, 155, 0.35);
+}
+
+[data-has-hero] .action.primary:hover {
+  background-position: right top;
+}
+
+[data-has-hero] .action.primary:is(:focus, :focus-visible, :active) {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--btn-bg-color), 0 0 0 6px var(--btn-bg-2);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-has-hero] .action.primary {
+    transition: linear;
+  }
+}
+
+
 ol ul:last-child {
   margin-bottom: 1rem;
 }
