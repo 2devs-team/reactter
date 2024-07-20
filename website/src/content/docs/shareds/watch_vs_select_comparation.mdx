@@ -1,0 +1,44 @@
+---
+title: BuildContext.watch vs BuildContext.select
+---
+
+import { HT } from '@/components/Highlight';
+
+<details>
+  <summary>Show me an example and explanation</summary>
+
+  ```dart showLineNumbers=false "context.watch" "context.select"
+  [...]
+  build(BuildContext context) {
+    final product = context.watch<Product>(
+      (product) => [product.price, product.quantity],
+    );
+    final total = product.price.value + product.quantity.value;
+
+    return Text("Total: $total");
+  }
+
+  // is equivalent to
+
+  [...]
+  build(BuildContext context) {
+    final total = context.select<Product>(
+      (product, $) {
+        // The `$(...)` syntax is used to select a specific state to listen for changes.
+        return $(product.price).value + $(product.quantity).value;
+      },
+    );
+
+    return Text("Total: $total");
+  }
+  ```
+
+  In the example above, we use <HT>`context.watch`</HT> and <HT>`context.select`</HT> to calculate the `total` price of a `product` based on its unit `price` and `quantity`.
+  These methods update the UI when certain dependencies change, but they have different performance implications.
+
+  When using <HT>`context.watch`</HT>, the widget will rebuild whenever any of the dependencies change, even if the change in state does not affect the calculated value.
+  This can lead to unnecessary rebuilds and reduced performance.
+
+  In contrast, <HT>`context.select`</HT> allows you to listen for specific state changes and only rebuilds when the calculated value (`total`) changes.
+  This approach is more efficient as it avoids unnecessary rebuilds, leading to better performance.
+</details>
