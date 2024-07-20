@@ -63,13 +63,26 @@ ReactterSelector<T, V>({
 - <HM>`selector`</HM>: A function that computes a value <HT>`V`</HT> from one or more states and listens for changes to rebuild the widget tree when the value computed changes.
   It receives the following arguments:
   - `instance`: The instance of <HT>`T`</HT> dependency provided by the closest <HT>`ReactterProvider`</HT> widget.
-  - `select`: A function that allows you to wrap the state to be listened for changes and returns it.
+  - <HM>`select`</HM>: A function that allows you to wrap the state(<HT>`ReactterState`</HT>) to be listened for changes and returns it.
 - <HM>`builder`</HM>: A function that rebuilds a widget depending on the <HT>`ReactterSelector`</HT>.
 It receives the following arguments:
   - `context`: The <HT>`BuildContext`</HT> of the <HT>`ReactterSelector`</HT> widget.
   - `instance`: The instance of <HT>`T`</HT> dependency provided by the closest <HT>`ReactterProvider`</HT> widget.
   - `value`: The selected value computed <HT>`V`</HT> by the <HM>`selector`</HM> function.
   - `child`: The `child` widget passed to <HT>`ReactterSelector`</HT>.
+
+:::tip
+It's a good idea to name the select parameter to something more simple and shorter like `$` to make it easier to read and understand the <HM>`selector`</HM> function when you have multiple states to select.
+
+```dart showLineNumbers=false {2}
+ReactterSelector<UserController, String>(
+  selector: (inst, $) => $(inst.firstName).value + ' ' + $(inst.lastName).value,
+  builder: (context, inst, fullName, child) {
+    return Text("Full name: $fullName");
+  },
+)
+```
+:::
 
 ## Usage
 
@@ -109,19 +122,6 @@ Here’s an example of how to use it:
 
 In this example, checks if the `count` state from <HT>`CounterController`</HT> is divisible by a specified number (`byNum`).
 The <HT>`ReactterSelector`</HT> widget is used to perform this check and rebuild the widget tree whenever the divisibility status changes.
-
-:::tip
-It's a good idea to name the select parameter to something more simple and shorter like `$` to make it easier to read and understand the <HM>`selector`</HM> function when you have multiple states to select.
-
-```dart showLineNumbers=false {2}
-ReactterSelector<UserController, String>(
-  selector: (inst, $) => $(inst.firstName).value + ' ' + $(inst.lastName).value,
-  builder: (context, inst, fullName, child) {
-    return Text("Full name: $fullName");
-  },
-)
-```
-:::
 
 ### Using `child`
 
