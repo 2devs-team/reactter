@@ -129,12 +129,12 @@ export default defineConfig({
           },
         },
         {
-          label: "Learn More",
+          label: "Extra topics",
           translations: {
-            es: "Aprende más",
+            es: "Temas adicionales",
           },
           autogenerate: {
-            directory: "learn_more",
+            directory: "extra_topics",
           },
         },
       ],
