@@ -22,7 +22,7 @@ This adaptation is particularly valuable in contexts like employing the <HT>[`Me
 
 ## Classes
 
-Reactter provides theses generic arguments classes:
+Reactter provides these generic arguments classes:
 
 - <HT><a href="https://pub.dev/documentation/reactter/latest/reactter/Args-class.html" target="_blank">`Args<A>`</a></HT>: represents one or more arguments of <HT>`A`</HT> type.
 - <HT><a href="https://pub.dev/documentation/reactter/latest/reactter/Args1-class.html" target="_blank">`Args1<A>`</a></HT>: represents a argument of <HT>`A`</HT> type.
@@ -34,7 +34,7 @@ Reactter provides theses generic arguments classes:
 
 ## Properties & Methods
 
-In each of the methods it provides theses properties and methods:
+In each of the methods it provides these properties and methods:
 
 - `arguments`: A property to get the list of arguments.
 - `arg1`: A property to get the first argument.
@@ -102,12 +102,12 @@ void myFunction(ArgsX2<int> args) {
   print(args.arg2); // 2
 }
 
-// theses are valid
+// these are valid
 myFunction(Args2(1, 2));
 myFunction(Args3(1, 2, 3));
 myFunction(ArgsX3(1, 2, 3));
 
-// theses are invalid
+// these are invalid
 myFunction(Args([1, 2]));
 myFunction(Args1(1));
 myFunction(Args2(1, "foo"));
@@ -120,7 +120,7 @@ The <HT>`Args`</HT> classes are comparable, so you can compare them with each ot
 Two Args instances are considered equal if they contain the same number of arguments and the values in each corresponding position match, e.g.:
 
 ```dart del=/Args1\\((2)\\)\\); \\/\\/ false/ del=/Args1\\((\\{"foo": "bar"\\})\\)\\); \\/\\/ false/ del=/(Args1)\\((\\[1, 2\\])\\)\\); \\/\\/ false/ del=/(Args3)\\(2, "foo"(, false)\\)\\); \\/\\/ false/ del=/Args3\\(("bar"), (3), false\\)\\); \\/\\/ false/ del=/Args\\(\\[1, "foo", false, ("bar")\\]\\)\\); \\/\\/ false/
-// Theses are equal
+// these are equal
 print(Args1(1) == Args1(1)); // true
 print(Args2(2, "foo") == Args2(2, "foo")); // true
 print(ArgsX3(3, "bar", false) == ArgsX3(3, "bar", false)); // true
@@ -144,7 +144,7 @@ print(ArgsX3(3, "bar", false) == Args3("bar", 3, false)); // false
 
 > The _**arity**_ or _**adicity**_ of a function is the number of arguments (i.e. inputs or parameters) it takes.
 
-Use <HM>`ary`</HM> of <HT>Function</HT> extention to convert any <HT>`Function`</HT> with **_positional arguments_** to <HT>`Function`</HT> with generic argument, e.g.:
+Use <HM>`ary`</HM> of <HT>`Function`</HT> extention to convert any <HT>`Function`</HT> with **_positional arguments_** to <HT>`Function`</HT> with generic argument, e.g.:
 
 ```dart
 import 'package:reactter/reactter.dart';

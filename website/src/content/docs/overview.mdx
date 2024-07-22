@@ -7,18 +7,26 @@ The goal was to create a state management solution that was **reactive**, **_sim
 
 Reactter is a dart package that stands out as an  **_lightweight_**, **_powerful_**, and _**reactive**_ **state management**, **dependency injection** and **event handler** solution.
 
-Reactter is the ideal solution for all types of Dart and Flutter projects, offering **_reactivity_** with an exceptional **_simplicity_** and **_speed_**.
+:::note
+Reactter is inspired by the ReactJS library, taking some concepts and ideas from it and adapt to Dart and Flutter.
+The name **Reactter** is a combination of the words (**_Reac_**)t and Flu(**_tter_**).
+:::
 
 ## Motivation
 
-State management is fundamental to apps, because it determines how information is stored, updated and shared within app. While there are several state management solutions available, often these solutions don't provide a full integration with equally important concepts, such as dependency injection and event handler. As a results, some of these critical aspects are missing:
+State management is fundamental to apps, because it determines how information is stored, updated and shared within app.
+While there are several state management solutions available, often these solutions don't provide a full integration with equally important concepts, such as dependency injection and event handler.
 
-- **Scalability**: Without proper integration between state management, dependency injection and event handler, the app may have difficulty scaling efficiently as it grows in complexity and size.
-- **Flexibility**: An integrated architecture provides a more flexible foundation for customizing and enhancements to the app.
-- **Maintainability**:  Failure to integrate these 3 concepts can have a long-term impact on the maintainability of the code, making it difficult to understand and modify due to its fragmented structure.
-- **Performance**: Poor integration can degrade app performance, making it less responsive and less efficient at using system resources.
+You might think, _"But we already have packages for it"_ or _"I can develop it myself"_
+While that's true, handling these aspects separately can limit the development experience and result in critical aspects being overlooked:
 
-In this context, Reactter emerges as an ideal solution for these needs. By tightly integrating state management, dependency injection, and event handler. Reactter provides a smoother and more consistent development experience. Its unified approach not only simplifies the implementation of complex functionality, but also improves **_maintainability_** and **_scalability_** code.
+- **Scalability**: Without proper integration between these 3 concepts, the app may have difficulty scaling efficiently as it grows in complexity and size.
+- **Flexibility**: An integrated architecture becomes easier to adapt and extend the app to meet new requirements or incorporate new features without major overhauls.
+- **Maintainability**: Disjointed these 3 concepts lead to a fragmented codebase, which makes it harder to understand, debug, and modify.
+- **Performance**: Poor integration between these 3 concepts, the app may become less responsive and inefficient in using system resources.
+This can lead to slower execution times, increased memory usage, and a suboptimal user experience.
+
+Reactter addresses these challenges by offering a comprehensive framework that integrates state management, dependency injection, and event handling. This integration provides a smoother, more consistent development experience and ensures that applications are robust, efficient, and maintainable.
 
 ## Features
 
@@ -28,14 +36,14 @@ Reactter offers the following features:
 - **Lightweight** and **fast**
 - **No boilerplate** (no recurring code)
 - **Easy to use**
-- **Highly reusable** (Custom hooks)
+- **Highly reusable** (Custom hooks, Dependency injection)
 - **100% Dart**(Compatible with latest version of Dart)
 - **Fully testable** (100% coverage)
 - **No code generation**
 - **0 configuration**
 - **0 dependencies**
 - **Rendering control** (using `flutter_reactter` package)
-- **Not opinionated** (You can use it with any architecture and do whatever you want)
+- **Not opinionated** (You can use it with any architecture or pattern. Do whatever you want!!)
 
 ## Try Reactter online
 
