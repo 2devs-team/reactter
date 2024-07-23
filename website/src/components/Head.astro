@@ -1,0 +1,14 @@
+---
+import type { Props } from "@astrojs/starlight/props";
+import Default from "@astrojs/starlight/components/Head.astro";
+
+const canonical = Astro.site
+  ? new URL(Astro.url.pathname, Astro.site)
+  : undefined;
+---
+
+<!-- Render the default <Head/> component. -->
+<Default {...Astro.props}><slot /></Default>
+
+<meta property="og:image" content={`${canonical?.href}opengraph.png`} />
+<meta property="twitter:image" content={`${canonical?.href}opengraph.png`} />

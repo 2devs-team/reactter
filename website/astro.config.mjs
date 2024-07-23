@@ -31,6 +31,7 @@ export default defineConfig({
         themes: [myTheme],
       },
       components: {
+        Head: "./src/components/Head.astro",
         SocialIcons: "./src/components/SocialIcons.astro",
         Search: "./src/components/Search.astro",
         SiteTitle: "./src/components/SiteTitle.astro",
