@@ -5,10 +5,11 @@ import Default from "@astrojs/starlight/components/Head.astro";
 const canonical = Astro.site
   ? new URL(Astro.url.pathname, Astro.site)
   : undefined;
+const ogUrl = canonical.href.replace(/(\/)$/, "") + "/opengraph.png";
 ---
 
 <!-- Render the default <Head/> component. -->
 <Default {...Astro.props}><slot /></Default>
 
-<meta property="og:image" content={`${canonical?.href}opengraph.png`} />
-<meta property="twitter:image" content={`${canonical?.href}opengraph.png`} />
+<meta property="og:image" content={ogUrl} />
+<meta property="twitter:image" content={ogUrl} />
