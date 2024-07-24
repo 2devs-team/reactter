@@ -432,8 +432,17 @@ abstract class DependencyInjection {
     return _getDependencyRegister<T>(id)?.instance != null;
   }
 
-  /// Checks if an instance is registered in Reactter.
-  bool isRegistered(Object? instance) {
+  /// Checks if an instance is registered in Reactter
+  // coverage:ignore-start
+  @Deprecated(
+    'Use `isActive` instead.'
+    'This feature was deprecated after v7.2.0.',
+  )
+  bool isRegistered(Object? instance) => isActive(instance);
+  // coverage:ignore-end
+
+  /// Checks if the [instance] is active in Reactter.
+  bool isActive(Object? instance) {
     return _instances[instance] != null;
   }
 

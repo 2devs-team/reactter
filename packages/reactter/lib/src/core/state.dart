@@ -90,7 +90,7 @@ abstract class State implements StateBase {
   }
 
   void _validateInstanceBinded() {
-    if (dependencyInjection.isRegistered(instanceBinded)) return;
+    if (dependencyInjection.isActive(instanceBinded)) return;
 
     logger.log(
       "The instance binded($instanceBinded) to $this is not in Reactter's context and cannot be disposed automatically.\n"

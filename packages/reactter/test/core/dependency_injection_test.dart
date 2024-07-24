@@ -243,14 +243,14 @@ void main() {
 
     test("should check if an instance is registered", () {
       final testController = TestController();
-      bool isRegisted = Reactter.isRegistered(testController);
-      expect(isRegisted, false);
+      bool isActive = Reactter.isActive(testController);
+      expect(isActive, false);
 
       final instance = Reactter.create(() => testController);
       expect(instance, testController);
 
-      isRegisted = Reactter.isRegistered(testController);
-      expect(isRegisted, true);
+      isActive = Reactter.isActive(testController);
+      expect(isActive, true);
 
       Reactter.destroy<TestController>();
     });

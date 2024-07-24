@@ -24,8 +24,8 @@ void main() {
       final instance = Reactter.get<TestController>();
       expect(useDependency.instance, instance);
 
-      final isRegistered = Reactter.isRegistered(useDependency.instance);
-      expect(isRegistered, true);
+      final isActive = Reactter.isActive(useDependency.instance);
+      expect(isActive, true);
 
       Reactter.destroy<TestController>();
     });
@@ -38,8 +38,8 @@ void main() {
       final instance = Reactter.get<TestController>(ID);
       expect(useDependency.instance, instance);
 
-      final isRegistered = Reactter.isRegistered(useDependency.instance);
-      expect(isRegistered, true);
+      final isActive = Reactter.isActive(useDependency.instance);
+      expect(isActive, true);
 
       Reactter.destroy<TestController>(id: ID);
     });
@@ -51,8 +51,8 @@ void main() {
       final instance = Reactter.get<TestController>();
       expect(useDependency.instance, instance);
 
-      final isRegistered = Reactter.isRegistered(useDependency.instance);
-      expect(isRegistered, true);
+      final isActive = Reactter.isActive(useDependency.instance);
+      expect(isActive, true);
 
       final dependencyMode = Reactter.getDependencyMode(useDependency.instance);
       expect(dependencyMode, DependencyMode.builder);
@@ -68,8 +68,8 @@ void main() {
       final instance = Reactter.get<TestController>(ID);
       expect(useDependency.instance, instance);
 
-      final isRegistered = Reactter.isRegistered(useDependency.instance);
-      expect(isRegistered, true);
+      final isActive = Reactter.isActive(useDependency.instance);
+      expect(isActive, true);
 
       final dependencyMode = Reactter.getDependencyMode(useDependency.instance);
       expect(dependencyMode, DependencyMode.builder);
@@ -84,8 +84,8 @@ void main() {
       final instance = Reactter.get<TestController>();
       expect(useDependency.instance, instance);
 
-      final isRegistered = Reactter.isRegistered(useDependency.instance);
-      expect(isRegistered, true);
+      final isActive = Reactter.isActive(useDependency.instance);
+      expect(isActive, true);
 
       final dependencyMode = Reactter.getDependencyMode(useDependency.instance);
       expect(dependencyMode, DependencyMode.factory);
@@ -101,8 +101,8 @@ void main() {
       final instance = Reactter.get<TestController>(ID);
       expect(useDependency.instance, instance);
 
-      final isRegistered = Reactter.isRegistered(useDependency.instance);
-      expect(isRegistered, true);
+      final isActive = Reactter.isActive(useDependency.instance);
+      expect(isActive, true);
 
       final dependencyMode = Reactter.getDependencyMode(useDependency.instance);
       expect(dependencyMode, DependencyMode.factory);
@@ -117,8 +117,8 @@ void main() {
       final instance = Reactter.get<TestController>();
       expect(useDependency.instance, instance);
 
-      final isRegistered = Reactter.isRegistered(useDependency.instance);
-      expect(isRegistered, true);
+      final isActive = Reactter.isActive(useDependency.instance);
+      expect(isActive, true);
 
       final dependencyMode = Reactter.getDependencyMode(useDependency.instance);
       expect(dependencyMode, DependencyMode.singleton);
@@ -134,8 +134,8 @@ void main() {
       final instance = Reactter.get<TestController>(ID);
       expect(useDependency.instance, instance);
 
-      final isRegistered = Reactter.isRegistered(useDependency.instance);
-      expect(isRegistered, true);
+      final isActive = Reactter.isActive(useDependency.instance);
+      expect(isActive, true);
 
       final dependencyMode = Reactter.getDependencyMode(useDependency.instance);
       expect(dependencyMode, DependencyMode.singleton);
@@ -147,8 +147,8 @@ void main() {
       final useDependency = UseDependency.create(() => TestController());
       expect(useDependency.instance, isA<TestController>());
 
-      final isRegistered = Reactter.isRegistered(useDependency.instance);
-      expect(isRegistered, true);
+      final isActive = Reactter.isActive(useDependency.instance);
+      expect(isActive, true);
 
       Reactter.destroy<TestController>();
     });
@@ -157,8 +157,8 @@ void main() {
       final useDependency = UseDependency.builder(() => TestController());
       expect(useDependency.instance, isA<TestController>());
 
-      final isRegistered = Reactter.isRegistered(useDependency.instance);
-      expect(isRegistered, true);
+      final isActive = Reactter.isActive(useDependency.instance);
+      expect(isActive, true);
 
       final dependencyMode = Reactter.getDependencyMode(useDependency.instance);
       expect(dependencyMode, DependencyMode.builder);
@@ -170,8 +170,8 @@ void main() {
       final useDependency = UseDependency.builder(() => TestController(), ID);
       expect(useDependency.instance, isA<TestController>());
 
-      final isRegistered = Reactter.isRegistered(useDependency.instance);
-      expect(isRegistered, true);
+      final isActive = Reactter.isActive(useDependency.instance);
+      expect(isActive, true);
 
       final dependencyMode = Reactter.getDependencyMode(useDependency.instance);
       expect(dependencyMode, DependencyMode.builder);
@@ -183,8 +183,8 @@ void main() {
       final useDependency = UseDependency.factory(() => TestController());
       expect(useDependency.instance, isA<TestController>());
 
-      final isRegistered = Reactter.isRegistered(useDependency.instance);
-      expect(isRegistered, true);
+      final isActive = Reactter.isActive(useDependency.instance);
+      expect(isActive, true);
 
       final dependencyMode = Reactter.getDependencyMode(useDependency.instance);
       expect(dependencyMode, DependencyMode.factory);
@@ -196,8 +196,8 @@ void main() {
       final useDependency = UseDependency.factory(() => TestController(), ID);
       expect(useDependency.instance, isA<TestController>());
 
-      final isRegistered = Reactter.isRegistered(useDependency.instance);
-      expect(isRegistered, true);
+      final isActive = Reactter.isActive(useDependency.instance);
+      expect(isActive, true);
 
       final dependencyMode = Reactter.getDependencyMode(useDependency.instance);
       expect(dependencyMode, DependencyMode.factory);
@@ -209,8 +209,8 @@ void main() {
       final useDependency = UseDependency.singleton(() => TestController());
       expect(useDependency.instance, isA<TestController>());
 
-      final isRegistered = Reactter.isRegistered(useDependency.instance);
-      expect(isRegistered, true);
+      final isActive = Reactter.isActive(useDependency.instance);
+      expect(isActive, true);
 
       final dependencyMode = Reactter.getDependencyMode(useDependency.instance);
       expect(dependencyMode, DependencyMode.singleton);
@@ -222,8 +222,8 @@ void main() {
       final useDependency = UseDependency.singleton(() => TestController(), ID);
       expect(useDependency.instance, isA<TestController>());
 
-      final isRegistered = Reactter.isRegistered(useDependency.instance);
-      expect(isRegistered, true);
+      final isActive = Reactter.isActive(useDependency.instance);
+      expect(isActive, true);
 
       final dependencyMode = Reactter.getDependencyMode(useDependency.instance);
       expect(dependencyMode, DependencyMode.singleton);
@@ -237,8 +237,8 @@ void main() {
       final useDependency = UseDependency<TestController>.get();
       expect(useDependency.instance, isA<TestController>());
 
-      final isRegistered = Reactter.isRegistered(useDependency.instance);
-      expect(isRegistered, true);
+      final isActive = Reactter.isActive(useDependency.instance);
+      expect(isActive, true);
 
       Reactter.destroy<TestController>();
     });
@@ -249,8 +249,8 @@ void main() {
       final useDependency = UseDependency<TestController>.get(ID);
       expect(useDependency.instance, isA<TestController>());
 
-      final isRegistered = Reactter.isRegistered(useDependency.instance);
-      expect(isRegistered, true);
+      final isActive = Reactter.isActive(useDependency.instance);
+      expect(isActive, true);
 
       Reactter.destroy<TestController>(id: ID);
     });
