@@ -32,6 +32,9 @@ part of 'obj.dart';
 /// strObj("change value");
 /// ```
 /// {@endtemplate}
+@Deprecated(
+  'This feature was deprecated after v7.2.0 and will be removed in v8.0.0.',
+)
 class Obj<T> with ObjBase<T> {
   @override
   T value;

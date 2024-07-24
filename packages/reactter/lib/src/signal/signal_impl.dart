@@ -150,10 +150,16 @@ extension SignalNullExt<T> on Signal<T?> {
 
 extension ObjToSignalExt<T> on Obj<T> {
   /// Returns a new Signal<T> with the value of the current Obj<T>.
+  @Deprecated(
+    'This feature was deprecated after v7.2.0 and will be removed in v8.0.0.',
+  )
   Signal<T> get toSignal => Signal<T>(value);
 }
 
 extension SignalToObjExt<T> on Signal<T> {
   /// Returns a new Obj<T> with the value of the current Signal<T>.
+  @Deprecated(
+    'This feature was deprecated after v7.2.0 and will be removed in v8.0.0.',
+  )
   Obj<T> get toObj => Obj<T>(value);
 }
