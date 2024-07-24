@@ -76,8 +76,12 @@ extension ReactterBuildContextExtension on BuildContext {
   /// ```dart
   /// ReactterProvider.contextOf<T>(context, listenStates: listenStates);
   /// ```
-  T watch<T extends Object?>([ListenStates<T>? listenStates]) {
-    return ReactterProvider.contextOf<T>(this, listenStates: listenStates);
+  T watch<T extends Object?>([ListenStates<T>? listenStates, String? id]) {
+    return ReactterProvider.contextOf<T>(
+      this,
+      listenStates: listenStates,
+      id: id,
+    );
   }
 
   /// Gets the dependency of [T] type by [id] from the closest ancestor
