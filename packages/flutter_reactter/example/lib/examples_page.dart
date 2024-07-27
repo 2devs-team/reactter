@@ -60,7 +60,7 @@ final examples = [
       "RtComponent",
       "RtConsumer",
       "RtProvider",
-      "ReactterProviders",
+      "RtMultiProvider",
       "ReactterSelector",
       "UseDependency",
       "UseState",

@@ -121,7 +121,7 @@ part of '../widgets.dart';
 ///
 /// See also:
 ///
-/// * [ReactterProviders], a widget that allows to use multiple [RtProvider].
+/// * [RtMultiProvider], a widget that allows to use multiple [RtProvider].
 /// {@endtemplate}
 class RtProvider<T extends Object?> extends ProviderBase<T>
     implements ProviderWrapper, ProviderRef {

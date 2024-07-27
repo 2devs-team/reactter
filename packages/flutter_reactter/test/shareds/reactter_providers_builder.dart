@@ -3,24 +3,23 @@ import 'package:flutter_reactter/flutter_reactter.dart';
 
 import 'test_controller.dart';
 
-class ReactterProvidersBuilder extends StatefulWidget {
+class RtMultiProviderBuilder extends StatefulWidget {
   final TransitionBuilder builder;
 
-  const ReactterProvidersBuilder({
+  const RtMultiProviderBuilder({
     Key? key,
     required this.builder,
   }) : super(key: key);
 
   @override
-  State<ReactterProvidersBuilder> createState() =>
-      _ReactterProvidersBuilderState();
+  State<RtMultiProviderBuilder> createState() => _RtMultiProviderBuilderState();
 }
 
-class _ReactterProvidersBuilderState extends State<ReactterProvidersBuilder> {
+class _RtMultiProviderBuilderState extends State<RtMultiProviderBuilder> {
   @override
   Widget build(BuildContext context) {
     return ReactterScope(
-      child: ReactterProviders(
+      child: RtMultiProvider(
         [
           RtProvider.init(
             () => TestController(),

@@ -7,7 +7,7 @@ import '../shareds/test_builder.dart';
 import '../shareds/test_controller.dart';
 
 void main() {
-  group("ReactterProviders", () {
+  group("RtMultiProvider", () {
     testWidgets("should get dependency form different RtProvider",
         (tester) async {
       late TestController instanceObtained;
@@ -17,7 +17,7 @@ void main() {
 
       await tester.pumpWidget(
         TestBuilder(
-          child: ReactterProvidersBuilder(
+          child: RtMultiProviderBuilder(
             key: key,
             builder: (BuildContext context, Widget? child) {
               instanceObtained = context.use<TestController>();
@@ -31,7 +31,7 @@ void main() {
                   Text(
                     "ProviderWithId stateString: ${instanceObtainedWithId.stateString.value}",
                   ),
-                  ReactterProvidersBuilder(
+                  RtMultiProviderBuilder(
                     key: key2,
                     builder: (context, child) {
                       context.watch<TestController>();
@@ -96,7 +96,7 @@ void main() {
 
       await tester.pumpWidget(
         TestBuilder(
-          child: ReactterProviders(
+          child: RtMultiProvider(
             [
               RtProvider(
                 () => TestController(),
@@ -172,7 +172,7 @@ void main() {
         TestBuilder(
           child: Column(
             children: [
-              ReactterProviders(
+              RtMultiProvider(
                 [
                   RtProvider.init(() => TestController()),
                 ],

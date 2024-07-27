@@ -149,7 +149,7 @@ void main() {
 
           await tester.pumpWidget(
             TestBuilder(
-              child: ReactterProvidersBuilder(
+              child: RtMultiProviderBuilder(
                 builder: (_, __) {
                   return RtConsumer<TestController>(
                     builder: (_, inst, __) {

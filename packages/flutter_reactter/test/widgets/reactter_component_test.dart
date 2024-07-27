@@ -31,7 +31,7 @@ void main() {
 
       await tester.pumpWidget(
         TestBuilder(
-          child: ReactterProvidersBuilder(
+          child: RtMultiProviderBuilder(
             builder: (_, __) {
               return RtComponentTest(
                 id: "uniqueId",
@@ -67,7 +67,7 @@ void main() {
 
       await tester.pumpWidget(
         TestBuilder(
-          child: ReactterProvidersBuilder(
+          child: RtMultiProviderBuilder(
             builder: (_, __) {
               return RtComponentTest(
                 withoutBuilder: true,
@@ -89,7 +89,7 @@ void main() {
 
       await tester.pumpWidget(
         TestBuilder(
-          child: ReactterProvidersBuilder(
+          child: RtMultiProviderBuilder(
             builder: (_, __) {
               return RtComponentTest(
                 withoutListenStates: true,

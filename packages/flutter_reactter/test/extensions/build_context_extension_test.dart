@@ -155,7 +155,7 @@ void main() {
 
       await tester.pumpWidget(
         TestBuilder(
-          child: ReactterProvidersBuilder(
+          child: RtMultiProviderBuilder(
             builder: (context, _) {
               instanceObtained = context.use<TestController>();
               instanceObtainedWithId = context.use<TestController>('uniqueId');
@@ -320,7 +320,7 @@ void main() {
 
       await tester.pumpWidget(
         TestBuilder(
-          child: ReactterProvidersBuilder(
+          child: RtMultiProviderBuilder(
             builder: (context, _) {
               instanceObtained = context.use<TestController>();
 
@@ -395,7 +395,7 @@ void main() {
 
       await tester.pumpWidget(
         TestBuilder(
-          child: ReactterProvidersBuilder(
+          child: RtMultiProviderBuilder(
             builder: (context, _) {
               final len = context.select<TestController, int>(
                 (inst, $) {
@@ -471,7 +471,7 @@ void main() {
 
       await tester.pumpWidget(
         TestBuilder(
-          child: ReactterProvidersBuilder(
+          child: RtMultiProviderBuilder(
             builder: (context, _) {
               instanceObtained = context.watch<TestController>(
                 (inst) => [inst.stateList],
@@ -575,7 +575,7 @@ void main() {
 
       await tester.pumpWidget(
         TestBuilder(
-          child: ReactterProvidersBuilder(
+          child: RtMultiProviderBuilder(
             builder: (context, _) {
               instanceObtained = context.use<TestController>();
               final len = context.select<TestController, int>(

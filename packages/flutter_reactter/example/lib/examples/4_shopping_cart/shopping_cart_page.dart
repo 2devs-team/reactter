@@ -10,7 +10,7 @@ class ShoppingCartPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ReactterProviders(
+    return RtMultiProvider(
       const [
         RtProvider(ProductsController.new),
         RtProvider(CartController.new),

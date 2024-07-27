@@ -4,14 +4,14 @@ part of '../widgets.dart';
 @internal
 abstract class ProviderWrapper implements WrapperWidget {}
 
-/// {@template reactter_providers}
+/// {@template flutter_reactter.rt_multi_provider}
 /// A [StatelessWidget] that allows to use multiple [RtProvider] as nested way.
 ///
 /// ```dart
-/// ReactterProviders(
+/// RtMultiProvider(
 ///   [
-///     ReactterProvider(() => AppController()),
-///     ReactterProvider(() => AppController(), id: "uniqueId"),
+///     RtProvider(() => AppController()),
+///     RtProvider(() => AppController(), id: "uniqueId"),
 ///   ],
 ///   builder: (context, child) {
 ///     final appController = context.read<AppController>();
@@ -28,11 +28,11 @@ abstract class ProviderWrapper implements WrapperWidget {}
 /// ```
 ///
 /// Use [child] property to pass a [Widget] which to be built once only.
-/// The [ReactterProviders] pass it through the [builder] callback,
+/// The [RtMultiProvider] pass it through the [builder] callback,
 /// so you can incorporate it into your build:
 ///
 /// ```dart
-/// ReactterProviders(
+/// RtMultiProvider(
 ///   [
 ///     ReactterProvider(() => AppController()),
 ///     ReactterProvider(() => AppController(), id: "uniqueId"),
@@ -57,9 +57,9 @@ abstract class ProviderWrapper implements WrapperWidget {}
 ///
 /// * [RtProvider], a widget that provides a [T] dependency to widget tree.
 /// {@endtemplate}
-class ReactterProviders extends StatelessWidget implements ProviderWrapper {
+class RtMultiProvider extends StatelessWidget implements ProviderWrapper {
   /// {@macro reactter_providers}
-  const ReactterProviders(
+  const RtMultiProvider(
     this.providers, {
     Key? key,
     this.child,
@@ -86,15 +86,15 @@ class ReactterProviders extends StatelessWidget implements ProviderWrapper {
   }
 
   @override
-  ReactterProvidersElement createElement() {
-    return ReactterProvidersElement(this);
+  RtMultiProviderElement createElement() {
+    return RtMultiProviderElement(this);
   }
 }
 
-class ReactterProvidersElement extends StatelessElement
-    with WrapperElementMixin<ReactterProviders> {
+class RtMultiProviderElement extends StatelessElement
+    with WrapperElementMixin<RtMultiProvider> {
   /// Creates an element that uses the given widget as its configuration.
-  ReactterProvidersElement(ReactterProviders widget) : super(widget);
+  RtMultiProviderElement(RtMultiProvider widget) : super(widget);
 
   @override
   Widget build() {
@@ -105,7 +105,7 @@ class ReactterProvidersElement extends StatelessElement
         );
 
     for (final child in widget.providers.reversed) {
-      nextNode = nestedHook = NestedWidget<ReactterProviders>(
+      nextNode = nestedHook = NestedWidget<RtMultiProvider>(
         owner: this,
         wrappedWidget: child,
         injectedChild: nextNode,
@@ -133,3 +133,7 @@ class ReactterProvidersElement extends StatelessElement
     return nextNode;
   }
 }
+
+/// {@macro flutter_reactter.rt_multi_provider}
+@Deprecated('Use `RtMultiProvider` instead')
+typedef ReactterProviders = RtMultiProvider;
