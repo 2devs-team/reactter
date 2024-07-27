@@ -20,7 +20,7 @@ class ProductsView extends RtComponent<ProductsController> {
       appBar: AppBar(
         title: const Text('Shopping Cart'),
         actions: [
-          ReactterConsumer<ProductsController>(
+          RtConsumer<ProductsController>(
             builder: (_, __, ___) {
               return CartAction(
                 onPressed: () {
@@ -41,7 +41,7 @@ class ProductsView extends RtComponent<ProductsController> {
         builder: (context, constraints) {
           final crossAxisCount = (constraints.maxWidth / 140).floor();
 
-          return ReactterConsumer<ProductsController>(
+          return RtConsumer<ProductsController>(
             listenStates: (inst) => [inst.uProducts],
             builder: (_, __, ___) {
               final products = productsController.uProducts.value;

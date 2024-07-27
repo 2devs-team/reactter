@@ -1,6 +1,6 @@
 part of '../widgets.dart';
 
-/// {@template reactter_consumer}
+/// {@template flutter_reactter.rt_consumer}
 /// A [StatelessWidget] that allows to obtain the instance of the [T] dependency
 /// from the closest ancestor [ReactterProvider] and passes the instance
 /// to [builder].
@@ -8,7 +8,7 @@ part of '../widgets.dart';
 /// Also, listens for dependency changes or a [RtState] list
 /// to rebuild the widget tree.
 ///
-/// [ReactterConsumer] has same functionality as [ReactterProvider.contextOf].
+/// [RtConsumer] has same functionality as [ReactterProvider.contextOf].
 ///
 /// Use [id] property to identify the [T] dependency.
 ///
@@ -16,7 +16,7 @@ part of '../widgets.dart';
 /// or the states defined in [listenStates] property:
 ///
 ///```dart
-/// ReactterConsumer<AppController>(
+/// RtConsumer<AppController>(
 ///   listenStates: (inst) => [inst.stateA],
 ///   builder: (context, appController, child) {
 ///     return Column(
@@ -34,7 +34,7 @@ part of '../widgets.dart';
 /// into your build:
 ///
 ///```dart
-/// ReactterConsumer<AppController>(
+/// RtConsumer<AppController>(
 ///   listenAll: true,
 ///   child: Text("This widget build only once"),
 ///   builder: (context, appController, child) {
@@ -54,9 +54,9 @@ part of '../widgets.dart';
 /// * [ReactterProvider], a widget that provides a [T] dependency through Widget.
 /// tree.
 ///{@endtemplate}
-class ReactterConsumer<T extends Object?> extends StatelessWidget {
+class RtConsumer<T extends Object?> extends StatelessWidget {
   /// {@macro reactter_consumer}
-  const ReactterConsumer({
+  const RtConsumer({
     Key? key,
     this.id,
     this.listenStates,
@@ -105,3 +105,7 @@ class ReactterConsumer<T extends Object?> extends StatelessWidget {
     );
   }
 }
+
+/// {@macro flutter_reactter.rt_consumer}
+@Deprecated('Use `RtConsumer` instead.')
+typedef ReactterConsumer<T extends Object> = RtConsumer<T>;

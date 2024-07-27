@@ -9,14 +9,14 @@ import '../shareds/test_controller.dart';
 
 void main() {
   group(
-    "ReactterConsumer",
+    "RtConsumer",
     () {
       testWidgets(
         "should throw exception when dependency not found",
         (tester) async {
           await tester.pumpWidget(
             TestBuilder(
-              child: ReactterConsumer<TestController>(
+              child: RtConsumer<TestController>(
                 builder: (inst, _, __) {
                   return const Text("Rendered");
                 },
@@ -41,7 +41,7 @@ void main() {
 
           await tester.pumpWidget(
             TestBuilder(
-              child: ReactterConsumer<TestController?>(
+              child: RtConsumer<TestController?>(
                 builder: (_, inst, __) {
                   instanceObtained = inst;
 
@@ -69,7 +69,7 @@ void main() {
             TestBuilder(
               child: ReactterProviderBuilder(
                 builder: (_, __, ___) {
-                  return ReactterConsumer<TestController>(
+                  return RtConsumer<TestController>(
                     listenAll: true,
                     builder: (_, inst, __) {
                       instanceObtained = inst;
@@ -103,7 +103,7 @@ void main() {
             TestBuilder(
               child: ReactterProviderBuilder(
                 builder: (_, __, ___) {
-                  return ReactterConsumer<TestController>(
+                  return RtConsumer<TestController>(
                     listenStates: (inst) => [inst.stateInt],
                     builder: (_, inst, __) {
                       instanceObtained = inst;
@@ -151,11 +151,11 @@ void main() {
             TestBuilder(
               child: ReactterProvidersBuilder(
                 builder: (_, __) {
-                  return ReactterConsumer<TestController>(
+                  return RtConsumer<TestController>(
                     builder: (_, inst, __) {
                       instanceObtained = inst;
 
-                      return ReactterConsumer<TestController>(
+                      return RtConsumer<TestController>(
                         id: 'uniqueId',
                         builder: (_, instWithId, __) {
                           instanceWithIdObtained = instWithId;
@@ -163,7 +163,7 @@ void main() {
                           return Column(
                             children: [
                               // any change of any states without id
-                              ReactterConsumer<TestController>(
+                              RtConsumer<TestController>(
                                 listenAll: true,
                                 builder: (_, __, ___) {
                                   return Column(
@@ -179,7 +179,7 @@ void main() {
                                 },
                               ),
                               // only change of stateString with id
-                              ReactterConsumer<TestController>(
+                              RtConsumer<TestController>(
                                 id: 'uniqueId',
                                 listenStates: (inst) => [inst.stateString],
                                 builder: (_, __, ___) {
@@ -189,7 +189,7 @@ void main() {
                                 },
                               ),
                               // any change of stateInt
-                              ReactterConsumer<TestController>(
+                              RtConsumer<TestController>(
                                 listenStates: (inst) => [
                                   inst.stateInt,
                                   instWithId.stateInt,

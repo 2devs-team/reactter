@@ -27,7 +27,7 @@ final examples = [
     [
       "BuilContext.use",
       "Rt.batch",
-      "ReactterConsumer",
+      "RtConsumer",
       "ReactterProvider",
       "ReactterSelector",
       "ReactterWatcher",
@@ -58,7 +58,7 @@ final examples = [
     [
       "Rt.lazyState",
       "RtComponent",
-      "ReactterConsumer",
+      "RtConsumer",
       "ReactterProvider",
       "ReactterProviders",
       "ReactterSelector",
@@ -73,7 +73,7 @@ final examples = [
     "Search user or repository and show info about it.",
     [
       "Memo",
-      "ReactterConsumer",
+      "RtConsumer",
       "ReactterProvider",
       "UseAsyncState",
     ],
@@ -87,7 +87,7 @@ final examples = [
       "Rt.lazyState",
       "RtActionCallable",
       "RtComponent",
-      "ReactterConsumer",
+      "RtConsumer",
       "ReactterProvider",
       "ReactterSelector",
       "UseReducer",
@@ -100,7 +100,7 @@ final examples = [
     "Change size, shape and color.",
     [
       "Rt.lazyState",
-      "ReactterConsumer",
+      "RtConsumer",
       "RtHook",
       "ReactterProvider",
       "ReactterSelector",

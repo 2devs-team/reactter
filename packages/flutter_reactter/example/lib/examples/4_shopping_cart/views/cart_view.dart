@@ -72,7 +72,7 @@ class CartView extends RtComponent<CartController> {
           );
         },
       ),
-      bottomNavigationBar: ReactterConsumer<CartController>(
+      bottomNavigationBar: RtConsumer<CartController>(
         listenStates: (inst) => [inst.uCartItems],
         builder: (_, cartController, __) {
           final items = cartController.uCartItems.value;

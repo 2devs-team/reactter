@@ -1,7 +1,7 @@
 part of '../widgets.dart';
 
 /// {@template reactter_selector}
-/// A [StatelessWidget] similar to [ReactterConsumer] but allowing to control
+/// A [StatelessWidget] similar to [RtConsumer] but allowing to control
 /// the rebuilding of widget tree by selecting the [RtState]s,
 /// and a computed value.
 ///
@@ -79,7 +79,7 @@ part of '../widgets.dart';
 /// See also:
 ///
 /// * [RtState], a state in reactter.
-/// * [ReactterConsumer], a widget that obtains an instance of [T] dependency
+/// * [RtConsumer], a widget that obtains an instance of [T] dependency
 /// from the closest ancestor [ReactterProvider].
 /// * [ReactterProvider], a widget that provides a [T] dependency through Widget.
 /// {@endtemplate}
