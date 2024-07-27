@@ -8,16 +8,16 @@ part of 'framework.dart';
 abstract class ReactterState extends State {
   @override
   @internal
-  DependencyInjection get dependencyInjection => Reactter;
+  DependencyInjection get dependencyInjection => Rt;
   @override
   @internal
-  StateManagement get stateManagment => Reactter;
+  StateManagement get stateManagment => Rt;
   @override
   @internal
-  EventHandler get eventHandler => Reactter;
+  EventHandler get eventHandler => Rt;
   @override
   @internal
-  Logger get logger => Reactter;
+  Logger get logger => Rt;
 }
 
 /// An implementation of the [ReactterState].

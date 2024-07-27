@@ -7,7 +7,7 @@ class TreeNode {
   final uChildren = UseState(<TreeNode>[]);
   final uCount = UseState(0);
   final uChildrenTotal = UseState(0);
-  late final uTotal = Reactter.lazyState(
+  late final uTotal = Rt.lazyState(
     () => UseCompute(
       () => uCount.value + uChildrenTotal.value,
       [uCount, uChildrenTotal],

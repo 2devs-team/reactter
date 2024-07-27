@@ -30,10 +30,10 @@ void main() {
       late final bool willUpdateChecked;
       late final bool didUpdateChecked;
 
-      Reactter.one(signal, Lifecycle.willUpdate, (_, __) {
+      Rt.one(signal, Lifecycle.willUpdate, (_, __) {
         willUpdateChecked = true;
       });
-      Reactter.one(signal, Lifecycle.didUpdate, (_, __) {
+      Rt.one(signal, Lifecycle.didUpdate, (_, __) {
         didUpdateChecked = true;
       });
 
@@ -48,10 +48,10 @@ void main() {
       late final bool willUpdateChecked;
       late final bool didUpdateChecked;
 
-      Reactter.one(signal, Lifecycle.willUpdate, (_, __) {
+      Rt.one(signal, Lifecycle.willUpdate, (_, __) {
         willUpdateChecked = true;
       });
-      Reactter.one(signal, Lifecycle.didUpdate, (_, __) {
+      Rt.one(signal, Lifecycle.didUpdate, (_, __) {
         didUpdateChecked = true;
       });
 
@@ -65,7 +65,7 @@ void main() {
       final signal = Signal("initial");
       int count = 0;
 
-      Reactter.one(signal, Lifecycle.didUpdate, (_, __) {
+      Rt.one(signal, Lifecycle.didUpdate, (_, __) {
         count += 1;
       });
 
@@ -82,16 +82,15 @@ void main() {
       late final bool willUpdateChecked;
       late final bool didUpdateChecked;
 
-      final testController =
-          Reactter.create<TestController>(() => TestController())!;
+      final testController = Rt.create<TestController>(() => TestController())!;
       final signalString = testController.signalString;
 
       expect(signalString(), "initial");
 
-      Reactter.one(testController, Lifecycle.willUpdate, (_, __) {
+      Rt.one(testController, Lifecycle.willUpdate, (_, __) {
         willUpdateChecked = true;
       });
-      Reactter.one(testController, Lifecycle.didUpdate, (_, __) {
+      Rt.one(testController, Lifecycle.didUpdate, (_, __) {
         didUpdateChecked = true;
       });
 
@@ -100,7 +99,7 @@ void main() {
       expectLater(willUpdateChecked, true);
       expectLater(didUpdateChecked, true);
 
-      Reactter.destroy<TestController>();
+      Rt.destroy<TestController>();
 
       expect(
         () => signalString("throw a assertion error"),
@@ -112,17 +111,17 @@ void main() {
       late final bool willUpdateChecked;
       late final bool didUpdateChecked;
 
-      final test2Controller = Reactter.create(() => Test2Controller())!;
+      final test2Controller = Rt.create(() => Test2Controller())!;
       final testController = test2Controller.testController.instance!;
 
       final signalString = testController.signalString;
 
       expect(signalString(), "initial");
 
-      Reactter.one(testController, Lifecycle.willUpdate, (_, __) {
+      Rt.one(testController, Lifecycle.willUpdate, (_, __) {
         willUpdateChecked = true;
       });
-      Reactter.one(testController, Lifecycle.didUpdate, (_, __) {
+      Rt.one(testController, Lifecycle.didUpdate, (_, __) {
         didUpdateChecked = true;
       });
 
@@ -131,7 +130,7 @@ void main() {
       expectLater(willUpdateChecked, true);
       expectLater(didUpdateChecked, true);
 
-      Reactter.destroy<TestController>();
+      Rt.destroy<TestController>();
 
       expect(
         () => signalString("throw a assertion error"),
@@ -140,7 +139,7 @@ void main() {
     });
 
     test("should be able to bind to another instance", () {
-      final testController = Reactter.create(() => SignalTestController())!;
+      final testController = Rt.create(() => SignalTestController())!;
       final signalString = testController.signalString;
 
       expect(signalString(), "initial");
@@ -149,7 +148,7 @@ void main() {
 
       expect(signalString(), "change signal");
 
-      Reactter.destroy<SignalTestController>();
+      Rt.destroy<SignalTestController>();
 
       expect(
         signalString("no throw a assertion error"),

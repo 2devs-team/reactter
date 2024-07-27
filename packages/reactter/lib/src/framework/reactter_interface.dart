@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 part of 'framework.dart';
 
 void defaultLogWriterCallback(
@@ -5,23 +7,25 @@ void defaultLogWriterCallback(
   Object? error,
   LogLevel? level = LogLevel.info,
 }) {
-  if (Reactter.isLogEnable || error != null) {
+  if (Rt.isLogEnable || error != null) {
     dev.log(value, name: 'REACTTER', error: error);
   }
 }
 
-/// A class that represents the interface for Reactter.
+///{@template reactter.rt_interface}
+/// A class that represents the interface for Rt.
 ///
 /// It is intended to be used as a mixin with other classes.
-class ReactterInterface
+/// {@endtemplate}
+class RtInterface
     with
         StateManagement<ReactterState>,
         DependencyInjection,
         EventHandler,
         Logger {
-  static final _reactterInterface = ReactterInterface._();
-  factory ReactterInterface() => _reactterInterface;
-  ReactterInterface._();
+  static final _reactterInterface = RtInterface._();
+  factory RtInterface() => _reactterInterface;
+  RtInterface._();
 
   @override
   @internal
@@ -37,7 +41,16 @@ class ReactterInterface
   LogWriterCallback get log => defaultLogWriterCallback;
 }
 
+/// {@template reactter.rt}
 /// This class represents the interface for the Reactter framework.
 /// It provides methods and properties for interacting with the Reactter framework.
-/// ignore: non_constant_identifier_names
-final Reactter = ReactterInterface();
+/// {@endtemplate}
+final Rt = RtInterface();
+
+/// {@macro reactter.rt_interface}
+@Deprecated('Use `RtInterface` instead')
+typedef ReactterInterface = RtInterface;
+
+/// {@macro reactter.rt}
+@Deprecated('Use `Rt` instead')
+final Reactter = Rt;

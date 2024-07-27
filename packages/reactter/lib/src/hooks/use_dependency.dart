@@ -36,13 +36,13 @@ typedef UseInstance<T extends Object> = UseDependency<T>;
 ///
 /// The instance must be created by [DependencyInjection] using the following methods:
 ///
-/// - **Reactter.get**:
+/// - **Rt.get**:
 ///   {@macro get}
-/// - **Reactter.create**:
+/// - **Rt.create**:
 ///   {@macro create}
-/// - **Reactter.builder**:
+/// - **Rt.builder**:
 ///   {@macro builder}
-/// - **Reactter.singleton**:
+/// - **Rt.singleton**:
 ///   {@macro builder}
 ///
 /// or created by [ReactterProvider] of [`flutter_reactter`](https://pub.dev/packages/flutter_reactter)
@@ -90,7 +90,7 @@ class UseDependency<T extends Object> extends ReactterHook {
     assert(!_isDisposed);
 
     if (_instance == null) {
-      final instanceFound = Reactter.find<T>(id);
+      final instanceFound = Rt.find<T>(id);
 
       // coverage:ignore-start
       /// this condition shouldn't be `true`
@@ -110,7 +110,7 @@ class UseDependency<T extends Object> extends ReactterHook {
 
   /// {@macro use_dependency}
   UseDependency([this.id]) {
-    _instance = Reactter.find<T>(id);
+    _instance = Rt.find<T>(id);
     _listen();
   }
 
@@ -120,7 +120,7 @@ class UseDependency<T extends Object> extends ReactterHook {
     DependencyMode mode = DependencyMode.builder,
     this.id,
   }) {
-    Reactter.register(
+    Rt.register(
       builder,
       id: id,
       mode: mode,
@@ -159,7 +159,7 @@ class UseDependency<T extends Object> extends ReactterHook {
     this.id,
     DependencyMode mode = DependencyMode.builder,
   }) {
-    _instance = Reactter.create(
+    _instance = Rt.create(
       builder,
       id: id,
       ref: this,
@@ -194,7 +194,7 @@ class UseDependency<T extends Object> extends ReactterHook {
 
   /// {@macro get}
   UseDependency.get([this.id]) {
-    _instance = Reactter.get(id, this);
+    _instance = Rt.get(id, this);
     _listen();
   }
 
@@ -206,7 +206,7 @@ class UseDependency<T extends Object> extends ReactterHook {
     _isDisposed = true;
 
     _unlisten();
-    Reactter.delete<T>(id, this);
+    Rt.delete<T>(id, this);
 
     update(() => _instance = null);
 
@@ -214,15 +214,15 @@ class UseDependency<T extends Object> extends ReactterHook {
   }
 
   void _listen() {
-    Reactter.on(ReactterDependency<T>(id), Lifecycle.created, _onInstance);
-    Reactter.on(ReactterDependency<T>(id), Lifecycle.willMount, _onInstance);
-    Reactter.on(ReactterDependency<T>(id), Lifecycle.deleted, _onInstance);
+    Rt.on(ReactterDependency<T>(id), Lifecycle.created, _onInstance);
+    Rt.on(ReactterDependency<T>(id), Lifecycle.willMount, _onInstance);
+    Rt.on(ReactterDependency<T>(id), Lifecycle.deleted, _onInstance);
   }
 
   void _unlisten() {
-    Reactter.off(ReactterDependency<T>(id), Lifecycle.created, _onInstance);
-    Reactter.off(ReactterDependency<T>(id), Lifecycle.willMount, _onInstance);
-    Reactter.off(ReactterDependency<T>(id), Lifecycle.deleted, _onInstance);
+    Rt.off(ReactterDependency<T>(id), Lifecycle.created, _onInstance);
+    Rt.off(ReactterDependency<T>(id), Lifecycle.willMount, _onInstance);
+    Rt.off(ReactterDependency<T>(id), Lifecycle.deleted, _onInstance);
   }
 
   void _onInstance(inst, param) {

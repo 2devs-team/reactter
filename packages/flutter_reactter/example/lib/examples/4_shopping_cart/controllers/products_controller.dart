@@ -4,7 +4,7 @@ import 'package:examples/examples/4_shopping_cart/repositories/store_repository.
 
 class ProductsController {
   final uStoreRepository = UseDependency.create(StoreRepository.new);
-  late final uProducts = Reactter.lazyState(
+  late final uProducts = Rt.lazyState(
     () => UseState(uStoreRepository.instance?.getProducts() ?? []),
     this,
   );

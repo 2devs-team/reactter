@@ -8,7 +8,7 @@ import 'memo/memo.dart' show Memo;
 /// A function to generate the instance of [T] dependency.
 typedef InstanceBuilder<T> = T Function();
 
-/// Reactter.log type
+/// Rt.log type
 typedef LogWriterCallback = void Function(
   String text, {
   Object error,

@@ -52,14 +52,14 @@ class UseCompute<T> extends ReactterHook {
     _valueComputed = compute();
 
     for (var dependency in dependencies) {
-      Reactter.on(dependency, Lifecycle.didUpdate, _onDependencyChanged);
+      Rt.on(dependency, Lifecycle.didUpdate, _onDependencyChanged);
     }
   }
 
   @override
   void dispose() {
     for (var dependency in dependencies) {
-      Reactter.off(dependency, Lifecycle.didUpdate, _onDependencyChanged);
+      Rt.off(dependency, Lifecycle.didUpdate, _onDependencyChanged);
     }
 
     super.dispose();

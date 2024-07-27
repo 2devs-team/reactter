@@ -164,7 +164,7 @@ class ReactterProvider<T extends Object?> extends ProviderBase<T>
           child: child,
           builder: builder,
         ) {
-    Reactter.create(
+    Rt.create(
       instanceBuilder,
       id: id,
       mode: mode,
@@ -245,7 +245,7 @@ class ReactterProvider<T extends Object?> extends ProviderBase<T>
 class ReactterProviderElement<T extends Object?> extends ComponentElement
     with WrapperElementMixin<ReactterProvider<T>> {
   bool get isRoot {
-    return Reactter.getHashCodeRefAt<T>(0, widget.id) == _widget.hashCode;
+    return Rt.getHashCodeRefAt<T>(0, widget.id) == _widget.hashCode;
   }
 
   final ReactterProvider<T> _widget;

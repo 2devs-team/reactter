@@ -21,7 +21,7 @@ part of 'core.dart';
 /// }
 ///
 /// // MyController has been initialized
-/// final myController = Reactter.create(() => MyController());
+/// final myController = Rt.create(() => MyController());
 /// // state has been changed
 /// myController.state.value = "value changed";
 /// ```

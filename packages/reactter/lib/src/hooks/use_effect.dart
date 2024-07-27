@@ -199,12 +199,12 @@ class UseEffect extends ReactterHook {
   }
 
   void _watchInstanceAttached() {
-    Reactter.on(
+    Rt.on(
       instanceBinded!,
       Lifecycle.didMount,
       _runCallbackAndWatchDependencies,
     );
-    Reactter.on(
+    Rt.on(
       instanceBinded!,
       Lifecycle.willUnmount,
       _runCleanupAndUnwatchDependencies,
@@ -212,12 +212,12 @@ class UseEffect extends ReactterHook {
   }
 
   void _unwatchInstanceAttached() {
-    Reactter.off(
+    Rt.off(
       instanceBinded!,
       Lifecycle.didMount,
       _runCallbackAndWatchDependencies,
     );
-    Reactter.off(
+    Rt.off(
       instanceBinded!,
       Lifecycle.willUnmount,
       _runCleanupAndUnwatchDependencies,
@@ -236,15 +236,15 @@ class UseEffect extends ReactterHook {
 
   void _watchDependencies() {
     for (final dependency in dependencies) {
-      Reactter.on(dependency, Lifecycle.willUpdate, _runCleanup);
-      Reactter.on(dependency, Lifecycle.didUpdate, _runCallback);
+      Rt.on(dependency, Lifecycle.willUpdate, _runCleanup);
+      Rt.on(dependency, Lifecycle.didUpdate, _runCallback);
     }
   }
 
   void _unwatchDependencies() {
     for (final dependency in dependencies) {
-      Reactter.off(dependency, Lifecycle.willUpdate, _runCleanup);
-      Reactter.off(dependency, Lifecycle.didUpdate, _runCallback);
+      Rt.off(dependency, Lifecycle.willUpdate, _runCleanup);
+      Rt.off(dependency, Lifecycle.didUpdate, _runCallback);
     }
   }
 

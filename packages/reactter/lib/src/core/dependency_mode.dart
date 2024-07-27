@@ -39,7 +39,7 @@ enum DependencyMode {
   /// This mode preserves the instance and its states,
   /// even if the dependency tree stops using it.
   ///
-  /// Use `Reactter.destroy` if you want to force destroy
+  /// Use `Rt.destroy` if you want to force destroy
   /// the instance and its register.
   ///
   /// It consumes less CPU than [builder] and [factory],

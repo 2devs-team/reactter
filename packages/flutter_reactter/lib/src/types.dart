@@ -1,7 +1,8 @@
 // ignore_for_file: prefer_void_to_null
 
 import 'package:flutter/widgets.dart';
-import 'package:reactter/reactter.dart' hide Reactter;
+
+import '../reactter.dart';
 
 /// This function type can be used as a callback to determine
 /// whether a specific aspect of an inherited widget should be selected or not.

@@ -120,7 +120,7 @@ mixin ScopeElementMixin on InheritedElement {
     Dependency dependency,
   ) {
     if (!_instancesAndStatesDependencies.containsKey(instance)) {
-      Reactter.on(instance, Lifecycle.didUpdate, _markNeedsNotifyDependents);
+      Rt.on(instance, Lifecycle.didUpdate, _markNeedsNotifyDependents);
     }
 
     _instancesAndStatesDependencies[instance] ??= {};
@@ -133,7 +133,7 @@ mixin ScopeElementMixin on InheritedElement {
   ) {
     for (final state in states) {
       if (!_instancesAndStatesDependencies.containsKey(state)) {
-        Reactter.on(state, Lifecycle.didUpdate, _markNeedsNotifyDependents);
+        Rt.on(state, Lifecycle.didUpdate, _markNeedsNotifyDependents);
       }
 
       _instancesAndStatesDependencies[state] ??= {};
@@ -198,7 +198,7 @@ mixin ScopeElementMixin on InheritedElement {
 
   void _removeListeners() {
     for (final instancesOrStates in _instancesAndStatesDependencies.keys) {
-      Reactter.off(
+      Rt.off(
         instancesOrStates,
         Lifecycle.didUpdate,
         _markNeedsNotifyDependents,
@@ -236,7 +236,7 @@ mixin ScopeElementMixin on InheritedElement {
   }
 
   void _clearInstanceOrStateDependencies(Object? instanceOrState) {
-    Reactter.off(
+    Rt.off(
       instanceOrState,
       Lifecycle.didUpdate,
       _markNeedsNotifyDependents,

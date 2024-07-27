@@ -10,20 +10,20 @@ void main() {
       test(
         "should have a initial value",
         () {
-          final testController = Reactter.create<TestController>(
+          final testController = Rt.create<TestController>(
             () => TestController(),
           )!;
 
           expect(testController.stateCompute.value, 5);
 
-          Reactter.delete<TestController>();
+          Rt.delete<TestController>();
         },
       );
 
       test(
         "should change vale when computed value is different to previus value",
         () {
-          final testController = Reactter.create<TestController>(
+          final testController = Rt.create<TestController>(
             () => TestController(),
           )!;
 
@@ -52,7 +52,7 @@ void main() {
 
           expect(logValueChanges, [5, 6, 10]);
 
-          Reactter.delete<TestController>();
+          Rt.delete<TestController>();
         },
       );
     },

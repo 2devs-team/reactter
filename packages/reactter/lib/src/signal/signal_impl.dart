@@ -41,13 +41,13 @@ enum SignalEvent { onGetValue, onSetValue }
 /// or use `Lifecicle.didUpdate` event for after the [value] is changed:
 ///
 /// ```dart
-/// Reactter.on(
+/// Rt.on(
 ///   strSignal,
 ///   Lifecycle.willUpdate,
 ///   (signal, _) => print("Previous value: $signal"),
 /// );
 ///
-/// Reactter.on(
+/// Rt.on(
 ///   strSignal,
 ///   Lifecycle.didUpdate,
 ///   (signal, _) => print("Current value: $signal"),
@@ -126,7 +126,7 @@ class Signal<T> extends ReactterStateImpl with ObjBase<T> implements Obj<T> {
     if (!_shouldGetValueNotify) return;
 
     _shouldGetValueNotify = false;
-    Reactter.emit(Signal, SignalEvent.onGetValue, this);
+    Rt.emit(Signal, SignalEvent.onGetValue, this);
     _shouldGetValueNotify = true;
   }
 
@@ -134,7 +134,7 @@ class Signal<T> extends ReactterStateImpl with ObjBase<T> implements Obj<T> {
     if (!_shouldSetValueNotify) return;
 
     _shouldSetValueNotify = false;
-    Reactter.emit(Signal, SignalEvent.onSetValue, this);
+    Rt.emit(Signal, SignalEvent.onSetValue, this);
     _shouldSetValueNotify = true;
   }
 }

@@ -97,13 +97,13 @@ class _ReactterWatcherState extends State<ReactterWatcher> {
     final prevState = _currentState;
 
     _currentState = this;
-    Reactter.on(Signal, SignalEvent.onGetValue, _onGetValue);
+    Rt.on(Signal, SignalEvent.onGetValue, _onGetValue);
 
     final widgetBuit =
         widget.builder?.call(context, widget.child) ?? widget.child!;
 
     _currentState = prevState;
-    Reactter.off(Signal, SignalEvent.onGetValue, _onGetValue);
+    Rt.off(Signal, SignalEvent.onGetValue, _onGetValue);
 
     return widgetBuit;
   }
@@ -120,7 +120,7 @@ class _ReactterWatcherState extends State<ReactterWatcher> {
     }
 
     _signals.add(signal);
-    Reactter.on(signal, Lifecycle.didUpdate, _onSignalDidUpdate);
+    Rt.on(signal, Lifecycle.didUpdate, _onSignalDidUpdate);
   }
 
   void _onSignalDidUpdate(_, __) {
@@ -132,7 +132,7 @@ class _ReactterWatcherState extends State<ReactterWatcher> {
 
   void _clearSignals() {
     for (var signal in _signals) {
-      Reactter.off(signal, Lifecycle.didUpdate, _onSignalDidUpdate);
+      Rt.off(signal, Lifecycle.didUpdate, _onSignalDidUpdate);
     }
     _signals.clear();
   }

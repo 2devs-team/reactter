@@ -106,9 +106,9 @@ abstract class State implements StateBase {
   void _onInstanceDeleted(_, __) => dispose();
 
   /// Notifies the listeners about the specified [event].
-  /// If [Reactter._isUntrackedRunning] is true, the notification is skipped.
-  /// If [Reactter._isBatchRunning] is true, the notification is deferred until the batch is completed.
-  /// The [event] is emitted using [Reactter.emit] for the current instance and [_instanceBinded].
+  /// If [Rt._isUntrackedRunning] is true, the notification is skipped.
+  /// If [Rt._isBatchRunning] is true, the notification is deferred until the batch is completed.
+  /// The [event] is emitted using [Rt.emit] for the current instance and [_instanceBinded].
   void _notify(Enum event) {
     if (stateManagment._isUntrackedRunning) return;
 

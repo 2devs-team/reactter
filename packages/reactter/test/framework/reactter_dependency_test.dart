@@ -11,14 +11,14 @@ void main() {
       late bool didUpdateChecked;
       late bool isDeleted;
 
-      Reactter.on(
+      Rt.on(
         ReactterDependency<TestController>(),
         Lifecycle.created,
         (TestController? inst, __) {
           instance = inst;
         },
       );
-      Reactter.on(
+      Rt.on(
         ReactterDependency<TestController>(),
         Lifecycle.willUpdate,
         (TestController? inst, UseState hook) {
@@ -27,7 +27,7 @@ void main() {
           expect(hook.value, "initial");
         },
       );
-      Reactter.on(
+      Rt.on(
         ReactterDependency<TestController>(),
         Lifecycle.didUpdate,
         (TestController? inst, UseState hook) {
@@ -36,7 +36,7 @@ void main() {
           expect(hook.value, "changed");
         },
       );
-      Reactter.on(
+      Rt.on(
         ReactterDependency<TestController>(),
         Lifecycle.deleted,
         (_, __) {
@@ -44,10 +44,10 @@ void main() {
         },
       );
 
-      final testController = Reactter.create(() => TestController());
+      final testController = Rt.create(() => TestController());
       testController?.stateString.value = "changed";
 
-      Reactter.delete<TestController>();
+      Rt.delete<TestController>();
 
       expectLater(instance, isA<TestController>());
       expectLater(instance, testController);
@@ -71,7 +71,7 @@ void main() {
         isNull,
       );
 
-      Reactter.create(() => Test3Controller());
+      Rt.create(() => Test3Controller());
 
       expect(
         test3Controller.instance,
@@ -87,7 +87,7 @@ void main() {
         isA<TestController>(),
       );
 
-      Reactter.delete<Test2Controller>();
+      Rt.delete<Test2Controller>();
 
       expect(
         test3Controller.instance,
@@ -103,7 +103,7 @@ void main() {
         isNull,
       );
 
-      Reactter.delete<Test3Controller>();
+      Rt.delete<Test3Controller>();
 
       expect(
         test3Controller.instance,

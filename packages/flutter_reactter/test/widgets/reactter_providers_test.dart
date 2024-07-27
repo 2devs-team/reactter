@@ -103,8 +103,7 @@ void main() {
               ),
               ReactterProvider(
                 () {
-                  final instFromProviderSibling =
-                      Reactter.find<TestController>();
+                  final instFromProviderSibling = Rt.find<TestController>();
 
                   expect(instFromProviderSibling, isNotNull);
 

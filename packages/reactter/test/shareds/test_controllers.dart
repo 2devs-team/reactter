@@ -94,7 +94,7 @@ class TestController extends ReactterState {
   });
   final stateReduce = UseReducer(_reducer, TestStore(count: 0));
 
-  late final stateCompute = Reactter.lazyState(
+  late final stateCompute = Rt.lazyState(
     () => UseCompute(
       () => (stateInt.value + stateDouble.value).clamp(5, 10),
       [stateInt, stateDouble],
@@ -192,7 +192,7 @@ class Test2Controller {
   final testController = UseDependency<TestController>();
 
   Test2Controller() {
-    Reactter.create(() => TestController());
+    Rt.create(() => TestController());
   }
 }
 
@@ -200,7 +200,7 @@ class Test3Controller {
   final test2Controller = UseDependency<Test2Controller>();
 
   Test3Controller() {
-    Reactter.create(() => Test2Controller());
+    Rt.create(() => Test2Controller());
   }
 }
 

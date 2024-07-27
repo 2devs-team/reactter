@@ -148,7 +148,7 @@ class ProviderElement<T extends Object?> extends InheritedElement
   bool _isLazyInstanceObtained = false;
 
   bool get isRoot {
-    return Reactter.getHashCodeRefAt<T>(0, widget.id) == widget.ref.hashCode;
+    return Rt.getHashCodeRefAt<T>(0, widget.id) == widget.ref.hashCode;
   }
 
   @override
@@ -158,14 +158,14 @@ class ProviderElement<T extends Object?> extends InheritedElement
 
   T? get instance {
     if (!_isLazyInstanceObtained && widget.isLazy) {
-      final instance = Reactter.get<T>(widget.id, widget.ref);
+      final instance = Rt.get<T>(widget.id, widget.ref);
 
       _isLazyInstanceObtained = instance != null;
 
       return instance;
     }
 
-    return Reactter.find<T>(widget.id);
+    return Rt.find<T>(widget.id);
   }
 
   /// Creates an element that uses the given widget as its configuration.
@@ -175,7 +175,7 @@ class ProviderElement<T extends Object?> extends InheritedElement
   }) : super(widget) {
     if (widget.init && !widget.isLazy) {
       // TODO: Remove this when the `init` property is removed
-      Reactter.create<T>(
+      Rt.create<T>(
         widget.instanceBuilder,
         id: widget.id,
         mode: widget.mode,
@@ -185,7 +185,7 @@ class ProviderElement<T extends Object?> extends InheritedElement
       return;
     }
 
-    Reactter.register<T>(
+    Rt.register<T>(
       widget.instanceBuilder,
       id: widget.id,
       mode: widget.mode,
@@ -195,19 +195,19 @@ class ProviderElement<T extends Object?> extends InheritedElement
   @override
   void mount(Element? parent, Object? newSlot) {
     if (!widget.init && !widget.isLazy) {
-      Reactter.get<T>(widget.id, widget.ref);
+      Rt.get<T>(widget.id, widget.ref);
     }
 
     _updateInheritedElementWithId(parent);
 
     if (isRoot) {
-      Reactter.emit(instance!, Lifecycle.willMount);
+      Rt.emit(instance!, Lifecycle.willMount);
     }
 
     super.mount(parent, newSlot);
 
     if (isRoot) {
-      Reactter.emit(instance!, Lifecycle.didMount);
+      Rt.emit(instance!, Lifecycle.didMount);
     }
   }
 
@@ -231,16 +231,16 @@ class ProviderElement<T extends Object?> extends InheritedElement
 
     try {
       if (isRoot) {
-        Reactter.emit(instance!, Lifecycle.willUnmount);
+        Rt.emit(instance!, Lifecycle.willUnmount);
       }
 
       return super.unmount();
     } finally {
       if (isRoot) {
-        Reactter.emit(instance!, Lifecycle.didUnmount);
+        Rt.emit(instance!, Lifecycle.didUnmount);
       }
 
-      Reactter.delete<T>(id, ref);
+      Rt.delete<T>(id, ref);
 
       _inheritedElementsWithId = null;
       prevChild = null;

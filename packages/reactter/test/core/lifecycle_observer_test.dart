@@ -10,17 +10,17 @@ void main() {
       () {
         late TestLifecycleController? testLifecycleController;
 
-        testLifecycleController = Reactter.find<TestLifecycleController>();
+        testLifecycleController = Rt.find<TestLifecycleController>();
 
         expect(testLifecycleController, null);
 
-        testLifecycleController = Reactter.create(
+        testLifecycleController = Rt.create(
           () => TestLifecycleController(),
         )!;
 
         expect(testLifecycleController, isA<TestLifecycleController>());
 
-        Reactter.emit(
+        Rt.emit(
           ReactterDependency<TestLifecycleController>(),
           Lifecycle.willMount,
         );
@@ -34,7 +34,7 @@ void main() {
         expect(testLifecycleController.onDidUnmountCalledCount, 0);
         expect(testLifecycleController.lastState, null);
 
-        Reactter.emit(
+        Rt.emit(
           ReactterDependency<TestLifecycleController>(),
           Lifecycle.didMount,
         );
@@ -76,7 +76,7 @@ void main() {
           testLifecycleController.stateString,
         );
 
-        Reactter.emit(
+        Rt.emit(
           ReactterDependency<TestLifecycleController>(),
           Lifecycle.willUnmount,
         );
@@ -93,7 +93,7 @@ void main() {
           testLifecycleController.stateString,
         );
 
-        Reactter.emit(
+        Rt.emit(
           ReactterDependency<TestLifecycleController>(),
           Lifecycle.didUnmount,
         );

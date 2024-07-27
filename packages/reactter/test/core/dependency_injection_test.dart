@@ -6,128 +6,128 @@ import '../shareds/test_controllers.dart';
 void main() {
   group("DependencyInjection", () {
     test("should register a dependency", () {
-      bool registered = Reactter.register(() => TestController());
+      bool registered = Rt.register(() => TestController());
       expect(registered, true);
 
-      registered = Reactter.register(() => TestController());
+      registered = Rt.register(() => TestController());
       expect(registered, false);
 
-      Reactter.destroy<TestController>();
+      Rt.destroy<TestController>();
     });
 
     test("should register a dependency with id", () {
       final id = 'uniqueId';
 
-      bool registered = Reactter.register(
+      bool registered = Rt.register(
         () => TestController(),
         id: id,
       );
       expect(registered, true);
 
-      registered = Reactter.register(
+      registered = Rt.register(
         () => TestController(),
         id: id,
       );
       expect(registered, false);
 
-      Reactter.destroy<TestController>(id: id);
+      Rt.destroy<TestController>(id: id);
     });
 
     test("should unregister a dependency", () {
-      Reactter.register(() => TestController());
+      Rt.register(() => TestController());
 
-      bool unregistered = Reactter.unregister<TestController>();
+      bool unregistered = Rt.unregister<TestController>();
       expect(unregistered, true);
 
-      unregistered = Reactter.unregister<TestController>();
+      unregistered = Rt.unregister<TestController>();
       expect(unregistered, false);
 
-      Reactter.create(() => TestController());
+      Rt.create(() => TestController());
 
-      unregistered = Reactter.unregister<TestController>();
+      unregistered = Rt.unregister<TestController>();
       expect(unregistered, false);
 
-      Reactter.destroy<TestController>(onlyInstance: true);
+      Rt.destroy<TestController>(onlyInstance: true);
 
-      unregistered = Reactter.unregister<TestController>();
+      unregistered = Rt.unregister<TestController>();
       expect(unregistered, true);
 
-      unregistered = Reactter.unregister<TestController>();
+      unregistered = Rt.unregister<TestController>();
       expect(unregistered, false);
     });
 
     test("should unregister a dependency with id", () {
       final id = 'uniqueId';
 
-      Reactter.register(() => TestController(), id: id);
+      Rt.register(() => TestController(), id: id);
 
-      bool unregistered = Reactter.unregister<TestController>(id);
+      bool unregistered = Rt.unregister<TestController>(id);
       expect(unregistered, true);
 
-      unregistered = Reactter.unregister<TestController>(id);
+      unregistered = Rt.unregister<TestController>(id);
       expect(unregistered, false);
 
-      Reactter.create(() => TestController(), id: id);
+      Rt.create(() => TestController(), id: id);
 
-      unregistered = Reactter.unregister<TestController>(id);
+      unregistered = Rt.unregister<TestController>(id);
       expect(unregistered, false);
 
-      Reactter.destroy<TestController>(id: id, onlyInstance: true);
+      Rt.destroy<TestController>(id: id, onlyInstance: true);
 
-      unregistered = Reactter.unregister<TestController>(id);
+      unregistered = Rt.unregister<TestController>(id);
       expect(unregistered, true);
 
-      unregistered = Reactter.unregister<TestController>(id);
+      unregistered = Rt.unregister<TestController>(id);
       expect(unregistered, false);
     });
 
     test("should get a dependency", () {
-      var instance = Reactter.get<TestController>();
+      var instance = Rt.get<TestController>();
       expect(instance, null);
 
-      Reactter.register(() => TestController());
-      Reactter.register<Test2Controller?>(() => null);
+      Rt.register(() => TestController());
+      Rt.register<Test2Controller?>(() => null);
 
-      instance = Reactter.get<TestController>();
+      instance = Rt.get<TestController>();
       expect(instance, isA<TestController>());
 
-      instance = Reactter.get<TestController?>();
+      instance = Rt.get<TestController?>();
       expect(instance, isA<TestController>());
 
-      final instance2 = Reactter.get<Test2Controller>();
+      final instance2 = Rt.get<Test2Controller>();
       expect(instance2, null);
 
-      Reactter.destroy<TestController>();
+      Rt.destroy<TestController>();
     });
 
     test("should get a dependency with id", () {
       final id = 'uniqueId';
 
-      var instance = Reactter.get<TestController>(id);
+      var instance = Rt.get<TestController>(id);
       expect(instance, null);
 
-      Reactter.register(() => TestController(), id: id);
+      Rt.register(() => TestController(), id: id);
 
-      instance = Reactter.get<TestController>(id);
+      instance = Rt.get<TestController>(id);
       expect(instance, isA<TestController>());
 
-      Reactter.destroy<TestController>(id: id);
+      Rt.destroy<TestController>(id: id);
     });
 
     test("should create a dependency", () {
       final ref = #ref;
 
-      final instance = Reactter.create(() => TestController(), ref: ref);
+      final instance = Rt.create(() => TestController(), ref: ref);
       expect(instance, isA<TestController>());
 
-      Reactter.destroy<TestController>();
+      Rt.destroy<TestController>();
     });
 
     test("should create a dependency with id", () {
       final id = 'uniqueId';
       final ref = #ref;
 
-      final instance = Reactter.create(
+      final instance = Rt.create(
         () => TestController(),
         id: id,
         ref: ref,
@@ -135,297 +135,296 @@ void main() {
 
       expect(instance, isA<TestController>());
 
-      Reactter.destroy<TestController>(id: id);
+      Rt.destroy<TestController>(id: id);
     });
 
     test("should delete a dependency", () {
       final ref = #ref;
 
-      Reactter.create(() => TestController(), ref: ref);
+      Rt.create(() => TestController(), ref: ref);
 
-      bool isDeleted = Reactter.delete<TestController>(null, ref);
+      bool isDeleted = Rt.delete<TestController>(null, ref);
       expect(isDeleted, true);
 
-      isDeleted = Reactter.delete<TestController>(null, ref);
+      isDeleted = Rt.delete<TestController>(null, ref);
       expect(isDeleted, false);
 
-      Reactter.destroy<TestController>();
+      Rt.destroy<TestController>();
     });
 
     test("should delete a dependency with id", () {
       final ref = #ref;
       final id = 'uniqueId';
 
-      Reactter.create(() => TestController(), id: id, ref: ref);
+      Rt.create(() => TestController(), id: id, ref: ref);
 
-      bool isDeleted = Reactter.delete<TestController>(id, ref);
+      bool isDeleted = Rt.delete<TestController>(id, ref);
       expect(isDeleted, true);
 
-      isDeleted = Reactter.delete<TestController>(id, ref);
+      isDeleted = Rt.delete<TestController>(id, ref);
       expect(isDeleted, false);
 
-      Reactter.destroy<TestController>(id: id);
+      Rt.destroy<TestController>(id: id);
     });
 
     test("should destroy a dependency", () {
-      var isDestroyed = Reactter.destroy<TestController>();
+      var isDestroyed = Rt.destroy<TestController>();
       expect(isDestroyed, false);
 
-      isDestroyed = Reactter.destroy<TestController>(onlyInstance: true);
+      isDestroyed = Rt.destroy<TestController>(onlyInstance: true);
       expect(isDestroyed, false);
 
-      Reactter.create(() => TestController());
+      Rt.create(() => TestController());
 
-      isDestroyed = Reactter.destroy<TestController>(onlyInstance: true);
+      isDestroyed = Rt.destroy<TestController>(onlyInstance: true);
       expect(isDestroyed, true);
 
-      final instance = Reactter.find<TestController>();
+      final instance = Rt.find<TestController>();
       expect(instance, null);
 
-      Reactter.get<TestController>();
+      Rt.get<TestController>();
 
-      isDestroyed = Reactter.destroy<TestController>();
+      isDestroyed = Rt.destroy<TestController>();
       expect(isDestroyed, true);
     });
 
     test("should destroy a dependency with id", () {
       final id = 'UniqueId';
 
-      var isDestroyed = Reactter.destroy<TestController>(id: id);
+      var isDestroyed = Rt.destroy<TestController>(id: id);
       expect(isDestroyed, false);
 
-      isDestroyed = Reactter.destroy<TestController>(
+      isDestroyed = Rt.destroy<TestController>(
         id: id,
         onlyInstance: true,
       );
       expect(isDestroyed, false);
 
-      Reactter.create(() => TestController(), id: id);
+      Rt.create(() => TestController(), id: id);
 
-      isDestroyed = Reactter.destroy<TestController>(
+      isDestroyed = Rt.destroy<TestController>(
         id: id,
         onlyInstance: true,
       );
       expect(isDestroyed, true);
 
-      final instance = Reactter.find<TestController>(id);
+      final instance = Rt.find<TestController>(id);
       expect(instance, null);
 
-      Reactter.get<TestController>(id);
+      Rt.get<TestController>(id);
 
-      isDestroyed = Reactter.destroy<TestController>(id: id);
+      isDestroyed = Rt.destroy<TestController>(id: id);
       expect(isDestroyed, true);
     });
 
     test("should find a dependency", () {
-      var instance = Reactter.find<TestController>();
+      var instance = Rt.find<TestController>();
       expect(instance, null);
 
-      Reactter.create(() => TestController());
+      Rt.create(() => TestController());
 
-      instance = Reactter.find<TestController>();
+      instance = Rt.find<TestController>();
       expect(instance, isA<TestController>());
 
-      Reactter.destroy<TestController>();
+      Rt.destroy<TestController>();
     });
 
     test("should find a dependency with id", () {
       final id = 'uniqueId';
-      var instance = Reactter.find<TestController>(id);
+      var instance = Rt.find<TestController>(id);
       expect(instance, null);
 
-      Reactter.create(() => TestController(), id: id);
-      instance = Reactter.find<TestController>(id);
+      Rt.create(() => TestController(), id: id);
+      instance = Rt.find<TestController>(id);
       expect(instance, isA<TestController>());
 
-      Reactter.destroy<TestController>(id: id);
+      Rt.destroy<TestController>(id: id);
     });
 
     test("should check if an instance is registered", () {
       final testController = TestController();
-      bool isActive = Reactter.isActive(testController);
+      bool isActive = Rt.isActive(testController);
       expect(isActive, false);
 
-      final instance = Reactter.create(() => testController);
+      final instance = Rt.create(() => testController);
       expect(instance, testController);
 
-      isActive = Reactter.isActive(testController);
+      isActive = Rt.isActive(testController);
       expect(isActive, true);
 
-      Reactter.destroy<TestController>();
+      Rt.destroy<TestController>();
     });
 
     test("should check if a dependency is registered", () {
       final testController = TestController();
-      bool hasRegister = Reactter.hasRegister<TestController>();
+      bool hasRegister = Rt.hasRegister<TestController>();
       expect(hasRegister, false);
 
-      final instance = Reactter.create(() => testController);
+      final instance = Rt.create(() => testController);
       expect(instance, testController);
 
-      hasRegister = Reactter.hasRegister<TestController>();
+      hasRegister = Rt.hasRegister<TestController>();
       expect(hasRegister, true);
 
-      Reactter.destroy<TestController>();
+      Rt.destroy<TestController>();
     });
 
     test("should check if exist a dependency", () {
-      bool isExistInstance = Reactter.exists<TestController>();
+      bool isExistInstance = Rt.exists<TestController>();
       expect(isExistInstance, false);
 
-      Reactter.create(() => TestController());
-      isExistInstance = Reactter.exists<TestController>();
+      Rt.create(() => TestController());
+      isExistInstance = Rt.exists<TestController>();
       expect(isExistInstance, true);
 
-      Reactter.destroy<TestController>();
+      Rt.destroy<TestController>();
     });
 
     test("should check if exist a dependency with id", () {
       final id = 'uniqueId';
 
-      bool isExistInstance = Reactter.exists<TestController>(id);
+      bool isExistInstance = Rt.exists<TestController>(id);
       expect(isExistInstance, false);
 
-      Reactter.create(() => TestController(), id: id);
-      isExistInstance = Reactter.exists<TestController>(id);
+      Rt.create(() => TestController(), id: id);
+      isExistInstance = Rt.exists<TestController>(id);
       expect(isExistInstance, true);
 
-      Reactter.destroy<TestController>(id: id);
+      Rt.destroy<TestController>(id: id);
     });
 
     test("should create a dependency in builder mode", () {
-      final instance = Reactter.builder(() => TestController());
+      final instance = Rt.builder(() => TestController());
       expect(instance, isA<TestController>());
 
-      final dependencyMode = Reactter.getDependencyMode(instance);
+      final dependencyMode = Rt.getDependencyMode(instance);
       expect(dependencyMode, DependencyMode.builder);
 
-      final isDeleted = Reactter.delete<TestController>();
+      final isDeleted = Rt.delete<TestController>();
       expect(isDeleted, true);
 
-      final instanceBeforeDeleted = Reactter.find<TestController>();
+      final instanceBeforeDeleted = Rt.find<TestController>();
       expect(instanceBeforeDeleted, null);
 
-      final isRegistered = Reactter.lazyBuilder(() => TestController());
+      final isRegistered = Rt.lazyBuilder(() => TestController());
       expect(isRegistered, true);
 
-      Reactter.destroy<TestController>();
+      Rt.destroy<TestController>();
     });
 
     test("should create a dependency with id in builder mode", () {
       final id = 'uniqueId';
 
-      final instance = Reactter.builder(() => TestController(), id: id);
+      final instance = Rt.builder(() => TestController(), id: id);
       expect(instance, isA<TestController>());
 
-      final dependencyMode = Reactter.getDependencyMode(instance);
+      final dependencyMode = Rt.getDependencyMode(instance);
       expect(dependencyMode, DependencyMode.builder);
 
-      final isDeleted = Reactter.delete<TestController>(id);
+      final isDeleted = Rt.delete<TestController>(id);
       expect(isDeleted, true);
 
-      final instanceBeforeDeleted = Reactter.find<TestController>(id);
+      final instanceBeforeDeleted = Rt.find<TestController>(id);
       expect(instanceBeforeDeleted, null);
 
-      final isRegistered = Reactter.lazyBuilder(() => TestController(), id: id);
+      final isRegistered = Rt.lazyBuilder(() => TestController(), id: id);
       expect(isRegistered, true);
 
-      Reactter.destroy<TestController>(id: id);
+      Rt.destroy<TestController>(id: id);
     });
 
     test("should create a dependency in factory mode", () {
-      final instance = Reactter.factory(() => TestController());
+      final instance = Rt.factory(() => TestController());
       expect(instance, isA<TestController>());
 
-      final dependencyMode = Reactter.getDependencyMode(instance);
+      final dependencyMode = Rt.getDependencyMode(instance);
       expect(dependencyMode, DependencyMode.factory);
 
-      final isDeleted = Reactter.delete<TestController>();
+      final isDeleted = Rt.delete<TestController>();
       expect(isDeleted, true);
 
-      final instanceBeforeDeleted = Reactter.find<TestController>();
+      final instanceBeforeDeleted = Rt.find<TestController>();
       expect(instanceBeforeDeleted, null);
 
-      final isRegistered = Reactter.lazyFactory(() => TestController());
+      final isRegistered = Rt.lazyFactory(() => TestController());
       expect(isRegistered, false);
 
-      Reactter.destroy<TestController>();
+      Rt.destroy<TestController>();
     });
 
     test("should create a dependency with id in factory mode", () {
       final id = 'uniqueId';
 
-      final instance = Reactter.factory(() => TestController(), id: id);
+      final instance = Rt.factory(() => TestController(), id: id);
       expect(instance, isA<TestController>());
 
-      final dependencyMode = Reactter.getDependencyMode(instance);
+      final dependencyMode = Rt.getDependencyMode(instance);
       expect(dependencyMode, DependencyMode.factory);
 
-      final isDeleted = Reactter.delete<TestController>(id);
+      final isDeleted = Rt.delete<TestController>(id);
       expect(isDeleted, true);
 
-      final instanceBeforeDeleted = Reactter.find<TestController>(id);
+      final instanceBeforeDeleted = Rt.find<TestController>(id);
       expect(instanceBeforeDeleted, null);
 
-      final isRegistered = Reactter.lazyFactory(() => TestController(), id: id);
+      final isRegistered = Rt.lazyFactory(() => TestController(), id: id);
       expect(isRegistered, false);
 
-      Reactter.destroy<TestController>(id: id);
+      Rt.destroy<TestController>(id: id);
     });
 
     test("should create a dependency in singleton mode", () {
-      final instance = Reactter.singleton(() => TestController());
+      final instance = Rt.singleton(() => TestController());
       expect(instance, isA<TestController>());
 
-      final dependencyMode = Reactter.getDependencyMode(instance);
+      final dependencyMode = Rt.getDependencyMode(instance);
       expect(dependencyMode, DependencyMode.singleton);
 
-      final isDeleted = Reactter.delete<TestController>();
+      final isDeleted = Rt.delete<TestController>();
       expect(isDeleted, false);
 
-      final instanceBeforeDeleted = Reactter.find<TestController>();
+      final instanceBeforeDeleted = Rt.find<TestController>();
       expect(instanceBeforeDeleted, isA<TestController>());
       expect(instanceBeforeDeleted, instance);
 
-      final isRegistered = Reactter.lazySingleton(() => TestController());
+      final isRegistered = Rt.lazySingleton(() => TestController());
       expect(isRegistered, false);
 
-      Reactter.destroy<TestController>();
+      Rt.destroy<TestController>();
     });
 
     test("should create a dependency with id in singleton mode", () {
       final id = 'uniqueId';
 
-      final instance = Reactter.singleton(() => TestController(), id: id);
+      final instance = Rt.singleton(() => TestController(), id: id);
       expect(instance, isA<TestController>());
 
-      final nstanceManageMode = Reactter.getDependencyMode(instance);
+      final nstanceManageMode = Rt.getDependencyMode(instance);
       expect(nstanceManageMode, DependencyMode.singleton);
 
-      final isDeleted = Reactter.delete<TestController>(id);
+      final isDeleted = Rt.delete<TestController>(id);
       expect(isDeleted, false);
 
-      final instanceBeforeDeleted = Reactter.find<TestController>(id);
+      final instanceBeforeDeleted = Rt.find<TestController>(id);
       expect(instanceBeforeDeleted, isA<TestController>());
       expect(instanceBeforeDeleted, instance);
 
-      final isRegistered =
-          Reactter.lazySingleton(() => TestController(), id: id);
+      final isRegistered = Rt.lazySingleton(() => TestController(), id: id);
       expect(isRegistered, false);
 
-      Reactter.destroy<TestController>(id: id);
+      Rt.destroy<TestController>(id: id);
     });
 
     test("should get hashcode ref by index", () {
       final ref = 'myRef';
 
-      Reactter.create(() => TestController(), ref: ref);
+      Rt.create(() => TestController(), ref: ref);
 
-      final hashCodeRef = Reactter.getHashCodeRefAt<TestController>(0);
+      final hashCodeRef = Rt.getHashCodeRefAt<TestController>(0);
       expect(hashCodeRef, isA<int>());
       expect(hashCodeRef, ref.hashCode);
 
-      Reactter.destroy<TestController>();
+      Rt.destroy<TestController>();
     });
   });
 }

@@ -194,7 +194,7 @@ void main() {
             () => TestController(),
             builder: (context, child) {
               expect(
-                Reactter.find<TestController>(),
+                Rt.find<TestController>(),
                 isOnBuilder ? instanceObtained : null,
               );
 
@@ -241,7 +241,7 @@ void main() {
             id: "uniqueId",
             builder: (context, child) {
               expect(
-                Reactter.find<TestController>("uniqueId"),
+                Rt.find<TestController>("uniqueId"),
                 isOnBuilder ? instanceObtained : null,
               );
 

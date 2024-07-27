@@ -26,7 +26,7 @@ final examples = [
     "Performs simple arithmetic operations on numbers",
     [
       "BuilContext.use",
-      "Reactter.batch",
+      "Rt.batch",
       "ReactterConsumer",
       "ReactterProvider",
       "ReactterSelector",
@@ -42,7 +42,7 @@ final examples = [
     [
       "BuilContext.use",
       "BuilContext.watchId",
-      "Reactter.lazyState",
+      "Rt.lazyState",
       "ReactterComponent",
       "ReactterProvider",
       "UseCompute",
@@ -56,7 +56,7 @@ final examples = [
     "4. Shopping Cart",
     "Add, remove product to cart and checkout",
     [
-      "Reactter.lazyState",
+      "Rt.lazyState",
       "ReactterComponent",
       "ReactterConsumer",
       "ReactterProvider",
@@ -84,7 +84,7 @@ final examples = [
     "6. To-Do List",
     "Add and remove to-do, mark and unmark to-do as done and filter to-do list",
     [
-      "Reactter.lazyState",
+      "Rt.lazyState",
       "ReactterActionCallable",
       "ReactterComponent",
       "ReactterConsumer",
@@ -99,7 +99,7 @@ final examples = [
     "7. Animate widget",
     "Change size, shape and color.",
     [
-      "Reactter.lazyState",
+      "Rt.lazyState",
       "ReactterConsumer",
       "ReactterHook",
       "ReactterProvider",
