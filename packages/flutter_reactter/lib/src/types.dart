@@ -9,9 +9,9 @@ import '../reactter.dart';
 typedef SelectorAspect<T> = bool Function(InheritedElement inheritedElement);
 
 /// This function type can be used as a callback to listen to the states of an
-/// instance of [T] dependency and return a list of [ReactterState] objects
+/// instance of [T] dependency and return a list of [RtState] objects
 /// associated with the dependency.
-typedef ListenStates<T> = List<ReactterState> Function(T instance);
+typedef ListenStates<T> = List<RtState> Function(T instance);
 
 /// Identifies a [ReactterProvider] with id.
 typedef WithId = String;
@@ -20,7 +20,7 @@ typedef WithId = String;
 typedef WithoutId = Null;
 
 /// This function type can be used to watch a state.
-typedef Select = S Function<S extends ReactterState>(S state);
+typedef Select = S Function<S extends RtState>(S state);
 
 /// This function type takes an argument of [T] type and a [Select] function, and returns a value of [R] type.
 /// This function type can be used to compute a value based on the provided arguments.

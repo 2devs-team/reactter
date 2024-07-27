@@ -2,18 +2,18 @@ part of '../widgets.dart';
 
 /// {@template reactter_selector}
 /// A [StatelessWidget] similar to [ReactterConsumer] but allowing to control
-/// the rebuilding of widget tree by selecting the [ReactterState]s,
+/// the rebuilding of widget tree by selecting the [RtState]s,
 /// and a computed value.
 ///
 /// [ReactterSelector] determines if [builder] needs to be rebuild again
 /// by comparing the previous and new result of [Selector] and returns it.
-/// This evaluation only occurs if one of the selected [ReactterState]s gets updated,
-/// or by the dependency if the [selector] does not have any selected [ReactterState]s.
+/// This evaluation only occurs if one of the selected [RtState]s gets updated,
+/// or by the dependency if the [selector] does not have any selected [RtState]s.
 ///
 /// The [selector] property has a two arguments, the first one is the instance
 /// of [T] dependency which is obtained from the closest ancestor [ReactterProvider].
 /// and the second one is a [Select] function which allows to wrapper any
-/// [ReactterState]s to listen, and returns the value in each build. e.g:
+/// [RtState]s to listen, and returns the value in each build. e.g:
 ///
 /// ```dart
 /// ReactterSelector<MyController, double>(
@@ -78,7 +78,7 @@ part of '../widgets.dart';
 ///
 /// See also:
 ///
-/// * [ReactterState], a state in reactter.
+/// * [RtState], a state in reactter.
 /// * [ReactterConsumer], a widget that obtains an instance of [T] dependency
 /// from the closest ancestor [ReactterProvider].
 /// * [ReactterProvider], a widget that provides a [T] dependency through Widget.
@@ -133,13 +133,13 @@ class ReactterSelector<T extends Object?, V> extends StatelessWidget {
   /// Uses the [selector] callback, for determining if
   /// the widget tree of [context] needs to be rebuild by comparaing
   /// the previous and new result of [selector], and returns it.
-  /// This evaluation only occurs if one of the selected [ReactterState]s gets updated,
-  /// or by the dependency if the [selector] does not have any selected [ReactterState]s.
+  /// This evaluation only occurs if one of the selected [RtState]s gets updated,
+  /// or by the dependency if the [selector] does not have any selected [RtState]s.
   ///
   /// The [selector] callback has a two arguments, the first one is
   /// the instance of [T] dependency which is obtained from the closest ancestor
   /// of [ReactterProvider] and the second one is a [Select] function which
-  /// allows to wrapper any [ReactterState]s to listen.
+  /// allows to wrapper any [RtState]s to listen.
   ///
   /// If [T] is not defined and [ReactterScope] is not found,
   /// will throw [ReactterScopeNotFoundException].

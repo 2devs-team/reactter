@@ -15,7 +15,7 @@ part of 'core.dart';
 ///   }
 ///
 ///   @override
-///   void onDidUpdate(ReactterState? state) {
+///   void onDidUpdate(RtState? state) {
 ///     print("$state has been changed");
 ///   }
 /// }

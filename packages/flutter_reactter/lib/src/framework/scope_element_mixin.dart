@@ -128,7 +128,7 @@ mixin ScopeElementMixin on InheritedElement {
   }
 
   void _addStatesListener(
-    Set<ReactterState> states,
+    Set<RtState> states,
     Dependency dependency,
   ) {
     for (final state in states) {

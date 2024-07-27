@@ -5,7 +5,7 @@ part of 'hooks.dart';
 ///
 ///
 /// The `side-effect` logic into the [callback] function is executed
-/// when [dependencies] of [ReactterState] argument has changes
+/// when [dependencies] of [RtState] argument has changes
 /// or [instance] trigger [LifeCycle.didMount] event:
 ///
 /// ```dart
@@ -20,7 +20,7 @@ part of 'hooks.dart';
 /// The [callback] function can return a cleanup function to manage the `effect
 /// cleanup`.
 /// The cleanup function is executed before the [dependencies] of
-/// [ReactterState] argument has changes or [instance] trigger
+/// [RtState] argument has changes or [instance] trigger
 /// [LifeCycle.willUnmount] event:
 ///
 /// ```dart
@@ -125,7 +125,7 @@ part of 'hooks.dart';
 ///
 /// See also:
 ///
-/// * [ReactterState], it receives as dependencies.
+/// * [RtState], it receives as dependencies.
 /// {@endtemplate}
 class UseEffect extends ReactterHook {
   @protected
@@ -140,7 +140,7 @@ class UseEffect extends ReactterHook {
   final Function callback;
 
   /// It's used to store the states as dependencies of [UseEffect].
-  final List<ReactterState> dependencies;
+  final List<RtState> dependencies;
 
   /// {@macro use_effect}
   UseEffect(this.callback, this.dependencies) {

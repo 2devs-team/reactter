@@ -1,6 +1,6 @@
 part of 'framework.dart';
 
-/// An abstract-class that provides the functionality of [ReactterState].
+/// An abstract-class that provides the functionality of [RtState].
 ///
 /// This is an example of how to create a custom hook:
 ///
@@ -37,8 +37,8 @@ part of 'framework.dart';
 /// > ```
 ///
 /// See also:
-/// * [ReactterState], adds state management features to [ReactterHook].
-abstract class ReactterHook extends Hook implements ReactterState {
+/// * [RtState], adds state management features to [ReactterHook].
+abstract class ReactterHook extends Hook implements RtState {
   @override
   @internal
   DependencyInjection get dependencyInjection => Rt;

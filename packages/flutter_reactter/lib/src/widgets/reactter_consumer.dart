@@ -5,7 +5,7 @@ part of '../widgets.dart';
 /// from the closest ancestor [ReactterProvider] and passes the instance
 /// to [builder].
 ///
-/// Also, listens for dependency changes or a [ReactterState] list
+/// Also, listens for dependency changes or a [RtState] list
 /// to rebuild the widget tree.
 ///
 /// [ReactterConsumer] has same functionality as [ReactterProvider.contextOf].
@@ -50,7 +50,7 @@ part of '../widgets.dart';
 ///
 /// See also:
 ///
-/// * [ReactterState], a state in reactter.
+/// * [RtState], a state in reactter.
 /// * [ReactterProvider], a widget that provides a [T] dependency through Widget.
 /// tree.
 ///{@endtemplate}

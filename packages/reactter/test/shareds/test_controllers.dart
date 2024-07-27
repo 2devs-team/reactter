@@ -75,7 +75,7 @@ TestStore _reducer(TestStore state, ReactterAction action) {
   }
 }
 
-class TestController extends ReactterState {
+class TestController extends RtState {
   final signalString = Signal("initial");
   final stateBool = UseState(false);
   final stateString = UseState("initial");
@@ -141,7 +141,7 @@ class TestLifecycleController extends LifecycleObserver {
   int onDidUpdateCalledCount = 0;
   int onWillUnmountCalledCount = 0;
   int onDidUnmountCalledCount = 0;
-  ReactterState? lastState;
+  RtState? lastState;
 
   @override
   void onCreated() {
@@ -162,14 +162,14 @@ class TestLifecycleController extends LifecycleObserver {
   }
 
   @override
-  void onWillUpdate(ReactterState? state) {
+  void onWillUpdate(RtState? state) {
     onWillUpdateCalledCount++;
     lastState = state;
     super.onWillUpdate(state);
   }
 
   @override
-  void onDidUpdate(ReactterState? state) {
+  void onDidUpdate(RtState? state) {
     onDidUpdateCalledCount++;
     lastState = state;
     super.onDidUpdate(state);

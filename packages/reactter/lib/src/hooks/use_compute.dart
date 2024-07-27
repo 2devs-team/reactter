@@ -40,7 +40,7 @@ class UseCompute<T> extends ReactterHook {
 
   late T _valueComputed;
   final T Function() compute;
-  final List<ReactterState> dependencies;
+  final List<RtState> dependencies;
 
   T get value => _valueComputed;
 
