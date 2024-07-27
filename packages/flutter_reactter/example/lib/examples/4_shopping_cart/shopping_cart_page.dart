@@ -12,8 +12,8 @@ class ShoppingCartPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return ReactterProviders(
       const [
-        ReactterProvider(ProductsController.new),
-        ReactterProvider(CartController.new),
+        RtProvider(ProductsController.new),
+        RtProvider(CartController.new),
       ],
       builder: (context, child) {
         return const ProductsView();

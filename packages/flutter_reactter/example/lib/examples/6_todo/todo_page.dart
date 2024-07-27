@@ -11,7 +11,7 @@ class TodoPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ReactterProvider(
+    return RtProvider(
       TodoController.new,
       builder: (context, todoController, _) {
         final size = MediaQuery.of(context).size;

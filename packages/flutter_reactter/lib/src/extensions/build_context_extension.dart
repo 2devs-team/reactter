@@ -10,7 +10,7 @@ extension ReactterBuildContextExtension on BuildContext {
   ///
   /// The [selector] callback has a two arguments, the first one is
   /// the dependency of [T] type which is obtained from the closest ancestor
-  /// of [ReactterProvider] and the second one is a [Select] function which
+  /// of [RtProvider] and the second one is a [Select] function which
   /// allows to wrapper any [RtState]s to listen.
   ///
   /// ```dart
@@ -53,7 +53,7 @@ extension ReactterBuildContextExtension on BuildContext {
     return ReactterSelector.contextOf(this, id: id, selector: selector);
   }
 
-  /// Gets the dependency of [T] type from the closest ancestor [ReactterProvider]
+  /// Gets the dependency of [T] type from the closest ancestor [RtProvider]
   /// and listens changes to the dependency or the states([RtState]) defined
   /// in first parameter([listenStates]) to trigger rebuild of the Widget tree.
   ///
@@ -74,10 +74,10 @@ extension ReactterBuildContextExtension on BuildContext {
   /// This method is equivalent to calling:
   ///
   /// ```dart
-  /// ReactterProvider.contextOf<T>(context, listenStates: listenStates);
+  /// RtProvider.contextOf<T>(context, listenStates: listenStates);
   /// ```
   T watch<T extends Object?>([ListenStates<T>? listenStates, String? id]) {
-    return ReactterProvider.contextOf<T>(
+    return RtProvider.contextOf<T>(
       this,
       listenStates: listenStates,
       id: id,
@@ -85,7 +85,7 @@ extension ReactterBuildContextExtension on BuildContext {
   }
 
   /// Gets the dependency of [T] type by [id] from the closest ancestor
-  /// of [ReactterProvider] and watchs changes to the dependency or
+  /// of [RtProvider] and watchs changes to the dependency or
   /// the states([RtState]) defined in first parameter([listenStates])
   /// to trigger rebuild of the Widget tree.
   ///
@@ -107,13 +107,13 @@ extension ReactterBuildContextExtension on BuildContext {
   /// This method is equivalent to calling:
   ///
   /// ```dart
-  /// ReactterProvider.contextOf<T>(context, id: id, listenStates: listenStates);
+  /// RtProvider.contextOf<T>(context, id: id, listenStates: listenStates);
   /// ```
   T watchId<T extends Object?>(
     String id, [
     ListenStates<T>? listenStates,
   ]) {
-    return ReactterProvider.contextOf<T>(
+    return RtProvider.contextOf<T>(
       this,
       id: id,
       listenStates: listenStates,
@@ -121,7 +121,7 @@ extension ReactterBuildContextExtension on BuildContext {
   }
 
   /// Gets the dependency of [T] type with/without [id]
-  /// from the closest ancestor [ReactterProvider].
+  /// from the closest ancestor [RtProvider].
   ///
   /// ```dart
   /// final appController = context.use<AppController>();
@@ -138,9 +138,9 @@ extension ReactterBuildContextExtension on BuildContext {
   /// This method is equivalent to calling:
   ///
   /// ```dart
-  /// ReactterProvider.contextOf<T>(context, id: id, listen: false);
+  /// RtProvider.contextOf<T>(context, id: id, listen: false);
   /// ```
   T use<T extends Object?>([String? id]) {
-    return ReactterProvider.contextOf<T>(this, id: id, listen: false);
+    return RtProvider.contextOf<T>(this, id: id, listen: false);
   }
 }

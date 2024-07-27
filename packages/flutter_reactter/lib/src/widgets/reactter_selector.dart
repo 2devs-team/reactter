@@ -11,7 +11,7 @@ part of '../widgets.dart';
 /// or by the dependency if the [selector] does not have any selected [RtState]s.
 ///
 /// The [selector] property has a two arguments, the first one is the instance
-/// of [T] dependency which is obtained from the closest ancestor [ReactterProvider].
+/// of [T] dependency which is obtained from the closest ancestor [RtProvider].
 /// and the second one is a [Select] function which allows to wrapper any
 /// [RtState]s to listen, and returns the value in each build. e.g:
 ///
@@ -80,15 +80,15 @@ part of '../widgets.dart';
 ///
 /// * [RtState], a state in reactter.
 /// * [RtConsumer], a widget that obtains an instance of [T] dependency
-/// from the closest ancestor [ReactterProvider].
-/// * [ReactterProvider], a widget that provides a [T] dependency through Widget.
+/// from the closest ancestor [RtProvider].
+/// * [RtProvider], a widget that provides a [T] dependency through Widget.
 /// {@endtemplate}
 ///
 
 class ReactterSelector<T extends Object?, V> extends StatelessWidget {
   /// This identifier can be used to differentiate
   /// between multiple dependencies of the same [T] type
-  /// in the widget tree when using [ReactterProvider].
+  /// in the widget tree when using [RtProvider].
   final String? id;
 
   /// Takes an [T] dependency and a [Select] function, and returns a
@@ -138,7 +138,7 @@ class ReactterSelector<T extends Object?, V> extends StatelessWidget {
   ///
   /// The [selector] callback has a two arguments, the first one is
   /// the instance of [T] dependency which is obtained from the closest ancestor
-  /// of [ReactterProvider] and the second one is a [Select] function which
+  /// of [RtProvider] and the second one is a [Select] function which
   /// allows to wrapper any [RtState]s to listen.
   ///
   /// If [T] is not defined and [ReactterScope] is not found,

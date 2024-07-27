@@ -107,7 +107,7 @@ class ProvideImpl<T extends Object?, I extends String?> extends ProviderBase<T>
     return instance;
   }
 
-  /// Returns the [ProviderElement] of the [ReactterProvider] that is
+  /// Returns the [ProviderElement] of the [RtProvider] that is
   /// closest to the [BuildContext] that was passed as arguments.
   static ProviderElement<T?>? getProviderInheritedElement<T extends Object?>(
     BuildContext context, [
@@ -275,7 +275,7 @@ class ProviderElement<T extends Object?> extends InheritedElement
 }
 
 /// {@template flutter_reactter.rt_dependency_not_found_exception}
-/// The error that will be thrown if [ReactterProvider.contextOf] fails
+/// The error that will be thrown if [RtProvider.contextOf] fails
 /// to find the dependency from ancestor of the [BuildContext] used.
 /// {@endtemplate}
 class RtDependencyNotFoundException implements Exception {
@@ -293,41 +293,41 @@ class RtDependencyNotFoundException implements Exception {
   @override
   String toString() {
     return '''
-Error: Could not find the correct `ReactterProvider<$valueType>` above this `$widgetType` Widget
+Error: Could not find the correct `RtProvider<$valueType>` above this `$widgetType` Widget
 
 This happens because you used a `BuildContext` that does not include the dependency of your choice.
 There are a few common scenarios:
 
-- You added a new `ReactterProvider` in your `main.dart` and perform a hot-restart.
+- You added a new `RtProvider` in your `main.dart` and perform a hot-restart.
 
 - The dependency you are trying to read is in a different route.
 
-  `ReactterProvider` is a "scoped". So if you insert of `ReactterProvider` inside a route, then
+  `RtProvider` is a "scoped". So if you insert of `RtProvider` inside a route, then
   other routes will not be able to access that dependency.
 
-- You used a `BuildContext` that is an ancestor of the `ReactterProvider` you are trying to read.
+- You used a `BuildContext` that is an ancestor of the `RtProvider` you are trying to read.
 
-  Make sure that `$widgetType` is under your `ReactterProvider<$valueType>`.
+  Make sure that `$widgetType` is under your `RtProvider<$valueType>`.
   This usually happens when you are creating an instance of the dependency and trying to read it immediately.
 
   For example, instead of:
 
   ```
   Widget build(BuildContext context) {
-    return ReactterProvider(
+    return RtProvider(
       () => AppController(),
       // Will throw a `RtDependencyNotFoundException`,
-      // because `context` is out of `ReactterProvider`'s scope.
+      // because `context` is out of `RtProvider`'s scope.
       child: Text(context.watch<AppController>().state.value),
     ),
   }
   ```
 
-  Try to use `builder` propery of `ReactterProvider` to access the dependency inmedately as it created, like so:
+  Try to use `builder` propery of `RtProvider` to access the dependency inmedately as it created, like so:
 
   ```
   Widget build(BuildContext context) {
-    return ReactterProvider(
+    return RtProvider(
       () => AppController(),
       // we use `builder` to obtain a new `BuildContext` that has access to the provider
       builder: (context, appController, child) {

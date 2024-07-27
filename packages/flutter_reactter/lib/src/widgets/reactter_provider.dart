@@ -2,7 +2,7 @@
 
 part of '../widgets.dart';
 
-/// {@template reactter_provider}
+/// {@template flutter_reactter.rt_provider}
 /// A Widget that serves as a conduit for injecting a dependency of [T] type
 /// into the widget tree. e.g.:
 ///
@@ -11,7 +11,7 @@ part of '../widgets.dart';
 ///   ...
 ///   @override
 ///   Widget build(context) {
-///     return ReactterProvider<MyController>(
+///     return RtProvider<MyController>(
 ///       () => MyController(),
 ///       builder: (context, myController, child) {
 ///         return OtherWidget();
@@ -45,7 +45,7 @@ part of '../widgets.dart';
 /// ```
 ///
 /// > **NOTE:**
-/// > [ReactterProvider] is a "scoped". This mean that [ReactterProvider]
+/// > [RtProvider] is a "scoped". This mean that [RtProvider]
 /// exposes the instance of [T] dependency to second parameter([InstanceChildBuilder])
 /// through the [BuildContext] in the widget subtree:
 /// >
@@ -60,7 +60,7 @@ part of '../widgets.dart';
 ///
 /// ```dart
 /// ...
-/// ReactterProvider<MyController>(
+/// RtProvider<MyController>(
 ///   () => MyController(),
 ///   id: 'uniqueId,
 ///   builder: (context, myController, child) {
@@ -77,7 +77,7 @@ part of '../widgets.dart';
 /// into your build:
 ///
 /// ```dart
-/// ReactterProvider<MyController>(
+/// RtProvider<MyController>(
 ///   () => MyController(),
 ///   child: Text("This widget build only once"),
 ///   builder: (context, _, __) {
@@ -99,12 +99,12 @@ part of '../widgets.dart';
 /// > The [init] property is `false` by default. This means that the instance
 /// will be created in the mounting.
 ///
-/// Use [ReactterProvider.lazy] contructor for creating a lazy instance of [T] dependency.
+/// Use [RtProvider.lazy] contructor for creating a lazy instance of [T] dependency.
 /// This is particularly useful for optimizing performance
 /// by lazy-loading instance only when it is needed. e.g.:
 ///
 /// ```dart
-/// ReactterProvider.lazy(
+/// RtProvider.lazy(
 ///   () => MyController(),
 ///   child: Text('Do Something'),
 ///   builder: (context, child) {
@@ -121,19 +121,19 @@ part of '../widgets.dart';
 ///
 /// See also:
 ///
-/// * [ReactterProviders], a widget that allows to use multiple [ReactterProvider].
+/// * [ReactterProviders], a widget that allows to use multiple [RtProvider].
 /// {@endtemplate}
-class ReactterProvider<T extends Object?> extends ProviderBase<T>
+class RtProvider<T extends Object?> extends ProviderBase<T>
     implements ProviderWrapper, ProviderRef {
   /// Creates an instance of [T] dependency and provides it to tree widget.
-  const ReactterProvider(
+  const RtProvider(
     InstanceBuilder<T> instanceBuilder, {
     Key? key,
     String? id,
     DependencyMode mode = DependencyMode.builder,
     @Deprecated(
       'This feature not working anymore. It was deprecated after v7.2.0. '
-      'Use `ReactterProvider.init` instead.',
+      'Use `RtProvider.init` instead.',
     )
     bool init = false,
     Widget? child,
@@ -148,7 +148,7 @@ class ReactterProvider<T extends Object?> extends ProviderBase<T>
           builder: builder,
         );
 
-  ReactterProvider.init(
+  RtProvider.init(
     InstanceBuilder<T> instanceBuilder, {
     Key? key,
     String? id,
@@ -173,7 +173,7 @@ class ReactterProvider<T extends Object?> extends ProviderBase<T>
   }
 
   /// Creates a lazy instance of [T] dependency and provides it to tree widget.
-  const ReactterProvider.lazy(
+  const RtProvider.lazy(
     InstanceBuilder<T> instanceBuilder, {
     Key? key,
     String? id,
@@ -223,8 +223,7 @@ class ReactterProvider<T extends Object?> extends ProviderBase<T>
   }
 
   @override
-  ReactterProviderElement<T> createElement() =>
-      ReactterProviderElement<T>(this);
+  RtProviderElement<T> createElement() => RtProviderElement<T>(this);
 
   /// Returns an instance of [T] dependency
   /// and sets the [BuildContext] to listen for when it should be re-rendered.
@@ -242,15 +241,15 @@ class ReactterProvider<T extends Object?> extends ProviderBase<T>
       );
 }
 
-class ReactterProviderElement<T extends Object?> extends ComponentElement
-    with WrapperElementMixin<ReactterProvider<T>> {
+class RtProviderElement<T extends Object?> extends ComponentElement
+    with WrapperElementMixin<RtProvider<T>> {
   bool get isRoot {
     return Rt.getHashCodeRefAt<T>(0, widget.id) == _widget.hashCode;
   }
 
-  final ReactterProvider<T> _widget;
+  final RtProvider<T> _widget;
 
-  ReactterProviderElement(ReactterProvider<T> widget)
+  RtProviderElement(RtProvider<T> widget)
       : _widget = widget,
         super(widget);
 
@@ -281,3 +280,7 @@ class ReactterProviderElement<T extends Object?> extends ComponentElement
     );
   }
 }
+
+/// {@macro flutter_reactter.rt_provider}
+@Deprecated('Use `RtProvider` instead')
+typedef ReactterProvider<T extends Object> = RtProvider<T>;

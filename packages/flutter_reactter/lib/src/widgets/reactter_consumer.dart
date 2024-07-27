@@ -2,13 +2,13 @@ part of '../widgets.dart';
 
 /// {@template flutter_reactter.rt_consumer}
 /// A [StatelessWidget] that allows to obtain the instance of the [T] dependency
-/// from the closest ancestor [ReactterProvider] and passes the instance
+/// from the closest ancestor [RtProvider] and passes the instance
 /// to [builder].
 ///
 /// Also, listens for dependency changes or a [RtState] list
 /// to rebuild the widget tree.
 ///
-/// [RtConsumer] has same functionality as [ReactterProvider.contextOf].
+/// [RtConsumer] has same functionality as [RtProvider.contextOf].
 ///
 /// Use [id] property to identify the [T] dependency.
 ///
@@ -51,7 +51,7 @@ part of '../widgets.dart';
 /// See also:
 ///
 /// * [RtState], a state in reactter.
-/// * [ReactterProvider], a widget that provides a [T] dependency through Widget.
+/// * [RtProvider], a widget that provides a [T] dependency through Widget.
 /// tree.
 ///{@endtemplate}
 class RtConsumer<T extends Object?> extends StatelessWidget {
@@ -67,7 +67,7 @@ class RtConsumer<T extends Object?> extends StatelessWidget {
 
   /// This identifier can be used to differentiate
   /// between multiple instances of the same type [T]
-  /// in the widget tree when using [ReactterProvider].
+  /// in the widget tree when using [RtProvider].
   final String? id;
 
   /// Watchs all states to re-build [builder] method.
@@ -95,7 +95,7 @@ class RtConsumer<T extends Object?> extends StatelessWidget {
 
     return builder(
       context,
-      ReactterProvider.contextOf<T>(
+      RtProvider.contextOf<T>(
         context,
         id: id,
         listen: listenAll || listenStates != null,

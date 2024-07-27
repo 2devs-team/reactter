@@ -67,7 +67,7 @@ void main() {
 
           await tester.pumpWidget(
             TestBuilder(
-              child: ReactterProviderBuilder(
+              child: RtProviderBuilder(
                 builder: (_, __, ___) {
                   return RtConsumer<TestController>(
                     listenAll: true,
@@ -101,7 +101,7 @@ void main() {
 
           await tester.pumpWidget(
             TestBuilder(
-              child: ReactterProviderBuilder(
+              child: RtProviderBuilder(
                 builder: (_, __, ___) {
                   return RtConsumer<TestController>(
                     listenStates: (inst) => [inst.stateInt],

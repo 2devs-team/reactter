@@ -1,11 +1,11 @@
 part of '../widgets.dart';
 
-/// Abstract class to implementing a wrapper widget for [ReactterProvider]
+/// Abstract class to implementing a wrapper widget for [RtProvider]
 @internal
 abstract class ProviderWrapper implements WrapperWidget {}
 
 /// {@template reactter_providers}
-/// A [StatelessWidget] that allows to use multiple [ReactterProvider] as nested way.
+/// A [StatelessWidget] that allows to use multiple [RtProvider] as nested way.
 ///
 /// ```dart
 /// ReactterProviders(
@@ -55,7 +55,7 @@ abstract class ProviderWrapper implements WrapperWidget {}
 ///
 /// See also:
 ///
-/// * [ReactterProvider], a widget that provides a [T] dependency to widget tree.
+/// * [RtProvider], a widget that provides a [T] dependency to widget tree.
 /// {@endtemplate}
 class ReactterProviders extends StatelessWidget implements ProviderWrapper {
   /// {@macro reactter_providers}

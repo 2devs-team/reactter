@@ -13,10 +13,10 @@ typedef SelectorAspect<T> = bool Function(InheritedElement inheritedElement);
 /// associated with the dependency.
 typedef ListenStates<T> = List<RtState> Function(T instance);
 
-/// Identifies a [ReactterProvider] with id.
+/// Identifies a [RtProvider] with id.
 typedef WithId = String;
 
-/// Identifies a [ReactterProvider] without id.
+/// Identifies a [RtProvider] without id.
 typedef WithoutId = Null;
 
 /// This function type can be used to watch a state.

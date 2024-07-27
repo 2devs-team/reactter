@@ -36,7 +36,7 @@ void main() {
 
       await tester.pumpWidget(
         TestBuilder(
-          child: ReactterProviderBuilder(
+          child: RtProviderBuilder(
             builder: (context, _, __) {
               instanceObtained = context.use<TestController>();
               final testController = context.use<TestController?>();
@@ -85,7 +85,7 @@ void main() {
 
       await tester.pumpWidget(
         TestBuilder(
-          child: ReactterProviderBuilder(
+          child: RtProviderBuilder(
             builder: (context, _, __) {
               instanceObtained = context.watch<TestController>();
 
@@ -112,7 +112,7 @@ void main() {
 
       await tester.pumpWidget(
         TestBuilder(
-          child: ReactterProviderBuilder(
+          child: RtProviderBuilder(
             builder: (context, _, __) {
               instanceObtained = context.watch<TestController>(
                 (inst) => [inst.stateInt],

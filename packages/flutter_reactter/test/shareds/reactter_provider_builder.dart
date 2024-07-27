@@ -3,11 +3,11 @@ import 'package:flutter_reactter/flutter_reactter.dart';
 
 import 'test_controller.dart';
 
-class ReactterProviderBuilder extends StatelessWidget {
+class RtProviderBuilder extends StatelessWidget {
   final InstanceChildBuilder<TestController> builder;
   final String? id;
 
-  const ReactterProviderBuilder({
+  const RtProviderBuilder({
     Key? key,
     this.id,
     required this.builder,
@@ -15,7 +15,7 @@ class ReactterProviderBuilder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ReactterProvider(
+    return RtProvider(
       () {
         final inst = TestController();
         if (id != null) {

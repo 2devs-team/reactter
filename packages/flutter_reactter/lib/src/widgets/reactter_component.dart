@@ -1,7 +1,7 @@
 part of '../widgets.dart';
 
 /// {@template flutter_reactter.rt_component}
-/// A abstract [StatelessWidget] class that provides [ReactterProvider] features,
+/// A abstract [StatelessWidget] class that provides [RtProvider] features,
 /// whose dependency of [T] type defined is exposing trough [render] method.
 ///
 /// ```dart
@@ -70,7 +70,7 @@ part of '../widgets.dart';
 ///
 /// See also:
 ///
-/// * [ReactterProvider], a [StatelessWidget] that provides an [T] dependency
+/// * [RtProvider], a [StatelessWidget] that provides an [T] dependency
 /// to widget tree that can be access through the [BuildContext].
 /// {@endtemplate}
 abstract class RtComponent<T extends Object> extends StatelessWidget {
@@ -109,7 +109,7 @@ abstract class RtComponent<T extends Object> extends StatelessWidget {
       return render(context, _getInstance(context));
     }
 
-    return ReactterProvider<T>(
+    return RtProvider<T>(
       builder!,
       id: id,
       builder: (context, instance, _) => render(context, _getInstance(context)),

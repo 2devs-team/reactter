@@ -22,10 +22,10 @@ class _ReactterProvidersBuilderState extends State<ReactterProvidersBuilder> {
     return ReactterScope(
       child: ReactterProviders(
         [
-          ReactterProvider.init(
+          RtProvider.init(
             () => TestController(),
           ),
-          ReactterProvider(
+          RtProvider(
             () {
               final inst = TestController();
               inst.stateString.value = "from uniqueId";

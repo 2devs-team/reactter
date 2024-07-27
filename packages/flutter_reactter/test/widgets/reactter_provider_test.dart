@@ -7,13 +7,13 @@ import '../shareds/test_builder.dart';
 import '../shareds/test_controller.dart';
 
 void main() {
-  group("ReactterProvider", () {
+  group("RtProvider", () {
     testWidgets("should get instance from context", (tester) async {
       late TestController instanceObtained;
 
       await tester.pumpWidget(
         TestBuilder(
-          child: ReactterProviderBuilder(
+          child: RtProviderBuilder(
             builder: (context, _, __) {
               instanceObtained = context.use<TestController>();
 
@@ -36,7 +36,7 @@ void main() {
 
       await tester.pumpWidget(
         TestBuilder(
-          child: ReactterProviderBuilder(
+          child: RtProviderBuilder(
             builder: (context, _, __) {
               instanceObtained = context.use<TestController?>();
 
@@ -60,7 +60,7 @@ void main() {
 
       await tester.pumpWidget(
         TestBuilder(
-          child: ReactterProviderBuilder(
+          child: RtProviderBuilder(
             id: "uniqueId",
             builder: (context, _, __) {
               instanceObtained = context.use<TestController>("uniqueId");
@@ -83,7 +83,7 @@ void main() {
 
       await tester.pumpWidget(
         TestBuilder(
-          child: ReactterProviderBuilder(
+          child: RtProviderBuilder(
             builder: (context, _, __) {
               instanceObtained = context.watch<TestController>(
                 (inst) => [inst.stateString, inst.stateBool],
@@ -121,7 +121,7 @@ void main() {
 
       await tester.pumpWidget(
         TestBuilder(
-          child: ReactterProviderBuilder(
+          child: RtProviderBuilder(
             id: "uniqueId",
             builder: (context, _, __) {
               instanceObtained = context.watchId<TestController>(
@@ -159,11 +159,11 @@ void main() {
         TestBuilder(
           child: Column(
             children: [
-              ReactterProvider(
+              RtProvider(
                 () => TestController(),
                 child: const Text("child"),
               ),
-              ReactterProvider(
+              RtProvider(
                 () => TestController(),
                 child: const Text("child2"),
                 builder: (_, context, child) {
@@ -190,7 +190,7 @@ void main() {
 
       await tester.pumpWidget(
         TestBuilder(
-          child: ReactterProvider.lazy(
+          child: RtProvider.lazy(
             () => TestController(),
             builder: (context, child) {
               expect(
@@ -236,7 +236,7 @@ void main() {
 
       await tester.pumpWidget(
         TestBuilder(
-          child: ReactterProvider.lazy(
+          child: RtProvider.lazy(
             () => TestController(),
             id: "uniqueId",
             builder: (context, child) {
@@ -284,11 +284,11 @@ void main() {
         TestBuilder(
           child: Column(
             children: [
-              ReactterProvider.lazy(
+              RtProvider.lazy(
                 () => TestController(),
                 child: const Text("child"),
               ),
-              ReactterProvider.lazy(
+              RtProvider.lazy(
                 () => TestController(),
                 child: const Text("child2"),
                 builder: (context, child) {
@@ -314,12 +314,12 @@ void main() {
         TestBuilder(
           child: Column(
             children: [
-              ReactterProvider.lazy(
+              RtProvider.lazy(
                 () => TestController(),
                 id: "uniqueId",
                 child: const Text("child"),
               ),
-              ReactterProvider.lazy(
+              RtProvider.lazy(
                 () => TestController(),
                 id: "uniqueId",
                 child: const Text("child2"),

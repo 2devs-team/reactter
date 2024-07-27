@@ -8,7 +8,7 @@ class AnimationPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ReactterProvider(
+    return RtProvider(
       AnimationController.new,
       builder: (context, animationController, child) {
         return Scaffold(

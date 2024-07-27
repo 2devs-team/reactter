@@ -45,7 +45,7 @@ typedef UseInstance<T extends Object> = UseDependency<T>;
 /// - **Rt.singleton**:
 ///   {@macro builder}
 ///
-/// or created by [ReactterProvider] of [`flutter_reactter`](https://pub.dev/packages/flutter_reactter)
+/// or created by [RtProvider] of [`flutter_reactter`](https://pub.dev/packages/flutter_reactter)
 ///
 /// [UseDependency] providers the following constructors:
 ///

@@ -14,7 +14,7 @@ class ApiPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ReactterProvider(
+    return RtProvider(
       ApiController.new,
       builder: (context, apiController, child) {
         return Scaffold(
