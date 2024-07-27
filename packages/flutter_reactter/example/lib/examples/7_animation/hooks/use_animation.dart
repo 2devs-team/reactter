@@ -60,10 +60,10 @@ class AnimationOptions<T> {
   });
 }
 
-class UseAnimation<T> extends ReactterHook implements TickerProvider {
+class UseAnimation<T> extends RtHook implements TickerProvider {
   @override
   @protected
-  final $ = ReactterHook.$register;
+  final $ = RtHook.$register;
 
   late final uTween = Rt.lazyState(
     () => UseState(options.tween),

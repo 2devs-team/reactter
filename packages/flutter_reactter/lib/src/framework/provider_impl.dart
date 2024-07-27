@@ -95,7 +95,7 @@ class ProvideImpl<T extends Object?, I extends String?> extends ProviderBase<T>
     }
 
     /// A way to tell the [BuildContext] that it should be re-rendered
-    /// when the [ReactterInstance] or the [ReactterHook]s that are being listened
+    /// when the [ReactterInstance] or the [RtHook]s that are being listened
     /// change.
     context.dependOnInheritedElement(
       providerInheritedElement!,

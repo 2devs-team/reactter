@@ -1,7 +1,7 @@
 part of 'hooks.dart';
 
 /// {@template use_effect}
-/// A [ReactterHook] that manages `side-effect`.
+/// A [RtHook] that manages `side-effect`.
 ///
 ///
 /// The `side-effect` logic into the [callback] function is executed
@@ -127,10 +127,10 @@ part of 'hooks.dart';
 ///
 /// * [RtState], it receives as dependencies.
 /// {@endtemplate}
-class UseEffect extends ReactterHook {
+class UseEffect extends RtHook {
   @protected
   @override
-  final $ = ReactterHook.$register;
+  final $ = RtHook.$register;
 
   bool _isDispatched = false;
   Function? _cleanupCallback;

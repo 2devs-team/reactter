@@ -7,7 +7,7 @@ part of 'hooks.dart';
 typedef UseInstance<T extends Object> = UseDependency<T>;
 
 /// {@template use_dependency}
-/// A [ReactterHook] that allows to manages a dependency of [T] with/without [id].
+/// A [RtHook] that allows to manages a dependency of [T] with/without [id].
 ///
 /// ```dart
 /// final useAppController = UseDependency<AppController>();
@@ -75,10 +75,10 @@ typedef UseInstance<T extends Object> = UseDependency<T>;
 /// * [DependencyInjection], a dependency manager.
 /// * [UseEffect], a side-effect manager.
 /// {@endtemplate}
-class UseDependency<T extends Object> extends ReactterHook {
+class UseDependency<T extends Object> extends RtHook {
   @protected
   @override
-  final $ = ReactterHook.$register;
+  final $ = RtHook.$register;
 
   bool _isDisposed = false;
   T? _instance;

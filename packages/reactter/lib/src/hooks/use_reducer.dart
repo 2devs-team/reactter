@@ -31,7 +31,7 @@ part of 'hooks.dart';
 ///
 /// See also:
 ///
-/// * [UseReducer], a [ReactterHook] that manages state using [reducer] method.
+/// * [UseReducer], a [RtHook] that manages state using [reducer] method.
 /// {@endtemplate}
 class ReactterAction<T> {
   // Provides this action a name that is descriptive.
@@ -78,7 +78,7 @@ class ReactterAction<T> {
 ///
 /// * [ReactterAction], a representation of an event that describes something
 /// that happened in the application.
-/// * [UseReducer], a [ReactterHook] that manages state using [reducer] method.
+/// * [UseReducer], a [RtHook] that manages state using [reducer] method.
 abstract class ReactterActionCallable<T, P> extends ReactterAction<P> {
   const ReactterActionCallable({
     required String type,
@@ -98,7 +98,7 @@ abstract class ReactterActionCallable<T, P> extends ReactterAction<P> {
 }
 
 /// {@template use_reducer}
-/// A [ReactterHook] that manages state using [reducer] method.
+/// A [RtHook] that manages state using [reducer] method.
 ///
 /// [UseReducer] accepts a [reducer] method
 ///  and returns the current state paired with a [dispatch] method.
@@ -143,10 +143,10 @@ abstract class ReactterActionCallable<T, P> extends ReactterAction<P> {
 /// }
 /// ```
 /// {@endtemplate}
-class UseReducer<T> extends ReactterHook {
+class UseReducer<T> extends RtHook {
   @protected
   @override
-  final $ = ReactterHook.$register;
+  final $ = RtHook.$register;
 
   late final UseState<T> _state;
 

@@ -101,7 +101,7 @@ final examples = [
     [
       "Rt.lazyState",
       "ReactterConsumer",
-      "ReactterHook",
+      "RtHook",
       "ReactterProvider",
       "ReactterSelector",
       "UseEffect",
