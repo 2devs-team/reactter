@@ -43,7 +43,7 @@ final examples = [
       "BuilContext.use",
       "BuilContext.watchId",
       "Rt.lazyState",
-      "ReactterComponent",
+      "RtComponent",
       "ReactterProvider",
       "UseCompute",
       "UseEffect",
@@ -57,7 +57,7 @@ final examples = [
     "Add, remove product to cart and checkout",
     [
       "Rt.lazyState",
-      "ReactterComponent",
+      "RtComponent",
       "ReactterConsumer",
       "ReactterProvider",
       "ReactterProviders",
@@ -86,7 +86,7 @@ final examples = [
     [
       "Rt.lazyState",
       "RtActionCallable",
-      "ReactterComponent",
+      "RtComponent",
       "ReactterConsumer",
       "ReactterProvider",
       "ReactterSelector",

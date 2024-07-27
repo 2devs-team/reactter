@@ -7,7 +7,7 @@ import 'package:examples/examples/4_shopping_cart/widgets/cart_bottom.dart';
 import 'package:examples/examples/4_shopping_cart/widgets/cart_item_card.dart';
 import 'package:examples/examples/4_shopping_cart/controllers/cart_controller.dart';
 
-class CartView extends ReactterComponent<CartController> {
+class CartView extends RtComponent<CartController> {
   const CartView({
     Key? key,
     this.onCheckout,

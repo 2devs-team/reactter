@@ -7,14 +7,14 @@ import '../shareds/test_builder.dart';
 import '../shareds/test_controller.dart';
 
 void main() {
-  group("ReactterComponent", () {
+  group("RtComponent", () {
     late TestController instanceObtained;
 
     testWidgets("should render and get dependency", (tester) async {
       await tester.pumpWidget(
         TestBuilder(
           child: TestBuilder(
-            child: ReactterComponentTest(
+            child: RtComponentTest(
               getInstance: (inst) {
                 instanceObtained = inst;
               },
@@ -23,7 +23,7 @@ void main() {
         ),
       );
 
-      await _testReactterComponent(tester: tester, instance: instanceObtained);
+      await _testRtComponent(tester: tester, instance: instanceObtained);
     });
 
     testWidgets("should renders and get dependency by id", (tester) async {
@@ -33,7 +33,7 @@ void main() {
         TestBuilder(
           child: ReactterProvidersBuilder(
             builder: (_, __) {
-              return ReactterComponentTest(
+              return RtComponentTest(
                 id: "uniqueId",
                 getInstance: (inst) {
                   instanceObtained = inst;
@@ -44,14 +44,14 @@ void main() {
         ),
       );
 
-      await _testReactterComponent(
+      await _testRtComponent(
         tester: tester,
         instance: instanceObtained,
         byId: true,
       );
 
       final rectterCompontentElement =
-          tester.element(find.bySubtype<ReactterComponent>().first)
+          tester.element(find.bySubtype<RtComponent>().first)
             ..deactivate()
             ..activate();
 
@@ -69,7 +69,7 @@ void main() {
         TestBuilder(
           child: ReactterProvidersBuilder(
             builder: (_, __) {
-              return ReactterComponentTest(
+              return RtComponentTest(
                 withoutBuilder: true,
                 getInstance: (inst) {
                   instanceObtained = inst;
@@ -80,7 +80,7 @@ void main() {
         ),
       );
 
-      await _testReactterComponent(tester: tester, instance: instanceObtained);
+      await _testRtComponent(tester: tester, instance: instanceObtained);
     });
 
     testWidgets("should render and get dependency without listen states",
@@ -91,7 +91,7 @@ void main() {
         TestBuilder(
           child: ReactterProvidersBuilder(
             builder: (_, __) {
-              return ReactterComponentTest(
+              return RtComponentTest(
                 withoutListenStates: true,
                 getInstance: (inst) {
                   instanceObtained = inst;
@@ -102,7 +102,7 @@ void main() {
         ),
       );
 
-      await _testReactterComponent(
+      await _testRtComponent(
         tester: tester,
         instance: instanceObtained,
         withoutListenStates: true,
@@ -111,7 +111,7 @@ void main() {
   });
 }
 
-_testReactterComponent({
+_testRtComponent({
   required WidgetTester tester,
   required TestController instance,
   bool withoutListenStates = false,
@@ -144,8 +144,8 @@ _testReactterComponent({
   }
 }
 
-class ReactterComponentTest extends StatelessWidget {
-  const ReactterComponentTest({
+class RtComponentTest extends StatelessWidget {
+  const RtComponentTest({
     Key? key,
     this.id,
     required this.getInstance,
@@ -162,34 +162,34 @@ class ReactterComponentTest extends StatelessWidget {
   @override
   build(context) {
     if (withoutBuilder) {
-      return ReactterComponentTestWithoutBuilder(
+      return RtComponentTestWithoutBuilder(
         id: id,
         getInstance: getInstance,
       );
     }
 
     if (withoutListenStates) {
-      return ReactterComponentTestWithoutListenStates(
+      return RtComponentTestWithoutListenStates(
         id: id,
         getInstance: getInstance,
       );
     }
 
     if (id == null) {
-      return ReactterComponentTestWithoutId(
+      return RtComponentTestWithoutId(
         getInstance: getInstance,
       );
     }
 
-    return ReactterComponentTestAll(
+    return RtComponentTestAll(
       id: id,
       getInstance: getInstance,
     );
   }
 }
 
-class ReactterComponentTestWithoutId extends ReactterComponent<TestController> {
-  const ReactterComponentTestWithoutId({
+class RtComponentTestWithoutId extends RtComponent<TestController> {
+  const RtComponentTestWithoutId({
     Key? key,
     required this.getInstance,
   }) : super(key: key);
@@ -210,9 +210,8 @@ class ReactterComponentTestWithoutId extends ReactterComponent<TestController> {
   }
 }
 
-class ReactterComponentTestWithoutBuilder
-    extends ReactterComponent<TestController> {
-  const ReactterComponentTestWithoutBuilder({
+class RtComponentTestWithoutBuilder extends RtComponent<TestController> {
+  const RtComponentTestWithoutBuilder({
     Key? key,
     this.id,
     required this.getInstance,
@@ -234,9 +233,8 @@ class ReactterComponentTestWithoutBuilder
   }
 }
 
-class ReactterComponentTestWithoutListenStates
-    extends ReactterComponent<TestController> {
-  const ReactterComponentTestWithoutListenStates({
+class RtComponentTestWithoutListenStates extends RtComponent<TestController> {
+  const RtComponentTestWithoutListenStates({
     Key? key,
     this.id,
     required this.getInstance,
@@ -258,8 +256,8 @@ class ReactterComponentTestWithoutListenStates
   }
 }
 
-class ReactterComponentTestAll extends ReactterComponent<TestController> {
-  const ReactterComponentTestAll({
+class RtComponentTestAll extends RtComponent<TestController> {
+  const RtComponentTestAll({
     Key? key,
     this.id,
     required this.getInstance,
