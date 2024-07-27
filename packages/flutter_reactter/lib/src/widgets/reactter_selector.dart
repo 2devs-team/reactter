@@ -30,10 +30,10 @@ part of '../widgets.dart';
 /// ```
 ///
 /// It does not have the [T] tyoe, it is necessary
-/// to wrap the app with [ReactterScope] for it to work properly. e.g:
+/// to wrap the app with [RtScope] for it to work properly. e.g:
 ///
 /// ```dart
-/// ReactterScope(
+/// RtScope(
 ///   child: MyApp(),
 /// )
 ///
@@ -141,8 +141,8 @@ class ReactterSelector<T extends Object?, V> extends StatelessWidget {
   /// of [RtProvider] and the second one is a [Select] function which
   /// allows to wrapper any [RtState]s to listen.
   ///
-  /// If [T] is not defined and [ReactterScope] is not found,
-  /// will throw [ReactterScopeNotFoundException].
+  /// If [T] is not defined and [RtScope] is not found,
+  /// will throw [RtScopeNotFoundException].
   ///
   /// If [T] is non-nullable and the instance of [T] dependency obtained returned `null`,
   /// will throw [RtDependencyNotFoundException].
@@ -158,7 +158,7 @@ class ReactterSelector<T extends Object?, V> extends StatelessWidget {
     final shouldFindProvider = T != getType<Object?>();
     final inheritedElement = shouldFindProvider
         ? ProvideImpl.getProviderInheritedElement<T>(context, id)
-        : ReactterScope._getScopeInheritedElement(context);
+        : RtScope._getScopeInheritedElement(context);
     final instance = inheritedElement is ProviderElement<T?>
         ? inheritedElement.instance
         : null;

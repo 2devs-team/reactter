@@ -32,8 +32,8 @@ extension ReactterBuildContextExtension on BuildContext {
   /// );
   /// ```
   ///
-  /// If [T] is not defined and [ReactterScope] is not found,
-  /// will throw [ReactterScopeNotFoundException].
+  /// If [T] is not defined and [RtScope] is not found,
+  /// will throw [RtScopeNotFoundException].
   ///
   /// If [T] is non-nullable and the instance of [T] dependency obtained returned `null`,
   /// will throw [RtDependencyNotFoundException].

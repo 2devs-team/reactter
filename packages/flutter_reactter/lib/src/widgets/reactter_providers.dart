@@ -113,9 +113,9 @@ class RtMultiProviderElement extends StatelessElement
     }
 
     if (nestedHook != null) {
-      // We manually update ReactterNestedProviderElement instead of letter widgets do their thing
-      // because an item N may be constant but N+1 not. So, if we used widgets
-      // then N+1 wouldn't rebuild because N didn't change
+      /// We manually update [NestedElement] instead of letter widgets do their thing
+      /// because an item N may be constant but N+1 not. So, if we used widgets
+      /// then N+1 wouldn't rebuild because N didn't change
       for (final node in nodes) {
         node
           ..wrappedChild = nestedHook!.wrappedWidget

@@ -75,7 +75,7 @@ class ProvideImpl<T extends Object?, I extends String?> extends ProviderBase<T>
     bool listen = true,
   }) {
     if (T == getType<Object?>()) {
-      ReactterScope.contextOf(
+      RtScope.contextOf(
         context,
         id: id,
         listenStates: listenStates as ListenStates<Object?>?,

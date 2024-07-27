@@ -11,7 +11,7 @@ void main() {
         final signalList = Signal(<int>[]);
 
         await tester.pumpWidget(
-          ReactterScope(
+          RtScope(
             child: TestBuilder(
               child: ReactterSelector(
                 selector: (_, $) {

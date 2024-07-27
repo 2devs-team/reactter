@@ -269,7 +269,7 @@ void main() {
 
   group("context.select", () {
     testWidgets(
-      "should throw exception when ReactterScope not found",
+      "should throw exception when RtScope not found",
       (tester) async {
         await tester.pumpWidget(
           TestBuilder(
@@ -285,7 +285,7 @@ void main() {
 
         expect(
           tester.takeException(),
-          isInstanceOf<ReactterScopeNotFoundException>(),
+          isInstanceOf<RtScopeNotFoundException>(),
         );
         expect(find.text("Rendered"), findsNothing);
       },

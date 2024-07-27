@@ -18,7 +18,7 @@ class RtMultiProviderBuilder extends StatefulWidget {
 class _RtMultiProviderBuilderState extends State<RtMultiProviderBuilder> {
   @override
   Widget build(BuildContext context) {
-    return ReactterScope(
+    return RtScope(
       child: RtMultiProvider(
         [
           RtProvider.init(
