@@ -1,14 +1,21 @@
 part of 'framework.dart';
 
-@Deprecated(
-  'Use `ReactterDependency` instead. '
-  'This feature was deprecated after v7.1.0.',
-)
-typedef ReactterInstance<T> = ReactterDependency<T>;
-
+/// {@template reactter.rt_dependency}
 /// Represents dependency managed by Reactter's dependency injection.
 ///
 /// This class extends [DependencyRef] and provides an optional [id] parameter.
-class ReactterDependency<T> extends DependencyRef<T> {
-  const ReactterDependency([String? id]) : super(id);
+/// {@endtemplate}
+class RtDependency<T> extends DependencyRef<T> {
+  const RtDependency([String? id]) : super(id);
 }
+
+/// {@macro reactter.rt_dependency}
+@Deprecated(
+  'Use `RtDependency` instead.'
+  'This feature was deprecated after v7.1.0.',
+)
+typedef ReactterInstance<T> = RtDependency<T>;
+
+/// {@macro reactter.rt_dependency}
+@Deprecated('Use `RtDependency` instead.')
+typedef ReactterDependency<T> = RtDependency<T>;

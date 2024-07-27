@@ -131,20 +131,20 @@ class ProvideImpl<T extends Object?, I extends String?> extends ProviderBase<T>
     }
 
     if (providerInheritedElement?.instance == null && null is! T) {
-      throw ReactterDependencyNotFoundException(T, context.widget.runtimeType);
+      throw RtDependencyNotFoundException(T, context.widget.runtimeType);
     }
 
     return providerInheritedElement;
   }
 }
 
-/// [ProviderElement] is a class that manages the lifecycle of the [ReactterDependency] and
-/// provides the [ReactterDependency] to its descendants
+/// [ProviderElement] is a class that manages the lifecycle of the [RtDependency] and
+/// provides the [RtDependency] to its descendants
 @internal
 class ProviderElement<T extends Object?> extends InheritedElement
     with ScopeElementMixin {
   Widget? prevChild;
-  HashMap<ReactterDependency, ProviderElement<T>>? _inheritedElementsWithId;
+  HashMap<RtDependency, ProviderElement<T>>? _inheritedElementsWithId;
   bool _isLazyInstanceObtained = false;
 
   bool get isRoot {
@@ -247,11 +247,11 @@ class ProviderElement<T extends Object?> extends InheritedElement
     }
   }
 
-  /// Gets [ProviderElement] that it has the [ReactterDependency]'s id.
+  /// Gets [ProviderElement] that it has the [RtDependency]'s id.
   ProviderElement<T>? getInheritedElementOfExactId(
     String id,
   ) =>
-      _inheritedElementsWithId?[ReactterDependency<T?>(id)];
+      _inheritedElementsWithId?[RtDependency<T?>(id)];
 
   /// updates [inheritedElementsWithId]
   /// with all ancestor [ProviderElement] with id
@@ -263,23 +263,23 @@ class ProviderElement<T extends Object?> extends InheritedElement
         as ProviderElement<T>?;
 
     if (ancestorInheritedElement?._inheritedElementsWithId != null) {
-      _inheritedElementsWithId =
-          HashMap<ReactterDependency, ProviderElement<T>>.of(
+      _inheritedElementsWithId = HashMap<RtDependency, ProviderElement<T>>.of(
         ancestorInheritedElement!._inheritedElementsWithId!,
       );
     } else {
-      _inheritedElementsWithId =
-          HashMap<ReactterDependency, ProviderElement<T>>();
+      _inheritedElementsWithId = HashMap<RtDependency, ProviderElement<T>>();
     }
 
-    _inheritedElementsWithId![ReactterDependency<T?>(widget.id)] = this;
+    _inheritedElementsWithId![RtDependency<T?>(widget.id)] = this;
   }
 }
 
+/// {@template flutter_reactter.rt_dependency_not_found_exception}
 /// The error that will be thrown if [ReactterProvider.contextOf] fails
 /// to find the dependency from ancestor of the [BuildContext] used.
-class ReactterDependencyNotFoundException implements Exception {
-  const ReactterDependencyNotFoundException(
+/// {@endtemplate}
+class RtDependencyNotFoundException implements Exception {
+  const RtDependencyNotFoundException(
     this.valueType,
     this.widgetType,
   );
@@ -316,7 +316,7 @@ There are a few common scenarios:
   Widget build(BuildContext context) {
     return ReactterProvider(
       () => AppController(),
-      // Will throw a `ReactterDependencyNotFoundException`,
+      // Will throw a `RtDependencyNotFoundException`,
       // because `context` is out of `ReactterProvider`'s scope.
       child: Text(context.watch<AppController>().state.value),
     ),
@@ -344,3 +344,7 @@ https://stackoverflow.com/questions/tagged/flutter
 ''';
   }
 }
+
+/// {@macro flutter_reactter.provider_not_found_exception}
+@Deprecated('Use `RtDependencyNotFoundException` instead.')
+typedef ReactterDependencyNotFoundException = RtDependencyNotFoundException;

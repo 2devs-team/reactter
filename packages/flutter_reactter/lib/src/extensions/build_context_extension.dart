@@ -36,7 +36,7 @@ extension ReactterBuildContextExtension on BuildContext {
   /// will throw [ReactterScopeNotFoundException].
   ///
   /// If [T] is non-nullable and the instance of [T] dependency obtained returned `null`,
-  /// will throw [ReactterDependencyNotFoundException].
+  /// will throw [RtDependencyNotFoundException].
   ///
   /// If [T] is nullable and no matching dependency is found,
   /// [Selector] first argument will return `null`.

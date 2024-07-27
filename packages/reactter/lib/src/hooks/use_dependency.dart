@@ -214,15 +214,15 @@ class UseDependency<T extends Object> extends RtHook {
   }
 
   void _listen() {
-    Rt.on(ReactterDependency<T>(id), Lifecycle.created, _onInstance);
-    Rt.on(ReactterDependency<T>(id), Lifecycle.willMount, _onInstance);
-    Rt.on(ReactterDependency<T>(id), Lifecycle.deleted, _onInstance);
+    Rt.on(RtDependency<T>(id), Lifecycle.created, _onInstance);
+    Rt.on(RtDependency<T>(id), Lifecycle.willMount, _onInstance);
+    Rt.on(RtDependency<T>(id), Lifecycle.deleted, _onInstance);
   }
 
   void _unlisten() {
-    Rt.off(ReactterDependency<T>(id), Lifecycle.created, _onInstance);
-    Rt.off(ReactterDependency<T>(id), Lifecycle.willMount, _onInstance);
-    Rt.off(ReactterDependency<T>(id), Lifecycle.deleted, _onInstance);
+    Rt.off(RtDependency<T>(id), Lifecycle.created, _onInstance);
+    Rt.off(RtDependency<T>(id), Lifecycle.willMount, _onInstance);
+    Rt.off(RtDependency<T>(id), Lifecycle.deleted, _onInstance);
   }
 
   void _onInstance(inst, param) {

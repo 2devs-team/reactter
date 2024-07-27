@@ -21,7 +21,7 @@ void main() {
         expect(testLifecycleController, isA<TestLifecycleController>());
 
         Rt.emit(
-          ReactterDependency<TestLifecycleController>(),
+          RtDependency<TestLifecycleController>(),
           Lifecycle.willMount,
         );
 
@@ -35,7 +35,7 @@ void main() {
         expect(testLifecycleController.lastState, null);
 
         Rt.emit(
-          ReactterDependency<TestLifecycleController>(),
+          RtDependency<TestLifecycleController>(),
           Lifecycle.didMount,
         );
 
@@ -77,7 +77,7 @@ void main() {
         );
 
         Rt.emit(
-          ReactterDependency<TestLifecycleController>(),
+          RtDependency<TestLifecycleController>(),
           Lifecycle.willUnmount,
         );
 
@@ -94,7 +94,7 @@ void main() {
         );
 
         Rt.emit(
-          ReactterDependency<TestLifecycleController>(),
+          RtDependency<TestLifecycleController>(),
           Lifecycle.didUnmount,
         );
 

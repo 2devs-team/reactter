@@ -28,7 +28,7 @@ void main() {
 
           expect(
             tester.takeException(),
-            isInstanceOf<ReactterDependencyNotFoundException>(),
+            isInstanceOf<RtDependencyNotFoundException>(),
           );
           expect(find.text("Rendered"), findsNothing);
         },
