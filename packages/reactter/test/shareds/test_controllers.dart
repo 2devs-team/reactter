@@ -12,17 +12,17 @@ class TestStore {
   TestStore({this.count = 0});
 }
 
-class IncrementAction extends ReactterAction<int> {
+class IncrementAction extends RtAction<int> {
   IncrementAction({int quantity = 1})
       : super(type: 'INCREMENT', payload: quantity);
 }
 
-class DecrementAction extends ReactterAction<int> {
+class DecrementAction extends RtAction<int> {
   DecrementAction({int quantity = 1})
       : super(type: 'DECREMENT', payload: quantity);
 }
 
-class IncrementActionCallable extends ReactterActionCallable<TestStore, int> {
+class IncrementActionCallable extends RtActionCallable<TestStore, int> {
   IncrementActionCallable({int quantity = 1})
       : super(type: 'INCREMENT', payload: quantity);
 
@@ -32,7 +32,7 @@ class IncrementActionCallable extends ReactterActionCallable<TestStore, int> {
   }
 }
 
-class DecrementActionCallable extends ReactterActionCallable<TestStore, int> {
+class DecrementActionCallable extends RtActionCallable<TestStore, int> {
   DecrementActionCallable({int quantity = 1})
       : super(type: 'DECREMENT', payload: quantity);
 
@@ -56,8 +56,8 @@ Future<String> _resolveStateAsync([
   return argsString.isEmpty ? "resolved" : "resolved with args: $argsString";
 }
 
-TestStore _reducer(TestStore state, ReactterAction action) {
-  if (action is ReactterActionCallable) {
+TestStore _reducer(TestStore state, RtAction action) {
+  if (action is RtActionCallable) {
     return action(state);
   }
 

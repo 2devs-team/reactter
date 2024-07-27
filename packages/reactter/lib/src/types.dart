@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'args.dart';
 import 'core/core.dart' show LogLevel;
-import 'hooks/hooks.dart' show ReactterAction;
+import 'hooks/hooks.dart';
 import 'memo/memo.dart' show Memo;
 
 /// A function to generate the instance of [T] dependency.
@@ -25,7 +25,7 @@ typedef WhenErrorReturn<R> = R Function(Object? value);
 typedef CallbackEvent<T extends Object?, P> = Function(T? inst, P param);
 
 /// to represent a reducer method
-typedef Reducer<T> = T Function(T state, ReactterAction action);
+typedef Reducer<T> = T Function(T state, RtAction action);
 
 /// to represent an async function without arguments
 typedef AsyncFunction<T> = FutureOr<T> Function();

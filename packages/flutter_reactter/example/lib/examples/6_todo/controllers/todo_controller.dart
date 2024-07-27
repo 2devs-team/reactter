@@ -8,10 +8,8 @@ import 'package:examples/examples/6_todo/actions/toggle_todo_action.dart';
 import 'package:examples/examples/6_todo/models/todo.dart';
 import 'package:examples/examples/6_todo/stores/todo_store.dart';
 
-TodoStore _reducer(TodoStore state, ReactterAction action) {
-  return action is ReactterActionCallable
-      ? action(state)
-      : UnimplementedError();
+TodoStore _reducer(TodoStore state, RtAction action) {
+  return action is RtActionCallable ? action(state) : UnimplementedError();
 }
 
 class TodoController {

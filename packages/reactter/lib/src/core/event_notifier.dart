@@ -126,7 +126,7 @@ class EventNotifier extends EventNotifierRef {
   /// assert, as in this example.
   ///
   /// ```dart
-  /// class MyNotifier with ReactterNotifier {
+  /// class MyNotifier with EventNotifier {
   ///   void doUpdate() {
   ///     assert(ReacterNotifier.debugAssertNotDisposed(this));
   ///     // ...
@@ -135,7 +135,7 @@ class EventNotifier extends EventNotifierRef {
   /// ```
   /// {@end-tool}
   // This is static and not an instance method because too many people try to
-  // implement ReactterNotifier instead of extending it (and so it is too breaking
+  // implement EventNotifier instead of extending it (and so it is too breaking
   // to add a method, especially for debug).
   // coverage:ignore-start
   static bool debugAssertNotDisposed(EventNotifier notifier) {
@@ -183,7 +183,7 @@ class EventNotifier extends EventNotifierRef {
   ///
   /// This method must not be called after [dispose] has been called.
   ///
-  /// {@template reactter.ReactterNotifier.addListener}
+  /// {@template reactter.EventNotifier.addListener}
   /// If a listener is added twice, and is removed once during an iteration
   /// (e.g. in response to a notification), it will still be called again. If,
   /// on the other hand, it is removed as many times as it was registered, then

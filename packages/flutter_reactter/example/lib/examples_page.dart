@@ -85,7 +85,7 @@ final examples = [
     "Add and remove to-do, mark and unmark to-do as done and filter to-do list",
     [
       "Rt.lazyState",
-      "ReactterActionCallable",
+      "RtActionCallable",
       "ReactterComponent",
       "ReactterConsumer",
       "ReactterProvider",

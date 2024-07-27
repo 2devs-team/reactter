@@ -8,6 +8,6 @@ abstract class Logger {
   bool isLogEnable = true;
 
   /// It's used as a callback function for logging purposes in
-  /// the `ReactterInterface` class.
+  /// the [RtInterface] class.
   LogWriterCallback get log;
 }
