@@ -27,7 +27,7 @@ class CartAction extends StatelessWidget {
               child: CircleAvatar(
                 backgroundColor: Colors.amber,
                 radius: 8,
-                child: ReactterSelector<CartController, int>(
+                child: RtSelector<CartController, int>(
                   selector: (inst, $) => $(inst.uCartItems).value.length,
                   builder: (_, cartController, count, __) {
                     return Text(

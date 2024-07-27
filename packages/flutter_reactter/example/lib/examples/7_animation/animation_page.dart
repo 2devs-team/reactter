@@ -23,7 +23,7 @@ class AnimationPage extends StatelessWidget {
               crossAxisAlignment: WrapCrossAlignment.center,
               direction: Axis.horizontal,
               children: [
-                ReactterSelector<AnimationController, bool>(
+                RtSelector<AnimationController, bool>(
                   selector: (inst, $) {
                     return inst.checkIfPlaying(
                       $(inst.uBorderRadiusAnimation.uControl).value,
@@ -50,7 +50,7 @@ class AnimationPage extends StatelessWidget {
                     );
                   },
                 ),
-                ReactterSelector<AnimationController, bool>(
+                RtSelector<AnimationController, bool>(
                   selector: (inst, $) {
                     return inst.checkIfPlaying(
                       $(inst.uSizeAnimation.uControl).value,
@@ -76,7 +76,7 @@ class AnimationPage extends StatelessWidget {
                     );
                   },
                 ),
-                ReactterSelector<AnimationController, bool>(
+                RtSelector<AnimationController, bool>(
                   selector: (inst, $) {
                     return inst.checkIfPlaying(
                       $(inst.uColorAnimation.uControl).value,
@@ -100,7 +100,7 @@ class AnimationPage extends StatelessWidget {
                     );
                   },
                 ),
-                ReactterSelector<AnimationController, bool>(
+                RtSelector<AnimationController, bool>(
                   selector: (inst, $) {
                     return [
                       $(inst.uSizeAnimation.uControl).value,

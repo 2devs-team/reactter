@@ -4,7 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import '../shareds/test_builder.dart';
 
 void main() {
-  group("ReactterSelector", () {
+  group("RtSelector", () {
     testWidgets(
       "should rebuild when detected value has changes",
       (tester) async {
@@ -13,7 +13,7 @@ void main() {
         await tester.pumpWidget(
           RtScope(
             child: TestBuilder(
-              child: ReactterSelector(
+              child: RtSelector(
                 selector: (_, $) {
                   return $(signalList)
                       .fold<int>(0, (prev, elem) => prev + elem);

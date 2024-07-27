@@ -34,7 +34,7 @@ class CalculatorActionButton extends StatelessWidget {
 
     if (isMathOperation) {
       return Expanded(
-        child: ReactterSelector<CalculatorController, bool>(
+        child: RtSelector<CalculatorController, bool>(
           selector: (inst, $) {
             return $(calculatorController.mathOperation).value == action;
           },

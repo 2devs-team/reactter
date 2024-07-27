@@ -24,7 +24,7 @@ class CartView extends RtComponent<CartController> {
       appBar: AppBar(
         title: const Text('Shopping Cart'),
       ),
-      body: ReactterSelector<CartController, int>(
+      body: RtSelector<CartController, int>(
         selector: (inst, $) => $(inst.uCartItems).value.length,
         builder: (_, __, itemCount, ____) {
           if (itemCount == 0) {
@@ -44,7 +44,7 @@ class CartView extends RtComponent<CartController> {
               horizontal: 4,
             ),
             itemBuilder: (context, index) {
-              return ReactterSelector<CartController, int>(
+              return RtSelector<CartController, int>(
                 selector: (inst, $) {
                   try {
                     return $(inst.uCartItems).value[index].quantity;

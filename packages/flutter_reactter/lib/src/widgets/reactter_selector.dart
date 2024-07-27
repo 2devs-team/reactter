@@ -1,11 +1,11 @@
 part of '../widgets.dart';
 
-/// {@template reactter_selector}
+/// {@template flutter_reactter.rt_selector}
 /// A [StatelessWidget] similar to [RtConsumer] but allowing to control
 /// the rebuilding of widget tree by selecting the [RtState]s,
 /// and a computed value.
 ///
-/// [ReactterSelector] determines if [builder] needs to be rebuild again
+/// [RtSelector] determines if [builder] needs to be rebuild again
 /// by comparing the previous and new result of [Selector] and returns it.
 /// This evaluation only occurs if one of the selected [RtState]s gets updated,
 /// or by the dependency if the [selector] does not have any selected [RtState]s.
@@ -16,7 +16,7 @@ part of '../widgets.dart';
 /// [RtState]s to listen, and returns the value in each build. e.g:
 ///
 /// ```dart
-/// ReactterSelector<MyController, double>(
+/// RtSelector<MyController, double>(
 ///   selector: (MyController inst, Select $) {
 ///     final num1 = $(inst.intState).value;
 ///     final num2 = $(inst.doubleState).value;
@@ -39,7 +39,7 @@ part of '../widgets.dart';
 ///
 /// // Now can use it without type like:
 ///
-/// ReactterSelector(
+/// RtSelector(
 ///   selector: (_, $) => $(myListState).value.length,
 ///   builder: (context, _, itemCount, child) {
 ///     return ListView.builder(
@@ -52,7 +52,7 @@ part of '../widgets.dart';
 /// )
 /// ```
 ///
-/// [ReactterSelector] has same functionality as [ReactterSelector.contextOf].
+/// [RtSelector] has same functionality as [RtSelector.contextOf].
 ///
 ///
 /// Use [id] property to identify the [T] dependency.
@@ -62,7 +62,7 @@ part of '../widgets.dart';
 /// into your build:
 ///
 ///```dart
-/// ReactterSelector<MyController, String>(
+/// RtSelector<MyController, String>(
 ///   selector: (inst, $) => $(inst.strState).value.trim(),
 ///   child: Text("This widget build only once"),
 ///   builder: (context inst, value, child) {
@@ -85,7 +85,7 @@ part of '../widgets.dart';
 /// {@endtemplate}
 ///
 
-class ReactterSelector<T extends Object?, V> extends StatelessWidget {
+class RtSelector<T extends Object?, V> extends StatelessWidget {
   /// This identifier can be used to differentiate
   /// between multiple dependencies of the same [T] type
   /// in the widget tree when using [RtProvider].
@@ -108,7 +108,7 @@ class ReactterSelector<T extends Object?, V> extends StatelessWidget {
   final InstanceValueChildBuilder<T, V> builder;
 
   /// {@macro reactter_selector}
-  const ReactterSelector({
+  const RtSelector({
     Key? key,
     this.id,
     required this.selector,
@@ -176,3 +176,7 @@ class ReactterSelector<T extends Object?, V> extends StatelessWidget {
     return dependency.value;
   }
 }
+
+/// {@macro flutter_reactter.rt_selector}
+@Deprecated('Use `RtSelector` instead.')
+typedef ReactterSelector<T extends Object?, V> = RtSelector<T, V>;

@@ -44,13 +44,13 @@ extension ReactterBuildContextExtension on BuildContext {
   /// This method is equivalent to calling:
   ///
   /// ```dart
-  /// ReactterSelector.contextOf<T>(context, selector, id);
+  /// RtSelector.contextOf<T>(context, selector, id);
   /// ```
   R select<T extends Object?, R>(
     Selector<T, R> selector, [
     String? id,
   ]) {
-    return ReactterSelector.contextOf(this, id: id, selector: selector);
+    return RtSelector.contextOf(this, id: id, selector: selector);
   }
 
   /// Gets the dependency of [T] type from the closest ancestor [RtProvider]
