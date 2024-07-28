@@ -14,3 +14,4 @@ part 'widgets/reactter_providers.dart';
 part 'widgets/reactter_scope.dart';
 part 'widgets/reactter_selector.dart';
 part 'widgets/reactter_watcher.dart';
+part 'widgets/rt_watch.dart';
