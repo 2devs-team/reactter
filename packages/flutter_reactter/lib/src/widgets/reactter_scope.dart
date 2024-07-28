@@ -20,7 +20,6 @@ class RtScope extends InheritedWidget {
   /// and sets the [BuildContext] to listen for when it should be re-rendered.
   static void contextOf(
     BuildContext context, {
-    String? id,
     ListenStates<void>? listenStates,
     bool listen = true,
   }) {
