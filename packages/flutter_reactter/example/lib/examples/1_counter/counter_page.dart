@@ -39,15 +39,13 @@ class CounterPage extends StatelessWidget {
                 color: Theme.of(context).highlightColor,
               ),
               child: FittedBox(
-                child: ReactterWatcher(
-                  builder: (_, __) {
-                    return Text(
-                      "$count",
-                      style: Theme.of(context).textTheme.displaySmall,
-                      textAlign: TextAlign.center,
-                    );
-                  },
-                ),
+                child: RtWatcher((context) {
+                  return Text(
+                    "$count",
+                    style: Theme.of(context).textTheme.displaySmall,
+                    textAlign: TextAlign.center,
+                  );
+                }),
               ),
             ),
             ElevatedButton(

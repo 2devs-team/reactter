@@ -1,6 +1,6 @@
 part of '../widgets.dart';
 
-/// {@template reactter_watcher}
+/// {@template flutter_reactter.rt_watcher}
 /// A [StatefulWidget] that listens for [Signal]s and re-build when any [Signal] is changed.
 ///
 /// For example:
@@ -10,32 +10,31 @@ part of '../widgets.dart';
 /// final toggle = Signal(false);
 ///
 /// class Example extends StatelessWidget {
-///   ...
 ///   Widget build(context) {
-///     return ReactterWatcher(
-///       builder: (context, child) {
-///         return Column(
+///     return RtWatcher((context) => Column(
 ///           children: [
 ///             Text("Count: $count"),
 ///             Text("Toggle is: $toggle"),
 ///           ],
-///         );
-///       },
+///        ),
 ///     );
 ///   }
 /// }
 /// ```
 ///
 /// Build the widget tree with the values of the [Signal]s contained in
-/// the [ReactterWatcher] [builder], and with each change of its values,
+/// the [RtWatcher], and with each change of its values,
 /// it will re-build the widget tree.
+///
+/// Use [RtWatcher.builder] to pass a [builder] method which has the render logic.
+/// It exposes [BuilderContext] and [child] widget as parameters.
 ///
 /// Use [child] property to pass a [Widget] which to be built once only.
 /// It will be sent through the [builder] callback, so you can incorporate it
 /// into your build:
 ///
 /// ```dart
-/// ReactterWatcher(
+/// RtWatcher.builder(
 ///   child: Row(
 ///     children: [
 ///       ElevatedButton(
@@ -53,7 +52,7 @@ part of '../widgets.dart';
 ///       children: [
 ///         Text("Count: $count"),
 ///         Text("Toggle is: $toggle"),
-///         child, // Row with 2 buttons
+///         if (child != null) child, // Row with 2 buttons
 ///       ],
 ///     );
 ///   },
@@ -64,13 +63,23 @@ part of '../widgets.dart';
 ///
 /// * [Signal], a reactive state of any type.
 /// {@endtemplate}
-class ReactterWatcher extends StatefulWidget {
-  /// {@macro reactter_watcher}
-  const ReactterWatcher({
+class RtWatcher extends StatefulWidget {
+  /// {@macro flutter_reactter.rt_watcher}
+  const RtWatcher(this.directBuilder, {Key? key})
+      : child = null,
+        builder = null,
+        super(key: null);
+
+  /// Method which has the render logic
+  /// Exposes [BuilderContext] and returns a widget.
+  final WidgetBuilder? directBuilder;
+
+  const RtWatcher.builder({
     Key? key,
     this.child,
-    this.builder,
-  }) : super(key: key);
+    required this.builder,
+  })  : directBuilder = null,
+        super(key: key);
 
   /// Provides a widget , which render one time.
   ///
@@ -84,13 +93,13 @@ class ReactterWatcher extends StatefulWidget {
   final TransitionBuilder? builder;
 
   @override
-  State<ReactterWatcher> createState() => _ReactterWatcherState();
+  State<RtWatcher> createState() => _RtWatcherState();
 }
 
-class _ReactterWatcherState extends State<ReactterWatcher> {
+class _RtWatcherState extends State<RtWatcher> {
   final Set<Signal> _signals = {};
 
-  static _ReactterWatcherState? _currentState;
+  static _RtWatcherState? _currentState;
 
   @override
   Widget build(BuildContext context) {
@@ -99,8 +108,9 @@ class _ReactterWatcherState extends State<ReactterWatcher> {
     _currentState = this;
     Rt.on(Signal, SignalEvent.onGetValue, _onGetValue);
 
-    final widgetBuit =
-        widget.builder?.call(context, widget.child) ?? widget.child!;
+    final widgetBuit = widget.directBuilder?.call(context) ??
+        widget.builder?.call(context, widget.child) ??
+        widget.child!;
 
     _currentState = prevState;
     Rt.off(Signal, SignalEvent.onGetValue, _onGetValue);
@@ -136,4 +146,19 @@ class _ReactterWatcherState extends State<ReactterWatcher> {
     }
     _signals.clear();
   }
+}
+
+/// {@template flutter_reactter.reactter_watcher}
+/// A [StatefulWidget] that listens for [Signal]s and re-build when any [Signal] is changed.
+/// It's a deprecated version of [RtWatcher].
+/// {@endtemplate}
+@Deprecated(
+  'Use `RtWatcher.builder` instead, or use `RtWatcher` directly if you don\'t need a child.',
+)
+class ReactterWatcher extends RtWatcher {
+  const ReactterWatcher({
+    Key? key,
+    required TransitionBuilder builder,
+    Widget? child,
+  }) : super.builder(key: key, builder: builder, child: child);
 }

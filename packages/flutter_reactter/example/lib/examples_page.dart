@@ -15,7 +15,7 @@ final examples = [
     "1. Counter",
     "Increase and decrease the counter",
     [
-      "ReactterWatcher",
+      "RtWatcher",
       "Signal",
     ],
     () => const CounterPage(),
@@ -30,7 +30,7 @@ final examples = [
       "RtConsumer",
       "RtProvider",
       "RtSelector",
-      "ReactterWatcher",
+      "RtWatcher",
       "Signal",
     ],
     () => const CalculatorPage(),

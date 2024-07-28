@@ -3,6 +3,7 @@ part of '../widgets.dart';
 /// {@template flutter_reactter.rt_scope}
 /// An [InheritedWidget] that provides a scope for managing state
 /// and re-rendering child widgets.
+/// {@endtemplate}
 class RtScope extends InheritedWidget {
   const RtScope({
     Key? key,

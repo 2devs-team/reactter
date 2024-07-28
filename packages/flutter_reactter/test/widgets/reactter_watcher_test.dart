@@ -5,7 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import '../shareds/test_builder.dart';
 
 void main() {
-  group("ReactterWatcher", () {
+  group("RtWatcher", () {
     testWidgets(
       "should rebuild when detected signals has changes",
       (tester) async {
@@ -13,9 +13,7 @@ void main() {
 
         await tester.pumpWidget(
           TestBuilder(
-            child: ReactterWatcher(
-              builder: (context, child) => Text("$signalString"),
-            ),
+            child: RtWatcher((context) => Text("$signalString")),
           ),
         );
 
