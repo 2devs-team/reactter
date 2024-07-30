@@ -73,6 +73,7 @@ final examples = [
     "Search user or repository and show info about it.",
     [
       "Memo",
+      "Rt.lazyState",
       "RtConsumer",
       "RtProvider",
       "UseAsyncState",

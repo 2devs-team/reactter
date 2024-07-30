@@ -1,16 +1,16 @@
 part of '../memo.dart';
 
-/// {@template temporary_cache_memo}
+/// {@template reactter.memo_temporary_cache_interceptor}
 /// It's a memoization interceptor that removes memoized values from the
 /// cache after a specified duration.
 /// {@endtemplate}
-class TemporaryCacheMemo<T, A> extends MemoInterceptor<T, A> {
+class MemoTemporaryCacheInterceptor<T, A> extends MemoInterceptor<T, A> {
   /// It's used to store the duration for which the memoized values
   /// should be kept in the cache before being removed.
   final Duration duration;
 
-  /// {@macro temporary_cache_memo}
-  const TemporaryCacheMemo(this.duration);
+  /// {@macro reactter.memo_temporary_cache_interceptor}
+  const MemoTemporaryCacheInterceptor(this.duration);
 
   @override
   void onValue(Memo<T, A> memo, A arg, T value, bool fromCache) {
@@ -19,3 +19,7 @@ class TemporaryCacheMemo<T, A> extends MemoInterceptor<T, A> {
     }
   }
 }
+
+/// {@macro reactter.memo_temporary_cache_interceptor}
+@Deprecated('Use `MemoTemporaryCacheInterceptor` instead.')
+typedef TemporaryCacheMemo<T, A> = MemoTemporaryCacheInterceptor<T, A>;

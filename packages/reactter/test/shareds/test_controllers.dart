@@ -122,7 +122,7 @@ class TestController extends RtState {
 
       return args?.arguments ?? [];
     },
-    AsyncMemoSafe(),
+    MemoSafeAsyncInterceptor(),
   );
 
   final inlineMemo = Memo.inline((Args? args) {

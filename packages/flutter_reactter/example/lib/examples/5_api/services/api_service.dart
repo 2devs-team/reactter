@@ -8,16 +8,6 @@ import 'package:examples/examples/5_api/models/user.dart';
 typedef NotFoundException = Exception;
 
 class ApiService {
-  Future<Object?> getEntity(String query) async {
-    final queryPath = query.split("/");
-
-    if (queryPath.length > 1) {
-      return await getRepository(queryPath[0], queryPath[1]);
-    }
-
-    return await getUser(query);
-  }
-
   Future<User> getUser(String query) async {
     final response =
         await http.get(Uri.parse('https://api.github.com/users/$query'));
