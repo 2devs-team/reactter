@@ -1,5 +1,60 @@
 # Reactter
 
+## 7.3.0
+
+### Breakings
+
+- **refactor(core, test):** Deprecate [`isRegistered`](https://pub.dev/documentation/reactter/7.2.0/reactter/ReactterInterface/isRegistered.html) method and replace it with [`isActive`](https://pub.dev/documentation/reactter/7.3.0/reactter/RtInterface/isActive.html) to use a right concept.
+  - Deprecated [`Rt.isRegistered`](https://pub.dev/documentation/reactter/7.2.0/reactter/ReactterInterface/isRegistered.html), use [`Rt.isActive`](https://pub.dev/documentation/reactter/7.3.0/reactter/RtInterface/isActive.html) instead.
+- **refactor:** Deprecate [`Obj`](https://pub.dev/documentation/reactter/7.2.0/reactter/Obj-class.html) class, and extension methods [`toSignal`](https://pub.dev/documentation/reactter/7.2.0/reactter/ObjToSignalExt/toSignal.html) and [`toObj`](https://pub.dev/documentation/reactter/7.2.0/reactter/SignalToObjExt/toObj.html).
+  - [`Obj`](https://pub.dev/documentation/reactter/7.2.0/reactter/Obj-class.html) class, and extension methods [`toSignal`](https://pub.dev/documentation/reactter/7.2.0/reactter/ObjToSignalExt/toSignal.html) and [`toObj`](https://pub.dev/documentation/reactter/7.2.0/reactter/SignalToObjExt/toObj.html) will be removed, consider removing them permanently.
+- **refactor:** Update references to use [`Rt`](https://pub.dev/documentation/reactter/7.3.0/reactter/Rt.html) instead of [`Reactter`](https://pub.dev/documentation/reactter/7.2.0/reactter/Reactter.html).
+  - Deprecate [`Reactter`](https://pub.dev/documentation/reactter/7.2.0/reactter/Reactter.html), use [`Rt`](https://pub.dev/documentation/reactter/7.3.0/reactter/Rt.html) instead.
+- **refactor:** Update references to use [`RtState`](https://pub.dev/documentation/reactter/7.3.0/reactter/RtState-class.html) instead of [`ReactterState`](https://pub.dev/documentation/reactter/7.2.0/reactter/ReactterState-class.html).
+  - Deprecate [`ReactterState`](https://pub.dev/documentation/reactter/7.2.0/reactter/ReactterState-class.html), use [`RtState`](https://pub.dev/documentation/reactter/7.3.0/reactter/RtState-class.html) instead.
+  - Deprecate [`ReactterStateImpl`](https://pub.dev/documentation/reactter/7.2.0/reactter/ReactterStateImpl-class.html), use [`RtStateImpl`](https://pub.dev/documentation/reactter/7.3.0/reactter/ReactterStateImpl-class.html) instead.
+- **refactor:** Update references to use [`RtHook`](https://pub.dev/documentation/reactter/7.3.0/reactter/RtHook-class.html) instead of [`ReactterHook`](https://pub.dev/documentation/reactter/7.2.0/reactter/ReactterHook-class.html).
+  - Deprecate [`ReactterHook`](https://pub.dev/documentation/reactter/7.2.0/reactter/ReactterHook-class.html), use [`RtHook`](https://pub.dev/documentation/reactter/7.3.0/reactter/RtHook-class.html) instead.
+- **refactor:** Update references to use [`RtDependency`](https://pub.dev/documentation/reactter/7.3.0/reactter/RtDependency-class.html) instead of [`ReactterDependency`](https://pub.dev/documentation/reactter/7.2.0/reactter/ReactterDependency-class.html).
+  - Deprecate [`ReactterDependency`](https://pub.dev/documentation/reactter/7.2.0/reactter/ReactterDependency-class.html), use [`RtDependency`](https://pub.dev/documentation/reactter/7.3.0/reactter/RtDependency-class.html) instead.
+  - Deprecate [`ReactterDependencyNotFoundException`](https://pub.dev/documentation/flutter_reactter/7.2.0/flutter_reactter/ReactterDependencyNotFoundException-class.html), use [`RtDependencyNotFoundException`](https://pub.dev/documentation/flutter_reactter/7.3.0/flutter_reactter/RtDependencyNotFoundException-class.html) instead.
+- **refactor:** Update references to use [`RtAction`](https://pub.dev/documentation/reactter/7.3.0/reactter/RtAction-class.html) instead of [`ReactterAction`](https://pub.dev/documentation/reactter/7.2.0/reactter/ReactterAction-class.html) and `RtActionCallable` instead of `ReactterActionCallable`.
+  - Deprecate [`ReactterAction`](https://pub.dev/documentation/reactter/7.2.0/reactter/ReactterAction-class.html), use [`RtAction`](https://pub.dev/documentation/reactter/7.3.0/reactter/RtAction-class.html) instead.
+  - Deprecate [`ReactterActionCallable`](https://pub.dev/documentation/reactter/7.2.0/reactter/ReactterActionCallable-class.html), use [`RtActionCallable`](https://pub.dev/documentation/reactter/7.3.0/reactter/RtActionCallable-class.html) instead.
+- **refactor:** Update memo interceptors to use more descriptive names.
+  - Deprecate [`MemoInterceptors`](https://pub.dev/documentation/reactter/7.2.0/reactter/MemoInterceptors-class.html), use [`MemoMultiInterceptor`](https://pub.dev/documentation/reactter/7.3.0/reactter/MemoMultiInterceptor-class.html) instead.
+  - Deprecate [`AsyncMemoSafe`](https://pub.dev/documentation/reactter/7.2.0/reactter/AsyncMemoSafe-class.html) , use [`MemoSafeAsyncInterceptor`](https://pub.dev/documentation/reactter/7.3.0/reactter/MemoSafeAsyncInterceptor-class.html) instead.
+  - Deprecate [`TemporaryCacheMemo`](https://pub.dev/documentation/reactter/7.2.0/reactter/TemporaryCacheMemo-class.html), use [`MemoTemporaryCacheInterceptor`](https://pub.dev/documentation/reactter/7.3.0/reactter/MemoTemporaryCacheInterceptor-class.html) instead.
+  - Deprecate [`MemoInterceptorWrapper`](https://pub.dev/documentation/reactter/7.2.0/reactter/MemoInterceptorWrapper-class.html), use [`MemoWrapperInterceptor`](https://pub.dev/documentation/reactter/7.3.0/reactter/MemoWrapperInterceptor-class.html) instead.
+- **refactor:** Update widget references to use [`RtSignalWatcher`](https://pub.dev/documentation/flutter_reactter/7.3.0/flutter_reactter/RtSignalWatcher-class.html) instead of [`ReactterWatcher`](https://pub.dev/documentation/flutter_reactter/7.2.0/flutter_reactter/ReactterWatcher-class.html).
+  - Deprecate [`ReactterWatcher`](https://pub.dev/documentation/flutter_reactter/7.2.0/flutter_reactter/ReactterWatcher-class.html), use [`RtSignalWatcher`](https://pub.dev/documentation/flutter_reactter/7.3.0/flutter_reactter/RtSignalWatcher-class.html) instead.
+- **refactor:** Update references to use [`RtSelector`](https://pub.dev/documentation/flutter_reactter/7.3.0/flutter_reactter/RtSelector-class.html) instead of [`ReactterSelector`](https://pub.dev/documentation/flutter_reactter/7.2.0/flutter_reactter/ReactterSelector-class.html).
+  - Deprecate [`ReactterSelector`](https://pub.dev/documentation/flutter_reactter/7.2.0/flutter_reactter/ReactterSelector-class.html), use [`RtSelector`](https://pub.dev/documentation/flutter_reactter/7.3.0/flutter_reactter/RtSelector-class.html) instead.
+- **refactor:** Update references to use [`RtScope`](https://pub.dev/documentation/flutter_reactter/7.3.0/flutter_reactter/RtScope-class.html) instead of [`ReactterScope`](https://pub.dev/documentation/flutter_reactter/7.2.0/flutter_reactter/ReactterScope-class.html).
+  - Deprecate [`ReactterScope`](https://pub.dev/documentation/flutter_reactter/7.2.0/flutter_reactter/ReactterScope-class.html), use [`RtScope`](https://pub.dev/documentation/flutter_reactter/7.3.0/flutter_reactter/RtScope-class.html) instead.
+  - Deprecate [`ReactterScopeNotFoundException`](https://pub.dev/documentation/flutter_reactter/7.2.0/flutter_reactter/ReactterScopeNotFoundException-class.html), use [`RtScopeNotFoundException`](https://pub.dev/documentation/flutter_reactter/7.3.0/flutter_reactter/RtScopeNotFoundException-class.html) instead.
+- **refactor:** Update references to use [`RtMultiProvider`](https://pub.dev/documentation/flutter_reactter/7.3.0/flutter_reactter/RtProviders-class.html) instead of [`ReactterProviders`](https://pub.dev/documentation/flutter_reactter/7.2.0/flutter_reactter/ReactterProviders-class.html).
+  - Deprecate [`ReactterProviders`](https://pub.dev/documentation/flutter_reactter/7.2.0/flutter_reactter/ReactterProviders-class.html), use [`RtMultiProvider`](https://pub.dev/documentation/flutter_reactter/7.3.0/flutter_reactter/RtProviders-class.html) instead.
+- **refactor:** Update references to use [`RtProvider`](https://pub.dev/documentation/flutter_reactter/7.3.0/flutter_reactter/RtProvider-class.html) instead of [`ReactterProvider`](https://pub.dev/documentation/flutter_reactter/7.2.0/flutter_reactter/ReactterProvider-class.html).
+  - Deprecated [`ReactterProvider`](https://pub.dev/documentation/flutter_reactter/7.2.0/flutter_reactter/ReactterProvider-class.html), use [`RtProvider`](https://pub.dev/documentation/flutter_reactter/7.3.0/flutter_reactter/RtProvider-class.html) instead.
+- **refactor:** Update references to use [`RtConsumer`](https://pub.dev/documentation/flutter_reactter/7.3.0/flutter_reactter/RtConsumer-class.html) instead of [`ReactterConsumer`](https://pub.dev/documentation/flutter_reactter/7.2.0/flutter_reactter/ReactterConsumer-class.html).
+  - Deprecate [`ReactterConsumer`](https://pub.dev/documentation/flutter_reactter/7.2.0/flutter_reactter/ReactterConsumer-class.html), use [`RtConsumer`](https://pub.dev/documentation/flutter_reactter/7.3.0/flutter_reactter/RtConsumer-class.html) instead.
+- **refactor:** Update references to use [`RtComponent`](https://pub.dev/documentation/flutter_reactter/7.3.0/flutter_reactter/RtComponent-class.html) instead of [`ReactterComponent`](https://pub.dev/documentation/flutter_reactter/7.2.0/flutter_reactter/ReactterComponent-class.html).
+  - Deprecate [`ReactterComponent`](https://pub.dev/documentation/flutter_reactter/7.2.0/flutter_reactter/ReactterComponent-class.html), use [`RtComponent`](https://pub.dev/documentation/flutter_reactter/7.3.0/flutter_reactter/RtComponent-class.html) instead.
+
+### Enhancements
+
+- **feat(extensions):** Add `id` parameter to [`watch`](https://pub.dev/documentation/flutter_reactter/7.3.0/flutter_reactter/ReactterBuildContextExtension/watch.html) method.
+- **feat(widgets):** Add the [`RtWatcher`](https://pub.dev/documentation/flutter_reactter/7.3.0/flutter_reactter/RtWatcher-class.html) widget. It's a experimental widget for watching state and rebuilding when the state watched changes.
+
+### Fixes
+
+- **refactor:** Remove unused `id` parameter in `ProvideImpl` and `RtScope.contextOf`.
+
+### Internal
+
+- **refactor:** Rename files and classes to use consistent naming convention.
+
 ## 7.2.0
 
 ### Breakings
