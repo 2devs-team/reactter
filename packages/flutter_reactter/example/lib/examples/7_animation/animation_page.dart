@@ -8,7 +8,7 @@ class AnimationPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ReactterProvider(
+    return RtProvider(
       AnimationController.new,
       builder: (context, animationController, child) {
         return Scaffold(
@@ -23,13 +23,13 @@ class AnimationPage extends StatelessWidget {
               crossAxisAlignment: WrapCrossAlignment.center,
               direction: Axis.horizontal,
               children: [
-                ReactterSelector<AnimationController, bool>(
+                RtSelector<AnimationController, bool>(
                   selector: (inst, $) {
                     return inst.checkIfPlaying(
                       $(inst.uBorderRadiusAnimation.uControl).value,
                     );
                   },
-                  child: ReactterConsumer<AnimationController>(
+                  child: RtConsumer<AnimationController>(
                     listenStates: (inst) => [inst.uBorderRadiusAnimation],
                     builder: (_, inst, ___) {
                       return Container(
@@ -50,13 +50,13 @@ class AnimationPage extends StatelessWidget {
                     );
                   },
                 ),
-                ReactterSelector<AnimationController, bool>(
+                RtSelector<AnimationController, bool>(
                   selector: (inst, $) {
                     return inst.checkIfPlaying(
                       $(inst.uSizeAnimation.uControl).value,
                     );
                   },
-                  child: ReactterConsumer<AnimationController>(
+                  child: RtConsumer<AnimationController>(
                     listenStates: (inst) => [inst.uSizeAnimation],
                     builder: (_, inst, ___) {
                       return Container(
@@ -76,13 +76,13 @@ class AnimationPage extends StatelessWidget {
                     );
                   },
                 ),
-                ReactterSelector<AnimationController, bool>(
+                RtSelector<AnimationController, bool>(
                   selector: (inst, $) {
                     return inst.checkIfPlaying(
                       $(inst.uColorAnimation.uControl).value,
                     );
                   },
-                  child: ReactterConsumer<AnimationController>(
+                  child: RtConsumer<AnimationController>(
                     listenStates: (inst) => [inst.uColorAnimation],
                     builder: (_, inst, ___) {
                       return Container(
@@ -100,7 +100,7 @@ class AnimationPage extends StatelessWidget {
                     );
                   },
                 ),
-                ReactterSelector<AnimationController, bool>(
+                RtSelector<AnimationController, bool>(
                   selector: (inst, $) {
                     return [
                       $(inst.uSizeAnimation.uControl).value,
@@ -108,7 +108,7 @@ class AnimationPage extends StatelessWidget {
                       $(inst.uColorAnimation.uControl).value,
                     ].every(inst.checkIfPlaying);
                   },
-                  child: ReactterConsumer<AnimationController>(
+                  child: RtConsumer<AnimationController>(
                     listenAll: true,
                     builder: (_, inst, ___) {
                       return Container(

@@ -5,12 +5,6 @@ part of 'core.dart';
 abstract class Hook with State implements StateBase {
   /// This variable is used to register [Hook]
   /// and attach the [StateBase] that are defined here.
-  ///
-  /// It must be defined as a final variable
-  /// and set with [Hook.$register].
-  /// Like so:
-  ///
-  /// `final $ = ReactterHookBase.$register;`
   @protected
   HookRegister get $;
 

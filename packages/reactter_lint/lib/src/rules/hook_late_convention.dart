@@ -16,8 +16,8 @@ class HookLateConvention extends DartLintRule {
     errorSeverity: ErrorSeverity.WARNING,
     problemMessage: "The '{0}' hook late must be attached an instance.",
     correctionMessage:
-        "Try removing 'late' keyword or wrapping the hook using 'Reactter.lazyState'.\n"
-        "Example: late final myHookLate = Reactter.lazyState(() => UseState(0), this);",
+        "Try removing 'late' keyword or wrapping the hook using 'Rt.lazyState'.\n"
+        "Example: late final myHookLate = Rt.lazyState(() => UseState(0), this);",
   );
 
   @override
@@ -105,14 +105,14 @@ class _HookLateFix extends DartFix {
           if (instanceCreationExpression == null) return;
 
           final changeBuilder = reporter.createChangeBuilder(
-            message: "Wrap with 'Reactter.lazyState'.",
+            message: "Wrap with 'Rt.lazyState'.",
             priority: 1,
           );
 
           changeBuilder.addDartFileEdit((builder) {
             builder.addSimpleReplacement(
               instanceCreationExpression.sourceRange,
-              "Reactter.lazyState(() => $instanceCreationExpression, this)",
+              "Rt.lazyState(() => $instanceCreationExpression, this)",
             );
           });
         } catch (e) {

@@ -1,5 +1,6 @@
 import 'package:fake_async/fake_async.dart';
 import 'package:reactter/reactter.dart';
+import 'package:reactter/src/memo/memo.dart';
 import 'package:test/test.dart';
 
 import 'shareds/test_controllers.dart';
@@ -107,7 +108,7 @@ void main() {
         (Args1 args) {
           return Future.error(args.arg1);
         },
-        AsyncMemoSafe(),
+        MemoSafeAsyncInterceptor(),
       );
       final arg = Args1(ArgumentError());
       final valueFuture = memo(arg);

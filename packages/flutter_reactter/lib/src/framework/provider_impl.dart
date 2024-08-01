@@ -75,9 +75,8 @@ class ProvideImpl<T extends Object?, I extends String?> extends ProviderBase<T>
     bool listen = true,
   }) {
     if (T == getType<Object?>()) {
-      ReactterScope.contextOf(
+      RtScope.contextOf(
         context,
-        id: id,
         listenStates: listenStates as ListenStates<Object?>?,
         listen: listen,
       );
@@ -95,7 +94,7 @@ class ProvideImpl<T extends Object?, I extends String?> extends ProviderBase<T>
     }
 
     /// A way to tell the [BuildContext] that it should be re-rendered
-    /// when the [ReactterInstance] or the [ReactterHook]s that are being listened
+    /// when the [ReactterInstance] or the [RtHook]s that are being listened
     /// change.
     context.dependOnInheritedElement(
       providerInheritedElement!,
@@ -107,7 +106,7 @@ class ProvideImpl<T extends Object?, I extends String?> extends ProviderBase<T>
     return instance;
   }
 
-  /// Returns the [ProviderElement] of the [ReactterProvider] that is
+  /// Returns the [ProviderElement] of the [RtProvider] that is
   /// closest to the [BuildContext] that was passed as arguments.
   static ProviderElement<T?>? getProviderInheritedElement<T extends Object?>(
     BuildContext context, [
@@ -131,24 +130,24 @@ class ProvideImpl<T extends Object?, I extends String?> extends ProviderBase<T>
     }
 
     if (providerInheritedElement?.instance == null && null is! T) {
-      throw ReactterDependencyNotFoundException(T, context.widget.runtimeType);
+      throw RtDependencyNotFoundException(T, context.widget.runtimeType);
     }
 
     return providerInheritedElement;
   }
 }
 
-/// [ProviderElement] is a class that manages the lifecycle of the [ReactterDependency] and
-/// provides the [ReactterDependency] to its descendants
+/// [ProviderElement] is a class that manages the lifecycle of the [RtDependency] and
+/// provides the [RtDependency] to its descendants
 @internal
 class ProviderElement<T extends Object?> extends InheritedElement
     with ScopeElementMixin {
   Widget? prevChild;
-  HashMap<ReactterDependency, ProviderElement<T>>? _inheritedElementsWithId;
+  HashMap<RtDependency, ProviderElement<T>>? _inheritedElementsWithId;
   bool _isLazyInstanceObtained = false;
 
   bool get isRoot {
-    return Reactter.getHashCodeRefAt<T>(0, widget.id) == widget.ref.hashCode;
+    return Rt.getHashCodeRefAt<T>(0, widget.id) == widget.ref.hashCode;
   }
 
   @override
@@ -158,14 +157,14 @@ class ProviderElement<T extends Object?> extends InheritedElement
 
   T? get instance {
     if (!_isLazyInstanceObtained && widget.isLazy) {
-      final instance = Reactter.get<T>(widget.id, widget.ref);
+      final instance = Rt.get<T>(widget.id, widget.ref);
 
       _isLazyInstanceObtained = instance != null;
 
       return instance;
     }
 
-    return Reactter.find<T>(widget.id);
+    return Rt.find<T>(widget.id);
   }
 
   /// Creates an element that uses the given widget as its configuration.
@@ -175,7 +174,7 @@ class ProviderElement<T extends Object?> extends InheritedElement
   }) : super(widget) {
     if (widget.init && !widget.isLazy) {
       // TODO: Remove this when the `init` property is removed
-      Reactter.create<T>(
+      Rt.create<T>(
         widget.instanceBuilder,
         id: widget.id,
         mode: widget.mode,
@@ -185,7 +184,7 @@ class ProviderElement<T extends Object?> extends InheritedElement
       return;
     }
 
-    Reactter.register<T>(
+    Rt.register<T>(
       widget.instanceBuilder,
       id: widget.id,
       mode: widget.mode,
@@ -195,19 +194,19 @@ class ProviderElement<T extends Object?> extends InheritedElement
   @override
   void mount(Element? parent, Object? newSlot) {
     if (!widget.init && !widget.isLazy) {
-      Reactter.get<T>(widget.id, widget.ref);
+      Rt.get<T>(widget.id, widget.ref);
     }
 
     _updateInheritedElementWithId(parent);
 
     if (isRoot) {
-      Reactter.emit(instance!, Lifecycle.willMount);
+      Rt.emit(instance!, Lifecycle.willMount);
     }
 
     super.mount(parent, newSlot);
 
     if (isRoot) {
-      Reactter.emit(instance!, Lifecycle.didMount);
+      Rt.emit(instance!, Lifecycle.didMount);
     }
   }
 
@@ -231,27 +230,27 @@ class ProviderElement<T extends Object?> extends InheritedElement
 
     try {
       if (isRoot) {
-        Reactter.emit(instance!, Lifecycle.willUnmount);
+        Rt.emit(instance!, Lifecycle.willUnmount);
       }
 
       return super.unmount();
     } finally {
       if (isRoot) {
-        Reactter.emit(instance!, Lifecycle.didUnmount);
+        Rt.emit(instance!, Lifecycle.didUnmount);
       }
 
-      Reactter.delete<T>(id, ref);
+      Rt.delete<T>(id, ref);
 
       _inheritedElementsWithId = null;
       prevChild = null;
     }
   }
 
-  /// Gets [ProviderElement] that it has the [ReactterDependency]'s id.
+  /// Gets [ProviderElement] that it has the [RtDependency]'s id.
   ProviderElement<T>? getInheritedElementOfExactId(
     String id,
   ) =>
-      _inheritedElementsWithId?[ReactterDependency<T?>(id)];
+      _inheritedElementsWithId?[RtDependency<T?>(id)];
 
   /// updates [inheritedElementsWithId]
   /// with all ancestor [ProviderElement] with id
@@ -263,23 +262,23 @@ class ProviderElement<T extends Object?> extends InheritedElement
         as ProviderElement<T>?;
 
     if (ancestorInheritedElement?._inheritedElementsWithId != null) {
-      _inheritedElementsWithId =
-          HashMap<ReactterDependency, ProviderElement<T>>.of(
+      _inheritedElementsWithId = HashMap<RtDependency, ProviderElement<T>>.of(
         ancestorInheritedElement!._inheritedElementsWithId!,
       );
     } else {
-      _inheritedElementsWithId =
-          HashMap<ReactterDependency, ProviderElement<T>>();
+      _inheritedElementsWithId = HashMap<RtDependency, ProviderElement<T>>();
     }
 
-    _inheritedElementsWithId![ReactterDependency<T?>(widget.id)] = this;
+    _inheritedElementsWithId![RtDependency<T?>(widget.id)] = this;
   }
 }
 
-/// The error that will be thrown if [ReactterProvider.contextOf] fails
+/// {@template flutter_reactter.rt_dependency_not_found_exception}
+/// The error that will be thrown if [RtProvider.contextOf] fails
 /// to find the dependency from ancestor of the [BuildContext] used.
-class ReactterDependencyNotFoundException implements Exception {
-  const ReactterDependencyNotFoundException(
+/// {@endtemplate}
+class RtDependencyNotFoundException implements Exception {
+  const RtDependencyNotFoundException(
     this.valueType,
     this.widgetType,
   );
@@ -293,41 +292,41 @@ class ReactterDependencyNotFoundException implements Exception {
   @override
   String toString() {
     return '''
-Error: Could not find the correct `ReactterProvider<$valueType>` above this `$widgetType` Widget
+Error: Could not find the correct `RtProvider<$valueType>` above this `$widgetType` Widget
 
 This happens because you used a `BuildContext` that does not include the dependency of your choice.
 There are a few common scenarios:
 
-- You added a new `ReactterProvider` in your `main.dart` and perform a hot-restart.
+- You added a new `RtProvider` in your `main.dart` and perform a hot-restart.
 
 - The dependency you are trying to read is in a different route.
 
-  `ReactterProvider` is a "scoped". So if you insert of `ReactterProvider` inside a route, then
+  `RtProvider` is a "scoped". So if you insert of `RtProvider` inside a route, then
   other routes will not be able to access that dependency.
 
-- You used a `BuildContext` that is an ancestor of the `ReactterProvider` you are trying to read.
+- You used a `BuildContext` that is an ancestor of the `RtProvider` you are trying to read.
 
-  Make sure that `$widgetType` is under your `ReactterProvider<$valueType>`.
+  Make sure that `$widgetType` is under your `RtProvider<$valueType>`.
   This usually happens when you are creating an instance of the dependency and trying to read it immediately.
 
   For example, instead of:
 
   ```
   Widget build(BuildContext context) {
-    return ReactterProvider(
+    return RtProvider(
       () => AppController(),
-      // Will throw a `ReactterDependencyNotFoundException`,
-      // because `context` is out of `ReactterProvider`'s scope.
+      // Will throw a `RtDependencyNotFoundException`,
+      // because `context` is out of `RtProvider`'s scope.
       child: Text(context.watch<AppController>().state.value),
     ),
   }
   ```
 
-  Try to use `builder` propery of `ReactterProvider` to access the dependency inmedately as it created, like so:
+  Try to use `builder` propery of `RtProvider` to access the dependency inmedately as it created, like so:
 
   ```
   Widget build(BuildContext context) {
-    return ReactterProvider(
+    return RtProvider(
       () => AppController(),
       // we use `builder` to obtain a new `BuildContext` that has access to the provider
       builder: (context, appController, child) {
@@ -344,3 +343,10 @@ https://stackoverflow.com/questions/tagged/flutter
 ''';
   }
 }
+
+/// {@macro flutter_reactter.provider_not_found_exception}
+@Deprecated(
+  'Use `RtDependencyNotFoundException` instead. '
+  'This feature was deprecated after v7.3.0.',
+)
+typedef ReactterDependencyNotFoundException = RtDependencyNotFoundException;

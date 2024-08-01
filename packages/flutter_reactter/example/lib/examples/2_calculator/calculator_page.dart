@@ -13,7 +13,7 @@ class CalculatorPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ReactterProvider(
+    return RtProvider(
       CalculatorController.new,
       builder: (_, __, ___) {
         return Scaffold(

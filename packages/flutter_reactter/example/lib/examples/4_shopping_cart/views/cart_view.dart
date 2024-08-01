@@ -7,7 +7,7 @@ import 'package:examples/examples/4_shopping_cart/widgets/cart_bottom.dart';
 import 'package:examples/examples/4_shopping_cart/widgets/cart_item_card.dart';
 import 'package:examples/examples/4_shopping_cart/controllers/cart_controller.dart';
 
-class CartView extends ReactterComponent<CartController> {
+class CartView extends RtComponent<CartController> {
   const CartView({
     Key? key,
     this.onCheckout,
@@ -24,7 +24,7 @@ class CartView extends ReactterComponent<CartController> {
       appBar: AppBar(
         title: const Text('Shopping Cart'),
       ),
-      body: ReactterSelector<CartController, int>(
+      body: RtSelector<CartController, int>(
         selector: (inst, $) => $(inst.uCartItems).value.length,
         builder: (_, __, itemCount, ____) {
           if (itemCount == 0) {
@@ -44,7 +44,7 @@ class CartView extends ReactterComponent<CartController> {
               horizontal: 4,
             ),
             itemBuilder: (context, index) {
-              return ReactterSelector<CartController, int>(
+              return RtSelector<CartController, int>(
                 selector: (inst, $) {
                   try {
                     return $(inst.uCartItems).value[index].quantity;
@@ -72,7 +72,7 @@ class CartView extends ReactterComponent<CartController> {
           );
         },
       ),
-      bottomNavigationBar: ReactterConsumer<CartController>(
+      bottomNavigationBar: RtConsumer<CartController>(
         listenStates: (inst) => [inst.uCartItems],
         builder: (_, cartController, __) {
           final items = cartController.uCartItems.value;

@@ -2,7 +2,7 @@ part of '../framework.dart';
 
 abstract class Dependency<T extends Object?> {
   T? _instance;
-  final Set<ReactterState> _states;
+  final Set<RtState> _states;
 
   Dependency(this._instance, this._states);
 
@@ -14,7 +14,7 @@ class MasterDependency<T extends Object?> extends Dependency<T> {
 
   MasterDependency({
     T? instance,
-    Set<ReactterState> states = const {},
+    Set<RtState> states = const {},
     Set<SelectDependency> selects = const {},
   })  : _selects = selects.toSet(),
         super(instance, states.toSet());
@@ -54,7 +54,7 @@ class InstanceDependency<T extends Object?> extends Dependency<T> {
 }
 
 class StatesDependency<T extends Object?> extends Dependency<T> {
-  StatesDependency(Set<ReactterState> states) : super(null, states);
+  StatesDependency(Set<RtState> states) : super(null, states);
 
   @override
   MasterDependency<T> makeMaster() => MasterDependency<T>(
@@ -83,12 +83,12 @@ class SelectDependency<T extends Object?> extends Dependency<T> {
     );
   }
 
-  S watchState<S extends ReactterState>(S state) {
+  S watchState<S extends RtState>(S state) {
     _states.add(state);
     return state;
   }
 
-  static S skipWatchState<S extends ReactterState>(S s) => s;
+  static S skipWatchState<S extends RtState>(S s) => s;
 
   @override
   MasterDependency<T> makeMaster() => MasterDependency<T>(

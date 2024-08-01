@@ -8,10 +8,10 @@ enum UseAsyncStateStatus {
 }
 
 @internal
-abstract class UseAsyncStateBase<T> extends ReactterHook {
+abstract class UseAsyncStateBase<T> extends RtHook {
   @protected
   @override
-  final $ = ReactterHook.$register;
+  final $ = RtHook.$register;
 
   /// Stores the initial value.
   final T _initialValue;

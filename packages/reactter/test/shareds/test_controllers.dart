@@ -12,17 +12,17 @@ class TestStore {
   TestStore({this.count = 0});
 }
 
-class IncrementAction extends ReactterAction<int> {
+class IncrementAction extends RtAction<int> {
   IncrementAction({int quantity = 1})
       : super(type: 'INCREMENT', payload: quantity);
 }
 
-class DecrementAction extends ReactterAction<int> {
+class DecrementAction extends RtAction<int> {
   DecrementAction({int quantity = 1})
       : super(type: 'DECREMENT', payload: quantity);
 }
 
-class IncrementActionCallable extends ReactterActionCallable<TestStore, int> {
+class IncrementActionCallable extends RtActionCallable<TestStore, int> {
   IncrementActionCallable({int quantity = 1})
       : super(type: 'INCREMENT', payload: quantity);
 
@@ -32,7 +32,7 @@ class IncrementActionCallable extends ReactterActionCallable<TestStore, int> {
   }
 }
 
-class DecrementActionCallable extends ReactterActionCallable<TestStore, int> {
+class DecrementActionCallable extends RtActionCallable<TestStore, int> {
   DecrementActionCallable({int quantity = 1})
       : super(type: 'DECREMENT', payload: quantity);
 
@@ -56,8 +56,8 @@ Future<String> _resolveStateAsync([
   return argsString.isEmpty ? "resolved" : "resolved with args: $argsString";
 }
 
-TestStore _reducer(TestStore state, ReactterAction action) {
-  if (action is ReactterActionCallable) {
+TestStore _reducer(TestStore state, RtAction action) {
+  if (action is RtActionCallable) {
     return action(state);
   }
 
@@ -75,7 +75,7 @@ TestStore _reducer(TestStore state, ReactterAction action) {
   }
 }
 
-class TestController extends ReactterState {
+class TestController extends RtState {
   final signalString = Signal("initial");
   final stateBool = UseState(false);
   final stateString = UseState("initial");
@@ -94,7 +94,7 @@ class TestController extends ReactterState {
   });
   final stateReduce = UseReducer(_reducer, TestStore(count: 0));
 
-  late final stateCompute = Reactter.lazyState(
+  late final stateCompute = Rt.lazyState(
     () => UseCompute(
       () => (stateInt.value + stateDouble.value).clamp(5, 10),
       [stateInt, stateDouble],
@@ -122,7 +122,7 @@ class TestController extends ReactterState {
 
       return args?.arguments ?? [];
     },
-    AsyncMemoSafe(),
+    MemoSafeAsyncInterceptor(),
   );
 
   final inlineMemo = Memo.inline((Args? args) {
@@ -141,7 +141,7 @@ class TestLifecycleController extends LifecycleObserver {
   int onDidUpdateCalledCount = 0;
   int onWillUnmountCalledCount = 0;
   int onDidUnmountCalledCount = 0;
-  ReactterState? lastState;
+  RtState? lastState;
 
   @override
   void onCreated() {
@@ -162,14 +162,14 @@ class TestLifecycleController extends LifecycleObserver {
   }
 
   @override
-  void onWillUpdate(ReactterState? state) {
+  void onWillUpdate(RtState? state) {
     onWillUpdateCalledCount++;
     lastState = state;
     super.onWillUpdate(state);
   }
 
   @override
-  void onDidUpdate(ReactterState? state) {
+  void onDidUpdate(RtState? state) {
     onDidUpdateCalledCount++;
     lastState = state;
     super.onDidUpdate(state);
@@ -192,7 +192,7 @@ class Test2Controller {
   final testController = UseDependency<TestController>();
 
   Test2Controller() {
-    Reactter.create(() => TestController());
+    Rt.create(() => TestController());
   }
 }
 
@@ -200,7 +200,7 @@ class Test3Controller {
   final test2Controller = UseDependency<Test2Controller>();
 
   Test3Controller() {
-    Reactter.create(() => Test2Controller());
+    Rt.create(() => Test2Controller());
   }
 }
 

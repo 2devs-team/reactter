@@ -18,7 +18,7 @@ class BindingZone {
   static BindingZone? get currentZone => _currentZone;
 
   BindingZone() {
-    /// This is done to keep track of the current [ReactterZone] instance.
+    /// This is done to keep track of the current [BindingZone] instance.
     _currentZone = this;
   }
 

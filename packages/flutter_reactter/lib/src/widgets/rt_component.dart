@@ -1,11 +1,11 @@
 part of '../widgets.dart';
 
-/// {@template reactter_component}
-/// A abstract [StatelessWidget] class that provides [ReactterProvider] features,
+/// {@template flutter_reactter.rt_component}
+/// A abstract [StatelessWidget] class that provides [RtProvider] features,
 /// whose dependency of [T] type defined is exposing trough [render] method.
 ///
 /// ```dart
-/// class App extends ReactterComponent<AppController> {
+/// class App extends RtComponent<AppController> {
 ///   const App({Key? key}) : super(key: key);
 ///
 ///   @override
@@ -21,7 +21,7 @@ part of '../widgets.dart';
 /// Use [builder] getter to define the dependency creating method.
 ///
 /// ```dart
-/// class App extends ReactterComponent<AppController> {
+/// class App extends RtComponent<AppController> {
 ///   @override
 ///   get builder => () => AppController();
 ///   ...
@@ -36,7 +36,7 @@ part of '../widgets.dart';
 /// Use [id] getter to identify the [T] dependency:
 ///
 /// ```dart
-/// class App extends ReactterComponent<AppController> {
+/// class App extends RtComponent<AppController> {
 ///   @override
 ///   get id => "uniqueId";
 ///   ...
@@ -47,7 +47,7 @@ part of '../widgets.dart';
 /// and with its changes rebuild the Widget tree defined in [render] method.
 ///
 /// ```dart
-/// class App extends ReactterComponent<AppController> {
+/// class App extends RtComponent<AppController> {
 ///   @override
 ///   get listenStates => (inst) => [inst.stateA, inst.stateB];
 ///   ...
@@ -58,7 +58,7 @@ part of '../widgets.dart';
 /// the Widget tree defined in [render] method.
 ///
 /// ```dart
-/// class App extends ReactterComponent<AppController> {
+/// class App extends RtComponent<AppController> {
 ///   @override
 ///   get listenAll => true;
 ///   ...
@@ -70,11 +70,11 @@ part of '../widgets.dart';
 ///
 /// See also:
 ///
-/// * [ReactterProvider], a [StatelessWidget] that provides an [T] dependency
+/// * [RtProvider], a [StatelessWidget] that provides an [T] dependency
 /// to widget tree that can be access through the [BuildContext].
 /// {@endtemplate}
-abstract class ReactterComponent<T extends Object> extends StatelessWidget {
-  const ReactterComponent({Key? key}) : super(key: key);
+abstract class RtComponent<T extends Object> extends StatelessWidget {
+  const RtComponent({Key? key}) : super(key: key);
 
   /// An indentify of the [T] dependency.
   String? get id => null;
@@ -109,7 +109,7 @@ abstract class ReactterComponent<T extends Object> extends StatelessWidget {
       return render(context, _getInstance(context));
     }
 
-    return ReactterProvider<T>(
+    return RtProvider<T>(
       builder!,
       id: id,
       builder: (context, instance, _) => render(context, _getInstance(context)),
@@ -139,3 +139,10 @@ abstract class ReactterComponent<T extends Object> extends StatelessWidget {
     );
   }
 }
+
+/// {@macro flutter_reactter.rt_component}
+@Deprecated(
+  'Use `RtComponent` instead. '
+  'This feature was deprecated after v7.3.0.',
+)
+typedef RtComponentWidget<T extends Object> = RtComponent<T>;

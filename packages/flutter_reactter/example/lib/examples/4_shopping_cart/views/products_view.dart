@@ -8,7 +8,7 @@ import 'package:examples/examples/4_shopping_cart/views/cart_view.dart';
 import 'package:examples/examples/4_shopping_cart/widgets/cart_action.dart';
 import 'package:examples/examples/4_shopping_cart/widgets/product_card.dart';
 
-class ProductsView extends ReactterComponent<ProductsController> {
+class ProductsView extends RtComponent<ProductsController> {
   const ProductsView({Key? key}) : super(key: key);
 
   @override
@@ -20,7 +20,7 @@ class ProductsView extends ReactterComponent<ProductsController> {
       appBar: AppBar(
         title: const Text('Shopping Cart'),
         actions: [
-          ReactterConsumer<ProductsController>(
+          RtConsumer<ProductsController>(
             builder: (_, __, ___) {
               return CartAction(
                 onPressed: () {
@@ -41,7 +41,7 @@ class ProductsView extends ReactterComponent<ProductsController> {
         builder: (context, constraints) {
           final crossAxisCount = (constraints.maxWidth / 140).floor();
 
-          return ReactterConsumer<ProductsController>(
+          return RtConsumer<ProductsController>(
             listenStates: (inst) => [inst.uProducts],
             builder: (_, __, ___) {
               final products = productsController.uProducts.value;

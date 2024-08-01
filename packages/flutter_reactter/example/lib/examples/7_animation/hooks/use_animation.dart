@@ -60,24 +60,24 @@ class AnimationOptions<T> {
   });
 }
 
-class UseAnimation<T> extends ReactterHook implements TickerProvider {
+class UseAnimation<T> extends RtHook implements TickerProvider {
   @override
   @protected
-  final $ = ReactterHook.$register;
+  final $ = RtHook.$register;
 
-  late final uTween = Reactter.lazyState(
+  late final uTween = Rt.lazyState(
     () => UseState(options.tween),
     this,
   );
-  late final uControl = Reactter.lazyState(
+  late final uControl = Rt.lazyState(
     () => UseState(options.control),
     this,
   );
-  late final uDuration = Reactter.lazyState(
+  late final uDuration = Rt.lazyState(
     () => UseState(options.duration),
     this,
   );
-  late final uCurve = Reactter.lazyState(
+  late final uCurve = Rt.lazyState(
     () => UseState(options.curve),
     this,
   );
@@ -189,7 +189,7 @@ class UseAnimation<T> extends ReactterHook implements TickerProvider {
 
   void _onAnimationStatus(AnimationStatus status) {
     options.animationStatusListener?.call(status);
-    Reactter.emit(this, status);
+    Rt.emit(this, status);
   }
 
   void _rebuild() {

@@ -1,6 +1,6 @@
 part of '../widgets.dart';
 
-/// {@template reactter_watcher}
+/// {@template flutter_reactter.rt_signal_watcher}
 /// A [StatefulWidget] that listens for [Signal]s and re-build when any [Signal] is changed.
 ///
 /// For example:
@@ -10,10 +10,9 @@ part of '../widgets.dart';
 /// final toggle = Signal(false);
 ///
 /// class Example extends StatelessWidget {
-///   ...
 ///   Widget build(context) {
-///     return ReactterWatcher(
-///       builder: (context, child) {
+///     return RtSignalWatcher(
+///       build: (context, child) {
 ///         return Column(
 ///           children: [
 ///             Text("Count: $count"),
@@ -27,15 +26,15 @@ part of '../widgets.dart';
 /// ```
 ///
 /// Build the widget tree with the values of the [Signal]s contained in
-/// the [ReactterWatcher] [builder], and with each change of its values,
+/// the [RtSignalWatcher], and with each change of its values,
 /// it will re-build the widget tree.
-///
+//
 /// Use [child] property to pass a [Widget] which to be built once only.
 /// It will be sent through the [builder] callback, so you can incorporate it
 /// into your build:
 ///
 /// ```dart
-/// ReactterWatcher(
+/// RtSignalWatcher(
 ///   child: Row(
 ///     children: [
 ///       ElevatedButton(
@@ -53,7 +52,7 @@ part of '../widgets.dart';
 ///       children: [
 ///         Text("Count: $count"),
 ///         Text("Toggle is: $toggle"),
-///         child, // Row with 2 buttons
+///         if (child != null) child, // Row with 2 buttons
 ///       ],
 ///     );
 ///   },
@@ -64,12 +63,12 @@ part of '../widgets.dart';
 ///
 /// * [Signal], a reactive state of any type.
 /// {@endtemplate}
-class ReactterWatcher extends StatefulWidget {
-  /// {@macro reactter_watcher}
-  const ReactterWatcher({
+class RtSignalWatcher extends StatefulWidget {
+  /// {@macro flutter_reactter.rt_signal_watcher}
+  const RtSignalWatcher({
     Key? key,
     this.child,
-    this.builder,
+    required this.builder,
   }) : super(key: key);
 
   /// Provides a widget , which render one time.
@@ -84,56 +83,79 @@ class ReactterWatcher extends StatefulWidget {
   final TransitionBuilder? builder;
 
   @override
-  State<ReactterWatcher> createState() => _ReactterWatcherState();
+  State<RtSignalWatcher> createState() => _RtSignalWatcherState();
 }
 
-class _ReactterWatcherState extends State<ReactterWatcher> {
-  final Set<Signal> _signals = {};
-
-  static _ReactterWatcherState? _currentState;
+class _RtSignalWatcherState extends State<RtSignalWatcher> {
+  static _RtSignalWatcherState? _currentState;
+  final Set<RtState> _states = {};
 
   @override
   Widget build(BuildContext context) {
     final prevState = _currentState;
 
     _currentState = this;
-    Reactter.on(Signal, SignalEvent.onGetValue, _onGetValue);
+    Rt.on(Signal, SignalEvent.onGetValue, _onWatch);
 
     final widgetBuit =
         widget.builder?.call(context, widget.child) ?? widget.child!;
 
     _currentState = prevState;
-    Reactter.off(Signal, SignalEvent.onGetValue, _onGetValue);
+    Rt.off(Signal, SignalEvent.onGetValue, _onWatch);
 
     return widgetBuit;
   }
 
   @override
   void dispose() {
-    _clearSignals();
+    _clearStates();
     super.dispose();
   }
 
-  void _onGetValue(_, Signal signal) {
-    if (_currentState != this || _signals.contains(signal)) {
+  void _onWatch(_, RtState state) {
+    if (_currentState != this || _states.contains(state)) {
       return;
     }
 
-    _signals.add(signal);
-    Reactter.on(signal, Lifecycle.didUpdate, _onSignalDidUpdate);
+    _addState(state);
   }
 
-  void _onSignalDidUpdate(_, __) {
-    _clearSignals();
-    Future.microtask(
-      () => setState(() {}),
-    );
+  void _onStateDidUpdate(_, __) {
+    _clearStates();
+    _rebuild();
   }
 
-  void _clearSignals() {
-    for (var signal in _signals) {
-      Reactter.off(signal, Lifecycle.didUpdate, _onSignalDidUpdate);
+  void _rebuild() async {
+    if (!mounted) return;
+
+    // coverage:ignore-start
+    if (SchedulerBinding.instance.schedulerPhase != SchedulerPhase.idle) {
+      await SchedulerBinding.instance.endOfFrame;
     }
-    _signals.clear();
+    // coverage:ignore-end
+
+    if (!mounted) return;
+
+    (context as Element).markNeedsBuild();
+  }
+
+  void _addState(RtState state) {
+    _states.add(state);
+    Rt.on(state, Lifecycle.didUpdate, _onStateDidUpdate);
+  }
+
+  void _clearStates() {
+    for (final state in _states) {
+      Rt.off(state, Lifecycle.didUpdate, _onStateDidUpdate);
+    }
+
+    _states.clear();
   }
 }
+
+/// {@macro flutter_reactter.rt_signal_watcher}
+@Deprecated(
+  'Use `RtSignalWatcher` instead. '
+  'This feature was deprecated after v7.3.0.',
+)
+typedef ReactterWatcher = RtSignalWatcher;

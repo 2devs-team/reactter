@@ -6,7 +6,7 @@ void main() {
     test("should create a lazy state", () {
       bool isCreated = false;
       final state = UseState(0);
-      late final computed = Reactter.lazyState(
+      late final computed = Rt.lazyState(
         () => UseCompute(
           () {
             isCreated = true;
@@ -36,7 +36,7 @@ void main() {
       final state = UseState(0);
       final computed = UseCompute(() => state.value + 1, [state]);
 
-      Reactter.untracked(() {
+      Rt.untracked(() {
         state.value = 2;
 
         expect(computed.value, 1);
@@ -49,8 +49,8 @@ void main() {
       final state = UseState(0);
       final computed = UseCompute(() => state.value + 1, [state]);
 
-      Reactter.untracked(() {
-        Reactter.untracked(() {
+      Rt.untracked(() {
+        Rt.untracked(() {
           state.value = 2;
 
           expect(computed.value, 1);
@@ -70,7 +70,7 @@ void main() {
       final state = UseState(0);
       final computed = UseCompute(() => state.value + 1, [state]);
 
-      Reactter.batch(() {
+      Rt.batch(() {
         state.value = 2;
 
         expect(computed.value, 1);
@@ -83,8 +83,8 @@ void main() {
       final state = UseState(0);
       final computed = UseCompute(() => state.value + 1, [state]);
 
-      Reactter.batch(() {
-        Reactter.batch(() {
+      Rt.batch(() {
+        Rt.batch(() {
           state.value = 2;
 
           expect(computed.value, 1);

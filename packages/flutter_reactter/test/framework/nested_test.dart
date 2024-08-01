@@ -18,11 +18,11 @@ void main() {
               builder: (context) {
                 try {
                   return NestedWidget(
-                    owner: ReactterProvider(
+                    owner: RtProvider(
                       () => TestController(),
                       child: const SizedBox.shrink(),
-                    ) as ReactterProviderElement,
-                    wrappedWidget: ReactterProvider(
+                    ) as RtProviderElement,
+                    wrappedWidget: RtProvider(
                       () => TestController(),
                       child: const SizedBox.shrink(),
                     ),

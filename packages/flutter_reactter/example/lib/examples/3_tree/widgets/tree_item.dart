@@ -9,7 +9,7 @@ import 'package:examples/examples/3_tree/tree_node.dart';
 import 'package:examples/examples/3_tree/widgets/custom_icon_button.dart';
 import 'package:examples/examples/3_tree/widgets/tree_items.dart';
 
-class TreeItem extends ReactterComponent<TreeNode> {
+class TreeItem extends RtComponent<TreeNode> {
   const TreeItem({
     Key? key,
     required this.treeNode,

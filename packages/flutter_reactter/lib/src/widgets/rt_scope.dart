@@ -1,9 +1,11 @@
 part of '../widgets.dart';
 
+/// {@template flutter_reactter.rt_scope}
 /// An [InheritedWidget] that provides a scope for managing state
 /// and re-rendering child widgets.
-class ReactterScope extends InheritedWidget {
-  const ReactterScope({
+/// {@endtemplate}
+class RtScope extends InheritedWidget {
+  const RtScope({
     Key? key,
     required Widget child,
   }) : super(key: key, child: child);
@@ -12,13 +14,12 @@ class ReactterScope extends InheritedWidget {
   bool updateShouldNotify(covariant InheritedWidget oldWidget) => false;
 
   @override
-  ReactterScopeElement createElement() => ReactterScopeElement(this);
+  RtScopeElement createElement() => RtScopeElement(this);
 
-  /// Returns the [ReactterScopeElement]
+  /// Returns the [RtScopeElement]
   /// and sets the [BuildContext] to listen for when it should be re-rendered.
   static void contextOf(
     BuildContext context, {
-    String? id,
     ListenStates<void>? listenStates,
     bool listen = true,
   }) {
@@ -34,25 +35,25 @@ class ReactterScope extends InheritedWidget {
     }
   }
 
-  static ReactterScopeElement _getScopeInheritedElement(BuildContext context) {
+  static RtScopeElement _getScopeInheritedElement(BuildContext context) {
     final reactterScopeElement =
-        context.getElementForInheritedWidgetOfExactType<ReactterScope>();
+        context.getElementForInheritedWidgetOfExactType<RtScope>();
 
     if (reactterScopeElement == null) {
-      throw ReactterScopeNotFoundException(context.widget.runtimeType);
+      throw RtScopeNotFoundException(context.widget.runtimeType);
     }
 
-    return reactterScopeElement as ReactterScopeElement;
+    return reactterScopeElement as RtScopeElement;
   }
 }
 
-class ReactterScopeElement extends InheritedElement with ScopeElementMixin {
+class RtScopeElement extends InheritedElement with ScopeElementMixin {
   Widget? prevChild;
 
-  ReactterScopeElement(InheritedWidget widget) : super(widget);
+  RtScopeElement(InheritedWidget widget) : super(widget);
 
   @override
-  ReactterScope get widget => super.widget as ReactterScope;
+  RtScope get widget => super.widget as RtScope;
 
   @override
   Widget build() {
@@ -66,23 +67,23 @@ class ReactterScopeElement extends InheritedElement with ScopeElementMixin {
   }
 }
 
-class ReactterScopeNotFoundException implements Exception {
+class RtScopeNotFoundException implements Exception {
   final Type widgetType;
 
-  const ReactterScopeNotFoundException(
+  const RtScopeNotFoundException(
     this.widgetType,
   );
 
   @override
   String toString() {
     return '''
-Error: Could not find the correct `ReactterScope` above this `$widgetType` Widget
+Error: Could not find the correct `RtScope` above this `$widgetType` Widget
 
 This happens because you used a `BuildContext` without dependency defined:
 
-- You added a new `ReactterScope` in your `main.dart` and perform a hot-restart.
+- You added a new `RtScope` in your `main.dart` and perform a hot-restart.
 
-  `ReactterScope` is a "scoped". So if you insert of `ReactterScope` inside a route, then
+  `RtScope` is a "scoped". So if you insert of `RtScope` inside a route, then
   other routes will not be able to access it.
 
 If none of these solutions work, consider asking for help on StackOverflow:
@@ -90,3 +91,16 @@ https://stackoverflow.com/questions/tagged/flutter
     ''';
   }
 }
+
+/// {@macro flutter_reactter.rt_scope}
+@Deprecated(
+  'Use `RtScope` instead. '
+  'This feature was deprecated after v7.3.0.',
+)
+typedef ReactterScope = RtScope;
+
+@Deprecated(
+  'Use `RtScopeNotFoundException` instead. '
+  'This feature was deprecated after v7.3.0.',
+)
+typedef ReactterScopeNotFoundException = RtScopeNotFoundException;

@@ -66,7 +66,7 @@ class AnimationController {
   );
 
   void resumeAllAnimation() {
-    Reactter.batch(() {
+    Rt.batch(() {
       uSizeAnimation.resume();
       uBorderRadiusAnimation.resume();
       uColorAnimation.resume();
@@ -74,7 +74,7 @@ class AnimationController {
   }
 
   void pauseAllAnimation() {
-    Reactter.batch(() {
+    Rt.batch(() {
       uSizeAnimation.pause();
       uBorderRadiusAnimation.pause();
       uColorAnimation.pause();
@@ -82,7 +82,7 @@ class AnimationController {
   }
 
   void stopAllAnimation() {
-    Reactter.batch(() {
+    Rt.batch(() {
       uSizeAnimation.stop();
       uBorderRadiusAnimation.stop();
       uColorAnimation.stop();

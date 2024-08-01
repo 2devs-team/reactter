@@ -1,14 +1,14 @@
 part of '../widgets.dart';
 
-/// {@template reactter_consumer}
+/// {@template flutter_reactter.rt_consumer}
 /// A [StatelessWidget] that allows to obtain the instance of the [T] dependency
-/// from the closest ancestor [ReactterProvider] and passes the instance
+/// from the closest ancestor [RtProvider] and passes the instance
 /// to [builder].
 ///
-/// Also, listens for dependency changes or a [ReactterState] list
+/// Also, listens for dependency changes or a [RtState] list
 /// to rebuild the widget tree.
 ///
-/// [ReactterConsumer] has same functionality as [ReactterProvider.contextOf].
+/// [RtConsumer] has same functionality as [RtProvider.contextOf].
 ///
 /// Use [id] property to identify the [T] dependency.
 ///
@@ -16,7 +16,7 @@ part of '../widgets.dart';
 /// or the states defined in [listenStates] property:
 ///
 ///```dart
-/// ReactterConsumer<AppController>(
+/// RtConsumer<AppController>(
 ///   listenStates: (inst) => [inst.stateA],
 ///   builder: (context, appController, child) {
 ///     return Column(
@@ -34,7 +34,7 @@ part of '../widgets.dart';
 /// into your build:
 ///
 ///```dart
-/// ReactterConsumer<AppController>(
+/// RtConsumer<AppController>(
 ///   listenAll: true,
 ///   child: Text("This widget build only once"),
 ///   builder: (context, appController, child) {
@@ -50,13 +50,13 @@ part of '../widgets.dart';
 ///
 /// See also:
 ///
-/// * [ReactterState], a state in reactter.
-/// * [ReactterProvider], a widget that provides a [T] dependency through Widget.
+/// * [RtState], a state in reactter.
+/// * [RtProvider], a widget that provides a [T] dependency through Widget.
 /// tree.
 ///{@endtemplate}
-class ReactterConsumer<T extends Object?> extends StatelessWidget {
+class RtConsumer<T extends Object?> extends StatelessWidget {
   /// {@macro reactter_consumer}
-  const ReactterConsumer({
+  const RtConsumer({
     Key? key,
     this.id,
     this.listenStates,
@@ -67,7 +67,7 @@ class ReactterConsumer<T extends Object?> extends StatelessWidget {
 
   /// This identifier can be used to differentiate
   /// between multiple instances of the same type [T]
-  /// in the widget tree when using [ReactterProvider].
+  /// in the widget tree when using [RtProvider].
   final String? id;
 
   /// Watchs all states to re-build [builder] method.
@@ -95,7 +95,7 @@ class ReactterConsumer<T extends Object?> extends StatelessWidget {
 
     return builder(
       context,
-      ReactterProvider.contextOf<T>(
+      RtProvider.contextOf<T>(
         context,
         id: id,
         listen: listenAll || listenStates != null,
@@ -105,3 +105,10 @@ class ReactterConsumer<T extends Object?> extends StatelessWidget {
     );
   }
 }
+
+/// {@macro flutter_reactter.rt_consumer}
+@Deprecated(
+  'Use `RtConsumer` instead. '
+  'This feature was deprecated after v7.3.0.',
+)
+typedef ReactterConsumer<T extends Object> = RtConsumer<T>;

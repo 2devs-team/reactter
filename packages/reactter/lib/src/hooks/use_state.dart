@@ -1,7 +1,7 @@
 part of 'hooks.dart';
 
 /// {@template use_state}
-/// A [ReactterHook] that manages a state.
+/// A [RtHook] that manages a state.
 ///
 /// Contains a [value] of type [T] which represents the current state.
 ///
@@ -39,10 +39,10 @@ part of 'hooks.dart';
 /// }
 /// ```
 /// {@endtemplate}
-class UseState<T> extends ReactterHook {
+class UseState<T> extends RtHook {
   @protected
   @override
-  final $ = ReactterHook.$register;
+  final $ = RtHook.$register;
 
   /// {@macro use_state}
   UseState(T initialValue) : _value = initialValue;

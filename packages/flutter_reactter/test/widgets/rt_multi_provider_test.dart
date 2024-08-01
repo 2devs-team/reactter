@@ -7,8 +7,8 @@ import '../shareds/test_builder.dart';
 import '../shareds/test_controller.dart';
 
 void main() {
-  group("ReactterProviders", () {
-    testWidgets("should get dependency form different ReactterProvider",
+  group("RtMultiProvider", () {
+    testWidgets("should get dependency form different RtProvider",
         (tester) async {
       late TestController instanceObtained;
       late TestController instanceObtainedWithId;
@@ -17,7 +17,7 @@ void main() {
 
       await tester.pumpWidget(
         TestBuilder(
-          child: ReactterProvidersBuilder(
+          child: RtMultiProviderBuilder(
             key: key,
             builder: (BuildContext context, Widget? child) {
               instanceObtained = context.use<TestController>();
@@ -31,7 +31,7 @@ void main() {
                   Text(
                     "ProviderWithId stateString: ${instanceObtainedWithId.stateString.value}",
                   ),
-                  ReactterProvidersBuilder(
+                  RtMultiProviderBuilder(
                     key: key2,
                     builder: (context, child) {
                       context.watch<TestController>();
@@ -77,7 +77,7 @@ void main() {
       expect(find.text("Provider2 stateString: changed"), findsOneWidget);
 
       final reactterProviderInheritedElement =
-          tester.element(find.bySubtype<ReactterProvider>().first)
+          tester.element(find.bySubtype<RtProvider>().first)
             ..deactivate()
             ..activate();
 
@@ -89,22 +89,21 @@ void main() {
       expect(diagnostic?['isRoot'], "true");
     });
 
-    testWidgets("should get dependency from ReactterProvider siblings",
+    testWidgets("should get dependency from RtProvider siblings",
         (tester) async {
       late TestController instanceObtained;
       late TestController instanceObtainedWithId;
 
       await tester.pumpWidget(
         TestBuilder(
-          child: ReactterProviders(
+          child: RtMultiProvider(
             [
-              ReactterProvider(
+              RtProvider(
                 () => TestController(),
               ),
-              ReactterProvider(
+              RtProvider(
                 () {
-                  final instFromProviderSibling =
-                      Reactter.find<TestController>();
+                  final instFromProviderSibling = Rt.find<TestController>();
 
                   expect(instFromProviderSibling, isNotNull);
 
@@ -156,7 +155,7 @@ void main() {
       );
 
       final reactterProviderInheritedElement =
-          tester.element(find.bySubtype<ReactterProvider>().first)
+          tester.element(find.bySubtype<RtProvider>().first)
             ..deactivate()
             ..activate();
 
@@ -173,9 +172,9 @@ void main() {
         TestBuilder(
           child: Column(
             children: [
-              ReactterProviders(
+              RtMultiProvider(
                 [
-                  ReactterProvider.init(() => TestController()),
+                  RtProvider.init(() => TestController()),
                 ],
                 child: Builder(
                   builder: (context) {
@@ -208,7 +207,7 @@ void main() {
       expect(find.text("Provider stateString: initial"), findsOneWidget);
 
       final reactterProviderInheritedElement =
-          tester.element(find.bySubtype<ReactterProvider>().first)
+          tester.element(find.bySubtype<RtProvider>().first)
             ..deactivate()
             ..activate();
 

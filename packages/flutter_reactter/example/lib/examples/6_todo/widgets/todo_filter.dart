@@ -19,14 +19,14 @@ class TodoFilter extends StatelessWidget {
           FittedBox(
             child: SizedBox(
               height: 30,
-              child: ReactterSelector<TodoController, TodoListType>(
+              child: RtSelector<TodoController, TodoListType>(
                 selector: (inst, $) => $(inst.uReduce).value.filteredBy,
                 builder: (_, __, filteredBy, ___) {
                   return Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       const Text('Filter by:'),
-                      ReactterSelector<TodoController, int>(
+                      RtSelector<TodoController, int>(
                         selector: (inst, $) {
                           return $(inst.uReduce).value.todoList.length;
                         },
@@ -39,7 +39,7 @@ class TodoFilter extends StatelessWidget {
                           );
                         },
                       ),
-                      ReactterSelector<TodoController, int>(
+                      RtSelector<TodoController, int>(
                         selector: (inst, $) {
                           final uReduce = $(inst.uReduce).value;
                           final allCount = uReduce.todoList.length;
@@ -56,7 +56,7 @@ class TodoFilter extends StatelessWidget {
                           );
                         },
                       ),
-                      ReactterSelector<TodoController, int>(
+                      RtSelector<TodoController, int>(
                         selector: (inst, $) {
                           return $(inst.uReduce).value.doneCount;
                         },
@@ -76,7 +76,7 @@ class TodoFilter extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 8),
-          ReactterSelector<TodoController, bool>(
+          RtSelector<TodoController, bool>(
             selector: (inst, $) {
               return $(inst.uReduce).value.doneCount > 0;
             },

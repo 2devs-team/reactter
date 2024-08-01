@@ -4,22 +4,22 @@ import 'package:test/test.dart';
 import '../shareds/test_controllers.dart';
 
 void main() {
-  group("ReactterDependency", () {
+  group("RtDependency", () {
     test("should throw the life-cycle events", () async {
       late TestController? instance;
       late bool willUpdateChecked;
       late bool didUpdateChecked;
       late bool isDeleted;
 
-      Reactter.on(
-        ReactterDependency<TestController>(),
+      Rt.on(
+        RtDependency<TestController>(),
         Lifecycle.created,
         (TestController? inst, __) {
           instance = inst;
         },
       );
-      Reactter.on(
-        ReactterDependency<TestController>(),
+      Rt.on(
+        RtDependency<TestController>(),
         Lifecycle.willUpdate,
         (TestController? inst, UseState hook) {
           willUpdateChecked = true;
@@ -27,8 +27,8 @@ void main() {
           expect(hook.value, "initial");
         },
       );
-      Reactter.on(
-        ReactterDependency<TestController>(),
+      Rt.on(
+        RtDependency<TestController>(),
         Lifecycle.didUpdate,
         (TestController? inst, UseState hook) {
           didUpdateChecked = true;
@@ -36,18 +36,18 @@ void main() {
           expect(hook.value, "changed");
         },
       );
-      Reactter.on(
-        ReactterDependency<TestController>(),
+      Rt.on(
+        RtDependency<TestController>(),
         Lifecycle.deleted,
         (_, __) {
           isDeleted = true;
         },
       );
 
-      final testController = Reactter.create(() => TestController());
+      final testController = Rt.create(() => TestController());
       testController?.stateString.value = "changed";
 
-      Reactter.delete<TestController>();
+      Rt.delete<TestController>();
 
       expectLater(instance, isA<TestController>());
       expectLater(instance, testController);
@@ -71,7 +71,7 @@ void main() {
         isNull,
       );
 
-      Reactter.create(() => Test3Controller());
+      Rt.create(() => Test3Controller());
 
       expect(
         test3Controller.instance,
@@ -87,7 +87,7 @@ void main() {
         isA<TestController>(),
       );
 
-      Reactter.delete<Test2Controller>();
+      Rt.delete<Test2Controller>();
 
       expect(
         test3Controller.instance,
@@ -103,7 +103,7 @@ void main() {
         isNull,
       );
 
-      Reactter.delete<Test3Controller>();
+      Rt.delete<Test3Controller>();
 
       expect(
         test3Controller.instance,

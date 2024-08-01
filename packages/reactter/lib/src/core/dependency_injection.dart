@@ -69,7 +69,7 @@ abstract class DependencyInjection {
   /// This method is equivalent to calling:
   ///
   /// ```dart
-  /// Reactter.register<T>(
+  /// Rt.register<T>(
   ///   builder,
   ///   id: id,
   ///   mode: DependencyMode.builder,
@@ -99,7 +99,7 @@ abstract class DependencyInjection {
   /// This method is equivalent to calling:
   ///
   /// ```dart
-  /// Reactter.register<T>(
+  /// Rt.register<T>(
   ///   builder,
   ///   id: id,
   ///   mode: DependencyMode.factory,
@@ -129,7 +129,7 @@ abstract class DependencyInjection {
   /// This method is equivalent to calling:
   ///
   /// ```dart
-  /// Reactter.register<T>(
+  /// Rt.register<T>(
   ///   builder,
   ///   id: id,
   ///   mode: DependencyMode.singleton,
@@ -189,7 +189,7 @@ abstract class DependencyInjection {
   /// This method is equivalent to calling:
   ///
   /// ```dart
-  /// Reactter.create<T>(
+  /// Rt.create<T>(
   ///   builder,
   ///   id: id,
   ///   ref: ref,
@@ -224,7 +224,7 @@ abstract class DependencyInjection {
   /// This method is equivalent to calling:
   ///
   /// ```dart
-  /// Reactter.create<T>(
+  /// Rt.create<T>(
   ///   builder,
   ///   id: id,
   ///   ref: ref,
@@ -259,7 +259,7 @@ abstract class DependencyInjection {
   /// This method is equivalent to calling:
   ///
   /// ```dart
-  /// Reactter.create<T>(
+  /// Rt.create<T>(
   ///   builder,
   ///   id: id,
   ///   ref: ref,
@@ -371,8 +371,8 @@ abstract class DependencyInjection {
         'The "$T" builder couldn\'t deregister '
         'because the "$dependencyRegister" dependency is active.\n'
         'You should delete the instance before with:\n'
-        '`Reactter.delete<$T>(${id ?? ''});` or \n'
-        '`Reactter.destroy<$T>($idParam, onlyInstance: true);`\n',
+        '`Rt.delete<$T>(${id ?? ''});` or \n'
+        '`Rt.destroy<$T>($idParam, onlyInstance: true);`\n',
         level: LogLevel.warning,
       );
 
@@ -491,8 +491,8 @@ abstract class DependencyInjection {
       logger.log(
         'The "$dependencyRef" builder is not registered.\n'
         'You should register the instance build with: \n'
-        '`Reactter.register<$T>(() => $T()$idParam);` or \n'
-        '`Reactter.create<$T>(() => $T()$idParam);`.',
+        '`Rt.register<$T>(() => $T()$idParam);` or \n'
+        '`Rt.create<$T>(() => $T()$idParam);`.',
         level: LogLevel.warning,
       );
 

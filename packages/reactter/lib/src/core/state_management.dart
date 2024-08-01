@@ -25,7 +25,7 @@ abstract class StateManagement<S extends StateBase> {
   ///   final stateB = UseState(0);
   ///
   ///   // This is a lazy state, it will only be loaded when it is accessed.
-  ///   late final computed = Reactter.lazyState(
+  ///   late final computed = Rt.lazyState(
   ///     () => UseCompute(
   ///       () => stateA.value + stateB.value,
   ///       [stateA, stateB],
@@ -59,7 +59,7 @@ abstract class StateManagement<S extends StateBase> {
   /// final state = UseState(0);
   /// final computed = UseCompute(() => state.value + 1, [state]);
   ///
-  /// Reactter.untracked(() {
+  /// Rt.untracked(() {
   ///   state.value = 2;
   ///
   ///   print(computed.value); // 1 -> because the state change is not tracked
@@ -100,7 +100,7 @@ abstract class StateManagement<S extends StateBase> {
   ///   [stateA, stateB],
   /// );
   ///
-  /// Reactter.batch(() {
+  /// Rt.batch(() {
   ///   stateA.value = 1;
   ///   stateB.value = 2;
   ///

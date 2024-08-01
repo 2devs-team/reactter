@@ -18,12 +18,12 @@ void main() {
       expect(testController.stateReduce.value.count, 1);
 
       testController.stateReduce
-          .dispatch(ReactterAction(type: 'INCREMENT', payload: 2));
+          .dispatch(RtAction(type: 'INCREMENT', payload: 2));
       expect(testController.stateReduce.value.count, 3);
 
       expect(
         () => testController.stateReduce.dispatch(
-          ReactterAction(type: 'undefined', payload: 'undefined'),
+          RtAction(type: 'undefined', payload: 'undefined'),
         ),
         throwsA(
           isA<UnimplementedError>(),

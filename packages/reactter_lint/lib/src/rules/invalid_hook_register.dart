@@ -19,7 +19,7 @@ class InvalidHookRegister extends DartLintRule {
         "The hook register('$HOOK_REGISTER_VAR' field) must be final only.",
     correctionMessage:
         "Try changing the keyword('get', 'set', 'var') to 'final' keyword.\n"
-        "Example: final $HOOK_REGISTER_VAR = ReactterHook.\$register;",
+        "Example: final $HOOK_REGISTER_VAR = RtHook.\$register;",
   );
 
   @override

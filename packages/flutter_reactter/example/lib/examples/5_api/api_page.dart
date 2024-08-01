@@ -14,7 +14,7 @@ class ApiPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ReactterProvider(
+    return RtProvider(
       ApiController.new,
       builder: (context, apiController, child) {
         return Scaffold(
@@ -34,7 +34,7 @@ class ApiPage extends StatelessWidget {
           body: SingleChildScrollView(
             padding: const EdgeInsets.all(8),
             child: Center(
-              child: ReactterConsumer<ApiController>(
+              child: RtConsumer<ApiController>(
                 listenStates: (inst) => [inst.uEntity],
                 builder: (_, __, ___) {
                   return FittedBox(

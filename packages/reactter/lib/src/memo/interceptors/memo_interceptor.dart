@@ -1,6 +1,8 @@
 part of '../memo.dart';
 
+/// {@template reactter.memo_interceptor}
 /// It allows for intercepting the memoizing function calls.
+/// {@endtemplate}
 abstract class MemoInterceptor<T, A> {
   const MemoInterceptor();
 

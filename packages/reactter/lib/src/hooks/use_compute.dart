@@ -1,7 +1,7 @@
 part of 'hooks.dart';
 
 /// {@template use_compute}
-/// A [ReactterHook] that allows to compute a value
+/// A [RtHook] that allows to compute a value
 /// using a predetermined [compute] function and a list of state [dependencies],
 /// and which automatically updates the computed [value] if a dependency changes.
 ///
@@ -33,14 +33,14 @@ part of 'hooks.dart';
 /// }
 /// ```
 /// {@endtemplate}
-class UseCompute<T> extends ReactterHook {
+class UseCompute<T> extends RtHook {
   @protected
   @override
-  final $ = ReactterHook.$register;
+  final $ = RtHook.$register;
 
   late T _valueComputed;
   final T Function() compute;
-  final List<ReactterState> dependencies;
+  final List<RtState> dependencies;
 
   T get value => _valueComputed;
 
@@ -52,14 +52,14 @@ class UseCompute<T> extends ReactterHook {
     _valueComputed = compute();
 
     for (var dependency in dependencies) {
-      Reactter.on(dependency, Lifecycle.didUpdate, _onDependencyChanged);
+      Rt.on(dependency, Lifecycle.didUpdate, _onDependencyChanged);
     }
   }
 
   @override
   void dispose() {
     for (var dependency in dependencies) {
-      Reactter.off(dependency, Lifecycle.didUpdate, _onDependencyChanged);
+      Rt.off(dependency, Lifecycle.didUpdate, _onDependencyChanged);
     }
 
     super.dispose();

@@ -5,7 +5,7 @@ import '../shareds/test_controllers.dart';
 
 void main() {
   test("UseEffect should detach previous instance", () {
-    final testController = Reactter.create(() => TestController());
+    final testController = Rt.create(() => TestController());
     final uEffect = UseEffect(() {}, [])..bind(testController!);
 
     expect(uEffect.instanceBinded, isA<TestController>());
@@ -14,7 +14,7 @@ void main() {
 
     expect(uEffect.instanceBinded, isNull);
 
-    Reactter.delete<TestController>();
+    Rt.delete<TestController>();
   });
 
   group("UseEffect's callback", () {
@@ -29,7 +29,7 @@ void main() {
     });
 
     test("should be called initially, if the effect is run", () {
-      final testController = Reactter.create(() => UseEffectTestController())!;
+      final testController = Rt.create(() => UseEffectTestController())!;
 
       int nCalls = 0;
 
@@ -45,11 +45,11 @@ void main() {
       expect(testController.nCalls5, 0);
       expect(testController.nCalls6, 1);
 
-      Reactter.delete<UseEffectTestController>();
+      Rt.delete<UseEffectTestController>();
     });
 
     test("should be called when its dependencies has changed", () {
-      final testController = Reactter.create(() => UseEffectTestController())!;
+      final testController = Rt.create(() => UseEffectTestController())!;
       final stateA = testController.stateBool;
       final stateB = testController.stateInt;
 
@@ -95,11 +95,11 @@ void main() {
       expect(testController.nCalls5, 2);
       expect(testController.nCalls6, 3);
 
-      Reactter.delete<UseEffectTestController>();
+      Rt.delete<UseEffectTestController>();
     });
 
     test("should be called after instance did mount", () {
-      final testController = Reactter.create(() => UseEffectTestController())!;
+      final testController = Rt.create(() => UseEffectTestController())!;
 
       int nCalls = 0;
 
@@ -115,7 +115,7 @@ void main() {
       expect(testController.nCalls5, 0);
       expect(testController.nCalls6, 1);
 
-      Reactter.emit(testController, Lifecycle.didMount);
+      Rt.emit(testController, Lifecycle.didMount);
 
       expect(nCalls, 1);
       expect(testController.nCalls1, 1);
@@ -125,14 +125,14 @@ void main() {
       expect(testController.nCalls5, 0);
       expect(testController.nCalls6, 1);
 
-      Reactter.delete<UseEffectTestController>();
+      Rt.delete<UseEffectTestController>();
     });
 
     test("should be called with DispatchEffect when it initialized later", () {
       final testController = UseEffectDispatchController();
       int nCalls = 0;
 
-      late final uEffect = Reactter.lazyState(
+      late final uEffect = Rt.lazyState(
         () {
           return UseEffect(
             () {
@@ -175,7 +175,7 @@ void main() {
 
   group("UseEffect's cleaup", () {
     test("should be called after its dependencies has changed", () {
-      final testController = Reactter.create(() => UseEffectTestController())!;
+      final testController = Rt.create(() => UseEffectTestController())!;
       final stateA = testController.stateBool;
       final stateB = testController.stateInt;
       final stateC = testController.signalString;
@@ -240,7 +240,7 @@ void main() {
       expect(testController.nCleanupCalls5, 2);
       expect(testController.nCleanupCalls6, 3);
 
-      Reactter.delete<UseEffectTestController>();
+      Rt.delete<UseEffectTestController>();
     });
 
     test("should be called with dispatchEffect", () {
@@ -284,7 +284,7 @@ void main() {
     });
 
     test("should be called after context will unmount", () {
-      final testController = Reactter.create(() => UseEffectTestController())!;
+      final testController = Rt.create(() => UseEffectTestController())!;
 
       int nCalls = 0;
 
@@ -302,7 +302,7 @@ void main() {
       expect(testController.nCleanupCalls5, 0);
       expect(testController.nCleanupCalls6, 0);
 
-      Reactter.emit(testController, Lifecycle.didMount);
+      Rt.emit(testController, Lifecycle.didMount);
 
       expect(nCalls, 0);
       expect(testController.nCleanupCalls1, 0);
@@ -312,7 +312,7 @@ void main() {
       expect(testController.nCleanupCalls5, 0);
       expect(testController.nCleanupCalls6, 0);
 
-      Reactter.emit(testController, Lifecycle.willUnmount);
+      Rt.emit(testController, Lifecycle.willUnmount);
 
       expect(nCalls, 1);
       expect(testController.nCleanupCalls1, 1);
@@ -322,7 +322,7 @@ void main() {
       expect(testController.nCleanupCalls5, 0);
       expect(testController.nCleanupCalls6, 0);
 
-      Reactter.unregister<UseEffectTestController>();
+      Rt.unregister<UseEffectTestController>();
     });
   });
 }

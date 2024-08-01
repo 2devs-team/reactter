@@ -21,13 +21,13 @@ void main() {
       final useDependency = UseDependency.register(() => TestController());
       expect(useDependency.instance, null);
 
-      final instance = Reactter.get<TestController>();
+      final instance = Rt.get<TestController>();
       expect(useDependency.instance, instance);
 
-      final isActive = Reactter.isActive(useDependency.instance);
+      final isActive = Rt.isActive(useDependency.instance);
       expect(isActive, true);
 
-      Reactter.destroy<TestController>();
+      Rt.destroy<TestController>();
     });
 
     test("should register a dependency with id", () {
@@ -35,29 +35,29 @@ void main() {
           UseDependency.register(() => TestController(), id: ID);
       expect(useDependency.instance, null);
 
-      final instance = Reactter.get<TestController>(ID);
+      final instance = Rt.get<TestController>(ID);
       expect(useDependency.instance, instance);
 
-      final isActive = Reactter.isActive(useDependency.instance);
+      final isActive = Rt.isActive(useDependency.instance);
       expect(isActive, true);
 
-      Reactter.destroy<TestController>(id: ID);
+      Rt.destroy<TestController>(id: ID);
     });
 
     test("should register a dependency in builder mode", () {
       final useDependency = UseDependency.lazyBuilder(() => TestController());
       expect(useDependency.instance, null);
 
-      final instance = Reactter.get<TestController>();
+      final instance = Rt.get<TestController>();
       expect(useDependency.instance, instance);
 
-      final isActive = Reactter.isActive(useDependency.instance);
+      final isActive = Rt.isActive(useDependency.instance);
       expect(isActive, true);
 
-      final dependencyMode = Reactter.getDependencyMode(useDependency.instance);
+      final dependencyMode = Rt.getDependencyMode(useDependency.instance);
       expect(dependencyMode, DependencyMode.builder);
 
-      Reactter.destroy<TestController>();
+      Rt.destroy<TestController>();
     });
 
     test("should register a dependency with id in builder mode", () {
@@ -65,32 +65,32 @@ void main() {
           UseDependency.lazyBuilder(() => TestController(), ID);
       expect(useDependency.instance, null);
 
-      final instance = Reactter.get<TestController>(ID);
+      final instance = Rt.get<TestController>(ID);
       expect(useDependency.instance, instance);
 
-      final isActive = Reactter.isActive(useDependency.instance);
+      final isActive = Rt.isActive(useDependency.instance);
       expect(isActive, true);
 
-      final dependencyMode = Reactter.getDependencyMode(useDependency.instance);
+      final dependencyMode = Rt.getDependencyMode(useDependency.instance);
       expect(dependencyMode, DependencyMode.builder);
 
-      Reactter.destroy<TestController>(id: ID);
+      Rt.destroy<TestController>(id: ID);
     });
 
     test("should register a dependency in factory mode", () {
       final useDependency = UseDependency.lazyFactory(() => TestController());
       expect(useDependency.instance, null);
 
-      final instance = Reactter.get<TestController>();
+      final instance = Rt.get<TestController>();
       expect(useDependency.instance, instance);
 
-      final isActive = Reactter.isActive(useDependency.instance);
+      final isActive = Rt.isActive(useDependency.instance);
       expect(isActive, true);
 
-      final dependencyMode = Reactter.getDependencyMode(useDependency.instance);
+      final dependencyMode = Rt.getDependencyMode(useDependency.instance);
       expect(dependencyMode, DependencyMode.factory);
 
-      Reactter.destroy<TestController>();
+      Rt.destroy<TestController>();
     });
 
     test("should register a dependency with id in factory mode", () {
@@ -98,32 +98,32 @@ void main() {
           UseDependency.lazyFactory(() => TestController(), ID);
       expect(useDependency.instance, null);
 
-      final instance = Reactter.get<TestController>(ID);
+      final instance = Rt.get<TestController>(ID);
       expect(useDependency.instance, instance);
 
-      final isActive = Reactter.isActive(useDependency.instance);
+      final isActive = Rt.isActive(useDependency.instance);
       expect(isActive, true);
 
-      final dependencyMode = Reactter.getDependencyMode(useDependency.instance);
+      final dependencyMode = Rt.getDependencyMode(useDependency.instance);
       expect(dependencyMode, DependencyMode.factory);
 
-      Reactter.destroy<TestController>(id: ID);
+      Rt.destroy<TestController>(id: ID);
     });
 
     test("should register a dependency in singleton mode", () {
       final useDependency = UseDependency.lazySingleton(() => TestController());
       expect(useDependency.instance, null);
 
-      final instance = Reactter.get<TestController>();
+      final instance = Rt.get<TestController>();
       expect(useDependency.instance, instance);
 
-      final isActive = Reactter.isActive(useDependency.instance);
+      final isActive = Rt.isActive(useDependency.instance);
       expect(isActive, true);
 
-      final dependencyMode = Reactter.getDependencyMode(useDependency.instance);
+      final dependencyMode = Rt.getDependencyMode(useDependency.instance);
       expect(dependencyMode, DependencyMode.singleton);
 
-      Reactter.destroy<TestController>();
+      Rt.destroy<TestController>();
     });
 
     test("should register a dependency with id in singleton mode", () {
@@ -131,140 +131,140 @@ void main() {
           UseDependency.lazySingleton(() => TestController(), ID);
       expect(useDependency.instance, null);
 
-      final instance = Reactter.get<TestController>(ID);
+      final instance = Rt.get<TestController>(ID);
       expect(useDependency.instance, instance);
 
-      final isActive = Reactter.isActive(useDependency.instance);
+      final isActive = Rt.isActive(useDependency.instance);
       expect(isActive, true);
 
-      final dependencyMode = Reactter.getDependencyMode(useDependency.instance);
+      final dependencyMode = Rt.getDependencyMode(useDependency.instance);
       expect(dependencyMode, DependencyMode.singleton);
 
-      Reactter.destroy<TestController>(id: ID);
+      Rt.destroy<TestController>(id: ID);
     });
 
     test("should create a dependency", () {
       final useDependency = UseDependency.create(() => TestController());
       expect(useDependency.instance, isA<TestController>());
 
-      final isActive = Reactter.isActive(useDependency.instance);
+      final isActive = Rt.isActive(useDependency.instance);
       expect(isActive, true);
 
-      Reactter.destroy<TestController>();
+      Rt.destroy<TestController>();
     });
 
     test("should create a dependency in builder mode", () {
       final useDependency = UseDependency.builder(() => TestController());
       expect(useDependency.instance, isA<TestController>());
 
-      final isActive = Reactter.isActive(useDependency.instance);
+      final isActive = Rt.isActive(useDependency.instance);
       expect(isActive, true);
 
-      final dependencyMode = Reactter.getDependencyMode(useDependency.instance);
+      final dependencyMode = Rt.getDependencyMode(useDependency.instance);
       expect(dependencyMode, DependencyMode.builder);
 
-      Reactter.destroy<TestController>();
+      Rt.destroy<TestController>();
     });
 
     test("should create a dependency with id in builder mode", () {
       final useDependency = UseDependency.builder(() => TestController(), ID);
       expect(useDependency.instance, isA<TestController>());
 
-      final isActive = Reactter.isActive(useDependency.instance);
+      final isActive = Rt.isActive(useDependency.instance);
       expect(isActive, true);
 
-      final dependencyMode = Reactter.getDependencyMode(useDependency.instance);
+      final dependencyMode = Rt.getDependencyMode(useDependency.instance);
       expect(dependencyMode, DependencyMode.builder);
 
-      Reactter.destroy<TestController>(id: ID);
+      Rt.destroy<TestController>(id: ID);
     });
 
     test("should create a dependency in factory mode", () {
       final useDependency = UseDependency.factory(() => TestController());
       expect(useDependency.instance, isA<TestController>());
 
-      final isActive = Reactter.isActive(useDependency.instance);
+      final isActive = Rt.isActive(useDependency.instance);
       expect(isActive, true);
 
-      final dependencyMode = Reactter.getDependencyMode(useDependency.instance);
+      final dependencyMode = Rt.getDependencyMode(useDependency.instance);
       expect(dependencyMode, DependencyMode.factory);
 
-      Reactter.destroy<TestController>();
+      Rt.destroy<TestController>();
     });
 
     test("should create a dependency with id in factory mode", () {
       final useDependency = UseDependency.factory(() => TestController(), ID);
       expect(useDependency.instance, isA<TestController>());
 
-      final isActive = Reactter.isActive(useDependency.instance);
+      final isActive = Rt.isActive(useDependency.instance);
       expect(isActive, true);
 
-      final dependencyMode = Reactter.getDependencyMode(useDependency.instance);
+      final dependencyMode = Rt.getDependencyMode(useDependency.instance);
       expect(dependencyMode, DependencyMode.factory);
 
-      Reactter.destroy<TestController>(id: ID);
+      Rt.destroy<TestController>(id: ID);
     });
 
     test("should create a dependency in singleton mode", () {
       final useDependency = UseDependency.singleton(() => TestController());
       expect(useDependency.instance, isA<TestController>());
 
-      final isActive = Reactter.isActive(useDependency.instance);
+      final isActive = Rt.isActive(useDependency.instance);
       expect(isActive, true);
 
-      final dependencyMode = Reactter.getDependencyMode(useDependency.instance);
+      final dependencyMode = Rt.getDependencyMode(useDependency.instance);
       expect(dependencyMode, DependencyMode.singleton);
 
-      Reactter.destroy<TestController>();
+      Rt.destroy<TestController>();
     });
 
     test("should create a dependency with id in singleton mode", () {
       final useDependency = UseDependency.singleton(() => TestController(), ID);
       expect(useDependency.instance, isA<TestController>());
 
-      final isActive = Reactter.isActive(useDependency.instance);
+      final isActive = Rt.isActive(useDependency.instance);
       expect(isActive, true);
 
-      final dependencyMode = Reactter.getDependencyMode(useDependency.instance);
+      final dependencyMode = Rt.getDependencyMode(useDependency.instance);
       expect(dependencyMode, DependencyMode.singleton);
 
-      Reactter.destroy<TestController>(id: ID);
+      Rt.destroy<TestController>(id: ID);
     });
 
     test("should get a dependency", () {
-      Reactter.register(() => TestController());
+      Rt.register(() => TestController());
 
       final useDependency = UseDependency<TestController>.get();
       expect(useDependency.instance, isA<TestController>());
 
-      final isActive = Reactter.isActive(useDependency.instance);
+      final isActive = Rt.isActive(useDependency.instance);
       expect(isActive, true);
 
-      Reactter.destroy<TestController>();
+      Rt.destroy<TestController>();
     });
 
     test("should get a dependency with id", () {
-      Reactter.register(() => TestController(), id: ID);
+      Rt.register(() => TestController(), id: ID);
 
       final useDependency = UseDependency<TestController>.get(ID);
       expect(useDependency.instance, isA<TestController>());
 
-      final isActive = Reactter.isActive(useDependency.instance);
+      final isActive = Rt.isActive(useDependency.instance);
       expect(isActive, true);
 
-      Reactter.destroy<TestController>(id: ID);
+      Rt.destroy<TestController>(id: ID);
     });
   });
 }
 
 void _testController([String? id]) {
-  Reactter.create(() => TestController(), id: id);
+  Rt.create(() => TestController(), id: id);
 
   final useDependency = UseDependency<TestController>(id);
 
   expect(useDependency.instance, isA<TestController>());
 
-  Reactter.destroy<TestController>(id: id);
+  Rt.destroy<TestController>(id: id);
 }
 
 void _testControllerLate([String? id]) {
@@ -277,8 +277,8 @@ void _testControllerLate([String? id]) {
     }
   }, [useDependency]);
 
-  Reactter.create(() => TestController(), id: id);
-  Reactter.destroy<TestController>(id: id);
+  Rt.create(() => TestController(), id: id);
+  Rt.destroy<TestController>(id: id);
 
   expectLater(instance, isA<TestController>());
 }

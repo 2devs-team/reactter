@@ -1,11 +1,11 @@
 part of 'hooks.dart';
 
 /// {@template use_effect}
-/// A [ReactterHook] that manages `side-effect`.
+/// A [RtHook] that manages `side-effect`.
 ///
 ///
 /// The `side-effect` logic into the [callback] function is executed
-/// when [dependencies] of [ReactterState] argument has changes
+/// when [dependencies] of [RtState] argument has changes
 /// or [instance] trigger [LifeCycle.didMount] event:
 ///
 /// ```dart
@@ -20,7 +20,7 @@ part of 'hooks.dart';
 /// The [callback] function can return a cleanup function to manage the `effect
 /// cleanup`.
 /// The cleanup function is executed before the [dependencies] of
-/// [ReactterState] argument has changes or [instance] trigger
+/// [RtState] argument has changes or [instance] trigger
 /// [LifeCycle.willUnmount] event:
 ///
 /// ```dart
@@ -125,12 +125,12 @@ part of 'hooks.dart';
 ///
 /// See also:
 ///
-/// * [ReactterState], it receives as dependencies.
+/// * [RtState], it receives as dependencies.
 /// {@endtemplate}
-class UseEffect extends ReactterHook {
+class UseEffect extends RtHook {
   @protected
   @override
-  final $ = ReactterHook.$register;
+  final $ = RtHook.$register;
 
   bool _isDispatched = false;
   Function? _cleanupCallback;
@@ -140,7 +140,7 @@ class UseEffect extends ReactterHook {
   final Function callback;
 
   /// It's used to store the states as dependencies of [UseEffect].
-  final List<ReactterState> dependencies;
+  final List<RtState> dependencies;
 
   /// {@macro use_effect}
   UseEffect(this.callback, this.dependencies) {
@@ -199,12 +199,12 @@ class UseEffect extends ReactterHook {
   }
 
   void _watchInstanceAttached() {
-    Reactter.on(
+    Rt.on(
       instanceBinded!,
       Lifecycle.didMount,
       _runCallbackAndWatchDependencies,
     );
-    Reactter.on(
+    Rt.on(
       instanceBinded!,
       Lifecycle.willUnmount,
       _runCleanupAndUnwatchDependencies,
@@ -212,12 +212,12 @@ class UseEffect extends ReactterHook {
   }
 
   void _unwatchInstanceAttached() {
-    Reactter.off(
+    Rt.off(
       instanceBinded!,
       Lifecycle.didMount,
       _runCallbackAndWatchDependencies,
     );
-    Reactter.off(
+    Rt.off(
       instanceBinded!,
       Lifecycle.willUnmount,
       _runCleanupAndUnwatchDependencies,
@@ -236,15 +236,15 @@ class UseEffect extends ReactterHook {
 
   void _watchDependencies() {
     for (final dependency in dependencies) {
-      Reactter.on(dependency, Lifecycle.willUpdate, _runCleanup);
-      Reactter.on(dependency, Lifecycle.didUpdate, _runCallback);
+      Rt.on(dependency, Lifecycle.willUpdate, _runCleanup);
+      Rt.on(dependency, Lifecycle.didUpdate, _runCallback);
     }
   }
 
   void _unwatchDependencies() {
     for (final dependency in dependencies) {
-      Reactter.off(dependency, Lifecycle.willUpdate, _runCleanup);
-      Reactter.off(dependency, Lifecycle.didUpdate, _runCallback);
+      Rt.off(dependency, Lifecycle.willUpdate, _runCleanup);
+      Rt.off(dependency, Lifecycle.didUpdate, _runCallback);
     }
   }
 

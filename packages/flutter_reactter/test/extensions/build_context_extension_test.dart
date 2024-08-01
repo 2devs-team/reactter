@@ -26,7 +26,7 @@ void main() {
 
       expect(
         tester.takeException(),
-        isInstanceOf<ReactterDependencyNotFoundException>(),
+        isInstanceOf<RtDependencyNotFoundException>(),
       );
       expect(find.text("Rendered"), findsNothing);
     });
@@ -36,7 +36,7 @@ void main() {
 
       await tester.pumpWidget(
         TestBuilder(
-          child: ReactterProviderBuilder(
+          child: RtProviderBuilder(
             builder: (context, _, __) {
               instanceObtained = context.use<TestController>();
               final testController = context.use<TestController?>();
@@ -85,7 +85,7 @@ void main() {
 
       await tester.pumpWidget(
         TestBuilder(
-          child: ReactterProviderBuilder(
+          child: RtProviderBuilder(
             builder: (context, _, __) {
               instanceObtained = context.watch<TestController>();
 
@@ -112,7 +112,7 @@ void main() {
 
       await tester.pumpWidget(
         TestBuilder(
-          child: ReactterProviderBuilder(
+          child: RtProviderBuilder(
             builder: (context, _, __) {
               instanceObtained = context.watch<TestController>(
                 (inst) => [inst.stateInt],
@@ -155,7 +155,7 @@ void main() {
 
       await tester.pumpWidget(
         TestBuilder(
-          child: ReactterProvidersBuilder(
+          child: RtMultiProviderBuilder(
             builder: (context, _) {
               instanceObtained = context.use<TestController>();
               instanceObtainedWithId = context.use<TestController>('uniqueId');
@@ -269,7 +269,7 @@ void main() {
 
   group("context.select", () {
     testWidgets(
-      "should throw exception when ReactterScope not found",
+      "should throw exception when RtScope not found",
       (tester) async {
         await tester.pumpWidget(
           TestBuilder(
@@ -285,7 +285,7 @@ void main() {
 
         expect(
           tester.takeException(),
-          isInstanceOf<ReactterScopeNotFoundException>(),
+          isInstanceOf<RtScopeNotFoundException>(),
         );
         expect(find.text("Rendered"), findsNothing);
       },
@@ -308,7 +308,7 @@ void main() {
 
         expect(
           tester.takeException(),
-          isInstanceOf<ReactterDependencyNotFoundException>(),
+          isInstanceOf<RtDependencyNotFoundException>(),
         );
         expect(find.text("Rendered"), findsNothing);
       },
@@ -320,7 +320,7 @@ void main() {
 
       await tester.pumpWidget(
         TestBuilder(
-          child: ReactterProvidersBuilder(
+          child: RtMultiProviderBuilder(
             builder: (context, _) {
               instanceObtained = context.use<TestController>();
 
@@ -395,7 +395,7 @@ void main() {
 
       await tester.pumpWidget(
         TestBuilder(
-          child: ReactterProvidersBuilder(
+          child: RtMultiProviderBuilder(
             builder: (context, _) {
               final len = context.select<TestController, int>(
                 (inst, $) {
@@ -471,7 +471,7 @@ void main() {
 
       await tester.pumpWidget(
         TestBuilder(
-          child: ReactterProvidersBuilder(
+          child: RtMultiProviderBuilder(
             builder: (context, _) {
               instanceObtained = context.watch<TestController>(
                 (inst) => [inst.stateList],
@@ -575,7 +575,7 @@ void main() {
 
       await tester.pumpWidget(
         TestBuilder(
-          child: ReactterProvidersBuilder(
+          child: RtMultiProviderBuilder(
             builder: (context, _) {
               instanceObtained = context.use<TestController>();
               final len = context.select<TestController, int>(

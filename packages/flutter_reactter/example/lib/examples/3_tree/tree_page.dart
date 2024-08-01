@@ -9,7 +9,7 @@ class TreePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ReactterProvider(
+    return RtProvider(
       TreeNode.new,
       builder: (context, treeContext, _) {
         return Scaffold(

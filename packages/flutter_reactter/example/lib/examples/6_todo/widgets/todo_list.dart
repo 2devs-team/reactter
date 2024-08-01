@@ -4,7 +4,7 @@ import 'package:flutter_reactter/flutter_reactter.dart';
 import 'package:examples/examples/6_todo/controllers/todo_controller.dart';
 import 'package:examples/examples/6_todo/widgets/todo_item.dart';
 
-class TodoList extends ReactterComponent<TodoController> {
+class TodoList extends RtComponent<TodoController> {
   const TodoList({super.key});
 
   @override

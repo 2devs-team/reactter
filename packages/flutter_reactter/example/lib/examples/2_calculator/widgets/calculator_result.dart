@@ -10,20 +10,18 @@ class CalculatorResult extends StatelessWidget {
   Widget build(BuildContext context) {
     final calculatorController = context.use<CalculatorController>();
 
-    return ReactterWatcher(
-      builder: (_, __) {
-        return Container(
-          padding: const EdgeInsets.all(10.0),
-          alignment: Alignment.bottomRight,
-          child: Text(
-            "${calculatorController.result}",
-            style: const TextStyle(
-              fontSize: 48,
-              fontWeight: FontWeight.w200,
-            ),
+    return Container(
+      padding: const EdgeInsets.all(10.0),
+      alignment: Alignment.bottomRight,
+      child: RtWatcher((context, watch) {
+        return Text(
+          "${watch(calculatorController.result)}",
+          style: const TextStyle(
+            fontSize: 48,
+            fontWeight: FontWeight.w200,
           ),
         );
-      },
+      }),
     );
   }
 }

@@ -1,11 +1,11 @@
 part of '../memo.dart';
 
-/// {@template memo_interceptor_wrapper}
+/// {@template reactter.memo_wrapper_interceptor}
 /// It´s a wrapper for a memoized function that allows you to define
 /// callbacks for initialization, successful completion,
 /// error handling, and finishing.
 /// {@endtemplate}
-class MemoInterceptorWrapper<T, A> extends MemoInterceptor<T, A> {
+class MemoWrapperInterceptor<T, A> extends MemoInterceptor<T, A> {
   /// It's called when the memoized function is invoked
   /// for the first time with a new set of arguments.
   /// It allows you to perform any initialization logic
@@ -23,8 +23,8 @@ class MemoInterceptorWrapper<T, A> extends MemoInterceptor<T, A> {
   /// regardless of whether it was successful or encountered an error.
   final FunctionArgMemo<T, A>? _onFinish;
 
-  /// {@macro memo_interceptor_wrapper}
-  const MemoInterceptorWrapper({
+  /// {@macro reactter.memo_wrapper_interceptor}
+  const MemoWrapperInterceptor({
     FunctionArgMemo<T, A>? onInit,
     FunctionValueMemo<T, A>? onValue,
     FunctionErrorMemo<T, A>? onError,
@@ -54,3 +54,10 @@ class MemoInterceptorWrapper<T, A> extends MemoInterceptor<T, A> {
     _onFinish?.call(memo, arg);
   }
 }
+
+/// {@macro reactter.memo_wrapper_interceptor}
+@Deprecated(
+  'Use `MemoWrapperInterceptor` instead. '
+  'This feature was deprecated after v7.3.0.',
+)
+typedef MemoInterceptorWrapper<T, A> = MemoWrapperInterceptor<T, A>;

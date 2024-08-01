@@ -15,13 +15,13 @@ part of 'core.dart';
 ///   }
 ///
 ///   @override
-///   void onDidUpdate(ReactterState? state) {
+///   void onDidUpdate(RtState? state) {
 ///     print("$state has been changed");
 ///   }
 /// }
 ///
 /// // MyController has been initialized
-/// final myController = Reactter.create(() => MyController());
+/// final myController = Rt.create(() => MyController());
 /// // state has been changed
 /// myController.state.value = "value changed";
 /// ```

@@ -16,7 +16,7 @@ const TEST_EVENT2_COUNT = 2;
 void main() {
   group("EventHandler", () {
     test("should listen and emit event using dependency", () {
-      final testController = Reactter.create(() => TestController())!;
+      final testController = Rt.create(() => TestController())!;
 
       _testListenAndEmitEvent(
         testController,
@@ -24,11 +24,11 @@ void main() {
         instanceMatcher: testController,
       );
 
-      Reactter.delete<TestController>();
+      Rt.delete<TestController>();
     });
 
     test("should listen and emit event using dependency with id", () {
-      final testController = Reactter.create(
+      final testController = Rt.create(
         () => TestController(),
         id: 'uniqueId',
       )!;
@@ -39,122 +39,122 @@ void main() {
         instanceMatcher: testController,
       );
 
-      Reactter.delete<TestController>('uniqueId');
+      Rt.delete<TestController>('uniqueId');
     });
 
     test(
-      "should listen and emit event using ReactterDependency",
+      "should listen and emit event using RtDependency",
       () {
         _testListenAndEmitEvent(
-          ReactterDependency<TestController>(),
-          ReactterDependency<TestController>(),
+          RtDependency<TestController>(),
+          RtDependency<TestController>(),
           instanceMatcher: isNull,
         );
 
-        final testController = Reactter.create(() => TestController())!;
+        final testController = Rt.create(() => TestController())!;
 
         _testListenAndEmitEvent(
-          ReactterDependency<TestController>(),
-          ReactterDependency<TestController>(),
+          RtDependency<TestController>(),
+          RtDependency<TestController>(),
           instanceMatcher: testController,
         );
 
-        Reactter.delete<TestController>();
+        Rt.delete<TestController>();
       },
     );
 
     test(
-      "should listen and emit event using ReactterDependency with id",
+      "should listen and emit event using RtDependency with id",
       () {
         _testListenAndEmitEvent(
-          ReactterDependency<TestController>('uniqueId'),
-          ReactterDependency<TestController>('uniqueId'),
+          RtDependency<TestController>('uniqueId'),
+          RtDependency<TestController>('uniqueId'),
           instanceMatcher: isNull,
         );
 
-        final testController = Reactter.create(
+        final testController = Rt.create(
           () => TestController(),
           id: 'uniqueId',
         )!;
 
         _testListenAndEmitEvent(
-          ReactterDependency<TestController>('uniqueId'),
-          ReactterDependency<TestController>('uniqueId'),
+          RtDependency<TestController>('uniqueId'),
+          RtDependency<TestController>('uniqueId'),
           instanceMatcher: testController,
         );
 
-        Reactter.delete<TestController>('uniqueId');
+        Rt.delete<TestController>('uniqueId');
       },
     );
 
     test(
-      "should listen event using dependency and emit event using ReactterDependency",
+      "should listen event using dependency and emit event using RtDependency",
       () {
-        final testController = Reactter.create(() => TestController())!;
+        final testController = Rt.create(() => TestController())!;
 
         _testListenAndEmitEvent(
           testController,
-          ReactterDependency<TestController>(),
+          RtDependency<TestController>(),
           instanceMatcher: testController,
         );
 
-        Reactter.delete<TestController>();
+        Rt.delete<TestController>();
       },
     );
 
     test(
-      "should listen event using the dependency and emit event using ReactterDependency with id",
+      "should listen event using the dependency and emit event using RtDependency with id",
       () {
-        final testController = Reactter.create(
+        final testController = Rt.create(
           () => TestController(),
           id: 'uniqueId',
         )!;
 
         _testListenAndEmitEvent(
           testController,
-          ReactterDependency<TestController>('uniqueId'),
+          RtDependency<TestController>('uniqueId'),
           instanceMatcher: testController,
         );
 
-        Reactter.delete<TestController>('uniqueId');
+        Rt.delete<TestController>('uniqueId');
       },
     );
 
     test(
-      "should listen event using ReactterDependency and emit event using the dependency",
+      "should listen event using RtDependency and emit event using the dependency",
       () {
-        final testController = Reactter.create(() => TestController())!;
+        final testController = Rt.create(() => TestController())!;
 
         _testListenAndEmitEvent(
-          ReactterDependency<TestController>(),
+          RtDependency<TestController>(),
           testController,
           instanceMatcher: testController,
         );
 
-        Reactter.delete<TestController>();
+        Rt.delete<TestController>();
       },
     );
 
     test(
-      "should listen event using ReactterDependency and emit event using the dependency with id",
+      "should listen event using RtDependency and emit event using the dependency with id",
       () {
-        final testController = Reactter.create(
+        final testController = Rt.create(
           () => TestController(),
           id: 'uniqueId',
         )!;
 
         _testListenAndEmitEvent(
-          ReactterDependency<TestController>('uniqueId'),
+          RtDependency<TestController>('uniqueId'),
           testController,
           instanceMatcher: testController,
         );
 
-        Reactter.delete<TestController>('uniqueId');
+        Rt.delete<TestController>('uniqueId');
       },
     );
 
     test("should listen and emits event only once", () {
-      final testController = Reactter.create(() => TestController())!;
+      final testController = Rt.create(() => TestController())!;
 
       _testListenAndEmitEvent(
         testController,
@@ -164,31 +164,31 @@ void main() {
       );
 
       _testListenAndEmitEvent(
-        ReactterDependency<TestController>(),
-        ReactterDependency<TestController>(),
+        RtDependency<TestController>(),
+        RtDependency<TestController>(),
         instanceMatcher: testController,
         isOnce: true,
       );
 
       _testListenAndEmitEvent(
         testController,
-        ReactterDependency<TestController>(),
+        RtDependency<TestController>(),
         instanceMatcher: testController,
         isOnce: true,
       );
 
       _testListenAndEmitEvent(
-        ReactterDependency<TestController>(),
+        RtDependency<TestController>(),
         testController,
         instanceMatcher: testController,
         isOnce: true,
       );
 
-      Reactter.delete<TestController>();
+      Rt.delete<TestController>();
     });
 
     test("should listen and emits event only once with id", () {
-      final testController = Reactter.create(
+      final testController = Rt.create(
         () => TestController(),
         id: 'uniqueId',
       )!;
@@ -201,27 +201,27 @@ void main() {
       );
 
       _testListenAndEmitEvent(
-        ReactterDependency<TestController>('uniqueId'),
-        ReactterDependency<TestController>('uniqueId'),
+        RtDependency<TestController>('uniqueId'),
+        RtDependency<TestController>('uniqueId'),
         instanceMatcher: testController,
         isOnce: true,
       );
 
       _testListenAndEmitEvent(
         testController,
-        ReactterDependency<TestController>('uniqueId'),
+        RtDependency<TestController>('uniqueId'),
         instanceMatcher: testController,
         isOnce: true,
       );
 
       _testListenAndEmitEvent(
-        ReactterDependency<TestController>('uniqueId'),
+        RtDependency<TestController>('uniqueId'),
         testController,
         instanceMatcher: testController,
         isOnce: true,
       );
 
-      Reactter.delete<TestController>('uniqueId');
+      Rt.delete<TestController>('uniqueId');
     });
     test("should unlisten event", _testUnlistenEvent);
 
@@ -241,7 +241,7 @@ void _testListenAndEmitEvent(
   int countEvent1 = 0;
   int countEvent2 = 0;
 
-  final listen = isOnce ? Reactter.one : Reactter.on;
+  final listen = isOnce ? Rt.one : Rt.on;
 
   listen(instListen, Events.TestEvent, (inst, param) {
     if (instanceMatcher != null) expect(inst, instanceMatcher);
@@ -256,7 +256,7 @@ void _testListenAndEmitEvent(
   });
 
   for (var i = 0; i < TEST_EVENT_COUNT; i++) {
-    Reactter.emit(
+    Rt.emit(
       instEmit,
       Events.TestEvent,
       TEST_EVENT_PARAM_NAME,
@@ -265,7 +265,7 @@ void _testListenAndEmitEvent(
   }
 
   for (var i = 0; i < TEST_EVENT2_COUNT; i++) {
-    Reactter.emit(
+    Rt.emit(
       instEmit,
       Events.TestEvent2,
       TEST_EVENT2_PARAM_NAME,
@@ -273,7 +273,7 @@ void _testListenAndEmitEvent(
     expect(countEvent2, isOnce ? 1 : i + 1);
   }
 
-  Reactter.offAll(instListen, true);
+  Rt.offAll(instListen, true);
 }
 
 void _testUnlistenEvent({bool withId = false}) {
@@ -281,7 +281,7 @@ void _testUnlistenEvent({bool withId = false}) {
   int countEvent2 = 0;
   final id = withId ? 'uniqueId' : null;
 
-  final testController = Reactter.create(() => TestController(), id: id)!;
+  final testController = Rt.create(() => TestController(), id: id)!;
 
   void onTestEvent(TestController? inst, String param) {
     countEvent1 += 1;
@@ -291,17 +291,17 @@ void _testUnlistenEvent({bool withId = false}) {
     countEvent2 += 1;
   }
 
-  Reactter.on(testController, Events.TestEvent, onTestEvent);
-  Reactter.on(
-    ReactterDependency<TestController>(id),
+  Rt.on(testController, Events.TestEvent, onTestEvent);
+  Rt.on(
+    RtDependency<TestController>(id),
     Events.TestEvent,
     (inst, param) {
       expect(inst, testController);
       expect(param, TEST_EVENT_PARAM_NAME);
     },
   );
-  Reactter.on(
-    ReactterDependency<TestController>(id),
+  Rt.on(
+    RtDependency<TestController>(id),
     Events.TestEvent2,
     onTestEvent2,
   );
@@ -309,13 +309,13 @@ void _testUnlistenEvent({bool withId = false}) {
   expect(countEvent1, 0);
   expect(countEvent2, 0);
 
-  Reactter.emit(testController, Events.TestEvent, TEST_EVENT_PARAM_NAME);
+  Rt.emit(testController, Events.TestEvent, TEST_EVENT_PARAM_NAME);
 
   expect(countEvent1, 1);
   expect(countEvent2, 0);
 
-  Reactter.emit(
-    ReactterDependency<TestController>(id),
+  Rt.emit(
+    RtDependency<TestController>(id),
     Events.TestEvent,
     TEST_EVENT_PARAM_NAME,
   );
@@ -323,8 +323,8 @@ void _testUnlistenEvent({bool withId = false}) {
   expect(countEvent1, 2);
   expect(countEvent2, 0);
 
-  Reactter.emit(
-    ReactterDependency<TestController>(id),
+  Rt.emit(
+    RtDependency<TestController>(id),
     Events.TestEvent2,
     TEST_EVENT2_PARAM_NAME,
   );
@@ -332,30 +332,30 @@ void _testUnlistenEvent({bool withId = false}) {
   expect(countEvent1, 2);
   expect(countEvent2, 1);
 
-  Reactter.off(testController, Events.TestEvent, onTestEvent);
-  Reactter.emit(
-    ReactterDependency<TestController>(id),
+  Rt.off(testController, Events.TestEvent, onTestEvent);
+  Rt.emit(
+    RtDependency<TestController>(id),
     Events.TestEvent,
     TEST_EVENT_PARAM_NAME,
   );
-  Reactter.emit(testController, Events.TestEvent, TEST_EVENT_PARAM_NAME);
+  Rt.emit(testController, Events.TestEvent, TEST_EVENT_PARAM_NAME);
 
   expect(countEvent1, 2);
   expect(countEvent2, 1);
 
-  Reactter.emit(testController, Events.TestEvent2, TEST_EVENT2_PARAM_NAME);
+  Rt.emit(testController, Events.TestEvent2, TEST_EVENT2_PARAM_NAME);
 
   expect(countEvent1, 2);
   expect(countEvent2, 2);
 
-  Reactter.off(
-    ReactterDependency<TestController>(id),
+  Rt.off(
+    RtDependency<TestController>(id),
     Events.TestEvent2,
     onTestEvent2,
   );
-  Reactter.emit(testController, Events.TestEvent2, TEST_EVENT2_PARAM_NAME);
-  Reactter.emit(
-    ReactterDependency<TestController>(id),
+  Rt.emit(testController, Events.TestEvent2, TEST_EVENT2_PARAM_NAME);
+  Rt.emit(
+    RtDependency<TestController>(id),
     Events.TestEvent2,
     TEST_EVENT2_PARAM_NAME,
   );
@@ -363,5 +363,5 @@ void _testUnlistenEvent({bool withId = false}) {
   expect(countEvent1, 2);
   expect(countEvent2, 2);
 
-  Reactter.delete<TestController>(id);
+  Rt.delete<TestController>(id);
 }
