@@ -61,5 +61,8 @@ abstract class RtHook extends Hook implements RtState {
 }
 
 /// {@macro reactter.rt_hook}
-@Deprecated('Use `RtHook` instead.')
+@Deprecated(
+  'Use `RtHook` instead. '
+  'This feature was deprecated after v7.3.0.',
+)
 typedef ReactterHook = RtHook;

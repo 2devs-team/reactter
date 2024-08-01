@@ -132,8 +132,8 @@ class RtProvider<T extends Object?> extends ProviderBase<T>
     String? id,
     DependencyMode mode = DependencyMode.builder,
     @Deprecated(
-      'This feature not working anymore. It was deprecated after v7.2.0. '
-      'Use `RtProvider.init` instead.',
+      'This feature not working anymore, use `RtProvider.init` instead. '
+      'It was deprecated after v7.2.0.',
     )
     bool init = false,
     Widget? child,
@@ -282,5 +282,8 @@ class RtProviderElement<T extends Object?> extends ComponentElement
 }
 
 /// {@macro flutter_reactter.rt_provider}
-@Deprecated('Use `RtProvider` instead')
+@Deprecated(
+  'Use `RtProvider` instead. '
+  'This feature was deprecated after v7.3.0.',
+)
 typedef ReactterProvider<T extends Object> = RtProvider<T>;

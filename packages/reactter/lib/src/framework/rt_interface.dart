@@ -44,9 +44,15 @@ class RtInterface
 final Rt = RtInterface();
 
 /// {@macro reactter.rt_interface}
-@Deprecated('Use `RtInterface` instead')
+@Deprecated(
+  'Use `RtInterface` instead. '
+  'This feature was deprecated after v7.3.0.',
+)
 typedef ReactterInterface = RtInterface;
 
 /// {@macro reactter.rt}
-@Deprecated('Use `Rt` instead')
+@Deprecated(
+  'Use `Rt` instead. '
+  'This feature was deprecated after v7.3.0.',
+)
 final Reactter = Rt;

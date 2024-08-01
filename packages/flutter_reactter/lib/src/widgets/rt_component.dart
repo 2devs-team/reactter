@@ -141,5 +141,8 @@ abstract class RtComponent<T extends Object> extends StatelessWidget {
 }
 
 /// {@macro flutter_reactter.rt_component}
-@Deprecated('Use `RtComponent` instead')
+@Deprecated(
+  'Use `RtComponent` instead. '
+  'This feature was deprecated after v7.3.0.',
+)
 typedef RtComponentWidget<T extends Object> = RtComponent<T>;

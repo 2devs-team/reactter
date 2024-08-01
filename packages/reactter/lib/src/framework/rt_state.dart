@@ -32,9 +32,15 @@ abstract class RtStateImpl extends RtState {
 }
 
 /// {@macro reactter.rt_state}
-@Deprecated('Use `RtState` instead')
+@Deprecated(
+  'Use `RtState` instead. '
+  'This feature was deprecated after v7.3.0.',
+)
 typedef ReactterState = RtState;
 
 /// {@macro reactter.rt_state_impl}
-@Deprecated('Use `RtStateImpl` instead')
+@Deprecated(
+  'Use `RtStateImpl` instead. '
+  'This feature was deprecated after v7.3.0.',
+)
 typedef ReactterStateImpl = RtStateImpl;

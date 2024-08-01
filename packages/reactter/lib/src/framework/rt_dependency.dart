@@ -17,5 +17,8 @@ class RtDependency<T> extends DependencyRef<T> {
 typedef ReactterInstance<T> = RtDependency<T>;
 
 /// {@macro reactter.rt_dependency}
-@Deprecated('Use `RtDependency` instead.')
+@Deprecated(
+  'Use `RtDependency` instead. '
+  'This feature was deprecated after v7.3.0.',
+)
 typedef ReactterDependency<T> = RtDependency<T>;

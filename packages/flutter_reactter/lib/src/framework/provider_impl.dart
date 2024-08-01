@@ -345,5 +345,8 @@ https://stackoverflow.com/questions/tagged/flutter
 }
 
 /// {@macro flutter_reactter.provider_not_found_exception}
-@Deprecated('Use `RtDependencyNotFoundException` instead.')
+@Deprecated(
+  'Use `RtDependencyNotFoundException` instead. '
+  'This feature was deprecated after v7.3.0.',
+)
 typedef ReactterDependencyNotFoundException = RtDependencyNotFoundException;

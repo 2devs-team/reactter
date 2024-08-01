@@ -93,8 +93,14 @@ https://stackoverflow.com/questions/tagged/flutter
 }
 
 /// {@macro flutter_reactter.rt_scope}
-@Deprecated('Use `RtScope` instead')
+@Deprecated(
+  'Use `RtScope` instead. '
+  'This feature was deprecated after v7.3.0.',
+)
 typedef ReactterScope = RtScope;
 
-@Deprecated('Use `RtScopeNotFoundException` instead')
+@Deprecated(
+  'Use `RtScopeNotFoundException` instead. '
+  'This feature was deprecated after v7.3.0.',
+)
 typedef ReactterScopeNotFoundException = RtScopeNotFoundException;
