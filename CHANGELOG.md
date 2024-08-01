@@ -1,5 +1,11 @@
 # Reactter
 
+## 7.3.1
+
+## Fixes
+
+- **fix:** Update `RtComponentWidget` typedef to `ReactterComponent`.
+
 ## 7.3.0
 
 ### Breakings
