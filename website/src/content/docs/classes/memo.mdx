@@ -2,7 +2,7 @@
 title: Memo
 description: Learn how to use memoization in Reactter.
 sidebar:
-  order: 0.2
+  order: 2
 ---
 import { HM, HT } from '@/components/Highlight';
 
@@ -24,10 +24,10 @@ Memo<T, A>(
 - <HM>`computeValue`</HM>: A method that takes an argument of type <HT>`A`</HT> and returns a value of <HT>`T`</HT> type. This is the core function that will be memoized.
 - `interceptor`: A <HT><a href="https://pub.dev/documentation/reactter/latest/reactter/MemoInterceptor-class.html" target="_blank">`MemoInterceptor`</a></HT> that allows you to intercept the memoization function calls and modify the memoization process.
   Reactter providers some interceptors:
-  - <HT><a href="https://pub.dev/documentation/reactter/latest/reactter/AsyncMemoSafe-class.html" target="_blank">`AsyncMemoSafe`</a></HT>: prevents caching if the <HT>`Future`</HT> calculation function throws an error during execution.
-  - <HT><a href="https://pub.dev/documentation/reactter/latest/reactter/TemporaryCacheMemo-class.html" target="_blank">`TemporaryCacheMemo`</a></HT>: removes memoized values from the cache after a specified duration.
-  - <HT><a href="https://pub.dev/documentation/reactter/latest/reactter/MemoInterceptorWrapper-class.html" target="_blank">`MemoInterceptorWrapper`</a></HT>: Wraps a memoized function, enabling the definition of callbacks for initialization, successful completion, error handling, and finishing.
-  - <HT><a href="https://pub.dev/documentation/reactter/latest/reactter/MemoInterceptors-class.html" target="_blank">`MemoInterceptors`</a></HT>: allows multiple memoization interceptors to be used together.
+  - <HT><a href="https://pub.dev/documentation/reactter/latest/reactter/MemoSafeAsyncInterceptor-class.html" target="_blank">`MemoSafeAsyncInterceptor`</a></HT>: prevents caching if the <HT>`Future`</HT> calculation function throws an error during execution.
+  - <HT><a href="https://pub.dev/documentation/reactter/latest/reactter/MemoTemporaryCacheInterceptor-class.html" target="_blank">`MemoTemporaryCacheInterceptor`</a></HT>: removes memoized values from the cache after a specified duration.
+  - <HT><a href="https://pub.dev/documentation/reactter/latest/reactter/MemoWrapperInterceptor-class.html" target="_blank">`MemoWrapperInterceptor`</a></HT>: Wraps a memoized function, enabling the definition of callbacks for initialization, successful completion, error handling, and finishing.
+  - <HT><a href="https://pub.dev/documentation/reactter/latest/reactter/MemoMultiInterceptor-class.html" target="_blank">`MemoMultiInterceptor`</a></HT>: allows multiple memoization interceptors to be used together.
 
 ## Methods
 

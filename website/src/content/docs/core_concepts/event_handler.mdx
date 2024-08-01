@@ -16,11 +16,11 @@ Reactter offers the following event handler mechanisms:
 - Hooks
   - <HT>[`UseEffect`](/reactter/hooks/UseEffect)</HT>
 - Methods
-  - <HM>[`Reactter.on`](/reactter/methods/event_handler_methods/#reactteron)</HM>
-  - <HM>[`Reactter.one`](/reactter/methods/event_handler_methods/#reactterone)</HM>
-  - <HM>[`Reactter.emit`](/reactter/methods/event_handler_methods/#reactteremit)</HM>
-  - <HM>[`Reactter.off`](/reactter/methods/event_handler_methods/#reactteroff)</HM>
-  - <HM>[`Reactter.offAll`](/reactter/methods/event_handler_methods/#reactteroffall)</HM>
+  - <HM>[`Rt.on`](/reactter/methods/event_handler_methods/#rton)</HM>
+  - <HM>[`Rt.one`](/reactter/methods/event_handler_methods/#rtone)</HM>
+  - <HM>[`Rt.emit`](/reactter/methods/event_handler_methods/#rtemit)</HM>
+  - <HM>[`Rt.off`](/reactter/methods/event_handler_methods/#rtoff)</HM>
+  - <HM>[`Rt.offAll`](/reactter/methods/event_handler_methods/#rtoffall)</HM>
 
 ## How it works
 
@@ -36,7 +36,7 @@ Understanding these concepts is crucial for effectively managing event-driven in
 
 To illustrate this, let's take a countdown example seen from the [State Management](/reactter/core_concepts/state_management/#example) page:
 
-```dart title="main.dart" {10-14} /count(?!down)(?!\u0060)/ "count.value" "Reactter.on" "Lifecycle.didUpdate"
+```dart title="main.dart" {10-14} /count(?!down)(?!\u0060)/ "count.value" "Rt.on" "Lifecycle.didUpdate"
 import 'dart:async';
 import 'package:reactter/reactter.dart';
 
@@ -46,7 +46,7 @@ final count = Signal(10);
 void main() async {
   // Listen to the `didUpdate` event of the `count` state
   // and print the `value` of `count` each time it changes
-  Reactter.on(
+  Rt.on(
     count,
     Lifecycle.didUpdate,
     (_, __) => print('Count: $count')
@@ -68,7 +68,7 @@ void countdown(Timer timer) {
 }
 ```
 
-In this example, the line 10 to 14, we see that the <HM>`Reactter.on`</HM> method is used to subscribe to the <HE>`Lifecycle.didUpdate`</HE> **event** of the `count` **instance**.
+In this example, the line 10 to 14, we see that the <HM>`Rt.on`</HM> method is used to subscribe to the <HE>`Lifecycle.didUpdate`</HE> **event** of the `count` **instance**.
 Whenever the `count` state changes, the **listener** function is invoked, printing the current `value` of the `count` state.
 
 Here, we can't see the emitter, because it's encapsulated within the <HT>`Signal`</HT> class, and it's called when the `value` of the `count` state changes.
@@ -80,7 +80,7 @@ This mechanism is made possible by the underlying state management system.
 
 Now, we do a small tweak to add an emitter:
 
-```dart title="main.dart" ins={4,18-24,38-39} /count(?!down)(?!\u0060)/ "count.value" "Reactter.on" "Lifecycle.didUpdate" "Reactter.emit" /(CustomEvent) / /(CustomEvent(\.countdownFinished))(?!\u0060)/
+```dart title="main.dart" ins={4,18-24,38-39} /count(?!down)(?!\u0060)/ "count.value" "Rt.on" "Lifecycle.didUpdate" "Rt.emit" /(CustomEvent) / /(CustomEvent(\.countdownFinished))(?!\u0060)/
 import 'dart:async';
 import 'package:reactter/reactter.dart';
 
@@ -92,7 +92,7 @@ final count = Signal(10);
 void main() async {
   // Listen to the `didUpdate` event of the `count` state
   // and print the `value` of `count` each time it changes
-  Reactter.on(
+  Rt.on(
     count,
     Lifecycle.didUpdate,
     (_, __) => print('Count: $count')
@@ -100,7 +100,7 @@ void main() async {
 
   // Listen to the `countdownFinished` event
   // and print a message when the countdown is finished
-  Reactter.on(
+  Rt.on(
     count,
     CustomEvent.countdownFinished,
     (_, __) => print('Countdown finished!')
@@ -119,7 +119,7 @@ void countdown(Timer timer) {
   if (count.value == 0) {
     timer.cancel();
     // Emit the `CustomEvent.countdownFinished` event
-    Reactter.emit(count, CustomEvent.countdownFinished);
+    Rt.emit(count, CustomEvent.countdownFinished);
   }
 }
 ```

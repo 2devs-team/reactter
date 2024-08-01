@@ -31,9 +31,9 @@ Reactter provider some hooks to manage the state and side effects of the applica
 
 ## How it works
 
-Hooks in Reactter are classes that extend <HT><a href="https://pub.dev/documentation/reactter/latest/reactter/ReactterHook-class.html" target="_blank">`ReactterHook`</a></HT> and follow a special naming convention with the  <HT>`Use`</HT>  prefix. The <HT>`ReactterHook`</HT> class is responsible for binding the hook to other hooks and states, and managing the lifecycle of the hook.
+Hooks in Reactter are classes that extend <HT><a href="https://pub.dev/documentation/reactter/latest/reactter/RtHook-class.html" target="_blank">`RtHook`</a></HT> and follow a special naming convention with the  <HT>`Use`</HT>  prefix. The <HT>`RtHook`</HT> class is responsible for binding the hook to other hooks and states, and managing the lifecycle of the hook.
 
-Hooks in Reactter are essentially stateful entities because <HT>`ReactterHook`</HT> inherits from <HT>`ReactterState`</HT> this inheritance allows hooks to manage both state and lifecycle methods efficiently.
+Hooks in Reactter are essentially stateful entities because <HT>`RtHook`</HT> inherits from <HT>`RtState`</HT> this inheritance allows hooks to manage both state and lifecycle methods efficiently.
 
 To manage these aspects, Hooks provide the following:
 <StateMethodsLite/>
@@ -50,10 +50,10 @@ There are several advantages to using _**Custom Hooks**_:
 
 ### Creating a custom hook
 
-To create a _**Custom hook**_, you need to create a class that extends <HT>`ReactterHook`</HT> and follow the naming convention with the <HT>`Use`</HT> prefix.
+To create a _**Custom hook**_, you need to create a class that extends <HT>`RtHook`</HT> and follow the naming convention with the <HT>`Use`</HT> prefix.
 
 :::note
-<HT>`ReactterHook`</HT> is a class that inherits from <HT>`ReactterState`</HT>.
+<HT>`RtHook`</HT> is a class that inherits from <HT>`RtState`</HT>.
 It provides a set of methods to manage the state and lifecycle of the hook.
 Learn more about [State methods](/reactter/core_concepts/state_management/#state-methods).
 :::
@@ -63,10 +63,10 @@ Here's an example of a _**Custom Hook**_ that manages the state of a text input:
 <Code code={UseTextInputCode} lang="dart" mark={[...marks, {range: "5-6", label: "*      This line is REQUIRED!        "}]} />
 
 :::caution[Attention!!]
-To create a _**Custom Hook**_(<HT>`ReactterHook`</HT>), you need to register it by adding the following line:
+To create a _**Custom Hook**_(<HT>`RtHook`</HT>), you need to register it by adding the following line:
 
 ```dart showLineNumbers=false
-final $ = ReactterHook.$register;
+final $ = RtHook.$register;
 ```
 
 It's important to note that the states and hooks defined above this line are not linked to the hook.
@@ -76,7 +76,7 @@ To avoid this, it's recommended to place this line as the first line in the clas
 As shown in the example above, we can utilize other hooks such as <HT>[`UseEffect`](/reactter/hooks/use_effect)</HT> to monitor changes in the text input's controller and ensure it is disposed when the hook is destroyed.
 
 The <HM>`update`</HM> method is used to set the internal `_value` to the current text in the controller, which keeps the state synchronized with the input.
-This methods is a part of the <HT>`ReactterHook`</HT> class that allows you to update the state of the hook.
+This methods is a part of the <HT>`RtHook`</HT> class that allows you to update the state of the hook.
 
 ### Using a custom hook
 

@@ -57,8 +57,8 @@ import mainDestroyCode from '@/examples/dependency_injection_destroy/lib/main.da
 import counterUnregisterCode from '@/examples/dependency_injection_unregister/lib/counter.dart?raw';
 import mainUnregisterCode from '@/examples/dependency_injection_unregister/lib/main.dart?raw';
 
-import counterIsRegisteredCode from '@/examples/dependency_injection_is_registered/lib/counter.dart?raw';
-import mainIsRegisteredCode from '@/examples/dependency_injection_is_registered/lib/main.dart?raw';
+import counterIsActiveCode from '@/examples/dependency_injection_is_active/lib/counter.dart?raw';
+import mainIsActiveCode from '@/examples/dependency_injection_is_active/lib/main.dart?raw';
 
 :::tip
 This documentation assumes you've already read the [Dependency Injection](/reactter/core_concepts/dependency_injection).
@@ -68,15 +68,15 @@ It's recommended read that first if you're new in Reactter.
 Reactter provides several methods to manage dependencies in a more efficient way.
 These methods are used to create and manipulate dependencies in a more organized way.
 
-## <HM>`Reactter.register`</HM>
+## <HM>`Rt.register`</HM>
 
-The <HM>`Reactter.register`</HM> method registers a new dependency.
+The <HM>`Rt.register`</HM> method registers a new dependency.
 It returns <HN>`true`</HN> if the dependency is registered successfully, otherwise return <HN>`false`</HN>.
 
 #### Syntax
 
 ```dart showLineNumbers=false
-bool Reactter.register<T>(
+bool Rt.register<T>(
   T Function() builder, {
   String? id,
   DependencyMode mode = DependencyMode.builder,
@@ -92,7 +92,7 @@ The default value is <HE>`DependencyMode.builder`</HE>. Learn more about it in [
 
 #### Example
 
-See the example below to understand how to use the <HM>`Reactter.register`</HM> method in different scenarios.
+See the example below to understand how to use the <HM>`Rt.register`</HM> method in different scenarios.
 
 <CodeTabs>
   <ZappButton path="examples/dependency_injection_register"/>
@@ -109,17 +109,17 @@ See the example below to understand how to use the <HM>`Reactter.register`</HM> 
   </Tabs>
 </CodeTabs>
 
-## <HM>`Reactter.lazyBuilder`</HM>
+## <HM>`Rt.lazyBuilder`</HM>
 
-The <HM>`Reactter.lazyBuilder`</HM> method registers a new dependency as [<HE>`DependencyMode.builder`</HE>](/reactter/core_concepts/dependency_injection/#builder).
+The <HM>`Rt.lazyBuilder`</HM> method registers a new dependency as [<HE>`DependencyMode.builder`</HE>](/reactter/core_concepts/dependency_injection/#builder).
 It returns <HN>`true`</HN> if the dependency is registered successfully, otherwise return <HN>`false`</HN>.
 
-This method is similar to the <HM>`Reactter.register`</HM> method but with the <HE>`DependencyMode.builder`</HE> mode only.
+This method is similar to the <HM>`Rt.register`</HM> method but with the <HE>`DependencyMode.builder`</HE> mode only.
 
 #### Syntax
 
 ```dart showLineNumbers=false
-bool Reactter.lazyBuilder<T>(
+bool Rt.lazyBuilder<T>(
   T Function() builder, {
   String? id,
 });
@@ -132,7 +132,7 @@ bool Reactter.lazyBuilder<T>(
 
 #### Example
 
-See the example below to understand how to use the <HM>`Reactter.lazyBuilder`</HM> method in different scenarios.
+See the example below to understand how to use the <HM>`Rt.lazyBuilder`</HM> method in different scenarios.
 
 <CodeTabs>
   <ZappButton path="examples/dependency_injection_lazy_builder"/>
@@ -149,17 +149,17 @@ See the example below to understand how to use the <HM>`Reactter.lazyBuilder`</H
   </Tabs>
 </CodeTabs>
 
-## <HM>`Reactter.lazyFactory`</HM>
+## <HM>`Rt.lazyFactory`</HM>
 
-The <HM>`Reactter.lazyFactory`</HM> method registers a new dependency as [<HE>`DependencyMode.factory`</HE>](/reactter/core_concepts/dependency_injection/#factory).
+The <HM>`Rt.lazyFactory`</HM> method registers a new dependency as [<HE>`DependencyMode.factory`</HE>](/reactter/core_concepts/dependency_injection/#factory).
 It returns <HN>`true`</HN> if the dependency is registered successfully, otherwise return <HN>`false`</HN>.
 
-This method is similar to the <HM>`Reactter.register`</HM> method but with the <HE>`DependencyMode.factory`</HE> mode only.
+This method is similar to the <HM>`Rt.register`</HM> method but with the <HE>`DependencyMode.factory`</HE> mode only.
 
 #### Syntax
 
 ```dart showLineNumbers=false
-bool Reactter.lazyFactory<T>(
+bool Rt.lazyFactory<T>(
   T Function() builder, {
   String? id,
 });
@@ -172,7 +172,7 @@ bool Reactter.lazyFactory<T>(
 
 #### Example
 
-See the example below to understand how to use the <HM>`Reactter.lazyFactory`</HM> method in different scenarios.
+See the example below to understand how to use the <HM>`Rt.lazyFactory`</HM> method in different scenarios.
 
 <CodeTabs>
   <ZappButton path="examples/dependency_injection_lazy_factory"/>
@@ -189,17 +189,17 @@ See the example below to understand how to use the <HM>`Reactter.lazyFactory`</H
   </Tabs>
 </CodeTabs>
 
-## <HM>`Reactter.lazySingleton`</HM>
+## <HM>`Rt.lazySingleton`</HM>
 
-The <HM>`Reactter.lazySingleton`</HM> method registers a new dependency as [<HE>`DependencyMode.singleton`</HE>](/reactter/core_concepts/dependency_injection/#singleton).
+The <HM>`Rt.lazySingleton`</HM> method registers a new dependency as [<HE>`DependencyMode.singleton`</HE>](/reactter/core_concepts/dependency_injection/#singleton).
 It returns <HN>`true`</HN> if the dependency is registered successfully, otherwise return <HN>`false`</HN>.
 
-This method is similar to the <HM>`Reactter.register`</HM> method but with the <HE>`DependencyMode.singleton`</HE> mode.
+This method is similar to the <HM>`Rt.register`</HM> method but with the <HE>`DependencyMode.singleton`</HE> mode.
 
 #### Syntax
 
 ```dart showLineNumbers=false
-bool Reactter.lazySingleton<T>(
+bool Rt.lazySingleton<T>(
   T Function() builder, {
   String? id,
 });
@@ -212,7 +212,7 @@ bool Reactter.lazySingleton<T>(
 
 #### Example
 
-See the example below to understand how to use the <HM>`Reactter.lazySingleton`</HM> method in different scenarios.
+See the example below to understand how to use the <HM>`Rt.lazySingleton`</HM> method in different scenarios.
 
 <CodeTabs>
   <ZappButton path="examples/dependency_injection_lazy_singleton"/>
@@ -229,14 +229,14 @@ See the example below to understand how to use the <HM>`Reactter.lazySingleton`<
   </Tabs>
 </CodeTabs>
 
-## <HM>`Reactter.create`</HM>
+## <HM>`Rt.create`</HM>
 
-The <HM>`Reactter.create`</HM> method registers a dependency(if not already registered), create its instance(if not created yet) and return it.
+The <HM>`Rt.create`</HM> method registers a dependency(if not already registered), create its instance(if not created yet) and return it.
 
 #### Syntax
 
 ```dart showLineNumbers=false
-T Reactter.create<T>(T Function() builder, {
+T Rt.create<T>(T Function() builder, {
   String? id,
   DependencyMode mode = DependencyMode.builder,
 });
@@ -249,7 +249,7 @@ T Reactter.create<T>(T Function() builder, {
 
 #### Example
 
-See the example below to understand how to use the <HM>`Reactter.create`</HM> method in different scenarios.
+See the example below to understand how to use the <HM>`Rt.create`</HM> method in different scenarios.
 
 <CodeTabs>
   <ZappButton path="examples/dependency_injection_create"/>
@@ -266,16 +266,16 @@ See the example below to understand how to use the <HM>`Reactter.create`</HM> me
   </Tabs>
 </CodeTabs>
 
-## <HM>`Reactter.builder`</HM>
+## <HM>`Rt.builder`</HM>
 
-The <HM>`Reactter.create`</HM> method registers a dependency as [<HE>`DependencyMode.builder`</HE>](/reactter/core_concepts/dependency_injection/#builder)(if not already registered), create its instance(if not created yet) and return it.
+The <HM>`Rt.create`</HM> method registers a dependency as [<HE>`DependencyMode.builder`</HE>](/reactter/core_concepts/dependency_injection/#builder)(if not already registered), create its instance(if not created yet) and return it.
 
-This method is similar to the <HM>`Reactter.create`</HM> method.
+This method is similar to the <HM>`Rt.create`</HM> method.
 
 #### Syntax
 
 ```dart showLineNumbers=false
-T Reactter.builder<T>(T Function() builder, {
+T Rt.builder<T>(T Function() builder, {
   String? id,
 });
 ```
@@ -287,7 +287,7 @@ T Reactter.builder<T>(T Function() builder, {
 
 #### Example
 
-See the example below to understand how to use the <HM>`Reactter.builder`</HM> method in different scenarios.
+See the example below to understand how to use the <HM>`Rt.builder`</HM> method in different scenarios.
 
 <CodeTabs>
   <ZappButton path="examples/dependency_injection_builder"/>
@@ -304,16 +304,16 @@ See the example below to understand how to use the <HM>`Reactter.builder`</HM> m
   </Tabs>
 </CodeTabs>
 
-## <HM>`Reactter.factory`</HM>
+## <HM>`Rt.factory`</HM>
 
-The <HM>`Reactter.factory`</HM> method registers a dependency as [<HE>`DependencyMode.factory`</HE>](/reactter/core_concepts/dependency_injection/#factory)(if not already registered), create its instance(if not created yet) and return it.
+The <HM>`Rt.factory`</HM> method registers a dependency as [<HE>`DependencyMode.factory`</HE>](/reactter/core_concepts/dependency_injection/#factory)(if not already registered), create its instance(if not created yet) and return it.
 
-This method is similar to the <HM>`Reactter.create`</HM> method but with the <HE>`DependencyMode.factory`</HE> mode.
+This method is similar to the <HM>`Rt.create`</HM> method but with the <HE>`DependencyMode.factory`</HE> mode.
 
 #### Syntax
 
 ```dart showLineNumbers=false
-T Reactter.factory<T>(T Function() builder, {
+T Rt.factory<T>(T Function() builder, {
   String? id,
 });
 ```
@@ -325,7 +325,7 @@ T Reactter.factory<T>(T Function() builder, {
 
 #### Example
 
-See the example below to understand how to use the <HM>`Reactter.factory`</HM> method in different scenarios.
+See the example below to understand how to use the <HM>`Rt.factory`</HM> method in different scenarios.
 
 <CodeTabs>
   <ZappButton path="examples/dependency_injection_factory"/>
@@ -342,16 +342,16 @@ See the example below to understand how to use the <HM>`Reactter.factory`</HM> m
   </Tabs>
 </CodeTabs>
 
-## <HM>`Reactter.singleton`</HM>
+## <HM>`Rt.singleton`</HM>
 
-The <HM>`Reactter.singleton`</HM> method registers a dependency as [<HE>`DependencyMode.singleton`</HE>](/reactter/core_concepts/dependency_injection/#singleton)(if not already registered), create its instance(if not created yet) and return it.
+The <HM>`Rt.singleton`</HM> method registers a dependency as [<HE>`DependencyMode.singleton`</HE>](/reactter/core_concepts/dependency_injection/#singleton)(if not already registered), create its instance(if not created yet) and return it.
 
-This method is similar to the <HM>`Reactter.create`</HM> method but with the <HE>`DependencyMode.singleton`</HE> mode.
+This method is similar to the <HM>`Rt.create`</HM> method but with the <HE>`DependencyMode.singleton`</HE> mode.
 
 #### Syntax
 
 ```dart showLineNumbers=false
-T Reactter.singleton<T>(T Function() builder, {
+T Rt.singleton<T>(T Function() builder, {
   String? id,
 });
 ```
@@ -363,7 +363,7 @@ T Reactter.singleton<T>(T Function() builder, {
 
 #### Example
 
-See the example below to understand how to use the <HM>`Reactter.singleton`</HM> method in different scenarios.
+See the example below to understand how to use the <HM>`Rt.singleton`</HM> method in different scenarios.
 
 <CodeTabs>
   <ZappButton path="examples/dependency_injection_singleton"/>
@@ -380,15 +380,15 @@ See the example below to understand how to use the <HM>`Reactter.singleton`</HM>
   </Tabs>
 </CodeTabs>
 
-## <HM>`Reactter.get`</HM>
+## <HM>`Rt.get`</HM>
 
-The <HM>`Reactter.get`</HM> method creates the dependency instance(if not created yet), retrieves it, and then return it.
+The <HM>`Rt.get`</HM> method creates the dependency instance(if not created yet), retrieves it, and then return it.
 If the dependency is not created, it will return <HN>`null`</HN>.
 
 #### Syntax
 
 ```dart showLineNumbers=false
-T? Reactter.get<T>([String? id]);
+T? Rt.get<T>([String? id]);
 ```
 
 #### Parameters
@@ -397,7 +397,7 @@ T? Reactter.get<T>([String? id]);
 
 #### Example
 
-See the example below to understand how to use the <HM>`Reactter.get`</HM> method in different scenarios.
+See the example below to understand how to use the <HM>`Rt.get`</HM> method in different scenarios.
 
 <CodeTabs>
   <ZappButton path="examples/dependency_injection_get"/>
@@ -414,14 +414,14 @@ See the example below to understand how to use the <HM>`Reactter.get`</HM> metho
   </Tabs>
 </CodeTabs>
 
-## <HM>`Reactter.find`</HM>
+## <HM>`Rt.find`</HM>
 
-The <HM>`Reactter.find`</HM> method retrieves the created dependency instance and returns it. If the dependency is not created, returns <HN>`null`</HN>.
+The <HM>`Rt.find`</HM> method retrieves the created dependency instance and returns it. If the dependency is not created, returns <HN>`null`</HN>.
 
 #### Syntax
 
 ```dart showLineNumbers=false
-T? Reactter.find<T>([String? id]);
+T? Rt.find<T>([String? id]);
 ```
 
 #### Parameters
@@ -430,7 +430,7 @@ T? Reactter.find<T>([String? id]);
 
 #### Example
 
-See the example below to understand how to use the <HM>`Reactter.find`</HM> method in different scenarios.
+See the example below to understand how to use the <HM>`Rt.find`</HM> method in different scenarios.
 
 <CodeTabs>
   <ZappButton path="examples/dependency_injection_find"/>
@@ -447,14 +447,14 @@ See the example below to understand how to use the <HM>`Reactter.find`</HM> meth
   </Tabs>
 </CodeTabs>
 
-## <HM>`Reactter.exists`</HM>
+## <HM>`Rt.exists`</HM>
 
-The <HM>`Reactter.exists`</HM> method checks if the dependency instance exists in Reactter. It returns <HN>`true`</HN> if the dependency exists, otherwise return <HN>`false`</HN>.
+The <HM>`Rt.exists`</HM> method checks if the dependency instance exists in Reactter. It returns <HN>`true`</HN> if the dependency exists, otherwise return <HN>`false`</HN>.
 
 #### Syntax
 
 ```dart showLineNumbers=false
-bool Reactter.exists<T>([String? id]);
+bool Rt.exists<T>([String? id]);
 ```
 
 #### Parameters
@@ -463,7 +463,7 @@ bool Reactter.exists<T>([String? id]);
 
 #### Example
 
-See the example below to understand how to use the <HM>`Reactter.exists`</HM> method in different scenarios.
+See the example below to understand how to use the <HM>`Rt.exists`</HM> method in different scenarios.
 
 <CodeTabs>
   <ZappButton path="examples/dependency_injection_exists"/>
@@ -480,14 +480,14 @@ See the example below to understand how to use the <HM>`Reactter.exists`</HM> me
   </Tabs>
 </CodeTabs>
 
-## <HM>`Reactter.getDependencyMode`</HM>
+## <HM>`Rt.getDependencyMode`</HM>
 
-The <HM>`Reactter.getDependencyMode`</HM> method retrieves the dependency mode of a registered dependency. If the dependency is not registered, it returns <HN>`null`</HN>.
+The <HM>`Rt.getDependencyMode`</HM> method retrieves the dependency mode of a registered dependency. If the dependency is not registered, it returns <HN>`null`</HN>.
 
 #### Syntax
 
 ```dart showLineNumbers=false
-DependencyMode? Reactter.getDependencyMode<T>([String? id]);
+DependencyMode? Rt.getDependencyMode<T>([String? id]);
 ```
 
 #### Parameters
@@ -496,7 +496,7 @@ DependencyMode? Reactter.getDependencyMode<T>([String? id]);
 
 #### Example
 
-See the example below to understand how to use the <HM>`Reactter.getDependencyMode`</HM> method in different scenarios.
+See the example below to understand how to use the <HM>`Rt.getDependencyMode`</HM> method in different scenarios.
 
 <CodeTabs>
   <ZappButton path="examples/dependency_injection_get_dependency_mode"/>
@@ -513,13 +513,13 @@ See the example below to understand how to use the <HM>`Reactter.getDependencyMo
   </Tabs>
 </CodeTabs>
 
-## <HM>`Reactter.delete`</HM>
+## <HM>`Rt.delete`</HM>
 
-The <HM>`Reactter.delete`</HM> method removes the dependency instance and its registration from the Reactter based on the dependency mode.
+The <HM>`Rt.delete`</HM> method removes the dependency instance and its registration from the Reactter based on the dependency mode.
 It returns <HN>`true`</HN> if the dependency is successfully deleted, otherwise return <HN>`false`</HN>.
 
 :::note
-The behavior of the <HM>`Reactter.delete`</HM> method depends on the dependency mode:
+The behavior of the <HM>`Rt.delete`</HM> method depends on the dependency mode:
 - If the dependency is registered as <HE>Builder</HE> mode, both the dependency instance and its registration will be deleted.
 - If the dependency is registered as <HE>Factory</HE> mode, only the dependency instance will be deleted, but its registration remains.
 - If the dependency is registered as <HE>Singleton</HE> mode, nothing will be deleted.
@@ -530,7 +530,7 @@ For more information about the dependency modes, refer to [Dependency Modes](/re
 #### Syntax
 
 ```dart showLineNumbers=false
-bool Reactter.delete<T>([String? id]);
+bool Rt.delete<T>([String? id]);
 ```
 
 #### Parameters
@@ -539,7 +539,7 @@ bool Reactter.delete<T>([String? id]);
 
 #### Example
 
-See the example below to understand how to use the <HM>`Reactter.delete`</HM> method in different scenarios.
+See the example below to understand how to use the <HM>`Rt.delete`</HM> method in different scenarios.
 
 <CodeTabs>
   <ZappButton path="examples/dependency_injection_delete"/>
@@ -556,15 +556,15 @@ See the example below to understand how to use the <HM>`Reactter.delete`</HM> me
   </Tabs>
 </CodeTabs>
 
-## <HM>`Reactter.destroy`</HM>
+## <HM>`Rt.destroy`</HM>
 
-The <HM>`Reactter.destroy`</HM> method forcibly removes the dependency instance and its registration from the Reactter.
+The <HM>`Rt.destroy`</HM> method forcibly removes the dependency instance and its registration from the Reactter.
 It returns <HN>`true`</HN> if the dependency is successfully destroyed, otherwise return <HN>`false`</HN>.
 
 #### Syntax
 
 ```dart showLineNumbers=false
-bool Reactter.destroy<T>({
+bool Rt.destroy<T>({
   String? id,
   bool onlyDependency = false,
 });
@@ -577,7 +577,7 @@ bool Reactter.destroy<T>({
 
 #### Example
 
-See the example below to understand how to use the <HM>`Reactter.destroy`</HM> method in different scenarios.
+See the example below to understand how to use the <HM>`Rt.destroy`</HM> method in different scenarios.
 
 <CodeTabs>
   <ZappButton path="examples/dependency_injection_destroy"/>
@@ -594,15 +594,15 @@ See the example below to understand how to use the <HM>`Reactter.destroy`</HM> m
   </Tabs>
 </CodeTabs>
 
-## <HM>`Reactter.unregister`</HM>
+## <HM>`Rt.unregister`</HM>
 
-The <HM>`Reactter.unregister`</HM> method is used to unregister the dependency from the Reactter. 
+The <HM>`Rt.unregister`</HM> method is used to unregister the dependency from the Reactter.
 It returns <HN>`true`</HN> if the dependency is unregistered successfully, otherwise return <HN>`false`</HN>.
 
 #### Syntax
 
 ```dart showLineNumbers=false
-bool Reactter.unregister<T>([String? id]);
+bool Rt.unregister<T>([String? id]);
 ```
 
 #### Parameters
@@ -611,7 +611,7 @@ bool Reactter.unregister<T>([String? id]);
 
 #### Example
 
-See the example below to understand how to use the <HM>`Reactter.unregister`</HM> method in different scenarios.
+See the example below to understand how to use the <HM>`Rt.unregister`</HM> method in different scenarios.
 
 <CodeTabs>
   <ZappButton path="examples/dependency_injection_unregister"/>
@@ -628,15 +628,15 @@ See the example below to understand how to use the <HM>`Reactter.unregister`</HM
   </Tabs>
 </CodeTabs>
 
-## <HM>`Reactter.isRegistered`</HM>
+## <HM>`Rt.isActive`</HM>
 
-The <HM>`Reactter.isRegistered`</HM> method is used to check if the dependency is registered in Reactter.
+The <HM>`Rt.isActive`</HM> method is used to check if the dependency is registered in Reactter.
 It returns <HN>`true`</HN> if the dependency is registered, otherwise return <HN>`false`</HN>.
 
 #### Syntax
 
 ```dart showLineNumbers=false
-bool Reactter.isRegistered<T>([String? id]);
+bool Rt.isActive<T>([String? id]);
 ```
 
 #### Parameters
@@ -645,19 +645,19 @@ bool Reactter.isRegistered<T>([String? id]);
 
 #### Example
 
-See the example below to understand how to use the <HM>`Reactter.isRegistered`</HM> method in different scenarios.
+See the example below to understand how to use the <HM>`Rt.isActive`</HM> method in different scenarios.
 
 <CodeTabs>
-  <ZappButton path="examples/dependency_injection_is_registered"/>
+  <ZappButton path="examples/dependency_injection_is_active"/>
 
   <Tabs>
     <TabItem>
       <HM single slot="label">main.dart</HM>
-      <Code code={mainIsRegisteredCode} lang="dart" mark={[...marks, {range: "16-19, 34-37"}]} collapse={["20-26", "38-53", "55-100"]} />
+      <Code code={mainIsActiveCode} lang="dart" mark={[...marks, {range: "16-19, 34-37"}]} collapse={["20-26", "38-53", "55-100"]} />
     </TabItem>
 
     <TabItem label="counter.dart">
-      <Code code={counterIsRegisteredCode} lang="dart" mark={marks} />
+      <Code code={counterIsActiveCode} lang="dart" mark={marks} />
     </TabItem>
   </Tabs>
 </CodeTabs>

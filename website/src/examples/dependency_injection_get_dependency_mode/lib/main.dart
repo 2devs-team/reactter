@@ -5,18 +5,18 @@ import 'counter.dart';
 void main() {
   // Create the dependencies with different dependency modes
   final counter = Counter();
-  final counter2 = Reactter.builder<Counter>(() => Counter(), id: 'Builder');
-  final counter3 = Reactter.factory<Counter>(() => Counter(), id: 'Factory');
-  final counter4 = Reactter.singleton<Counter>(
+  final counter2 = Rt.builder<Counter>(() => Counter(), id: 'Builder');
+  final counter3 = Rt.factory<Counter>(() => Counter(), id: 'Factory');
+  final counter4 = Rt.singleton<Counter>(
     () => Counter(),
     id: 'Singleton',
   );
 
   // Check the dependency modes
-  final counterMode = Reactter.getDependencyMode(counter);
-  final counter2Mode = Reactter.getDependencyMode(counter2);
-  final counter3Mode = Reactter.getDependencyMode(counter3);
-  final counter4Mode = Reactter.getDependencyMode(counter4);
+  final counterMode = Rt.getDependencyMode(counter);
+  final counter2Mode = Rt.getDependencyMode(counter2);
+  final counter3Mode = Rt.getDependencyMode(counter3);
+  final counter4Mode = Rt.getDependencyMode(counter4);
 
   print(
     'Counter mode: $counterMode',

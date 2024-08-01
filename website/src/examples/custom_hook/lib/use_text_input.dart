@@ -1,9 +1,9 @@
 import 'package:reactter/reactter.dart';
 import 'package:flutter/widgets.dart';
 
-class UseTextInput extends ReactterHook {
+class UseTextInput extends RtHook {
   // This line is REQUIRED!
-  final $ = ReactterHook.$register;
+  final $ = RtHook.$register;
 
   final controller = TextEditingController();
 

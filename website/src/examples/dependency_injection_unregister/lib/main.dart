@@ -4,16 +4,16 @@ import 'counter.dart';
 
 void main() {
   // Create the dependencies with different dependency modes
-  Reactter.create<Counter>(() => Counter());
-  Reactter.builder<Counter>(() => Counter(), id: 'Builder');
-  Reactter.factory<Counter>(() => Counter(), id: 'Factory');
-  Reactter.singleton<Counter>(() => Counter(), id: 'Singleton');
+  Rt.create<Counter>(() => Counter());
+  Rt.builder<Counter>(() => Counter(), id: 'Builder');
+  Rt.factory<Counter>(() => Counter(), id: 'Factory');
+  Rt.singleton<Counter>(() => Counter(), id: 'Singleton');
 
   // Unregister the dependencies
-  final isUnregistered = Reactter.unregister<Counter>();
-  final isUnregistered2 = Reactter.unregister<Counter>('Builder');
-  final isUnregistered3 = Reactter.unregister<Counter>('Factory');
-  final isUnregistered4 = Reactter.unregister<Counter>('Singleton');
+  final isUnregistered = Rt.unregister<Counter>();
+  final isUnregistered2 = Rt.unregister<Counter>('Builder');
+  final isUnregistered3 = Rt.unregister<Counter>('Factory');
+  final isUnregistered4 = Rt.unregister<Counter>('Singleton');
 
   // All should return false, because the dependencies has an active instance
   print('isUnregistered: $isUnregistered'); // isUnregistered: false
@@ -22,16 +22,16 @@ void main() {
   print('isUnregistered4: $isUnregistered4'); // isCounterUnregistered4: false
 
   // Delete the dependencies
-  Reactter.destroy<Counter>(onlyInstance: true);
-  Reactter.delete<Counter>('Builder');
-  Reactter.delete<Counter>('Factory');
-  Reactter.delete<Counter>('Singleton');
+  Rt.destroy<Counter>(onlyInstance: true);
+  Rt.delete<Counter>('Builder');
+  Rt.delete<Counter>('Factory');
+  Rt.delete<Counter>('Singleton');
 
   // Unregister the dependencies after deleted
-  final isUnregisteredAfterDeleted = Reactter.unregister<Counter>();
-  final isUnregisteredAfterDeleted2 = Reactter.unregister<Counter>('Builder');
-  final isUnregisteredAfterDeleted3 = Reactter.unregister<Counter>('Factory');
-  final isUnregisteredAfterDeleted4 = Reactter.unregister<Counter>('Singleton');
+  final isUnregisteredAfterDeleted = Rt.unregister<Counter>();
+  final isUnregisteredAfterDeleted2 = Rt.unregister<Counter>('Builder');
+  final isUnregisteredAfterDeleted3 = Rt.unregister<Counter>('Factory');
+  final isUnregisteredAfterDeleted4 = Rt.unregister<Counter>('Singleton');
 
   // These should return true, because the instance has been deleted but the dependency is still registered
   print(

@@ -9,7 +9,7 @@ class Counter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Provide the `CounterController` dependency to the widget tree
-    return ReactterProvider<CounterController>(
+    return RtProvider<CounterController>(
       () => CounterController(),
       builder: (context, counterController, child) {
         return Row(
@@ -22,7 +22,7 @@ class Counter extends StatelessWidget {
             const SizedBox(width: 8),
             // Observe the `count` property of the `counterController`
             // and rebuild the widget tree when the `count` value changes
-            ReactterConsumer<CounterController>(
+            RtConsumer<CounterController>(
               listenStates: (counterController) => [counterController.count],
               builder: (context, counterController, child) {
                 return Text("${counterController.count}");

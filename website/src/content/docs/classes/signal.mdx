@@ -2,7 +2,7 @@
 title: Signal
 description: The base class for all signals in Reactter.
 sidebar:
-  order: 0.1
+  order: 1
 ---
 
 import { HM, HT } from '@/components/Highlight';
@@ -45,11 +45,11 @@ final userSignal = Signal(User());
 
 <MDXRedry mdx={NoteLateState} vars={{stateName: 'Signal'}}>
   <Fragment slot="exampleCode">
-```dart title="counter_controller.dart" collapse={1-3, 8-10} "late" "Reactter.lazyState" "Signal"
+```dart title="counter_controller.dart" collapse={1-3, 8-10} "late" "Rt.lazyState" "Signal"
 class CounterController {
   final int initialCount;
 
-  late final count = Reactter.lazyState(
+  late final count = Rt.lazyState(
     () => Signal(this.initialCount),
     this
   );
@@ -111,5 +111,5 @@ userSignal.refresh();
 }}/>
 
 :::note[With Flutter]
-<HT>[`ReactterWatcher`](/reactter/widgets/reactter_watcher)</HT> is a way to keep the widgets automatically updates, accessing the `value` of <HT>`Signal`</HT> reactively.
+<HT>[`RtSignalWatcher`](/reactter/widgets/rt_signal_watcher)</HT> is a way to keep the widgets automatically updates, accessing the `value` of <HT>`Signal`</HT> reactively.
 :::

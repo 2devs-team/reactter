@@ -4,7 +4,7 @@ description: Updating objects in state
 ---
 import { HM, HN, HS, HT } from '@/components/Highlight';
 
-States(<HT>`ReactterState`</HT>) like <HT>`Signal`</HT>, <HT>`UseState`</HT>, <HT>`UseAsyncState`</HT>, <HT>`UseReducer`</HT> and <HT>`UseCompute`</HT> can hold any type of Dart value, including objects.
+States(<HT>`RtState`</HT>) like <HT>`Signal`</HT>, <HT>`UseState`</HT>, <HT>`UseAsyncState`</HT>, <HT>`UseReducer`</HT> and <HT>`UseCompute`</HT> can hold any type of Dart value, including objects.
 However, you should not modify objects held in the Reactter state directly,
 when you need to update an object, create a new one or make a copy of the existing object,
 and then set the state to use this new or copied object.
@@ -58,7 +58,7 @@ This example holds an object in state to represent the user.
 The user's name is changed from <HS>`"Jane Doe"`</HS> to <HS>`"John Doe"`</HS> when you click the button.
 But the user's name stays the same.
 
-```dart title="main.dart" "Signal" "User" "ReactterWatcher" "user.value.name" "user.value.age" "user" mark={31}
+```dart title="main.dart" "Signal" "User" "RtSignalWatcher" "user.value.name" "user.value.age" "user" mark={31}
 import 'package:flutter/material.dart';
 import 'package:reactter/reactter.dart';
 
@@ -82,7 +82,7 @@ class MyApp extends StatelessWidget {
       home: Scaffold(
         appBar: AppBar(title: Text("Inmutable state example")),
         body: Center(
-          child: ReactterWatcher((){
+          child: RtSignalWatcher((){
             return Column(
               children: [
                 Text('Name: ${user.value.name}'),

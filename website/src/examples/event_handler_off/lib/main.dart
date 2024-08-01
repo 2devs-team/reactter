@@ -20,27 +20,27 @@ void onDidUpdateStateB(instance, Signal state) {
 
 void main() {
   // Listen to the `myEvent` event of the `MyDependency` before it's created.
-  Reactter.on(
-    ReactterDependency<MyDependency>(),
+  Rt.on(
+    RtDependency<MyDependency>(),
     CustomEvent.myEvent,
     onMyEvent,
   );
 
   // Create a new instance of `MyDependency`.
-  final myDependency = Reactter.create(() => MyDependency())!;
+  final myDependency = Rt.create(() => MyDependency())!;
 
   // Listen to the `didUpdate` event of the `MyDependency` instance.
-  Reactter.on<MyDependency, ReactterState>(
+  Rt.on<MyDependency, RtState>(
     myDependency,
     Lifecycle.didUpdate,
     onDidUpdate,
   );
 
   // Listen to the `didUpdate` event of the `stateA`.
-  Reactter.on(myDependency.stateA, Lifecycle.didUpdate, onDidUpdateStateA);
+  Rt.on(myDependency.stateA, Lifecycle.didUpdate, onDidUpdateStateA);
 
   // Listen to the `didUpdate` event of the `stateB`.
-  Reactter.on(myDependency.stateB, Lifecycle.didUpdate, onDidUpdateStateB);
+  Rt.on(myDependency.stateB, Lifecycle.didUpdate, onDidUpdateStateB);
 
   // Change the value of `stateA` to `10`.
   // Print:
@@ -57,20 +57,20 @@ void main() {
   // Emit the `myEvent` event with the parameter `test`.
   // Print:
   //  CustomEvent.myEvent emitted with param: test
-  Reactter.emit(myDependency, CustomEvent.myEvent, 'test');
+  Rt.emit(myDependency, CustomEvent.myEvent, 'test');
 
   // Stop listening to the `myEvent` event of the `MyDependency`
-  Reactter.off(
-    ReactterDependency<MyDependency>(),
+  Rt.off(
+    RtDependency<MyDependency>(),
     CustomEvent.myEvent,
     onMyEvent,
   );
 
   // Stop listening to the `didUpdate` event of the `MyDependency` instance
-  Reactter.off(myDependency, Lifecycle.didUpdate, onDidUpdate);
+  Rt.off(myDependency, Lifecycle.didUpdate, onDidUpdate);
 
   // Stop listening to the `didUpdate` event of the `stateA`
-  Reactter.off(myDependency.stateA, Lifecycle.didUpdate, onDidUpdateStateA);
+  Rt.off(myDependency.stateA, Lifecycle.didUpdate, onDidUpdateStateA);
 
   // No print for neither `stateA` nor the `MyDependency` instance
   // because the listeners are removed
@@ -78,7 +78,7 @@ void main() {
 
   // Cannot listen to the `myEvent` event using the `MyDependency` instance
   // because the listener is removed
-  Reactter.emit(myDependency, CustomEvent.myEvent, 'This is not printed');
+  Rt.emit(myDependency, CustomEvent.myEvent, 'This is not printed');
 
   runApp(MyApp());
 }

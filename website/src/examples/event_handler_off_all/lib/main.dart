@@ -4,31 +4,31 @@ import 'my_dependency.dart';
 
 void main() {
   // Listen to the `myEvent` event of the `MyDependency` before it's created.
-  Reactter.on(
-    ReactterDependency<MyDependency>(),
+  Rt.on(
+    RtDependency<MyDependency>(),
     CustomEvent.myEvent,
     (instance, param) => print('CustomEvent emitted with param: $param'),
   );
 
   // Create a new instance of `MyDependency`.
-  final myDependency = Reactter.create(() => MyDependency())!;
+  final myDependency = Rt.create(() => MyDependency())!;
 
   // Listen to the `didUpdate` event of the `MyDependency` instance.
-  Reactter.on<MyDependency, ReactterState>(
+  Rt.on<MyDependency, RtState>(
     myDependency,
     Lifecycle.didUpdate,
     (instance, state) => print('The state updated is: ${state.runtimeType}'),
   );
 
   // Listen to the `didUpdate` event of the `stateA`.
-  Reactter.on(
+  Rt.on(
     myDependency.stateA,
     Lifecycle.didUpdate,
     (instance, Signal state) => print('stateA updated: ${state.value}'),
   );
 
   // Listen to the `didUpdate` event of the `stateB`.
-  Reactter.on(
+  Rt.on(
     myDependency.stateB,
     Lifecycle.didUpdate,
     (instance, Signal state) => print('stateB updated: ${state.value}'),
@@ -49,14 +49,14 @@ void main() {
   // Emit the `myEvent` event with the parameter `test`.
   // Print:
   //  CustomEvent.myEvent emitted with param: test
-  Reactter.emit(myDependency, CustomEvent.myEvent, 'test');
+  Rt.emit(myDependency, CustomEvent.myEvent, 'test');
 
   // Remove all event listeners of `stateA`.
-  Reactter.offAll(myDependency.stateA);
+  Rt.offAll(myDependency.stateA);
 
   // Remove all event listeners of `myDependency`,
-  // including the generic listeners (using `ReactterDependency`).
-  Reactter.offAll(myDependency, true);
+  // including the generic listeners (using `RtDependency`).
+  Rt.offAll(myDependency, true);
 
   // No print for neither `stateA` nor the `MyDependency` instance
   // because the listeners are removed
@@ -70,7 +70,7 @@ void main() {
 
   // Cannot listen to the `myEvent` event using the `MyDependency` instance
   // because the listeners are removed.
-  Reactter.emit(myDependency, CustomEvent.myEvent, 'This is not printed');
+  Rt.emit(myDependency, CustomEvent.myEvent, 'This is not printed');
 
   runApp(MyApp());
 }

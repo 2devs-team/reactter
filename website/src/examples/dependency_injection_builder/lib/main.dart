@@ -4,11 +4,11 @@ import 'counter.dart';
 
 void main() {
   // Create a dependency as builder mode.
-  final counter = Reactter.builder<Counter>(() => Counter());
+  final counter = Rt.builder<Counter>(() => Counter());
   print("counter: ${counter?.hashCode}");
 
   // Listen to the state changes
-  Reactter.on(
+  Rt.on(
     counter!.count,
     Lifecycle.didUpdate,
     (_, __) {
@@ -21,24 +21,24 @@ void main() {
   counter.decrement();
 
   // Delete the dependency
-  Reactter.delete<Counter>();
+  Rt.delete<Counter>();
 
   // Error: "Can't update when it's been disposed", because the dependency instance was deleted
   // counter.increment();
 
   // Can't get the dependency instance, because the dependency register was deleted
-  final counter2 = Reactter.get<Counter>();
+  final counter2 = Rt.get<Counter>();
   print("counter2: ${counter2?.hashCode}"); // counter2: null
 
   // Create a dependency using `id` parameter as builder mode
-  final counterById = Reactter.builder<Counter>(
+  final counterById = Rt.builder<Counter>(
     () => Counter(),
     id: 'CounterById',
   );
   print("counterById: ${counterById?.hashCode}");
 
   // Delete the dependency using `id` parameter
-  Reactter.delete<Counter>('CounterById');
+  Rt.delete<Counter>('CounterById');
 
   runApp(MyApp());
 }

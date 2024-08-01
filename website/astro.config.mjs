@@ -101,6 +101,16 @@ export default defineConfig({
           },
         },
         {
+          label: "Widgets",
+          badge: "Flutter",
+          translations: {
+            es: "Widgets",
+          },
+          autogenerate: {
+            directory: "widgets",
+          },
+        },
+        {
           label: "Methods",
           translations: {
             es: "Métodos",
@@ -110,18 +120,8 @@ export default defineConfig({
           },
         },
         {
-          label: "Widgets",
-          badge: "flutter",
-          translations: {
-            es: "Widgets",
-          },
-          autogenerate: {
-            directory: "widgets",
-          },
-        },
-        {
           label: "Extensions",
-          badge: "flutter",
+          badge: "Flutter",
           translations: {
             es: "Extensiones",
           },

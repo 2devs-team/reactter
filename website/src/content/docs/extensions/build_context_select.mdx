@@ -20,7 +20,7 @@ import counterDivisibleCode from '@/examples/build_context_select/lib/counter_di
 import counterViewCode from '@/examples/build_context_select/lib/counter_view.dart?raw';
 import mainCode from '@/examples/build_context_select/lib/main.dart?raw';
 
-<HT><a href="https://pub.dev/documentation/flutter_reactter/latest/flutter_reactter/BuildContextExtension/select.html" target="_blank">`BuildContext.select`</a></HT> is a method that computes a value whenever the selected states change and registers the current widget as a listener for these changes.
+<HT><a href="https://pub.dev/documentation/flutter_reactter/latest/flutter_reactter/ReactterBuildContextExtension/select.html" target="_blank">`BuildContext.select`</a></HT> is a method that computes a value whenever the selected states change and registers the current widget as a listener for these changes.
 Consequently, each time the selected states change, the value is recalculated and if it is different from the previous one, the widget is automatically notified and rebuilt.
 
 :::tip
@@ -35,7 +35,7 @@ This aproach is more efficient than using <HT>[`BuildContext.watch`](/reactter/e
 
 ```dart showLineNumbers=false
 V context.select<T, V>(
-  V computeValue(T instance, ReactterState select(ReactterState state)),
+  V computeValue(T instance, RtState select(RtState state)),
   [String? id],
 );
 ```
@@ -45,14 +45,14 @@ V context.select<T, V>(
 - <HT>`V`</HT>: The type of the value you want to compute. It is the return type of the <HM>`computeValue`</HM> function.
 - <HM>`computeValue`</HM>: A function that computes the value based on the selected states. It takes two arguments:
   - `instance`: The instance of the dependency of type <HT>`T`</HT>.
-  - <HM>`select`</HM>: A function that allows you to wrap the state(<HT>`ReactterState`</HT>) to be listened for changes and returns it.
+  - <HM>`select`</HM>: A function that allows you to wrap the state(<HT>`RtState`</HT>) to be listened for changes and returns it.
 - `id`: An optional identifier for the <HT>`T`</HT> dependency. If omitted, the dependency will be located by its type (<HT>`T`</HT>).
 
 :::tip
 It's a good idea to name the select parameter to something more simple and shorter like `$` to make it easier to read and understand the <HM>`selector`</HM> function when you have multiple states to select.
 
 ```dart showLineNumbers=false {2}
-ReactterSelector<UserController, String>(
+RtSelector<UserController, String>(
   selector: (inst, $) => $(inst.firstName).value + ' ' + $(inst.lastName).value,
   builder: (context, inst, fullName, child) {
     return Text("Full name: $fullName");

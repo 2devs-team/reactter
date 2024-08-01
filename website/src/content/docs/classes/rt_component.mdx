@@ -1,0 +1,94 @@
+---
+title: RtComponent
+description: Learn how to use the RtComponent in Reactter.
+sidebar:
+  order: 4
+  badge:
+    text: Flutter
+---
+import { HM, HT, HN } from '@/components/Highlight';
+import CodeTabs from '@/components/CodeTabs.astro';
+import { Tabs, TabItem } from "@/components/Tabs";
+import ZappButton from "@/components/ZappButton.astro";
+import { Code } from "@astrojs/starlight/components";
+import { marks } from '@/examples/marks.ts'
+
+import counterControllerCode from '@/examples/rt_component/lib/counter_controller.dart?raw';
+import counterCode from '@/examples/rt_component/lib/counter.dart?raw';
+import counterWithButtonsCode from '@/examples/rt_component/lib/counter_with_buttons.dart?raw';
+import counterViewCode from '@/examples/rt_component/lib/counter_view.dart?raw';
+import mainCode from '@/examples/rt_component/lib/main.dart?raw';
+
+The <HT><a href="https://pub.dev/documentation/flutter_reactter/latest/flutter_reactter/RtComponent-class.html">`RtComponent`</a></HT> is a <HT>`StatelessWidget`</HT> hat simplifies the creation of reactive widgets by utilizing the dependency injection system.
+It provides features similar to <HT>[`RtProvider`](/reactter/widgets/rt_provider)</HT> and <HT>[`RtConsumer`](/reactter/widgets/rt_consumer)</HT> that are used to inject and consume dependencies.
+
+:::tip
+The <HT>`RtComponent`</HT> widget is a more efficient way to create reactive widgets than using <HT>`RtProvider`</HT> and <HT>`RtConsumer`</HT> widgets separately.
+:::
+
+## Syntax
+
+```dart showLineNumbers=false
+abstract class RtComponent<T> extends StatelessWidget {
+  const RtComponent({Key? key}): super(key: key);
+
+  T Function()? get builder => null;
+  String? get id => null;
+  List<RtState> Function(T instance)? get listenStates => null;
+  bool get listenAll => false;
+  Widget render(BuildContext context, T inst);
+}
+```
+
+## Getters and Methods
+
+- `builder`: An optional function that creates an instance of the <HT>`T`</HT> dependency. This function is registered by [Dependency Injection](/reactter/core_concepts/dependency_injection). If omitted, an attempt will be made to locate it within the closest ancestor where it was initially created.
+- `id`: An optional identifier for the <HT>`T`</HT> dependency. If omitted, the dependency will be located by its type(<HT>`T`</HT>).
+- `listenStates`: An optional function for defining a list of the states that will rebuild the widget tree defined in the <HM>`render`</HM> method whenever it changes.
+  It exposes the instance of the <HT>`T`</HT> dependency as argument of the function.
+  If omitted, the `listenAll` getter is checked.
+- `listenAll`: A boolean value that determines whether to listen to all states(<HT>`RtState`</HT>) of the <HT>`T`</HT> dependency for rebuilds the widget tree defined in the <HM>`render`</HM> method.
+  For default, it is set to <HN>`false`</HN>.
+- <HM>`render`</HM>: A required function that builds the widget tree based on the instance of the <HT>`T`</HT> dependency. It receives the following arguments:
+  - `context`: The <HT>`BuildContext`</HT> of the <HT>`RtComponent`</HT> widget.
+  - `inst`: The instance of the <HT>`T`</HT> dependency.
+
+## Usage
+
+In the following example demonstrates a reactive counter implementation using <HT>`RtComponent`</HT>.
+
+<CodeTabs>
+  <ZappButton path="examples/rt_component"/>
+
+  <Tabs>
+    <TabItem>
+      <HM single slot="label">counter_with_buttons.dart</HM>
+      <Code code={counterWithButtonsCode} lang="dart" mark={[...marks, {range: "6-100"}]} />
+    </TabItem>
+
+    <TabItem>
+      <HM single slot="label">counter.dart</HM>
+      <Code code={counterCode} lang="dart" mark={[...marks, {range: "5-100"}]}/>
+    </TabItem>
+
+    <TabItem>
+      <HM single slot="label">counter_view.dart</HM>
+      <Code code={counterViewCode} lang="dart" mark={[...marks, {range: "19, 22, 27"}]} />
+    </TabItem>
+
+    <TabItem label="counter_controller.dart">
+      <Code code={counterControllerCode} lang="dart" mark={marks} />
+    </TabItem>
+
+    <TabItem label="main.dart">
+      <Code code={mainCode} lang="dart" mark={marks} />
+    </TabItem>
+  </Tabs>
+</CodeTabs>
+
+In this example, we introduce two components: <HT>`Counter`</HT> and <HT>`CounterWithButtons`</HT>.
+
+<HT>`Counter`</HT> listens changes in the `count` property of <HT>`CounterController`</HT> using the `listenStates` getter, and displays its value within the <HM>`render`</HM> method.
+On the other hand, <HT>`CounterWithButtons`</HT> provides buttons for incrementing and decrementing the counter and integrates the <HT>`Counter`</HT> component to display the count in its <HM>`render`</HM> method.
+
+Both <HT>`Counter`</HT> and <HT>`CounterWithButtons`</HT> extend <HT>`RtComponent`</HT> with <HT>`CounterController`</HT> as their dependency, use the `builder` getter to create an instance of <HT>`CounterController`</HT> and the `id` getter to distinguish between different instances of the counter.

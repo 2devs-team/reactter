@@ -20,14 +20,14 @@ import * as ListeningChangesState from '@/content/docs/shareds/listening_changes
 ```dart showLineNumbers=false
 UseCompute<T>(
   T computeValue(),
-  List<ReactterState> dependencies,
+  List<RtState> dependencies,
 );
 ```
 
 <HT>`UseCompute`</HT> accepts these arguments:
 
 - <HM>`computeValue`</HM>: A function that returns a value based on the current state of the dependencies.
-- `dependencies`: A list of state(<HT>`ReactterState`</HT>, learn about it [here](/reactter/core_concepts/state_management/#state)) that the computation depends on. When any of these dependencies change, the `value` is recalculated.
+- `dependencies`: A list of state(<HT>`RtState`</HT>, learn about it [here](/reactter/core_concepts/state_management/#state)) that the computation depends on. When any of these dependencies change, the `value` is recalculated.
 
 ## Properties & Methods
 
@@ -54,14 +54,14 @@ final uTotal = UseCompute<int>(
 
 <MDXRedry mdx={NoteLateState} vars={{stateName: 'UseCompute'}}>
   <Fragment slot="exampleCode">
-```dart title="item_controller.dart" collapse={1-6, 14-31} "late" "Reactter.lazyState" "UseCompute"
+```dart title="item_controller.dart" collapse={1-6, 14-31} "late" "Rt.lazyState" "UseCompute"
 class ItemController {
   final Product product;
 
   final uPrice = UseState<int>(0);
   final uQuantity = UseState<int>(0);
 
-  late final uTotal = Reactter.lazyState(
+  late final uTotal = Rt.lazyState(
     () => UseCompute<int>(
       () => uPrice.value * uQuantity.value,
       [uPrice, uQuantity],
@@ -103,7 +103,7 @@ print("Total: ${uTotal.value}");
 When any of the `dependencies` change, the `value` property recalculates the result based on the <HM>`computeValue`</HM> function, e.g.:
 
 
-```dart title="main.dart" "UseCompute" "UseState" "Reactter.on" "Lifecycle.didUpdate" "uStateA" "uStateB" "uResult" "uStateA.value" "uStateB.value" "uResult.value"
+```dart title="main.dart" "UseCompute" "UseState" "Rt.on" "Lifecycle.didUpdate" "uStateA" "uStateB" "uResult" "uStateA.value" "uStateB.value" "uResult.value"
 final uStateA = UseState(1);
 final uStateB = UseState(2);
 
@@ -118,7 +118,7 @@ int addAB() => uStateA.value + uStateB.value;
 void printResult() => print("${addAB()} -> ${uResult.value}");
 
 void main() {
-  Reactter.on(
+  Rt.on(
     uResult,
     Lifecycle.didUpdate,
     (_, __) => print("uResult changed with: ${uResult.value}"),

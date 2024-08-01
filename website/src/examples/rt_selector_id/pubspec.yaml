@@ -1,0 +1,14 @@
+name: RtSelectorId
+description: RtSelector using id example
+version: 0.1.0
+
+environment:
+  sdk: ">=2.19.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_reactter: ^7.3.1
+
+flutter:
+  uses-material-design: true

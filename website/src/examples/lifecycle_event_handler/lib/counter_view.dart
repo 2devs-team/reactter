@@ -8,26 +8,26 @@ class CounterView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Reactter.on(
-      ReactterDependency<CounterController>(),
+    Rt.on(
+      RtDependency<CounterController>(),
       Lifecycle.unregistered,
       (_, __) => print('CounterController unregistered'),
     );
 
-    Reactter.on(
-      ReactterDependency<CounterController>(),
+    Rt.on(
+      RtDependency<CounterController>(),
       Lifecycle.registered,
       (_, __) => print('CounterController registered'),
     );
 
-    Reactter.on(
-      ReactterDependency<CounterController>(),
+    Rt.on(
+      RtDependency<CounterController>(),
       Lifecycle.created,
       (_, __) => print('CounterController created'),
     );
 
-    Reactter.on(
-      ReactterDependency<CounterController>(),
+    Rt.on(
+      RtDependency<CounterController>(),
       Lifecycle.deleted,
       (_, __) => print('CounterController deleted'),
     );
@@ -38,7 +38,7 @@ class CounterView extends StatelessWidget {
       appBar: AppBar(
         title: const Text("Counter - Lifecycle using EventHandler"),
       ),
-      body: ReactterWatcher(
+      body: RtSignalWatcher(
         builder: (context, child) {
           return Center(
             child: Column(

@@ -4,19 +4,19 @@ import 'counter.dart';
 
 void main() {
   // Create the dependencies with different dependency modes
-  final counter = Reactter.create<Counter>(() => Counter());
-  final counter2 = Reactter.builder<Counter>(() => Counter(), id: 'Builder');
-  final counter3 = Reactter.factory<Counter>(() => Counter(), id: 'Factory');
-  final counter4 = Reactter.singleton<Counter>(
+  final counter = Rt.create<Counter>(() => Counter());
+  final counter2 = Rt.builder<Counter>(() => Counter(), id: 'Builder');
+  final counter3 = Rt.factory<Counter>(() => Counter(), id: 'Factory');
+  final counter4 = Rt.singleton<Counter>(
     () => Counter(),
     id: 'Singleton',
   );
 
   // Delete the dependencies
-  final isDeleted = Reactter.delete<Counter>();
-  final isDeleted2 = Reactter.delete<Counter>('Builder');
-  final isDeleted3 = Reactter.delete<Counter>('Factory');
-  final isDeleted4 = Reactter.delete<Counter>('Singleton');
+  final isDeleted = Rt.delete<Counter>();
+  final isDeleted2 = Rt.delete<Counter>('Builder');
+  final isDeleted3 = Rt.delete<Counter>('Factory');
+  final isDeleted4 = Rt.delete<Counter>('Singleton');
 
   // Print if the dependencies are deleted
   print('isDeleted: $isDeleted'); // isDeleted: true
@@ -25,10 +25,10 @@ void main() {
   print('isDeleted4: $isDeleted4'); // isDeleted4: false
 
   // Get the dependencies
-  final counterAfterDeleted = Reactter.get<Counter>();
-  final counterAfterDeleted2 = Reactter.get<Counter>('Builder');
-  final counterAfterDeleted3 = Reactter.get<Counter>('Factory');
-  final counterAfterDeleted4 = Reactter.get<Counter>('Singleton');
+  final counterAfterDeleted = Rt.get<Counter>();
+  final counterAfterDeleted2 = Rt.get<Counter>('Builder');
+  final counterAfterDeleted3 = Rt.get<Counter>('Factory');
+  final counterAfterDeleted4 = Rt.get<Counter>('Singleton');
 
   // Check if the dependencies are obtained
   final isObtained = counterAfterDeleted != null;

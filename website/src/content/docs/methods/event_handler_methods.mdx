@@ -31,9 +31,9 @@ It's recommended read that first if you're new in Reactter.
 
 Reactter provides several methods to manage events in a more efficient way. These methods are used to create and manipulate events in a more organized way.
 
-## <HM>`Reactter.on`</HM>
+## <HM>`Rt.on`</HM>
 
-The <HM>`Reactter.on`</HM> method listens for an event emitted by an instance, allowing the listener to respond whenever the event occurs.
+The <HM>`Rt.on`</HM> method listens for an event emitted by an instance, allowing the listener to respond whenever the event occurs.
 
 #### Syntax
 
@@ -55,7 +55,7 @@ void on<T, P>(
 
 #### Example
 
-See the example below to understand how to use the <HM>`Reactter.on`</HM> method:
+See the example below to understand how to use the <HM>`Rt.on`</HM> method:
 
 <CodeTabs>
   <ZappButton path="examples/event_handler_on_emit"/>
@@ -72,9 +72,9 @@ See the example below to understand how to use the <HM>`Reactter.on`</HM> method
   </Tabs>
 </CodeTabs>
 
-## <HM>`Reactter.one`</HM>
+## <HM>`Rt.one`</HM>
 
-The <HM>`Reactter.one`</HM> method listens for an event emitted by an instance, but only once. After the event is triggered, the listener is automatically removed.
+The <HM>`Rt.one`</HM> method listens for an event emitted by an instance, but only once. After the event is triggered, the listener is automatically removed.
 
 #### Syntax
 
@@ -96,7 +96,7 @@ void one<T, P>(
 
 #### Example
 
-See the example below to understand how to use the <HM>`Reactter.one`</HM> method:
+See the example below to understand how to use the <HM>`Rt.one`</HM> method:
 
 <CodeTabs>
   <ZappButton path="examples/event_handler_one"/>
@@ -113,9 +113,9 @@ See the example below to understand how to use the <HM>`Reactter.one`</HM> metho
   </Tabs>
 </CodeTabs>
 
-## <HM>`Reactter.emit`</HM>
+## <HM>`Rt.emit`</HM>
 
-The <HM>`Reactter.emit`</HM> method triggers an event from an instance, notifying all listeners of that event.
+The <HM>`Rt.emit`</HM> method triggers an event from an instance, notifying all listeners of that event.
 
 #### Syntax
 
@@ -135,7 +135,7 @@ void emit(
 
 #### Example
 
-See the example below to understand how to use the <HM>`Reactter.emit`</HM> method:
+See the example below to understand how to use the <HM>`Rt.emit`</HM> method:
 
 <CodeTabs>
   <ZappButton path="examples/event_handler_on_emit"/>
@@ -152,9 +152,9 @@ See the example below to understand how to use the <HM>`Reactter.emit`</HM> meth
   </Tabs>
 </CodeTabs>
 
-## <HM>`Reactter.off`</HM>
+## <HM>`Rt.off`</HM>
 
-The <HM>`Reactter.off`</HM> method removes a specific event listener from an instance, stopping it from receiving further notifications for that event.
+The <HM>`Rt.off`</HM> method removes a specific event listener from an instance, stopping it from receiving further notifications for that event.
 
 #### Syntax
 
@@ -176,7 +176,7 @@ void off<T, P>(
 
 #### Example
 
-See the example below to understand how to use the <HM>`Reactter.off`</HM> method:
+See the example below to understand how to use the <HM>`Rt.off`</HM> method:
 
 <CodeTabs>
   <ZappButton path="examples/event_handler_off"/>
@@ -193,9 +193,9 @@ See the example below to understand how to use the <HM>`Reactter.off`</HM> metho
   </Tabs>
 </CodeTabs>
 
-## <HM>`Reactter.offAll`</HM>
+## <HM>`Rt.offAll`</HM>
 
-The <HM>`Reactter.offAll`</HM> method removes all event listeners for a specific event from an instance, ensuring no listeners are notified when the event is triggered in the future.
+The <HM>`Rt.offAll`</HM> method removes all event listeners for a specific event from an instance, ensuring no listeners are notified when the event is triggered in the future.
 
 #### Syntax
 
@@ -209,7 +209,7 @@ void offAll<T>(Object? instance);
 
 #### Example
 
-See the example below to understand how to use the <HM>`Reactter.offAll`</HM> method:
+See the example below to understand how to use the <HM>`Rt.offAll`</HM> method:
 
 <CodeTabs>
   <ZappButton path="examples/event_handler_off_all"/>

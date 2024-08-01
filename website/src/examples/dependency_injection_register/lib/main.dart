@@ -4,14 +4,14 @@ import 'counter.dart';
 
 void main() {
   // Register a dependency
-  Reactter.register<Counter>(() => Counter());
+  Rt.register<Counter>(() => Counter());
 
   // Get the dependency
-  final counter = Reactter.get<Counter>();
+  final counter = Rt.get<Counter>();
   print("counter: ${counter?.hashCode}");
 
   // Listen to the state changes
-  Reactter.on(
+  Rt.on(
     counter!.count,
     Lifecycle.didUpdate,
     (_, __) {
@@ -24,52 +24,52 @@ void main() {
   counter.decrement();
 
   // Delete the dependency
-  Reactter.delete<Counter>();
+  Rt.delete<Counter>();
 
   // Error: "Can't update when it's been disposed", because the dependency instance was deleted
   // counter.increment();
 
   // Can't get the dependency instance, because the dependency register was deleted
-  final counter2 = Reactter.get<Counter>();
+  final counter2 = Rt.get<Counter>();
   print("counter2: ${counter2?.hashCode}"); // counter2: null
 
   // Register a dependency using `id` parameter
-  Reactter.register(() => Counter(), id: 'CounterById');
+  Rt.register(() => Counter(), id: 'CounterById');
 
   // Get the dependency using `id` parameter
-  final counterById = Reactter.get<Counter>('CounterById');
+  final counterById = Rt.get<Counter>('CounterById');
   print("counterById: ${counterById?.hashCode}");
 
   // Delete the dependency using `id` parameter
-  Reactter.delete<Counter>('CounterById');
+  Rt.delete<Counter>('CounterById');
 
   // Register a dependency using `mode` parameter as singleton mode
-  Reactter.register(() => Counter(), mode: DependencyMode.singleton);
+  Rt.register(() => Counter(), mode: DependencyMode.singleton);
 
   // Get the dependency
-  final counterBySingletonMode = Reactter.get<Counter>();
+  final counterBySingletonMode = Rt.get<Counter>();
   print("counterBySingletonMode: ${counterBySingletonMode?.hashCode}");
 
   // Delete the dependency
-  Reactter.delete<Counter>();
+  Rt.delete<Counter>();
 
   // Can get the dependency again, because it's singleton mode
-  final counterBySingletonMode2 = Reactter.get<Counter>();
+  final counterBySingletonMode2 = Rt.get<Counter>();
   print(
     "counterBySingletonMode2: ${counterBySingletonMode2?.hashCode}",
   );
 
   // Use `onlyInstance` parameter to delete the dependency instance only
-  Reactter.destroy<Counter>(onlyInstance: true);
+  Rt.destroy<Counter>(onlyInstance: true);
 
   // Can't get the dependency instance, because the dependency register was destroyed
-  final counterBySingletonMode3 = Reactter.find<Counter>();
+  final counterBySingletonMode3 = Rt.find<Counter>();
   print(
     "counterBySingletonMode3: ${counterBySingletonMode3?.hashCode}",
   ); // counterBySingletonMode3: null
 
-  // If you need to delete the dependency fully, use `Reactter.destroy` method by forcing it, because it's singleton mode
-  Reactter.destroy<Counter>();
+  // If you need to delete the dependency fully, use `Rt.destroy` method by forcing it, because it's singleton mode
+  Rt.destroy<Counter>();
 
   runApp(MyApp());
 }

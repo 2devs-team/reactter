@@ -5,7 +5,7 @@ class MyController {
   final firstNameInput = UseTextInput();
   final lastNameInput = UseTextInput();
 
-  late final fullName = Reactter.lazyState(
+  late final fullName = Rt.lazyState(
     () => UseCompute(
       () {
         final firstName = firstNameInput.value;

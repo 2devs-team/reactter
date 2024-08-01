@@ -87,11 +87,11 @@ Future<String> asyncFunction() async {
 
 <MDXRedry mdx={NoteLateState} vars={{stateName: "UseAsyncState"}}>
   <Fragment slot="exampleCode">
-```dart title="user_controller.dart" collapse={1-3, 8-18} "late" "Reactter.lazyState" "UseAsyncState"
+```dart title="user_controller.dart" collapse={1-3, 8-18} "late" "Rt.lazyState" "UseAsyncState"
 class UserController {
   final String userId;
 
-  late final uUser = Reactter.lazyState(
+  late final uUser = Rt.lazyState(
     () => UseAsyncState<User?>.withArg(null, this.getUser),
     this,
   );

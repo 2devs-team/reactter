@@ -13,23 +13,23 @@ This documentation assumes you've already read the [Dependency Injection](/react
 It's recommended read that first if you're new in Reactter.
 :::
 
-<HT><a href="https://pub.dev/documentation/reactter/latest/reactter/UseDependency-class.html" target="_blank">`UseDependency`</a></HT> is a [hook](https://pub.dev/documentation/reactter/latest/reactter/ReactterHook-class.html) that allows to manage a dependency.
+<HT><a href="https://pub.dev/documentation/reactter/latest/reactter/UseDependency-class.html" target="_blank">`UseDependency`</a></HT> is a [RtHook](https://pub.dev/documentation/reactter/latest/reactter/RtHook-class.html) that allows to manage a dependency.
 
 ## Constructors and factories
 
-- <HT>`UseDependency`</HT>: Default constructor to get the <HT>`T`</HT> dependency. It's similar to using <HM>`Reactter.find`</HM>.
+- <HT>`UseDependency`</HT>: Default constructor to get the <HT>`T`</HT> dependency. It's similar to using <HM>`Rt.find`</HM>.
 
     ```dart showLineNumbers=false
     UseDependency<T>([String? id]);
     ```
 
-- <HT>`UseDependency.get`</HT>: Get a <HT>`T`</HT> dependency inmediately. It's similar to using <HM>`Reactter.get`</HM>.
+- <HT>`UseDependency.get`</HT>: Get a <HT>`T`</HT> dependency inmediately. It's similar to using <HM>`Rt.get`</HM>.
 
     ```dart showLineNumbers=false
     UseDependency<T>.get([String? id]);
     ```
 
-- <HT>`UseDependency.register`</HT>: Register a builder function to create a <HT>`T`</HT> dependency. It's similar to using <HM>`Reactter.register`</HM>.
+- <HT>`UseDependency.register`</HT>: Register a builder function to create a <HT>`T`</HT> dependency. It's similar to using <HM>`Rt.register`</HM>.
 
     ```dart showLineNumbers=false
     UseDependency<T>.register(T Function() builder, {
@@ -38,7 +38,7 @@ It's recommended read that first if you're new in Reactter.
     });
     ```
 
-- <HT>`UseDependency.create`</HT>: Registers, creates and gets a <HT>`T`</HT> dependency inmediately. It's similar to using <HM>`Reactter.create`</HM>.
+- <HT>`UseDependency.create`</HT>: Registers, creates and gets a <HT>`T`</HT> dependency inmediately. It's similar to using <HM>`Rt.create`</HM>.
 
     ```dart showLineNumbers=false
     UseDependency<T>.create(T Function() builder, {
@@ -47,25 +47,25 @@ It's recommended read that first if you're new in Reactter.
     });
     ```
 
-- <HT>`UseDependency.lazyBuilder`</HT>: Registers a builder function, to create a instance of the <HT>`T`</HT> dependency as [Builder](/reactter/core_concepts/dependency_injection/#builder) mode. It's similar to using <HM>`Reactter.lazyBuilder`</HM>.
+- <HT>`UseDependency.lazyBuilder`</HT>: Registers a builder function, to create a instance of the <HT>`T`</HT> dependency as [Builder](/reactter/core_concepts/dependency_injection/#builder) mode. It's similar to using <HM>`Rt.lazyBuilder`</HM>.
 
     ```dart showLineNumbers=false
     UseDependency<T>.lazyBuilder(T Function() builder, [String? id]);
     ```
 
-- <HT>`UseDependency.lazyFactory`</HT>: Registers a builder function, to create a instance of the <HT>`T`</HT> dependency as [Factory](/reactter/core_concepts/dependency_injection/#factory) mode. It's similar to using <HM>`Reactter.lazyFactory`</HM>.
+- <HT>`UseDependency.lazyFactory`</HT>: Registers a builder function, to create a instance of the <HT>`T`</HT> dependency as [Factory](/reactter/core_concepts/dependency_injection/#factory) mode. It's similar to using <HM>`Rt.lazyFactory`</HM>.
 
     ```dart showLineNumbers=false
     UseDependency<T>.lazyFactory(T Function() builder, [String? id]);
     ```
 
-- <HT>`UseDependency.lazySingleton`</HT>: Registers a builder function, to create a instance of the <HT>`T`</HT> dependency as [Singleton](/reactter/core_concepts/dependency_injection/#singleton) mode. It's similar to using <HM>`Reactter.lazySingleton`</HM>.
+- <HT>`UseDependency.lazySingleton`</HT>: Registers a builder function, to create a instance of the <HT>`T`</HT> dependency as [Singleton](/reactter/core_concepts/dependency_injection/#singleton) mode. It's similar to using <HM>`Rt.lazySingleton`</HM>.
 
     ```dart showLineNumbers=false
     UseDependency<T>.lazySingleton(T Function() builder, [String? id]);
     ```
 
-- <HT>`UseDependency.builder`</HT>: Registers, creates and gets a <HT>`T`</HT> dependency inmediately as [Builder](/reactter/core_concepts/dependency_injection/#builder) mode. It's similar to using <HM>`Reactter.builder`</HM>.
+- <HT>`UseDependency.builder`</HT>: Registers, creates and gets a <HT>`T`</HT> dependency inmediately as [Builder](/reactter/core_concepts/dependency_injection/#builder) mode. It's similar to using <HM>`Rt.builder`</HM>.
 
     ```dart showLineNumbers=false
     UseDependency<T>.builder(T Function() builder, {
@@ -74,7 +74,7 @@ It's recommended read that first if you're new in Reactter.
     });
     ```
 
-- <HT>`UseDependency.factory`</HT>: Registers, creates and gets a <HT>`T`</HT> dependency inmediately as [Factory](/reactter/core_concepts/dependency_injection/#factory) mode. It's similar to using <HM>`Reactter.factory`</HM>.
+- <HT>`UseDependency.factory`</HT>: Registers, creates and gets a <HT>`T`</HT> dependency inmediately as [Factory](/reactter/core_concepts/dependency_injection/#factory) mode. It's similar to using <HM>`Rt.factory`</HM>.
 
     ```dart showLineNumbers=false
     UseDependency<T>.factory(T Function() builder, {
@@ -83,7 +83,7 @@ It's recommended read that first if you're new in Reactter.
     });
     ```
 
-- <HT>`UseDependency.singleton`</HT>: Registers, creates and gets a <HT>`T`</HT> dependency inmediately as [Singleton](/reactter/core_concepts/dependency_injection/#singleton) mode. It's similar to using <HM>`Reactter.singleton`</HM>.
+- <HT>`UseDependency.singleton`</HT>: Registers, creates and gets a <HT>`T`</HT> dependency inmediately as [Singleton](/reactter/core_concepts/dependency_injection/#singleton) mode. It's similar to using <HM>`Rt.singleton`</HM>.
 
     ```dart showLineNumbers=false
     UseDependency<T>.singleton(T Function() builder, {
@@ -191,18 +191,18 @@ class MyController {
 }
 ```
 
-```dart title="my_app.dart" "ReactterProviders" "ReactterProvider"
+```dart title="my_app.dart" "RtMultiProvider" "RtProvider"
 import 'package:flutter_reactter/flutter_reactter.dart';
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: ReactterProviders(
+      home: RtMultiProvider(
         [
-          ReactterProvider(() => MyDependency()),
-          ReactterProvider(() => MyDependency(), id: "uniqueId"),
-          ReactterProvider(() => MyController()),
+          RtProvider(() => MyDependency()),
+          RtProvider(() => MyDependency(), id: "uniqueId"),
+          RtProvider(() => MyController()),
         ],
         build: (_, __) => MyHomePage(),
       ),
@@ -275,17 +275,17 @@ To ensure that the dependency is created, you can using the <HT>`UseDependency.c
 :::tip
 The <HT>`UseDependency.get`</HT> hook is ideal for accessing a dependency, when you are sure that it is already registered before, e.g.:
 
-```dart title="my_app.dart" "ReactterProviders" "ReactterProvider"
+```dart title="my_app.dart" "RtMultiProvider" "RtProvider"
 import 'package:flutter_reactter/flutter_reactter.dart';
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: ReactterProviders(
+      home: RtMultiProvider(
         [
-          ReactterProvider(() => MyDependency()),
-          ReactterProvider(() => MyController()),
+          RtProvider(() => MyDependency()),
+          RtProvider(() => MyController()),
         ],
         build: (_, __) => MyHomePage(),
       ),
@@ -326,16 +326,16 @@ class MyController {
 :::note
 In above example, it will print <HS>_Dependency instance: null_</HS>, because <HT>`UseDependency.register`</HT> hook does not create the dependency instance immediately.
 
-For creating the dependency instance, using the <HT>`Reactter.get`</HT> method, e.g.:
+For creating the dependency instance, using the <HT>`Rt.get`</HT> method, e.g.:
 
-```dart title="my_controller.dart" ins={7} "UseDependency<MyDependency>.register" "Reactter.get"
+```dart title="my_controller.dart" ins={7} "UseDependency<MyDependency>.register" "Rt.get"
 import 'package:reactter/reactter.dart';
 
 class MyController {
   final uDependency = UseDependency<MyDependency>.register(() => MyDependency());
 
   const MyController() {
-    Reactter.get<MyDependency>();
+    Rt.get<MyDependency>();
     print("Dependency instance: ${uDependency.instance}");
   }
 }
@@ -359,14 +359,14 @@ class DependenciesRegisters {
 }
 ```
 
-```dart title="my_app.dart" "ReactterProviders" "ReactterProvider" "DependenciesRegisters"
+```dart title="my_app.dart" "RtMultiProvider" "RtProvider" "DependenciesRegisters"
 import 'package:flutter_reactter/flutter_reactter.dart';
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: ReactterProvider(
+      home: RtProvider(
         () => DependenciesRegisters(),
         build: (_, __, ___) => MyHomePage(),
       ),
@@ -433,14 +433,14 @@ class DependenciesRegisters {
 }
 ```
 
-```dart title="my_app.dart" "ReactterProviders" "ReactterProvider" "DependenciesRegisters"
+```dart title="my_app.dart" "RtMultiProvider" "RtProvider" "DependenciesRegisters"
 import 'package:flutter_reactter/flutter_reactter.dart';
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: ReactterProvider(
+      home: RtProvider(
         () => DependenciesRegisters(),
         build: (_, __, ___) => MyHomePage(),
       ),

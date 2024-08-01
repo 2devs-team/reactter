@@ -13,7 +13,7 @@ class CounterView extends StatelessWidget {
       appBar: AppBar(
         title: const Text("Counter - Lifecycle using UseEffect"),
       ),
-      body: ReactterWatcher(
+      body: RtSignalWatcher(
         builder: (context, child) {
           return Center(
             child: Column(

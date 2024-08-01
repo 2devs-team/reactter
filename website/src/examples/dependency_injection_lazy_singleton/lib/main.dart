@@ -4,14 +4,14 @@ import 'counter.dart';
 
 void main() {
   // Register a dependency as singleton mode.
-  Reactter.lazySingleton<Counter>(() => Counter());
+  Rt.lazySingleton<Counter>(() => Counter());
 
   // Get the dependency
-  final counter = Reactter.get<Counter>();
+  final counter = Rt.get<Counter>();
   print("counter: ${counter?.hashCode}");
 
   // Listen to the state changes
-  Reactter.on(
+  Rt.on(
     counter!.count,
     Lifecycle.didUpdate,
     (_, __) {
@@ -24,38 +24,38 @@ void main() {
   counter.decrement();
 
   // Can't delete the dependency, because it's singleton mode
-  Reactter.delete<Counter>();
+  Rt.delete<Counter>();
 
   // Can update the state, because it's singleton mode
   counter.increment();
 
   // Can get the same dependency instanse, because it's singleton mode
-  final counter2 = Reactter.get<Counter>();
+  final counter2 = Rt.get<Counter>();
   print("counter2: ${counter2?.hashCode}");
 
   // Delete the dependency instance
-  Reactter.destroy<Counter>(onlyInstance: true);
+  Rt.destroy<Counter>(onlyInstance: true);
 
   // Can get the dependency instance, but it's created again, because it's singleton mode
-  final counter3 = Reactter.get<Counter>();
+  final counter3 = Rt.get<Counter>();
   print("counter3: ${counter3?.hashCode}");
 
   // Delete the dependency instance and its register
-  Reactter.destroy<Counter>();
+  Rt.destroy<Counter>();
 
   // Can't get the dependency instance, because the dependency register was deleted using `destroy` method
-  final counter4 = Reactter.get<Counter>();
+  final counter4 = Rt.get<Counter>();
   print("counter4: ${counter4?.hashCode}"); // counter4: null
 
   // Register a dependency using `id` parameter as singleton mode
-  Reactter.lazySingleton(() => Counter(), id: 'CounterById');
+  Rt.lazySingleton(() => Counter(), id: 'CounterById');
 
   // Get the dependency using `id` parameter
-  final counterById = Reactter.get<Counter>('CounterById');
+  final counterById = Rt.get<Counter>('CounterById');
   print("counterById: ${counterById?.hashCode}");
 
   // Delete the dependency instance and its register using `id` parameter
-  Reactter.destroy<Counter>(id: 'CounterById');
+  Rt.destroy<Counter>(id: 'CounterById');
 
   runApp(MyApp());
 }

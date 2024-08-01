@@ -4,14 +4,14 @@ import 'counter.dart';
 
 void main() {
   // Register a dependency as factory mode.
-  Reactter.lazyFactory<Counter>(() => Counter());
+  Rt.lazyFactory<Counter>(() => Counter());
 
   // Get the dependency
-  final counter = Reactter.get<Counter>();
+  final counter = Rt.get<Counter>();
   print("counter: ${counter?.hashCode}");
 
   // Listen to the state changes
-  Reactter.on(
+  Rt.on(
     counter!.count,
     Lifecycle.didUpdate,
     (_, __) {
@@ -24,31 +24,31 @@ void main() {
   counter.decrement();
 
   // Delete the dependency
-  Reactter.delete<Counter>();
+  Rt.delete<Counter>();
 
   // Error: "Can't update when it's been disposed", because the dependency instance was deleted
   // counter.increment();
 
   // Can get the dependency instance, but it's created again, because it's factory mode
-  final counter2 = Reactter.get<Counter>();
+  final counter2 = Rt.get<Counter>();
   print("counter2: ${counter2?.hashCode}");
 
   // Delete the dependency instance and its register
-  Reactter.destroy<Counter>();
+  Rt.destroy<Counter>();
 
   // Can't get the dependency instance, because the dependency register was deleted using `destroy` method
-  final counter3 = Reactter.get<Counter>();
+  final counter3 = Rt.get<Counter>();
   print("counter3: ${counter3?.hashCode}"); // counter3: null
 
   // Register a dependency using `id` parameter as factory mode
-  Reactter.lazyFactory(() => Counter(), id: 'CounterById');
+  Rt.lazyFactory(() => Counter(), id: 'CounterById');
 
   // Get the dependency using `id` parameter
-  final counterById = Reactter.get<Counter>('CounterById');
+  final counterById = Rt.get<Counter>('CounterById');
   print("counterById: ${counterById?.hashCode}");
 
   // Delete the dependency instance and its register using `id` parameter
-  Reactter.destroy<Counter>(id: 'CounterById');
+  Rt.destroy<Counter>(id: 'CounterById');
 
   runApp(MyApp());
 }

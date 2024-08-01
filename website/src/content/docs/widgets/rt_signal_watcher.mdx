@@ -1,0 +1,71 @@
+---
+title: RtSignalWatcher
+description: Learn how to use the RtSignalWatcher in Reactter.
+sidebar:
+  order: 8
+---
+
+import { HM, HT, HN } from '@/components/Highlight';
+import CodeTabs from '@/components/CodeTabs.astro';
+import { Tabs, TabItem } from "@/components/Tabs";
+import ZappButton from "@/components/ZappButton.astro";
+import { Code } from "@astrojs/starlight/components";
+import { marks } from '@/examples/marks.ts'
+
+import counterCode from '@/examples/rt_signal_watcher/lib/counter.dart?raw';
+import counterViewCode from '@/examples/rt_signal_watcher/lib/counter_view.dart?raw';
+import mainCode from '@/examples/rt_signal_watcher/lib/main.dart?raw';
+
+The <HT><a href="https://pub.dev/documentation/flutter_reactter/latest/flutter_reactter/RtSignalWatcher-class.html">`RtSignalWatcher`</a></HT> widget that provides a mechanism to rebuild a widget tree whenever a <HT>`Signal`</HT> within its scope changes.
+It acts as a listener for all <HT>`Signal`</HT> instances within its subtree, triggering a rebuild when any of these signals emit new values.
+
+:::caution
+It is not recommended to use <HT>`RtSignalWatcher`</HT> with a widget tree where it may contain a considerable number of arbitrary unchecked signals.
+Because <HT>`RtSignalWatcher`</HT> will listen any signals in the widget tree, regardless of its level, this could result in needless rebuilds that negatively affect performance.
+
+For more granular control and performance optimization, consider using <HT>[`RtConsumer`](/reactter/widgets/rt_consumer)</HT>, <HT>[`RtSelector`](/reactter/widgets/rt_selector)</HT>, <HM>[`BuildContext.watch`](/reactter/extensions/builder_context_watch)</HM>, <HM>[`BuildContext.select`](/reactter/extensions/builder_context_select)</HM> instead to listen for specific states and rebuild parts of the widget tree that require it.
+:::
+
+## Syntax
+
+```dart showLineNumbers=false
+RtSignalWatcher({
+  Key? key,
+  Widget child,
+  Widget builder(BuildContext context, Widget? child),
+})
+```
+
+## Properties
+
+- `key`: An optional <HT>`Key`</HT> to use for identifying the widget.
+- `child`: An optional <HT>`Widget`</HT> that is independent of the <HT>`RtSignalWatcher`</HT>.
+  It is passed to the <HM>`builder`</HM> function if it is defined.
+- <HM>`builder`</HM>: A required function that builds a widget tree based on the current state of the signals.
+  It receives the following arguments:
+  - `context`: The <HT>`BuildContext`</HT> of the <HT>`RtSignalWatcher`</HT> widget.
+  - `child`: The `child` widget passed to <HT>`RtSignalWatcher`</HT>.
+
+## Usage
+
+The following example demonstrates how to use the <HT>`RtSignalWatcher`</HT> widget to listen for changes in a <HT>`Signal`</HT> and rebuild the widget tree accordingly.
+
+
+<CodeTabs>
+  <ZappButton path="examples/rt_signal_watcher"/>
+
+  <Tabs>
+    <TabItem>
+      <HM single slot="label">counter.dart</HM>
+      <Code code={counterCode} lang="dart" mark={[...marks, {range: "11-38"}]}/>
+    </TabItem>
+
+    <TabItem label="counter_view.dart">
+      <Code code={counterViewCode} lang="dart" mark={marks} />
+    </TabItem>
+
+    <TabItem label="main.dart">
+      <Code code={mainCode} lang="dart" mark={marks} />
+    </TabItem>
+  </Tabs>
+</CodeTabs>

@@ -11,10 +11,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: ReactterProviders(
+      home: RtMultiProvider(
         [
-          ReactterProvider(() => CounterController()),
-          ReactterProvider.lazy(() => CounterController(), id: 'counterLazy'),
+          RtProvider(() => CounterController()),
+          RtProvider.lazy(() => CounterController(), id: 'counterLazy'),
         ],
         child: CounterView(),
       ),

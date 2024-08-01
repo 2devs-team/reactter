@@ -25,7 +25,7 @@ An alternative to <HT>[`UseState`](/reactter/hooks/use_state)</HT>.
 
 ```dart showLineNumbers=false
 UseReducer<T>(
-  T reducer(T state, ReactterAction action),
+  T reducer(T state, RtAction action),
   T initialValue,
 );
 ```
@@ -43,7 +43,7 @@ UseReducer<T>(
 - <HM>`dispatch`</HM>: A method that allows to dispatch an action to update the state.
   - Syntax:
     ```dart
-    void dispatch(ReactterAction action);
+    void dispatch(RtAction action);
     ```
 <StateMethodsLite />
 
@@ -57,18 +57,18 @@ UseReducer<T>(
 
 <MDXRedry mdx={NoteLateState} vars={{stateName: 'UseReducer'}}>
   <Fragment slot="exampleCode">
-```dart title="user_controller.dart" collapse={1-3, 8-19} "late" "Reactter.lazyState" "UseReducer"
+```dart title="user_controller.dart" collapse={1-3, 8-19} "late" "Rt.lazyState" "UseReducer"
 class UserController {
   final String userId;
 
-  late final uUser = Reactter.lazyState(
+  late final uUser = Rt.lazyState(
     () => UseReducer<User?>.withArg(this.reducer, null),
     this,
   );
 
   UserController(this.userId);
 
-  User? reducer(User? state, ReactterAction action) {
+  User? reducer(User? state, RtAction action) {
     if (action is IncrementedEgeUserAction) {
       return User(name: state!.name, age: state.age + 1);
     } else if (action is ChangedNameUserAction) {
@@ -83,7 +83,7 @@ class UserController {
 
 ### Writting the action
 
-The action is a class that inherits from the <HT>`ReactterAction`</HT> class.
+The action is a class that inherits from the <HT>`RtAction`</HT> class.
 
 This class contains the action `type` and `payload` that will be dispatched to the <HM>`reducer`</HM> method.
 
@@ -110,10 +110,10 @@ After dispatching an action, you can read the state using the `value` property.
 
 ### Using the action callable
 
-The actions can be created as a callable class, extending from <HT>`ReactterActionCallable`</HT> e.g.:
+The actions can be created as a callable class, extending from <HT>`RtActionCallable`</HT> e.g.:
 
-```dart "ReactterActionCallable" "call" "type" "payload"
-class IncrementedEgeUserAction extends ReactterActionCallable<User, void> {
+```dart "RtActionCallable" "call" "type" "payload"
+class IncrementedEgeUserAction extends RtActionCallable<User, void> {
   const IncrementedEgeUserAction()
     : super(type: 'incremented_ege', payload: null);
 
@@ -121,7 +121,7 @@ class IncrementedEgeUserAction extends ReactterActionCallable<User, void> {
   User call(User state) => User(name: state.name, age: state.age + 1);
 }
 
-class ChangedNameUserAction extends ReactterActionCallable<User, String> {
+class ChangedNameUserAction extends RtActionCallable<User, String> {
   final String name;
 
   const ChangedNameUserAction(this.name)
@@ -132,13 +132,13 @@ class ChangedNameUserAction extends ReactterActionCallable<User, String> {
 }
 ```
 
-<HT>`ReactterActionCallable`</HT> has a <HM>`call`</HM> method that returns the new state based on the `state` and `payload`.
+<HT>`RtActionCallable`</HT> has a <HM>`call`</HM> method that returns the new state based on the `state` and `payload`.
 
 The action callable can be applied in reducer method:
 
-```dart "ReactterActionCallable"
-User reducer(User state, ReactterAction action) {
-  if (action is ReactterActionCallable) return action(state);
+```dart "RtActionCallable"
+User reducer(User state, RtAction action) {
+  if (action is RtActionCallable) return action(state);
   return state;
 }
 ```

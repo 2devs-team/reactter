@@ -7,7 +7,7 @@ class MyCustomForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ReactterProvider<MyController>(
+    return RtProvider<MyController>(
       () => MyController(),
       builder: (context, myController, child) {
         return Scaffold(
@@ -19,7 +19,7 @@ class MyCustomForm extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                ReactterConsumer<MyController>(
+                RtConsumer<MyController>(
                   listenStates: (myController) => [myController.fullName],
                   child: const Text(
                     "Full Name:",

@@ -1,0 +1,96 @@
+---
+title: Renaming Classes
+description: Renaming Classes in Reactter.
+---
+
+import { Code } from "@astrojs/starlight/components";
+import { HE, HK, HM, HN, HS, HT } from '@/components/Highlight';
+import { Tabs, TabItem } from "@/components/Tabs";
+
+:::caution
+This practices is not recommended. Renaming classes can cause any the following issues:
+- It can make your codebase harder to understand and maintain.
+- It can make it harder to find information about the class you are looking for.
+- It can cause conflicts with other packages that depend on the original name.
+
+It's recommended to do it only when you have a good reason to do so and you understand the potential consequences.
+:::
+
+Reactter classes are generally prefixed with <HT>`Reactter`</HT> to avoid conflicts with other packages, so you can easily identify them. This may seem verbose and redundant, but you can rename them to shorter names or other aliases if you prefer.
+
+To rename a class, use <HK>`typedef`</HK> to create an alias for the class.
+Here is an example of renaming classes to prefix them with <HT>`Rt`</HT> instead of <HT>`Reactter`</HT>:
+
+<Tabs groupName="project_type">
+  <TabItem name="dart" label="Only Dart" icon="dart">
+    ```dart title="reactter.dart"
+    import 'package:reactter/reactter.dart';
+
+    /// Alias for [Reactter]
+    /// ignore: non_constant_identifier_names
+    final Rt = Reactter;
+
+    /// Alias for [ReactterState]
+    typedef RtState = ReactterState;
+
+    /// Alias for [ReactterHook]
+    typedef RtHook = ReactterHook;
+
+    /// Alias for [ReactterDependency]
+    typedef RtDependency = ReactterDependency;
+
+    /// Alias for [ReactterAction]
+    typedef RtAction = ReactterAction;
+
+    /// Alias for [ReactterActionCallable]
+    typedef RtActionCallable = ReactterActionCallable;
+    ```
+  </TabItem>
+  <TabItem name="flutter" label="With Flutter" icon="flutter">
+    ```dart title="flutter_reactter.dart"
+    import 'package:flutter_reactter/flutter_reactter.dart';
+
+    /// Alias for [Reactter]
+    /// ignore: non_constant_identifier_names
+    final Rt = Reactter;
+
+    /// Alias for [ReactterState]
+    typedef RtState = ReactterState;
+
+    /// Alias for [ReactterHook]
+    typedef RtHook = ReactterHook;
+
+    /// Alias for [ReactterDependency]
+    typedef RtDependency = ReactterDependency;
+
+    /// Alias for [ReactterAction]
+    typedef RtAction = ReactterAction;
+
+    /// Alias for [ReactterActionCallable]
+    typedef RtActionCallable = ReactterActionCallable;
+
+    /// Alias for [ReactterComponent]
+    typedef RtComponent = ReactterComponent;
+
+    /// Alias for [ReactterScope]
+    typedef RtScope = ReactterScope;
+
+    /// Alias for [ReactterProvider]
+    typedef RtProvider = ReactterProvider;
+
+    /// Alias for [ReactterProviders]
+    typedef RtProviders = ReactterProviders;
+
+    /// Alias for [ReactterConsumer]
+    typedef RtConsumer = ReactterConsumer;
+
+    /// Alias for [ReactterSelector]
+    typedef RtSelector = ReactterSelector;
+
+    /// Alias for [ReactterWatcher]
+    typedef RtWatcher = ReactterWatcher;
+    ```
+  </TabItem>
+</Tabs>
+
+

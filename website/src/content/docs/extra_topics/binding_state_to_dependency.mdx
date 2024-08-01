@@ -11,7 +11,7 @@ This guies assumes you've already read the [Dependency Injection](/reactter/core
 It's recommended read that first if you're new in Reactter.
 :::
 
-A state(<HT>[`ReactterState`](/reactter/core_concepts/state_management/#state)</HT> like <HT>[`Signal`](/reactter/classes/signal)</HT> or any <HT>[`Hooks`](/reactter/core_concepts/hooks)</HT>) can be bound to the dependency, allowing the state to be manipulated directly from the dependency and to notify its listeners about any changes.
+A state(<HT>[`RtState`](/reactter/core_concepts/state_management/#state)</HT> like <HT>[`Signal`](/reactter/classes/signal)</HT> or any <HT>[`Hooks`](/reactter/core_concepts/hooks)</HT>) can be bound to the dependency, allowing the state to be manipulated directly from the dependency and to notify its listeners about any changes.
 Additionally, it ensures that the state is automatically disposed of when the dependency is no longer needed.
 
 By integrating state directly within dependencies, you benefit from _**cleaner**_ and more _**maintainable**_ code. The automatic handling by Reactter means _**less boilerplate**_ and _**fewer errors**_ related to manual state management, leading to a more efficient development process. This approach _**simplifies**_ the synchronization between state and its associated dependency, enhancing the _**overall responsiveness**_ and _**reliability**_ of your application.
@@ -39,13 +39,13 @@ class CountController {
 
 In the example above, the `uCount` state is declared as a property of the <HT>`CountController`</HT> class and the <HT>`UseEffect`</HT> hook is used within the constructor to react to changes in the `uCount` state, printing its value whenever it changes.  This automatically binds the `uCount` state and <HT>`UseEffect`</HT> hook to the  <HT>`CountController`</HT> instance, demonstrates how Reactter handles the binding and reactivity seamlessly.
 
-```dart title="main.dart" "Reactter.create" "Reactter.delete"
+```dart title="main.dart" "Rt.create" "Rt.delete"
 import "./count_controller.dart";
 
 void main() {
-  final controller = Reactter.create(() => CountController(10));
+  final controller = Rt.create(() => CountController(10));
   controller.uCount.value += 2; // Count: 12
-  Reactter.delete<CountController>();
+  Rt.delete<CountController>();
   controller.uCount.value += 3; // Error: "Can't update when it's been disposed"
 }
 ```
@@ -53,20 +53,20 @@ void main() {
 In the example above, the `uCount` state is accessed after creating the <HT>`CountController`</HT> instance, demonstrating that the state is bound to the dependency and can be manipulated directly from the instance. When the <HT>`CountController`</HT> instance is deleted, the state is automatically disposed of, ensuring that resources are released efficiently.
 
 :::caution
-If the state is declared lazily (e.g., using <HK>`late`</HK> keyword), it will not be automatically bound to the dependency. In such cases, you need to use the <HT>`Reactter.lazyState`</HT> method to bind the state to the dependency(See [Lazy state binding](#lazy-state-binding)).
+If the state is declared lazily (e.g., using <HK>`late`</HK> keyword), it will not be automatically bound to the dependency. In such cases, you need to use the <HT>`Rt.lazyState`</HT> method to bind the state to the dependency(See [Lazy state binding](#lazy-state-binding)).
 :::
 
 ### Lazy state binding
 
-When a state is declared lazily, it is not automatically bound to the dependency. In such cases, you can use the <HT>[`Reactter.lazyState`](/reactter/methods/state_management_methods/#reactterlazystate)</HT> method to bind the state to the dependency, e.g.:
+When a state is declared lazily, it is not automatically bound to the dependency. In such cases, you can use the <HT>[`Rt.lazyState`](/reactter/methods/state_management_methods/#rtlazystate)</HT> method to bind the state to the dependency, e.g.:
 
-```dart title="count_controller.dart" "UseState" "Reactter.lazyState"
+```dart title="count_controller.dart" "UseState" "Rt.lazyState"
 import "package:reactter/reactter.dart";
 
 class CountController {
   final int initialCount;
 
-  late final uCount = Reactter.lazyState(
+  late final uCount = Rt.lazyState(
     () => UseState(this.initialCount),
     this,
   );
@@ -79,15 +79,15 @@ class CountController {
 }
 ```
 
-In the example above, the `uCount` state is declared lazily using the <HK>`late`</HK> keyword. To bind the state to the <HT>`CountController`</HT> instance, the <HT>[`Reactter.lazyState`](/reactter/methods/state_management_methods/#reactterlazystate)</HT> method is used, passing the state creation function and the dependency instance as arguments. This ensures that when `uCount` is accessed, it will be automatically bound to the <HT>`CountController`</HT> instance, e.g.:
+In the example above, the `uCount` state is declared lazily using the <HK>`late`</HK> keyword. To bind the state to the <HT>`CountController`</HT> instance, the <HT>[`Rt.lazyState`](/reactter/methods/state_management_methods/#rtlazystate)</HT> method is used, passing the state creation function and the dependency instance as arguments. This ensures that when `uCount` is accessed, it will be automatically bound to the <HT>`CountController`</HT> instance, e.g.:
 
-```dart title="main.dart" "Reactter.create" "Reactter.delete"
+```dart title="main.dart" "Rt.create" "Rt.delete"
 import "./count_controller.dart";
 
 void main() {
-  final controller = Reactter.create(() => CountController(10));
+  final controller = Rt.create(() => CountController(10));
   controller.uCount.value += 2; // Count: 12
-  Reactter.delete<CountController>();
+  Rt.delete<CountController>();
   controller.uCount.value += 3; // Error: "Can't update when it's been disposed"
 }
 ```
@@ -114,13 +114,13 @@ class CountController {
 
 In the example above, the `uCount` state is declared lazily using the <HK>`late`</HK> keyword. To manually bind the state to the <HT>`CountController`</HT> instance, the <HM>`bind`</HM> method is called within the constructor, passing the dependency instance as an argument. This ensures that the `uCount` state is associated with the <HT>`CountController`</HT> instance, e.g.:
 
-```dart title="main.dart" "Reactter.create" "Reactter.delete"
+```dart title="main.dart" "Rt.create" "Rt.delete"
 import "./count_controller.dart";
 
 void main() {
-  final controller = Reactter.create(() => CountController(10));
+  final controller = Rt.create(() => CountController(10));
   controller.uCount.value += 2; // Count: 12
-  Reactter.delete<CountController>();
+  Rt.delete<CountController>();
   controller.uCount.value += 3; // Error: "Can't update when it's been disposed"
 }
 ```

@@ -20,9 +20,9 @@ Reactter provides a variety of mechanisms for state management, including classe
   - <HT>[`UseReducer`](/reactter/hooks/use_reducer)</HT>
   - <HT>[`UseCompute`](/reactter/hooks/use_compute)</HT>
 - Methods
-  - <HM>[`Reactter.lazyState`](/reactter/methods/state_management_methods/#reactterlazy_state)</HM>
-  - <HM>[`Reactter.batch`](/reactter/methods/state_management_methods/#reactterbatch)</HM>
-  - <HM>[`Reactter.untracked`](/reactter/methods/state_management_methods/#reactteruntracked)</HM>
+  - <HM>[`Rt.lazyState`](/reactter/methods/state_management_methods/#rtlazy_state)</HM>
+  - <HM>[`Rt.batch`](/reactter/methods/state_management_methods/#rtbatch)</HM>
+  - <HM>[`Rt.untracked`](/reactter/methods/state_management_methods/#rtuntracked)</HM>
 
 :::tip
   Learn about <HT>[Hooks](/reactter/core_concepts/hooks)</HT>.
@@ -33,18 +33,18 @@ Reactter provides a variety of mechanisms for state management, including classe
 Reactter's state management system is based on the concept of _reactivity_.
 Contrary to the prevailing notion that implementing reactive programming in Dart can be challenging,
 Reactter greatly simplifies this process.
-To dive into the concept, let's start by exploring what constitutes a state in Reactter.
+To dive into the concept, let's start by exploring what constitutes a state in Rt.
 
 ### State
 
-All state in Reactter are classes that inherit <HT><a href="https://pub.dev/documentation/reactter/latest/reactter/ReactterState-class.html" target="_blank">`ReactterState`</a></HT>,
+All state in Reactter are classes that inherit <HT><a href="https://pub.dev/documentation/reactter/latest/reactter/RtState-class.html" target="_blank">`RtState`</a></HT>,
 which encapsulates the data and behavior of a particular state, and provides a way to notify observers when the state changes.
 
 Reactter offers two fundamental approaches for creating states: <HT>[`Signal`](/reactter/classes/signal)</HT> and <HT>[`Hooks`](/reactter/core_concepts/hooks)</HT>.
 
 ### State methods
 
-<HT><a href="https://pub.dev/documentation/reactter/latest/reactter/ReactterState-class.html" target="_blank">`ReactterState`</a></HT> class provides some methods for managing states, which are:
+<HT><a href="https://pub.dev/documentation/reactter/latest/reactter/RtState-class.html" target="_blank">`RtState`</a></HT> class provides some methods for managing states, which are:
 
 <StateMethods />
 
@@ -52,7 +52,7 @@ Reactter offers two fundamental approaches for creating states: <HT>[`Signal`](/
 
 Let's see an example of how a <HT>`Signal`</HT> state is used and what happens under the hood.
 
-```dart title="main.dart" /(Signal)(?!\u0060)/ /count(?!down)(?!\u0060)/ "count.value" "Reactter.on" "Lifecycle.didUpdate"
+```dart title="main.dart" /(Signal)(?!\u0060)/ /count(?!down)(?!\u0060)/ "count.value" "Rt.on" "Lifecycle.didUpdate"
 import 'dart:async';
 import 'package:reactter/reactter.dart';
 
@@ -62,7 +62,7 @@ final count = Signal(10);
 void main() async {
   // Listen to the `didUpdate` event of the `count` state
   // and print the `value` of `count` each time it changes
-  Reactter.on(
+  Rt.on(
     count,
     Lifecycle.didUpdate,
     (_, __) => print('Count: $count')
@@ -87,8 +87,8 @@ void countdown(Timer timer) {
 During the process, as the `value` of `count` changes and triggers the <HE>`Lifecycle.didUpdate`</HE> event,
 internally within the <HT>`Signal`</HT> class, the <HM>`update`</HM> method is invoked to notify its listeners(in line 11 of the code below), as follows:
 
-```dart title="signal.dart" "ReactterState" "_value" "update"
-class Signal<T> extends ReactterState[...] {
+```dart title="signal.dart" "RtState" "_value" "update"
+class Signal<T> extends RtState[...] {
   T _value;
 
   Signal(this._value);

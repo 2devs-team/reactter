@@ -44,7 +44,7 @@ To render using a computed value based on multiple states, use <HT>[`BuildContex
 
 ```dart showLineNumbers=false
 T context.watch<T>([
-  List<ReactterState> listenStates?(T instance),
+  List<RtState> listenStates?(T instance),
   String? id,
 ]);
 ```
@@ -54,7 +54,7 @@ T context.watch<T>([
 These are some points to consider:
   - If the type is nullable, the method will return <HN>`null`</HN> if the dependency is not found.
   - If the type is not nullable, the method will throw an exception if the dependency is not found.
-- <HM>`listenStates`</HM>: An optional function that returns a list of state(<HT>`ReactterState`</HT>) to listen for changes. If omitted, the method will listen for any changes in the <HT>`T`</HT> dependency.
+- <HM>`listenStates`</HM>: An optional function that returns a list of state(<HT>`RtState`</HT>) to listen for changes. If omitted, the method will listen for any changes in the <HT>`T`</HT> dependency.
 - `id`: An optional identifier for the <HT>`T`</HT> dependency. If omitted, the dependency will be located by its type(<HT>`T`</HT>).
 
 ## Usage

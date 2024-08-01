@@ -15,11 +15,11 @@ class CounterController extends LifecycleObserver {
     print('CounterController will mount');
   }
 
-  void onWillUpdate(ReactterState state) {
+  void onWillUpdate(RtState state) {
     print('CounterController will update by ${state.runtimeType}');
   }
 
-  void onDidUpdate(ReactterState state) {
+  void onDidUpdate(RtState state) {
     print('CounterController did update by ${state.runtimeType}');
   }
 

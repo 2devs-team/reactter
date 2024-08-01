@@ -1,0 +1,299 @@
+---
+title: RtConsumer
+description: Learn how to use the RtConsumer in Reactter.
+sidebar:
+  order: 4
+---
+import { HM, HN, HS, HT } from '@/components/Highlight';
+import CodeTabs from '@/components/CodeTabs.astro';
+import { Tabs, TabItem } from "@/components/Tabs";
+import ZappButton from "@/components/ZappButton.astro";
+import { Code } from "@astrojs/starlight/components";
+import { marks } from '@/examples/marks.ts'
+
+import counterControllerCode from '@/examples/rt_consumer/lib/counter_controller.dart?raw';
+import counterCode from '@/examples/rt_consumer/lib/counter.dart?raw';
+import counterViewCode from '@/examples/rt_consumer/lib/counter_view.dart?raw';
+import mainCode from '@/examples/rt_consumer/lib/main.dart?raw';
+
+import counterControllerListenAllCode from '@/examples/rt_consumer_listen_all/lib/counter_controller.dart?raw';
+import counterListenAllCode from '@/examples/rt_consumer_listen_all/lib/counter.dart?raw';
+import counterViewListenAllCode from '@/examples/rt_consumer_listen_all/lib/counter_view.dart?raw';
+import mainListenAllCode from '@/examples/rt_consumer_listen_all/lib/main.dart?raw';
+
+import counterControllerListenAll2Code from '@/examples/rt_consumer_listen_all_2/lib/counter_controller.dart?raw';
+import counterListenAll2Code from '@/examples/rt_consumer_listen_all_2/lib/counter.dart?raw';
+import counterViewListenAll2Code from '@/examples/rt_consumer_listen_all_2/lib/counter_view.dart?raw';
+import mainListenAll2Code from '@/examples/rt_consumer_listen_all_2/lib/main.dart?raw';
+
+import counterControllerListenStatesCode from '@/examples/rt_consumer_listen_states/lib/counter_controller.dart?raw';
+import counterListenStatesCode from '@/examples/rt_consumer_listen_states/lib/counter.dart?raw';
+import counterViewListenStatesCode from '@/examples/rt_consumer_listen_states/lib/counter_view.dart?raw';
+import mainListenStatesCode from '@/examples/rt_consumer_listen_states/lib/main.dart?raw';
+
+import counterControllerIdCode from '@/examples/rt_consumer_id/lib/counter_controller.dart?raw';
+import counterIdCode from '@/examples/rt_consumer_id/lib/counter.dart?raw';
+import counterViewIdCode from '@/examples/rt_consumer_id/lib/counter_view.dart?raw';
+import mainIdCode from '@/examples/rt_consumer_id/lib/main.dart?raw';
+
+import counterControllerChildCode from '@/examples/rt_consumer_child/lib/counter_controller.dart?raw';
+import counterChildCode from '@/examples/rt_consumer_child/lib/counter.dart?raw';
+import counterViewChildCode from '@/examples/rt_consumer_child/lib/counter_view.dart?raw';
+import mainChildCode from '@/examples/rt_consumer_child/lib/main.dart?raw';
+
+The <HT><a href="https://pub.dev/documentation/flutter_reactter/latest/flutter_reactter/RtConsumer-class.html">`RtConsumer`</a></HT> widget obtains the dependency provided by the closest <HT>[`RtProvider`](/reactter/widgets/rt_provider)</HT> widget and rebuilds itself whenever there are changes in the dependency or any defined states.
+
+:::note
+<HT>`RtConsumer`</HT> is similar to the <HM>[`BuildContext.use`](/reactter/extensions/builder_context_use)</HM> and <HM>[`BuildContext.watch`](/reactter/extensions/builder_context_watch)</HM> functions, but it is designed to be used within the widget tree.
+:::
+
+## Syntax
+
+```dart showLineNumbers=false
+RtConsumer<T>({
+  Key? key,
+  String? id,
+  Widget? child,
+  bool listenAll = false,
+  List<RtState> listenStates(
+    T instance,
+  ),
+  required Widget builder(
+    BuildContext context,
+    T instance,
+    Widget? child,
+  ),
+})
+```
+
+## Properties
+
+- `key`: An optional <HT>`Key`</HT> to use for identifying the widget.
+- `id`: An optional identifier for the dependency.
+  If omitted, the dependency will be located by its type(<HT>`T`</HT>).
+- `child`: An optional <HT>`Widget`</HT> that is independent of the <HT>`RtConsumer`</HT>.
+  It is passed to the <HM>`builder`</HM> function if it is defined.
+- `listenAll`: A boolean that determines whether to listen to all states provided by the <HT>`T`</HT> dependency.
+  If set to <HN>`true`</HN>, the <HM>`listenStates`</HM> function is ignored.
+  The default value is <HN>`false`</HN>.
+- <HM>`listenStates`</HM>: An optional function that returns a list of state(<HT>`RtState`</HT>) to listen to.
+  It takes the instance of the <HT>`T`</HT> dependency as an argument.
+  If omitted, the `listenAll` property is checked.
+- <HM>`builder`</HM>: A function that rebuilds a widget depending on the <HT>`RtConsumer`</HT>.
+  It receives the following arguments:
+  - `context`: The <HT>`BuildContext`</HT> of the <HT>`RtConsumer`</HT> widget.
+  - `instance`: The instance of <HT>`T`</HT> dependency provided by the closest <HT>`RtProvider`</HT> widget.
+  - `child`: The `child` widget passed to <HT>`RtConsumer`</HT>.
+
+## Usage
+
+### Basic Usage
+
+To use <HT>`RtConsumer`</HT>, you need to provide the <HT>`T`</HT> dependency using the <HT>`RtProvider`</HT> widget.
+
+:::note
+Ensure that the <HT>`RtProvider`</HT> widget is placed higher in the widget tree than any <HT>`RtConsumer`</HT> instances needing access to the <HT>`T`</HT> dependency.
+:::
+
+Here's an example of how to use it:
+
+<CodeTabs>
+  <ZappButton path="examples/rt_consumer"/>
+
+  <Tabs>
+    <TabItem label="counter.dart">
+      <HM single slot="label">counter.dart</HM>
+      <Code code={counterCode} lang="dart" mark={[...marks, {range: "11-12, 29-30"}]} collapse={["13-28"]} />
+    </TabItem>
+
+    <TabItem label="main.dart">
+      <Code code={mainCode} lang="dart"  mark={marks} />
+    </TabItem>
+
+    <TabItem label="counter_view.dart">
+      <Code code={counterViewCode} lang="dart" mark={marks} />
+    </TabItem>
+
+    <TabItem label="counter_controller.dart">
+      <Code code={counterControllerCode} lang="dart" mark={marks} />
+    </TabItem>
+  </Tabs>
+</CodeTabs>
+
+In the example above, <HT>`RtConsumer`</HT> is used only to access the <HT>`CounterController`</HT> dependency within the <HT>`Counter`</HT> widget.
+Consequently, it does not rebuild whenever there are changes in the `count` state of the <HT>`CounterController`</HT> dependency.
+
+:::note
+For specific state listening, you can use the <HM>`listenStates`</HM> property(see the [Listening to specific states](#listening-to-specific-states) section).
+
+Alternatively, you can set the `listenAll` property to <HN>`true`</HN> to listen to all states provided by the <HT>`CounterController`</HT> dependency(see the [Listening to all states](#listening-to-all-states) section).
+:::
+
+### Listening to all state
+
+To listen to all states, set the `listenAll` property to <HN>`true`</HN>. This ensures that <HT>`RtConsumer`</HT> rebuilds whenever any state in the dependency changes.
+
+:::caution
+Using the `listenAll` property indiscriminately is not recommended, especially when some states are not directly involved in rendering the widget subtree.
+Instead, it is advisable to use <HM>`listenStates`</HM> to specifically define which states to listen(see the [Listening to specific states](#listening-to-specific-states) section).
+:::
+
+Here's an example of how to use it:
+
+<CodeTabs>
+  <ZappButton path="examples/rt_consumer_listen_all"/>
+
+  <Tabs>
+    <TabItem label="counter.dart">
+      <HM single slot="label">counter.dart</HM>
+      <Code code={counterListenAllCode} lang="dart" mark={[...marks, {range: "12-14, 31-32"}, {range: "13", label: "👉"}]} collapse={["15-30"]} />
+    </TabItem>
+
+    <TabItem label="main.dart">
+      <Code code={mainListenAllCode} lang="dart"  mark={marks} />
+    </TabItem>
+
+    <TabItem label="counter_view.dart">
+      <Code code={counterViewListenAllCode} lang="dart" mark={marks} />
+    </TabItem>
+
+    <TabItem label="counter_controller.dart">
+      <Code code={counterControllerListenAllCode} lang="dart" mark={marks} />
+    </TabItem>
+  </Tabs>
+</CodeTabs>
+
+In the example above, <HT>`RtConsumer`</HT> will trigger a rebuild of the widget subtree(the <HT>`Row`</HT> widget and each of its children) whenever there are changes in any state of the <HT>`CounterController`</HT> dependency.
+
+So, that approach lacks performance efficient.
+It is advisable to optimize by selectively wrapping only the necessary widgets with <HT>`RtConsumer`</HT>, utilizing either active or non-active listening as appropriate, e.g.:
+
+<CodeTabs>
+  <ZappButton path="examples/rt_consumer_listen_all_2"/>
+
+  <Tabs>
+    <TabItem label="counter.dart">
+      <HM single slot="label">counter.dart</HM>
+      <Code code={counterListenAll2Code} lang="dart" mark={[...marks, {range: "11-12, 23-28, 36-37"}, {range: "24", label: "👉"}]} />
+    </TabItem>
+
+    <TabItem label="main.dart">
+      <Code code={mainListenAll2Code} lang="dart"  mark={marks} />
+    </TabItem>
+
+    <TabItem label="counter_view.dart">
+      <Code code={counterViewListenAll2Code} lang="dart" mark={marks} />
+    </TabItem>
+
+    <TabItem label="counter_controller.dart">
+      <Code code={counterControllerListenAll2Code} lang="dart" mark={marks} />
+    </TabItem>
+  </Tabs>
+</CodeTabs>
+
+### Listening to specific states
+
+To listen to specific states, use the <HM>`listenStates`</HM> property.
+Define a function that returns a list of the states you want to listen to.
+This ensures that <HT>`RtConsumer`</HT> rebuilds only when the specified states change.
+
+Here's an example of how to use it:
+
+<CodeTabs>
+  <ZappButton path="examples/rt_consumer_listen_states"/>
+
+  <Tabs>
+    <TabItem label="counter.dart">
+      <HM single slot="label">counter.dart</HM>
+      <Code code={counterListenStatesCode} lang="dart" mark={[...marks, {range: "23-28"}, {range: "24", label: "👉"}]} />
+    </TabItem>
+
+    <TabItem label="main.dart">
+      <Code code={mainListenStatesCode} lang="dart"  mark={marks} />
+    </TabItem>
+
+    <TabItem label="counter_view.dart">
+      <Code code={counterViewListenStatesCode} lang="dart" mark={marks} />
+    </TabItem>
+
+    <TabItem label="counter_controller.dart">
+      <Code code={counterControllerListenStatesCode} lang="dart" mark={marks} />
+    </TabItem>
+  </Tabs>
+</CodeTabs>
+
+In the example above, <HT>`RtConsumer`</HT> will trigger a rebuild of the <HT>`Text`</HT> widget whenever there are changes in the `count` state of the <HT>`CounterController`</HT> dependency.
+
+### Using `id`
+
+<HT>`RtConsumer`</HT> offers the `id` property to locate the <HT>`T`</HT> dependency by its identifier.
+This is useful when you have multiple instances of the same dependency type and need to specify which one to use.
+
+Here's an example of how to use it:
+
+<CodeTabs>
+  <ZappButton path="examples/rt_consumer_id"/>
+
+  <Tabs>
+    <TabItem label="counter.dart">
+      <HM single slot="label">counter.dart</HM>
+      <Code code={counterIdCode} lang="dart" mark={[...marks, {range:  "13-15, 26-32, 40-41"}, {range: "14,27", label: "👉"}]} />
+    </TabItem>
+
+    <TabItem label="counter_view.dart">
+      <HM single slot="label">counter_view.dart</HM>
+      <Code code={counterViewIdCode} lang="dart" mark={[...marks, {range: '17, 19'}]} />
+    </TabItem>
+
+    <TabItem label="main.dart">
+      <HM single slot="label">counter_view.dart</HM>
+      <Code code={mainIdCode} lang="dart" mark={[...marks, {range: '16, 17'}]} />
+    </TabItem>
+
+    <TabItem label="counter_controller.dart">
+      <Code code={counterControllerIdCode} lang="dart" mark={marks} />
+    </TabItem>
+  </Tabs>
+</CodeTabs>
+
+In the example above, <HT>`RtConsumer`</HT> uses the `id` property to locate the <HT>`CounterController`</HT> dependency by the <HS>`counter1`</HS> and <HS>`counter2`</HS> identifiers.
+
+:::note
+Ensure that the `id` property is located in the <HT>`RtProvider`</HT> widget that provides the <HT>`T`</HT> dependency.
+:::
+
+### Using `child`
+
+<HT>`RtConsumer`</HT> offers the `child` property to pass a widget that is independent of the <HT>`RtConsumer`</HT> and is passed to the <HM>`builder`</HM> function.
+This is useful when you want to reuse a widget that does not need to rebuild when the dependency changes.
+
+:::note
+The `child` argument can't accessed to the dependency instance.
+:::
+
+Here's an example of how to use it:
+
+<CodeTabs>
+  <ZappButton path="examples/rt_consumer_child"/>
+
+  <Tabs>
+    <TabItem label="counter.dart">
+      <HM single slot="label">counter.dart</HM>
+      <Code code={counterChildCode} lang="dart" mark={[...marks, {range:  "26-38"}, {range: "29, 33", label: "👉"}]} />
+    </TabItem>
+
+    <TabItem label="counter_view.dart">
+      <Code code={counterViewChildCode} lang="dart" mark={marks} />
+    </TabItem>
+
+    <TabItem label="main.dart">
+      <Code code={mainChildCode} lang="dart" mark={marks} />
+    </TabItem>
+
+    <TabItem label="counter_controller.dart">
+      <Code code={counterControllerChildCode} lang="dart" mark={marks} />
+    </TabItem>
+  </Tabs>
+</CodeTabs>
+
+In the example above, <HT>`RtConsumer`</HT> uses the `child` property to pass the <HT>`Text`</HT> widget to the <HM>`builder`</HM> function.
