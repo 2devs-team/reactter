@@ -1,6 +1,6 @@
 part of '../widgets.dart';
 
-/// {@template flutter_reactter.rt_watch}
+/// {@template flutter_reactter.rt_watcher}
 /// **This widget is EXPERIMENTAL and may be changed in the future.**
 ///
 /// A [StatefulWidget] that listens for [RtState]s and re-build when any watched [RtState] changes.
@@ -13,7 +13,7 @@ part of '../widgets.dart';
 ///
 /// class Example extends StatelessWidget {
 ///   Widget build(context) {
-///     return RtWatch((context, watch) {
+///     return RtWatcher((context, watch) {
 ///       return Column(
 ///           children: [
 ///             Text("Count: ${watch(count).value}"),
@@ -24,10 +24,10 @@ part of '../widgets.dart';
 ///   }
 /// }
 /// ```
-/// While using [RtWatch], you can watch the state changes of [RtState]s using the [watch] method.
+/// While using [RtWatcher], you can watch the state changes of [RtState]s using the [watch] method.
 /// It will re-build the widget tree when the watched state changes.
 ///
-/// Use [RtWatch.builder] to pass a [builder] method which has the render logic.
+/// Use [RtWatcher.builder] to pass a [builder] method which has the render logic.
 /// It exposes [BuilderContext], [WatchBuilder] and [child] widget as parameters.
 ///
 /// Use [child] property to pass a [Widget] which to be built once only.
@@ -35,7 +35,7 @@ part of '../widgets.dart';
 /// into your build:
 ///
 /// ```dart
-/// RtWatch.builder(
+/// RtWatcher.builder(
 ///   child: Row(
 ///     children: [
 ///       ElevatedButton(
@@ -59,24 +59,21 @@ part of '../widgets.dart';
 ///   },
 /// );
 /// ```
-///
 /// {@endtemplate}
-class RtWatch extends StatefulWidget {
-  /// {@macro flutter_reactter.rt_watch}
-  const RtWatch(this.directBuilder, {Key? key})
-      : child = null,
-        builder = null,
-        super(key: null);
+class RtWatcher extends StatefulWidget {
+  /// {@macro flutter_reactter.rt_watcher}
+  RtWatcher(
+    WatchBuilder builder, {
+    Key? key,
+  })  : child = null,
+        builder = ((context, watch, _) => builder.call(context, watch)),
+        super(key: key);
 
-  /// {@macro flutter_reactter.watch_builder}
-  final WatchBuilder? directBuilder;
-
-  const RtWatch.builder({
+  const RtWatcher.builder({
     Key? key,
     this.child,
     required this.builder,
-  })  : directBuilder = null,
-        super(key: key);
+  }) : super(key: key);
 
   /// Provides a widget , which render one time.
   ///
@@ -84,16 +81,16 @@ class RtWatch extends StatefulWidget {
   final Widget? child;
 
   /// {@macro flutter_reactter.watch_child_builder}
-  final WatchChildBuilder? builder;
+  final WatchChildBuilder builder;
 
   @override
-  State<RtWatch> createState() => _RtWatchState();
+  State<RtWatcher> createState() => _RtWatcherState();
 }
 
-class _RtWatchState extends State<RtWatch> {
+class _RtWatcherState extends State<RtWatcher> {
   final Set<RtState> _states = {};
 
-  static _RtWatchState? _currentState;
+  static _RtWatcherState? _currentState;
 
   @override
   Widget build(BuildContext context) {
@@ -101,9 +98,7 @@ class _RtWatchState extends State<RtWatch> {
 
     _currentState = this;
 
-    final widgetBuit = widget.directBuilder?.call(context, _watchState) ??
-        widget.builder?.call(context, _watchState, widget.child) ??
-        widget.child!;
+    final widgetBuit = widget.builder(context, _watchState, widget.child);
 
     _currentState = prevState;
 
@@ -129,13 +124,25 @@ class _RtWatchState extends State<RtWatch> {
 
   void _onStateDidUpdate(_, __) {
     _clearStates();
-    Future.microtask(
-      () => setState(() {}),
-    );
+    _rebuild();
+  }
+
+  void _rebuild() async {
+    if (!mounted) return;
+
+    // coverage:ignore-start
+    if (SchedulerBinding.instance.schedulerPhase != SchedulerPhase.idle) {
+      await SchedulerBinding.instance.endOfFrame;
+    }
+    // coverage:ignore-end
+
+    if (!mounted) return;
+
+    (context as Element).markNeedsBuild();
   }
 
   void _clearStates() {
-    for (var state in _states) {
+    for (final state in _states) {
       Rt.off(state, Lifecycle.didUpdate, _onStateDidUpdate);
     }
     _states.clear();

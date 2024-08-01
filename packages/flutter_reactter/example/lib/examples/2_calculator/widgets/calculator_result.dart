@@ -13,9 +13,9 @@ class CalculatorResult extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(10.0),
       alignment: Alignment.bottomRight,
-      child: RtWatcher((context) {
+      child: RtWatcher((context, watch) {
         return Text(
-          "${calculatorController.result}",
+          "${watch(calculatorController.result)}",
           style: const TextStyle(
             fontSize: 48,
             fontWeight: FontWeight.w200,
