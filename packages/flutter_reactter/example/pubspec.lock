@@ -170,10 +170,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_reactter
-      sha256: "44865f75d23f8ad23d7e271607f2f2c0bc8e235da7d39ddfb7adf7bf9bfd66ea"
+      sha256: "82eaa9fd97d3520656bcdc07ff701d57a382b8e8620e1d585fb9fa40103c9183"
       url: "https://pub.dev"
     source: hosted
-    version: "7.2.0"
+    version: "7.3.0"
   flutter_web_plugins:
     dependency: transitive
     description: flutter

@@ -145,4 +145,4 @@ abstract class RtComponent<T extends Object> extends StatelessWidget {
   'Use `RtComponent` instead. '
   'This feature was deprecated after v7.3.0.',
 )
-typedef RtComponentWidget<T extends Object> = RtComponent<T>;
+typedef ReactterComponent<T extends Object> = RtComponent<T>;
