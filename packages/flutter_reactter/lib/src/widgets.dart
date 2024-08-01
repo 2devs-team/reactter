@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
 import 'package:meta/meta.dart';
 
@@ -13,5 +14,5 @@ part 'widgets/reactter_provider.dart';
 part 'widgets/reactter_providers.dart';
 part 'widgets/reactter_scope.dart';
 part 'widgets/reactter_selector.dart';
-part 'widgets/reactter_watcher.dart';
-part 'widgets/rt_watch.dart';
+part 'widgets/rt_signal_watcher.dart';
+part 'widgets/rt_watcher.dart';
