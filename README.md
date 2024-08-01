@@ -40,25 +40,25 @@ final count = Signal(0);
 void main() {
   // Change the `value` in any time(e.g., each 1 second).
   Timer.periodic(
-    Duration(seconds: 1), 
-    (_) => count.value++,
+    Duration(seconds: 1),
+    (timer) => count.value++,
   );
 
   // Put on listen `didUpdate` event, whitout use `Stream`
-  Reactter.on(
+  Rt.on(
     count,
     Lifecycle.didUpdate,
-    (_, __) => print('Count: $count'),
+    (inst, state) => print('Count: $count'),
   );
 
   // And you can use in flutter, e.g:
   runApp(
     MaterialApp(
       home: Scaffold(
-        body: ReactterWatcher(
+        body: RtSignalWatcher(
           // Just use it, and puts it in listening mode
           // for further rendering automatically.
-          builder: (_, __) => Text("Count: $count"),
+          builder: (context, child) => Text("Count: $count"),
         ),
       ),
     ),
@@ -93,12 +93,12 @@ See more examples [here](https://zapp.run/pub/flutter_reactter)!
   - [Shortcuts to manage events](#shortcuts-to-manage-events)
   - [UseEffect](#useeffect)
 - [Rendering control](#rendering-control)
-  - [ReactterProvider](#reactterprovider)
-  - [ReactterProviders](#reactterproviders)
-  - [ReactterComponent](#reacttercomponent)
-  - [ReactterConsumer](#reactterconsumer)
-  - [ReactterSelector](#reactterselector)
-  - [ReactterWatcher](#reactterwatcher)
+  - [RtProvider](#rtprovider)
+  - [RtMultiProvider](#rtmultiprovider)
+  - [RtComponent](#rtcomponent)
+  - [RtConsumer](#rtconsumer)
+  - [RtSelector](#rtselector)
+  - [RtSignalWatcher](#rtsignalwatcher)
   - [BuildContext.use](#buildcontextuse)
   - [BuildContext.watch](#buildcontextwatch)
   - [BuildContext.select](#buildcontextselect)
@@ -207,7 +207,7 @@ Moreover, Reactter offers an extensive collection of widgets and extensions, gra
 
 ## State management
 
-In Reactter, state is understood as any object that extends [`ReactterState`](https://pub.dev/documentation/reactter/latest/reactter/ReactterState-class.html), endowing it with capabilities such as the ability to store one or more values and to broadcast notifications of its changes.
+In Reactter, state is understood as any object that extends [`RtState`](https://pub.dev/documentation/reactter/latest/reactter/RtState-class.html), endowing it with capabilities such as the ability to store one or more values and to broadcast notifications of its changes.
 
 Reactter offers the following several state managers:
 
@@ -218,14 +218,14 @@ Reactter offers the following several state managers:
 - [UseCompute](#usecompute)
 
 > **NOTE:**
-> The hooks (also known as [`ReactterHook`](https://pub.dev/documentation/reactter/latest/reactter/ReactterHook-class.html)) are named with the prefix `Use` according to convention.
+> The hooks (also known as [`RtHook`](https://pub.dev/documentation/reactter/latest/reactter/RtHook-class.html)) are named with the prefix `Use` according to convention.
 
 > **RECOMMENDED:**
 > See also [difference between Signal and UseState](#difference-between-signal-and-usestate) and about [custom hooks](#custom-hooks).
 
 ### Signal
 
-[`Signal`](https://pub.dev/documentation/reactter/latest/reactter/Signal-class.html) is an object (that extends [`ReactterState`](https://pub.dev/documentation/reactter/latest/reactter/ReactterState-class.html)) which has a `value` and notifies about its changes.
+[`Signal`](https://pub.dev/documentation/reactter/latest/reactter/Signal-class.html) is an object (that extends [`RtState`](https://pub.dev/documentation/reactter/latest/reactter/RtState-class.html)) which has a `value` and notifies about its changes.
 
 It can be initialized using the constructor class `Signal<T>(T initialValue)`:
 
@@ -284,11 +284,11 @@ When `value` has changed, the `Signal` will emit the following events(learn abou
 > An [`Obj`](https://pub.dev/documentation/reactter/latest/reactter/Obj-class.html) is like a `Signal` without reactive functionality, but you can convert it to `Signal` using `.toSignal`.
 
 > **NOTE:**
-> In flutter, using [`ReactterWatcher`](https://pub.dev/documentation/flutter_reactter/latest/flutter_reactter/ReactterWatcher-class.html), is a way to keep the widgets automatically updates, accessing the value of signal reactively.
+> In flutter, using [`RtSignalWatcher`](https://pub.dev/documentation/flutter_reactter/latest/flutter_reactter/RtSignalWatcher-class.html), is a way to keep the widgets automatically updates, accessing the value of signal reactively.
 
 ### UseState
 
-[`UseState`](https://pub.dev/documentation/reactter/latest/reactter/UseState-class.html) is a hook([`ReactterHook`](https://pub.dev/documentation/reactter/latest/reactter/ReactterHook-class.html)) that allows to declare state variables and manipulate its `value`, which in turn notifies about its changes.
+[`UseState`](https://pub.dev/documentation/reactter/latest/reactter/UseState-class.html) is a hook([`RtHook`](https://pub.dev/documentation/reactter/latest/reactter/RtHook-class.html)) that allows to declare state variables and manipulate its `value`, which in turn notifies about its changes.
 
 ```dart
 UseState<T>(T initialValue)
@@ -307,7 +307,7 @@ class CounterController {
 ```
 
 > **NOTE:**
-> if your variable hook is `late` use `Reactter.lazyState`. Learn about it [here](#lazy-state).
+> if your variable hook is `late` use `Rt.lazyState`. Learn about it [here](#lazy-state).
 
 `UseState` has a `value` property that allows to read and write its state:
 
@@ -349,7 +349,7 @@ When `value` has changed, the `UseState` will emitted the following events(learn
 
 ### UseAsyncState
 
-[`UseAsyncState`](https://pub.dev/documentation/reactter/latest/reactter/UseAsyncState-class.html) is a hook ([`ReactterHook`](https://pub.dev/documentation/reactter/latest/reactter/ReactterHook-class.html)) with the same feature as [`UseState`](#usestate) but its value will be lazily resolved by a function(`asyncFunction`).
+[`UseAsyncState`](https://pub.dev/documentation/reactter/latest/reactter/UseAsyncState-class.html) is a hook ([`RtHook`](https://pub.dev/documentation/reactter/latest/reactter/RtHook-class.html)) with the same feature as [`UseState`](#usestate) but its value will be lazily resolved by a function(`asyncFunction`).
 
 ```dart
 UseAsyncState<T>(
@@ -358,7 +358,7 @@ UseAsyncState<T>(
 );
 ```
 
-`UseAsyncState` accepts theses properties:
+`UseAsyncState` accepts these properties:
 
 - `initialValue`: is a unique value of any type that you use to initialize the state.
 - `asyncFunction`: is a function that will be called by the `resolved` method and sets the value of the state.
@@ -373,7 +373,7 @@ UseAsyncState.withArg<T, A>(
 ```
 
 > **NOTE:**
-> if your variable hook is `late` use `Reactter.lazyState`. Learn about it [here](#lazy-state).
+> if your variable hook is `late` use `Rt.lazyState`. Learn about it [here](#lazy-state).
 
 This is a translate example:
 
@@ -445,14 +445,14 @@ When `value` has changed, the `UseAsyncState` will emit the following events (le
 
 ### UseReducer
 
-[`UseReducer`](https://pub.dev/documentation/reactter/latest/reactter/UseReducer-class.html) is a hook([`ReactterHook`](https://pub.dev/documentation/reactter/latest/reactter/ReactterHook-class.html)) that manages state using reducer method. An alternative to [`UseState`](#usestate).
+[`UseReducer`](https://pub.dev/documentation/reactter/latest/reactter/UseReducer-class.html) is a hook([`RtHook`](https://pub.dev/documentation/reactter/latest/reactter/RtHook-class.html)) that manages state using reducer method. An alternative to [`UseState`](#usestate).
 
 > **RECOMMENDED:**
 > `UseReducer` is usually preferable over `UseState` when you have complex state logic that involves multiple sub-values or when the next state depends on the previous one.
 
  ```dart
   UseReducer<T>(
-    T reducer(T state, ReactterAction<dynamic> action),
+    T reducer(T state, RtAction<dynamic> action),
     T initialState,
   );
  ```
@@ -462,7 +462,7 @@ When `value` has changed, the `UseAsyncState` will emit the following events (le
 - `reducer`: is a method contains your custom state logic that calculates the new state using current state, and actions.
 - `initialState`: is a unique value of any type that you use to initialize the state.
 
-`UseReducer` exposes a `dispatch` method that allows you to invoke the `reducer` method sending a `ReactterAction`.
+`UseReducer` exposes a `dispatch` method that allows you to invoke the `reducer` method sending a `RtAction`.
 
 The current state can be accessed through the `value` property.
 
@@ -475,7 +475,7 @@ class Store {
   Store({this.count = 0});
 }
 
-Store reducer(Store state, ReactterAction<int?> action) {
+Store reducer(Store state, RtAction<int?> action) {
   switch (action.type) {
     case 'INCREMENT':
       return Store(count: state.count + (action.payload ?? 1));
@@ -491,18 +491,18 @@ class CounterController {
 
   CounterController() {
     print("count: ${useCounter.value.count}"); // count: 0;
-    useCounter.dispatch(ReactterAction(type: 'INCREMENT', payload: 2));
+    useCounter.dispatch(RtAction(type: 'INCREMENT', payload: 2));
     print("count: ${useCounter.value.count}"); // count: 2;
-    useCounter.dispatch(ReactterAction(type: 'DECREMENT'));
+    useCounter.dispatch(RtAction(type: 'DECREMENT'));
     print("count: ${useCounter.value.count}"); // count: 1;
   }
 }
  ```
 
-The actions can be created as a callable class, extending from [`ReactterActionCallable`](https://pub.dev/documentation/reactter/latest/reactter/ReactterActionCallable-class.html) and used as follows:
+The actions can be created as a callable class, extending from [`RtActionCallable`](https://pub.dev/documentation/reactter/latest/reactter/RtActionCallable-class.html) and used as follows:
 
 ```dart
-class IncrementAction extends ReactterActionCallable<Store, int> {
+class IncrementAction extends RtActionCallable<Store, int> {
   IncrementAction([int quantity = 1]) : super(
     type: 'INCREEMNT', payload: quantity
   );
@@ -511,7 +511,7 @@ class IncrementAction extends ReactterActionCallable<Store, int> {
   Store call(Store state) => Store(count: state.count + payload);
 }
 
-class DecrementAction extends ReactterActionCallable<Store, int> {
+class DecrementAction extends RtActionCallable<Store, int> {
   DecrementAction([int quantity = 1]) : super(
     type: 'DECREMENT', payload: quantity
   );
@@ -520,8 +520,8 @@ class DecrementAction extends ReactterActionCallable<Store, int> {
   Store call(Store state) => Store(count: state.count - payload);
 }
 
-Store reducer(Store state, ReactterAction action) {
-  if (action is ReactterActionCallable) return action(state);
+Store reducer(Store state, RtAction action) {
+  if (action is RtActionCallable) return action(state);
 
   return  UnimplementedError();
 }
@@ -546,12 +546,12 @@ When `value` has changed, the `UseReducer` will emit the following events (learn
 
 ### UseCompute
 
-[`UseCompute`](https://pub.dev/documentation/reactter/latest/reactter/UseCompute-class.html) is a hook([`ReactterHook`](https://pub.dev/documentation/reactter/latest/reactter/ReactterHook-class.html)) that keeps listening for state `dependencies` changes, to return a computed value(`T`) from a defined method(`computeValue`).
+[`UseCompute`](https://pub.dev/documentation/reactter/latest/reactter/UseCompute-class.html) is a hook([`RtHook`](https://pub.dev/documentation/reactter/latest/reactter/RtHook-class.html)) that keeps listening for state `dependencies` changes, to return a computed value(`T`) from a defined method(`computeValue`).
 
 ```dart
 UseCompute<T>(
   T computeValue(),
-  List<ReactterState> dependencies,
+  List<RtState> dependencies,
 )
 ```
 
@@ -567,7 +567,7 @@ class MyController {
   final stateA = UseState(1);
   final stateB = UseState(7);
 
-  late final computeState = Reactter.lazyState(
+  late final computeState = Rt.lazyState(
     () => UseCompute(
       // The `clamp` is a method that returns this num clamped
       // to be in the range lowerLimit-upperLimit(e.g., 10-15).
@@ -612,7 +612,7 @@ When `value` has changed, the `UseState` will emit the following events (learn a
 > `UseCompute` does not cache the computed value, meaning it recalculates the value when its depenencies has changes, potentially impacting performance, especially if the computation is expensive. In these cases, you should consider using `Memo`(learn about it [here](#memo)) in the following manner:
 
 ```dart
-  late final myUseComputeMemo = Reactter.lazyState((){
+  late final myUseComputeMemo = Rt.lazyState((){
     final addAB = Memo(
       (Args2 args) => args.arg1 + args.arg2,
     );
@@ -645,9 +645,9 @@ Reactter offers the following several instance managers:
 
 by `flutter_reactter`:
 
-- [ReactterProvider](#reactterprovider)
-- [ReactterProviders](#reactterproviders)
-- [ReactterComponent](#reacttercomponent)
+- [RtProvider](#rtprovider)
+- [RtProviders](#rtproviders)
+- [RtComponent](#rtcomponent)
 - [BuildContext.use](#buildcontextuse)
 
 ### Builder
@@ -656,7 +656,7 @@ Builder is a ways to manage an instance, which registers a builder function and 
 
 In builder mode, when the dependency tree no longer needs it, it is completely deleted, including deregistration (deleting the builder function).
 
-Reactter identifies the builder mode as [`InstanceManageMode.builder`](https://pub.dev/documentation/reactter/6.0.0/InstanceManageMode/InstanceManageMode.builder.html) and it's using for default.
+Reactter identifies the builder mode as [`DependencyMode.builder`](https://pub.dev/documentation/reactter/latest/DependencyMode/DependencyMode.builder.html) and it's using for default.
 
 > **NOTE:**
 > **Builder** uses less RAM than [Factory](#factory) and [Singleton](#singleton), but it consumes more CPU than the other modes.
@@ -667,7 +667,7 @@ Factory is a ways to manage an instance, which registers a builder function only
 
 In factory mode, when the dependency tree no longer needs it, the instance is deleted and the builder function is kept in the register.
 
-Reactter identifies the factory mode as [`InstanceManageMode.factory`](https://pub.dev/documentation/reactter/6.0.0/InstanceManageMode/InstanceManageMode.factory.html) and to active it, set it in the `mode` argument of `Reactter.register` and `Reactter.create`, or  use `Reactter.lazyFactory`,  `Reactter.factory`.
+Reactter identifies the factory mode as [`DependencyMode.factory`](https://pub.dev/documentation/reactter/latest/DependencyMode/DependencyMode.factory.html) and to active it, set it in the `mode` argument of `Rt.register` and `Rt.create`, or  use `Rt.lazyFactory`,  `Rt.factory`.
 
 > **NOTE:**
 > **Factory** uses more RAM than [Builder](#builder) but not more than [Singleton](#singleton), and consumes more CPU than [Singleton](#singleton) but not more than [Builder](#builder).
@@ -678,10 +678,10 @@ Singleton is a ways to manage an instance, which registers a builder function an
 
 The singleton mode preserves the instance and its states, even if the dependency tree stops using it.
 
-Reactter identifies the singleton mode as [`InstanceManageMode.singleton`](https://pub.dev/documentation/reactter/6.0.0/InstanceManageMode/InstanceManageMode.singleton.html) and to active it, set it in the `mode` argument of `Reactter.register` and `Reactter.create`, or use `Reactter.lazySingleton`, `Reactter.singleton`.
+Reactter identifies the singleton mode as [`DependencyMode.singleton`](https://pub.dev/documentation/reactter/latest/DependencyMode/DependencyMode.singleton.html) and to active it, set it in the `mode` argument of `Rt.register` and `Rt.create`, or use `Rt.lazySingleton`, `Rt.singleton`.
 
 > **NOTE:**
-> Use `Reactter.destroy` if you want to force destroy the instance and its register.
+> Use `Rt.destroy` if you want to force destroy the instance and its register.
 
 > **NOTE:**
 > **Singleton** consumes less CPU than [Builder](#builder) and [Factory](#factory), but uses more RAM than the other modes.
@@ -690,23 +690,23 @@ Reactter identifies the singleton mode as [`InstanceManageMode.singleton`](https
 
 Reactter offers several convenient shortcuts for managing instances:
 
-- [`Reactter.register`](https://pub.dev/documentation/reactter/latest/reactter/ReactterInterface/register.html): Registers a builder function, for creating a new instance using `[Reactter|UseDependency].[get|create|builder|factory|singleton]`.
-- [`Reactter.lazyBuilder`](https://pub.dev/documentation/reactter/latest/reactter/ReactterInterface/lazyBuilder.html): Registers a builder function, for creating a new instance as [Builder](#builder) mode using `[Reactter|UseDependency].[get|create|builder]`.
-- [`Reactter.lazyFactory`](https://pub.dev/documentation/reactter/latest/reactter/ReactterInterface/lazyFactory.html): Registers a builder function, for creating a new instance as [Factory](#factory) mode using `[Reactter|UseDependency].[get|create|factory]`.
-- [`Reactter.lazySingleton`](https://pub.dev/documentation/reactter/latest/reactter/ReactterInterface/lazySingleton.html): Registers a builder function, for creating a new instance as [Singleton](#singleton) mode using `[Reactter|UseDependency].[get|create|singleton]`.
-- [`Reactter.create`](https://pub.dev/documentation/reactter/latest/reactter/ReactterInterface/create.html): Registers, creates and returns the instance directly.
-- [`Reactter.builder`](https://pub.dev/documentation/reactter/latest/reactter/ReactterInterface/builder.html): Registers, creates and returns the instance as [Builder](#builder) directly.
-- [`Reactter.factory`](https://pub.dev/documentation/reactter/latest/reactter/ReactterInterface/factory.html): Registers, creates and returns the instance as [Factory](#factory) directly.
-- [`Reactter.singleton`](https://pub.dev/documentation/reactter/latest/reactter/ReactterInterface/singleton.html): Registers, creates and returns the instance as [Singleton](#singleton) directly.
-- [`Reactter.get`](https://pub.dev/documentation/reactter/latest/reactter/ReactterInterface/get.html): Returns a previously created instance or creates a new instance from the builder function registered by `[Reactter|UseDependency].[register|lazyBuilder|lazyFactory|lazySingleton]`.
-- [`Reactter.delete`](https://pub.dev/documentation/reactter/latest/reactter/ReactterInterface/delete.html): Deletes the instance but keeps the builder function.
-- [`Reactter.unregister`](https://pub.dev/documentation/reactter/latest/reactter/ReactterInterface/factory.html): Removes the builder function, preventing the creation of the instance.
-- [`Reactter.destroy`](https://pub.dev/documentation/reactter/latest/reactter/ReactterInterface/destroy.html): Destroys the instance and the builder function.
-- [`Reactter.find`](https://pub.dev/documentation/reactter/latest/reactter/ReactterInterface/find.html): Gets the instance.
-- [`Reactter.isRegistered`](https://pub.dev/documentation/reactter/latest/reactter/ReactterInterface/isRegistered.html): Checks if an instance is registered in Reactter.
-- [`Reactter.getInstanceManageMode`](https://pub.dev/documentation/reactter/latest/reactter/ReactterInterface/getInstanceManageMode.html): Returns the `InstanceManageMode` of the instance.
+- [`Rt.register`](https://pub.dev/documentation/reactter/latest/reactter/RtInterface/register.html): Registers a builder function, for creating a new instance using `[Rt|UseDependency].[get|create|builder|factory|singleton]`.
+- [`Rt.lazyBuilder`](https://pub.dev/documentation/reactter/latest/reactter/RtInterface/lazyBuilder.html): Registers a builder function, for creating a new instance as [Builder](#builder) mode using `[Rt|UseDependency].[get|create|builder]`.
+- [`Rt.lazyFactory`](https://pub.dev/documentation/reactter/latest/reactter/RtInterface/lazyFactory.html): Registers a builder function, for creating a new instance as [Factory](#factory) mode using `[Rt|UseDependency].[get|create|factory]`.
+- [`Rt.lazySingleton`](https://pub.dev/documentation/reactter/latest/reactter/RtInterface/lazySingleton.html): Registers a builder function, for creating a new instance as [Singleton](#singleton) mode using `[Rt|UseDependency].[get|create|singleton]`.
+- [`Rt.create`](https://pub.dev/documentation/reactter/latest/reactter/RtInterface/create.html): Registers, creates and returns the instance directly.
+- [`Rt.builder`](https://pub.dev/documentation/reactter/latest/reactter/RtInterface/builder.html): Registers, creates and returns the instance as [Builder](#builder) directly.
+- [`Rt.factory`](https://pub.dev/documentation/reactter/latest/reactter/RtInterface/factory.html): Registers, creates and returns the instance as [Factory](#factory) directly.
+- [`Rt.singleton`](https://pub.dev/documentation/reactter/latest/reactter/RtInterface/singleton.html): Registers, creates and returns the instance as [Singleton](#singleton) directly.
+- [`Rt.get`](https://pub.dev/documentation/reactter/latest/reactter/RtInterface/get.html): Returns a previously created instance or creates a new instance from the builder function registered by `[Rt|UseDependency].[register|lazyBuilder|lazyFactory|lazySingleton]`.
+- [`Rt.delete`](https://pub.dev/documentation/reactter/latest/reactter/RtInterface/delete.html): Deletes the instance but keeps the builder function.
+- [`Rt.unregister`](https://pub.dev/documentation/reactter/latest/reactter/RtInterface/factory.html): Removes the builder function, preventing the creation of the instance.
+- [`Rt.destroy`](https://pub.dev/documentation/reactter/latest/reactter/RtInterface/destroy.html): Destroys the instance and the builder function.
+- [`Rt.find`](https://pub.dev/documentation/reactter/latest/reactter/RtInterface/find.html): Gets the instance.
+- [`Rt.isRegistered`](https://pub.dev/documentation/reactter/latest/reactter/RtInterface/isRegistered.html): Checks if an instance is registered in Reactter.
+- [`Rt.getDependencyMode`](https://pub.dev/documentation/reactter/latest/reactter/RtInterface/getDependencyMode.html): Returns the `DependencyMode` of the instance.
 
-In each of the events methods shown above (except `Reactter.isRegister` and `Reactter.getInstanceManageMode`), it provides the `id` argument for managing the instances of the same type by a unique identity.
+In each of the events methods shown above (except `Rt.isRegister` and `Rt.getDependencyMode`), it provides the `id` argument for managing the instances of the same type by a unique identity.
 
 > **NOTE:**
 > The scope of the registered instances is global.
@@ -714,13 +714,13 @@ In each of the events methods shown above (except `Reactter.isRegister` and `Rea
 
 ### UseDependency
 
-[`UseDependency`](https://pub.dev/documentation/reactter/latest/reactter/UseDependency-class.html) is a hook([`ReactterHook`](https://pub.dev/documentation/reactter/latest/reactter/ReactterHook-class.html)) that allows to manage an instance.
+[`UseDependency`](https://pub.dev/documentation/reactter/latest/reactter/UseDependency-class.html) is a hook([`RtHook`](https://pub.dev/documentation/reactter/latest/reactter/RtHook-class.html)) that allows to manage an instance.
 
 ```dart
 UseDependency<T>([String? id]);
 ```
 
-The default constructor uses `Reactter.find` to get the instance of the `T` type with or without `id` that is available.
+The default constructor uses `Rt.find` to get the instance of the `T` type with or without `id` that is available.
 
 > **NOTE:**
 > The instance that you need to get, must be created by [`Dependency injection`](#dependency-injection) before.
@@ -750,15 +750,15 @@ class MyController {
 
 `UseDependency` provides some constructors and factories for managing an instance, which are:
 
-- [`UseDependency.register`](https://pub.dev/documentation/reactter/latest/reactter/UseDependency/register.html): Registers a builder function, for creating a new instance using `[Reactter|UseDependency].[get|create|builder|factory|singleton]`.
-- [`UseDependency.lazyBuilder`](https://pub.dev/documentation/reactter/latest/reactter/UseDependency/lazyBuilder.html): Registers a builder function, for creating a new instance as [Builder](#builder) mode using `[Reactter|UseDependency].[get|create|builder]`.
-- [`UseDependency.lazyFactory`](https://pub.dev/documentation/reactter/latest/reactter/UseDependency/lazyFactory.html): Registers a builder function, for creating a new instance as [Factory](#factory) mode using `[Reactter|UseDependency].[get|create|factory]`.
-- [`UseDependency.lazySingleton`](https://pub.dev/documentation/reactter/latest/reactter/UseDependency/lazySingleton.html): Registers a builder function, for creating a new instance as [Singleton](#singleton) mode using `[Reactter|UseDependency].[get|create|singleton]`.
+- [`UseDependency.register`](https://pub.dev/documentation/reactter/latest/reactter/UseDependency/register.html): Registers a builder function, for creating a new instance using `[Rt|UseDependency].[get|create|builder|factory|singleton]`.
+- [`UseDependency.lazyBuilder`](https://pub.dev/documentation/reactter/latest/reactter/UseDependency/lazyBuilder.html): Registers a builder function, for creating a new instance as [Builder](#builder) mode using `[Rt|UseDependency].[get|create|builder]`.
+- [`UseDependency.lazyFactory`](https://pub.dev/documentation/reactter/latest/reactter/UseDependency/lazyFactory.html): Registers a builder function, for creating a new instance as [Factory](#factory) mode using `[Rt|UseDependency].[get|create|factory]`.
+- [`UseDependency.lazySingleton`](https://pub.dev/documentation/reactter/latest/reactter/UseDependency/lazySingleton.html): Registers a builder function, for creating a new instance as [Singleton](#singleton) mode using `[Rt|UseDependency].[get|create|singleton]`.
 - [`UseDependency.create`](https://pub.dev/documentation/reactter/latest/reactter/UseDependency/create.html): Registers, creates and returns the instance directly.
 - [`UseDependency.builder`](https://pub.dev/documentation/reactter/latest/reactter/UseDependency/builder.html): Registers, creates and returns the instance as [Builder](#builder) directly.
 - [`UseDependency.factory`](https://pub.dev/documentation/reactter/latest/reactter/UseDependency/factory.html): Registers, creates and returns the instance as [Factory](#factory) directly.
 - [`UseDependency.singleton`](https://pub.dev/documentation/reactter/latest/reactter/UseDependency/singleton.html): Registers, creates and returns the instance as [Singleton](#singleton) directly.
-- [`UseDependency.get`](https://pub.dev/documentation/reactter/latest/reactter/UseDependency/get.html): Returns a previously created instance or creates a new instance from the builder function registered by `[Reactter|UseDependency].[register|lazyBuilder|lazyFactory|lazySingleton]`.
+- [`UseDependency.get`](https://pub.dev/documentation/reactter/latest/reactter/UseDependency/get.html): Returns a previously created instance or creates a new instance from the builder function registered by `[Rt|UseDependency].[register|lazyBuilder|lazyFactory|lazySingleton]`.
 
 In each of the contructors or factories above shown, it provides the `id` property for managing the instances of the same type by a unique identity.
 
@@ -781,23 +781,23 @@ Additionally, Reactter offers the following event managers:
 
 by `flutter_reactter`:
 
-- [ReactterConsumer](#reactterconsumer)
-- [ReactterSelector](#reactterselector)
-- [ReactterWatcher](#reactterwatcher)
+- [RtConsumer](#rtconsumer)
+- [RtSelector](#rtselector)
+- [RtSignalWatcher](#rtsignalwatcher)
 - [BuildContext.watch](#buildcontextwatch)
 - [BuildContext.select](#buildcontextselect)
 
 ### Lifecycles
 
-In Reactter, both the states ([`ReactterState`](#state-management)) and the instances (managed by the [`dependency injection`](#dependency-injection)) contain different stages, also known as [`Lifecycle`](https://pub.dev/documentation/reactter/latest/reactter/Lifecycle.html).
+In Reactter, both the states ([`RtState`](#state-management)) and the instances (managed by the [`dependency injection`](#dependency-injection)) contain different stages, also known as [`Lifecycle`](https://pub.dev/documentation/reactter/latest/reactter/Lifecycle.html).
 This lifecycles linked events, which are:
 
 - `Lifecycle.registered`: is triggered when the dependency has been registered.
 - `Lifecycle.created`: is triggered when the dependency instance has been created.
 - `Lifecycle.willMount` (exclusive of `flutter_reactter`): is triggered when the dependency is going to be mounted in the widget tree.
 - `Lifecycle.didMount` (exclusive of `flutter_reactter`): is triggered after the dependency has been successfully mounted in the widget tree.
-- `Lifecycle.willUpdate`: is triggered anytime the dependency's state is about to be updated. The event parameter is a `ReactterState`.
-- `Lifecycle.didUpdate`: is triggered anytime the dependency's state has been updated. The event parameter is a `ReactterState`.
+- `Lifecycle.willUpdate`: is triggered anytime the dependency's state is about to be updated. The event parameter is a `RtState`.
+- `Lifecycle.didUpdate`: is triggered anytime the dependency's state has been updated. The event parameter is a `RtState`.
 - `Lifecycle.willUnmount`(exclusive of `flutter_reactter`): is triggered when the dependency is about to be unmounted from the widget tree.
 - `Lifecycle.didUnmount`(exclusive of `flutter_reactter`): is triggered when the dependency has been successfully unmounted from the widget tree.
 - `Lifecycle.deleted`: is triggered when the dependency instance has been deleted.
@@ -815,12 +815,12 @@ class MyController with LifecycleObserver {
   }
 
   @override
-  void onDidUpdate(ReactterState? state) {
+  void onDidUpdate(RtState? state) {
     print("$state has been changed");
   }
 }
 
-final myController = Reactter.create(() => MyController());
+final myController = Rt.create(() => MyController());
 // MyController has been initialized
 myController.state.value = "value changed";
 // state has been changed
@@ -830,66 +830,66 @@ myController.state.value = "value changed";
 
 Reactter offers several convenient shortcuts for managing events:
 
-- [`Reactter.on`](https://pub.dev/documentation/reactter/latest/reactter/ReactterEventHandler/on.html): turns on the listen event. When the `event` of `instance` is emitted, the `callback` is called:
+- [`Rt.on`](https://pub.dev/documentation/reactter/latest/reactter/RtEventHandler/on.html): turns on the listen event. When the `event` of `instance` is emitted, the `callback` is called:
 
   ```dart
-  Reactter.on<T, P>(Object instance, Enum event, callback(T inst, P params));
+  Rt.on<T, P>(Object instance, Enum event, callback(T inst, P params));
   ```
 
-- [`Reactter.one`](https://pub.dev/documentation/reactter/latest/reactter/ReactterEventHandler/one.html): turns on the listen event for only once. When the `event` of `instance` is emitted, the `callback` is called and then removed.
+- [`Rt.one`](https://pub.dev/documentation/reactter/latest/reactter/RtEventHandler/one.html): turns on the listen event for only once. When the `event` of `instance` is emitted, the `callback` is called and then removed.
 
   ```dart
-  Reactter.one<T, P>(Object instance, Enum event, callback(T inst, P param));
+  Rt.one<T, P>(Object instance, Enum event, callback(T inst, P param));
   ```
 
-- [`Reactter.off`](https://pub.dev/documentation/reactter/latest/reactter/ReactterEventHandler/off.html): removes the `callback` from `event` of `instance`.
+- [`Rt.off`](https://pub.dev/documentation/reactter/latest/reactter/RtEventHandler/off.html): removes the `callback` from `event` of `instance`.
 
   ```dart
-  Reactter.off<T, P>(Object instance, Enum event, callback(T instance, P param));
+  Rt.off<T, P>(Object instance, Enum event, callback(T instance, P param));
   ```
 
-- [`Reactter.offAll`](https://pub.dev/documentation/reactter/latest/reactter/ReactterEventHandler/offAll.html): removes all events of `instance`.
+- [`Rt.offAll`](https://pub.dev/documentation/reactter/latest/reactter/RtEventHandler/offAll.html): removes all events of `instance`.
 
   ```dart
-  Reactter.offAll(Object instance);
+  Rt.offAll(Object instance);
   ```
 
   > **IMPORTANT**:
-  > Don't use it, if you're not sure. Because it will remove all events, even those events that Reactter needs to work properly. Instead, use `Reactter.off` to remove the specific events.
+  > Don't use it, if you're not sure. Because it will remove all events, even those events that Reactter needs to work properly. Instead, use `Rt.off` to remove the specific events.
 
-- [`Reactter.emit`](https://pub.dev/documentation/reactter/latest/reactter/ReactterEventHandler/emit.html): triggers an `event` of `instance` with or without the `param` given.
+- [`Rt.emit`](https://pub.dev/documentation/reactter/latest/reactter/RtEventHandler/emit.html): triggers an `event` of `instance` with or without the `param` given.
 
   ```dart
-  Reactter.emit(Object instance, Enum event, [dynamic param]);
+  Rt.emit(Object instance, Enum event, [dynamic param]);
   ```
 
-In each of the methods it receives as first parameter an `instance` that can be directly the instance object or use `ReactterInstance` instead:
+In each of the methods it receives as first parameter an `instance` that can be directly the instance object or use `RtInstance` instead:
 
 ```dart
 void onDidUpdate(inst, state) => print("Instance: $inst, state: $state");
 
-final myController = Reactter.get<MyController>();
-// or using `ReactterIntance`
-final myController = ReactterInstance<MyController>();
+final myController = Rt.get<MyController>();
+// or using `RtDependency`
+final myController = RtDependency<MyController>();
 
-Reactter.on(myController, Lifecycle.didUpdate, onDidUpdate);
-Reactter.emit(myController, Lifecycle.didUpdate, 'test param');
+Rt.on(myController, Lifecycle.didUpdate, onDidUpdate);
+Rt.emit(myController, Lifecycle.didUpdate, 'test param');
 ```
 
 > **RECOMMENDED:**
 > Use the instance object directly on event methods for optimal performance.
 
 > **NOTE:**
-> The `ReactterInstance` helps to find the instance for event, if the instance not exists, put it on wait. It's a good option if you're not sure that the instance has been created yet.
+> The `RtDependency` helps to find the instance for event, if the instance not exists, put it on wait. It's a good option if you're not sure that the instance has been created yet.
 
 ### UseEffect
 
-[`UseEffect`](https://pub.dev/documentation/reactter/latest/reactter/UseEffect-class.html) is a hook([`ReactterHook`](https://pub.dev/documentation/reactter/latest/reactter/ReactterHook-class.html)) that allows to manage side-effect.
+[`UseEffect`](https://pub.dev/documentation/reactter/latest/reactter/UseEffect-class.html) is a hook([`RtHook`](https://pub.dev/documentation/reactter/latest/reactter/RtHook-class.html)) that allows to manage side-effect.
 
 ```dart
 UseEffect(
   <Function cleanup> Function() callback,
-  List<ReactterState> dependencies,
+  List<RtState> dependencies,
 )
 ```
 
@@ -934,31 +934,31 @@ Rendering control provides the capability to observe specific instances or state
 
 In this context, the [`flutter_reactter`](https://pub.dev/packages/flutter_reactter) package provides the following purpose-built widgets and certain `BuildContext` extension for rendering control:
 
-- [ReactterProvider](#reactterprovider)
-- [ReactterProviders](#reactterproviders)
-- [ReactterComponent](#reacttercomponent)
-- [ReactterConsumer](#reactterconsumer)
-- [ReactterWatcher](#reactterwatcher)
-- [ReactterSelector](#reactterselector)
+- [RtProvider](#rtprovider)
+- [RtProviders](#rtproviders)
+- [RtComponent](#rtcomponent)
+- [RtConsumer](#rtconsumer)
+- [RtSignalWatcher](#rtsignalwatcher)
+- [RtSelector](#rtselector)
 - [BuildContext.use](#buildcontextuse)
 - [BuildContext.watch](#buildcontextwatch)
 - [BuildContext.select](#buildcontextselect)
 
-### ReactterProvider
+### RtProvider
 
-[`ReactterProvider`](https://pub.dev/documentation/flutter_reactter/latest/flutter_reactter/ReactterProvider-class.html) is a Widget (exclusive of `flutter_reactter`) that hydrates from an instance of `T` type to the Widget tree.
+[`RtProvider`](https://pub.dev/documentation/flutter_reactter/latest/flutter_reactter/RtProvider-class.html) is a Widget (exclusive of `flutter_reactter`) that hydrates from an instance of `T` type to the Widget tree.
 
 ```dart
-ReactterProvider<T>(
+RtProvider<T>(
   T instanceBuilder(), {
   String? id,
-  InstanceManageMode type = InstanceManageMode.builder,
+  DependencyMode type = DependencyMode.builder,
   Widget? child,
   required Widget builder(BuilderContext context, T instance, Widget? child),
 })
 ```
 
-`ReactterProvider` accepts theses properties:
+`RtProvider` accepts these properties:
 
 - `instanceBuilder`: to define a method for the creation of a new instance of `T` type.
 
@@ -973,7 +973,7 @@ ReactterProvider<T>(
 Here is an example:
 
 ```dart
-ReactterProvider<CounterController>(
+RtProvider<CounterController>(
   () => CounterController(),
   child: const Text('This widget is rendered once'),
   builder: (context, counterController, child) {
@@ -993,28 +993,28 @@ ReactterProvider<CounterController>(
 )
 ```
 
-Use [`ReactterProvider.init`](https://pub.dev/documentation/flutter_reactter/latest/flutter_reactter/ReactterProvider/ReactterProvider.init.html) to initialize the dependency instance before that it's mounted.
+Use [`RtProvider.init`](https://pub.dev/documentation/flutter_reactter/latest/flutter_reactter/RtProvider/RtProvider.init.html) to initialize the dependency instance before that it's mounted.
 
-Use [`ReactterProvider.lazy`](https://pub.dev/documentation/flutter_reactter/latest/flutter_reactter/ReactterProvider/ReactterProvider.lazy.html) to enable lazy-loading of the instance, ensuring it is only instantiated when necessary. While this feature enhances performance by deferring instantiation until required, it's important to note that it may result in the loss of lifecycle tracing.
+Use [`RtProvider.lazy`](https://pub.dev/documentation/flutter_reactter/latest/flutter_reactter/RtProvider/RtProvider.lazy.html) to enable lazy-loading of the instance, ensuring it is only instantiated when necessary. While this feature enhances performance by deferring instantiation until required, it's important to note that it may result in the loss of lifecycle tracing.
 
 > **NOTE:**
-> `ReactteProvider` is "scoped". So, the `builder` method will be rebuild when the instance or any `ReactterState` specified in [`BuildContext.watch`](#buildcontextwatch) or [`BuildContext.select`](#buildcontextselect)  changes.
+> `RtProvider` is "scoped". So, the `builder` method will be rebuild when the instance or any `RtState` specified in [`BuildContext.watch`](#buildcontextwatch) or [`BuildContext.select`](#buildcontextselect)  changes.
 
-### ReactterProviders
+### RtMultiProvider
 
-[`ReactterProviders`](https://pub.dev/documentation/flutter_reactter/latest/flutter_reactter/ReactterProviders-class.html) is a Widget (exclusive of `flutter_reactter`) that allows to use multiple [`ReactterProvider`](#reactterprovider) in a nested way.
+[`RtMultiProvider`](https://pub.dev/documentation/flutter_reactter/latest/flutter_reactter/RtMultiProvider-class.html) is a Widget (exclusive of `flutter_reactter`) that allows to use multiple [`RtProvider`](#rtprovider) in a nested way.
 
 ```dart
-ReactterProviders(
+RtMultiProvider(
   [
-    ReactterProvider(
+    RtProvider(
       () => MyController(),
     ),
-    ReactterProvider(
+    RtProvider(
       () => ConfigController(),
       id: 'App',
     ),
-    ReactterProvider(
+    RtProvider(
       () => ConfigController(),
       id: 'Dashboard'
     ),
@@ -1032,14 +1032,14 @@ ReactterProviders(
 > Don't use Object with constructor parameters to prevent conflicts.
 
 > **NOTE:**
-> `ReactteProvider` is "scoped". So, the `builder` method will be rebuild when the instance or any `ReactterState` specified in [`BuildContext.watch`](#buildcontextwatch) or [`BuildContext.select`](#buildcontextselect)  changes.
+> `RtProvider` is "scoped". So, the `builder` method will be rebuild when the instance or any `RtState` specified in [`BuildContext.watch`](#buildcontextwatch) or [`BuildContext.select`](#buildcontextselect)  changes.
 
-### ReactterComponent
+### RtComponent
 
-[`ReactterComponent`](https://pub.dev/documentation/flutter_reactter/latest/widgets/ReactterComponent-class.html) is a abstract `StatelessWidget` (exclusive of `flutter_reactter`) that provides [`ReactterProvider`](#reactterprovider) features, whose instance of `T` type is exposed trough `render` method.
+[`RtComponent`](https://pub.dev/documentation/flutter_reactter/latest/flutter_reactter/RtComponent-class.html) is a abstract `StatelessWidget` (exclusive of `flutter_reactter`) that provides [`RtProvider`](#rtprovider) features, whose instance of `T` type is exposed trough `render` method.
 
 ```dart
-class CounterComponent extends ReactterComponent<CounterController> {
+class CounterComponent extends RtComponent<CounterController> {
   const CounterComponent({Key? key}) : super(key: key);
 
   @override
@@ -1069,25 +1069,25 @@ Use the `listenStates` getter to define the states that will rebuild the tree of
 
 Use the `listenAll` getter as `true` to listen to all the instance changes to rebuild the Widget tree defined in the `render` method.
 
-### ReactterConsumer
+### RtConsumer
 
-[`ReactterConsumer`](https://pub.dev/documentation/flutter_reactter/latest/flutter_reactter/ReactterConsumer-class.html) is a Widget (exclusive of `flutter_reactter`) that allows to access the instance of `T` type from `ReactterProvider`'s nearest ancestor and can listen all or specified states to rebuild the Widget when theses changes occur:
+[`RtConsumer`](https://pub.dev/documentation/flutter_reactter/latest/flutter_reactter/RtConsumer-class.html) is a Widget (exclusive of `flutter_reactter`) that allows to access the instance of `T` type from `RtProvider`'s nearest ancestor and can listen all or specified states to rebuild the Widget when these changes occur:
 
 ```dart
-ReactterConsumer<T>({
+RtConsumer<T>({
   String? id,
   bool listenAll = false,
-  List<ReactterState> listenStates(T instance)?,
+  List<RtState> listenStates(T instance)?,
   Widget? child,
   required Widget builder(BuildContext context, T instance, Widget? child),
 });
 ```
 
-`ReactterConsumer` accepts theses properties:
+`RtConsumer` accepts these properties:
 
 - `id`: to uniquely identify the instance.
-- `listenAll`: to listen to all events emitted by the instance or its states(`ReactterState`).
-- `listenStates`: to listen to states(`ReactterState`) defined in it.
+- `listenAll`: to listen to all events emitted by the instance or its states(`RtState`).
+- `listenStates`: to listen to states(`RtState`) defined in it.
 - `child`: to pass a `Widget`  through the `builder` method that it will be built only once.
 - `builder`: to define a method that contains the builder logic of the widget that will be embedded in the widget tree. This method exposes the `instance`(`T`) created, a new `context`(`BuildContext`) and a `child`(`Widget`) defined in the `child` property.
 
@@ -1097,7 +1097,7 @@ Here is an example:
 class ExampleWidget extends StatelessWidget {
   ...
   Widget build(context) {
-    return ReactterConsumer<MyController>(
+    return RtConsumer<MyController>(
       listenStates: (inst) => [inst.stateA, inst.stateB],
       child: const Text('This widget is rendered once'),
       builder: (context, myController, child) {
@@ -1117,20 +1117,20 @@ class ExampleWidget extends StatelessWidget {
 ```
 
 > **NOTE:**
-> `ReactteConsumer` is "scoped". So, the `builder` method will be rebuild when the instance or any `ReactterState` specified get change.
+> `ReactteConsumer` is "scoped". So, the `builder` method will be rebuild when the instance or any `RtState` specified get change.
 
 > **NOTE:**
-> Use [`ReactterSelector`](#reactterselector) for more specific conditional state when you want the widget tree to be re-rendered.
+> Use [`RtSelector`](#rtselector) for more specific conditional state when you want the widget tree to be re-rendered.
 
-### ReactterSelector
+### RtSelector
 
-[`ReactterSelector`](https://pub.dev/documentation/flutter_reactter/latest/flutter_reactter/ReactterSelector-class.html) is a Widget (exclusive of `flutter_reactter`) that allows to control the rebuilding of widget tree by selecting the states([`ReactterState`](https://pub.dev/documentation/reactter/latest/reactter/ReactterState-class.html)) and a computed value.
+[`RtSelector`](https://pub.dev/documentation/flutter_reactter/latest/flutter_reactter/RtSelector-class.html) is a Widget (exclusive of `flutter_reactter`) that allows to control the rebuilding of widget tree by selecting the states([`RtState`](https://pub.dev/documentation/reactter/latest/reactter/RtState-class.html)) and a computed value.
 
 ```dart
-ReactterSelector<T, V>(
+RtSelector<T, V>(
   V selector(
     T inst,
-    ReactterState $(ReactterState state),
+    RtState $(RtState state),
   ),
   String? id,
   Widget? child,
@@ -1143,11 +1143,11 @@ ReactterSelector<T, V>(
 )
 ```
 
-`ReactterSelector` accepts four properties:
+`RtSelector` accepts four properties:
 
 - `selector`: to define a method that contains the computed value logic and determined when to be rebuilding the widget tree which defined in `build` property. It returns a value of `V` type and exposes the following arguments:
   - `inst`: the found instance of `T` type and by `id` if specified it.
-  - `$`: a method that allows to wrap to the state(`ReactterState`) to put it in listening.
+  - `$`: a method that allows to wrap to the state(`RtState`) to put it in listening.
 - `id`: to uniquely identify the instance.
 - `child`: to pass a `Widget` through the `builder` method that it will be built only once.
 - `builder`: to define a method that contains the builder logic of the widget that will be embedded in the widget tree. It exposes the following arguments:
@@ -1156,8 +1156,8 @@ ReactterSelector<T, V>(
   - `value`: the computed value of `V` type. It is computed by `selector` method.
   - `child`: a `Widget` defined in the `child` property.
 
-`ReactterSelector` determines if the widget tree of `builder` needs to be rebuild again by comparing the previous and new result of `selector`.
-This evaluation only occurs if one of the selected states(`ReactterState`) gets updated, or by the instance if the `selector` does not have any selected states(`ReactterState`). e.g.:
+`RtSelector` determines if the widget tree of `builder` needs to be rebuild again by comparing the previous and new result of `selector`.
+This evaluation only occurs if one of the selected states(`RtState`) gets updated, or by the instance if the `selector` does not have any selected states(`RtState`). e.g.:
 
 ```dart
 class MyApp extends StatelessWidget {
@@ -1165,7 +1165,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget? build(BuildContext context) {
-    return ReactterProvider<MyController>(
+    return RtProvider<MyController>(
       () => MyController(),
       builder: (context, inst, child) {
         return OtherWidget();
@@ -1179,7 +1179,7 @@ class OtherWidget extends StatelessWidget {
 
   @override
   Widget? build(BuildContext context) {
-    return ReactterSelector<MyController, int>(
+    return RtSelector<MyController, int>(
       selector: (inst, $) => $(inst.stateA).value % $(inst.stateB).value,
       builder: (context, inst, value, child) {
         // This is rebuilt every time that the result of selector is different to previous result.
@@ -1190,11 +1190,11 @@ class OtherWidget extends StatelessWidget {
 }
 ```
 
-`ReactterSelector` typing can be ommited, but the app must be wrapper by `ReactterScope`. e.g.:
+`RtSelector` typing can be ommited, but the app must be wrapper by `RtScope`. e.g.:
 
 ```dart
 [...]
-ReactterScope(
+RtScope(
   child: MyApp(),
 )
 [...]
@@ -1206,7 +1206,7 @@ class OtherWidget extends StatelessWidget {
   Widget? build(BuildContext context) {
     final myController = context.use<MyController>();
 
-    return ReactterSelector(
+    return RtSelector(
       selector: (_, $) => $(myController.stateA).value % $(myController.stateB).value,
       builder: (context, _, value, child) {
         // This is rebuilt every time that the result of selector is different to previous result.
@@ -1216,18 +1216,18 @@ class OtherWidget extends StatelessWidget {
 }
 ```
 
-### ReactterWatcher
+### RtSignalWatcher
 
-[`ReactterWatcher`](https://pub.dev/documentation/flutter_reactter/latest/flutter_reactter/ReactterWatcher-class.html) is a Widget (exclusive of `flutter_reactter`) that allows to listen all `Signal`s contained in `builder` property and rebuilt the Widget when it changes:
+[`RtSignalWatcher`](https://pub.dev/documentation/flutter_reactter/latest/flutter_reactter/RtSignalWatcher-class.html) is a Widget (exclusive of `flutter_reactter`) that allows to listen all `Signal`s contained in `builder` property and rebuilt the Widget when it changes:
 
 ```dart
-ReactterWatcher({
+RtSignalWatcher({
   Widget? child,
   required Widget builder(BuildContext context, Widget? child),
 })
 ```
 
-`ReactterWatcher` accepts two properties:
+`RtSignalWatcher` accepts two properties:
 
 - `child`: to pass a `Widget`  through the `builder` method that it will be built only once.
 - `builder`: to define a method that contains the builder logic of the widget that will be embedded in the widget tree. It exposes the following arguments:
@@ -1244,7 +1244,7 @@ void toggle() => flag(!flag.value);
 class App extends StatelessWidget {
   ...
   Widget build(context) {
-    return ReactterWatcher(
+    return RtSignalWatcher(
       // This widget is rendered once only and passed through the `builder` method.
       child: Row(
         children: const [
@@ -1275,7 +1275,7 @@ class App extends StatelessWidget {
 
 ### BuildContext.use
 
-[`BuildContext.use`](https://pub.dev/documentation/flutter_reactter/latest/flutter_reactter/ReactterBuildContextExtension/use.html) is an extension method of the `BuildContext`, that allows to access to instance of `T` type from the closest ancestor [`ReactterProvider`](https://pub.dev/documentation/flutter_reactter/latest/flutter_reactter/ReactterProvider-class.html).
+[`BuildContext.use`](https://pub.dev/documentation/flutter_reactter/latest/flutter_reactter/RtBuildContextExtension/use.html) is an extension method of the `BuildContext`, that allows to access to instance of `T` type from the closest ancestor [`RtProvider`](https://pub.dev/documentation/flutter_reactter/latest/flutter_reactter/RtProvider-class.html).
 
 ```dart
 T context.use<T>([String? id])
@@ -1289,7 +1289,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget? build(BuildContext context) {
-    return ReactterProvider<MyController>(
+    return RtProvider<MyController>(
       () => MyController(),
       builder: (context, inst, child) {
         return OtherWidget();
@@ -1327,11 +1327,11 @@ Use the nullable type to safely get the instance, avoiding exceptions if the ins
 
 ### BuildContext.watch
 
-[`BuildContext.watch`](https://pub.dev/documentation/flutter_reactter/latest/flutter_reactter/ReactterBuildContextExtension/watch.html) is an extension method of the `BuildContext`, that allows to access to instance of `T` type from the closest ancestor [`ReactterProvider`](https://pub.dev/documentation/flutter_reactter/latest/flutter_reactter/ReactterProvider-class.html), and listen to the instance or [`ReactterState`](https://pub.dev/documentation/reactter/latest/reactter/ReactterState-class.html) list for rebuilding the widget tree in the scope of `BuildContext`.
+[`BuildContext.watch`](https://pub.dev/documentation/flutter_reactter/latest/flutter_reactter/RtBuildContextExtension/watch.html) is an extension method of the `BuildContext`, that allows to access to instance of `T` type from the closest ancestor [`RtProvider`](https://pub.dev/documentation/flutter_reactter/latest/flutter_reactter/RtProvider-class.html), and listen to the instance or [`RtState`](https://pub.dev/documentation/reactter/latest/reactter/RtState-class.html) list for rebuilding the widget tree in the scope of `BuildContext`.
 
 ```dart
 T context.watch<T>(
-  List<ReactterState> listenStates(T inst)?,
+  List<RtState> listenStates(T inst)?,
 )
 ```
 
@@ -1343,7 +1343,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget? build(BuildContext context) {
-    return ReactterProvider<MyController>(
+    return RtProvider<MyController>(
       () => MyController(),
       builder: (context, inst, child) {
         return OtherWidget();
@@ -1379,12 +1379,12 @@ Use the first argument(`listenStates`) to specify the states that are to be list
 [...]
 ```
 
-Use [`BuildContext.watchId`](https://pub.dev/documentation/flutter_reactter/latest/flutter_reactter/ReactterBuildContextExtension/watchId.html) for obtaining the instance of `T` type by `id`, and listens the instance or [`ReactterState`](https://pub.dev/documentation/reactter/latest/reactter/ReactterState-class.html) list for rebuilding the widget tree in the scope of `BuildContext`.
+Use [`BuildContext.watchId`](https://pub.dev/documentation/flutter_reactter/latest/flutter_reactter/RtBuildContextExtension/watchId.html) for obtaining the instance of `T` type by `id`, and listens the instance or [`RtState`](https://pub.dev/documentation/reactter/latest/reactter/RtState-class.html) list for rebuilding the widget tree in the scope of `BuildContext`.
 
 ```dart
 T context.watchId<T>(
   String id,
-  List<ReactterState> listenStates(T inst)?,
+  List<RtState> listenStates(T inst)?,
 )
 ```
 
@@ -1402,13 +1402,13 @@ final myControllerById = context.watchId<MyController>(
 
 ### BuildContext.select
 
-[`BuildContext.select`](https://pub.dev/documentation/flutter_reactter/latest/flutter_reactter/ReactterBuildContextExtension/select.html) is an extension method of the `BuildContext`, that allows to control the rebuilding of widget tree by selecting the states([`ReactterState`](https://pub.dev/documentation/reactter/latest/reactter/ReactterState-class.html)) and a computed value.
+[`BuildContext.select`](https://pub.dev/documentation/flutter_reactter/latest/flutter_reactter/RtBuildContextExtension/select.html) is an extension method of the `BuildContext`, that allows to control the rebuilding of widget tree by selecting the states([`RtState`](https://pub.dev/documentation/reactter/latest/reactter/RtState-class.html)) and a computed value.
 
 ```dart
 V context.select<T, V>(
   V selector(
     T inst,
-    ReactterState $(ReactterState state),
+    RtState $(RtState state),
   ),
   [String? id],
 )
@@ -1418,11 +1418,11 @@ V context.select<T, V>(
 
 - `selector`: to define a method that computed value logic and determined when to be rebuilding the widget tree of the `BuildContext`. It returns a value of `V` type and exposes the following arguments:
   - `inst`: the found instance of `T` type and by `id` if specified it.
-  - `$`: a method that allows to wrap to the state(`ReactterState`) to put it in listening.
+  - `$`: a method that allows to wrap to the state(`RtState`) to put it in listening.
 - `id`: to uniquely identify the instance.
 
 `BuildContext.select` determines if the widget tree in scope of `BuildContext` needs to be rebuild again by comparing the previous and new result of `selector`.
-This evaluation only occurs if one of the selected states(`ReactterState`) gets updated, or by the instance if the `selector` does not have any selected states(`ReactterState`). e.g.:
+This evaluation only occurs if one of the selected states(`RtState`) gets updated, or by the instance if the `selector` does not have any selected states(`RtState`). e.g.:
 
 ```dart
 class MyApp extends StatelessWidget {
@@ -1430,7 +1430,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget? build(BuildContext context) {
-    return ReactterProvider<MyController>(
+    return RtProvider<MyController>(
       () => MyController(),
       builder: (context, inst, child) {
         return OtherWidget();
@@ -1453,11 +1453,11 @@ class OtherWidget extends StatelessWidget {
 }
 ```
 
-`BuildContext.select` typing can be ommited, but the app must be wrapper by `ReactterScope`. e.g.:
+`BuildContext.select` typing can be ommited, but the app must be wrapper by `RtScope`. e.g.:
 
 ```dart
 [...]
-ReactterScope(
+RtScope(
   child: MyApp(),
 )
 [...]
@@ -1479,7 +1479,7 @@ class OtherWidget extends StatelessWidget {
 
 ## Custom hooks
 
-Custom hooks are classes that extend [`ReactterHook`](https://pub.dev/documentation/reactter/latest/reactter/ReactterHook-class.html) that follow a special naming convention with the `use` prefix and can contain state logic, effects or any other custom code.
+Custom hooks are classes that extend [`RtHook`](https://pub.dev/documentation/reactter/latest/reactter/RtHook-class.html) that follow a special naming convention with the `use` prefix and can contain state logic, effects or any other custom code.
 
 There are several advantages to using Custom Hooks:
 
@@ -1490,8 +1490,8 @@ There are several advantages to using Custom Hooks:
 Here's the counter example:
 
 ```dart
-class UseCount extends ReactterHook {
-  final $ = ReactterHook.$register;
+class UseCount extends RtHook {
+  final $ = RtHook.$register;
 
   int _count = 0;
   int get value => _count;
@@ -1504,11 +1504,11 @@ class UseCount extends ReactterHook {
 ```
 
 > **IMPORTANT:**
-> To create a `ReactterHook`, you need to register it by adding the following line:
-> `final $ = ReactterHook.$register;`
+> To create a `RtHook`, you need to register it by adding the following line:
+> `final $ = RtHook.$register;`
 
 > **NOTE:**
-> `ReactterHook` provides an `update` method which notifies about its changes.
+> `RtHook` provides an `update` method which notifies about its changes.
 
 You can then call that custom hook from anywhere in the code and get access to its shared logic:
 
@@ -1520,7 +1520,7 @@ class MyController {
     Timer.periodic(Duration(seconds: 1), (_) => count.increment());
 
     // Print count value every second
-    Reactter.on(
+    Rt.on(
       count,
       Lifecycle.didUpdate,
       (_, __) => print("Count: ${count.value}",
@@ -1531,13 +1531,13 @@ class MyController {
 
 ## Lazy state
 
-A lazy state is a `ReactterState`([`Signal`](#signal) or [`ReactterHook`](https://pub.dev/documentation/reactter/latest/reactter/ReactterHook-class.html)) that is loaded lazily using `Reactter.lazyState`.
+A lazy state is a `RtState`([`Signal`](#signal) or [`RtHook`](https://pub.dev/documentation/reactter/latest/reactter/RtHook-class.html)) that is loaded lazily using `Rt.lazyState`.
 
 ```dart
-T Reactter.lazyState<T extends ReactterState>(T stateFn(), Object instance);
+T Rt.lazyState<T extends RtState>(T stateFn(), Object instance);
 ```
 
-`Reactter.lazyState` is generally used in states declared with the `late` keyword.
+`Rt.lazyState` is generally used in states declared with the `late` keyword.
 > In dart, `late` keyword is used to declare a variable or field that will be initialized at a later time. It is used to declare a non-nullable variable that is not initialized at the time of declaration.
 
 For example, when the a state declared in a class requires some variable or methods immediately:
@@ -1550,9 +1550,9 @@ class MyController {
   /// late final state = UseAsyncState(
   ///   initialValue,
   ///   resolveValue
-  /// ); <- to use `Reactter.lazyState` is required, like:
+  /// ); <- to use `Rt.lazyState` is required, like:
 
-  late final state = Reactter.lazyState(
+  late final state = Rt.lazyState(
     () => UseAsyncState(initialValue, resolveValue),
     this,
   );
@@ -1562,15 +1562,15 @@ class MyController {
 ```
 
 > **IMPORTANT**:
-> A state(`ReactterState`) declared with the `late` keyword and not using `Reactter.lazyState` is outside the context of the instance where it was declared, and therefore the instance does not notice about its changes.
+> A state(`RtState`) declared with the `late` keyword and not using `Rt.lazyState` is outside the context of the instance where it was declared, and therefore the instance does not notice about its changes.
 
 ## Batch
 
 ```dart
-T Reactter.batch<T>(T Function() callback)
+T Rt.batch<T>(T Function() callback)
 ```
 
-The [`batch`](https://pub.dev/documentation/reactter/latest/reactter/ReactterInterface/batch.html) function allows you to combine multiple state changes to be grouped together, ensuring that any associated side effects are only triggered once, improving performance and reducing unnecessary re-renders. e.g.:
+The [`batch`](https://pub.dev/documentation/reactter/latest/reactter/RtInterface/batch.html) function allows you to combine multiple state changes to be grouped together, ensuring that any associated side effects are only triggered once, improving performance and reducing unnecessary re-renders. e.g.:
 
 ```dart
 final stateA = UseState(0);
@@ -1580,7 +1580,7 @@ final computed = UseCompute(
   [stateA, stateB],
 );
 
-final batchReturned = Reactter.batch(() {
+final batchReturned = Rt.batch(() {
   stateA.value = 1;
   stateB.value = 2;
 
@@ -1603,11 +1603,11 @@ final computed = UseCompute(
   [stateA, stateB],
 );
 
-Reactter.batch(() {
+Rt.batch(() {
   stateA.value = 1;
   print(computed.value); // 0;
 
-  Reactter.batch(() {
+  Rt.batch(() {
     stateB.value = 2;
     print(computed.value); // 0;
   });
@@ -1621,16 +1621,16 @@ print(computed.value); // 3;
 ## Untracked
 
 ```dart
-T Reactter.untracked<T>(T Function() callback)
+T Rt.untracked<T>(T Function() callback)
 ```
 
-The [`untracked`](https://pub.dev/documentation/reactter/latest/reactter/ReactterInterface/untracked.html) function helps you to execute the given `callback` function without tracking any state changes. This means that any state changes that occur inside the `callback` function will not trigger any side effects. e.g.:
+The [`untracked`](https://pub.dev/documentation/reactter/latest/reactter/RtInterface/untracked.html) function helps you to execute the given `callback` function without tracking any state changes. This means that any state changes that occur inside the `callback` function will not trigger any side effects. e.g.:
 
 ```dart
 final state = UseState(0);
 final computed = UseCompute(() => state.value + 1, [state]);
 
-Reactter.untracked(() {
+Rt.untracked(() {
   state.value = 2;
 
   print(computed.value); // 1 -> because the state change is not tracked
@@ -1647,16 +1647,16 @@ It is used to define the arguments that are passed through a `Function` and allo
 > **RECOMMENDED**:
 > If your project supports [`Record`](https://dart.dev/language/records#record-types), it is recommended to use it instead of the generic arguments.
 
-Reactter provides theses generic arguments classes:
+Reactter provides these generic arguments classes:
 
-- [`Args<A>`](https://pub.dev/documentation/reactter/6.0.0/reactter/Args-class.html): represents one or more arguments of `A` type.
-- [`Args1<A>`](https://pub.dev/documentation/reactter/6.0.0/reactter/Args1-class.html) : represents a argument of `A` type.
-- [`Args2<A, A2>`](https://pub.dev/documentation/reactter/6.0.0/reactter/Args2-class.html): represents two arguments of `A`, `A2` type consecutively.
-- [`Args3<A, A2, A3>`](https://pub.dev/documentation/reactter/6.0.0/reactter/Args3-class.html): represents three arguments of `A`, `A2`, `A3` type consecutively.
-- [`ArgsX2<A>`](https://pub.dev/documentation/reactter/6.0.0/reactter/ArgsX2.html): represents two arguments of `A` type.
-- [`ArgsX3<A>`](https://pub.dev/documentation/reactter/6.0.0/reactter/ArgsX3.html): represents three arguments of `A` type.
+- [`Args<A>`](https://pub.dev/documentation/reactter/latest/reactter/Args-class.html): represents one or more arguments of `A` type.
+- [`Args1<A>`](https://pub.dev/documentation/reactter/latest/reactter/Args1-class.html) : represents a argument of `A` type.
+- [`Args2<A, A2>`](https://pub.dev/documentation/reactter/latest/reactter/Args2-class.html): represents two arguments of `A`, `A2` type consecutively.
+- [`Args3<A, A2, A3>`](https://pub.dev/documentation/reactter/latest/reactter/Args3-class.html): represents three arguments of `A`, `A2`, `A3` type consecutively.
+- [`ArgsX2<A>`](https://pub.dev/documentation/reactter/latest/reactter/ArgsX2.html): represents two arguments of `A` type.
+- [`ArgsX3<A>`](https://pub.dev/documentation/reactter/latest/reactter/ArgsX3.html): represents three arguments of `A` type.
 
-In each of the methods it provides theses methods and properties:
+In each of the methods it provides these methods and properties:
 
 - `arguments`: gets the list of arguments.
 - `toList<T>()`: gets the list of arguments `T` type.
@@ -1721,15 +1721,15 @@ Memo<T, A>(
 ]);
 ```
 
-`Memo` accepts theses properties:
+`Memo` accepts these properties:
 
 - `computeValue`: represents a method that takes an argument of type `A` and returns a value of  `T` type. This is the core function that will be memoized.
-- `interceptor`: receives a [`MemoInterceptor`](https://pub.dev/documentation/reactter/6.0.0/reactter/MemoInterceptor-class.html) that allows you to intercept the memoization function calls and modify the memoization process.
+- `interceptor`: receives a [`MemoInterceptor`](https://pub.dev/documentation/reactter/latest/reactter/MemoInterceptor-class.html) that allows you to intercept the memoization function calls and modify the memoization process.
   Reactter providers some interceptors:
-  - [`MemoInterceptors`](https://pub.dev/documentation/reactter/6.0.0/reactter/MemoInterceptors-class.html): allows multiple memoization interceptors to be used together.
-  - [`MemoInterceptorWrapper`](https://pub.dev/documentation/reactter/6.0.0/reactter/MemoInterceptorWrapper-class.html): a wrapper for a memoized function that allows you to define callbacks for initialization, successful completion, error handling, and finishing.
-  - [`AsyncMemoSafe`](https://pub.dev/documentation/reactter/6.0.0/reactter/AsyncMemoSafe-class.html): prevents saving in cache if the `Future` calculation function throws an error during execution.
-  - [`TemporaryCacheMemo`](https://pub.dev/documentation/reactter/6.0.0/reactter/TemporaryCacheMemo-class.html): removes memoized values from the cache after a specified duration.
+  - [`MemoMultiInterceptor`](https://pub.dev/documentation/reactter/latest/reactter/MemoMultiInterceptor-class.html): allows multiple memoization interceptors to be used together.
+  - [`MemoWrapperInterceptor`](https://pub.dev/documentation/reactter/latest/reactter/MemoWrapperInterceptor-class.html): a wrapper for a memoized function that allows you to define callbacks for initialization, successful completion, error handling, and finishing.
+  - [`MemoSafeAsyncInterceptor`](https://pub.dev/documentation/reactter/latest/reactter/MemoSafeAsyncInterceptor-class.html): prevents saving in cache if the `Future` calculation function throws an error during execution.
+  - [`MemoTemporaryCacheInterceptor`](https://pub.dev/documentation/reactter/latest/reactter/MemoTemporaryCacheInterceptor-class.html): removes memoized values from the cache after a specified duration.
 
 Here an factorial example using `Memo`:
 
@@ -1766,7 +1766,7 @@ void main() {
 > The `computeValue` of `Memo` accepts one argument only. If you want to add more arguments, you can supply it using the `Record`(`if your proyect support`) or `generic arguments`(learn more [here](#generic-arguments)).
 
 > **NOTE:**
-> Use [`Memo.inline`](https://pub.dev/documentation/reactter/6.0.0/reactter/Memo/inline.html) in case there is a typing conflict, e.g. with the `UseAsynState` and `UseCompute` hooks which a `Function` type is required.
+> Use [`Memo.inline`](https://pub.dev/documentation/reactter/latest/reactter/Memo/inline.html) in case there is a typing conflict, e.g. with the `UseAsynState` and `UseCompute` hooks which a `Function` type is required.
 
 `Memo` provides the following methods that will help you manipulate the cache as you wish:
 
@@ -1776,13 +1776,13 @@ void main() {
 
 ## Difference between Signal and UseState
 
-Both `UseState` and `Signal` represent a state (`ReactterState`). However, it possesses distinct features that set them apart.
+Both `UseState` and `Signal` represent a state (`RtState`). However, it possesses distinct features that set them apart.
 
-`UseState` is a `ReactterHook`, giving it the unique ability to be extended and enriched with new capabilities, which sets it apart from `Signal`.
+`UseState` is a `RtHook`, giving it the unique ability to be extended and enriched with new capabilities, which sets it apart from `Signal`.
 
 In the case of `UseState`, it necessitates the use of the `value` attribute whenever state is read or modified. On the other hand, `Signal` streamlines this process, eliminating the need for explicit `value` handling, thus enhancing code clarity and ease of understanding.
 
-In the context of Flutter, when implementing `UseState`, it is necessary to expose the parent class containing the state to the widget tree via a `ReactterProvider` or `ReactterComponent`, and subsequently access it through `BuildContext`. Conversely, with `Signal`, which is inherently reactive, you can conveniently employ `ReactterWatcher`.
+In the context of Flutter, when implementing `UseState`, it is necessary to expose the parent class containing the state to the widget tree via a `RtProvider` or `RtComponent`, and subsequently access it through `BuildContext`. Conversely, with `Signal`, which is inherently reactive, you can conveniently employ `RtSignalWatcher`.
 
 It's important to note that while `Signal` offers distinct advantages, particularly for managing global states and enhancing code readability, it can introduce potential antipatterns and may complicate the debugging process. Nevertheless, these concerns are actively being addressed and improved in upcoming versions of the package.
 
