@@ -6,7 +6,7 @@ import '../core/core.dart';
 export '../core/core.dart'
     show Lifecycle, LifecycleObserver, DependencyMode, LogLevel;
 
-part 'reactter_dependency.dart';
-part 'reactter_hook.dart';
-part 'reactter_interface.dart';
-part 'reactter_state.dart';
+part 'rt_dependency.dart';
+part 'rt_hook.dart';
+part 'rt_interface.dart';
+part 'rt_state.dart';
