@@ -22,25 +22,9 @@ abstract class RtState extends State {
   Logger get logger => Rt;
 }
 
-/// {@template reactter.rt_state_impl}
-/// An implementation of the [RtState].
-/// {@endtemplate}
-abstract class RtStateImpl extends RtState {
-  RtStateImpl() {
-    BindingZone.recollectState(this);
-  }
-}
-
 /// {@macro reactter.rt_state}
 @Deprecated(
   'Use `RtState` instead. '
   'This feature was deprecated after v7.3.0.',
 )
 typedef ReactterState = RtState;
-
-/// {@macro reactter.rt_state_impl}
-@Deprecated(
-  'Use `RtStateImpl` instead. '
-  'This feature was deprecated after v7.3.0.',
-)
-typedef ReactterStateImpl = RtStateImpl;

@@ -2,7 +2,7 @@ part of 'core.dart';
 
 /// An abstract class that provides the base functionality for creating
 /// custom hooks in the Reactter library.
-abstract class Hook with State implements StateBase {
+abstract class Hook extends State implements StateBase {
   /// This variable is used to register [Hook]
   /// and attach the [StateBase] that are defined here.
   @protected

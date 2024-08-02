@@ -4,6 +4,10 @@ part of 'core.dart';
 /// state in Reactter.
 @internal
 abstract class State implements StateBase {
+  State() {
+    BindingZone.recollectState(this);
+  }
+
   bool _isUpdating = false;
 
   /// The reference instance to the current state.
