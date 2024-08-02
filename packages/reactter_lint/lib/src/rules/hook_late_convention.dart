@@ -37,7 +37,7 @@ class HookLateConvention extends DartLintRule {
       if (!element.isLate) return;
 
       bool checkIsUseLazy(MethodInvocation method) {
-        return method.target.toString() == "Reactter" &&
+        return method.target.toString() == "Rt" &&
             method.methodName.toString() == "lazyState";
       }
 

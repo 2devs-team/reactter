@@ -1,5 +1,11 @@
 # Reactter Lint
 
+## 1.0.0
+
+### Breakings
+
+- **reactor:** Upgrade `Rt` method target from "Reactter" to "Rt".
+
 ## 0.1.0
 
 ### Breakings
