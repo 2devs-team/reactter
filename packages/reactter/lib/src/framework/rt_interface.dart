@@ -18,7 +18,12 @@ void defaultLogWriterCallback(
 /// It is intended to be used as a mixin with other classes.
 /// {@endtemplate}
 class RtInterface
-    with StateManagement<RtState>, DependencyInjection, EventHandler, Logger {
+    with
+        StateManagement<RtState>,
+        DependencyInjection,
+        EventHandler,
+        Logger,
+        ObserverManager {
   static final _reactterInterface = RtInterface._();
   factory RtInterface() => _reactterInterface;
   RtInterface._();

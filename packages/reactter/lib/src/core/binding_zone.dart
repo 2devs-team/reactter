@@ -43,7 +43,7 @@ class BindingZone {
       }
 
       for (final state in states) {
-        if (state is State && state.instanceBinded != null) {
+        if (state is State && state.boundInstance != null) {
           state._validateInstanceBinded();
         } else if (state != instance) {
           state.bind(instance);

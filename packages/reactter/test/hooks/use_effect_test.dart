@@ -8,11 +8,11 @@ void main() {
     final testController = Rt.create(() => TestController());
     final uEffect = UseEffect(() {}, [])..bind(testController!);
 
-    expect(uEffect.instanceBinded, isA<TestController>());
+    expect(uEffect.boundInstance, isA<TestController>());
 
     uEffect.unbind();
 
-    expect(uEffect.instanceBinded, isNull);
+    expect(uEffect.boundInstance, isNull);
 
     Rt.delete<TestController>();
   });
@@ -146,7 +146,7 @@ void main() {
 
       expect(nCalls, 0);
       expect(uEffect, isA<UseEffect>());
-      expect(uEffect.instanceBinded, isA<DispatchEffect>());
+      expect(uEffect.boundInstance, isA<DispatchEffect>());
       expect(nCalls, 1);
     });
 
