@@ -162,7 +162,7 @@ class UseEffect extends RtHook {
 
   @override
   void bind(Object instance) {
-    final shouldListen = instanceBinded == null;
+    final shouldListen = boundInstance == null;
 
     super.bind(instance);
 
@@ -170,9 +170,9 @@ class UseEffect extends RtHook {
 
     _watchInstanceAttached();
 
-    if (!_isDispatched && instanceBinded is DispatchEffect) {
-      _runCleanupAndUnwatchDependencies(instanceBinded);
-      _runCallbackAndWatchDependencies(instanceBinded);
+    if (!_isDispatched && boundInstance is DispatchEffect) {
+      _runCleanupAndUnwatchDependencies(boundInstance);
+      _runCallbackAndWatchDependencies(boundInstance);
       return;
     }
 
@@ -200,12 +200,12 @@ class UseEffect extends RtHook {
 
   void _watchInstanceAttached() {
     Rt.on(
-      instanceBinded!,
+      boundInstance!,
       Lifecycle.didMount,
       _runCallbackAndWatchDependencies,
     );
     Rt.on(
-      instanceBinded!,
+      boundInstance!,
       Lifecycle.willUnmount,
       _runCleanupAndUnwatchDependencies,
     );
@@ -213,12 +213,12 @@ class UseEffect extends RtHook {
 
   void _unwatchInstanceAttached() {
     Rt.off(
-      instanceBinded!,
+      boundInstance!,
       Lifecycle.didMount,
       _runCallbackAndWatchDependencies,
     );
     Rt.off(
-      instanceBinded!,
+      boundInstance!,
       Lifecycle.willUnmount,
       _runCleanupAndUnwatchDependencies,
     );

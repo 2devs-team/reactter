@@ -28,3 +28,6 @@ abstract class RtState extends State {
   'This feature was deprecated after v7.3.0.',
 )
 typedef ReactterState = RtState;
+
+/// {@macro reactter.state_observer}
+typedef RtStateObserver = StateObserver;
