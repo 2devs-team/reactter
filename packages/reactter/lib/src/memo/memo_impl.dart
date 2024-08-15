@@ -1,6 +1,6 @@
 part of 'memo.dart';
 
-/// {@template memo}
+/// {@template reactter.memo}
 /// A class callable that is used for memoizing values([T])
 /// returned by a calcutate function([calculateValue]).
 ///
@@ -46,7 +46,7 @@ class Memo<T, A> {
   /// and handle various events during the memoization process.
   final MemoInterceptor<T, A>? _interceptor;
 
-  /// {@macro memo}
+  /// {@macro reactter.memo}
   Memo(
     FunctionArg<T, A> computeValue, [
     MemoInterceptor<T, A>? interceptor,

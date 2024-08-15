@@ -6,9 +6,11 @@ part of 'core.dart';
 )
 typedef InstanceManageMode = DependencyMode;
 
+/// {@template reactter.dependency_mode}
 /// Represents different ways for managing instances.
+/// {@endtemplate}
 enum DependencyMode {
-  /// {@template dependency_mode.builder}
+  /// {@template reactter.dependency_mode.builder}
   /// It's a ways to manage a dependency, which registers a builder function
   /// and creates the instance, unless it has already done so.
   ///
@@ -20,7 +22,7 @@ enum DependencyMode {
   /// {@endtemplate}
   builder,
 
-  /// {@template dependency_mode.factory}
+  /// {@template reactter.dependency_mode.factory}
   /// It's a ways to manage a dependency, which registers
   /// a builder function only once and creates the instance if not already done.
   ///
@@ -32,7 +34,7 @@ enum DependencyMode {
   /// {@endtemplate}
   factory,
 
-  /// {@template dependency_mode.singleton}
+  /// {@template reactter.dependency_mode.singleton}
   /// It's a ways to manage a dependency, which registers a builder function
   /// and creates the instance only once.
   ///

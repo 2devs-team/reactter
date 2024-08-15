@@ -9,7 +9,7 @@ abstract class StateManagement<S extends StateBase> {
   bool _isBatchRunning = false;
   final HashMap<EventNotifier, Object?> _deferredEvents = HashMap();
 
-  /// {@template lazy_state}
+  /// {@template reactter.lazy_state}
   /// Lazily initializes a state of type [StateBase] and attaches it to the given [instance].
   ///
   /// This method is recommended to use when initializing state inside a class
@@ -45,7 +45,7 @@ abstract class StateManagement<S extends StateBase> {
     }
   }
 
-  /// {@template untracked}
+  /// {@template reactter.untracked}
   /// Executes the given [callback] function without tracking any state changes.
   /// This means that any state changes that occur inside the [callback] function
   /// will not trigger any side effects.
@@ -81,7 +81,7 @@ abstract class StateManagement<S extends StateBase> {
     }
   }
 
-  /// {@template batch}
+  /// {@template reactter.batch}
   /// Executes the given [callback] function within a batch operation.
   ///
   /// A batch operation allows multiple state changes to be grouped together,
