@@ -1,6 +1,6 @@
 part of 'hooks.dart';
 
-/// {@template use_compute}
+/// {@template reactter.use_compute}
 /// A [RtHook] that allows to compute a value
 /// using a predetermined [compute] function and a list of state [dependencies],
 /// and which automatically updates the computed [value] if a dependency changes.
@@ -44,11 +44,21 @@ class UseCompute<T> extends RtHook {
 
   T get value => _valueComputed;
 
-  /// {@macro use_compute}
+  final String? _debugLabel;
+  @override
+  String get debugLabel => _debugLabel ?? super.debugLabel;
+  @override
+  Map<String, dynamic> get debugProperties => {
+        'value': value,
+        'dependencies': dependencies,
+      };
+
+  /// {@macro reactter.use_compute}
   UseCompute(
     this.compute,
-    this.dependencies,
-  ) {
+    this.dependencies, {
+    String? debugLabel,
+  }) : _debugLabel = debugLabel {
     _valueComputed = compute();
 
     for (var dependency in dependencies) {

@@ -1,6 +1,6 @@
 part of 'hooks.dart';
 
-/// {@template use_state}
+/// {@template reactter.use_state}
 /// A [RtHook] that manages a state.
 ///
 /// Contains a [value] of type [T] which represents the current state.
@@ -44,8 +44,11 @@ class UseState<T> extends RtHook {
   @override
   final $ = RtHook.$register;
 
-  /// {@macro use_state}
-  UseState(T initialValue) : _value = initialValue;
+  final String? _debugLabel;
+  @override
+  String get debugLabel => _debugLabel ?? super.debugLabel;
+  @override
+  Map<String, dynamic> get debugProperties => {'value': value};
 
   T _value;
 
@@ -58,4 +61,11 @@ class UseState<T> extends RtHook {
       update(() => _value = value);
     }
   }
+
+  /// {@macro reactter.use_state}
+  UseState(
+    T initialValue, {
+    String? debugLabel,
+  })  : _value = initialValue,
+        _debugLabel = debugLabel;
 }

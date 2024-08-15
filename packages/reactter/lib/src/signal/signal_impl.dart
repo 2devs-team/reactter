@@ -4,7 +4,7 @@ part of 'signal.dart';
 /// getting or setting the value of a `Signal` object.
 enum SignalEvent { onGetValue, onSetValue }
 
-/// {@template signal}
+/// {@template reactter.signal}
 /// A base-class that store a value of [T] and notify the listeners
 /// when the value is updated.
 ///
@@ -77,13 +77,24 @@ enum SignalEvent { onGetValue, onSetValue }
 /// * [Obj], a base-class that can be used to store a value of [T].
 /// {@endtemplate}
 class Signal<T> extends RtState with ObjBase<T> implements Obj<T> {
-  T _value;
-
-  /// {@macro signal}
-  Signal(T value) : _value = value;
+  /// {@macro reactter.signal}
+  Signal(
+    T value, {
+    String? debugLabel,
+  })  : _value = value,
+        _debugLabel = debugLabel;
 
   bool _shouldGetValueNotify = true;
   bool _shouldSetValueNotify = true;
+
+  T _value;
+  final String? _debugLabel;
+
+  @override
+  String get debugLabel => _debugLabel ?? super.debugLabel;
+
+  @override
+  Map<String, dynamic> get debugProperties => {'value': value};
 
   /// Returns the [value] of the signal.
   @override
