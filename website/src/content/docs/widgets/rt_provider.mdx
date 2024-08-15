@@ -115,9 +115,10 @@ The <HT>`RtProvider`</HT> class has three constructors, each catering to differe
   If omitted, the dependency will be located by its type(<HT>`T`</HT>).
 - `mode`: The mode of the dependency injection. By default, it uses the builder mode(<HE>`DependecyMode.builder`</HE>).
   Learn more about the [dependency modes](/reactter/core_concepts/dependency_injection/#dependency-modes).
-- `child`: An optional <HT>`Widget`</HT> which is independent of the <HT>`RtProvider`</HT>.
+- `child`: An optional <HT>`Widget`</HT> that remains static while the widget tree is rebuilt.
   It is passed to the <HM>`builder`</HM> function if it is defined.
-- <HM>`builder`</HM>: An optional function which builds a widget based on the dependency. If it not defined, the <HT>`child`</HT> widget is returned.
+- <HM>`builder`</HM>: An optional function which builds a widget based on the dependency.
+If it not defined, the <HT>`child`</HT> widget is returned.
 It receives the following arguments:
   - `context`: The <HM>`BuildContext`</HM> of the widget. A handle to the location of <HT>`RtProvider`</HT> in the widget tree.
   - `instance`: The instance of the <HT>`T`</HT> dependency. It is available only to default constructor.

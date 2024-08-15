@@ -58,7 +58,7 @@ RtSelector<T, V>({
 
 - `key`: An optional <HT>`Key`</HT> to use for identifying the widget.
 - `id`: An optional <HT>`String`</HT> to identify the selector.
-- `child`: An optional <HT>`Widget`</HT> which is independent of the <HT>`RtSelector`</HT>.
+- `child`: An optional <HT>`Widget`</HT> that remains static while the widget tree is rebuilt.
   If defined, it is passed to the <HM>`builder`</HM> function.
 - <HM>`selector`</HM>: A function that computes a value <HT>`V`</HT> from one or more states and listens for changes to rebuild the widget tree when the value computed changes.
   It receives the following arguments:

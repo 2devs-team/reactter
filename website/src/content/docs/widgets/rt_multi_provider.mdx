@@ -40,7 +40,7 @@ RtMultiProvider(
 
 - `providers`: A list of <HT>`RtProvider`</HT> widgets that are to be wrapped by the <HT>`RtMultiProvider`</HT>.
 - `key`: An optional <HT>`Key`</HT> to use for identifying the widget.
-- `child`: An optional <HT>`Widget`</HT> which is independent of the <HT>`RtMultiProvider`</HT>.
+- `child`: An optional <HT>`Widget`</HT> that remains static while the widget tree is rebuilt.
   It is passed to the <HM>`builder`</HM> function if it is defined.
 - <HM>`builder`</HM>: An optional function which builds a widget depending on the <HT>`RtMultiProvider`</HT>. If it not defined, the <HT>`child`</HT> widget is returned.
 It receives the following arguments:

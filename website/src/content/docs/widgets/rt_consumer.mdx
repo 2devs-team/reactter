@@ -71,7 +71,7 @@ RtConsumer<T>({
 - `key`: An optional <HT>`Key`</HT> to use for identifying the widget.
 - `id`: An optional identifier for the dependency.
   If omitted, the dependency will be located by its type(<HT>`T`</HT>).
-- `child`: An optional <HT>`Widget`</HT> that is independent of the <HT>`RtConsumer`</HT>.
+- `child`: An optional <HT>`Widget`</HT> that remains static while the widget tree is rebuilt.
   It is passed to the <HM>`builder`</HM> function if it is defined.
 - `listenAll`: A boolean that determines whether to listen to all states provided by the <HT>`T`</HT> dependency.
   If set to <HN>`true`</HN>, the <HM>`listenStates`</HM> function is ignored.
