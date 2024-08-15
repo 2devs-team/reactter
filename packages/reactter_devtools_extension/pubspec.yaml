@@ -1,0 +1,27 @@
+name: reactter_devtools_extension
+descripqion: DevTools extension for Reactter
+publish_to: "none"
+version: 1.0.0+1
+
+environment:
+  sdk: ">=3.3.1 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.6
+  devtools_extensions: ^0.0.13
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+
+flutter:
+  uses-material-design: true
+
+scripts:
+  dev: flutter run -d chrome --dart-define=use_simulated_environment=true
+  build:
+    $before: flutter pub get
+    $script: dart run devtools_extensions build_and_copy --source=. --dest=../flutter_reactter/extension/devtools
