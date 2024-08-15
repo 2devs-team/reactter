@@ -6,7 +6,7 @@ part of 'hooks.dart';
 )
 typedef UseInstance<T extends Object> = UseDependency<T>;
 
-/// {@template use_dependency}
+/// {@template reactter.use_dependency}
 /// A [RtHook] that allows to manages a dependency of [T] with/without [id].
 ///
 /// ```dart
@@ -37,36 +37,36 @@ typedef UseInstance<T extends Object> = UseDependency<T>;
 /// The instance must be created by [DependencyInjection] using the following methods:
 ///
 /// - **Rt.get**:
-///   {@macro get}
+///   {@macro reactter.get}
 /// - **Rt.create**:
-///   {@macro create}
+///   {@macro reactter.create}
 /// - **Rt.builder**:
-///   {@macro builder}
+///   {@macro reactter.builder}
 /// - **Rt.singleton**:
-///   {@macro builder}
+///   {@macro reactter.builder}
 ///
 /// or created by [RtProvider] of [`flutter_reactter`](https://pub.dev/packages/flutter_reactter)
 ///
 /// [UseDependency] providers the following constructors:
 ///
 /// - **[UseDependency.register]**:
-///   {@macro register}
+///   {@macro reactter.register}
 /// - **[UseDependency.lazyBuilder]**:
-///   {@macro lazy_builder}
+///   {@macro reactter.lazy_builder}
 /// - **[UseDependency.lazyFactory]**:
 ///   {@macro lazy_factory}
 /// - **[UseDependency.lazySingleton]**:
-///   {@macro lazy_singleton}
+///   {@macro reactter.lazy_singleton}
 /// - **[UseDependency.create]**:
-///   {@macro create}
+///   {@macro reactter.create}
 /// - **[UseDependency.builder]**:
-///   {@macro builder}
+///   {@macro reactter.builder}
 /// - **[UseDependency.factory]**:
-///   {@macro factory}
+///   {@macro reactter.factory}
 /// - **[UseDependency.singleton]**:
-///   {@macro singleton}
+///   {@macro reactter.singleton}
 /// - **[UseDependency.get]**:
-///   {@macro get}
+///   {@macro reactter.get}
 ///
 /// > **IMPORTANT**
 /// > You should call [dispose] when it's no longer needed.
@@ -108,18 +108,31 @@ class UseDependency<T extends Object> extends RtHook {
   /// It's used to identify the instance of [T] dependency.
   final String? id;
 
-  /// {@macro use_dependency}
-  UseDependency([this.id]) {
+  final String? _debugLabel;
+  @override
+  String get debugLabel => _debugLabel ?? super.debugLabel;
+  @override
+  Map<String, dynamic> get debugProperties => {
+        'instance': instance,
+        'id': id,
+      };
+
+  /// {@macro reactter.use_dependency}
+  UseDependency({
+    this.id,
+    String? debugLabel,
+  }) : _debugLabel = debugLabel {
     _instance = Rt.find<T>(id);
     _listen();
   }
 
-  /// {@macro register}
+  /// {@macro reactter.register}
   UseDependency.register(
     InstanceBuilder<T> builder, {
     DependencyMode mode = DependencyMode.builder,
     this.id,
-  }) {
+    String? debugLabel,
+  }) : _debugLabel = debugLabel {
     Rt.register(
       builder,
       id: id,
@@ -128,37 +141,55 @@ class UseDependency<T extends Object> extends RtHook {
     _listen();
   }
 
-  /// {@macro lazy_builder}
-  factory UseDependency.lazyBuilder(InstanceBuilder<T> builder, [String? id]) =>
-      UseDependency.register(
-        builder,
-        mode: DependencyMode.builder,
-        id: id,
-      );
+  /// {@macro reactter.lazy_builder}
+  factory UseDependency.lazyBuilder(
+    InstanceBuilder<T> builder, {
+    String? id,
+    String? debugLabel,
+  }) {
+    return UseDependency.register(
+      builder,
+      mode: DependencyMode.builder,
+      id: id,
+      debugLabel: debugLabel,
+    );
+  }
 
-  /// {@macro lazy_factory}
-  factory UseDependency.lazyFactory(InstanceBuilder<T> builder, [String? id]) =>
-      UseDependency.register(
-        builder,
-        mode: DependencyMode.factory,
-        id: id,
-      );
+  /// {@macro reactter.lazy_factory}
+  factory UseDependency.lazyFactory(
+    InstanceBuilder<T> builder, {
+    String? id,
+    String? debugLabel,
+  }) {
+    return UseDependency.register(
+      builder,
+      mode: DependencyMode.factory,
+      id: id,
+      debugLabel: debugLabel,
+    );
+  }
 
-  /// {@macro lazy_singleton}
-  factory UseDependency.lazySingleton(InstanceBuilder<T> builder,
-          [String? id]) =>
-      UseDependency.register(
-        builder,
-        mode: DependencyMode.singleton,
-        id: id,
-      );
+  /// {@macro reactter.lazy_singleton}
+  factory UseDependency.lazySingleton(
+    InstanceBuilder<T> builder, {
+    String? id,
+    String? debugLabel,
+  }) {
+    return UseDependency.register(
+      builder,
+      mode: DependencyMode.singleton,
+      id: id,
+      debugLabel: debugLabel,
+    );
+  }
 
-  /// {@macro create}
+  /// {@macro reactter.create}
   UseDependency.create(
     InstanceBuilder<T> builder, {
     this.id,
     DependencyMode mode = DependencyMode.builder,
-  }) {
+    String? debugLabel,
+  }) : _debugLabel = debugLabel {
     _instance = Rt.create(
       builder,
       id: id,
@@ -168,32 +199,53 @@ class UseDependency<T extends Object> extends RtHook {
     _listen();
   }
 
-  /// {@macro builder}
-  factory UseDependency.builder(InstanceBuilder<T> builder, [String? id]) =>
-      UseDependency.create(
-        builder,
-        id: id,
-        mode: DependencyMode.builder,
-      );
+  /// {@macro reactter.builder}
+  factory UseDependency.builder(
+    InstanceBuilder<T> builder, {
+    String? id,
+    String? debugLabel,
+  }) {
+    return UseDependency.create(
+      builder,
+      id: id,
+      mode: DependencyMode.builder,
+      debugLabel: debugLabel,
+    );
+  }
 
-  /// {@macro factory}
-  factory UseDependency.factory(InstanceBuilder<T> builder, [String? id]) =>
-      UseDependency.create(
-        builder,
-        id: id,
-        mode: DependencyMode.factory,
-      );
+  /// {@macro reactter.factory}
+  factory UseDependency.factory(
+    InstanceBuilder<T> builder, {
+    String? id,
+    String? debugLabel,
+  }) {
+    return UseDependency.create(
+      builder,
+      id: id,
+      mode: DependencyMode.factory,
+      debugLabel: debugLabel,
+    );
+  }
 
-  /// {@macro singleton}
-  factory UseDependency.singleton(InstanceBuilder<T> builder, [String? id]) =>
-      UseDependency.create(
-        builder,
-        id: id,
-        mode: DependencyMode.singleton,
-      );
+  /// {@macro reactter.singleton}
+  factory UseDependency.singleton(
+    InstanceBuilder<T> builder, {
+    String? id,
+    String? debugLabel,
+  }) {
+    return UseDependency.create(
+      builder,
+      id: id,
+      mode: DependencyMode.singleton,
+      debugLabel: debugLabel,
+    );
+  }
 
-  /// {@macro get}
-  UseDependency.get([this.id]) {
+  /// {@macro reactter.get}
+  UseDependency.get({
+    this.id,
+    String? debugLabel,
+  }) : _debugLabel = debugLabel {
     _instance = Rt.get(id, this);
     _listen();
   }

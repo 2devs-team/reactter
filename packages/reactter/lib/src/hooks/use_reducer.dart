@@ -58,11 +58,18 @@ class UseReducer<T> extends RtHook {
 
   T get value => _state.value;
 
-  /// {@macro use_reducer}
-  UseReducer(
-    this.reducer,
-    T initialState,
-  ) : _state = UseState<T>(initialState) {
+  final String? _debugLabel;
+  @override
+  String get debugLabel => _debugLabel ?? super.debugLabel;
+  @override
+  Map<String, dynamic> get debugProperties => {
+        'value': value,
+      };
+
+  /// {@macro reactter.use_reducer}
+  UseReducer(this.reducer, T initialState, {String? debugLabel})
+      : _state = UseState<T>(initialState),
+        _debugLabel = debugLabel {
     UseEffect(update, [_state]);
   }
 
