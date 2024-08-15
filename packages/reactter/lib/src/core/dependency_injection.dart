@@ -23,7 +23,7 @@ abstract class DependencyInjection {
   /// It stores the dependencies and its registers for quick access.
   final _instances = HashMap<Object, DependencyRegister>();
 
-  /// {@template register}
+  /// {@template reactter.register}
   /// Register a [builder] function of the [T] dependency with/without [id].
   /// {@endtemplate}
   ///
@@ -59,7 +59,7 @@ abstract class DependencyInjection {
     return true;
   }
 
-  /// {@template lazy_builder}
+  /// {@template reactter.lazy_builder}
   /// Register a [builder] function of the [T] dependency with/without [id]
   /// as [DependencyMode.builder].
   /// {@endtemplate}
@@ -89,7 +89,7 @@ abstract class DependencyInjection {
     );
   }
 
-  /// {@template lazy_factory}
+  /// {@template reactter.lazy_factory}
   /// Register a [builder] function of the [T] dependency with/without [id]
   /// as [DependencyMode.factory].
   /// {@endtemplate}
@@ -119,7 +119,7 @@ abstract class DependencyInjection {
     );
   }
 
-  /// {@template lazy_singleton}
+  /// {@template reactter.lazy_singleton}
   /// Register a [builder] function of the [T] dependency with/without [id]
   /// as [DependencyMode.singleton].
   /// {@endtemplate}
@@ -149,7 +149,7 @@ abstract class DependencyInjection {
     );
   }
 
-  /// {@template create}
+  /// {@template reactter.create}
   /// Register a [builder] function of the [T] dependency with/without [id]
   /// and creates the instance if it isn't already registered,
   /// else gets its instance only.
@@ -157,7 +157,7 @@ abstract class DependencyInjection {
   ///
   /// Use [mode] parameter for defining how to manage the dependency.
   ///
-  /// {@template create_conditions}
+  /// {@template reactter.create_conditions}
   /// Under the following conditions:
   ///
   /// - if not found and hasn't registered it, registers, creates and returns it.
@@ -176,7 +176,7 @@ abstract class DependencyInjection {
     return _getOrCreateIfNotExtist<T>(id, ref)?.instance;
   }
 
-  /// {@template builder}
+  /// {@template reactter.builder}
   /// Register a [builder] function of the [T] dependency with/without [id]
   /// as [DependencyMode.builder]
   /// and creates the instance if it isn't already registered,
@@ -212,7 +212,7 @@ abstract class DependencyInjection {
     );
   }
 
-  /// {@template factory}
+  /// {@template reactter.factory}
   /// Register a [builder] function of the [T] dependency with/without [id]
   /// as [DependencyMode.factory]
   /// and creates the instance if it isn't already registered,
@@ -247,7 +247,7 @@ abstract class DependencyInjection {
     );
   }
 
-  /// {@template singleton}
+  /// {@template reactter.singleton}
   /// Register a [builder] function of the [T] dependency with/without [id]
   /// as [DependencyMode.singleton]
   /// and creates the instance if it isn't already registered,
@@ -282,11 +282,11 @@ abstract class DependencyInjection {
     );
   }
 
-  /// {@template get}
+  /// {@template reactter.get}
   /// Creates and/or gets the instance of the [T] dependency with/without [id].
   /// {@endtemplate}
   ///
-  /// {@template get_conditions}
+  /// {@template reactter.get_conditions}
   /// Under the following conditions:
   ///
   /// - if found it, returns it.
@@ -418,7 +418,7 @@ abstract class DependencyInjection {
     return unregister<T>(id);
   }
 
-  /// {@template find}
+  /// {@template reactter.find}
   /// Gets the instance of the [T] dependency with/without [id].
   /// {@endtemplate}
   ///

@@ -1,6 +1,6 @@
 part of 'core.dart';
 
-/// {@template lifecycle_observer}
+/// {@template reactter.lifecycle_observer}
 /// It's a mixin that provides a set of methods that can be used to observe
 /// the lifecycle of a dependency.
 ///

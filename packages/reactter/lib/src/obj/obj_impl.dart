@@ -1,6 +1,6 @@
 part of 'obj.dart';
 
-/// {@template obj}
+/// {@template reactter.obj}
 /// A base-class that store a value of [T].
 ///
 /// You can create a new [Obj]:
@@ -39,7 +39,7 @@ class Obj<T> with ObjBase<T> {
   @override
   T value;
 
-  /// {@macro obj}
+  /// {@macro reactter.obj}
   Obj(this.value);
 }
 
