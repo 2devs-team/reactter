@@ -192,7 +192,6 @@ class UseEffect extends RtHook {
       return;
     }
 
-    _unwatchDependencies();
     _watchDependencies();
   }
 
@@ -251,6 +250,8 @@ class UseEffect extends RtHook {
   }
 
   void _watchDependencies() {
+    _unwatchDependencies();
+
     for (final dependency in dependencies) {
       Rt.on(dependency, Lifecycle.willUpdate, _runCleanup);
       Rt.on(dependency, Lifecycle.didUpdate, _runCallback);
