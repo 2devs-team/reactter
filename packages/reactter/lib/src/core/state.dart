@@ -166,6 +166,12 @@ abstract class State implements StateBase {
     for (final observer in StateObserver._observers) {
       observer.onStateUpdated(this);
     }
+
+    if (boundInstance is State) {
+      for (final observer in StateObserver._observers) {
+        observer.onStateUpdated(boundInstance as State);
+      }
+    }
   }
 
   void _notifyDisponsed() {
