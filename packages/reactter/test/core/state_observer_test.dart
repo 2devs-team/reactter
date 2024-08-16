@@ -155,5 +155,26 @@ void main() {
 
       Rt.removeObserver(observer);
     });
+
+    test("should be observed when a nested state is updated", () {
+      final observer = StateObserverTest();
+      Rt.addObserver(observer);
+
+      final stateA = UseState(0, debugLabel: "stateA");
+      final stateB = UseState(1, debugLabel: "stateB");
+      stateB.bind(stateA);
+
+      stateB.value = 2;
+
+      expect(observer.onStateUpdatedCalledCount, 2);
+      expect(observer.lastStateUpdated, "stateA");
+
+      stateA.value = 3;
+
+      expect(observer.onStateUpdatedCalledCount, 3);
+      expect(observer.lastStateUpdated, "stateA");
+
+      Rt.removeObserver(observer);
+    });
   });
 }
