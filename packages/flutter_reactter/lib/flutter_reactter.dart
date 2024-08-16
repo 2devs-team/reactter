@@ -5,4 +5,5 @@ export 'src/framework.dart'
 export 'src/extensions.dart';
 export 'src/types.dart';
 export 'src/widgets.dart' hide ProviderWrapper;
+export 'src/devtools.dart' hide ReactterDevTools;
 export 'reactter.dart';
