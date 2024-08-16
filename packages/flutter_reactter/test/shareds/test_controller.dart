@@ -26,5 +26,5 @@ class TestController extends LifecycleObserver {
   final stateList = UseState([]);
   final stateMap = UseState({});
   final stateClass = UseState<TestClass?>(null);
-  final stateAsync = UseAsyncState("initial", _resolveStateAsync);
+  final stateAsync = UseAsyncState(_resolveStateAsync, "initial");
 }
