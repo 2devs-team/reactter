@@ -198,25 +198,25 @@ abstract class RtStateBase<E extends RtStateBase<E>> implements RtState {
   }
 
   void _notifyCreated() {
-    for (final observer in StateObserver._observers.toList(growable: false)) {
+    for (final observer in RtStateObserver._observers.toList(growable: false)) {
       observer.onStateCreated(this);
     }
   }
 
   void _notifyBound(Object instance) {
-    for (final observer in StateObserver._observers.toList(growable: false)) {
+    for (final observer in RtStateObserver._observers.toList(growable: false)) {
       observer.onStateBound(this, instance);
     }
   }
 
   void _notifyUnbound() {
-    for (final observer in StateObserver._observers.toList(growable: false)) {
+    for (final observer in RtStateObserver._observers.toList(growable: false)) {
       observer.onStateUnbound(this, _boundInstance!);
     }
   }
 
   void _notifyUpdated() {
-    for (final observer in StateObserver._observers.toList(growable: false)) {
+    for (final observer in RtStateObserver._observers.toList(growable: false)) {
       observer.onStateUpdated(this);
 
       if (boundInstance is RtState) {
@@ -226,7 +226,7 @@ abstract class RtStateBase<E extends RtStateBase<E>> implements RtState {
   }
 
   void _notifyDisponsed() {
-    for (final observer in StateObserver._observers.toList(growable: false)) {
+    for (final observer in RtStateObserver._observers.toList(growable: false)) {
       observer.onStateDisposed(this);
     }
   }

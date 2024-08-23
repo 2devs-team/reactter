@@ -1,6 +1,4 @@
-import 'dart:developer' as dev;
 import 'package:meta/meta.dart';
-import 'types.dart';
 import 'internals.dart';
 
 export 'internals.dart'
@@ -9,11 +7,11 @@ export 'internals.dart'
         LifecycleObserver,
         DependencyMode,
         LogLevel,
-        StateObserver,
+        RtInterface,
+        RtStateObserver,
         RtHook,
         RtState,
         RtStateBase;
 
 part 'framework/rt_context.dart';
 part 'framework/rt_dependency.dart';
-part 'framework/rt_interface.dart';

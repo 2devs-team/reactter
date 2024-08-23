@@ -5,28 +5,42 @@ import 'package:flutter/foundation.dart';
 import 'package:meta/meta.dart';
 import 'package:reactter/reactter.dart';
 
+extension RtExt on RtInterface {
+  void initializeDebugging() {
+    if (kDebugMode) {
+      ReactterDevTools._initializeDebugging();
+    }
+  }
+}
+
 @internal
 class ReactterDevTools extends RtStateObserver {
+  static ReactterDevTools? _instance;
+
+  static void _initializeDebugging() {
+    if (kDebugMode) {
+      _instance ??= ReactterDevTools._();
+    }
+  }
+
+  final Map<String, RtState> states = {};
+
+  List<String> get stateIdRefs => states.keys.toList();
+
   ReactterDevTools._() {
     print('ReactterDevTools initialized $hashCode');
     Rt.addObserver(this);
     _initDevTools();
   }
 
-  static final debugInstance = kDebugMode
-      ? ReactterDevTools._()
-      : throw UnsupportedError(
-          'Cannot use ReactterDevTools in release mode',
-        );
-
-  static final Set<RtState> states = {};
-
   @override
   void onStateCreated(covariant RtState state) {
-    states.add(state);
+    states[state.hashCode.toString()] = state;
     dev.postEvent('ext.reactter.onStateCreated', {
       'state': _getState(state),
     });
+    print("states len: ${states.length}");
+    print("state created: ${state.debugLabel}");
   }
 
   @override
@@ -54,27 +68,23 @@ class ReactterDevTools extends RtStateObserver {
 
   @override
   void onStateDisposed(covariant RtState state) {
-    states.remove(state);
+    states.remove(state.hashCode.toString());
     dev.postEvent('ext.reactter.onStateDisposed', {
       'state': _getState(state),
     });
+    print("states len: ${states.length}");
+    print("state disposed: ${state.debugLabel}");
   }
 
   void _initDevTools() {
     dev.registerExtension(
-      'ext.reactter.getAllStates',
+      'ext.reactter.getStateIdRefs',
       (method, parameters) async {
         return dev.ServiceExtensionResponse.result(
-          json.encode(_getStates()),
+          json.encode(stateIdRefs),
         );
       },
     );
-  }
-
-  Map<String, dynamic> _getStates() {
-    return {
-      'states': states.map(_getState).toList(),
-    };
   }
 
   Map<String, dynamic> _getState(RtState state) {
@@ -86,11 +96,7 @@ class ReactterDevTools extends RtStateObserver {
         (key, value) {
           var valueEncode = value;
 
-          try {
-            valueEncode = jsonEncode(value);
-          } catch (e) {
-            valueEncode = value.toString();
-          }
+          valueEncode = value.toString();
 
           return MapEntry(key, valueEncode);
         },
