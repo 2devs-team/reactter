@@ -1,4 +1,4 @@
-part of 'core.dart';
+part of '../internals.dart';
 
 /// {@template reactter.lifecycle_observer}
 /// It's a mixin that provides a set of methods that can be used to observe
@@ -47,12 +47,12 @@ abstract class LifecycleObserver {
   void onDidMount() {}
 
   /// This method is called when the dependency's state is about to be updated.
-  /// The parameter is a [StateBase].
-  void onWillUpdate(covariant StateBase? state) {}
+  /// The parameter is a [IState].
+  void onWillUpdate(covariant IState? state) {}
 
   /// This method is called when the dependency's state has been updated.
-  /// The parameter is a [StateBase].
-  void onDidUpdate(covariant StateBase? state) {}
+  /// The parameter is a [IState].
+  void onDidUpdate(covariant IState? state) {}
 
   /// This method is called when the dependency is going to be unmounted
   /// from the widget tree(exclusive to `flutter_reactter`).
@@ -66,7 +66,7 @@ abstract class LifecycleObserver {
 void _executeLifecycleObserver(
   LifecycleObserver observer,
   Lifecycle lifecycle, [
-  StateBase? state,
+  IState? state,
 ]) {
   switch (lifecycle) {
     // ignore: deprecated_member_use_from_same_package

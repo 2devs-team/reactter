@@ -28,6 +28,9 @@ abstract class UseAsyncStateBase<T> extends RtHook {
   Object? get error => _error.value;
   UseAsyncStateStatus get status => _status.value;
 
+  Future<T> _future = Completer<T>().future;
+  Future<T> get future => _future;
+
   final String? _debugLabel;
   @override
   String get debugLabel => _debugLabel ?? super.debugLabel;
@@ -55,9 +58,9 @@ abstract class UseAsyncStateBase<T> extends RtHook {
       final asyncFunctionExecuting =
           arg == null ? _asyncFunction() : _asyncFunction(arg);
 
-      _value.value = asyncFunctionExecuting is Future
-          ? await asyncFunctionExecuting
-          : asyncFunctionExecuting;
+      _future = Future.value(asyncFunctionExecuting);
+
+      _value.value = await _future;
 
       _status.value = UseAsyncStateStatus.done;
 
@@ -65,9 +68,8 @@ abstract class UseAsyncStateBase<T> extends RtHook {
     } catch (e) {
       _error.value = e;
       _status.value = UseAsyncStateStatus.error;
-
       return null;
-    }
+    } finally {}
   }
 
   /// Returns a new value of [R] depending on the state of the hook:

@@ -1,4 +1,4 @@
-part of 'core.dart';
+part of '../internals.dart';
 
 /// A class that represents a dependency register in Reactter.
 ///

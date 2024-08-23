@@ -75,7 +75,7 @@ TestStore _reducer(TestStore state, RtAction action) {
   }
 }
 
-class TestController extends RtState {
+class TestController with RtContext, RtStateBase<TestController> {
   final signalString = Signal("initial");
   final stateBool = UseState(false);
   final stateString = UseState("initial");

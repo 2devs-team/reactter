@@ -1,7 +1,4 @@
-part of 'core.dart';
-
-/// An abstract class representing an observer.
-abstract class Observer {}
+part of '../internals.dart';
 
 /// An abstract class representing an observer manager.
 abstract class ObserverManager {
@@ -9,7 +6,7 @@ abstract class ObserverManager {
   ///
   /// The [observer] parameter is the observer to be added.
   /// Only [StateObserver] instances can be added.
-  void addObserver(covariant Observer observer) {
+  void addObserver(covariant IObserver observer) {
     if (observer is StateObserver) {
       StateObserver._observers.add(observer);
     }
@@ -19,7 +16,7 @@ abstract class ObserverManager {
   ///
   /// The [observer] parameter is the observer to be removed.
   /// Only [StateObserver] instances can be removed.
-  void removeObserver(covariant Observer observer) {
+  void removeObserver(covariant IObserver observer) {
     if (observer is StateObserver) {
       StateObserver._observers.remove(observer);
     }

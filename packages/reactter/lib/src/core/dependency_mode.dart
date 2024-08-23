@@ -1,4 +1,4 @@
-part of 'core.dart';
+part of '../internals.dart';
 
 @Deprecated(
   'Use `DependencyMode` instead. '

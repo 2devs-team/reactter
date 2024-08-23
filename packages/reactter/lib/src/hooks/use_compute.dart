@@ -38,10 +38,10 @@ class UseCompute<T> extends RtHook {
   @override
   final $ = RtHook.$register;
 
-  late T _valueComputed;
   final T Function() compute;
   final List<RtState> dependencies;
 
+  late T _valueComputed;
   T get value => _valueComputed;
 
   final String? _debugLabel;
@@ -58,17 +58,16 @@ class UseCompute<T> extends RtHook {
     this.compute,
     this.dependencies, {
     String? debugLabel,
-  }) : _debugLabel = debugLabel {
-    _valueComputed = compute();
-
-    for (var dependency in dependencies) {
+  })  : _debugLabel = debugLabel,
+        _valueComputed = compute() {
+    for (var dependency in dependencies.toList(growable: false)) {
       Rt.on(dependency, Lifecycle.didUpdate, _onDependencyChanged);
     }
   }
 
   @override
   void dispose() {
-    for (var dependency in dependencies) {
+    for (var dependency in dependencies.toList(growable: false)) {
       Rt.off(dependency, Lifecycle.didUpdate, _onDependencyChanged);
     }
 

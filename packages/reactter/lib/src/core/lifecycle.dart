@@ -1,4 +1,4 @@
-part of 'core.dart';
+part of '../internals.dart';
 
 enum Lifecycle {
   /// This event is triggered when the [DependencyInjection] registers the dependency.
@@ -20,10 +20,10 @@ enum Lifecycle {
   /// This event(exclusive to `flutter_reactter`) happens after the dependency has been successfully mounted in the widget tree.
   didMount,
 
-  /// This event is triggered anytime the dependency's state is about to be updated. The event parameter is a [StateBase].
+  /// This event is triggered anytime the dependency's state is about to be updated. The event parameter is a [IState].
   willUpdate,
 
-  /// This event is triggered anytime the dependency's state has been updated. The event parameter is a [StateBase].
+  /// This event is triggered anytime the dependency's state has been updated. The event parameter is a [IState].
   didUpdate,
 
   /// This event(exclusive to `flutter_reactter`) happens when the dependency is going to be unmounted from the widget tree.
