@@ -1,4 +1,4 @@
-part of '../framework.dart';
+part of '../internals.dart';
 
 void defaultLogWriterCallback(
   String value, {
@@ -37,6 +37,20 @@ class RtInterface
 
   @override
   LogWriterCallback get log => defaultLogWriterCallback;
+
+  @override
+  void addObserver(covariant IObserver observer) {
+    if (observer is RtStateObserver) {
+      RtStateObserver._observers.add(observer);
+    }
+  }
+
+  @override
+  void removeObserver(covariant IObserver observer) {
+    if (observer is RtStateObserver) {
+      RtStateObserver._observers.remove(observer);
+    }
+  }
 }
 
 /// {@macro reactter.rt_interface}

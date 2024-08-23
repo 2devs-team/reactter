@@ -1,7 +1,7 @@
 import 'package:reactter/reactter.dart';
 import 'package:test/test.dart';
 
-class StateObserverTest extends StateObserver {
+class RtStateObserverTest extends RtStateObserver {
   int onStateCreatedCalledCount = 0;
   String? lastStateCreated;
 
@@ -51,9 +51,9 @@ class StateObserverTest extends StateObserver {
 }
 
 void main() {
-  group("StateObserverTest", () {
+  group("RtStateObserver", () {
     test("should be observed when a state is created", () {
-      final observer = StateObserverTest();
+      final observer = RtStateObserverTest();
       Rt.addObserver(observer);
 
       UseState(0, debugLabel: "stateA");
@@ -70,7 +70,7 @@ void main() {
     });
 
     test("should be observed when a state is bound", () {
-      final observer = StateObserverTest();
+      final observer = RtStateObserverTest();
       Rt.addObserver(observer);
 
       final stateA = UseState(0, debugLabel: "stateA");
@@ -93,7 +93,7 @@ void main() {
     });
 
     test("should be observed when a state is unbound", () {
-      final observer = StateObserverTest();
+      final observer = RtStateObserverTest();
       Rt.addObserver(observer);
 
       final stateA = UseState(0, debugLabel: "stateA");
@@ -118,7 +118,7 @@ void main() {
     });
 
     test("should be observed when a state is updated", () {
-      final observer = StateObserverTest();
+      final observer = RtStateObserverTest();
       Rt.addObserver(observer);
 
       final stateA = UseState(0, debugLabel: "stateA");
@@ -137,7 +137,7 @@ void main() {
     });
 
     test("should be observed when a state is disposed", () {
-      final observer = StateObserverTest();
+      final observer = RtStateObserverTest();
       Rt.addObserver(observer);
 
       final stateA = UseState(0, debugLabel: "stateA");
@@ -156,7 +156,7 @@ void main() {
     });
 
     test("should be observed when a nested state is updated", () {
-      final observer = StateObserverTest();
+      final observer = RtStateObserverTest();
       Rt.addObserver(observer);
 
       final stateA = UseState(0, debugLabel: "stateA");
