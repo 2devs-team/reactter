@@ -15,4 +15,11 @@ class Todo {
         title: title ?? this.title,
         isDone: isDone ?? this.isDone,
       );
+
+  Map<String, dynamic> toJson() {
+    return {
+      'title': title,
+      'isDone': isDone,
+    };
+  }
 }

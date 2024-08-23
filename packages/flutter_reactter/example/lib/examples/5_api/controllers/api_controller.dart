@@ -10,7 +10,6 @@ class ApiController {
 
   late final uEntity = Rt.lazyState(
     () => UseAsyncState.withArg(
-      null,
       Memo.inline<Future<Object?>, String>(
         getEntity,
         const MemoMultiInterceptor([
@@ -18,6 +17,7 @@ class ApiController {
           MemoTemporaryCacheInterceptor(Duration(seconds: 30)),
         ]),
       ),
+      null,
     ),
     this,
   );

@@ -23,4 +23,12 @@ class TodoStore {
         filteredBy: filteredBy ?? this.filteredBy,
         doneCount: doneCount ?? this.doneCount,
       );
+
+  Map<String, dynamic> toJson() {
+    return {
+      'todoList': todoList.map((e) => e.toJson()).toList(),
+      'filteredBy': filteredBy.toString(),
+      'doneCount': doneCount,
+    };
+  }
 }

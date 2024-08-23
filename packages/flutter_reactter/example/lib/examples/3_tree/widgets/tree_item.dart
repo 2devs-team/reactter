@@ -2,101 +2,77 @@
 
 import 'dart:async';
 import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_reactter/flutter_reactter.dart';
 
-import 'package:examples/examples/3_tree/tree_node.dart';
+import 'package:examples/examples/3_tree/states/tree_node.dart';
 import 'package:examples/examples/3_tree/widgets/custom_icon_button.dart';
-import 'package:examples/examples/3_tree/widgets/tree_items.dart';
 
 class TreeItem extends RtComponent<TreeNode> {
-  const TreeItem({
-    Key? key,
-    required this.treeNode,
-    this.isTreeNodeLast = false,
-  }) : super(key: key);
-
   final TreeNode treeNode;
-  final bool isTreeNodeLast;
-
-  @override
-  String get id => "${treeNode.hashCode}";
 
   @override
   get builder => () => treeNode;
 
   @override
-  Widget render(context, treeContext) {
+  String? get id => treeNode.id;
+
+  String get idStr => id != null ? 'ID: $id' : "root";
+
+  const TreeItem({
+    Key? key,
+    required this.treeNode,
+  }) : super(key: key);
+
+  @override
+  Widget render(context, treeNode) {
     return InkWell(
       onTap: () => _openDialog(context),
       child: Stack(
+        clipBehavior: Clip.none,
         children: [
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const SizedBox(width: 8),
-                  _buildExpandButton(),
-                  CustomIconButton(
-                    icon: const Icon(Icons.add_circle),
-                    onPressed: treeContext.addChild,
-                  ),
-                  if (treeContext.parent != null)
-                    CustomIconButton(
-                      icon: Transform.rotate(
-                        angle: -pi / 4,
-                        child: const Icon(Icons.add_circle),
-                      ),
-                      onPressed: treeContext.removeFromParent,
-                    ),
-                  Expanded(
-                    child: Align(
-                      alignment: Alignment.centerRight,
-                      child: Text(
-                        id,
-                        overflow: TextOverflow.ellipsis,
-                        style: Theme.of(context).textTheme.bodySmall,
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 2),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SizedBox(width: 24.0 * treeNode.depth + 8),
+                    _buildNode(),
+                    const Expanded(
+                      child: Divider(
+                        height: 2,
+                        thickness: 2,
                       ),
                     ),
-                  ),
-                  const SizedBox(width: 8),
-                  _buildCountLabel(),
-                  CustomIconButton(
-                    icon: const Icon(Icons.indeterminate_check_box_rounded),
-                    onPressed: treeContext.decrease,
-                  ),
-                  CustomIconButton(
-                    icon: const Icon(Icons.add_box),
-                    onPressed: treeContext.increase,
-                  ),
-                ],
-              ),
-              _buildTreeItems(),
-            ],
+                    _buildCount(),
+                  ],
+                ),
+              ],
+            ),
           ),
-          _buildTreeLine(treeContext),
+          _buildTreeLine(),
         ],
       ),
     );
   }
 
   Future<void> _openDialog(BuildContext context) {
-    final treeNode = context.use<TreeNode>(id);
-
     return showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text("About item[id='$id']"),
+          title: Text("About item[$idStr]"),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text("path:"),
+                  const Text("Path:"),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
@@ -109,7 +85,7 @@ class TreeItem extends RtComponent<TreeNode> {
               ),
               Row(
                 children: [
-                  const Text("children:"),
+                  const Text("Children:"),
                   const SizedBox(width: 8),
                   Text(
                     "${treeNode.uChildren.value.length}",
@@ -119,7 +95,7 @@ class TreeItem extends RtComponent<TreeNode> {
               ),
               Row(
                 children: [
-                  const Text("count:"),
+                  const Text("Count:"),
                   const SizedBox(width: 8),
                   Text(
                     "${treeNode.uCount.value}",
@@ -129,17 +105,17 @@ class TreeItem extends RtComponent<TreeNode> {
               ),
               Row(
                 children: [
-                  const Text("childrenTotal:"),
+                  const Text("Descendants Total:"),
                   const SizedBox(width: 8),
                   Text(
-                    "${treeNode.uChildrenTotal.value}",
+                    "${treeNode.uDescendantsTotal.value}",
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                 ],
               ),
               Row(
                 children: [
-                  const Text("total(count + childrenTotal):"),
+                  const Text("Total (Count + Descendants Total):"),
                   const SizedBox(width: 8),
                   Text(
                     "${treeNode.uTotal.value}",
@@ -154,99 +130,159 @@ class TreeItem extends RtComponent<TreeNode> {
     );
   }
 
-  Widget _buildExpandButton() {
-    return Builder(
-      builder: (context) {
-        final treeNode = context.watchId<TreeNode>(
-          id,
-          (inst) => [inst.uIsExpanded, inst.uChildren],
-        );
+  Widget _buildNode() {
+    return RtWatcher((context, watch) {
+      final children = watch(treeNode.uChildren).value;
+      final isExpanded = watch(treeNode.uIsExpanded).value;
 
-        if (treeNode.uChildren.value.isEmpty) {
-          return const SizedBox(width: 36);
-        }
-
-        return CustomIconButton(
-          icon: Transform.rotate(
-            angle: treeNode.uIsExpanded.value ? 0 : -pi / 2,
-            child: const Icon(Icons.expand_circle_down_rounded),
+      return Container(
+        margin: EdgeInsets.only(
+          left: children.isEmpty ? 28 : 0,
+        ),
+        decoration: ShapeDecoration(
+          shape: RoundedRectangleBorder(
+            side: BorderSide(
+              color: Theme.of(context).colorScheme.outlineVariant,
+              width: 2,
+            ),
+            borderRadius: const BorderRadius.all(Radius.circular(20)),
           ),
-          onPressed: treeNode.toggleExpansion,
-        );
-      },
-    );
-  }
-
-  Widget _buildCountLabel() {
-    return Builder(
-      builder: (context) {
-        final treeNode = context.watchId<TreeNode>(
-          id,
-          (inst) => [inst.uCount, inst.uTotal],
-        );
-
-        return Text(
-          "${treeNode.uCount.value} (${treeNode.uTotal.value})",
-        );
-      },
-    );
-  }
-
-  Widget _buildTreeItems() {
-    return Builder(
-      builder: (context) {
-        final treeNode = context.watchId<TreeNode>(
-          id,
-          (inst) => [
-            inst.uIsExpanded,
-            inst.uChildren,
+        ),
+        child: Row(
+          children: [
+            if (children.isNotEmpty)
+              CustomIconButton(
+                tooltip: isExpanded ? "Collapse" : "Expand",
+                icon: Transform.rotate(
+                  angle: isExpanded ? 0 : -pi / 2,
+                  child: const Icon(Icons.expand_circle_down_rounded),
+                ),
+                onPressed: treeNode.toggleExpansion,
+              ),
+            CustomIconButton(
+              tooltip: "Add child",
+              icon: const Icon(Icons.add_circle),
+              onPressed: treeNode.addChild,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 2).copyWith(
+                right: treeNode.parent == null ? 8 : 0,
+              ),
+              child: Text(
+                idStr,
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
+            ),
+            if (treeNode.parent != null)
+              CustomIconButton(
+                tooltip: "Remove",
+                icon: const Icon(Icons.cancel),
+                onPressed: treeNode.remove,
+              ),
           ],
-        );
+        ),
+      );
+    });
+  }
 
-        return TreeItems(
-          children: treeNode.uChildren.value,
-          expanded: treeNode.uIsExpanded.value,
+  Widget _buildCount() {
+    return Builder(
+      builder: (context) {
+        return Container(
+          decoration: ShapeDecoration(
+            shape: RoundedRectangleBorder(
+              side: BorderSide(
+                color: Theme.of(context).colorScheme.outlineVariant,
+                width: 2,
+              ),
+            ),
+          ),
+          child: Row(
+            children: [
+              CustomIconButton(
+                tooltip: "Decrease",
+                icon: const Icon(Icons.indeterminate_check_box_rounded),
+                onPressed: treeNode.decrease,
+              ),
+              RtWatcher((context, watch) {
+                return Text(
+                  "${watch(treeNode.uCount).value} (${watch(treeNode.uTotal).value})",
+                  style: Theme.of(context).textTheme.bodySmall,
+                );
+              }),
+              CustomIconButton(
+                tooltip: "Increase",
+                icon: const Icon(Icons.add_box),
+                onPressed: treeNode.increase,
+              ),
+            ],
+          ),
         );
       },
     );
   }
 
-  Widget _buildTreeLine(TreeNode treeContext) {
+  Widget _buildTreeLine() {
     return Positioned(
-      top: 0,
-      bottom: 0,
+      top: -4,
+      bottom: -4,
       child: Align(
         alignment: Alignment.topLeft,
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(
-              height: treeContext.parent == null || isTreeNodeLast ? 19 : null,
-              child: const VerticalDivider(
-                width: 2,
-                thickness: 2,
-              ),
-            ),
-            Builder(
-              builder: (context) {
-                final treeNode = context.watchId<TreeNode>(
-                  id,
-                  (inst) => [inst.uChildren],
-                );
-
-                return SizedBox(
-                  width: treeNode.uChildren.value.isEmpty ? 42 : 6,
-                  height: 36,
-                  child: const Divider(
-                    height: 2,
-                    thickness: 2,
-                  ),
-                );
-              },
-            ),
+            ..._buildParentLines(treeNode, []),
+            RtWatcher((context, watch) {
+              return SizedBox(
+                height:
+                    treeNode.parent == null || !watch(treeNode.uHasNext).value
+                        ? 23
+                        : null,
+                child: const VerticalDivider(
+                  width: 2,
+                  thickness: 2,
+                ),
+              );
+            }),
+            RtWatcher((context, watch) {
+              return SizedBox(
+                width: watch(treeNode.uChildren).value.isEmpty ? 36 : 6,
+                height: 48,
+                child: const Divider(
+                  height: 2,
+                  thickness: 2,
+                ),
+              );
+            }),
           ],
         ),
       ),
     );
+  }
+
+  List<Widget> _buildParentLines(TreeNode node, List<Widget> parentLines) {
+    if (node.parent == null) {
+      return parentLines;
+    }
+
+    parentLines.insert(
+      0,
+      RtWatcher((context, watch) {
+        if (!watch(node.parent!.uHasNext).value) {
+          return const SizedBox(width: 24);
+        }
+
+        return Container(
+          width: 24,
+          alignment: Alignment.centerLeft,
+          child: const VerticalDivider(
+            width: 2,
+            thickness: 2,
+          ),
+        );
+      }),
+    );
+
+    return _buildParentLines(node.parent!, parentLines);
   }
 }
