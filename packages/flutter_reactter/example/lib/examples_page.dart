@@ -40,11 +40,15 @@ final examples = [
     "3. Tree widget",
     "Add, remove and hide child widget with counter.",
     [
-      "BuilContext.use",
-      "BuilContext.watchId",
+      "Rt.batch",
+      "Rt.createSate",
       "Rt.lazyState",
+      "RtContext",
       "RtComponent",
+      "RtConsumer",
       "RtProvider",
+      "RtState",
+      "RtWatcher",
       "UseCompute",
       "UseEffect",
       "UseState",
@@ -118,7 +122,7 @@ class ExamplesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Title(
-      title: 'Reactter | Exmaples',
+      title: 'Reactter | Examples',
       color: Theme.of(context).primaryColor,
       child: Scaffold(
         appBar: AppBar(
