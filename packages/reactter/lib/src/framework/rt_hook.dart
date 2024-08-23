@@ -1,4 +1,4 @@
-part of 'framework.dart';
+part of '../internals.dart';
 
 /// {@template reactter.rt_hook}
 /// An abstract-class that provides the functionality of [RtState].
@@ -40,24 +40,37 @@ part of 'framework.dart';
 /// See also:
 /// * [RtState], adds state management features to [RtHook].
 /// {@endtemplate}
-abstract class RtHook extends Hook implements RtState {
-  @override
-  @internal
-  DependencyInjection get dependencyInjection => Rt;
-  @override
-  @internal
-  StateManagement get stateManagment => Rt;
-  @override
-  @internal
-  EventHandler get eventHandler => Rt;
-  @override
-  @internal
-  Logger get logger => Rt;
-
+abstract class RtHook with RtContext, RtStateBase<RtHook> implements IHook {
+  /// {@template reactter.rt_hook.register}
   /// This getter allows access to the [HookRegister] instance
-  /// which is responsible for registering a [Hook]
+  /// which is responsible for registering a [RtHook]
   /// and attaching previously collected states to it.
-  static HookRegister get $register => HookRegister();
+  /// {@endtemplate}
+  static get $register => HookRegister<RtHook>();
+
+  /// This variable is used to register [RtHook]
+  /// and attach the [RtState] that are defined here.
+  @override
+  @protected
+  HookRegister<RtHook> get $;
+
+  /// Initializes a new instance of the [RtHook] class.
+  ///
+  /// This constructor calls the `end` method of the [BindingHookZone] instance
+  /// to register the hook and attach the collected states.
+  RtHook() {
+    $.bindInstanceToStates(this);
+  }
+
+  /// Executes [callback], and notifies the listeners about the update.
+  ///
+  /// If [callback] is provided, it will be executed before notifying the listeners.
+  /// If [callback] is not provided, an empty function will be executed.
+  @override
+  @mustCallSuper
+  void update([Function? callback]) {
+    return super.update(callback ?? () {});
+  }
 }
 
 /// {@macro reactter.rt_hook}

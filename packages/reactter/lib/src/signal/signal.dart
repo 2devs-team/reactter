@@ -1,6 +1,8 @@
 import 'dart:math';
 
-import '../framework/framework.dart';
+import 'package:reactter/src/internals.dart';
+
+import '../framework.dart';
 import '../obj/obj.dart';
 
 part 'signal_impl.dart';

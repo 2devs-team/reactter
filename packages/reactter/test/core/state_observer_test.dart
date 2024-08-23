@@ -1,5 +1,4 @@
 import 'package:reactter/reactter.dart';
-import 'package:reactter/src/core/core.dart';
 import 'package:test/test.dart';
 
 class StateObserverTest extends StateObserver {
@@ -20,32 +19,32 @@ class StateObserverTest extends StateObserver {
   String? lastStateDisposed;
 
   @override
-  void onStateCreated(covariant State state) {
+  void onStateCreated(covariant RtState state) {
     lastStateCreated = state.debugLabel;
     onStateCreatedCalledCount++;
   }
 
   @override
-  void onStateBound(covariant State state, Object instance) {
+  void onStateBound(covariant RtState state, Object instance) {
     lastStateBound = state.debugLabel;
     lastInstanceBound = instance;
     onStateBoundCalledCount++;
   }
 
   @override
-  void onStateUnbound(covariant State state, Object instance) {
+  void onStateUnbound(covariant RtState state, Object instance) {
     lastStateUnbound = state.debugLabel;
     onStateUnboundCalledCount++;
   }
 
   @override
-  void onStateUpdated(covariant State state) {
+  void onStateUpdated(covariant RtState state) {
     lastStateUpdated = state.debugLabel;
     onStateUpdatedCalledCount++;
   }
 
   @override
-  void onStateDisposed(covariant State state) {
+  void onStateDisposed(covariant RtState state) {
     lastStateDisposed = state.debugLabel;
     onStateDisposedCalledCount++;
   }

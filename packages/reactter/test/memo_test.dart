@@ -8,13 +8,13 @@ import 'shareds/test_controllers.dart';
 void main() {
   group("Memo", () {
     test("should be a class callable with arguments", () {
-      final testController = TestController();
+      final testController = Rt.createState(() => TestController());
 
       expect(testController.memo.call, isA<Function(Args)>());
     });
 
     test("should memoize the returned value by the calculate function", () {
-      final testController = TestController();
+      final testController = Rt.createState(() => TestController());
 
       final value0 = testController.memo(null);
       final value1 = testController.memo(Args1(1));
@@ -32,7 +32,7 @@ void main() {
     });
 
     test("should override the cached value", () {
-      final testController = TestController();
+      final testController = Rt.createState(() => TestController());
 
       final value0 = testController.memo(null);
       final value1 = testController.memo(Args1(1));
@@ -50,7 +50,7 @@ void main() {
     });
 
     test("should remove all cached data", () {
-      final testController = TestController();
+      final testController = Rt.createState(() => TestController());
 
       final value0 = testController.memo(null);
       final value1 = testController.memo(Args1(1));
@@ -71,7 +71,7 @@ void main() {
     });
 
     test("should removed the cached data", () {
-      final testController = TestController();
+      final testController = Rt.createState(() => TestController());
 
       final value0 = testController.memo(null);
       final value1 = testController.memo(Args1(1));
@@ -93,7 +93,7 @@ void main() {
     });
 
     test("shouldn't memoize when an error occurs", () {
-      final testController = TestController();
+      final testController = Rt.createState(() => TestController());
 
       expect(
         () => testController.memo(Args1(ArgumentError())),
@@ -257,13 +257,13 @@ void main() {
 
   group("Memo.inline", () {
     test("should be a class callable with arguments", () {
-      final testController = TestController();
+      final testController = Rt.createState(() => TestController());
 
       expect(testController.inlineMemo.call, isA<Function(Args)>());
     });
 
     test("should memoize the returned value by the calculate function", () {
-      final testController = TestController();
+      final testController = Rt.createState(() => TestController());
 
       final value0 = testController.inlineMemo(null);
       final value1 = testController.inlineMemo(Args1(1));
@@ -281,7 +281,7 @@ void main() {
     });
 
     test("should override the cached value", () {
-      final testController = TestController();
+      final testController = Rt.createState(() => TestController());
 
       final value0 = testController.inlineMemo(null);
       final value1 = testController.inlineMemo(Args1(1));

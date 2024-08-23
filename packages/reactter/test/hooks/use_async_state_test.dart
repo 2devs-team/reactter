@@ -6,7 +6,7 @@ import '../shareds/test_controllers.dart';
 void main() {
   group("UseAsyncState", () {
     test("should resolve state", () async {
-      final testController = TestController();
+      final testController = Rt.createState(() => TestController());
       final stateAsync = testController.stateAsync;
 
       expect(stateAsync.value, "initial");
@@ -17,7 +17,7 @@ void main() {
     });
 
     test("should catch error", () async {
-      final testController = TestController();
+      final testController = Rt.createState(() => TestController());
       final stateAsync = testController.stateAsyncWithError;
 
       await stateAsync.resolve();
@@ -28,7 +28,7 @@ void main() {
     });
 
     test("should reset state", () async {
-      final testController = TestController();
+      final testController = Rt.createState(() => TestController());
       final stateAsync = testController.stateAsync;
 
       await stateAsync.resolve();
@@ -41,7 +41,7 @@ void main() {
     });
 
     test("should resolve state with arguments", () async {
-      final testController = TestController();
+      final testController = Rt.createState(() => TestController());
       final stateAsync = testController.stateAsyncWithArg;
 
       await stateAsync.resolve(Args1('arg1'));
@@ -58,7 +58,7 @@ void main() {
     });
 
     test("should get value when", () async {
-      final testController = TestController();
+      final testController = Rt.createState(() => TestController());
       final stateAsync = testController.stateAsyncWithArg;
 
       final s1 = stateAsync.when<String>(standby: (value) => value);

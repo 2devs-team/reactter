@@ -3,6 +3,10 @@ import 'package:test/test.dart';
 
 import '../shareds/test_controllers.dart';
 
+class MyTest {
+  final uState = UseState(0);
+}
+
 void main() {
   group("DependencyInjection", () {
     test("should register a dependency", () {
@@ -242,7 +246,7 @@ void main() {
     });
 
     test("should check if an instance is registered", () {
-      final testController = TestController();
+      final testController = Rt.createState(() => TestController());
       bool isActive = Rt.isActive(testController);
       expect(isActive, false);
 
@@ -256,7 +260,7 @@ void main() {
     });
 
     test("should check if a dependency is registered", () {
-      final testController = TestController();
+      final testController = Rt.createState(() => TestController());
       bool hasRegister = Rt.hasRegister<TestController>();
       expect(hasRegister, false);
 

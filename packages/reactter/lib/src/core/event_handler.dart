@@ -1,17 +1,11 @@
-part of 'core.dart';
+part of '../internals.dart';
 
 /// A abstract-class that adds event handler features to classes that use it.
 ///
 /// It contains methods for adding, removing, and triggering events,
 /// as well as storing event callbacks.
 @internal
-abstract class EventHandler {
-  @internal
-  DependencyInjection get dependencyInjection;
-
-  @internal
-  Logger get logger;
-
+abstract class EventHandler implements IContext {
   final _notifiers = HashSet<EventNotifier>();
 
   /// Puts on to listen [eventName] event.
@@ -86,9 +80,10 @@ abstract class EventHandler {
       return notifier == instance;
     });
 
-    for (final notifier in {...notifiers}) {
+    for (final notifier in notifiers.toList(growable: false)) {
       notifier.dispose();
       _notifiers.remove(notifier);
+      stateManagement._deferredEvents.remove(notifier);
     }
   }
 
@@ -105,7 +100,6 @@ abstract class EventHandler {
           instance,
           eventName,
           dependencyInjection,
-          logger,
           _offEventNotifier,
         );
   }
@@ -140,7 +134,7 @@ abstract class EventHandler {
   void _resolveLifecycleEvent(
     Object? instance,
     Lifecycle lifecycle, [
-    StateBase? state,
+    IState? state,
   ]) {
     if (instance is LifecycleObserver) {
       return _executeLifecycleObserver(instance, lifecycle, state);

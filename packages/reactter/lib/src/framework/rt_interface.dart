@@ -1,6 +1,4 @@
-// ignore_for_file: non_constant_identifier_names
-
-part of 'framework.dart';
+part of '../framework.dart';
 
 void defaultLogWriterCallback(
   String value, {
@@ -24,10 +22,9 @@ class RtInterface
         EventHandler,
         Logger,
         ObserverManager {
-  static final _reactterInterface = RtInterface._();
-  factory RtInterface() => _reactterInterface;
-  RtInterface._();
-
+  @override
+  @internal
+  StateManagement<RtState> get stateManagement => this;
   @override
   @internal
   DependencyInjection get dependencyInjection => this;
@@ -42,22 +39,9 @@ class RtInterface
   LogWriterCallback get log => defaultLogWriterCallback;
 }
 
-/// {@template reactter.rt}
-/// This class represents the interface for the Reactter framework.
-/// It provides methods and properties for interacting with the Reactter framework.
-/// {@endtemplate}
-final Rt = RtInterface();
-
 /// {@macro reactter.rt_interface}
 @Deprecated(
   'Use `RtInterface` instead. '
   'This feature was deprecated after v7.3.0.',
 )
 typedef ReactterInterface = RtInterface;
-
-/// {@macro reactter.rt}
-@Deprecated(
-  'Use `Rt` instead. '
-  'This feature was deprecated after v7.3.0.',
-)
-final Reactter = Rt;

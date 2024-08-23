@@ -1,4 +1,4 @@
-part of 'core.dart';
+part of '../internals.dart';
 
 /// A mixin-class that adds dependency injection features
 /// to classes that use it.
@@ -13,10 +13,7 @@ part of 'core.dart';
 /// emits lifecycle events when dependencies are registered, unregistered,
 /// initialized, and destroyed.
 @internal
-abstract class DependencyInjection {
-  Logger get logger;
-  EventHandler get eventHandler;
-
+abstract class DependencyInjection implements IContext {
   /// It stores the dependencies registered.
   final _dependencyRegisters = HashSet<DependencyRegister>();
 
@@ -39,7 +36,7 @@ abstract class DependencyInjection {
 
     if (dependencyRegister != null) {
       logger.log(
-        'The "$dependencyRegister" builder already registered as `$mode`.',
+        'The "$dependencyRegister" builder already registered as `${dependencyRegister.mode}`.',
       );
       return false;
     }
@@ -548,7 +545,7 @@ abstract class DependencyInjection {
     eventHandler.emit(dependencyRegister, Lifecycle.deleted);
     logger.log(log);
 
-    if (instance is StateBase) instance.dispose();
+    if (instance is IState) instance.dispose();
   }
 
   /// Returns the [DependencyRef] associated with the given instance.

@@ -139,7 +139,7 @@ void main() {
     });
 
     test("should be able to bind to another instance", () {
-      final testController = Rt.create(() => SignalTestController())!;
+      final testController = Rt.create(() => TestController())!;
       final signalString = testController.signalString;
 
       expect(signalString(), "initial");
@@ -148,18 +148,14 @@ void main() {
 
       expect(signalString(), "change signal");
 
-      Rt.destroy<SignalTestController>();
+      Rt.destroy<TestController>();
 
       expect(
-        signalString("no throw a assertion error"),
-        "no throw a assertion error",
+        () {
+          signalString("throw a assertion error because it's been destroyed");
+        },
+        throwsA(isA<AssertionError>()),
       );
     });
   });
-}
-
-class SignalTestController extends TestController {
-  SignalTestController() {
-    signalString.bind(TestController());
-  }
 }

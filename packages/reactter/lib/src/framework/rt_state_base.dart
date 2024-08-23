@@ -1,33 +1,69 @@
-part of 'core.dart';
+part of '../internals.dart';
 
-/// An abstract class that provides common functionality for managing
-/// state in Reactter.
-@internal
-abstract class State implements StateBase {
+/// {@template reactter.rt_state_base}
+/// A base class that implements the [IState] interface.
+///
+/// This class provides the basic functionality for managing the state.
+/// {@endtemplate}
+abstract class RtStateBase<E extends RtStateBase<E>> implements RtState {
+  /// Debug assertion for registering a state object.
+  ///
+  /// This method is used to assert that a state object is being created within
+  /// a binding zone. If the assertion fails, an [AssertionError] is thrown.
+  static bool debugAssertRegistering<E>() {
+    assert(() {
+      final currentZone = BindingZone.currentZone;
+      final isRegistering = currentZone != null &&
+          (currentZone is BindingZone<E> || currentZone is BindingZone<E?>) &&
+          !currentZone.isVerified;
+
+      if (!isRegistering) {
+        throw AssertionError(
+          "The state($E) must be create within the BindingZone.\n"
+          "You can use the 'Rt.createState' method or register as dependency "
+          "using the dependency injection to ensure that the state is registered.",
+        );
+      }
+      return true;
+    }());
+
+    return true;
+  }
+
+  // ignore: unused_field
+  final _debugAssertRegistering = debugAssertRegistering<E>();
+
   bool _isUpdating = false;
 
+  @override
+  @protected
+  @mustCallSuper
+  void _register() {
+    BindingZone.recollectState(this);
+    _notifyCreated();
+  }
+
   /// A label used for debugging purposes.
+  @override
   String get debugLabel => "$runtimeType[$hashCode]";
 
   /// A map containing properties used for debugging purposes.
+  @override
   Map<String, dynamic> get debugProperties => {};
 
   /// The reference instance to the current state.
+  @override
   Object? get boundInstance => _boundInstance;
   Object? _boundInstance;
 
   /// Returns `true` if the state has been disposed.
+  @override
   bool get isDisposed => _isDisposed;
   bool _isDisposed = false;
 
   bool get _hasListeners =>
       eventHandler._hasListeners(this) ||
       (_boundInstance != null && eventHandler._hasListeners(_boundInstance));
-
-  State() {
-    BindingZone.recollectState(this);
-    _notifyCreated();
-  }
 
   @mustCallSuper
   @override
@@ -62,18 +98,18 @@ abstract class State implements StateBase {
 
   @override
   @mustCallSuper
-  void update(covariant Function fnUpdate) {
+  void update(covariant Function? fnUpdate) {
     assert(!_isDisposed, "Can't update when it's been disposed");
 
     if (!_hasListeners || _isUpdating) {
-      fnUpdate();
+      fnUpdate?.call();
       _notifyUpdated();
       return;
     }
 
     _isUpdating = true;
     _notify(Lifecycle.willUpdate);
-    fnUpdate();
+    fnUpdate?.call();
     _notify(Lifecycle.didUpdate);
     _notifyUpdated();
     _isUpdating = false;
@@ -81,7 +117,12 @@ abstract class State implements StateBase {
 
   @override
   @mustCallSuper
-  void refresh() {
+  @Deprecated("Use 'notify' instead.")
+  void refresh() => notify();
+
+  @override
+  @mustCallSuper
+  void notify() {
     assert(!_isDisposed, "Can't refresh when it's been disposed");
 
     if (!_hasListeners || _isUpdating) {
@@ -98,6 +139,8 @@ abstract class State implements StateBase {
   @override
   @mustCallSuper
   void dispose() {
+    if (_isDisposed) return;
+
     _isDisposed = true;
 
     if (_boundInstance != null) {
@@ -105,11 +148,21 @@ abstract class State implements StateBase {
       _boundInstance = null;
     }
 
+    eventHandler.emit(this, Lifecycle.deleted);
     eventHandler.offAll(this);
 
     _notifyDisponsed();
   }
 
+  void revive() {
+    _isDisposed = false;
+
+    if (_boundInstance != null) {
+      eventHandler.one(_boundInstance!, Lifecycle.deleted, _onInstanceDeleted);
+    }
+  }
+
+  @override
   void _validateInstanceBinded() {
     if (dependencyInjection.isActive(boundInstance)) return;
 
@@ -131,10 +184,10 @@ abstract class State implements StateBase {
   /// If [Rt._isBatchRunning] is true, the notification is deferred until the batch is completed.
   /// The [event] is emitted using [Rt.emit] for the current instance and [_boundInstance].
   void _notify(Enum event) {
-    if (stateManagment._isUntrackedRunning) return;
+    if (stateManagement._isUntrackedRunning) return;
 
-    final emit = stateManagment._isBatchRunning
-        ? stateManagment._emitDefferred
+    final emit = stateManagement._isBatchRunning
+        ? stateManagement._emitDefferred
         : eventHandler.emit;
 
     emit(this, event, this);
@@ -145,37 +198,35 @@ abstract class State implements StateBase {
   }
 
   void _notifyCreated() {
-    for (final observer in StateObserver._observers) {
+    for (final observer in StateObserver._observers.toList(growable: false)) {
       observer.onStateCreated(this);
     }
   }
 
   void _notifyBound(Object instance) {
-    for (final observer in StateObserver._observers) {
+    for (final observer in StateObserver._observers.toList(growable: false)) {
       observer.onStateBound(this, instance);
     }
   }
 
   void _notifyUnbound() {
-    for (final observer in StateObserver._observers) {
+    for (final observer in StateObserver._observers.toList(growable: false)) {
       observer.onStateUnbound(this, _boundInstance!);
     }
   }
 
   void _notifyUpdated() {
-    for (final observer in StateObserver._observers) {
+    for (final observer in StateObserver._observers.toList(growable: false)) {
       observer.onStateUpdated(this);
-    }
 
-    if (boundInstance is State) {
-      for (final observer in StateObserver._observers) {
-        observer.onStateUpdated(boundInstance as State);
+      if (boundInstance is RtState) {
+        observer.onStateUpdated(boundInstance as RtState);
       }
     }
   }
 
   void _notifyDisponsed() {
-    for (final observer in StateObserver._observers) {
+    for (final observer in StateObserver._observers.toList(growable: false)) {
       observer.onStateDisposed(this);
     }
   }

@@ -1,4 +1,4 @@
-part of 'core.dart';
+part of '../internals.dart';
 
 /// A generic class that represents the reference to a dependency in Reactter's context.
 /// Provides an optional [id] parameter for identifying the dependency.

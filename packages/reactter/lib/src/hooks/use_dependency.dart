@@ -260,9 +260,10 @@ class UseDependency<T extends Object> extends RtHook {
     _unlisten();
     Rt.delete<T>(id, this);
 
-    update(() => _instance = null);
-
-    super.dispose();
+    update(() {
+      _instance = null;
+      super.dispose();
+    });
   }
 
   void _listen() {

@@ -6,13 +6,13 @@ import '../shareds/test_controllers.dart';
 void main() {
   group("UseReducer", () {
     test("should have a initial value", () {
-      final testController = TestController();
+      final testController = Rt.createState(() => TestController());
 
       expect(testController.stateReduce.value.count, 0);
     });
 
     test("should dispatch a action", () {
-      final testController = TestController();
+      final testController = Rt.createState(() => TestController());
 
       testController.stateReduce.dispatch(IncrementAction());
       expect(testController.stateReduce.value.count, 1);
@@ -32,7 +32,7 @@ void main() {
     });
 
     test("should dispatch a action callable", () {
-      final testController = TestController();
+      final testController = Rt.createState(() => TestController());
 
       testController.stateReduce.dispatch(IncrementActionCallable(quantity: 2));
       expect(testController.stateReduce.value.count, 2);
@@ -42,7 +42,7 @@ void main() {
     });
 
     test("should update state when dispatch action", () {
-      final testController = TestController();
+      final testController = Rt.createState(() => TestController());
       late bool? isStateChanged;
 
       UseEffect(() {

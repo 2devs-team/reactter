@@ -213,6 +213,14 @@ class UseEffect extends RtHook {
     super.dispose();
   }
 
+  @override
+  void revive() {
+    _watchInstanceAttached();
+    _watchDependencies();
+
+    super.revive();
+  }
+
   void _watchInstanceAttached() {
     Rt.on(
       boundInstance!,
@@ -252,14 +260,14 @@ class UseEffect extends RtHook {
   void _watchDependencies() {
     _unwatchDependencies();
 
-    for (final dependency in dependencies) {
+    for (final dependency in dependencies.toList(growable: false)) {
       Rt.on(dependency, Lifecycle.willUpdate, _runCleanup);
       Rt.on(dependency, Lifecycle.didUpdate, _runCallback);
     }
   }
 
   void _unwatchDependencies() {
-    for (final dependency in dependencies) {
+    for (final dependency in dependencies.toList(growable: false)) {
       Rt.off(dependency, Lifecycle.willUpdate, _runCleanup);
       Rt.off(dependency, Lifecycle.didUpdate, _runCallback);
     }

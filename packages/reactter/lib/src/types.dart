@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'args.dart';
-import 'core/core.dart' show LogLevel;
+import 'internals.dart' show LogLevel;
 import 'hooks/hooks.dart';
 import 'memo/memo.dart' show Memo;
 

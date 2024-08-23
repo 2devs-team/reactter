@@ -2,8 +2,8 @@ import 'dart:async';
 import 'package:meta/meta.dart';
 
 import '../args.dart';
-import '../core/core.dart';
-import '../framework/framework.dart';
+import '../internals.dart';
+import '../framework.dart';
 import '../types.dart';
 
 part 'use_async_state.dart';

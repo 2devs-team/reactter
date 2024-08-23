@@ -76,13 +76,19 @@ enum SignalEvent { onGetValue, onSetValue }
 ///
 /// * [Obj], a base-class that can be used to store a value of [T].
 /// {@endtemplate}
-class Signal<T> extends RtState with ObjBase<T> implements Obj<T> {
+class Signal<T>
+    with RtContext, RtStateBase<Signal<T>>, ObjBase<T>
+    implements Obj<T> {
+  final _$ = BindingZone<Signal<T>>();
+
   /// {@macro reactter.signal}
   Signal(
     T value, {
     String? debugLabel,
   })  : _value = value,
-        _debugLabel = debugLabel;
+        _debugLabel = debugLabel {
+    _$.bindInstanceToStates(this);
+  }
 
   bool _shouldGetValueNotify = true;
   bool _shouldSetValueNotify = true;
