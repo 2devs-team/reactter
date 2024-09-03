@@ -244,7 +244,7 @@ class RtProvider<T extends Object?> extends ProviderBase<T>
 class RtProviderElement<T extends Object?> extends ComponentElement
     with WrapperElementMixin<RtProvider<T>> {
   bool get isRoot {
-    return Rt.getHashCodeRefAt<T>(0, widget.id) == _widget.hashCode;
+    return Rt.getRefAt<T>(0, widget.id) == _widget;
   }
 
   final RtProvider<T> _widget;
