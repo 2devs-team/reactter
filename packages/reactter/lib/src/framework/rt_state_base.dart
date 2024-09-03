@@ -139,9 +139,7 @@ abstract class RtStateBase<E extends RtStateBase<E>> implements RtState {
   @override
   @mustCallSuper
   void dispose() {
-    if (_isDisposed) return;
-
-    _isDisposed = true;
+    assert(!_isDisposed, "Can't dispose when it's been disposed");
 
     if (_boundInstance != null) {
       eventHandler.off(_boundInstance!, Lifecycle.deleted, _onInstanceDeleted);
@@ -152,14 +150,7 @@ abstract class RtStateBase<E extends RtStateBase<E>> implements RtState {
     eventHandler.offAll(this);
 
     _notifyDisponsed();
-  }
-
-  void revive() {
-    _isDisposed = false;
-
-    if (_boundInstance != null) {
-      eventHandler.one(_boundInstance!, Lifecycle.deleted, _onInstanceDeleted);
-    }
+    _isDisposed = true;
   }
 
   @override
