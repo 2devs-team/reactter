@@ -271,11 +271,10 @@ abstract class Notifier<T extends Function> {
 
     final int end = _count;
     for (int i = 0; i < end; i++) {
+      final listener = _listeners[i];
+      assert(listener != null, 'Unexpected null listener in $target.');
+
       try {
-        final listener = _listeners[i];
-
-        assert(listener != null, 'Unexpected null listener in $target.');
-
         if (_listenersSingleUse.contains(listener)) {
           removeListener(listener!);
           _listenersSingleUse.remove(listener);
