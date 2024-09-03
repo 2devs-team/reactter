@@ -79,15 +79,17 @@ enum SignalEvent { onGetValue, onSetValue }
 class Signal<T>
     with RtContext, RtStateBase<Signal<T>>, ObjBase<T>
     implements Obj<T> {
-  final _$ = BindingZone<Signal<T>>();
-
   /// {@macro reactter.signal}
-  Signal(
+  Signal._(
     T value, {
     String? debugLabel,
   })  : _value = value,
-        _debugLabel = debugLabel {
-    _$.bindInstanceToStates(this);
+        _debugLabel = debugLabel;
+
+  factory Signal(T value, {String? debugLabel}) {
+    return Rt.createState(
+      () => Signal._(value, debugLabel: debugLabel),
+    );
   }
 
   bool _shouldGetValueNotify = true;
