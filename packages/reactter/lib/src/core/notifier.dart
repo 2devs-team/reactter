@@ -274,16 +274,27 @@ abstract class Notifier<T extends Function> {
       try {
         final listener = _listeners[i];
 
+        assert(listener != null, 'Unexpected null listener in $target.');
+
         if (_listenersSingleUse.contains(listener)) {
           removeListener(listener!);
           _listenersSingleUse.remove(listener);
         }
 
         listenerCall(listener, param);
-      } catch (error, _) {
-        throw AssertionError(
-          'An error was caught during Notifier on $target',
-        );
+      } catch (error) {
+        assert(() {
+          throw AssertionError(
+            'An error was thrown by a listener of $target.\n'
+            'The error thrown was:\n'
+            '  $error\n',
+          );
+        }());
+
+        rethrow;
+      } finally {
+        // ignore: control_flow_in_finally
+        continue;
       }
     }
 
