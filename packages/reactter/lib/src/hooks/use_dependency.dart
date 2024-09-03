@@ -87,7 +87,7 @@ class UseDependency<T extends Object> extends RtHook {
   /// or `null` if the dependency is not found it
   /// or has not been created yet.
   T? get instance {
-    assert(!_isDisposed);
+    assert(!_isDisposed, 'Cannot use a disposed hook.');
 
     if (_instance == null) {
       final instanceFound = Rt.find<T>(id);
@@ -255,8 +255,6 @@ class UseDependency<T extends Object> extends RtHook {
   void dispose() {
     if (_isDisposed) return;
 
-    _isDisposed = true;
-
     _unlisten();
     Rt.delete<T>(id, this);
 
@@ -264,6 +262,8 @@ class UseDependency<T extends Object> extends RtHook {
       _instance = null;
       super.dispose();
     });
+
+    _isDisposed = true;
   }
 
   void _listen() {
