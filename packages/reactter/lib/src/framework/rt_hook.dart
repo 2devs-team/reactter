@@ -42,17 +42,17 @@ part of '../internals.dart';
 /// {@endtemplate}
 abstract class RtHook with RtContext, RtStateBase<RtHook> implements IHook {
   /// {@template reactter.rt_hook.register}
-  /// This getter allows access to the [HookRegister] instance
+  /// This getter allows access to the [HookBindingZone] instance
   /// which is responsible for registering a [RtHook]
   /// and attaching previously collected states to it.
   /// {@endtemplate}
-  static get $register => HookRegister<RtHook>();
+  static get $register => HookBindingZone<RtHook>();
 
   /// This variable is used to register [RtHook]
   /// and attach the [RtState] that are defined here.
   @override
   @protected
-  HookRegister<RtHook> get $;
+  HookBindingZone<RtHook> get $;
 
   /// Initializes a new instance of the [RtHook] class.
   ///

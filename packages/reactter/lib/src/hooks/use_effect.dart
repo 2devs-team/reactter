@@ -213,14 +213,6 @@ class UseEffect extends RtHook {
     super.dispose();
   }
 
-  @override
-  void revive() {
-    _watchInstanceAttached();
-    _watchDependencies();
-
-    super.revive();
-  }
-
   void _watchInstanceAttached() {
     Rt.on(
       boundInstance!,
