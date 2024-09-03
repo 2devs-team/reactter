@@ -17,7 +17,7 @@ class DependencyRegister<T> extends DependencyRef<T?> {
   final DependencyMode mode;
 
   /// Stores the refs where the instance was created.
-  final refs = HashSet<int>();
+  final refs = HashSet<Object>();
 
   T? _instance;
   T? get instance => _instance;

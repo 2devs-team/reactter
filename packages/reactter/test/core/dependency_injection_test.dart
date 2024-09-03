@@ -419,14 +419,13 @@ void main() {
       Rt.destroy<TestController>(id: id);
     });
 
-    test("should get hashcode ref by index", () {
+    test("should get ref by index", () {
       final ref = 'myRef';
 
       Rt.create(() => TestController(), ref: ref);
 
-      final hashCodeRef = Rt.getHashCodeRefAt<TestController>(0);
-      expect(hashCodeRef, isA<int>());
-      expect(hashCodeRef, ref.hashCode);
+      final hashCodeRef = Rt.getRefAt<TestController>(0);
+      expect(hashCodeRef, ref);
 
       Rt.destroy<TestController>();
     });

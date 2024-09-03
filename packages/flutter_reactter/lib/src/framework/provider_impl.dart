@@ -147,7 +147,7 @@ class ProviderElement<T extends Object?> extends InheritedElement
   bool _isLazyInstanceObtained = false;
 
   bool get isRoot {
-    return Rt.getHashCodeRefAt<T>(0, widget.id) == widget.ref.hashCode;
+    return Rt.getRefAt<T>(0, widget.id) == widget;
   }
 
   @override
@@ -157,7 +157,7 @@ class ProviderElement<T extends Object?> extends InheritedElement
 
   T? get instance {
     if (!_isLazyInstanceObtained && widget.isLazy) {
-      final instance = Rt.get<T>(widget.id, widget.ref);
+      final instance = Rt.get<T>(widget.id, widget);
 
       _isLazyInstanceObtained = instance != null;
 
@@ -178,7 +178,7 @@ class ProviderElement<T extends Object?> extends InheritedElement
         widget.instanceBuilder,
         id: widget.id,
         mode: widget.mode,
-        ref: widget.ref,
+        ref: widget,
       );
 
       return;
@@ -194,7 +194,7 @@ class ProviderElement<T extends Object?> extends InheritedElement
   @override
   void mount(Element? parent, Object? newSlot) {
     if (!widget.init && !widget.isLazy) {
-      Rt.get<T>(widget.id, widget.ref);
+      Rt.get<T>(widget.id, widget);
     }
 
     _updateInheritedElementWithId(parent);
@@ -224,7 +224,7 @@ class ProviderElement<T extends Object?> extends InheritedElement
   @override
   void unmount() {
     final id = widget.id;
-    final ref = widget.ref;
+    final ref = widget;
     final isRoot = this.isRoot;
     final instance = this.instance;
 

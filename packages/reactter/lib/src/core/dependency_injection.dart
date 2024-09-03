@@ -317,7 +317,7 @@ abstract class DependencyInjection implements IContext {
     }
 
     if (ref != null) {
-      dependencyRegister!.refs.remove(ref.hashCode);
+      dependencyRegister!.refs.remove(ref);
     }
 
     if (dependencyRegister!.refs.isNotEmpty) {
@@ -463,9 +463,9 @@ abstract class DependencyInjection implements IContext {
     return _instances[instance]?.mode;
   }
 
-  /// Returns the hashCode reference at a specified index for a given type and
+  /// Returns the reference at a specified index for a given type and
   /// optional ID.
-  int? getHashCodeRefAt<T extends Object?>(int index, [String? id]) {
+  Object? getRefAt<T extends Object?>(int index, [String? id]) {
     final refs = _getDependencyRegister<T>(id)?.refs;
 
     if (refs == null || refs.length < index + 1) return null;
@@ -496,6 +496,10 @@ abstract class DependencyInjection implements IContext {
       return _getDependencyRegisterByRef<T>(dependencyRef);
     }
 
+    if (ref != null) {
+      instanceRegister.refs.add(ref);
+    }
+
     if (instanceRegister.instance != null) {
       logger.log('The "$instanceRegister" instance already created.');
 
@@ -503,10 +507,6 @@ abstract class DependencyInjection implements IContext {
     }
 
     BindingZone.autoBinding(() => _createInstance<T>(instanceRegister));
-
-    if (ref != null) {
-      instanceRegister.refs.add(ref.hashCode);
-    }
 
     // ignore: deprecated_member_use_from_same_package
     eventHandler.emit(instanceRegister, Lifecycle.initialized);
