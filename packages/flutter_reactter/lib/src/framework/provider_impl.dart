@@ -142,7 +142,9 @@ class ProvideImpl<T extends Object?, I extends String?> extends ProviderBase<T>
 @internal
 class ProviderElement<T extends Object?> extends InheritedElement
     with ScopeElementMixin {
-  Widget? prevChild;
+  static final Map<RtDependency, int> _instanceMountCount = {};
+
+  Widget? _prevChild;
   HashMap<RtDependency, ProviderElement<T>>? _inheritedElementsWithId;
   bool _isLazyInstanceObtained = false;
 
@@ -193,20 +195,25 @@ class ProviderElement<T extends Object?> extends InheritedElement
 
   @override
   void mount(Element? parent, Object? newSlot) {
+    final dependency = RtDependency<T?>(widget.id);
+    var count = _instanceMountCount.putIfAbsent(dependency, () => 0);
+    _instanceMountCount[dependency] = ++count;
+    final shouldNotifyMount = count == 1;
+
     if (!widget.init && !widget.isLazy) {
       Rt.get<T>(widget.id, widget);
     }
 
     _updateInheritedElementWithId(parent);
 
-    if (isRoot) {
-      Rt.emit(instance!, Lifecycle.willMount);
+    if (shouldNotifyMount) {
+      Rt.emit(dependency, Lifecycle.willMount);
     }
 
     super.mount(parent, newSlot);
 
-    if (isRoot) {
-      Rt.emit(instance!, Lifecycle.didMount);
+    if (shouldNotifyMount) {
+      Rt.emit(dependency, Lifecycle.didMount);
     }
   }
 
@@ -215,34 +222,40 @@ class ProviderElement<T extends Object?> extends InheritedElement
     if (hasDependenciesDirty) {
       notifyClients(widget);
 
-      if (prevChild != null) return prevChild!;
+      if (_prevChild != null) return _prevChild!;
     }
 
-    return prevChild = super.build();
+    return _prevChild = super.build();
   }
 
   @override
   void unmount() {
     final id = widget.id;
     final ref = widget;
-    final isRoot = this.isRoot;
-    final instance = this.instance;
+    final dependency = RtDependency<T?>(widget.id);
+    final count = (_instanceMountCount[dependency] ?? 0) - 1;
+    final shouldNotifyUnmount = count < 1;
+
+    if (shouldNotifyUnmount) {
+      _instanceMountCount.remove(dependency);
+    } else {
+      _instanceMountCount[dependency] = count;
+    }
 
     try {
-      if (isRoot) {
-        Rt.emit(instance!, Lifecycle.willUnmount);
+      if (shouldNotifyUnmount) {
+        Rt.emit(dependency, Lifecycle.willUnmount);
       }
 
       return super.unmount();
     } finally {
-      if (isRoot) {
-        Rt.emit(instance!, Lifecycle.didUnmount);
+      if (shouldNotifyUnmount) {
+        Rt.emit(dependency, Lifecycle.didUnmount);
       }
 
       Rt.delete<T>(id, ref);
-
       _inheritedElementsWithId = null;
-      prevChild = null;
+      _prevChild = null;
     }
   }
 
