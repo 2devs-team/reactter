@@ -8,12 +8,11 @@ import 'package:reactter_lint/src/consts.dart';
 import 'package:reactter_lint/src/helpers.dart';
 import 'package:reactter_lint/src/types.dart';
 
-/// The InvalidHookRegister class is a DartLintRule that detects and reports invalid hook registrations.
-class InvalidHookRegister extends DartLintRule {
-  const InvalidHookRegister() : super(code: _code);
+class RtInvalidHookRegister extends DartLintRule {
+  const RtInvalidHookRegister() : super(code: _code);
 
   static const _code = LintCode(
-    name: "invalid_hook_register",
+    name: "rt_invalid_hook_register",
     errorSeverity: ErrorSeverity.ERROR,
     problemMessage:
         "The hook register('$HOOK_REGISTER_VAR' field) must be final only.",
@@ -23,7 +22,7 @@ class InvalidHookRegister extends DartLintRule {
   );
 
   @override
-  List<Fix> getFixes() => [_HookRegisterFix()];
+  List<Fix> getFixes() => [_RtHookRegisterFix()];
 
   static whenIsInvalid({
     required CustomLintContext context,
@@ -34,9 +33,8 @@ class InvalidHookRegister extends DartLintRule {
 
       if (declaredElement == null) return;
 
-      if (!reactterHookType.isAssignableFrom(declaredElement)) return;
-
-      final hookRegisterNodes = node.members.where(isHookRegister);
+      if (!rtHookType.isAssignableFrom(declaredElement)) return;
+      final hookRegisterNodes = node.members.where(isRegisterDeclaration);
 
       if (hookRegisterNodes.isEmpty) return;
 
@@ -73,9 +71,7 @@ class InvalidHookRegister extends DartLintRule {
   }
 }
 
-/// The `_HookRegisterFix` class is a Dart fix that performs a specific action related to hook
-/// registration.
-class _HookRegisterFix extends DartFix {
+class _RtHookRegisterFix extends DartFix {
   @override
   void run(
     CustomLintResolver resolver,
@@ -84,7 +80,7 @@ class _HookRegisterFix extends DartFix {
     AnalysisError analysisError,
     List<AnalysisError> others,
   ) {
-    InvalidHookRegister.whenIsInvalid(
+    RtInvalidHookRegister.whenIsInvalid(
       context: context,
       onInvalid: (node, element) {
         try {

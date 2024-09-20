@@ -7,12 +7,11 @@ import 'package:custom_lint_builder/custom_lint_builder.dart';
 import 'package:reactter_lint/src/consts.dart';
 import 'package:reactter_lint/src/types.dart';
 
-/// The HookNameConvention class is a DartLintRule that enforces a specific naming convention for hooks.
-class HookNameConvention extends DartLintRule {
-  const HookNameConvention() : super(code: _code);
+class RtHookNameConvention extends DartLintRule {
+  const RtHookNameConvention() : super(code: _code);
 
   static const _code = LintCode(
-    name: "hook_name_convention",
+    name: "rt_hook_name_convention",
     errorSeverity: ErrorSeverity.WARNING,
     problemMessage:
         "The '{0}' hook name should be prefixed with '$HOOK_NAME_PREFIX'.",
@@ -20,7 +19,7 @@ class HookNameConvention extends DartLintRule {
   );
 
   @override
-  List<Fix> getFixes() => [_HookNameFix()];
+  List<Fix> getFixes() => [_RtHookNameFix()];
 
   static whenIsInvalid({
     required CustomLintContext context,
@@ -31,7 +30,7 @@ class HookNameConvention extends DartLintRule {
 
       if (declaredElement == null) return;
 
-      if (!reactterHookType.isAssignableFrom(declaredElement)) return;
+      if (!rtHookType.isAssignableFrom(declaredElement)) return;
 
       final name = declaredElement.name;
 
@@ -66,8 +65,7 @@ class HookNameConvention extends DartLintRule {
   }
 }
 
-/// The _HookNameFix class is a Dart fix that helps with fixing hook names.
-class _HookNameFix extends DartFix {
+class _RtHookNameFix extends DartFix {
   @override
   void run(
     CustomLintResolver resolver,
@@ -76,12 +74,12 @@ class _HookNameFix extends DartFix {
     AnalysisError analysisError,
     List<AnalysisError> others,
   ) {
-    HookNameConvention.whenIsInvalid(
+    RtHookNameConvention.whenIsInvalid(
       context: context,
       onInvalid: (node, element) {
         try {
           final name = element.name!;
-          final nameUse = HookNameConvention.prefixUseName(name);
+          final nameUse = RtHookNameConvention.prefixUseName(name);
 
           final changeBuilder = reporter.createChangeBuilder(
             message: "Rename '$name' to '$nameUse'.",

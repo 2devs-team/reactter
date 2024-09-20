@@ -8,13 +8,11 @@ import 'package:reactter_lint/src/extensions.dart';
 import 'package:reactter_lint/src/helpers.dart';
 import 'package:reactter_lint/src/types.dart';
 
-/// The InvalidHookPosition class is a DartLintRule that detects and reports invalid hook positions in
-/// code.
-class InvalidHookPosition extends DartLintRule {
-  const InvalidHookPosition() : super(code: _code);
+class RtInvalidHookPosition extends DartLintRule {
+  const RtInvalidHookPosition() : super(code: _code);
 
   static const _code = LintCode(
-    name: "invalid_hook_position",
+    name: "rt_invalid_hook_position",
     errorSeverity: ErrorSeverity.WARNING,
     problemMessage:
         "The '{0}' must be defined after hook register('$HOOK_REGISTER_VAR').",
@@ -31,9 +29,10 @@ class InvalidHookPosition extends DartLintRule {
 
       if (declaredElement == null) return;
 
-      if (!reactterHookType.isAssignableFrom(declaredElement)) return;
+      if (!rtHookType.isAssignableFrom(declaredElement)) return;
 
-      final hookRegisterNode = node.members.firstWhereOrNull(isHookRegister);
+      final hookRegisterNode =
+          node.members.firstWhereOrNull(isRegisterDeclaration);
 
       if (hookRegisterNode == null) return;
 
@@ -42,7 +41,7 @@ class InvalidHookPosition extends DartLintRule {
 
         if (element == null) return false;
 
-        return reactterHookType.isAssignableFrom(element);
+        return rtHookType.isAssignableFrom(element);
       }).toList();
 
       for (final hook in hooks) {
