@@ -545,7 +545,9 @@ abstract class DependencyInjection implements IContext {
     eventHandler.emit(dependencyRegister, Lifecycle.deleted);
     logger.log(log);
 
-    if (instance is IState) instance.dispose();
+    if (instance is IState && !(instance as IState).isDisposed) {
+      instance.dispose();
+    }
   }
 
   /// Returns the [DependencyRef] associated with the given instance.

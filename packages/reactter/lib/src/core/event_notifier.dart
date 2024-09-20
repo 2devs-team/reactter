@@ -23,19 +23,19 @@ class EventNotifierRef {
 
   @override
   bool operator ==(Object other) {
-    if (other is EventNotifierRef) {
-      if (other.event != event) {
-        return false;
-      }
-
-      if (_dependencyRef != null && other._dependencyRef != null) {
-        return _dependencyRef == other._dependencyRef;
-      }
-
-      return _instanceObj == other._instanceObj;
+    if (other is! EventNotifierRef) {
+      return false;
     }
 
-    return false;
+    if (other.event != event) {
+      return false;
+    }
+
+    if (_dependencyRef != null && other._dependencyRef != null) {
+      return _dependencyRef == other._dependencyRef;
+    }
+
+    return _instanceObj == other._instanceObj;
   }
 }
 

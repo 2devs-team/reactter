@@ -33,15 +33,8 @@ abstract class RtStateBase<E extends RtStateBase<E>> implements RtState {
   // ignore: unused_field
   final _debugAssertRegistering = debugAssertRegistering<E>();
 
+  bool _isRegistered = false;
   bool _isUpdating = false;
-
-  @override
-  @protected
-  @mustCallSuper
-  void _register() {
-    BindingZone.recollectState(this);
-    _notifyCreated();
-  }
 
   /// A label used for debugging purposes.
   @override
@@ -64,6 +57,18 @@ abstract class RtStateBase<E extends RtStateBase<E>> implements RtState {
   bool get _hasListeners =>
       eventHandler._hasListeners(this) ||
       (_boundInstance != null && eventHandler._hasListeners(_boundInstance));
+
+  @override
+  @protected
+  @mustCallSuper
+  void _register() {
+    BindingZone.recollectState(this);
+
+    if (_isRegistered) return;
+
+    _notifyCreated();
+    _isRegistered = true;
+  }
 
   @mustCallSuper
   @override
@@ -149,6 +154,8 @@ abstract class RtStateBase<E extends RtStateBase<E>> implements RtState {
     eventHandler.emit(this, Lifecycle.deleted);
     eventHandler.offAll(this);
 
+    if (_isDisposed) return;
+
     _notifyDisponsed();
     _isDisposed = true;
   }
@@ -183,9 +190,14 @@ abstract class RtStateBase<E extends RtStateBase<E>> implements RtState {
 
     emit(this, event, this);
 
-    if (_boundInstance != null) {
-      emit(_boundInstance!, event, this);
+    if (_boundInstance == null) return;
+
+    if (_boundInstance is RtStateBase &&
+        !(_boundInstance as RtStateBase)._isDisposed) {
+      return (_boundInstance as RtStateBase)._notify(event);
     }
+
+    emit(_boundInstance!, event, this);
   }
 
   void _notifyCreated() {
