@@ -153,11 +153,8 @@ abstract class StateManagement<S extends IState> implements IContext {
       }
 
       if (_deferredEvents.containsKey(notifier)) {
-        try {
-          notifier.notifyListeners(param);
-        } finally {
-          _deferredEvents.remove(notifier);
-        }
+        _deferredEvents.remove(notifier);
+        notifier.notifyListeners(param);
       }
     }
   }
