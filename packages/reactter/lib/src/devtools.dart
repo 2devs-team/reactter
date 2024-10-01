@@ -1,9 +1,10 @@
 import 'dart:collection';
 import 'dart:developer' as dev;
 
-import 'package:flutter/foundation.dart';
 import 'package:meta/meta.dart';
-import 'package:reactter/reactter.dart';
+
+import 'framework.dart';
+import 'internals.dart';
 
 extension RtExt on RtInterface {
   void initializeDebugging() {
@@ -69,19 +70,6 @@ class ReactterDevTools extends RtStateObserver {
       'stateKey': stateKey,
     });
   }
-
-  // List<Map<String, dynamic>> _getPropertiesNode(RtState state) {
-  //   return state.debugInfo.entries.map((entry) {
-  //     var valueEncode = entry.value;
-
-  //     valueEncode = valueEncode.toString();
-
-  //     return {
-  //       'key': entry.key,
-  //       'value': valueEncode,
-  //     };
-  //   }).toList();
-  // }
 
   Map<String, dynamic>? getStateDetails(String stateKey) {
     final state = states[stateKey];
