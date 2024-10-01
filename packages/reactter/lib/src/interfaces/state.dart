@@ -10,10 +10,10 @@ abstract class IState implements IContext {
   Object? get boundInstance;
 
   /// A label used for debugging purposes.
-  String get debugLabel => "$runtimeType[$hashCode]";
+  String? get debugLabel;
 
-  /// A map containing properties used for debugging purposes.
-  Map<String, dynamic> get debugProperties;
+  /// A map containing information about state for debugging purposes.
+  Map<String, dynamic> get debugInfo;
 
   /// This method is typically used for internal
   /// registration purposes within the state management system.

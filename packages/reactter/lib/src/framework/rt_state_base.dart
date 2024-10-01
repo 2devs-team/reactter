@@ -38,11 +38,11 @@ abstract class RtStateBase<E extends RtStateBase<E>> implements RtState {
 
   /// A label used for debugging purposes.
   @override
-  String get debugLabel => "$runtimeType[$hashCode]";
+  String? get debugLabel => null;
 
-  /// A map containing properties used for debugging purposes.
+  /// A map containing information about state for debugging purposes.
   @override
-  Map<String, dynamic> get debugProperties => {};
+  Map<String, dynamic> get debugInfo => {};
 
   /// The reference instance to the current state.
   @override
