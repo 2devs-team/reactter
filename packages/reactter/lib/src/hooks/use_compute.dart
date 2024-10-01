@@ -46,9 +46,9 @@ class UseCompute<T> extends RtHook {
 
   final String? _debugLabel;
   @override
-  String get debugLabel => _debugLabel ?? super.debugLabel;
+  String? get debugLabel => _debugLabel ?? super.debugLabel;
   @override
-  Map<String, dynamic> get debugProperties => {
+  Map<String, dynamic> get debugInfo => {
         'value': value,
         'dependencies': dependencies,
       };

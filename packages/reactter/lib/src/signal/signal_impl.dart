@@ -99,10 +99,10 @@ class Signal<T>
   final String? _debugLabel;
 
   @override
-  String get debugLabel => _debugLabel ?? super.debugLabel;
+  String? get debugLabel => _debugLabel ?? super.debugLabel;
 
   @override
-  Map<String, dynamic> get debugProperties => {'value': value};
+  Map<String, dynamic> get debugInfo => {'value': value};
 
   /// Returns the [value] of the signal.
   @override
