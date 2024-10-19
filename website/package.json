@@ -17,6 +17,7 @@
     "@astrojs/tailwind": "^5.1.0",
     "@expressive-code/plugin-collapsible-sections": "^0.35.3",
     "@expressive-code/plugin-line-numbers": "^0.35.3",
+    "@iconify-json/mdi": "^1.2.1",
     "@types/alpinejs": "^3.13.10",
     "alpinejs": "^3.13.10",
     "astro": "^4.7.1",

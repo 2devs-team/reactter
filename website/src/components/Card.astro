@@ -1,5 +1,5 @@
 ---
-import { Icon } from "@astrojs/starlight/components";
+import { Icon } from "astro-icon/components";
 
 interface Props {
   icon?: string;
@@ -10,125 +10,33 @@ const { icon, title } = Astro.props;
 ---
 
 <article
-  class="card sl-flex rounded-2xl drop-shadow-[0_0_1px_rgba(49,49,49,0.2)]"
+  class="card group/card sl-flex relative flex flex-col overflow-hidden p-8 rounded-2xl border shadow-lg bg-gradient-to-tr border-accent-700/[.5] shadow-accent-900/[.5] from-accent-950/[.25] to-accent-900/[.25] hover:boder-accent-700 hover:shadow-accent-900 hover:from-950/[0.75] hover:to-accent-900/[0.75] ease-in-out duration-300"
 >
+  <div class="sl-flex">
+    {
+      icon && (
+        <div class="absolute -top-16 -right-16 z-0 p-8 rounded-full border border-accent-800/[.5] bg-accent-800/[.15] group-hover/card:border-accent-800 group-hover/card:bg-accent-800/[.5] ease-in-out duration-300">
+          <div class="relative p-6 rounded-full border border-accent-700/[.5] bg-accent-700/[.15] group-hover/card:border-accent-700 group-hover/card:bg-accent-700/[.5] ease-in-out duration-300">
+            <div class="icon relative flex items-center justify-center w-14 h-14 rounded-full border border-accent-600/[.5] bg-accent-600/[.15] group-hover/card:border-accent-600 group-hover/card:bg-accent-600/[.5] ease-in-out duration-300">
+              <Icon
+                name={icon as any}
+                size={32}
+                class="text-accent-300 group-hover/card:text-accent-200 ease-in-out duration-300"
+              />
+            </div>
+          </div>
+        </div>
+      )
+    }
+    <p
+      class="text-xl font-semibold text-accent-300 group-hover/card:text-accent-200 !m-0 z-10 sm:text-2xl md:text-3xl md:mb-3 ease-in-out duration-300"
+      set:html={title}
+    />
+  </div>
+
   <div
-    class="card-inner flex flex-col relative w-full h-full overflow-hidden rounded-2xl transition duration-300"
+    class="text-md text-gray-200 group-hover/card:text-gray-100 sm:text-lg z-10"
   >
-    <p class="title sl-flex">
-      {icon && <Icon name={icon as any} class="icon" size="1.333em" />}
-      <span set:html={title} />
-    </p>
-    <div class="body"><slot /></div>
+    <slot />
   </div>
 </article>
-
-<style>
-  .card {
-    --sl-card-border: var(--sl-color-accent-high);
-    --sl-card-bg: var(--sl-color-accent);
-    position: relative;
-    box-sizing: border-box;
-  }
-  /* .card:nth-child(4n + 1) {
-    --sl-card-border: var(--sl-color-orange);
-    --sl-card-bg: var(--sl-color-orange-low);
-  }
-  .card:nth-child(4n + 3) {
-    --sl-card-border: var(--sl-color-green);
-    --sl-card-bg: var(--sl-color-green-low);
-  }
-  .card:nth-child(4n + 4) {
-    --sl-card-border: var(--sl-color-red);
-    --sl-card-bg: var(--sl-color-red-low);
-  }
-  .card:nth-child(4n + 5) {
-    --sl-card-border: var(--sl-color-blue);
-    --sl-card-bg: var(--sl-color-blue-low);
-  } */
-
-  .card .card-inner {
-    position: relative;
-    padding: clamp(1rem, calc(0.125rem + 3vw), 2.5rem);
-    gap: clamp(0.5rem, calc(0.125rem + 1vw), 1rem);
-    box-sizing: border-box;
-
-    --tw-gradient-from: hsl(from var(--sl-color-accent-low) h s l / 100%)
-      var(--tw-gradient-from-position);
-    --tw-gradient-to: transparent var(--tw-gradient-to-position);
-
-    --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
-    background-image: linear-gradient(to left bottom, var(--tw-gradient-stops)),
-      linear-gradient(
-        to left bottom,
-        hsl(from var(--sl-color-accent-low) h s l / 100%),
-        hsl(from var(--sl-color-accent-low) h s l / 15%)
-      );
-  }
-
-  .card:hover .card-inner {
-    background-image: linear-gradient(to left bottom, var(--tw-gradient-stops));
-  }
-
-  .card::before {
-    z-index: -1;
-    content: "";
-    inset: -1px;
-    opacity: 1;
-    pointer-events: none;
-    position: absolute;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    user-select: none;
-    border-radius: 1rem;
-
-    transition-property: background-color;
-    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-    transition-duration: 0.3s;
-    animation-duration: 0.3s;
-
-    background-image: linear-gradient(
-      45deg,
-      hsl(from var(--sl-color-accent) h s l / 50%),
-      hsl(from var(--sl-color-accent) h s l / 50%)
-    );
-  }
-
-  .card:hover::before {
-    opacity: 1;
-
-    background-image: radial-gradient(
-        400px circle at var(--mouse-x) var(--mouse-y),
-        var(--sl-color-accent) 0%,
-        transparent 100%
-      ),
-      linear-gradient(
-        45deg,
-        hsl(from var(--sl-color-accent) h s l / 40%),
-        hsl(from var(--sl-color-accent) h s l / 40%)
-      );
-  }
-
-  .title {
-    font-weight: 600;
-    font-size: var(--sl-text-h4);
-    color: var(--sl-color-white);
-    line-height: var(--sl-line-height-headings);
-    gap: 1rem;
-    align-items: center;
-  }
-  .card .icon {
-    border: 1px solid var(--sl-card-border);
-    background-color: var(--sl-card-bg);
-    padding: 0.2em;
-    border-radius: 0.25rem;
-  }
-  .card .body {
-    margin: 0;
-    font-size: clamp(
-      var(--sl-text-sm),
-      calc(0.5rem + 1vw),
-      var(--sl-text-body)
-    );
-  }
-</style>

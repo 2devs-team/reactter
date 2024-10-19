@@ -1,27 +1,29 @@
 ---
 title: Reactter
-description: A light, powerful and quick Reactive State Management, Dependency Injection and Event handler.
+description: A light, powerful and quick Reactive State Management, Dependency Injection and Event Handler for Dart/Flutter.
 template: splash
 hero:
-  title: <h1 class="text-5xl bg-gradient-to-b from-accent-400 to-accent-300 bg-clip-text text-transparent">Reactter</h1>
+  title: <h1 class="text-5xl sm:text-6xl bg-gradient-to-b from-accent-600 to-accent-300 bg-clip-text text-transparent">Reactter</h1>
   tagline:
-    A
-    <span class="text-lg font-bold bg-gradient-to-b from-slate-100 to-slate-400 bg-clip-text text-transparent">lightweight</span>,
-    <span class="text-lg font-bold bg-gradient-to-b from-slate-100 to-slate-400 bg-clip-text text-transparent">powerful</span>, and
-    <span class="text-lg font-bold bg-gradient-to-b from-slate-100 to-slate-400 bg-clip-text text-transparent">reactive</span>
-    <br />
-    <span class="text-xl font-bold bg-gradient-to-b from-accent-300 to-accent-200 bg-clip-text text-transparent">State Management</span>,
-    <span class="text-xl font-bold bg-gradient-to-b from-accent-300 to-accent-200 bg-clip-text text-transparent">Dependency Injection</span>
-    and
-    <span class="text-xl font-bold bg-gradient-to-b from-accent-300 to-accent-200 bg-clip-text text-transparent">Event handler</span>.
+    <p class="text-xl sm:text-2xl">
+      A
+      <span class="font-bold bg-gradient-to-b from-slate-100 to-slate-400 bg-clip-text text-transparent">lightweight</span>,
+      <span class="font-bold bg-gradient-to-b from-slate-100 to-slate-400 bg-clip-text text-transparent">powerful</span>, and
+      <span class="font-bold bg-gradient-to-b from-slate-100 to-slate-400 bg-clip-text text-transparent">reactive</span>
+    </p>
+    <p class="text-2xl sm:text-3xl">
+      <span class="font-semibold bg-gradient-to-b from-accent-500 to-accent-200 bg-clip-text text-transparent">State Management</span>,
+      <span class="font-semibold bg-gradient-to-b from-accent-500 to-accent-200 bg-clip-text text-transparent">Dependency Injection</span> and
+      <span class="font-semibold bg-gradient-to-b from-accent-500 to-accent-200 bg-clip-text text-transparent">Event Handler</span> for Dart/Flutter.
+    </p>
   image:
     html: <div id="hero_logo"></div>
   actions:
-    - text: Get Started
+    - text: <span class="text-lg sm:text-xl font-medium">Get Started</span>
       link: /reactter/getting_started/
-      icon: right-arrow
+      icon: rocket
       variant: primary
-    - text: Explore on pub.dev
+    - text: <span class="text-lg sm:text-xl">Explore on pub.dev</span>
       link: https://pub.dev/packages/reactter
       icon: external
       attrs:
@@ -30,50 +32,54 @@ hero:
 
 import { CardGrid } from "@astrojs/starlight/components";
 import Card from "@/components/Card.astro";
-import ScriptIndex from "@/components/ScriptIndex.astro";
 
 <div class="flex flex-col items-start justify-start">
   ## Try it
-  Experience the full potential of Reactter by trying it online on <a href="https://zapp.run/pub/flutter_reactter" target="_blank">Zapp</a>.
+  <p class="text-lg sm:text-xl">Experience the full potential of Reactter by trying it online on <a href="https://zapp.run/pub/flutter_reactter" target="_blank">Zapp</a>.</p>
   <iframe
+    class="!hidden sm:!block rounded-2xl w-full !h-[600px] border shadow-2xl border-accent-700/[0.5] shadow-accent-700/[.5] bg-accent-950/[.5] hover:boder-accent-700 hover:shadow-accent-700 hover:bg-accent-950 ease-in-out duration-300"
     src="https://zapp.run/edit/zn9806bin990?theme=dark&lazy=false&file=lib/examples/1_counter/counter_page.dart"
-    class="w-full !h-[600px] border-0 overflow-hidden"
-  ></iframe>
+  />
+  <iframe
+    class="!block sm:!hidden rounded-2xl w-full !h-[600px] border shadow-2xl border-accent-700/[0.5] shadow-accent-700/[.5] bg-accent-950/[.5] hover:boder-accent-700 hover:shadow-accent-700 hover:bg-accent-950 ease-in-out duration-300"
+    src="https://zapp.run/edit/zn9806bin990?theme=dark&lazy=true&file=lib/examples/1_counter/counter_page.dart"
+  />
 </div>
 
 ## Features
+<div>
+  <CardGrid stagger>
+    <Card title="Fine-grained reactivity" icon="mdi:creation">
+      React to changes at the finest level of granularity, providing precise
+      control and responsiveness in your app.
+      Learn more about [Rendering control](/reactter/core_concepts/rendering_control).
+    </Card>
+    <Card title="Lightweight" icon="mdi:telegram">
+      Reactter boasts a minimal footprint, ensuring efficient performance without
+      relying on any external dependencies.
+    </Card>
+    <Card title="Highly reusable" icon="mdi:json">
+      Share states and logic across your app using [Dependency
+      Injection](/reactter/core_concepts/dependency_injection) and [Custom Hooks](/reactter/core_concepts/hooks/#custom-hook).
+    </Card>
+    <Card title="Easy to use" icon="mdi:star">
+      Just a few lines of code to get started. Without code generation or complex
+      configurations.
+    </Card>
+    <Card title="100% Dart" icon="dart">
+      Supports Dart server, Dart JS (HTML), Flutter (Web, Mobile and Desktop),
+      etc. Reactter can be used in any Dart project! Compatible with latest
+      Dart/Flutter versions.
+    </Card>
+    <Card title="Fully testable" icon="mdi:code-tags-check">
+      Test your states and logic easily. Reactter is 100% test coverage.
+      <div class="flex">
+        [![Codecov](https://img.shields.io/codecov/c/github/2devs-team/reactter?logo=codecov)](https://app.codecov.io/gh/2devs-team/reactter)
+      </div>
+    </Card>
+    <Card title="No Boilerplate" icon="mdi:code-tags">
+      Reduce code significantly and simplify your app.
+    </Card>
+  </CardGrid>
+</div>
 
-<CardGrid stagger>
-  <Card title="Fine-grained reactivity" icon="rocket">
-    React to changes at the finest level of granularity, providing precise
-    control and responsiveness in your app.
-    Learn more about [Rendering control](/reactter/core_concepts/rendering_control).
-  </Card>
-  <Card title="Lightweight" icon="telegram">
-    Reactter boasts a minimal footprint, ensuring efficient performance without
-    relying on any external dependencies.
-  </Card>
-  <Card title="No Boilerplate" icon="seti:html">
-    Reduce code significantly and simplify your app.
-  </Card>
-  <Card title="Easy to use" icon="star">
-    Just a few lines of code to get started. Without code generation or complex
-    configurations.
-  </Card>
-  <Card title="Highly reusable" icon="seti:json">
-    Share states and logic across your app using [Dependency
-    Injection](/reactter/core_concepts/dependency_injection) and [Custom Hooks](/reactter/core_concepts/hooks/#custom-hook).
-  </Card>
-  <Card title="100% Dart" icon="seti:dart">
-    Supports Dart server, Dart JS (HTML), Flutter (Web, Mobile and Desktop),
-    etc. Reactter can be used in any Dart project! Compatible with latest
-    Dart/Flutter versions.
-  </Card>
-  <Card title="Fully testable" icon="approve-check">
-    Test your states and logic easily. Reactter is 100% test coverage.
-
-    [![Codecov](https://img.shields.io/codecov/c/github/2devs-team/reactter?logo=codecov)](https://app.codecov.io/gh/2devs-team/reactter)
-  </Card>
-</CardGrid>
-
-<ScriptIndex />
