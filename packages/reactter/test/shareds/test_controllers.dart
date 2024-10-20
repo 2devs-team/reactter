@@ -75,7 +75,7 @@ TestStore _reducer(TestStore state, RtAction action) {
   }
 }
 
-class TestController extends RtState {
+class TestController with RtContext, RtStateBase<TestController> {
   final signalString = Signal("initial");
   final stateBool = UseState(false);
   final stateString = UseState("initial");
@@ -84,14 +84,17 @@ class TestController extends RtState {
   final stateList = UseState([]);
   final stateMap = UseState({});
   final stateClass = UseState<TestClass?>(null);
-  final stateAsync = UseAsyncState("initial", _resolveStateAsync);
+  final stateAsync = UseAsyncState(_resolveStateAsync, "initial");
   final stateAsyncWithArg = UseAsyncState.withArg(
-    "initial",
     _resolveStateAsync,
+    "initial",
   );
-  final stateAsyncWithError = UseAsyncState("initial", () {
-    throw Exception("has a error");
-  });
+  final stateAsyncWithError = UseAsyncState(
+    () {
+      throw Exception("has a error");
+    },
+    "initial",
+  );
   final stateReduce = UseReducer(_reducer, TestStore(count: 0));
 
   late final stateCompute = Rt.lazyState(

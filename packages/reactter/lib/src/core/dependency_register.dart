@@ -1,4 +1,4 @@
-part of 'core.dart';
+part of '../internals.dart';
 
 /// A class that represents a dependency register in Reactter.
 ///
@@ -17,7 +17,7 @@ class DependencyRegister<T> extends DependencyRef<T?> {
   final DependencyMode mode;
 
   /// Stores the refs where the instance was created.
-  final refs = HashSet<int>();
+  final refs = HashSet<Object>();
 
   T? _instance;
   T? get instance => _instance;

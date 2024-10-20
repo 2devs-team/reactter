@@ -28,11 +28,26 @@ abstract class UseAsyncStateBase<T> extends RtHook {
   Object? get error => _error.value;
   UseAsyncStateStatus get status => _status.value;
 
+  Future<T> _future = Completer<T>().future;
+  Future<T> get future => _future;
+
+  final String? _debugLabel;
+  @override
+  String? get debugLabel => _debugLabel ?? super.debugLabel;
+  @override
+  Map<String, dynamic> get debugInfo => {
+        'value': value,
+        'error': error,
+        'status': status,
+      };
+
   UseAsyncStateBase(
-    T initialValue,
     Function asyncFunction,
-  )   : _initialValue = initialValue,
+    T initialValue, {
+    String? debugLabel,
+  })  : _initialValue = initialValue,
         _asyncFunction = asyncFunction,
+        _debugLabel = debugLabel,
         _value = UseState(initialValue);
 
   /// Execute [asyncFunction] to resolve [value].
@@ -43,9 +58,9 @@ abstract class UseAsyncStateBase<T> extends RtHook {
       final asyncFunctionExecuting =
           arg == null ? _asyncFunction() : _asyncFunction(arg);
 
-      _value.value = asyncFunctionExecuting is Future
-          ? await asyncFunctionExecuting
-          : asyncFunctionExecuting;
+      _future = Future.value(asyncFunctionExecuting);
+
+      _value.value = await _future;
 
       _status.value = UseAsyncStateStatus.done;
 
@@ -53,9 +68,8 @@ abstract class UseAsyncStateBase<T> extends RtHook {
     } catch (e) {
       _error.value = e;
       _status.value = UseAsyncStateStatus.error;
-
       return null;
-    }
+    } finally {}
   }
 
   /// Returns a new value of [R] depending on the state of the hook:
@@ -104,7 +118,7 @@ abstract class UseAsyncStateBase<T> extends RtHook {
   }
 }
 
-/// {@template use_async_state}
+/// {@template reactter.use_async_state}
 /// A [ReactteHook] that manages the state as async way.
 ///
 /// [T] is use to define the type of [value].
@@ -156,18 +170,28 @@ abstract class UseAsyncStateBase<T> extends RtHook {
 /// * [UseAsyncStateArg], the same as it, but with arguments.
 /// {@endtemplate}
 class UseAsyncState<T> extends UseAsyncStateBase<T> {
-  /// {@macro use_async_state}
+  /// {@macro reactter.use_async_state}
   UseAsyncState(
-    T initialValue,
     AsyncFunction<T> asyncFunction,
-  ) : super(initialValue, asyncFunction);
+    T initialValue, {
+    String? debugLabel,
+  }) : super(
+          asyncFunction,
+          initialValue,
+          debugLabel: debugLabel,
+        );
 
-  /// {@macro use_async_state_arg}
+  /// {@macro reactter.use_async_state_arg}
   static UseAsyncStateArg<T, A> withArg<T, A>(
-    T initialValue,
     AsyncFunctionArg<T, A> asyncFunction,
-  ) {
-    return UseAsyncStateArg<T, A>(initialValue, asyncFunction);
+    T initialValue, {
+    String? debugLabel,
+  }) {
+    return UseAsyncStateArg<T, A>(
+      asyncFunction,
+      initialValue,
+      debugLabel: debugLabel,
+    );
   }
 
   /// Execute [asyncFunction] to resolve [value].
@@ -176,7 +200,7 @@ class UseAsyncState<T> extends UseAsyncStateBase<T> {
   }
 }
 
-/// {@template use_async_state_arg}
+/// {@template reactter.use_async_state_arg}
 /// A [ReactteHook] that manages the state as async way.
 ///
 /// [T] is use to define the type of [value]
@@ -229,11 +253,16 @@ class UseAsyncState<T> extends UseAsyncStateBase<T> {
 /// * [Args], a generic arguments.
 /// {@endtemplate}
 class UseAsyncStateArg<T, A> extends UseAsyncStateBase<T> {
-  /// {@macro use_async_state_arg}
+  /// {@macro reactter.use_async_state_arg}
   UseAsyncStateArg(
-    T initialValue,
     AsyncFunctionArg<T, A> asyncFunction,
-  ) : super(initialValue, asyncFunction);
+    T initialValue, {
+    String? debugLabel,
+  }) : super(
+          asyncFunction,
+          initialValue,
+          debugLabel: debugLabel,
+        );
 
   /// Execute [asyncFunction] to resolve [value].
   FutureOr<T?> resolve(A arg) async {

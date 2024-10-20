@@ -1,6 +1,4 @@
-// ignore_for_file: non_constant_identifier_names
-
-part of 'framework.dart';
+part of '../internals.dart';
 
 void defaultLogWriterCallback(
   String value, {
@@ -18,11 +16,15 @@ void defaultLogWriterCallback(
 /// It is intended to be used as a mixin with other classes.
 /// {@endtemplate}
 class RtInterface
-    with StateManagement<RtState>, DependencyInjection, EventHandler, Logger {
-  static final _reactterInterface = RtInterface._();
-  factory RtInterface() => _reactterInterface;
-  RtInterface._();
-
+    with
+        StateManagement<RtState>,
+        DependencyInjection,
+        EventHandler,
+        Logger,
+        ObserverManager {
+  @override
+  @internal
+  StateManagement<RtState> get stateManagement => this;
   @override
   @internal
   DependencyInjection get dependencyInjection => this;
@@ -35,13 +37,21 @@ class RtInterface
 
   @override
   LogWriterCallback get log => defaultLogWriterCallback;
-}
 
-/// {@template reactter.rt}
-/// This class represents the interface for the Reactter framework.
-/// It provides methods and properties for interacting with the Reactter framework.
-/// {@endtemplate}
-final Rt = RtInterface();
+  @override
+  void addObserver(covariant IObserver observer) {
+    if (observer is RtStateObserver) {
+      RtStateObserver._observers.add(observer);
+    }
+  }
+
+  @override
+  void removeObserver(covariant IObserver observer) {
+    if (observer is RtStateObserver) {
+      RtStateObserver._observers.remove(observer);
+    }
+  }
+}
 
 /// {@macro reactter.rt_interface}
 @Deprecated(
@@ -49,10 +59,3 @@ final Rt = RtInterface();
   'This feature was deprecated after v7.3.0.',
 )
 typedef ReactterInterface = RtInterface;
-
-/// {@macro reactter.rt}
-@Deprecated(
-  'Use `Rt` instead. '
-  'This feature was deprecated after v7.3.0.',
-)
-final Reactter = Rt;

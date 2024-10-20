@@ -1,6 +1,6 @@
 part of 'hooks.dart';
 
-/// {@template use_effect}
+/// {@template reactter.use_effect}
 /// A [RtHook] that manages `side-effect`.
 ///
 ///
@@ -142,15 +142,31 @@ class UseEffect extends RtHook {
   /// It's used to store the states as dependencies of [UseEffect].
   final List<RtState> dependencies;
 
-  /// {@macro use_effect}
-  UseEffect(this.callback, this.dependencies) {
+  final String? _debugLabel;
+  @override
+  String? get debugLabel => _debugLabel ?? super.debugLabel;
+  @override
+  Map<String, dynamic> get debugInfo => {
+        'dependencies': dependencies,
+      };
+
+  /// {@macro reactter.use_effect}
+  UseEffect(
+    this.callback,
+    this.dependencies, {
+    String? debugLabel,
+  }) : _debugLabel = debugLabel {
     if (BindingZone.currentZone != null) return;
 
     _watchDependencies();
   }
 
-  /// {@macro use_effect}
-  UseEffect.runOnInit(this.callback, this.dependencies) : super() {
+  /// {@macro reactter.use_effect}
+  UseEffect.runOnInit(
+    this.callback,
+    this.dependencies, {
+    String? debugLabel,
+  }) : _debugLabel = debugLabel {
     _runCallback(this, this);
     _isUpdating = false;
     _isDispatched = true;
@@ -162,7 +178,7 @@ class UseEffect extends RtHook {
 
   @override
   void bind(Object instance) {
-    final shouldListen = instanceBinded == null;
+    final shouldListen = boundInstance == null;
 
     super.bind(instance);
 
@@ -170,13 +186,12 @@ class UseEffect extends RtHook {
 
     _watchInstanceAttached();
 
-    if (!_isDispatched && instanceBinded is DispatchEffect) {
-      _runCleanupAndUnwatchDependencies(instanceBinded);
-      _runCallbackAndWatchDependencies(instanceBinded);
+    if (!_isDispatched && boundInstance is DispatchEffect) {
+      _runCleanupAndUnwatchDependencies(boundInstance);
+      _runCallbackAndWatchDependencies(boundInstance);
       return;
     }
 
-    _unwatchDependencies();
     _watchDependencies();
   }
 
@@ -200,12 +215,12 @@ class UseEffect extends RtHook {
 
   void _watchInstanceAttached() {
     Rt.on(
-      instanceBinded!,
+      boundInstance!,
       Lifecycle.didMount,
       _runCallbackAndWatchDependencies,
     );
     Rt.on(
-      instanceBinded!,
+      boundInstance!,
       Lifecycle.willUnmount,
       _runCleanupAndUnwatchDependencies,
     );
@@ -213,12 +228,12 @@ class UseEffect extends RtHook {
 
   void _unwatchInstanceAttached() {
     Rt.off(
-      instanceBinded!,
+      boundInstance!,
       Lifecycle.didMount,
       _runCallbackAndWatchDependencies,
     );
     Rt.off(
-      instanceBinded!,
+      boundInstance!,
       Lifecycle.willUnmount,
       _runCleanupAndUnwatchDependencies,
     );
@@ -235,14 +250,16 @@ class UseEffect extends RtHook {
   }
 
   void _watchDependencies() {
-    for (final dependency in dependencies) {
+    _unwatchDependencies();
+
+    for (final dependency in dependencies.toList(growable: false)) {
       Rt.on(dependency, Lifecycle.willUpdate, _runCleanup);
       Rt.on(dependency, Lifecycle.didUpdate, _runCallback);
     }
   }
 
   void _unwatchDependencies() {
-    for (final dependency in dependencies) {
+    for (final dependency in dependencies.toList(growable: false)) {
       Rt.off(dependency, Lifecycle.willUpdate, _runCleanup);
       Rt.off(dependency, Lifecycle.didUpdate, _runCallback);
     }

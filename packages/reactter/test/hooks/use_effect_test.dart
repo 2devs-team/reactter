@@ -8,11 +8,11 @@ void main() {
     final testController = Rt.create(() => TestController());
     final uEffect = UseEffect(() {}, [])..bind(testController!);
 
-    expect(uEffect.instanceBinded, isA<TestController>());
+    expect(uEffect.boundInstance, isA<TestController>());
 
     uEffect.unbind();
 
-    expect(uEffect.instanceBinded, isNull);
+    expect(uEffect.boundInstance, isNull);
 
     Rt.delete<TestController>();
   });
@@ -146,12 +146,12 @@ void main() {
 
       expect(nCalls, 0);
       expect(uEffect, isA<UseEffect>());
-      expect(uEffect.instanceBinded, isA<DispatchEffect>());
+      expect(uEffect.boundInstance, isA<DispatchEffect>());
       expect(nCalls, 1);
     });
 
     test("shouldn't be called by instance that was not registered", () {
-      final testController = TestController();
+      final testController = Rt.createState(() => TestController());
       int nCalls = 0;
 
       UseEffect(
@@ -244,7 +244,7 @@ void main() {
     });
 
     test("should be called with dispatchEffect", () {
-      final testController = TestController();
+      final testController = Rt.createState(() => TestController());
       final stateA = testController.stateBool;
       final stateB = testController.stateInt;
       final stateC = testController.signalString;
@@ -330,7 +330,7 @@ void main() {
 class UseEffectDispatchController extends DispatchEffect {}
 
 class UseEffectTestController extends TestController {
-  final testControllerInner = TestController();
+  final testControllerInner = Rt.createState(() => TestController());
 
   int nCalls1 = 0;
   int nCalls2 = 0;

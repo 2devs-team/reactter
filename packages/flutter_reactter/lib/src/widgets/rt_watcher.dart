@@ -60,7 +60,15 @@ part of '../widgets.dart';
 /// );
 /// ```
 /// {@endtemplate}
-class RtWatcher extends StatefulWidget {
+class RtWatcher extends StatelessWidget {
+  /// Provides a widget , which render one time.
+  ///
+  /// It's expose on [builder] method as second parameter.
+  final Widget? child;
+
+  /// {@macro flutter_reactter.watch_child_builder}
+  final WatchChildBuilder builder;
+
   /// {@macro flutter_reactter.rt_watcher}
   RtWatcher(
     WatchBuilder builder, {
@@ -75,76 +83,21 @@ class RtWatcher extends StatefulWidget {
     required this.builder,
   }) : super(key: key);
 
-  /// Provides a widget , which render one time.
-  ///
-  /// It's expose on [builder] method as second parameter.
-  final Widget? child;
-
-  /// {@macro flutter_reactter.watch_child_builder}
-  final WatchChildBuilder builder;
-
-  @override
-  State<RtWatcher> createState() => _RtWatcherState();
-}
-
-class _RtWatcherState extends State<RtWatcher> {
-  final Set<RtState> _states = {};
-
-  static _RtWatcherState? _currentState;
-
   @override
   Widget build(BuildContext context) {
-    final prevState = _currentState;
-
-    _currentState = this;
-
-    final widgetBuit = widget.builder(context, _watchState, widget.child);
-
-    _currentState = prevState;
-
-    return widgetBuit;
+    return RtScope(
+      child: Builder(
+        builder: (context) => builder(
+          context,
+          <T extends RtState>(T state) => _watchState(context, state),
+          child,
+        ),
+      ),
+    );
   }
 
-  @override
-  void dispose() {
-    _clearStates();
-    super.dispose();
-  }
-
-  T _watchState<T extends RtState>(T state) {
-    if (_currentState != this || _states.contains(state)) {
-      return state;
-    }
-
-    _states.add(state);
-    Rt.on(state, Lifecycle.didUpdate, _onStateDidUpdate);
-
+  T _watchState<T extends RtState>(BuildContext context, T state) {
+    context.watch((_) => [state]);
     return state;
-  }
-
-  void _onStateDidUpdate(_, __) {
-    _clearStates();
-    _rebuild();
-  }
-
-  void _rebuild() async {
-    if (!mounted) return;
-
-    // coverage:ignore-start
-    if (SchedulerBinding.instance.schedulerPhase != SchedulerPhase.idle) {
-      await SchedulerBinding.instance.endOfFrame;
-    }
-    // coverage:ignore-end
-
-    if (!mounted) return;
-
-    (context as Element).markNeedsBuild();
-  }
-
-  void _clearStates() {
-    for (final state in _states) {
-      Rt.off(state, Lifecycle.didUpdate, _onStateDidUpdate);
-    }
-    _states.clear();
   }
 }

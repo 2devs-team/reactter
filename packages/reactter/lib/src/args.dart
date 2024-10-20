@@ -1,12 +1,12 @@
 import 'dart:async';
 
-/// {@template args}
+/// {@template reactter.args}
 /// A class that represents an argument
 /// {@endtemplate}
 class Args<A> {
   final List<A> arguments;
 
-  /// {@macro args}
+  /// {@macro reactter.args}
   const Args([this.arguments = const []]);
 
   /// Returns the first element of the `arguments` list.
@@ -25,14 +25,14 @@ class Args<A> {
       other is Args && this.hashCode == other.hashCode;
 }
 
-/// {@template args1}
+/// {@template reactter.args1}
 /// A class that represents an argument
 /// {@endtemplate}
 class Args1<A> extends Args {
   @override
   final A arg1;
 
-  /// {@macro args1}
+  /// {@macro reactter.args1}
   const Args1(this.arg1) : super();
 
   /// Returns a list containing all arguments.
@@ -43,13 +43,13 @@ class Args1<A> extends Args {
   List get arguments => [arg1];
 }
 
-/// {@template args2}
+/// {@template reactter.args2}
 /// A class that represents a set of two arguments.
 /// {@endtemplate}
 class Args2<A, A2> extends Args1<A> {
   final A2 arg2;
 
-  /// {@macro args2}
+  /// {@macro reactter.args2}
   const Args2(A arg1, this.arg2) : super(arg1);
 
   /// Returns a list containing all arguments.
@@ -60,13 +60,13 @@ class Args2<A, A2> extends Args1<A> {
   List get arguments => [...super.arguments, arg2];
 }
 
-/// {@template args3}
+/// {@template reactter.args3}
 /// A class that represents a set of three arguments.
 /// {@endtemplate}
 class Args3<A, A2, A3> extends Args2<A, A2> {
   final A3 arg3;
 
-  /// {@macro args3}
+  /// {@macro reactter.args3}
   const Args3(A arg1, A2 arg2, this.arg3) : super(arg1, arg2);
 
   /// Returns a list containing all arguments.

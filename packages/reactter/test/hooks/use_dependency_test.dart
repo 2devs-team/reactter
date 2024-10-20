@@ -61,8 +61,10 @@ void main() {
     });
 
     test("should register a dependency with id in builder mode", () {
-      final useDependency =
-          UseDependency.lazyBuilder(() => TestController(), ID);
+      final useDependency = UseDependency.lazyBuilder(
+        () => TestController(),
+        id: ID,
+      );
       expect(useDependency.instance, null);
 
       final instance = Rt.get<TestController>(ID);
@@ -94,8 +96,10 @@ void main() {
     });
 
     test("should register a dependency with id in factory mode", () {
-      final useDependency =
-          UseDependency.lazyFactory(() => TestController(), ID);
+      final useDependency = UseDependency.lazyFactory(
+        () => TestController(),
+        id: ID,
+      );
       expect(useDependency.instance, null);
 
       final instance = Rt.get<TestController>(ID);
@@ -127,8 +131,10 @@ void main() {
     });
 
     test("should register a dependency with id in singleton mode", () {
-      final useDependency =
-          UseDependency.lazySingleton(() => TestController(), ID);
+      final useDependency = UseDependency.lazySingleton(
+        () => TestController(),
+        id: ID,
+      );
       expect(useDependency.instance, null);
 
       final instance = Rt.get<TestController>(ID);
@@ -167,7 +173,10 @@ void main() {
     });
 
     test("should create a dependency with id in builder mode", () {
-      final useDependency = UseDependency.builder(() => TestController(), ID);
+      final useDependency = UseDependency.builder(
+        () => TestController(),
+        id: ID,
+      );
       expect(useDependency.instance, isA<TestController>());
 
       final isActive = Rt.isActive(useDependency.instance);
@@ -193,7 +202,10 @@ void main() {
     });
 
     test("should create a dependency with id in factory mode", () {
-      final useDependency = UseDependency.factory(() => TestController(), ID);
+      final useDependency = UseDependency.factory(
+        () => TestController(),
+        id: ID,
+      );
       expect(useDependency.instance, isA<TestController>());
 
       final isActive = Rt.isActive(useDependency.instance);
@@ -219,7 +231,10 @@ void main() {
     });
 
     test("should create a dependency with id in singleton mode", () {
-      final useDependency = UseDependency.singleton(() => TestController(), ID);
+      final useDependency = UseDependency.singleton(
+        () => TestController(),
+        id: ID,
+      );
       expect(useDependency.instance, isA<TestController>());
 
       final isActive = Rt.isActive(useDependency.instance);
@@ -246,7 +261,7 @@ void main() {
     test("should get a dependency with id", () {
       Rt.register(() => TestController(), id: ID);
 
-      final useDependency = UseDependency<TestController>.get(ID);
+      final useDependency = UseDependency<TestController>.get(id: ID);
       expect(useDependency.instance, isA<TestController>());
 
       final isActive = Rt.isActive(useDependency.instance);
@@ -260,7 +275,7 @@ void main() {
 void _testController([String? id]) {
   Rt.create(() => TestController(), id: id);
 
-  final useDependency = UseDependency<TestController>(id);
+  final useDependency = UseDependency<TestController>(id: id);
 
   expect(useDependency.instance, isA<TestController>());
 
@@ -269,7 +284,7 @@ void _testController([String? id]) {
 
 void _testControllerLate([String? id]) {
   late final TestController instance;
-  final useDependency = UseDependency<TestController>(id);
+  final useDependency = UseDependency<TestController>(id: id);
 
   UseEffect(() {
     if (useDependency.instance != null) {

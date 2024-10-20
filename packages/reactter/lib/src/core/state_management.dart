@@ -1,16 +1,41 @@
-part of 'core.dart';
+part of '../internals.dart';
 
 @internal
-abstract class StateManagement<S extends StateBase> {
-  @internal
-  EventHandler get eventHandler;
+abstract class StateManagement<S extends IState> implements IContext {
+  int _batchRunningCount = 0;
+  bool get _isBatchRunning => _batchRunningCount > 0;
 
-  bool _isUntrackedRunning = false;
-  bool _isBatchRunning = false;
-  final HashMap<EventNotifier, Object?> _deferredEvents = HashMap();
+  int _untrackedRunningCount = 0;
+  bool get _isUntrackedRunning => _untrackedRunningCount > 0;
 
-  /// {@template lazy_state}
-  /// Lazily initializes a state of type [StateBase] and attaches it to the given [instance].
+  final LinkedHashMap<EventNotifier, Object?> _deferredEvents = LinkedHashMap();
+
+  /// Creates a new state by invoking the provided `buildState` function.
+  ///
+  /// The `buildState` function should return an instance of a class that extends [IState].
+  /// The created state is automatically bound to the current binding zone using `BindingZone.autoBinding`.
+  ///
+  /// Example usage:
+  /// ```dart
+  /// class MyState with RtContext, RtStateBase<MyState> {
+  ///   int _value = 0;
+  ///   int get value => value;
+  ///   set value(int n) {
+  ///     if (n == _value) return;
+  ///     update(() => _value = n);
+  ///   }
+  /// }
+  ///
+  /// final state = Rt.createState<MyState>(() => MyState());
+  /// ```
+  ///
+  /// Returns the created state.
+  T createState<T extends S>(T Function() buildState) {
+    return BindingZone.autoBinding(buildState);
+  }
+
+  /// {@template reactter.lazy_state}
+  /// Lazily initializes a state of type [IState] and attaches it to the given [instance].
   ///
   /// This method is recommended to use when initializing state inside a class
   /// using the `late` keyword.
@@ -37,15 +62,14 @@ abstract class StateManagement<S extends StateBase> {
   /// {@endtemplate}
   T lazyState<T extends S>(T Function() buildState, Object instance) {
     final zone = BindingZone();
-
     try {
-      return buildState();
+      return createState(buildState);
     } finally {
       zone.bindInstanceToStates(instance);
     }
   }
 
-  /// {@template untracked}
+  /// {@template reactter.untracked}
   /// Executes the given [callback] function without tracking any state changes.
   /// This means that any state changes that occur inside the [callback] function
   /// will not trigger any side effects.
@@ -69,19 +93,15 @@ abstract class StateManagement<S extends StateBase> {
   /// ```
   /// {@endtemplate}
   T untracked<T>(T Function() callback) {
-    if (_isUntrackedRunning) {
-      return callback();
-    }
-
     try {
-      _isUntrackedRunning = true;
+      _untrackedRunningCount++;
       return callback();
     } finally {
-      _isUntrackedRunning = false;
+      _untrackedRunningCount--;
     }
   }
 
-  /// {@template batch}
+  /// {@template reactter.batch}
   /// Executes the given [callback] function within a batch operation.
   ///
   /// A batch operation allows multiple state changes to be grouped together,
@@ -111,28 +131,31 @@ abstract class StateManagement<S extends StateBase> {
   /// ```
   /// {@endtemplate}
   T batch<T>(T Function() callback) {
-    if (_isBatchRunning) {
-      return callback();
-    }
-
     try {
-      _isBatchRunning = true;
+      _batchRunningCount++;
       return callback();
     } finally {
-      _isBatchRunning = false;
-      _endBatch();
+      _batchRunningCount--;
+
+      if (_batchRunningCount == 0) {
+        _endBatch();
+      }
     }
   }
 
   void _endBatch() {
-    try {
-      for (final event in _deferredEvents.entries) {
-        final notifier = event.key;
-        final param = event.value;
+    for (final event in _deferredEvents.entries.toList(growable: false)) {
+      final notifier = event.key;
+      final param = event.value;
+
+      if (_deferredEvents.isEmpty) {
+        break;
+      }
+
+      if (_deferredEvents.containsKey(notifier)) {
+        _deferredEvents.remove(notifier);
         notifier.notifyListeners(param);
       }
-    } finally {
-      _deferredEvents.clear();
     }
   }
 

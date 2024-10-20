@@ -80,22 +80,44 @@ void main() {
     });
 
     test("should run the callback as nested batch", () {
-      final state = UseState(0);
-      final computed = UseCompute(() => state.value + 1, [state]);
+      final stateA = UseState(0);
+      final stateB = UseState(0);
+      final stateC = UseState(0);
+      final computed = UseCompute(
+        () => stateA.value + stateB.value + stateC.value,
+        [stateA, stateB, stateC],
+      );
 
-      Rt.batch(() {
+      UseEffect(() {
         Rt.batch(() {
-          state.value = 2;
+          stateB.value += 1; // 3
+          stateC.value += 1; // 1
 
-          expect(computed.value, 1);
+          // stateA(2) + stateB(2) + stateC(0)
+          expect(computed.value, 4);
         });
 
-        state.value += 1;
+        // stateA(2) + stateB(3) + stateC(1)
+        expect(computed.value, 6);
+      }, [stateA]);
 
-        expect(computed.value, 1);
-      });
+      Rt.batch(() {
+        stateA.value += 1; // 1
 
-      expect(computed.value, 4);
+        Rt.batch(() {
+          stateB.value += 1; // 1
+
+          expect(computed.value, 0);
+        });
+
+        stateB.value += 1; // 2
+        stateA.value += 1; // 2
+
+        expect(computed.value, 0);
+      }); // -> go to UseEffect
+
+      // stateA(2) + stateB(3) + stateC(1)
+      expect(computed.value, 6);
     });
   });
 }

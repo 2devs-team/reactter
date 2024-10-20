@@ -3,6 +3,10 @@ import 'package:test/test.dart';
 
 import '../shareds/test_controllers.dart';
 
+class MyTest {
+  final uState = UseState(0);
+}
+
 void main() {
   group("DependencyInjection", () {
     test("should register a dependency", () {
@@ -242,7 +246,7 @@ void main() {
     });
 
     test("should check if an instance is registered", () {
-      final testController = TestController();
+      final testController = Rt.createState(() => TestController());
       bool isActive = Rt.isActive(testController);
       expect(isActive, false);
 
@@ -256,7 +260,7 @@ void main() {
     });
 
     test("should check if a dependency is registered", () {
-      final testController = TestController();
+      final testController = Rt.createState(() => TestController());
       bool hasRegister = Rt.hasRegister<TestController>();
       expect(hasRegister, false);
 
@@ -415,14 +419,13 @@ void main() {
       Rt.destroy<TestController>(id: id);
     });
 
-    test("should get hashcode ref by index", () {
+    test("should get ref by index", () {
       final ref = 'myRef';
 
       Rt.create(() => TestController(), ref: ref);
 
-      final hashCodeRef = Rt.getHashCodeRefAt<TestController>(0);
-      expect(hashCodeRef, isA<int>());
-      expect(hashCodeRef, ref.hashCode);
+      final hashCodeRef = Rt.getRefAt<TestController>(0);
+      expect(hashCodeRef, ref);
 
       Rt.destroy<TestController>();
     });

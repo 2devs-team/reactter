@@ -1,4 +1,4 @@
-part of 'core.dart';
+part of '../internals.dart';
 
 /// A mixin-class that adds dependency injection features
 /// to classes that use it.
@@ -13,17 +13,14 @@ part of 'core.dart';
 /// emits lifecycle events when dependencies are registered, unregistered,
 /// initialized, and destroyed.
 @internal
-abstract class DependencyInjection {
-  Logger get logger;
-  EventHandler get eventHandler;
-
+abstract class DependencyInjection implements IContext {
   /// It stores the dependencies registered.
   final _dependencyRegisters = HashSet<DependencyRegister>();
 
   /// It stores the dependencies and its registers for quick access.
   final _instances = HashMap<Object, DependencyRegister>();
 
-  /// {@template register}
+  /// {@template reactter.register}
   /// Register a [builder] function of the [T] dependency with/without [id].
   /// {@endtemplate}
   ///
@@ -39,7 +36,7 @@ abstract class DependencyInjection {
 
     if (dependencyRegister != null) {
       logger.log(
-        'The "$dependencyRegister" builder already registered as `$mode`.',
+        'The "$dependencyRegister" builder already registered as `${dependencyRegister.mode}`.',
       );
       return false;
     }
@@ -59,7 +56,7 @@ abstract class DependencyInjection {
     return true;
   }
 
-  /// {@template lazy_builder}
+  /// {@template reactter.lazy_builder}
   /// Register a [builder] function of the [T] dependency with/without [id]
   /// as [DependencyMode.builder].
   /// {@endtemplate}
@@ -89,7 +86,7 @@ abstract class DependencyInjection {
     );
   }
 
-  /// {@template lazy_factory}
+  /// {@template reactter.lazy_factory}
   /// Register a [builder] function of the [T] dependency with/without [id]
   /// as [DependencyMode.factory].
   /// {@endtemplate}
@@ -119,7 +116,7 @@ abstract class DependencyInjection {
     );
   }
 
-  /// {@template lazy_singleton}
+  /// {@template reactter.lazy_singleton}
   /// Register a [builder] function of the [T] dependency with/without [id]
   /// as [DependencyMode.singleton].
   /// {@endtemplate}
@@ -149,7 +146,7 @@ abstract class DependencyInjection {
     );
   }
 
-  /// {@template create}
+  /// {@template reactter.create}
   /// Register a [builder] function of the [T] dependency with/without [id]
   /// and creates the instance if it isn't already registered,
   /// else gets its instance only.
@@ -157,7 +154,7 @@ abstract class DependencyInjection {
   ///
   /// Use [mode] parameter for defining how to manage the dependency.
   ///
-  /// {@template create_conditions}
+  /// {@template reactter.create_conditions}
   /// Under the following conditions:
   ///
   /// - if not found and hasn't registered it, registers, creates and returns it.
@@ -176,7 +173,7 @@ abstract class DependencyInjection {
     return _getOrCreateIfNotExtist<T>(id, ref)?.instance;
   }
 
-  /// {@template builder}
+  /// {@template reactter.builder}
   /// Register a [builder] function of the [T] dependency with/without [id]
   /// as [DependencyMode.builder]
   /// and creates the instance if it isn't already registered,
@@ -212,7 +209,7 @@ abstract class DependencyInjection {
     );
   }
 
-  /// {@template factory}
+  /// {@template reactter.factory}
   /// Register a [builder] function of the [T] dependency with/without [id]
   /// as [DependencyMode.factory]
   /// and creates the instance if it isn't already registered,
@@ -247,7 +244,7 @@ abstract class DependencyInjection {
     );
   }
 
-  /// {@template singleton}
+  /// {@template reactter.singleton}
   /// Register a [builder] function of the [T] dependency with/without [id]
   /// as [DependencyMode.singleton]
   /// and creates the instance if it isn't already registered,
@@ -282,11 +279,11 @@ abstract class DependencyInjection {
     );
   }
 
-  /// {@template get}
+  /// {@template reactter.get}
   /// Creates and/or gets the instance of the [T] dependency with/without [id].
   /// {@endtemplate}
   ///
-  /// {@template get_conditions}
+  /// {@template reactter.get_conditions}
   /// Under the following conditions:
   ///
   /// - if found it, returns it.
@@ -320,7 +317,7 @@ abstract class DependencyInjection {
     }
 
     if (ref != null) {
-      dependencyRegister!.refs.remove(ref.hashCode);
+      dependencyRegister!.refs.remove(ref);
     }
 
     if (dependencyRegister!.refs.isNotEmpty) {
@@ -418,7 +415,7 @@ abstract class DependencyInjection {
     return unregister<T>(id);
   }
 
-  /// {@template find}
+  /// {@template reactter.find}
   /// Gets the instance of the [T] dependency with/without [id].
   /// {@endtemplate}
   ///
@@ -466,9 +463,9 @@ abstract class DependencyInjection {
     return _instances[instance]?.mode;
   }
 
-  /// Returns the hashCode reference at a specified index for a given type and
+  /// Returns the reference at a specified index for a given type and
   /// optional ID.
-  int? getHashCodeRefAt<T extends Object?>(int index, [String? id]) {
+  Object? getRefAt<T extends Object?>(int index, [String? id]) {
     final refs = _getDependencyRegister<T>(id)?.refs;
 
     if (refs == null || refs.length < index + 1) return null;
@@ -499,6 +496,10 @@ abstract class DependencyInjection {
       return _getDependencyRegisterByRef<T>(dependencyRef);
     }
 
+    if (ref != null) {
+      instanceRegister.refs.add(ref);
+    }
+
     if (instanceRegister.instance != null) {
       logger.log('The "$instanceRegister" instance already created.');
 
@@ -506,10 +507,6 @@ abstract class DependencyInjection {
     }
 
     BindingZone.autoBinding(() => _createInstance<T>(instanceRegister));
-
-    if (ref != null) {
-      instanceRegister.refs.add(ref.hashCode);
-    }
 
     // ignore: deprecated_member_use_from_same_package
     eventHandler.emit(instanceRegister, Lifecycle.initialized);
@@ -548,7 +545,9 @@ abstract class DependencyInjection {
     eventHandler.emit(dependencyRegister, Lifecycle.deleted);
     logger.log(log);
 
-    if (instance is StateBase) instance.dispose();
+    if (instance is IState && !(instance as IState).isDisposed) {
+      instance.dispose();
+    }
   }
 
   /// Returns the [DependencyRef] associated with the given instance.

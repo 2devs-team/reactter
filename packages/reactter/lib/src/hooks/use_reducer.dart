@@ -51,20 +51,28 @@ class UseReducer<T> extends RtHook {
   @override
   final $ = RtHook.$register;
 
-  late final UseState<T> _state;
+  final UseState<T> _state;
 
   /// Calculates a new state with state([T]) and action([RtAction]) given.
   final Reducer<T> reducer;
 
   T get value => _state.value;
 
-  /// {@macro use_reducer}
+  final String? _debugLabel;
+  @override
+  String? get debugLabel => _debugLabel ?? super.debugLabel;
+  @override
+  Map<String, dynamic> get debugInfo => {
+        'value': value,
+      };
+
+  /// {@macro reactter.use_reducer}
   UseReducer(
     this.reducer,
-    T initialState,
-  ) : _state = UseState<T>(initialState) {
-    UseEffect(update, [_state]);
-  }
+    T initialState, {
+    String? debugLabel,
+  })  : _state = UseState<T>(initialState),
+        _debugLabel = debugLabel;
 
   /// Receives a [RtAction] and sends it to [reducer] method for resolved
   void dispatch<A extends RtAction>(A action) {

@@ -1,4 +1,4 @@
-part of 'framework.dart';
+part of '../framework.dart';
 
 /// {@template reactter.rt_dependency}
 /// Represents dependency managed by Reactter's dependency injection.
