@@ -17,6 +17,8 @@ Dependency injection offers several benefits.
 - **Inversion of Control**: It adheres to the principle of inversion of control, where the responsibility for object creation and management is delegated to Reactter. This results in improved code _modularity_, _reusability_, and _testability_.
 - **Simplified Code**: By offloading the responsibility of creating dependencies from individual classes, dependency injection simplifies code, allowing classes to focus more on their core functionality.
 
+## API
+
 Reactter provides the following dependencies injection mechanisms:
 
 - Hooks
@@ -243,11 +245,30 @@ void main() async {
   print('Count: ${counter?.count ?? 'Counter instance not found'}');
 }
 ```
-In this case, the countdown will work as before, but when trying to get the <HT>`Counter`</HT> instance to print itsvalue,
+In this case, the countdown will work as before, but when trying to get the <HT>`Counter`</HT> instance to print its value,
 the ouput will be _“Counter instance not found”_.
 This occurs because <HT>`Counter`</HT> was registered as  <HE>`DependencyMode.builder`</HE>(the default mode),
 so when it was deleted at the end of the countdown its registration was also deleted.
-If we want to get the <HT>`Counter`</HT> instance to print its value, we need to register using the <HE>`DependencyMode.singleton`</HE> mode.
+If we want to get the <HT>`Counter`</HT> instance to print its value, we need to register using the <HE>`DependencyMode.singleton`</HE> mode, looking like this:
+
+```dart title="main.dart" {7} collapse={8-15} "Rt.register" "Rt.create" "Rt.get" "DependencyMode.singleton" /counter(?!\\.)/ "counter?.count" /Counter(?!\u0060)(?! )/ /Countdown(?!\u0060)/ /(countdown) =/ "countdown.run"
+import 'package:reactter/reactter.dart';
+import 'countdown.dart';
+import 'counter.dart';
+
+void main() async {
+  // Register the `Counter` class as singleton mode with an initial value of 20
+  Rt.register(() => Counter(20), mode: DependencyMode.singleton);
+  // Create an instance of the `Countdown` class
+  final countdown = Rt.create(() => Countdown())!;
+  // Start the countdown
+  await countdown.run();
+  // Get the instance of the `Counter` class
+  final counter = Rt.get<Counter>();
+  // Try to print the current count value
+  print('Count: ${counter?.count ?? 'Counter instance not found'}');
+}
+```
 
 Let's now delve into the **modes** of dependency registration.
 

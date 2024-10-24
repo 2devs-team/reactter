@@ -20,6 +20,9 @@ import counterMainCode from '@/examples/counter/lib/main.dart?raw';
 
 In Flutter, efficient rendering control is essential for crafting high-performance, responsive, and scalable applications.
 Reactter provides a way to easily control the rendering of components in the widget tree behavior effortlessly, using the _**flutter_reactter**_ package.
+
+## API
+
 This package provides a collection of classes, widgets and some methods:
 
 - Classes
@@ -45,7 +48,7 @@ The rendering control in Reactter is based on two core concepts of Flutter:
 - **InheritedWidget**: This powerful mechanism efficiently shares data across the widget tree.
 Reactter extends this capability with the <HT>`RtProvider`</HT> widget, which stores dependencies using the dependency injection system.
 This allows descendant widgets to access these dependencies as needed.
-- **BuildContext Methods**: These methods facilitate dependency access and rendering control within the widget tree.
+- **BuildContext Extensions**: These methods facilitate dependency access and rendering control within the widget tree.
 Reactter widgets like <HT>`RtConsumer`</HT>, <HT>`RtSelector`</HT>, and <HT>`RtComponent`</HT> use these methods to observe dependencies or states.
 Whenever the dependency or any observed state undergoes a change, these widgets promptly trigger the rebuilding of the widget tree to reflect the updated state.
 
