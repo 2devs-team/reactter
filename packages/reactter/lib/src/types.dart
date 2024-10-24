@@ -4,6 +4,21 @@ import 'args.dart';
 import 'hooks/hooks.dart';
 import 'memo/memo.dart' show Memo;
 
+/// {@template log_output}
+/// An function to specify the log output destination.
+///
+///   - [message]: The log message.
+///   - [name]: The name of the logger.
+///   - [level]: The integer value of the [LogLevel].
+///   - [stackTrace]: The stack trace of the log message.
+/// {@endtemplate}
+typedef LogOutput = void Function(
+  String message, {
+  String name,
+  int level,
+  StackTrace? stackTrace,
+});
+
 /// A function to generate the instance of [T] dependency.
 typedef InstanceBuilder<T> = T Function();
 
