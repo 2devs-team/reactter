@@ -55,6 +55,4 @@ abstract class IState implements IContext {
   /// Called when this object is removed
   @mustCallSuper
   void dispose();
-
-  void _validateInstanceBinded();
 }

@@ -60,11 +60,11 @@ class EventNotifier extends EventNotifierRef with Notifier {
   final void Function(EventNotifier notifier) onNotifyComplete;
 
   DependencyRef? get instanceRef =>
-      _dependencyRef ?? dependencyInjection._getDependencyRef(_instanceObj);
+      _dependencyRef ?? dependencyInjection.getDependencyRef(_instanceObj);
 
   Object? get instanceObj =>
       _instanceObj ??
-      dependencyInjection._getDependencyRegisterByRef(_dependencyRef)?.instance;
+      dependencyInjection.getDependencyRegisterByRef(_dependencyRef)?.instance;
 
   EventNotifier(
     Object? instanceOrObj,
@@ -93,7 +93,7 @@ class EventNotifier extends EventNotifierRef with Notifier {
     final instanceRefSelf = instanceRef;
 
     if (instanceRefSelf != null) {
-      return instanceRefSelf == dependencyInjection._getDependencyRef(other);
+      return instanceRefSelf == dependencyInjection.getDependencyRef(other);
     }
 
     return instanceObj == other;

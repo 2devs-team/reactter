@@ -6,7 +6,6 @@ export 'internals.dart'
         Lifecycle,
         LifecycleObserver,
         DependencyMode,
-        LogLevel,
         RtInterface,
         RtStateObserver,
         RtHook,

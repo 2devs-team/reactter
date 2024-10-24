@@ -28,16 +28,8 @@ class DependencyRegister<T> extends DependencyRef<T?> {
     this.mode = DependencyMode.builder,
   }) : super(id);
 
+  /// Creates an instance of the dependency.
   T? builder() {
-    _instance = _builder();
-
-    return _instance;
-  }
-
-  @override
-  String toString() {
-    final hashCode = instance != null ? "(${instance.hashCode})" : "";
-
-    return '${super.toString()}$hashCode';
+    return _instance = _builder();
   }
 }

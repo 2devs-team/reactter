@@ -1,15 +1,5 @@
 part of '../internals.dart';
 
-void defaultLogWriterCallback(
-  String value, {
-  Object? error,
-  LogLevel? level = LogLevel.info,
-}) {
-  if (Rt.isLogEnable || error != null) {
-    dev.log(value, name: 'REACTTER', error: error);
-  }
-}
-
 ///{@template reactter.rt_interface}
 /// A class that represents the interface for Rt.
 ///
@@ -20,7 +10,6 @@ class RtInterface
         StateManagement<RtState>,
         DependencyInjection,
         EventHandler,
-        Logger,
         ObserverManager {
   @override
   @internal
@@ -31,17 +20,15 @@ class RtInterface
   @override
   @internal
   EventHandler get eventHandler => this;
-  @override
-  @internal
-  Logger get logger => this;
-
-  @override
-  LogWriterCallback get log => defaultLogWriterCallback;
 
   @override
   void addObserver(covariant IObserver observer) {
     if (observer is RtStateObserver) {
       RtStateObserver._observers.add(observer);
+    }
+
+    if (observer is RtDependencyObserver) {
+      RtDependencyObserver._observers.add(observer);
     }
   }
 
@@ -49,6 +36,10 @@ class RtInterface
   void removeObserver(covariant IObserver observer) {
     if (observer is RtStateObserver) {
       RtStateObserver._observers.remove(observer);
+    }
+
+    if (observer is RtDependencyObserver) {
+      RtDependencyObserver._observers.remove(observer);
     }
   }
 }

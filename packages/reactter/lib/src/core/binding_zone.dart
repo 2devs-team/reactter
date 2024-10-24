@@ -62,9 +62,7 @@ class BindingZone<T extends Object?> {
       }
 
       for (final state in states.toList(growable: false)) {
-        if (state.boundInstance != null) {
-          state._validateInstanceBinded();
-        } else if (state != instance) {
+        if (state != instance && state.boundInstance == null) {
           state.bind(instance);
         }
       }

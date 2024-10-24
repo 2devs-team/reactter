@@ -20,10 +20,6 @@ mixin RtContext implements IContext {
   @override
   @internal
   EventHandler get eventHandler => Rt;
-
-  @override
-  @internal
-  Logger get logger => Rt;
 }
 
 /// {@macro reactter.rt}

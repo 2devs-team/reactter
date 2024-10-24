@@ -35,9 +35,11 @@ abstract class DependencyInjection implements IContext {
     var dependencyRegister = _getDependencyRegister<T?>(id);
 
     if (dependencyRegister != null) {
-      logger.log(
-        'The "$dependencyRegister" builder already registered as `${dependencyRegister.mode}`.',
+      _notifyDependencyFailed(
+        dependencyRegister,
+        DependencyFail.alreadyRegistered,
       );
+
       return false;
     }
 
@@ -50,9 +52,6 @@ abstract class DependencyInjection implements IContext {
     _dependencyRegisters.add(dependencyRegister);
 
     eventHandler.emit(dependencyRegister, Lifecycle.registered);
-    logger.log(
-      'The "$dependencyRegister" builder has been registered as `$mode`.',
-    );
     return true;
   }
 
@@ -311,7 +310,10 @@ abstract class DependencyInjection implements IContext {
     if (dependencyRegister?.instance == null) {
       final dependencyRef = DependencyRef<T>(id);
 
-      logger.log('The "$dependencyRef" dependency already deleted.');
+      _notifyDependencyFailed(
+        dependencyRef,
+        DependencyFail.alreadyDeleted,
+      );
 
       return false;
     }
@@ -330,15 +332,17 @@ abstract class DependencyInjection implements IContext {
         return true;
       case DependencyMode.factory:
         _removeInstance<T>(dependencyRegister);
-        logger.log(
-          'The "$dependencyRegister" builder has been retained '
-          'because it\'s `${DependencyMode.factory}`.',
+
+        _notifyDependencyFailed(
+          dependencyRegister,
+          DependencyFail.builderRetainedAsFactory,
         );
+
         return true;
       case DependencyMode.singleton:
-        logger.log(
-          'The "$dependencyRegister" dependency has been retained '
-          'because it\'s `${DependencyMode.singleton}`.',
+        _notifyDependencyFailed(
+          dependencyRegister,
+          DependencyFail.dependencyRetainedAsSingleton,
         );
     }
 
@@ -350,27 +354,22 @@ abstract class DependencyInjection implements IContext {
   /// Returns `true` when dependency has been unregistered.
   bool unregister<T extends Object?>([String? id]) {
     final dependencyRegister = _getDependencyRegister<T?>(id);
-    final typeLabel =
-        dependencyRegister?.mode.label ?? DependencyMode.builder.label;
 
     if (dependencyRegister == null) {
       final dependencyRef = DependencyRef<T>(id);
 
-      logger.log('The "$dependencyRef" $typeLabel already deregistered.');
+      _notifyDependencyFailed(
+        dependencyRef,
+        DependencyFail.alreadyUnregistered,
+      );
 
       return false;
     }
 
     if (dependencyRegister._instance != null) {
-      final idParam = id != null ? "id: '$id, '" : '';
-
-      logger.log(
-        'The "$T" builder couldn\'t deregister '
-        'because the "$dependencyRegister" dependency is active.\n'
-        'You should delete the instance before with:\n'
-        '`Rt.delete<$T>(${id ?? ''});` or \n'
-        '`Rt.destroy<$T>($idParam, onlyInstance: true);`\n',
-        level: LogLevel.warning,
+      _notifyDependencyFailed(
+        dependencyRegister,
+        DependencyFail.cannotUnregisterActiveInstance,
       );
 
       return false;
@@ -380,7 +379,6 @@ abstract class DependencyInjection implements IContext {
 
     eventHandler.emit(dependencyRegister, Lifecycle.unregistered);
     eventHandler.offAll(dependencyRegister);
-    logger.log('The "$dependencyRegister" $typeLabel has been deregistered.');
 
     return true;
   }
@@ -400,7 +398,10 @@ abstract class DependencyInjection implements IContext {
     if (dependencyRegister?.instance == null && onlyInstance) {
       final dependencyRef = DependencyRef<T>(id);
 
-      logger.log('The "$dependencyRef" instance already deleted.');
+      _notifyDependencyFailed(
+        dependencyRef,
+        DependencyFail.alreadyDeleted,
+      );
 
       return false;
     }
@@ -483,17 +484,13 @@ abstract class DependencyInjection implements IContext {
 
     if (instanceRegister == null) {
       final dependencyRef = DependencyRef<T>(id);
-      final idParam = id != null ? ", id: '$id'" : '';
 
-      logger.log(
-        'The "$dependencyRef" builder is not registered.\n'
-        'You should register the instance build with: \n'
-        '`Rt.register<$T>(() => $T()$idParam);` or \n'
-        '`Rt.create<$T>(() => $T()$idParam);`.',
-        level: LogLevel.warning,
+      _notifyDependencyFailed(
+        dependencyRef,
+        DependencyFail.missingInstanceBuilder,
       );
 
-      return _getDependencyRegisterByRef<T>(dependencyRef);
+      return getDependencyRegisterByRef<T>(dependencyRef);
     }
 
     if (ref != null) {
@@ -501,7 +498,10 @@ abstract class DependencyInjection implements IContext {
     }
 
     if (instanceRegister.instance != null) {
-      logger.log('The "$instanceRegister" instance already created.');
+      _notifyDependencyFailed(
+        instanceRegister,
+        DependencyFail.alreadyCreated,
+      );
 
       return instanceRegister;
     }
@@ -509,10 +509,16 @@ abstract class DependencyInjection implements IContext {
     BindingZone.autoBinding(() => _createInstance<T>(instanceRegister));
 
     // ignore: deprecated_member_use_from_same_package
-    eventHandler.emit(instanceRegister, Lifecycle.initialized);
-    eventHandler.emit(instanceRegister, Lifecycle.created);
-
-    logger.log('The "$instanceRegister" instance has been created.');
+    eventHandler.emit(
+      instanceRegister,
+      Lifecycle.initialized,
+      instanceRegister.instance,
+    );
+    eventHandler.emit(
+      instanceRegister,
+      Lifecycle.created,
+      instanceRegister.instance,
+    );
 
     return instanceRegister;
   }
@@ -530,20 +536,18 @@ abstract class DependencyInjection implements IContext {
 
   /// Removes an instance of a generic type from a [DependencyRegister].
   void _removeInstance<T>(DependencyRegister<T?> dependencyRegister) {
-    final log = 'The "$dependencyRegister" instance has been deleted.';
     final instance = dependencyRegister.instance;
     dependencyRegister._instance = null;
 
     _instances.remove(instance);
 
     // ignore: deprecated_member_use_from_same_package
-    eventHandler.emit(instance, Lifecycle.destroyed);
-    eventHandler.emit(instance, Lifecycle.deleted);
+    eventHandler.emit(instance, Lifecycle.destroyed, instance);
+    eventHandler.emit(instance, Lifecycle.deleted, instance);
 
     // ignore: deprecated_member_use_from_same_package
-    eventHandler.emit(dependencyRegister, Lifecycle.destroyed);
-    eventHandler.emit(dependencyRegister, Lifecycle.deleted);
-    logger.log(log);
+    eventHandler.emit(dependencyRegister, Lifecycle.destroyed, instance);
+    eventHandler.emit(dependencyRegister, Lifecycle.deleted, instance);
 
     if (instance is IState && !(instance as IState).isDisposed) {
       instance.dispose();
@@ -552,7 +556,7 @@ abstract class DependencyInjection implements IContext {
 
   /// Returns the [DependencyRef] associated with the given instance.
   /// If the instance is null or not found, returns null.
-  DependencyRef<T>? _getDependencyRef<T extends Object?>(Object? instance) {
+  DependencyRef<T>? getDependencyRef<T extends Object?>(Object? instance) {
     return _instances[instance] as DependencyRef<T>?;
   }
 
@@ -565,9 +569,19 @@ abstract class DependencyInjection implements IContext {
   }
 
   /// Returns the [DependencyRegister] of [T] type with a given [dependencyRef].
-  DependencyRegister<T>? _getDependencyRegisterByRef<T extends Object?>(
-    DependencyRef? dependencyRef,
+  DependencyRegister<T>? getDependencyRegisterByRef<T extends Object?>(
+    DependencyRef<T>? dependencyRef,
   ) {
     return _dependencyRegisters.lookup(dependencyRef) as DependencyRegister<T>?;
+  }
+
+  void _notifyDependencyFailed(
+    DependencyRef dependencyRef,
+    DependencyFail fail,
+  ) {
+    for (final observer
+        in RtDependencyObserver._observers.toList(growable: false)) {
+      observer.onDependencyFailed(dependencyRef, fail);
+    }
   }
 }

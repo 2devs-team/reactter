@@ -66,7 +66,7 @@ abstract class LifecycleObserver {
 void _executeLifecycleObserver(
   LifecycleObserver observer,
   Lifecycle lifecycle, [
-  IState? state,
+  dynamic param,
 ]) {
   switch (lifecycle) {
     // ignore: deprecated_member_use_from_same_package
@@ -84,10 +84,10 @@ void _executeLifecycleObserver(
       observer.onDidMount();
       break;
     case Lifecycle.willUpdate:
-      observer.onWillUpdate(state);
+      observer.onWillUpdate(param);
       break;
     case Lifecycle.didUpdate:
-      observer.onDidUpdate(state);
+      observer.onDidUpdate(param);
       break;
     case Lifecycle.willUnmount:
       observer.onWillUnmount();

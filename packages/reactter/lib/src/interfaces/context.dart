@@ -17,7 +17,4 @@ abstract class IContext {
 
   @internal
   EventHandler get eventHandler;
-
-  @internal
-  Logger get logger;
 }

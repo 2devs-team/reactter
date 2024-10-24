@@ -8,15 +8,9 @@ part of '../internals.dart';
 class DependencyRef<T extends Object?> {
   final String? id;
 
+  Type get type => T;
+
   const DependencyRef([this.id]);
-
-  @override
-  String toString() {
-    final type = T.toString().replaceAll(RegExp(r'\?'), '');
-    final id = this.id != null ? "[id='${this.id}']" : "";
-
-    return '$type$id';
-  }
 
   int _getTypeHashCode<TT extends T?>() => TT.hashCode;
 

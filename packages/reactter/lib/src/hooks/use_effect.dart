@@ -279,10 +279,13 @@ class UseEffect extends RtHook {
         _cleanupCallback = cleanupCallback;
       }
     } catch (error) {
-      logger.log(
-        'An error occurred while executing the effect',
-        level: LogLevel.error,
-      );
+      assert(() {
+        throw AssertionError(
+          'An error occurred while executing the effect in $this${debugLabel != null ? '($debugLabel)' : ''}.\n'
+          'The error thrown was:\n'
+          '  $error\n',
+        );
+      }());
 
       rethrow;
     } finally {
@@ -294,10 +297,13 @@ class UseEffect extends RtHook {
     try {
       _cleanupCallback?.call();
     } catch (error) {
-      logger.log(
-        'An error occurred while executing the cleanup effect',
-        level: LogLevel.error,
-      );
+      assert(() {
+        throw AssertionError(
+          'An error occurred while executing the cleanup effect in $this${debugLabel != null ? '($debugLabel)' : ''}.\n'
+          'The error thrown was:\n'
+          '  $error\n',
+        );
+      }());
 
       rethrow;
     } finally {

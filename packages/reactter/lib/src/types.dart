@@ -1,19 +1,11 @@
 import 'dart:async';
 
 import 'args.dart';
-import 'internals.dart' show LogLevel;
 import 'hooks/hooks.dart';
 import 'memo/memo.dart' show Memo;
 
 /// A function to generate the instance of [T] dependency.
 typedef InstanceBuilder<T> = T Function();
-
-/// Rt.log type
-typedef LogWriterCallback = void Function(
-  String text, {
-  Object error,
-  LogLevel level,
-});
 
 /// UseAsyncState.when's parameter type for representing a value
 typedef WhenValueReturn<T, R> = R Function(T value);

@@ -83,8 +83,6 @@ abstract class RtStateBase<E extends RtStateBase<E>> implements RtState {
     eventHandler.one(instance, Lifecycle.deleted, _onInstanceDeleted);
     _boundInstance = instance;
 
-    if (BindingZone.currentZone == null) _validateInstanceBinded();
-
     _notifyBound(instance);
   }
 
@@ -147,8 +145,7 @@ abstract class RtStateBase<E extends RtStateBase<E>> implements RtState {
     assert(!_isDisposed, "Can't dispose when it's been disposed");
 
     if (_boundInstance != null) {
-      eventHandler.off(_boundInstance!, Lifecycle.deleted, _onInstanceDeleted);
-      _boundInstance = null;
+      unbind();
     }
 
     eventHandler.emit(this, Lifecycle.deleted);
@@ -158,20 +155,6 @@ abstract class RtStateBase<E extends RtStateBase<E>> implements RtState {
 
     _notifyDisponsed();
     _isDisposed = true;
-  }
-
-  @override
-  void _validateInstanceBinded() {
-    if (dependencyInjection.isActive(boundInstance)) return;
-
-    logger.log(
-      "The instance binded($boundInstance) to $this is not in Reactter's context and cannot be disposed automatically.\n"
-      "You can solve this problem in two ways:\n"
-      "1. Call the 'dispose' method manually when $this is no longer needed.\n"
-      "2. Create $boundInstance using the dependency injection methods.\n"
-      "**Ignore this message if you are sure that it will be disposed.**",
-      level: LogLevel.warning,
-    );
   }
 
   /// When the instance is destroyed, this object is dispose.

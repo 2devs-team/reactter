@@ -65,11 +65,14 @@ abstract class EventHandler implements IContext {
     if (notifier?._dependencyRef == null) {
       notifier?.notifyListeners(param);
       notifierPartner?.notifyListeners(param);
-      return;
+    } else {
+      notifierPartner?.notifyListeners(param);
+      notifier?.notifyListeners(param);
     }
 
-    notifierPartner?.notifyListeners(param);
-    notifier?.notifyListeners(param);
+    if (eventName is Lifecycle) {
+      _notifyToObservers(instance, eventName, param);
+    }
   }
 
   /// Removes all instance's events
@@ -114,8 +117,8 @@ abstract class EventHandler implements IContext {
   /// If the [EventNotifier] does not exist in the lookup table, it creates a new one.
   EventNotifier? _getEventNotifierPartner(Object? instance, Enum eventName) {
     final instancePartner = instance is DependencyRef
-        ? dependencyInjection._getDependencyRegisterByRef(instance)?.instance
-        : dependencyInjection._getDependencyRef(instance);
+        ? dependencyInjection.getDependencyRegisterByRef(instance)?.instance
+        : dependencyInjection.getDependencyRef(instance);
 
     if (instancePartner == null) return null;
 
@@ -134,17 +137,58 @@ abstract class EventHandler implements IContext {
   void _resolveLifecycleEvent(
     Object? instance,
     Lifecycle lifecycle, [
-    IState? state,
+    dynamic param,
   ]) {
-    if (instance is LifecycleObserver) {
-      return _executeLifecycleObserver(instance, lifecycle, state);
+    final instanceObj = instance is DependencyRef
+        ? dependencyInjection.getDependencyRegisterByRef(instance)?.instance
+        : instance;
+
+    if (instanceObj is LifecycleObserver) {
+      _executeLifecycleObserver(instanceObj, lifecycle, param);
     }
+  }
 
-    if (instance is! DependencyRef) return;
+  void _notifyToObservers(
+    Object? instanceOrDependencyRef,
+    Lifecycle lifecycle,
+    dynamic param,
+  ) {
+    final dependencyRef = instanceOrDependencyRef is DependencyRef
+        ? instanceOrDependencyRef
+        : dependencyInjection.getDependencyRef(instanceOrDependencyRef);
 
-    final instanceObj =
-        dependencyInjection._getDependencyRegisterByRef(instance)?.instance;
+    final instance = param is Object
+        ? param
+        : dependencyInjection
+            .getDependencyRegisterByRef(dependencyRef)
+            ?.instance;
 
-    return _resolveLifecycleEvent(instanceObj, lifecycle, state);
+    if (dependencyRef == null) return;
+
+    for (final observer
+        in RtDependencyObserver._observers.toList(growable: false)) {
+      switch (lifecycle) {
+        case Lifecycle.registered:
+          observer.onDependencyRegistered(dependencyRef);
+          break;
+        case Lifecycle.created:
+          observer.onDependencyCreated(dependencyRef, instance);
+          break;
+        case Lifecycle.didMount:
+          observer.onDependencyMounted(dependencyRef, instance);
+          break;
+        case Lifecycle.didUnmount:
+          observer.onDependencyUnmounted(dependencyRef, instance);
+          break;
+        case Lifecycle.deleted:
+          observer.onDependencyDeleted(dependencyRef, instance);
+          break;
+        case Lifecycle.unregistered:
+          observer.onDependencyUnregistered(dependencyRef);
+          break;
+        default:
+          break;
+      }
+    }
   }
 }
