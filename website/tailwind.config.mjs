@@ -34,7 +34,7 @@ export default {
         gray,
       },
       fontFamily: {
-        sans: ['"Atkinson Hyperlegible"'],
+        sans: ['"Inter"'],
         mono: ['"IBM Plex Mono"'],
       },
     },

@@ -11,7 +11,7 @@
 }
 
 body {
-  background-color: hsl(from var(--sl-color-accent-low) h s 05% / 100%);
+  background-color: hsl(from var(--sl-color-accent-low) h s 08% / 100%);
 }
 
 [data-has-hero] header {
@@ -48,21 +48,24 @@ body {
   background-position: center;
   width: 100%;
   height: 100%;
+  max-width: 300px;
 }
 
 [data-has-hero] .hero #hero_logo::after {
   content: "";
-  background: inherit;
-  width: 100%;
-  height: 100%;
   position: absolute;
-  filter: drop-shadow(0px 0px) blur(80px);
+  width: 100%;
+  aspect-ratio: 1/1;
+  border-radius: 50%;
+  background: linear-gradient(45deg, var(--sl-color-accent) 15%, var(--sl-color-accent-low) 75%);
+  filter: blur(72px);
   z-index: -1;
 }
 
 [data-has-hero] .page {
-  background: 
-    linear-gradient(215deg, transparent 0%, rgb(from var(--sl-color-accent-low) r g b / 0.5) 45%, rgb(from var(--sl-color-accent-low) r g b / 0.5) 55%,  transparent 100%);
+  background:
+    radial-gradient(var(--sl-color-accent-low),transparent 50%) no-repeat -60vw -40vh / 105vw 200vh,
+    radial-gradient(var(--sl-color-accent), var(--sl-color-accent-low), transparent 60%) no-repeat 50% calc(100% + 21rem) / 62rem 32rem;
 }
 
 [data-has-hero] .action.primary {
