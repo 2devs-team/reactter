@@ -1,0 +1,28 @@
+---
+import type { Props } from "@astrojs/starlight/props";
+import Default from "@astrojs/starlight/components/Footer.astro";
+
+const year = new Date().getFullYear();
+---
+
+<>
+  {
+    Astro.props.entry.data.hero ? (
+      <>
+        <footer class="hero-footer flex flex-col items-center justify-center text-sm font-medium text-center">
+          <p>Released under the MIT License.</p>
+          <p>
+            Copyright &copy; <span id="footer-year">{year}</span> Reactter.
+          </p>
+        </footer>
+
+        <script is:inline>
+          document.getElementById("footer-year").innerText = new
+          Date().getFullYear();
+        </script>
+      </>
+    ) : (
+      <Default {...Astro.props} />
+    )
+  }
+</>
