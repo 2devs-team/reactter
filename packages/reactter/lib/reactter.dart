@@ -1,6 +1,7 @@
 library reactter;
 
 export 'src/args.dart';
+export 'src/devtools.dart' hide RtDevTools;
 export 'src/framework.dart';
 export 'src/hooks/hooks.dart' hide UseAsyncStateBase;
 export 'src/memo/memo.dart';
