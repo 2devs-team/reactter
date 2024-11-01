@@ -101,6 +101,37 @@ abstract class StateManagement<S extends IState> implements IContext {
     }
   }
 
+  /// {@template reactter.untracked_async}
+  /// Executes the given [callback] function asynchronously without tracking any state changes.
+  /// This means that any state changes that occur inside the [callback] function
+  /// will not trigger any side effects.
+  ///
+  /// The [callback] function should return a [Future] of type [T].
+  /// The returned [Future] will be the result of the untracked operation.
+  ///
+  /// Example usage:
+  /// ```dart
+  /// final state = UseAsyncState(0, () async => Future.value(1));
+  /// final computed = UseCompute(() => state.value + 1, [state]);
+  ///
+  /// await Rt.untrackedAsync(() async {
+  ///   await state.resolve();
+  ///
+  ///   print(computed.value); // 1 -> because the state change is not tracked
+  /// });
+  ///
+  /// print(computed.value); // 1 -> because the state change is not tracked
+  /// ```
+  /// {@endtemplate}
+  Future<T> untrackedAsync<T>(Future<T> Function() callback) async {
+    try {
+      _untrackedRunningCount++;
+      return await callback();
+    } finally {
+      _untrackedRunningCount--;
+    }
+  }
+
   /// {@template reactter.batch}
   /// Executes the given [callback] function within a batch operation.
   ///
@@ -134,6 +165,47 @@ abstract class StateManagement<S extends IState> implements IContext {
     try {
       _batchRunningCount++;
       return callback();
+    } finally {
+      _batchRunningCount--;
+
+      if (_batchRunningCount == 0) {
+        _endBatch();
+      }
+    }
+  }
+
+  /// {@template reactter.batch_async}
+  /// Executes the given [callback] function within a batch operation asynchronously.
+  ///
+  /// This method is similar to [batch], but it allows the [callback] function to be asynchronous.
+  ///
+  /// The [callback] function should return a [Future] of type [T].
+  /// The returned [Future] will be the result of the batch operation.
+  ///
+  /// Example usage:
+  /// ```dart
+  /// final stateA = Signal(0);
+  /// final stateB = UseAsyncState(0, () async => Future.value(2));
+  /// final computed = UseCompute(
+  ///  () => stateA.value + stateB.value,
+  /// [stateA, stateB],
+  /// );
+  ///
+  /// await Rt.batchAsync(() async {
+  ///  stateA.value = 1;
+  ///  await stateB.resolve();
+  ///
+  ///  print(computed.value); // 0 -> because the batch operation is not completed yet.
+  /// });
+  ///
+  /// print(computed.value); // 3 -> because the batch operation is completed.
+  /// ```
+  ///
+  /// {@endtemplate}
+  Future<T> batchAsync<T>(Future<T> Function() callback) async {
+    try {
+      _batchRunningCount++;
+      return await callback();
     } finally {
       _batchRunningCount--;
 
