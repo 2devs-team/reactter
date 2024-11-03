@@ -24,14 +24,14 @@ class PropertyTile extends StatelessWidget {
           children: [
             Text(
               "${watch(propertyNode).key}: ",
-              style: Theme.of(context).textTheme.labelSmall,
+              style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
             ),
             Flexible(
               child: Text(
                 "${watch(propertyNode).value}",
-                style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
+                style: Theme.of(context).textTheme.labelSmall,
               ),
             ),
           ],

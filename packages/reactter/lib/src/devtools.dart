@@ -320,6 +320,14 @@ class RtDevTools with RtStateObserver, RtDependencyObserver {
     ) as _InstanceNode;
   }
 
+  Map<String, dynamic>? getDebugInfo(String stateKey) {
+    final state = _nodesByKey[stateKey];
+
+    if (state is! _StateNode) return null;
+
+    return state.instance.debugInfo;
+  }
+
   Map<String, dynamic> getDynamicInfo(Object instance) {
     if (instance is DependencyRef) {
       return getDependencyInfo(instance);
@@ -345,7 +353,6 @@ class RtDevTools with RtStateObserver, RtDependencyObserver {
       'key': state.hashCode.toString(),
       'type': state.runtimeType.toString(),
       'debugLabel': state.debugLabel,
-      'debugInfo': state.debugInfo,
       'boundInstanceKey': state.boundInstance?.hashCode.toString(),
     };
   }
@@ -368,6 +375,18 @@ class RtDevTools with RtStateObserver, RtDependencyObserver {
     } else {
       return value.toString();
     }
+  }
+
+  Map<String, dynamic> getPlainInstanceInfo(Object instance) {
+    if (instance is DependencyRef) {
+      return getDependencyInfo(instance);
+    }
+
+    if (instance is RtState) {
+      return getStateInfo(instance);
+    }
+
+    return getInstanceInfo(instance);
   }
 
   String getListString(List data) {
@@ -529,7 +548,6 @@ class _StateNode extends _Node<RtState> {
       'key': key,
       'type': instance.runtimeType.toString(),
       'debugLabel': instance.debugLabel,
-      'debugInfo': instance.debugInfo,
       'boundInstanceKey': instance.boundInstance?.hashCode.toString(),
       'dependencyRef': Rt.getDependencyRef(instance)?.hashCode.toString(),
     };

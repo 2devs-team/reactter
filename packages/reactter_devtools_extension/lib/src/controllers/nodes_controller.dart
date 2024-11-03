@@ -13,12 +13,6 @@ import 'package:reactter_devtools_extension/src/interfaces/node.dart';
 import 'package:reactter_devtools_extension/src/services/devtools_service.dart';
 import 'package:reactter_devtools_extension/src/data/state_node.dart';
 
-enum NodeType {
-  dependency,
-  state,
-  instance,
-}
-
 class NodesController {
   StreamSubscription? extEventSubscription;
 
@@ -47,32 +41,32 @@ class NodesController {
 
       switch (event.extensionKind) {
         case 'ext.reactter.onStateCreated':
-          final stateKey = eventData['stateKey'] as String;
+          final String stateKey = eventData['stateKey'];
           addNodeByKey(stateKey);
           break;
         case 'ext.reactter.onStateBound':
-          final instanceKey = eventData['instanceKey'] as String;
-          final stateKey = eventData['stateKey'] as String;
+          final String instanceKey = eventData['instanceKey'];
+          final String stateKey = eventData['stateKey'];
           addNodeByKey(instanceKey);
           addNodeByKey(stateKey);
           break;
         case 'ext.reactter.onStateUnbound':
-          final instanceKey = eventData['instanceKey'] as String;
-          final isInstanceRemoved = eventData['isInstanceRemoved'] as bool;
+          final String instanceKey = eventData['instanceKey'];
+          final bool isInstanceRemoved = eventData['isInstanceRemoved'];
           if (isInstanceRemoved) removeNodeByKey(instanceKey);
           break;
         case 'ext.reactter.onStateDisposed':
-          final stateKey = eventData['stateKey'] as String;
-          final isStateRemoved = eventData['isStateRemoved'] as bool;
+          final String stateKey = eventData['stateKey'];
+          final bool isStateRemoved = eventData['isStateRemoved'];
           if (isStateRemoved) removeNodeByKey(stateKey);
           break;
         case 'ext.reactter.onDependencyCreated':
-          final instanceKey = eventData['instanceKey'] as String;
+          final String instanceKey = eventData['instanceKey'];
           addNodeByKey(instanceKey);
           break;
         case 'ext.reactter.onDependencyDeleted':
-          final instanceKey = eventData['instanceKey'] as String;
-          final isInstanceRemoved = eventData['isInstanceRemoved'] as bool;
+          final String instanceKey = eventData['instanceKey'];
+          final bool isInstanceRemoved = eventData['isInstanceRemoved'];
           if (isInstanceRemoved) removeNodeByKey(instanceKey);
       }
     });
@@ -89,7 +83,7 @@ class NodesController {
     print('addNodeByKey $nodeKey ${nodeInfo['boundInstanceKey']}');
   }
 
-  void addNodes(List<Map<String, dynamic>> nodesInfo) {
+  void addNodes(List<Map> nodesInfo) {
     Rt.batch(() {
       for (final nodeInfo in nodesInfo) {
         addNodeByMapInfo(nodeInfo);
@@ -100,7 +94,7 @@ class NodesController {
     });
   }
 
-  void addNodeByMapInfo(Map<String, dynamic> nodeInfo) {
+  void addNodeByMapInfo(Map nodeInfo) {
     final kind = nodeInfo['kind'];
     final key = nodeInfo['key'];
     final type = nodeInfo['type'];
