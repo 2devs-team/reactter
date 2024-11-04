@@ -55,6 +55,12 @@ class NodesController {
           final bool isInstanceRemoved = eventData['isInstanceRemoved'];
           if (isInstanceRemoved) removeNodeByKey(instanceKey);
           break;
+        case 'ext.reactter.onStateUpdated':
+          final String stateKey = eventData['stateKey'];
+          if (uCurrentNodeKey.value == stateKey) {
+            print('refresh state');
+          }
+          break;
         case 'ext.reactter.onStateDisposed':
           final String stateKey = eventData['stateKey'];
           final bool isStateRemoved = eventData['isStateRemoved'];

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_reactter/flutter_reactter.dart';
 import 'package:reactter_devtools_extension/src/controllers/nodes_controller.dart';
+import 'package:reactter_devtools_extension/src/widgets/offset_scrollbar.dart';
 import 'package:reactter_devtools_extension/src/widgets/property_tile.dart';
 
 class PropertiesList extends StatelessWidget {
@@ -8,52 +9,68 @@ class PropertiesList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final listKey = GlobalKey();
+    final scrollControllerX = ScrollController();
+    final scrollControllerY = ScrollController();
     final focusNode = FocusNode();
-    final inst = context.use<NodesController>();
+    final nodesController = context.use<NodesController>();
 
-    return SelectableRegion(
-      focusNode: focusNode,
-      selectionControls: materialTextSelectionControls,
-      child: Scrollbar(
-        child: SizedBox.expand(
-          child: RtWatcher(
-            (context, watch) {
-              watch(inst.uCurrentNodeKey).value;
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final viewportWidth = constraints.maxWidth;
 
-              if (inst.currentNode == null) {
-                return const SizedBox();
-              }
+        return Scrollbar(
+          controller: scrollControllerX,
+          thumbVisibility: true,
+          child: SingleChildScrollView(
+            controller: scrollControllerX,
+            scrollDirection: Axis.horizontal,
+            child: Material(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 1000.00),
+                child: OffsetScrollbar(
+                  isAlwaysShown: true,
+                  axis: Axis.vertical,
+                  controller: scrollControllerY,
+                  offsetController: scrollControllerX,
+                  offsetControllerViewportDimension: viewportWidth,
+                  child: SelectableRegion(
+                    focusNode: focusNode,
+                    selectionControls: materialTextSelectionControls,
+                    child: RtWatcher((context, watch) {
+                      watch(nodesController.uCurrentNodeKey);
 
-              final properties = watch(inst.currentNode!.propertyNodes);
+                      final propertyNodes = nodesController.currentNode != null
+                          ? watch(nodesController.currentNode!.propertyNodes)
+                          : null;
 
-              return Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Padding(
-                  //   padding: const EdgeInsets.all(8.0).copyWith(bottom: 4),
-                  //   child: Text("Debug info",
-                  //       style: Theme.of(context).textTheme.bodyMedium),
-                  // ),
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: properties.length,
-                      itemBuilder: (context, index) {
-                        final propertyNode = properties.elementAt(index);
+                      final length = propertyNodes?.length ?? 0;
 
-                        return PropertyTile(
-                          key: ObjectKey(propertyNode),
-                          propertyNode: propertyNode,
-                        );
-                      },
-                    ),
+                      return ListView.custom(
+                        key: listKey,
+                        controller: scrollControllerY,
+                        itemExtent: 24,
+                        childrenDelegate: SliverChildBuilderDelegate(
+                          (context, index) {
+                            final propertyNode =
+                                propertyNodes!.elementAt(index);
+
+                            return PropertyTile(
+                              key: Key(propertyNode.key),
+                              propertyNode: propertyNode,
+                            );
+                          },
+                          childCount: length,
+                        ),
+                      );
+                    }),
                   ),
-                ],
-              );
-            },
+                ),
+              ),
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }

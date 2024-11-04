@@ -100,6 +100,10 @@ base class StateNode extends INode<StateInfo> {
       isAlive: isAlive,
     );
 
+    if (propertiesInst.kind == InstanceKind.kNull) {
+      return;
+    }
+
     assert(propertiesInst.kind == InstanceKind.kMap);
 
     final associations = propertiesInst.associations?.cast<MapAssociation>();

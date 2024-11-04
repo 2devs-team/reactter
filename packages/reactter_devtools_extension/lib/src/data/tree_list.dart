@@ -25,10 +25,12 @@ final class TreeList<E extends TreeNode<E>> extends LinkedList<E>
   void clear() {
     Rt.batch(() {
       for (final entry in this) {
-        (entry as RtState).dispose();
+        if (!entry.isDisposed) entry.dispose();
       }
 
-      update(() => super.clear());
+      super.clear();
+
+      notify();
     });
   }
 }

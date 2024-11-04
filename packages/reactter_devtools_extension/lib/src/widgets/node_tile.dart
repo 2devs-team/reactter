@@ -1,36 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_reactter/flutter_reactter.dart';
+import 'package:reactter_devtools_extension/src/data/constants.dart';
 import 'package:reactter_devtools_extension/src/interfaces/node.dart';
-
-enum NodeKind {
-  instance(label: 'I', color: Colors.orange),
-  state(label: 'S', color: Colors.blue),
-  hook(label: 'H', color: Colors.purple),
-  signal(label: 'S', color: Colors.green);
-
-  const NodeKind({
-    required this.label,
-    required this.color,
-  });
-
-  final String label;
-  final Color color;
-
-  static NodeKind getKind(String kind) {
-    switch (kind) {
-      case 'instance':
-        return instance;
-      case 'state':
-        return state;
-      case 'hook':
-        return hook;
-      case 'signal':
-        return signal;
-      default:
-        return instance;
-    }
-  }
-}
+import 'package:reactter_devtools_extension/src/widgets/tile_builder.dart';
 
 class NodeTile extends StatelessWidget {
   final INode node;
@@ -47,69 +19,11 @@ class NodeTile extends StatelessWidget {
     return RtWatcher((context, watch) {
       final isSelected = watch(node.uIsSelected).value;
 
-      return ListTile(
-        dense: true,
-        visualDensity: const VisualDensity(vertical: 0, horizontal: 0),
-        horizontalTitleGap: 0,
-        minVerticalPadding: 0,
-        contentPadding: EdgeInsets.zero,
-        minTileHeight: 0,
-        selected: isSelected,
-        selectedTileColor: Theme.of(context).focusColor,
+      return TreeNodeTileBuilder(
+        treeNode: node,
+        title: NodeTileTitle(node: node),
+        isSelected: isSelected,
         onTap: onTap,
-        // leading: NodeTileLeading(node: node),
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            ...List.generate(
-              node.depth.toInt() - 1,
-              (index) => Padding(
-                padding: EdgeInsets.only(
-                  left: 20,
-                  right: (index == node.depth.toInt() - 2) ? 0 : 0,
-                ),
-                child: const VerticalDivider(width: 1),
-              ),
-            ),
-            NodeTileLeading(node: node),
-            NodeTileTitle(node: node),
-          ],
-        ),
-      );
-    });
-  }
-}
-
-class NodeTileLeading extends StatelessWidget {
-  final INode node;
-
-  const NodeTileLeading({super.key, required this.node});
-
-  @override
-  Widget build(BuildContext context) {
-    return RtWatcher((context, watch) {
-      final children = watch(node.uChildren).value;
-
-      if (children.isEmpty) {
-        return const SizedBox(width: 11);
-      }
-
-      final isExpanded = watch(node.uIsExpanded).value;
-
-      return Padding(
-        padding: const EdgeInsets.only(left: 8),
-        child: IconButton(
-          padding: EdgeInsets.zero,
-          splashRadius: 18,
-          iconSize: 24,
-          constraints: const BoxConstraints.tightForFinite(),
-          icon: Icon(
-            isExpanded ? Icons.keyboard_arrow_down : Icons.keyboard_arrow_right,
-          ),
-          onPressed: () {
-            node.uIsExpanded.value = !isExpanded;
-          },
-        ),
       );
     });
   }
@@ -127,7 +41,7 @@ class NodeTileIcon extends StatelessWidget {
     return CircleAvatar(
       backgroundColor: nodeKind.color,
       child: Text(
-        nodeKind.label,
+        nodeKind.abbr,
         style: Theme.of(context).textTheme.labelSmall?.copyWith(
               color: Colors.white,
               fontWeight: FontWeight.bold,

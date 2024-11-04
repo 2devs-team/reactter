@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:devtools_app_shared/service.dart';
 import 'package:flutter_reactter/reactter.dart';
 import 'package:reactter_devtools_extension/src/data/constants.dart';
@@ -6,7 +8,7 @@ import 'package:reactter_devtools_extension/src/services/eval_service.dart';
 import 'package:reactter_devtools_extension/src/utils/extensions.dart';
 import 'package:vm_service/vm_service.dart';
 
-const _kMaxValueLength = 80;
+const _kMaxValueLength = 50;
 
 base class PropertyNode extends TreeNode<PropertyNode> {
   final String key;
@@ -17,7 +19,7 @@ base class PropertyNode extends TreeNode<PropertyNode> {
 
   String? _value;
   String? get value {
-    if (_value == null) _loadValueAsync();
+    if (_value == null) Future.microtask(_loadValueAsync);
 
     return _value;
   }
@@ -47,7 +49,7 @@ base class PropertyNode extends TreeNode<PropertyNode> {
 
     uIsLoading.value = true;
 
-    await Rt.batchAsync(() async {
+    await Rt.batch(() async {
       try {
         switch (valueRef.kind) {
           case InstanceKind.kNull:
@@ -56,11 +58,17 @@ base class PropertyNode extends TreeNode<PropertyNode> {
           case InstanceKind.kString:
             _value = '"${valueRef.valueAsString}"';
             break;
+          case InstanceKind.kList:
+            await _resolveValueByList();
+            break;
           case InstanceKind.kMap:
             await _resolveValueByMap();
             break;
-          case InstanceKind.kList:
-            await _resolveValueByList();
+          case InstanceKind.kRecord:
+            await _resolveValueByRecord();
+            break;
+          case InstanceKind.kSet:
+            await _resolveValueBySet();
             break;
           case InstanceKind.kPlainInstance:
             await _resolveValueByPlainInstance();
@@ -70,12 +78,41 @@ base class PropertyNode extends TreeNode<PropertyNode> {
             break;
         }
       } catch (e) {
-        _value = 'Error: $e';
+        _value = 'Unknown - Cannot load value';
       } finally {
         uIsLoading.value = false;
         notify();
       }
     });
+  }
+
+  Future<void> _resolveValueBySet() async {
+    assert(valueRef.kind == InstanceKind.kSet);
+
+    try {
+      final isAlive = Disposable();
+      final instance = await valueRef.safeGetInstance(isAlive);
+      final elements = instance?.elements?.cast<InstanceRef>();
+
+      _value = '{}';
+
+      if (elements?.isEmpty ?? true) return;
+
+      for (var i = 0; i < elements!.length; i++) {
+        addChild(PropertyNode(
+          key: i.toString(),
+          valueRef: elements[i],
+        ));
+      }
+
+      await _resolveValueByChildren(
+        buildValue: (node) => '${node.value}',
+        prefix: '{',
+        suffix: '}',
+      );
+    } finally {
+      notify();
+    }
   }
 
   Future<void> _resolveValueByList() async {
@@ -86,7 +123,7 @@ base class PropertyNode extends TreeNode<PropertyNode> {
       final instance = await valueRef.safeGetInstance(isAlive);
       final elements = instance?.elements?.cast<InstanceRef>();
 
-      _value = '[...]';
+      _value = '[]';
 
       if (elements?.isEmpty ?? true) return;
 
@@ -102,8 +139,6 @@ base class PropertyNode extends TreeNode<PropertyNode> {
         prefix: '[',
         suffix: ']',
       );
-    } catch (e) {
-      print('_resolveValueByList error: $e');
     } finally {
       notify();
     }
@@ -117,7 +152,7 @@ base class PropertyNode extends TreeNode<PropertyNode> {
       final instance = await valueRef.safeGetInstance(isAlive);
       final associations = instance?.associations;
 
-      _value = '{...}';
+      _value = '{}';
 
       if (associations == null) return;
 
@@ -138,13 +173,40 @@ base class PropertyNode extends TreeNode<PropertyNode> {
         prefix: '{',
         suffix: '}',
       );
-    } catch (e) {
-      print('_resolveMap error: $e');
     } finally {
       notify();
     }
 
     return;
+  }
+
+  Future<void> _resolveValueByRecord() async {
+    assert(valueRef.kind == InstanceKind.kRecord);
+
+    try {
+      final isAlive = Disposable();
+      final instance = await valueRef.safeGetInstance(isAlive);
+      final fields = instance?.fields?.cast<BoundField>();
+
+      _value = '()';
+
+      for (var i = 0; i < fields!.length; i++) {
+        final field = fields[i];
+
+        addChild(PropertyNode(
+          key: field.name.toString(),
+          valueRef: field.value,
+        ));
+      }
+
+      await _resolveValueByChildren(
+        buildValue: (node) => '${node.key}: ${node.value}',
+        prefix: '(',
+        suffix: ')',
+      );
+    } finally {
+      notify();
+    }
   }
 
   Future<void> _resolveValueByChildren({
@@ -164,15 +226,28 @@ base class PropertyNode extends TreeNode<PropertyNode> {
     for (var i = 0; i < children.length; i++) {
       final child = children[i];
       final isLast = i == children.length - 1;
-      await child._loadValueAsync();
 
-      childrenValueBuffer.write("${buildValue(child)}${isLast ? '' : ', '}");
+      switch (child.valueRef.kind) {
+        case InstanceKind.kMap:
+        case InstanceKind.kSet:
+          childrenValueBuffer.write("{...}${isLast ? '' : ', '}");
+          break;
+        case InstanceKind.kList:
+          childrenValueBuffer.write("[...]${isLast ? '' : ', '}");
+          break;
+        default:
+          await child._loadValueAsync();
+          childrenValueBuffer
+              .write("${buildValue(child)}${isLast ? '' : ', '}");
+          break;
+      }
 
       if (childrenValueBuffer.length > _kMaxValueLength) {
         isFull = isLast;
         break;
       }
     }
+
     final moreEllipsis = isFull ? '' : ', ...';
     final maxValueBufferLength =
         _kMaxValueLength - prefix.length - moreEllipsis.length - suffix.length;
@@ -200,6 +275,13 @@ base class PropertyNode extends TreeNode<PropertyNode> {
           'RtDevTools._instance?.getPlainInstanceInfo(value)',
           isAlive: isAlive,
           scope: {'value': valueRef.id!},
+        ),
+      );
+      final dartEval = await EvalService.dartEval;
+      final records = await EvalService.evalsQueue.add(
+        () => dartEval.evalInstance(
+          "('first', a: 2, b: true, 'last')",
+          isAlive: isAlive,
         ),
       );
 
@@ -234,8 +316,6 @@ base class PropertyNode extends TreeNode<PropertyNode> {
           _value = "$type#$key";
           break;
       }
-    } catch (e) {
-      print('loadValueFromPlainInstance error: $e');
     } finally {
       notify();
     }
