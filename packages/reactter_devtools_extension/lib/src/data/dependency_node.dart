@@ -81,7 +81,7 @@ base class DependencyNode extends INode<DependencyInfo> {
   }
 
   @override
-  void loadDetails() {
+  Future<void> loadDetails() async {
     // TODO: implement loadDetails
   }
 }

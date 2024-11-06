@@ -56,7 +56,7 @@ class PropertiesList extends StatelessWidget {
                                 propertyNodes!.elementAt(index);
 
                             return PropertyTile(
-                              key: Key(propertyNode.key),
+                              key: ObjectKey(propertyNode),
                               propertyNode: propertyNode,
                             );
                           },

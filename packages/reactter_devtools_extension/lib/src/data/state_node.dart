@@ -14,9 +14,7 @@ base class StateNode extends INode<StateInfo> {
     required super.key,
     required super.kind,
     required super.type,
-  }) {
-    // _loadStateNode();
-  }
+  });
 
   factory StateNode({
     required String key,
@@ -30,48 +28,6 @@ base class StateNode extends INode<StateInfo> {
         type: type,
       ),
     );
-  }
-
-  Future<dynamic> _loadStateNode() async {
-    uIsLoading.value = true;
-
-    final eval = await EvalService.devtoolsEval;
-    final isAlive = Disposable();
-
-    final stateNode = await eval.evalInstance(
-      'RtDevTools._instance?.getStateInfo("$key")',
-      isAlive: isAlive,
-    );
-
-    assert(stateNode.kind == InstanceKind.kMap);
-
-    final stateNodeAssociations =
-        stateNode.associations?.cast<MapAssociation>();
-
-    assert(stateNodeAssociations != null);
-
-    String? label;
-
-    for (var element in stateNodeAssociations!) {
-      assert(element.key != null && element.value != null);
-
-      final eKey = element.key!.valueAsString!;
-      final eValue = element.value!.valueAsString!;
-
-      if (element.value!.kind == InstanceKind.kNull) continue;
-
-      switch (eKey) {
-        case 'label':
-          label = eValue;
-          break;
-      }
-    }
-
-    uInfo.value = StateInfo(
-      label: label,
-    );
-
-    uIsLoading.value = false;
   }
 
   @override
@@ -95,36 +51,30 @@ base class StateNode extends INode<StateInfo> {
     final eval = await EvalService.devtoolsEval;
     final isAlive = Disposable();
 
-    final propertiesInst = await eval.evalInstance(
+    final debugInfoValue = await eval.evalInstance(
       'RtDevTools._instance?.getDebugInfo("$key")',
       isAlive: isAlive,
     );
 
-    if (propertiesInst.kind == InstanceKind.kNull) {
-      return;
+    PropertyNode? propertyNode;
+
+    for (final node in propertyNodes) {
+      if (node.key == 'debugInfo') {
+        propertyNode = node;
+        break;
+      }
     }
 
-    assert(propertiesInst.kind == InstanceKind.kMap);
-
-    final associations = propertiesInst.associations?.cast<MapAssociation>();
-
-    assert(associations != null);
-
-    final properties = <PropertyNode>[];
-
-    for (final association in associations!) {
-      final key = association.key!.valueAsString!;
-      final valueRef = association.value;
-
-      properties.add(
+    if (propertyNode == null) {
+      propertyNodes.add(
         PropertyNode(
-          key: key,
-          valueRef: valueRef,
+          key: 'debugInfo',
+          valueRef: debugInfoValue,
+          isExpanded: true,
         ),
       );
+    } else {
+      propertyNode.reassignValueRef(debugInfoValue);
     }
-
-    propertyNodes.clear();
-    propertyNodes.addAll(properties);
   }
 }

@@ -14,37 +14,45 @@ class PropertyTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RtWatcher((context, watch) {
-      return TreeNodeTileBuilder(
-        treeNode: propertyNode,
-        title: Row(
-          children: [
-            if (watch(propertyNode.uChildren).value.isEmpty)
-              const SizedBox(width: 22),
-            Text(
-              "${watch(propertyNode).key}: ",
-              style: Theme.of(context)
-                  .textTheme
-                  .labelSmall
-                  ?.copyWith(color: Theme.of(context).colorScheme.primary),
-            ),
-            RtWatcher((context, watch) {
-              final isLoading = watch(propertyNode.uIsLoading).value;
+    return TreeNodeTileBuilder(
+      key: key,
+      treeNode: propertyNode,
+      title: Row(
+        children: [
+          RtWatcher((context, watch) {
+            return SizedBox(
+              width: watch(propertyNode.uChildren).value.isEmpty ? 22 : 0,
+            );
+          }),
+          Text(
+            "${propertyNode.key}: ",
+            style: Theme.of(context)
+                .textTheme
+                .labelSmall
+                ?.copyWith(color: Theme.of(context).colorScheme.primary),
+          ),
+          FutureBuilder<String?>(
+            future: propertyNode.getValueAsync(),
+            builder: (context, snapshot) {
+              return RtWatcher((context, watch) {
+                final isLoading = watch(propertyNode.uIsLoading).value;
+                final value = watch(propertyNode.uValue).value;
 
-              if (isLoading || watch(propertyNode).value == null) {
-                return const Loading();
-              }
+                if (isLoading) {
+                  return const Loading();
+                }
 
-              return Text(
-                "${watch(propertyNode).value}",
-                style: Theme.of(context).textTheme.labelSmall,
-              );
-            }),
-          ],
-        ),
-        isSelected: false,
-        onTap: () {},
-      );
-    });
+                return Text(
+                  value ?? '...',
+                  style: Theme.of(context).textTheme.labelSmall,
+                );
+              });
+            },
+          ),
+        ],
+      ),
+      isSelected: false,
+      onTap: () {},
+    );
   }
 }

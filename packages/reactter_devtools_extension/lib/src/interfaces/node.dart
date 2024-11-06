@@ -19,5 +19,5 @@ abstract base class INode<I extends INodeInfo> extends TreeNode<INode> {
     required this.type,
   });
 
-  void loadDetails();
+  Future<void> loadDetails();
 }

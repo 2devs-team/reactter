@@ -57,9 +57,7 @@ class NodesController {
           break;
         case 'ext.reactter.onStateUpdated':
           final String stateKey = eventData['stateKey'];
-          if (uCurrentNodeKey.value == stateKey) {
-            print('refresh state');
-          }
+          if (uCurrentNodeKey.value == stateKey) currentNode?.loadDetails();
           break;
         case 'ext.reactter.onStateDisposed':
           final String stateKey = eventData['stateKey'];

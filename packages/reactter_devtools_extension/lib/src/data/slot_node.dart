@@ -20,7 +20,7 @@ base class SlotNode extends INode<INodeInfo> {
   }
 
   @override
-  void loadDetails() {
+  Future<void> loadDetails() async {
     // TODO: implement loadDetails
   }
 }

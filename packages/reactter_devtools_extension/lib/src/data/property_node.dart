@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:collection';
 
 import 'package:devtools_app_shared/service.dart';
 import 'package:flutter_reactter/reactter.dart';
@@ -12,235 +13,243 @@ const _kMaxValueLength = 50;
 
 base class PropertyNode extends TreeNode<PropertyNode> {
   final String key;
-  final InstanceRef valueRef;
-  final instanceInfo = UseState<Map<String, dynamic>?>(null);
 
+  InstanceRef _valueRef;
+  InstanceRef get valueRef => _valueRef;
+  Disposable? isAlive;
+  bool _isResolved = false;
+
+  FutureOr<String?>? _valueFuture;
+
+  final LinkedHashMap<String, PropertyNode> _childNodeRefs =
+      LinkedHashMap<String, PropertyNode>();
+
+  final uValue = UseState<String?>(null);
+  final uInstanceInfo = UseState<Map<String, dynamic>?>(null);
   final uIsLoading = UseState(false);
-
-  String? _value;
-  String? get value {
-    if (_value == null) Future.microtask(_loadValueAsync);
-
-    return _value;
-  }
 
   PropertyNode._({
     required this.key,
-    required this.valueRef,
-  }) {
-    uIsExpanded.value = false;
+    required InstanceRef valueRef,
+    bool isExpanded = false,
+  }) : _valueRef = valueRef {
+    uIsExpanded.value = isExpanded;
   }
 
   factory PropertyNode({
     PropertyNode? parent,
     required String key,
     required InstanceRef valueRef,
+    bool isExpanded = false,
   }) {
     return Rt.createState(
       () => PropertyNode._(
         key: key,
         valueRef: valueRef,
+        isExpanded: isExpanded,
       ),
     );
   }
 
-  Future<void> _loadValueAsync() async {
-    if (uIsLoading.value) return;
+  Future<void> reassignValueRef(InstanceRef valueRef) async {
+    isAlive?.dispose();
+    _isResolved = false;
+    _valueRef = valueRef;
+    _valueFuture = null;
+    uIsLoading.value = false;
 
-    uIsLoading.value = true;
+    if (list == null) return;
 
-    await Rt.batch(() async {
+    await getValueAsync();
+  }
+
+  Future<String?> getValueAsync() async {
+    if (_valueFuture != null) return _valueFuture!;
+    if (_isResolved) return Future.value(uValue.value);
+    if (uIsLoading.value) return Future.value(uValue.value);
+
+    return _valueFuture = Rt.batch<String?>(() async {
+      uIsLoading.value = true;
+      isAlive = Disposable();
+      String? value;
+
       try {
         switch (valueRef.kind) {
-          case InstanceKind.kNull:
-            _value = 'null';
-            break;
-          case InstanceKind.kString:
-            _value = '"${valueRef.valueAsString}"';
-            break;
           case InstanceKind.kList:
-            await _resolveValueByList();
+            value = await _resolveValueByList();
             break;
           case InstanceKind.kMap:
-            await _resolveValueByMap();
+            value = await _resolveValueByMap();
             break;
           case InstanceKind.kRecord:
-            await _resolveValueByRecord();
+            value = await _resolveValueByRecord();
             break;
           case InstanceKind.kSet:
-            await _resolveValueBySet();
+            value = await _resolveValueBySet();
             break;
           case InstanceKind.kPlainInstance:
-            await _resolveValueByPlainInstance();
+            value = await _resolveValueByPlainInstance();
+            break;
+          case InstanceKind.kNull:
+            value = 'null';
+            uChildren.value.clear();
+            break;
+          case InstanceKind.kString:
+            value = '"${valueRef.valueAsString}"';
+            uChildren.value.clear();
             break;
           default:
-            _value = valueRef.valueAsString;
+            value = valueRef.valueAsString;
+            uChildren.value.clear();
             break;
         }
       } catch (e) {
-        _value = 'Unknown - Cannot load value';
-      } finally {
-        uIsLoading.value = false;
-        notify();
+        value = null;
       }
+
+      value ??= 'Unknown - Cannot load value';
+
+      _isResolved = true;
+      uIsLoading.value = false;
+      return uValue.value = value;
     });
   }
 
-  Future<void> _resolveValueBySet() async {
+  Future<String?> _resolveValueBySet() async {
     assert(valueRef.kind == InstanceKind.kSet);
 
-    try {
-      final isAlive = Disposable();
-      final instance = await valueRef.safeGetInstance(isAlive);
-      final elements = instance?.elements?.cast<InstanceRef>();
+    final instance = await valueRef.safeGetInstance(isAlive);
+    final elements = instance?.elements?.cast<InstanceRef>() ?? [];
+    final children = {
+      for (var i = 0; i < elements.length; i++) i.toString(): elements[i],
+    };
 
-      _value = '{}';
+    await _addChildren(children);
 
-      if (elements?.isEmpty ?? true) return;
-
-      for (var i = 0; i < elements!.length; i++) {
-        addChild(PropertyNode(
-          key: i.toString(),
-          valueRef: elements[i],
-        ));
-      }
-
-      await _resolveValueByChildren(
-        buildValue: (node) => '${node.value}',
-        prefix: '{',
-        suffix: '}',
-      );
-    } finally {
-      notify();
-    }
+    return await _resolveValueByChildren(
+      buildValue: (key, value) => '$value',
+      prefix: '{',
+      suffix: '}',
+    );
   }
 
-  Future<void> _resolveValueByList() async {
+  Future<String?> _resolveValueByList() async {
     assert(valueRef.kind == InstanceKind.kList);
 
-    try {
-      final isAlive = Disposable();
-      final instance = await valueRef.safeGetInstance(isAlive);
-      final elements = instance?.elements?.cast<InstanceRef>();
+    final instance = await valueRef.safeGetInstance(isAlive);
+    final elements = instance?.elements?.cast<InstanceRef>() ?? [];
+    final children = {
+      for (var i = 0; i < elements.length; i++) i.toString(): elements[i],
+    };
 
-      _value = '[]';
+    await _addChildren(children);
 
-      if (elements?.isEmpty ?? true) return;
-
-      for (var i = 0; i < elements!.length; i++) {
-        addChild(PropertyNode(
-          key: i.toString(),
-          valueRef: elements[i],
-        ));
-      }
-
-      await _resolveValueByChildren(
-        buildValue: (node) => '${node.value}',
-        prefix: '[',
-        suffix: ']',
-      );
-    } finally {
-      notify();
-    }
+    return await _resolveValueByChildren(
+      buildValue: (key, value) => "$value",
+      prefix: '[',
+      suffix: ']',
+    );
   }
 
-  Future<void> _resolveValueByMap() async {
+  Future<String?> _resolveValueByMap() async {
     assert(valueRef.kind == InstanceKind.kMap);
 
-    try {
-      final isAlive = Disposable();
-      final instance = await valueRef.safeGetInstance(isAlive);
-      final associations = instance?.associations;
+    final instance = await valueRef.safeGetInstance(isAlive);
+    final associations = instance?.associations?.cast<MapAssociation>() ?? [];
+    final children = <String, InstanceRef>{};
 
-      _value = '{}';
+    for (final entry in associations) {
+      final keyRef = entry.key as InstanceRef;
+      final key = await keyRef.evalValueFirstLevel(isAlive);
 
-      if (associations == null) return;
-
-      for (final entry in associations) {
-        final InstanceRef keyRef = entry.key;
-        final InstanceRef valueRef = entry.value;
-
-        final key = await keyRef.evalValueFirstLevel(isAlive);
-
-        addChild(PropertyNode(
-          key: key.toString(),
-          valueRef: valueRef,
-        ));
-      }
-
-      await _resolveValueByChildren(
-        buildValue: (node) => '${node.key}: ${node.value}',
-        prefix: '{',
-        suffix: '}',
-      );
-    } finally {
-      notify();
+      children[key.toString()] = entry.value;
     }
 
-    return;
+    await _addChildren(children);
+
+    return await _resolveValueByChildren(
+      buildValue: (key, value) => '$key: $value',
+      prefix: '{',
+      suffix: '}',
+    );
   }
 
-  Future<void> _resolveValueByRecord() async {
+  Future<String?> _resolveValueByRecord() async {
     assert(valueRef.kind == InstanceKind.kRecord);
 
-    try {
-      final isAlive = Disposable();
-      final instance = await valueRef.safeGetInstance(isAlive);
-      final fields = instance?.fields?.cast<BoundField>();
+    final instance = await valueRef.safeGetInstance(isAlive);
+    final fields = instance?.fields?.cast<BoundField>() ?? [];
+    final children = {
+      for (final field in fields)
+        field.name.toString(): field.value as InstanceRef,
+    };
 
-      _value = '()';
+    await _addChildren(children);
 
-      for (var i = 0; i < fields!.length; i++) {
-        final field = fields[i];
+    return await _resolveValueByChildren(
+      buildValue: (key, value) => '$key: $value',
+      prefix: '(',
+      suffix: ')',
+    );
+  }
 
-        addChild(PropertyNode(
-          key: field.name.toString(),
-          valueRef: field.value,
-        ));
-      }
+  Future<void> _addChildren(Map<String, InstanceRef> children) async {
+    final childrenToRemove = _childNodeRefs.keys.toSet();
 
-      await _resolveValueByChildren(
-        buildValue: (node) => '${node.key}: ${node.value}',
-        prefix: '(',
-        suffix: ')',
+    for (final child in children.entries) {
+      final isRemoved = childrenToRemove.remove(child.key);
+      final childNode = _childNodeRefs.putIfAbsent(
+        child.key,
+        () => PropertyNode(
+          key: child.key,
+          valueRef: child.value,
+        ),
       );
-    } finally {
-      notify();
+
+      if (isRemoved) {
+        childNode.reassignValueRef(child.value);
+      } else {
+        addChild(childNode);
+      }
+    }
+
+    for (final childKey in childrenToRemove) {
+      final childNode = _childNodeRefs.remove(childKey);
+      childNode?.remove();
     }
   }
 
-  Future<void> _resolveValueByChildren({
-    required String Function(PropertyNode node) buildValue,
+  Future<String?> _resolveValueByChildren({
+    required String Function(String key, String? value) buildValue,
     String prefix = '{',
     String suffix = '}',
   }) async {
     final children = uChildren.value.toList();
-
-    _value = '$prefix...$suffix';
-
-    if (children.isEmpty) return;
-
     final childrenValueBuffer = StringBuffer();
     var isFull = true;
 
     for (var i = 0; i < children.length; i++) {
       final child = children[i];
       final isLast = i == children.length - 1;
+      String? value;
 
       switch (child.valueRef.kind) {
         case InstanceKind.kMap:
         case InstanceKind.kSet:
-          childrenValueBuffer.write("{...}${isLast ? '' : ', '}");
+          value = '{...}';
           break;
         case InstanceKind.kList:
-          childrenValueBuffer.write("[...]${isLast ? '' : ', '}");
+          value = '[...]';
           break;
         default:
-          await child._loadValueAsync();
-          childrenValueBuffer
-              .write("${buildValue(child)}${isLast ? '' : ', '}");
+          await child.getValueAsync();
+          value = child.uValue.value;
           break;
       }
+
+      childrenValueBuffer.write(
+        "${buildValue(child.key, value)}${isLast ? '' : ', '}",
+      );
 
       if (childrenValueBuffer.length > _kMaxValueLength) {
         isFull = isLast;
@@ -261,65 +270,38 @@ base class PropertyNode extends TreeNode<PropertyNode> {
           )
         : childrenValue;
 
-    _value = "$prefix$childrenValueCutted$cuttedEllipsis$moreEllipsis$suffix";
+    return "$prefix$childrenValueCutted$cuttedEllipsis$moreEllipsis$suffix";
   }
 
-  Future<void> _resolveValueByPlainInstance() async {
+  Future<String?> _resolveValueByPlainInstance() async {
     assert(valueRef.kind == InstanceKind.kPlainInstance);
 
-    try {
-      final isAlive = Disposable();
-      final eval = await EvalService.devtoolsEval;
-      final valueInfo = await EvalService.evalsQueue.add(
-        () => eval.evalInstance(
-          'RtDevTools._instance?.getPlainInstanceInfo(value)',
-          isAlive: isAlive,
-          scope: {'value': valueRef.id!},
-        ),
-      );
-      final dartEval = await EvalService.dartEval;
-      final records = await EvalService.evalsQueue.add(
-        () => dartEval.evalInstance(
-          "('first', a: 2, b: true, 'last')",
-          isAlive: isAlive,
-        ),
-      );
+    final eval = await EvalService.devtoolsEval;
+    final valueInfo = await EvalService.evalsQueue.add(
+      () => eval.evalInstance(
+        'RtDevTools._instance?.getPlainInstanceInfo(value)',
+        isAlive: isAlive,
+        scope: {'value': valueRef.id!},
+      ),
+    );
 
-      if (valueInfo.kind != InstanceKind.kMap) return;
+    if (valueInfo.kind != InstanceKind.kMap) return null;
 
-      final valueInfoMap = await valueInfo.evalValue(isAlive);
+    final valueInfoMap = await valueInfo.evalValue(isAlive);
 
-      if (valueInfoMap is! Map) return;
+    if (valueInfoMap is! Map) return null;
 
-      instanceInfo.value = valueInfoMap.cast<String, dynamic>();
+    uInstanceInfo.value = valueInfoMap.cast<String, dynamic>();
 
-      final String kind = valueInfoMap['kind'];
-      final String key = valueInfoMap['key'];
-      final String type = valueInfoMap['type'];
+    final String kind = valueInfoMap['kind'];
+    final String key = valueInfoMap['key'];
+    final String type = valueInfoMap['type'];
+    final String? id = valueInfoMap['id'];
+    final String? debugLabel = valueInfoMap['debugLabel'];
+    final String? idOrDebugLabel = id ?? debugLabel;
 
-      switch (NodeType.fromString(kind)) {
-        case NodeType.state:
-          final String? debugLabel = valueInfoMap['debugLabel'];
-
-          if (debugLabel?.isNotEmpty ?? false) {
-            _value = "$type($debugLabel)#$key";
-            break;
-          }
-        case NodeType.dependency:
-          final String? id = valueInfoMap['id'];
-
-          if (id?.isNotEmpty ?? false) {
-            _value = "$type($id)#$key";
-            break;
-          }
-        default:
-          _value = "$type#$key";
-          break;
-      }
-    } finally {
-      notify();
-    }
-
-    return;
+    return idOrDebugLabel != null
+        ? "$type($idOrDebugLabel)#$key"
+        : "$type#$key";
   }
 }
