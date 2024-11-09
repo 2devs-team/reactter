@@ -368,13 +368,14 @@ class RtDevTools with RtStateObserver, RtDependencyObserver {
   String getPropertyValue(value) {
     if (value is List) {
       return getListString(value);
-    } else if (value is Map) {
-      return getMapString(value);
-    } else if (value is Set) {
-      return getSetString(value);
-    } else {
-      return value.toString();
     }
+    if (value is Map) {
+      return getMapString(value);
+    }
+    if (value is Set) {
+      return getSetString(value);
+    }
+    return value.toString();
   }
 
   Map<String, dynamic> getPlainInstanceInfo(Object instance) {

@@ -164,23 +164,25 @@ abstract class RtStateBase<E extends RtStateBase<E>> implements RtState {
   /// If [Rt._isUntrackedRunning] is true, the notification is skipped.
   /// If [Rt._isBatchRunning] is true, the notification is deferred until the batch is completed.
   /// The [event] is emitted using [Rt.emit] for the current instance and [_boundInstance].
-  void _notify(Enum event) {
+  void _notify(Enum event, [dynamic param]) {
     if (stateManagement._isUntrackedRunning) return;
 
     final emit = stateManagement._isBatchRunning
         ? stateManagement._emitDefferred
         : eventHandler.emit;
 
-    emit(this, event, this);
+    final finalParam = param ?? this;
+
+    emit(this, event, finalParam);
 
     if (_boundInstance == null) return;
 
     if (_boundInstance is RtStateBase &&
         !(_boundInstance as RtStateBase)._isDisposed) {
-      return (_boundInstance as RtStateBase)._notify(event);
+      return (_boundInstance as RtStateBase)._notify(event, finalParam);
     }
 
-    emit(_boundInstance!, event, this);
+    emit(_boundInstance!, event, finalParam);
   }
 
   void _notifyCreated() {
