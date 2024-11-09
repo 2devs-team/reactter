@@ -99,8 +99,8 @@ class ProvideImpl<T extends Object?, I extends String?> extends ProviderBase<T>
     context.dependOnInheritedElement(
       providerInheritedElement!,
       aspect: listenStates == null
-          ? InstanceDependency(instance)
-          : StatesDependency(listenStates(instance).toSet()),
+          ? InstanceDependency<T>(instance)
+          : StatesDependency<T>(listenStates(instance).toSet()),
     );
 
     return instance;

@@ -163,7 +163,7 @@ class RtSelector<T extends Object?, V> extends StatelessWidget {
         ? inheritedElement.instance
         : null;
 
-    final dependency = SelectDependency(
+    final dependency = SelectDependency<T>(
       instance: instance as T,
       computeValue: selector as dynamic,
     );
