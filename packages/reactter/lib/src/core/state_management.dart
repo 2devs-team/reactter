@@ -96,7 +96,7 @@ abstract class StateManagement<S extends IState> implements IContext {
     try {
       _untrackedRunningCount++;
 
-      return await callback();
+      return callback is Future Function() ? await callback() : callback();
     } finally {
       _untrackedRunningCount--;
     }
@@ -135,7 +135,7 @@ abstract class StateManagement<S extends IState> implements IContext {
     try {
       _batchRunningCount++;
 
-      return await callback();
+      return callback is Future Function() ? await callback() : callback();
     } finally {
       _batchRunningCount--;
 

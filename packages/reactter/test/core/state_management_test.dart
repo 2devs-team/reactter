@@ -63,10 +63,49 @@ void main() {
 
       expect(computed.value, 1);
     });
+
+    test("should run the async callback without tracking the changes",
+        () async {
+      final state = UseState(0);
+      final computed = UseCompute(() => state.value + 1, [state]);
+
+      await Rt.untracked(() async {
+        await Future.delayed(Duration(milliseconds: 10));
+
+        state.value = 2;
+
+        expect(computed.value, 1);
+      });
+
+      expect(computed.value, 1);
+    });
+
+    test("should run the async callback as nested untracked", () async {
+      final state = UseState(0);
+      final computed = UseCompute(() => state.value + 1, [state]);
+
+      await Rt.untracked(() async {
+        await Future.delayed(Duration(milliseconds: 10));
+
+        await Rt.untracked(() async {
+          await Future.delayed(Duration(milliseconds: 10));
+
+          state.value = 2;
+
+          expect(computed.value, 1);
+        });
+
+        state.value += 1;
+
+        expect(computed.value, 1);
+      });
+
+      expect(computed.value, 1);
+    });
   });
 
   group("batch", () {
-    test("should run the callback and change the state after the batch", () {
+    test("should run the callback and reflect the state after the batch", () {
       final state = UseState(0);
       final computed = UseCompute(() => state.value + 1, [state]);
 
@@ -118,6 +157,55 @@ void main() {
 
       // stateA(2) + stateB(3) + stateC(1)
       expect(computed.value, 6);
+    });
+
+    test("should run the async callback and reflect the state after the batch",
+        () async {
+      final stateA = UseState(0);
+      final stateB = UseState(0);
+      final computed = UseCompute(
+        () => stateA.value + stateB.value,
+        [stateA, stateB],
+      );
+
+      await Rt.batch(() async {
+        stateA.value += 1; // 1
+
+        await Future.delayed(Duration(milliseconds: 10));
+
+        stateB.value += 2; // 2
+
+        expect(computed.value, 0);
+      });
+
+      // stateA(1) + stateB(2)
+      expect(computed.value, 3);
+    });
+
+    test("should run the async callback as nested batch", () async {
+      final stateA = UseState(0);
+      final stateB = UseState(0);
+      final computed = UseCompute(
+        () => stateA.value + stateB.value,
+        [stateA, stateB],
+      );
+
+      await Rt.batch(() async {
+        stateA.value += 1; // 1
+
+        await Future.delayed(Duration(milliseconds: 10));
+
+        await Rt.batch(() async {
+          stateB.value += 2; // 2
+
+          expect(computed.value, 0);
+        });
+
+        expect(computed.value, 0);
+      });
+
+      // stateA(1) + stateB(2)
+      expect(computed.value, 3);
     });
   });
 }
