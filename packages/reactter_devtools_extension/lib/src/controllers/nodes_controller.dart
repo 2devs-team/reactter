@@ -32,6 +32,9 @@ class NodesController {
 
     final vmService = await serviceManager.onServiceAvailable;
 
+    // Listen hot-restart for re-fetching all nodes
+    serviceManager.isolateManager.selectedIsolate.addListener(getAllNodes);
+
     extEventSubscription = vmService.onExtensionEvent.listen((event) {
       if (!(event.extensionKind?.startsWith('ext.reactter.') ?? false)) {
         return;
@@ -77,8 +80,15 @@ class NodesController {
   }
 
   Future<void> getAllNodes() async {
+    resetState();
     final nodesInfo = await devtoolsSevices.getAllNodes();
     addNodes(nodesInfo);
+  }
+
+  void resetState() {
+    nodesList.clear();
+    uNodes.value.clear();
+    uCurrentNodeKey.value = null;
   }
 
   Future<void> addNodeByKey(String nodeKey) async {

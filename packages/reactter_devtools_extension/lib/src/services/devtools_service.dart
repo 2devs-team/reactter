@@ -20,7 +20,7 @@ class DevtoolsService {
       ),
     );
 
-    assert(pageNodes.kind == InstanceKind.kMap);
+    if (pageNodes.kind == InstanceKind.kNull) return [];
 
     final Map pageInfo = await pageNodes.evalValue(isAlive);
     final totalPages = pageInfo['totalPages'] as int;
