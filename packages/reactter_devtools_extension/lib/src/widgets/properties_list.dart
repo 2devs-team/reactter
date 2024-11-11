@@ -9,7 +9,6 @@ class PropertiesList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final listKey = GlobalKey();
     final scrollControllerX = ScrollController();
     final scrollControllerY = ScrollController();
     final focusNode = FocusNode();
@@ -47,7 +46,7 @@ class PropertiesList extends StatelessWidget {
                       final length = propertyNodes?.length ?? 0;
 
                       return ListView.custom(
-                        key: listKey,
+                        key: ObjectKey(propertyNodes),
                         controller: scrollControllerY,
                         itemExtent: 24,
                         childrenDelegate: SliverChildBuilderDelegate(
@@ -56,7 +55,6 @@ class PropertiesList extends StatelessWidget {
                                 propertyNodes!.elementAt(index);
 
                             return PropertyTile(
-                              key: ObjectKey(propertyNode),
                               propertyNode: propertyNode,
                             );
                           },

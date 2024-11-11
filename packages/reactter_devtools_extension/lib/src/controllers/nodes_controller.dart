@@ -84,7 +84,6 @@ class NodesController {
   Future<void> addNodeByKey(String nodeKey) async {
     final nodeInfo = await devtoolsSevices.getNodeBykey(nodeKey);
     addNodeByMapInfo(nodeInfo);
-    print('addNodeByKey $nodeKey ${nodeInfo['boundInstanceKey']}');
   }
 
   void addNodes(List<Map> nodesInfo) {

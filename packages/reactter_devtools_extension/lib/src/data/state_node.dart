@@ -5,8 +5,6 @@ import 'package:reactter_devtools_extension/src/data/property_node.dart';
 import 'package:reactter_devtools_extension/src/data/state_info.dart';
 import 'package:reactter_devtools_extension/src/services/eval_service.dart';
 
-import 'package:vm_service/vm_service.dart';
-
 base class StateNode extends INode<StateInfo> {
   final uIsLoading = UseState(false);
 
@@ -74,7 +72,7 @@ base class StateNode extends INode<StateInfo> {
         ),
       );
     } else {
-      propertyNode.reassignValueRef(debugInfoValue);
+      propertyNode.updateValueRef(debugInfoValue);
     }
   }
 }

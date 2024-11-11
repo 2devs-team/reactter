@@ -34,9 +34,9 @@ class TreeNodeTileBuilder extends StatelessWidget {
         children: [
           ...List.generate(
             treeNode.depth.toInt() - 1,
-            (index) => Padding(
+            (index) => Container(
               padding: EdgeInsets.only(
-                left: 20,
+                left: 10,
                 right: (index == treeNode.depth.toInt() - 2) ? 0 : 0,
               ),
               child: const VerticalDivider(width: 1),
@@ -61,22 +61,20 @@ class TileExpandable extends StatelessWidget {
       final children = watch(treeNode.uChildren).value;
 
       if (children.isEmpty) {
-        return const SizedBox(width: 11);
+        return Container(
+          width: 24,
+        );
       }
 
       final isExpanded = watch(treeNode.uIsExpanded).value;
 
-      return Padding(
-        padding: const EdgeInsets.only(left: 8),
-        child: IconButton(
-          padding: EdgeInsets.zero,
-          splashRadius: 18,
-          iconSize: 24,
-          constraints: const BoxConstraints.tightForFinite(),
-          icon: Icon(
+      return Container(
+        padding: const EdgeInsets.only(left: 0),
+        child: InkWell(
+          child: Icon(
             isExpanded ? Icons.keyboard_arrow_down : Icons.keyboard_arrow_right,
           ),
-          onPressed: () {
+          onTap: () {
             treeNode.uIsExpanded.value = !isExpanded;
           },
         ),

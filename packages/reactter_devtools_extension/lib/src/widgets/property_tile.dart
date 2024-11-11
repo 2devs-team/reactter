@@ -15,15 +15,9 @@ class PropertyTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TreeNodeTileBuilder(
-      key: key,
       treeNode: propertyNode,
       title: Row(
         children: [
-          RtWatcher((context, watch) {
-            return SizedBox(
-              width: watch(propertyNode.uChildren).value.isEmpty ? 22 : 0,
-            );
-          }),
           Text(
             "${propertyNode.key}: ",
             style: Theme.of(context)
@@ -31,24 +25,21 @@ class PropertyTile extends StatelessWidget {
                 .labelSmall
                 ?.copyWith(color: Theme.of(context).colorScheme.primary),
           ),
-          FutureBuilder<String?>(
-            future: propertyNode.getValueAsync(),
-            builder: (context, snapshot) {
-              return RtWatcher((context, watch) {
-                final isLoading = watch(propertyNode.uIsLoading).value;
-                final value = watch(propertyNode.uValue).value;
+          RtWatcher((context, watch) {
+            final isLoading = watch(propertyNode.uIsLoading).value;
 
-                if (isLoading) {
-                  return const Loading();
-                }
+            if (isLoading) return const Loading();
 
-                return Text(
-                  value ?? '...',
-                  style: Theme.of(context).textTheme.labelSmall,
-                );
-              });
-            },
-          ),
+            watch(propertyNode.uValueFuture).value ??
+                propertyNode.getValueAsync();
+
+            final value = watch(propertyNode.uValue).value;
+
+            return Text(
+              value ?? '...',
+              style: Theme.of(context).textTheme.labelSmall,
+            );
+          }),
         ],
       ),
       isSelected: false,
