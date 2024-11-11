@@ -181,6 +181,10 @@ abstract class Notifier<T extends Function> {
   ///  * [addListener], which registers a closure to be called when the object
   ///    changes.
   void removeListener(Function listener) {
+    if (_listenersSingleUse.contains(listener)) {
+      _listenersSingleUse.remove(listener);
+    }
+
     // This method is allowed to be called on disposed instances for usability
     // reasons. Due to how our frame scheduling logic between render objects and
     // overlays, it is common that the owner of this instance would be disposed a
@@ -195,6 +199,7 @@ abstract class Notifier<T extends Function> {
           // effectively resize the list at the end of all notifyListeners
           // iterations.
           _listeners[i] = null;
+
           _reentrantlyRemovedListeners++;
         } else {
           // When we are outside the notifyListeners iterations we can
@@ -272,12 +277,13 @@ abstract class Notifier<T extends Function> {
     final int end = _count;
     for (int i = 0; i < end; i++) {
       final listener = _listeners[i];
-      assert(listener != null, 'Unexpected null listener in $target.');
+
+      if (listener == null) continue;
 
       try {
         if (_listenersSingleUse.contains(listener)) {
-          removeListener(listener!);
           _listenersSingleUse.remove(listener);
+          removeListener(listener);
         }
 
         listenerCall(listener, param);
