@@ -57,7 +57,7 @@ class RtScopeElement extends InheritedElement with ScopeElementMixin {
 
   @override
   Widget build() {
-    if (hasDependenciesDirty) {
+    if (hasDirtyDependencies) {
       notifyClients(widget);
 
       if (prevChild != null) return prevChild!;

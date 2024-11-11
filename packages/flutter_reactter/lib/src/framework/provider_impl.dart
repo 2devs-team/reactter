@@ -219,7 +219,7 @@ class ProviderElement<T extends Object?> extends InheritedElement
 
   @override
   Widget build() {
-    if (hasDependenciesDirty) {
+    if (hasDirtyDependencies) {
       notifyClients(widget);
 
       if (_prevChild != null) return _prevChild!;

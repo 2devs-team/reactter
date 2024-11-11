@@ -1,10 +1,5 @@
 part of '../framework.dart';
 
-typedef DependencyListener = void Function(
-  Dependency dependency,
-  dynamic instanceOrState,
-);
-
 abstract class Dependency<T extends Object?> {
   T? _instance;
   final Set<RtState> _states;
@@ -13,7 +8,7 @@ abstract class Dependency<T extends Object?> {
   CallbackEvent? _listener;
 
   Dependency(this._instance, this._states) {
-    listen((dependency, instanceOrState) => dependency.markDirty());
+    listen(markDirty);
   }
 
   MasterDependency<T> toMaster();
@@ -26,7 +21,7 @@ abstract class Dependency<T extends Object?> {
     unlisten();
   }
 
-  void listen(covariant DependencyListener callback);
+  void listen(covariant void Function() callback);
 
   @mustBeOverridden
   @mustCallSuper
@@ -39,11 +34,11 @@ abstract class Dependency<T extends Object?> {
     unlisten();
   }
 
-  CallbackEvent _buildListenerCallback(DependencyListener callback) {
+  CallbackEvent _buildListenerCallback(void Function() callback) {
     unlisten();
 
     return _listener = (instanceOrState, _) {
-      callback(this, instanceOrState);
+      callback();
       markDirty();
       unlisten();
     };
@@ -84,15 +79,15 @@ class MasterDependency<T extends Object?> extends Dependency<T> {
   }
 
   @override
-  void listen(DependencyListener callback) {
+  void listen(void Function() callback) {
     final eventListener = _buildListenerCallback(callback);
 
     if (_instance != null) {
-      Rt.one(_instance, Lifecycle.didUpdate, eventListener);
+      Rt.on(_instance, Lifecycle.didUpdate, eventListener);
     }
 
     for (final state in _states) {
-      Rt.one(state, Lifecycle.didUpdate, eventListener);
+      Rt.on(state, Lifecycle.didUpdate, eventListener);
     }
 
     for (final select in _selects) {
@@ -106,11 +101,9 @@ class MasterDependency<T extends Object?> extends Dependency<T> {
 
     if (_instance != null) {
       Rt.off(_instance, Lifecycle.didUpdate, _listener!);
-      _listener = null;
     }
 
     for (final state in _states) {
-      if (_listener == null) return;
       Rt.off(state, Lifecycle.didUpdate, _listener!);
     }
 
@@ -143,10 +136,10 @@ class InstanceDependency<T extends Object?> extends Dependency<T> {
   }
 
   @override
-  void listen(DependencyListener callback) {
+  void listen(void Function() callback) {
     final eventListener = _buildListenerCallback(callback);
 
-    Rt.one(_instance, Lifecycle.didUpdate, eventListener);
+    Rt.on(_instance, Lifecycle.didUpdate, eventListener);
   }
 
   @override
@@ -178,11 +171,11 @@ class StatesDependency<T extends Object?> extends Dependency<T> {
   }
 
   @override
-  void listen(DependencyListener callback) {
+  void listen(void Function() callback) {
     final eventListener = _buildListenerCallback(callback);
 
     for (final state in _states) {
-      Rt.one(state, Lifecycle.didUpdate, eventListener);
+      Rt.on(state, Lifecycle.didUpdate, eventListener);
     }
   }
 
@@ -239,27 +232,24 @@ class SelectDependency<T extends Object?> extends Dependency<T> {
   }
 
   @override
-  CallbackEvent _buildListenerCallback(DependencyListener callback) {
+  CallbackEvent _buildListenerCallback(void Function() callback) {
     unlisten();
 
-    _listener = (instanceOrState, _) {
+    return _listener = (instanceOrState, _) {
       if (value == resolve()) return;
 
-      callback(this, instanceOrState);
+      callback();
       markDirty();
       unlisten();
     };
-
-    return _listener!;
   }
 
   @override
-  void listen(DependencyListener callback) {
+  void listen(void Function() callback) {
     final eventListener = _buildListenerCallback(callback);
 
     if (_instance != null) {
       Rt.on(_instance, Lifecycle.didUpdate, eventListener);
-      _listener = null;
     }
 
     for (final state in _states) {
@@ -273,7 +263,6 @@ class SelectDependency<T extends Object?> extends Dependency<T> {
 
     if (_instance != null) {
       Rt.off(_instance, Lifecycle.didUpdate, _listener!);
-      _listener = null;
     }
 
     for (final state in _states) {

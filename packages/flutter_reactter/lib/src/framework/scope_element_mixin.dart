@@ -4,14 +4,14 @@ part of '../framework.dart';
 /// and notify when should be updated its dependencies.
 @internal
 mixin ScopeElementMixin on InheritedElement {
-  final _dependents = HashMap<Element, Object?>();
+  final _dependents = HashMap<Element, MasterDependency>();
   final _dependentsFlushReady = <Element>{};
-  final _dependenciesDirty = HashSet<Dependency>();
-
-  bool get hasDependenciesDirty => _dependenciesDirty.isNotEmpty;
   bool _isFlushDependentsScheduled = false;
   bool _updatedShouldNotify = false;
   bool _isMarkNeedsBuild = false;
+
+  bool get hasDirtyDependencies =>
+      _isMarkNeedsBuild || _dependents.values.any((dep) => dep.isDirty);
 
   @override
   void update(InheritedWidget newWidget) {
@@ -22,89 +22,107 @@ mixin ScopeElementMixin on InheritedElement {
 
   @override
   void updated(InheritedWidget oldWidget) {
-    super.updated(oldWidget);
-
+    // This point is generally reached when applying the hot reload.
     if (_updatedShouldNotify) {
+      // If the widget tree is updated, we need to reset the state
+      // to avoid memory leaks.
+      _resetState();
       notifyClients(oldWidget);
+      return;
     }
+
+    super.updated(oldWidget);
   }
 
   @override
   void unmount() {
-    _disposeDependencies();
+    _resetState();
     return super.unmount();
   }
 
+  /// Returns the value of the dependency of the dependent.
+  /// If a MasterDepndency is stored in this scope, it will be returned.
+  /// Otherwise, it will return the value of the dependency of the dependent in
+  /// the parent scope.
   @override
   Object? getDependencies(Element dependent) {
     return _dependents[dependent] ?? super.getDependencies(dependent);
   }
 
+  /// Sets the value of the dependency of the dependent.
+  /// If a MasterDepndency is stored in this scope, it will be set.
+  /// Otherwise, it will set the value of the dependency of the dependent in
+  /// the parent scope.
+  @override
+  void setDependencies(Element dependent, Object? value) {
+    if (value is MasterDependency) _dependents[dependent] = value;
+
+    super.setDependencies(dependent, value);
+  }
+
   @override
   void updateDependencies(Element dependent, Object? aspect) {
-    // coverage:ignore-start
+    // If the aspect is not a Dependency or if the widget tree is marked as
+    // needing build, we can skip the update of the dependencies.
     if (aspect is! Dependency || _isMarkNeedsBuild) {
       return super.updateDependencies(dependent, aspect);
     }
 
     var dependency = getDependencies(dependent);
 
+    // If no MasterDependency is stored, we can skip the update of the dependencies.
     if (dependency != null && dependency is! MasterDependency) {
       return super.updateDependencies(dependent, aspect);
     }
-    // coverage:ignore-end
 
-    assert(dependency is MasterDependency || dependency == null);
+    assert(dependency is MasterDependency?);
 
-    var masterDependency = dependency is MasterDependency ? dependency : null;
+    MasterDependency? masterDependency = dependency as MasterDependency?;
 
+    // Flush the dependent element and dispose of the dependency if it exists.
     masterDependency = _flushDependent(dependent, masterDependency);
 
+    // If the dependency is a MasterDependency, add the aspect to it.
     if (masterDependency is MasterDependency) {
       masterDependency.putDependency(aspect);
     }
 
+    // If the dependency is not a MasterDependency, create a new MasterDependency.
     masterDependency ??= aspect.toMaster();
 
     if (masterDependency.isDirty) {
-      markNeedsNotifyDependents(masterDependency, null);
+      markNeedsBuild();
     } else {
-      masterDependency.listen(markNeedsNotifyDependents);
+      masterDependency.listen(markNeedsBuild);
     }
 
     return setDependencies(dependent, masterDependency);
   }
 
   @override
-  void setDependencies(Element dependent, Object? value) {
-    if (value is MasterDependency) {
-      _dependents[dependent] = value;
-    }
-
-    super.setDependencies(dependent, value);
-  }
-
-  @override
   void notifyDependent(InheritedWidget oldWidget, Element dependent) {
-    // select can never be used inside `didChangeDependencies`, so if the
-    // dependent is already marked as needed build, there is no point
-    // in executing the selectors.
+    // if the dependent is already marked as needed build, there is no point
+    // in executing the evaluations about the dirty dependencies, because
+    // the dependent will be rebuild anyway.
     if (dependent.dirty) return;
 
+    if (!_isMarkNeedsBuild) return super.notifyDependent(oldWidget, dependent);
+
     final dependency = getDependencies(dependent);
-    final dependencies = {
-      dependency,
-      if (dependency is MasterDependency) ...dependency._selects,
-    };
 
-    if (!dependencies.any(_dependenciesDirty.contains)) return;
+    if (dependency is! MasterDependency) return;
 
-    dependent.didChangeDependencies();
+    final isDirty =
+        dependency.isDirty || dependency._selects.any((dep) => dep.isDirty);
+
+    if (!isDirty) return;
+
     _removeDependencies(dependent);
-    _dependenciesDirty.removeAll(dependencies);
     _isMarkNeedsBuild = false;
+    dependent.didChangeDependencies();
   }
 
+  /// Schedules a callback to flush dependents after the current frame.
   void _scheduleflushDependents() {
     if (_isFlushDependentsScheduled) return;
 
@@ -116,6 +134,15 @@ mixin ScopeElementMixin on InheritedElement {
     });
   }
 
+  /// Flushes the dependent element and disposes of the dependency if it exists.
+  ///
+  /// This method schedules the flushing of dependents and ensures that the
+  /// dependent element is marked as ready for flushing. If the dependent element
+  /// is already marked as ready, it returns the existing dependency.
+  ///
+  /// If the dependency is of type [MasterDependency], it is disposed of.
+  ///
+  /// Returns `null` after disposing of the dependency.
   MasterDependency<T>? _flushDependent<T>(
     Element dependent,
     MasterDependency<T>? dependency,
@@ -131,14 +158,6 @@ mixin ScopeElementMixin on InheritedElement {
     return null;
   }
 
-  void markNeedsNotifyDependents(
-    Dependency dependency,
-    dynamic instanceOrState,
-  ) {
-    _dependenciesDirty.add(dependency);
-    markNeedsBuild();
-  }
-
   @override
   void markNeedsBuild() {
     if (_isMarkNeedsBuild) return;
@@ -149,17 +168,24 @@ mixin ScopeElementMixin on InheritedElement {
 
   void _removeDependencies(Element dependent) {
     setDependencies(dependent, null);
-    _dependents.remove(dependent);
+    _dependents.remove(dependent)?.dispose();
+  }
+
+  void _resetState() {
+    _disposeDependencies();
+    _dependentsFlushReady.clear();
+    _isFlushDependentsScheduled = false;
+    _updatedShouldNotify = false;
+    _isMarkNeedsBuild = false;
   }
 
   void _disposeDependencies() {
     final dependencies = _dependents.values;
 
     for (final dependency in dependencies) {
-      if (dependency is Dependency) dependency.dispose();
+      dependency.dispose();
     }
 
     _dependents.clear();
-    _dependenciesDirty.clear();
   }
 }
