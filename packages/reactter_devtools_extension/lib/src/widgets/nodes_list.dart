@@ -9,11 +9,11 @@ class NodesList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final listKey = GlobalKey();
-    final scrollControllerX = ScrollController();
-    final scrollControllerY = ScrollController();
-    final focusNode = FocusNode();
     final nodesController = context.use<NodesController>();
+    final listViewKey = nodesController.listViewKey;
+    final scrollControllerX = ScrollController();
+    final scrollControllerY = nodesController.scrollControllerY;
+    final focusNode = FocusNode();
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -41,7 +41,7 @@ class NodesList extends StatelessWidget {
                       final length = watch(nodesController.nodesList).length;
 
                       return ListView.custom(
-                        key: listKey,
+                        key: listViewKey,
                         controller: scrollControllerY,
                         itemExtent: 24,
                         childrenDelegate: SliverChildBuilderDelegate(

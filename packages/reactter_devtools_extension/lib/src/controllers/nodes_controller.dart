@@ -2,7 +2,9 @@ import 'dart:async';
 import 'dart:collection';
 
 import 'package:devtools_extensions/devtools_extensions.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_reactter/reactter.dart';
+import 'package:reactter_devtools_extension/src/data/constants.dart';
 
 import 'package:reactter_devtools_extension/src/data/instance_info.dart';
 import 'package:reactter_devtools_extension/src/data/instance_node.dart';
@@ -20,6 +22,9 @@ class NodesController {
   final nodesList = TreeList<INode>();
   final uNodes = UseState(LinkedHashMap<String, INode>());
   final uCurrentNodeKey = UseState<String?>(null);
+
+  final listViewKey = GlobalKey();
+  final scrollControllerY = ScrollController();
 
   INode? get currentNode => uNodes.value[uCurrentNodeKey.value];
 
@@ -89,6 +94,24 @@ class NodesController {
     nodesList.clear();
     uNodes.value.clear();
     uCurrentNodeKey.value = null;
+  }
+
+  void selectNodeByKey(String nodeKey) {
+    final node = uNodes.value[nodeKey];
+
+    if (node != null) selectNode(node);
+
+    final index = node?.getIndex();
+
+    if (index == null) return;
+
+    final offset = index * kNodeTileHeight;
+
+    scrollControllerY.animateTo(
+      offset,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.bounceIn,
+    );
   }
 
   Future<void> addNodeByKey(String nodeKey) async {

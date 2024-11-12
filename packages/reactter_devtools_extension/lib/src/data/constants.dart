@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+const double kNodeTileHeight = 24;
+
 enum NodeType {
   dependency('dependency'),
   state('state'),

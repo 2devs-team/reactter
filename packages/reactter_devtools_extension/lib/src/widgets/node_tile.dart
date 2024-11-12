@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_reactter/flutter_reactter.dart';
 import 'package:reactter_devtools_extension/src/data/constants.dart';
 import 'package:reactter_devtools_extension/src/interfaces/node.dart';
+import 'package:reactter_devtools_extension/src/widgets/instance_title.dart';
 import 'package:reactter_devtools_extension/src/widgets/tile_builder.dart';
 
 class NodeTile extends StatelessWidget {
@@ -73,40 +74,10 @@ class NodeTileTitle extends StatelessWidget {
         RtWatcher((context, watch) {
           final info = watch(node.uInfo).value;
 
-          return RichText(
-            selectionRegistrar: SelectionContainer.maybeOf(context),
-            selectionColor: Theme.of(context).highlightColor,
-            text: TextSpan(
-              style: Theme.of(context).textTheme.labelSmall,
-              children: [
-                TextSpan(
-                  text: node.type,
-                  style: Theme.of(context)
-                      .textTheme
-                      .labelSmall
-                      ?.copyWith(color: Colors.amber),
-                ),
-                if (info?.label != null)
-                  TextSpan(
-                    children: [
-                      const TextSpan(text: "("),
-                      TextSpan(
-                        text: info?.label!,
-                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                              color: Theme.of(context).colorScheme.primary,
-                            ),
-                      ),
-                      const TextSpan(text: ")"),
-                    ],
-                  ),
-                TextSpan(
-                  text: " #${node.key}",
-                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                        color: Theme.of(context).colorScheme.secondary,
-                      ),
-                ),
-              ],
-            ),
+          return InstanceTitle(
+            type: node.type,
+            label: info?.label,
+            nKey: node.key,
           );
         }),
       ],

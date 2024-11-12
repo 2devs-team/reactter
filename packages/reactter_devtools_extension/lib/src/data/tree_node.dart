@@ -18,6 +18,8 @@ abstract base class TreeNode<E extends TreeNode<E>> extends LinkedListEntry<E>
     return uChildren.value.last.lastDescendant;
   }
 
+  int? getIndex() => list?.indexed.firstWhere((e) => e.$2 == this).$1;
+
   TreeNode() {
     UseEffect(
       _onIsExpandedChanged,
