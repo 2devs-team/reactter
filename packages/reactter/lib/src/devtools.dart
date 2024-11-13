@@ -434,7 +434,15 @@ abstract class _Node<T extends Object> extends LinkedListEntry<_Node> {
 
   _Node({required this.instance});
 
-  Map<String, dynamic> toJson();
+  Map<String, dynamic> toJson() {
+    final dependencyRef = Rt.getDependencyRef(instance);
+    final dependencyId = dependencyRef?.id;
+
+    return {
+      'dependencyId': dependencyId,
+      'dependencyRef': dependencyRef?.hashCode.toString(),
+    };
+  }
 
   _Node? get lastDescendant =>
       children.isEmpty ? this : children.last.lastDescendant as _Node;
@@ -517,7 +525,7 @@ class _InstanceNode extends _Node {
       'kind': _NodeKind.instance,
       'key': key,
       'type': instance.runtimeType.toString(),
-      'dependencyRef': Rt.getDependencyRef(instance)?.hashCode.toString(),
+      ...super.toJson(),
     };
   }
 
@@ -550,7 +558,7 @@ class _StateNode extends _Node<RtState> {
       'type': instance.runtimeType.toString(),
       'debugLabel': instance.debugLabel,
       'boundInstanceKey': instance.boundInstance?.hashCode.toString(),
-      'dependencyRef': Rt.getDependencyRef(instance)?.hashCode.toString(),
+      ...super.toJson(),
     };
   }
 

@@ -8,6 +8,9 @@ import 'package:reactter_devtools_extension/src/services/eval_service.dart';
 base class StateNode extends INode<StateInfo> {
   final uIsLoading = UseState(false);
 
+  @override
+  String? get label => uInfo.value?.debugLabel;
+
   StateNode._({
     required super.key,
     required super.kind,

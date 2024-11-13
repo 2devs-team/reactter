@@ -134,6 +134,7 @@ class NodesController {
     final kind = nodeInfo['kind'];
     final key = nodeInfo['key'];
     final type = nodeInfo['type'];
+    final dependencyRef = nodeInfo['dependencyRef'];
 
     switch (kind) {
       case 'dependency':
@@ -149,11 +150,13 @@ class NodesController {
                 kind: kind,
                 type: type,
               );
+
         final debugLabel = nodeInfo['debugLabel'];
         final boundInstanceKey = nodeInfo['boundInstanceKey'];
 
         node.uInfo.value = StateInfo(
-          label: debugLabel,
+          dependencyRef: dependencyRef,
+          debugLabel: debugLabel,
           boundInstanceKey: boundInstanceKey,
         );
 
@@ -184,7 +187,9 @@ class NodesController {
                 type: type,
               );
 
-        node.uInfo.value = InstanceInfo();
+        node.uInfo.value = InstanceInfo(
+          dependencyRef: dependencyRef,
+        );
 
         addNode(node);
 

@@ -32,21 +32,34 @@ class NodeTile extends StatelessWidget {
 
 class NodeTileIcon extends StatelessWidget {
   final String kind;
+  final bool isDependency;
 
-  const NodeTileIcon({super.key, required this.kind});
+  const NodeTileIcon({
+    super.key,
+    required this.kind,
+    this.isDependency = false,
+  });
 
   @override
   Widget build(BuildContext context) {
     final nodeKind = NodeKind.getKind(kind);
 
-    return CircleAvatar(
-      backgroundColor: nodeKind.color,
-      child: Text(
-        nodeKind.abbr,
-        style: Theme.of(context).textTheme.labelSmall?.copyWith(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
+    return Badge(
+      backgroundColor: isDependency ? Colors.teal : Colors.transparent,
+      child: Padding(
+        padding: const EdgeInsets.all(2.0),
+        child: Center(
+          child: CircleAvatar(
+            backgroundColor: nodeKind.color,
+            child: Text(
+              nodeKind.abbr,
+              style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
+          ),
+        ),
       ),
     );
   }
@@ -62,25 +75,29 @@ class NodeTileTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        SizedBox.square(
-          dimension: 24,
-          child: Padding(
-            padding: const EdgeInsets.all(4).copyWith(left: 0, right: 4),
-            child: NodeTileIcon(kind: node.kind),
-          ),
-        ),
-        RtWatcher((context, watch) {
-          final info = watch(node.uInfo).value;
+    return RtWatcher((context, watch) {
+      final info = watch(node.uInfo).value;
+      final dependencyRef = info?.dependencyRef;
 
-          return InstanceTitle(
+      return Row(
+        children: [
+          SizedBox.square(
+            dimension: 24,
+            child: Padding(
+              padding: const EdgeInsets.all(1),
+              child: NodeTileIcon(
+                kind: node.kind,
+                isDependency: dependencyRef != null,
+              ),
+            ),
+          ),
+          InstanceTitle(
             type: node.type,
-            label: info?.label,
+            label: node.label,
             nKey: node.key,
-          );
-        }),
-      ],
-    );
+          ),
+        ],
+      );
+    });
   }
 }

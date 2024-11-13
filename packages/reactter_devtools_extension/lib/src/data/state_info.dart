@@ -1,18 +1,25 @@
 import 'package:reactter_devtools_extension/src/interfaces/node_info.dart';
 
 class StateInfo extends INodeInfo {
+  final String? debugLabel;
   final String? boundInstanceKey;
   final List<String> kinds;
 
   StateInfo({
-    super.label,
+    super.dependencyRef,
+    this.debugLabel,
     this.boundInstanceKey,
     this.kinds = const ['RtState'],
   });
 
-  StateInfo copyWith({String? label, String? boundInstanceKey}) {
+  StateInfo copyWith({
+    String? dependencyRef,
+    String? debugLabel,
+    String? boundInstanceKey,
+  }) {
     return StateInfo(
-      label: label ?? this.label,
+      dependencyRef: dependencyRef ?? this.dependencyRef,
+      debugLabel: debugLabel ?? this.debugLabel,
       boundInstanceKey: boundInstanceKey ?? this.boundInstanceKey,
     );
   }

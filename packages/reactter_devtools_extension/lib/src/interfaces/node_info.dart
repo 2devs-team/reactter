@@ -1,5 +1,5 @@
 abstract class INodeInfo {
-  final String? label;
+  final String? dependencyRef;
 
-  INodeInfo({this.label});
+  const INodeInfo({this.dependencyRef});
 }

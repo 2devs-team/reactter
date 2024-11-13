@@ -8,6 +8,9 @@ import 'package:vm_service/vm_service.dart';
 base class DependencyNode extends INode<DependencyInfo> {
   final uIsLoading = UseState(false);
 
+  @override
+  String? get label => uInfo.value?.id;
+
   DependencyNode._({
     required super.key,
     required super.kind,

@@ -9,6 +9,8 @@ abstract base class INode<I extends INodeInfo> extends TreeNode<INode> {
   final String kind;
   final String type;
 
+  String? get label;
+
   final uInfo = UseState<I?>(null);
   final uIsSelected = UseState(false);
   final propertyNodes = TreeList<PropertyNode>();
