@@ -19,10 +19,3 @@ class MemoTemporaryCacheInterceptor<T, A> extends MemoInterceptor<T, A> {
     }
   }
 }
-
-/// {@macro reactter.memo_temporary_cache_interceptor}
-@Deprecated(
-  'Use `MemoTemporaryCacheInterceptor` instead. '
-  'This feature was deprecated after v7.3.0.',
-)
-typedef TemporaryCacheMemo<T, A> = MemoTemporaryCacheInterceptor<T, A>;

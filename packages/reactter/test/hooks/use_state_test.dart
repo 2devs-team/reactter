@@ -96,9 +96,39 @@ void main() {
         }),
       );
 
-      await Future.microtask(() {});
-
       expectLater(testController.stateInt.value, 3);
+
+      Rt.delete<TestController>();
+    });
+
+    test("should update manually", () {
+      final testController = Rt.create<TestController>(() => TestController())!;
+      late bool didUpdate;
+
+      testController.stateInt.value = 1;
+
+      Rt.one(testController.stateInt, Lifecycle.didUpdate, (_, __) {
+        expect(testController.stateInt.value, 1);
+        didUpdate = true;
+      });
+
+      testController.stateInt.update();
+
+      expectLater(didUpdate, true);
+
+      Rt.delete<TestController>();
+    });
+
+    test("should update manually with callback", () {
+      final testController = Rt.create<TestController>(() => TestController())!;
+
+      testController.stateInt.value = 1;
+
+      testController.stateInt.update(() {
+        testController.stateInt.value += 1;
+      });
+
+      expect(testController.stateInt.value, 2);
 
       Rt.delete<TestController>();
     });

@@ -101,8 +101,16 @@ abstract class RtStateBase<E extends RtStateBase<E>> implements RtState {
 
   @override
   @mustCallSuper
+
+  /// {@macro reactter.istate.update}
+  ///
+  /// The [fnUpdate] must be a function without arguments(Function()).
   void update(covariant Function? fnUpdate) {
     assert(!_isDisposed, "Can't update when it's been disposed");
+    assert(
+      fnUpdate is Function(),
+      "The fnUpdate must be a function without arguments",
+    );
 
     if (!_hasListeners || _isUpdating) {
       fnUpdate?.call();
@@ -117,11 +125,6 @@ abstract class RtStateBase<E extends RtStateBase<E>> implements RtState {
     _notifyUpdated();
     _isUpdating = false;
   }
-
-  @override
-  @mustCallSuper
-  @Deprecated("Use 'notify' instead.")
-  void refresh() => notify();
 
   @override
   @mustCallSuper

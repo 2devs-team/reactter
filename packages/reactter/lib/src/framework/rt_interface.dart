@@ -43,10 +43,3 @@ class RtInterface
     }
   }
 }
-
-/// {@macro reactter.rt_interface}
-@Deprecated(
-  'Use `RtInterface` instead. '
-  'This feature was deprecated after v7.3.0.',
-)
-typedef ReactterInterface = RtInterface;

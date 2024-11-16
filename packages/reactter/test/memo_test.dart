@@ -1,6 +1,6 @@
 import 'package:fake_async/fake_async.dart';
 import 'package:reactter/reactter.dart';
-import 'package:reactter/src/memo/memo.dart';
+
 import 'package:test/test.dart';
 
 import 'shareds/test_controllers.dart';
@@ -131,7 +131,7 @@ void main() {
       fakeAsync((async) {
         final memo = Memo<dynamic, Args1>(
           (Args1 args) => args.arg1,
-          TemporaryCacheMemo(
+          MemoTemporaryCacheInterceptor(
             Duration(minutes: 1),
           ),
         );
@@ -165,11 +165,11 @@ void main() {
 
       final nInterceptors = 2;
 
-      final memoInterceptors = MemoInterceptors<dynamic, Args1>([
+      final memoInterceptors = MemoMultiInterceptor<dynamic, Args1>([
         FakeInterceptorForCoverage(),
         ...List.generate(
           nInterceptors,
-          (_) => MemoInterceptorWrapper<dynamic, Args1>(
+          (_) => MemoWrapperInterceptor<dynamic, Args1>(
             onInit: (memo, args) {
               nCallOnInit += 1;
             },

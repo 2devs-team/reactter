@@ -1,11 +1,5 @@
 part of '../internals.dart';
 
-@Deprecated(
-  'Use `DependencyMode` instead. '
-  'This feature was deprecated after v7.1.0.',
-)
-typedef InstanceManageMode = DependencyMode;
-
 /// {@template reactter.dependency_mode}
 /// Represents different ways for managing instances.
 /// {@endtemplate}

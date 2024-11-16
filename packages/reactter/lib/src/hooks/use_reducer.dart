@@ -178,17 +178,3 @@ abstract class RtActionCallable<T, P> extends RtAction<P> {
   /// the action has been applied).
   T call(T state);
 }
-
-/// {@macro reactter.rt_action}
-@Deprecated(
-  'Use `RtAction` instead. '
-  'This feature was deprecated after v7.3.0.',
-)
-typedef ReactterAction<T> = RtAction<T>;
-
-/// {@macro reactter.rt_action_callable}
-@Deprecated(
-  'Use `RtActionCallable` instead. '
-  'This feature was deprecated after v7.3.0.',
-)
-typedef ReactterActionCallable = RtActionCallable;

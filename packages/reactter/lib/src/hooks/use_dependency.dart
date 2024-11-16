@@ -1,11 +1,5 @@
 part of 'hooks.dart';
 
-@Deprecated(
-  'Use `UseDependency` instead. '
-  'This feature was deprecated after v7.1.0.',
-)
-typedef UseInstance<T extends Object> = UseDependency<T>;
-
 /// {@template reactter.use_dependency}
 /// A [RtHook] that allows to manages a dependency of [T] with/without [id].
 ///

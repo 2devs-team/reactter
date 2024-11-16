@@ -176,10 +176,3 @@ class RtSelector<T extends Object?, V> extends StatelessWidget {
     return dependency.value;
   }
 }
-
-/// {@macro flutter_reactter.rt_selector}
-@Deprecated(
-  'Use `RtSelector` instead. '
-  'This feature was deprecated after v7.3.0.',
-)
-typedef ReactterSelector<T extends Object?, V> = RtSelector<T, V>;

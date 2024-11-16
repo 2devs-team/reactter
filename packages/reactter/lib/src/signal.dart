@@ -1,4 +1,4 @@
-part of 'signal.dart';
+import 'package:reactter/src/framework.dart';
 
 /// This enumeration is used to represent different events that can occur when
 /// getting or setting the value of a `Signal` object.
@@ -72,13 +72,8 @@ enum SignalEvent { onGetValue, onSetValue }
 /// If you use flutter, add [`flutter_reactter`](https://pub.dev/packages/flutter_reactter)
 /// package on your dependencies and use its Widgets.
 ///
-/// See also:
-///
-/// * [Obj], a base-class that can be used to store a value of [T].
 /// {@endtemplate}
-class Signal<T>
-    with RtContext, RtStateBase<Signal<T>>, ObjBase<T>
-    implements Obj<T> {
+class Signal<T> with RtContext, RtStateBase<Signal<T>> {
   /// {@macro reactter.signal}
   Signal._(
     T value, {
@@ -105,7 +100,6 @@ class Signal<T>
   Map<String, dynamic> get debugInfo => {'value': value};
 
   /// Returns the [value] of the signal.
-  @override
   T get value {
     _notifyGetValue();
 
@@ -114,7 +108,6 @@ class Signal<T>
 
   /// Updates the [value] of the signal
   /// and notifies the observers when changes occur.
-  @override
   set value(T val) {
     if (_value == val) return;
 
@@ -127,7 +120,6 @@ class Signal<T>
   /// Gets and/or sets to [value] like a function
   /// This method doesn't allow setting its value to null.
   /// If you need to set null as value, use `.value = null`.
-  @override
   T call([T? val]) {
     assert(!isDisposed, "You can call when it's been disposed");
 
@@ -136,10 +128,41 @@ class Signal<T>
     return value;
   }
 
+  /// Executes [callback], and notifies the listeners about the update.
   @override
   void update(void Function(T value) fnUpdate) {
     super.update(() => fnUpdate(value));
   }
+
+  @override
+  String toString() => value.toString();
+
+  @override
+  // ignore: unnecessary_overrides
+  int get hashCode => super.hashCode;
+
+  /// The equality operator.
+  ///
+  /// It's checking if the [other] object is of the same type as the [Signal],
+  /// if it is, it compares the [value], else it compares like [Object] using [hashCode].
+  ///
+  /// Examples:
+  /// ```dart
+  /// final s = Signal(0);
+  /// final s2 = Signal(1);
+  /// final s3 = s(0);
+  /// final sCopy = s;
+  ///
+  /// print(s == 0); // true
+  /// print(s == 1); // false
+  /// print(s == s2); // false
+  /// print(s == s3); // true
+  /// print(s == sCopy); // true
+  /// ```
+  ///
+  @override
+  bool operator ==(Object other) =>
+      other is Signal<T> ? identical(this, other) : value == other;
 
   void _notifyGetValue() {
     if (!_shouldGetValueNotify) return;
@@ -165,20 +188,4 @@ extension SignalNullExt<T> on Signal<T?> {
     assert(value != null);
     return Signal<T>(value as T);
   }
-}
-
-extension ObjToSignalExt<T> on Obj<T> {
-  /// Returns a new Signal<T> with the value of the current Obj<T>.
-  @Deprecated(
-    'This feature was deprecated after v7.2.0 and will be removed in v8.0.0.',
-  )
-  Signal<T> get toSignal => Signal<T>(value);
-}
-
-extension SignalToObjExt<T> on Signal<T> {
-  /// Returns a new Obj<T> with the value of the current Signal<T>.
-  @Deprecated(
-    'This feature was deprecated after v7.2.0 and will be removed in v8.0.0.',
-  )
-  Obj<T> get toObj => Obj<T>(value);
 }

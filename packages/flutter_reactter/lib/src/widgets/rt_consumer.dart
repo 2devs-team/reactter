@@ -105,10 +105,3 @@ class RtConsumer<T extends Object?> extends StatelessWidget {
     );
   }
 }
-
-/// {@macro flutter_reactter.rt_consumer}
-@Deprecated(
-  'Use `RtConsumer` instead. '
-  'This feature was deprecated after v7.3.0.',
-)
-typedef ReactterConsumer<T extends Object> = RtConsumer<T>;

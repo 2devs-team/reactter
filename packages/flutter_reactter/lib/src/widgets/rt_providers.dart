@@ -133,10 +133,3 @@ class RtMultiProviderElement extends StatelessElement
     return nextNode;
   }
 }
-
-/// {@macro flutter_reactter.rt_multi_provider}
-@Deprecated(
-  'Use `RtMultiProvider` instead. '
-  'This feature was deprecated after v7.3.0.',
-)
-typedef ReactterProviders = RtMultiProvider;

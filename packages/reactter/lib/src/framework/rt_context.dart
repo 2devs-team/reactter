@@ -21,10 +21,3 @@ mixin RtContext implements IContext {
   @internal
   EventHandler get eventHandler => Rt;
 }
-
-/// {@macro reactter.rt}
-@Deprecated(
-  'Use `Rt` instead. '
-  'This feature was deprecated after v7.3.0.',
-)
-final Reactter = Rt;

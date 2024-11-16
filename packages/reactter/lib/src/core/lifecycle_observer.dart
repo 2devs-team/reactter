@@ -28,13 +28,6 @@ part of '../internals.dart';
 
 /// {@endtemplate}
 abstract class LifecycleObserver {
-  /// This method is called when the dependency is initialized.
-  @Deprecated(
-    'Use `onCreated` instead. '
-    'This feature was deprecated after v7.2.0.',
-  )
-  void onInitialized() {}
-
   /// This method is called when the dependency instance is created.
   void onCreated() {}
 
@@ -69,11 +62,6 @@ void _executeLifecycleObserver(
   dynamic param,
 ]) {
   switch (lifecycle) {
-    // ignore: deprecated_member_use_from_same_package
-    case Lifecycle.initialized:
-      // ignore: deprecated_member_use_from_same_package
-      observer.onInitialized();
-      break;
     case Lifecycle.created:
       observer.onCreated();
       break;

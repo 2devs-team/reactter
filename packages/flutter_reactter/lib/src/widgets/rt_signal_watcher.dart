@@ -152,10 +152,3 @@ class _RtSignalWatcherState extends State<RtSignalWatcher> {
     _states.clear();
   }
 }
-
-/// {@macro flutter_reactter.rt_signal_watcher}
-@Deprecated(
-  'Use `RtSignalWatcher` instead. '
-  'This feature was deprecated after v7.3.0.',
-)
-typedef ReactterWatcher = RtSignalWatcher;

@@ -54,10 +54,3 @@ class MemoWrapperInterceptor<T, A> extends MemoInterceptor<T, A> {
     _onFinish?.call(memo, arg);
   }
 }
-
-/// {@macro reactter.memo_wrapper_interceptor}
-@Deprecated(
-  'Use `MemoWrapperInterceptor` instead. '
-  'This feature was deprecated after v7.3.0.',
-)
-typedef MemoInterceptorWrapper<T, A> = MemoWrapperInterceptor<T, A>;

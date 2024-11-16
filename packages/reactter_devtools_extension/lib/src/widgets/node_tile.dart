@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_reactter/flutter_reactter.dart';
-import 'package:reactter_devtools_extension/src/data/constants.dart';
 import 'package:reactter_devtools_extension/src/interfaces/node.dart';
 import 'package:reactter_devtools_extension/src/widgets/instance_title.dart';
 import 'package:reactter_devtools_extension/src/widgets/tile_builder.dart';

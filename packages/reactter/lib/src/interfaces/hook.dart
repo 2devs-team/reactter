@@ -12,7 +12,7 @@ abstract class IHook {
   /// If [callback] is provided, it will be executed before notifying the listeners.
   /// If [callback] is not provided, an empty function will be executed.
   @mustCallSuper
-  void update([Function? callback]);
+  void update([Function()? callback]);
 }
 
 @internal

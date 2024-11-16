@@ -430,15 +430,6 @@ abstract class DependencyInjection implements IContext {
     return _getDependencyRegister<T>(id)?.instance != null;
   }
 
-  /// Checks if an instance is registered in Reactter
-  // coverage:ignore-start
-  @Deprecated(
-    'Use `isActive` instead.'
-    'This feature was deprecated after v7.2.0.',
-  )
-  bool isRegistered(Object? instance) => isActive(instance);
-  // coverage:ignore-end
-
   /// Checks if the [instance] is active in Reactter.
   bool isActive(Object? instance) {
     return _instances[instance] != null;
@@ -449,15 +440,6 @@ abstract class DependencyInjection implements IContext {
     final DependencyRef dependencyRef = DependencyRef<T?>(id);
     return _dependencyRegisters.lookup(dependencyRef) != null;
   }
-
-  // coverage:ignore-start
-  @Deprecated(
-    'Use `getDependencyMode` instead. '
-    'This feature was deprecated after v7.1.0.',
-  )
-  InstanceManageMode? getInstanceManageMode(Object? instance) =>
-      getDependencyMode(instance);
-  // coverage:ignore-end
 
   /// Returns [DependencyMode] of instance parameter.
   DependencyMode? getDependencyMode(Object? instance) {
@@ -508,12 +490,6 @@ abstract class DependencyInjection implements IContext {
 
     BindingZone.autoBinding(() => _createInstance<T>(instanceRegister));
 
-    // ignore: deprecated_member_use_from_same_package
-    eventHandler.emit(
-      instanceRegister,
-      Lifecycle.initialized,
-      instanceRegister.instance,
-    );
     eventHandler.emit(
       instanceRegister,
       Lifecycle.created,
@@ -537,16 +513,11 @@ abstract class DependencyInjection implements IContext {
   /// Removes an instance of a generic type from a [DependencyRegister].
   void _removeInstance<T>(DependencyRegister<T?> dependencyRegister) {
     final instance = dependencyRegister.instance;
+
     dependencyRegister._instance = null;
 
     _instances.remove(instance);
-
-    // ignore: deprecated_member_use_from_same_package
-    eventHandler.emit(instance, Lifecycle.destroyed, instance);
     eventHandler.emit(instance, Lifecycle.deleted, instance);
-
-    // ignore: deprecated_member_use_from_same_package
-    eventHandler.emit(dependencyRegister, Lifecycle.destroyed, instance);
     eventHandler.emit(dependencyRegister, Lifecycle.deleted, instance);
 
     if (instance is IState && !(instance as IState).isDisposed) {

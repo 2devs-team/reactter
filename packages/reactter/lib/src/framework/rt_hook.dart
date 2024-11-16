@@ -62,20 +62,9 @@ abstract class RtHook with RtContext, RtStateBase<RtHook> implements IHook {
     $.bindInstanceToStates(this);
   }
 
-  /// Executes [callback], and notifies the listeners about the update.
-  ///
-  /// If [callback] is provided, it will be executed before notifying the listeners.
-  /// If [callback] is not provided, an empty function will be executed.
   @override
   @mustCallSuper
-  void update([Function? callback]) {
-    return super.update(callback ?? () {});
+  void update([Function()? fnUpdate]) {
+    return super.update(fnUpdate ?? () {});
   }
 }
-
-/// {@macro reactter.rt_hook}
-@Deprecated(
-  'Use `RtHook` instead. '
-  'This feature was deprecated after v7.3.0.',
-)
-typedef ReactterHook = RtHook;

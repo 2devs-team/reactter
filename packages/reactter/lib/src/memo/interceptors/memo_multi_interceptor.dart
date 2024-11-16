@@ -37,10 +37,3 @@ class MemoMultiInterceptor<T, A> extends MemoInterceptor<T, A> {
     }
   }
 }
-
-/// {@macro reactter.memo_multi_interceptor}
-@Deprecated(
-  'Use `MemoMultiInterceptor` instead. '
-  'This feature was deprecated after v7.3.0.',
-)
-typedef MemoInterceptors<T, A> = MemoMultiInterceptor<T, A>;

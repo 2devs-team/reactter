@@ -2,10 +2,10 @@ import 'dart:collection';
 import 'dart:developer' as dev;
 
 import 'package:meta/meta.dart';
+import 'package:reactter/src/signal.dart';
 
 import 'framework.dart';
 import 'internals.dart';
-import 'signal/signal.dart';
 
 extension RtDevToolsExt on RtInterface {
   void initializeDevTools() {

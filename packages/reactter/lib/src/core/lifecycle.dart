@@ -4,13 +4,6 @@ enum Lifecycle {
   /// This event is triggered when the [DependencyInjection] registers the dependency.
   registered,
 
-  /// This event is triggered when the [DependencyInjection] initializes the dependency.
-  @Deprecated(
-    'Use `Lifecycle.created` instead. '
-    'This feature was deprecated after v7.2.0.',
-  )
-  initialized,
-
   /// This event is triggered when the [DependencyInjection] created the dependency instance.
   created,
 
@@ -31,13 +24,6 @@ enum Lifecycle {
 
   /// This event(exclusive to `flutter_reactter`) happens when the dependency has been successfully unmounted from the widget tree.
   didUnmount,
-
-  /// This event is triggered when the [DependencyInjection] destroys the dependency.
-  @Deprecated(
-    'Use `Lifecycle.deleted` instead. '
-    'This feature was deprecated after v7.2.0.',
-  )
-  destroyed,
 
   /// This event is triggered when the [DependencyInjection] destroys the dependency instance.
   deleted,
