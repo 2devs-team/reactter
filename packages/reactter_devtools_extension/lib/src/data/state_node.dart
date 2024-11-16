@@ -15,7 +15,9 @@ base class StateNode extends INode<StateInfo> {
     required super.key,
     required super.kind,
     required super.type,
-  });
+  }) {
+    UseEffect(loadDependencyRef, [uInfo]);
+  }
 
   factory StateNode({
     required String key,
@@ -33,22 +35,45 @@ base class StateNode extends INode<StateInfo> {
 
   @override
   Future<void> loadDetails() async {
-    await Future.wait([loadBoundInstance(), loadProperties()]);
+    await Future.wait([
+      super.loadDetails(),
+      loadBoundInstance(),
+      loadDebugInfo(),
+    ]);
   }
 
   Future<void> loadBoundInstance() async {
-    // final eval = await EvalService.devtoolsEval;
-    // final isAlive = Disposable();
-    // final valueInst = await eval.safeGetInstance(ref, isAlive);
+    final eval = await EvalService.devtoolsEval;
+    final isAlive = Disposable();
 
-    // final inst = await eval.evalInstance(
-    //   'state.boundInstance',
-    //   isAlive: isAlive,
-    //   scope: {'state': ref.id!},
-    // );
+    final boundInstanceValue = await eval.evalInstance(
+      'RtDevTools._instance?.getBoundInstance("$key")',
+      isAlive: isAlive,
+    );
+
+    PropertyAsyncNode? propertyNode;
+
+    for (final node in propertyNodes) {
+      if (node.key == 'boundInstance' && node is PropertyAsyncNode) {
+        propertyNode = node;
+        break;
+      }
+    }
+
+    if (propertyNode == null) {
+      propertyNodes.add(
+        PropertyAsyncNode(
+          key: 'boundInstance',
+          valueRef: boundInstanceValue,
+          isExpanded: false,
+        ),
+      );
+    } else {
+      propertyNode.updateValueRef(boundInstanceValue);
+    }
   }
 
-  Future<void> loadProperties() async {
+  Future<void> loadDebugInfo() async {
     final eval = await EvalService.devtoolsEval;
     final isAlive = Disposable();
 
@@ -57,10 +82,10 @@ base class StateNode extends INode<StateInfo> {
       isAlive: isAlive,
     );
 
-    PropertyNode? propertyNode;
+    PropertyAsyncNode? propertyNode;
 
     for (final node in propertyNodes) {
-      if (node.key == 'debugInfo') {
+      if (node.key == 'debugInfo' && node is PropertyAsyncNode) {
         propertyNode = node;
         break;
       }
@@ -68,7 +93,7 @@ base class StateNode extends INode<StateInfo> {
 
     if (propertyNode == null) {
       propertyNodes.add(
-        PropertyNode(
+        PropertyAsyncNode(
           key: 'debugInfo',
           valueRef: debugInfoValue,
           isExpanded: true,

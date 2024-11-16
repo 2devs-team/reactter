@@ -328,41 +328,41 @@ class RtDevTools with RtStateObserver, RtDependencyObserver {
     return state.instance.debugInfo;
   }
 
-  Map<String, dynamic> getDynamicInfo(Object instance) {
-    if (instance is DependencyRef) {
-      return getDependencyInfo(instance);
-    } else if (instance is RtState) {
-      return getStateInfo(instance);
-    } else {
-      return getInstanceInfo(instance);
-    }
+  dynamic getBoundInstance(String stateKey) {
+    final state = _nodesByKey[stateKey];
+
+    if (state is! _StateNode) return null;
+
+    return state.instance.boundInstance;
   }
 
-  Map<String, dynamic> getDependencyInfo(DependencyRef dependencyRef) {
-    return {
-      'kind': _NodeKind.dependency,
-      'key': dependencyRef.hashCode.toString(),
-      'type': dependencyRef.type.toString(),
-      'id': dependencyRef.id,
-    };
-  }
+  dynamic getDependencyRef(String dependencyKey) {
+    final dependencyRef = _nodesByKey[dependencyKey];
 
-  Map<String, dynamic> getStateInfo(RtState state) {
-    return {
-      'kind': _NodeKind.state,
-      'key': state.hashCode.toString(),
-      'type': state.runtimeType.toString(),
-      'debugLabel': state.debugLabel,
-      'boundInstanceKey': state.boundInstance?.hashCode.toString(),
-    };
+    if (dependencyRef is! _DependencyNode) return null;
+
+    return dependencyRef.instance;
   }
 
   Map<String, dynamic> getInstanceInfo(Object instance) {
-    return {
-      'kind': _NodeKind.instance,
-      'key': instance.hashCode.toString(),
-      'type': instance.runtimeType.toString(),
-    };
+    if (instance is Enum) {
+      return {
+        ..._InstanceNode.getInstanceInfo(instance),
+        'type': instance.toString(),
+      };
+    }
+
+    if (instance is Iterable) {
+      return {
+        ..._InstanceNode.getInstanceInfo(instance),
+        'fields': {
+          'length': instance.length,
+          'items': instance.toList(),
+        },
+      };
+    }
+
+    return _InstanceNode.getInstanceInfo(instance);
   }
 
   String getPropertyValue(value) {
@@ -380,11 +380,11 @@ class RtDevTools with RtStateObserver, RtDependencyObserver {
 
   Map<String, dynamic> getPlainInstanceInfo(Object instance) {
     if (instance is DependencyRef) {
-      return getDependencyInfo(instance);
+      return _DependencyNode.getInstanceInfo(instance);
     }
 
     if (instance is RtState) {
-      return getStateInfo(instance);
+      return _StateNode.getInstanceInfo(instance);
     }
 
     return getInstanceInfo(instance);
@@ -439,6 +439,7 @@ abstract class _Node<T extends Object> extends LinkedListEntry<_Node> {
     final dependencyId = dependencyRef?.id;
 
     return {
+      'key': key,
       'dependencyId': dependencyId,
       'dependencyRef': dependencyRef?.hashCode.toString(),
     };
@@ -519,12 +520,18 @@ abstract class _Node<T extends Object> extends LinkedListEntry<_Node> {
 class _InstanceNode extends _Node {
   _InstanceNode({required Object instance}) : super(instance: instance);
 
+  static Map<String, dynamic> getInstanceInfo(Object instance) {
+    return {
+      'kind': _NodeKind.instance,
+      'key': instance.hashCode.toString(),
+      'type': instance.runtimeType.toString(),
+    };
+  }
+
   @override
   Map<String, dynamic> toJson() {
     return {
-      'kind': _NodeKind.instance,
-      'key': key,
-      'type': instance.runtimeType.toString(),
+      ...getInstanceInfo(instance),
       ...super.toJson(),
     };
   }
@@ -550,14 +557,20 @@ class _StateNode extends _Node<RtState> {
     return _NodeKind.state;
   }
 
-  @override
-  Map<String, dynamic> toJson() {
+  static Map<String, dynamic> getInstanceInfo(RtState instance) {
     return {
       'kind': resolveKind(instance),
-      'key': key,
+      'key': instance.hashCode.toString(),
       'type': instance.runtimeType.toString(),
       'debugLabel': instance.debugLabel,
       'boundInstanceKey': instance.boundInstance?.hashCode.toString(),
+    };
+  }
+
+  @override
+  Map<String, dynamic> toJson() {
+    return {
+      ...getInstanceInfo(instance),
       ...super.toJson(),
     };
   }
@@ -578,15 +591,23 @@ class _DependencyNode extends _Node<DependencyRef> {
   _DependencyNode({required DependencyRef instance})
       : super(instance: instance);
 
+  static Map<String, dynamic> getInstanceInfo(DependencyRef instance) {
+    return {
+      'kind': _NodeKind.dependency,
+      'key': instance.hashCode.toString(),
+      'type': instance.type.toString(),
+      'id': instance.id,
+      'instanceKey': Rt.getDependencyRegisterByRef(
+        instance,
+      )?.instance.hashCode.toString(),
+    };
+  }
+
   @override
   Map<String, dynamic> toJson() {
     return {
-      'kind': _NodeKind.dependency,
-      'key': key,
-      'type': instance.type.toString(),
-      'id': instance.id,
-      'instanceKey':
-          Rt.getDependencyRegisterByRef(instance)?.instance.hashCode.toString(),
+      ...getInstanceInfo(instance),
+      ...super.toJson(),
     };
   }
 }

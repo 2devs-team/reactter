@@ -11,39 +11,73 @@ import 'package:vm_service/vm_service.dart';
 
 const _kMaxValueLength = 50;
 
-base class PropertyNode extends TreeNode<PropertyNode> {
+abstract base class IPropertyNode extends TreeNode<IPropertyNode> {
   final String key;
+  final uValue = UseState<String?>(null);
+  final uInstanceInfo = UseState<Map<String, dynamic>?>(null);
 
+  IPropertyNode({required this.key, String? value, bool isExpanded = false}) {
+    uValue.value = value;
+    uIsExpanded.value = isExpanded;
+  }
+}
+
+base class PropertyNode extends IPropertyNode {
+  PropertyNode._({
+    required super.key,
+    required super.value,
+    required super.isExpanded,
+  });
+
+  factory PropertyNode({
+    IPropertyNode? parent,
+    required String key,
+    required String value,
+    bool isExpanded = false,
+  }) {
+    return Rt.createState(
+      () => PropertyNode._(
+        key: key,
+        value: value,
+        isExpanded: isExpanded,
+      ),
+    );
+  }
+
+  void updateValue(String value) {
+    uValue.value = value;
+  }
+}
+
+base class PropertyAsyncNode extends IPropertyNode {
   InstanceRef _valueRef;
   InstanceRef get valueRef => _valueRef;
 
   Disposable? _isAlive;
   bool _isResolved = false;
   bool _isValueUpdating = false;
-  final LinkedHashMap<String, PropertyNode> _childNodeRefs =
-      LinkedHashMap<String, PropertyNode>();
+  final LinkedHashMap<String, IPropertyNode> _childNodeRefs =
+      LinkedHashMap<String, IPropertyNode>();
 
   final uValueFuture = UseState<FutureOr<String?>?>(null);
-  final uValue = UseState<String?>(null);
   final uIsLoading = UseState(false);
-  final uInstanceInfo = UseState<Map<String, dynamic>?>(null);
 
-  PropertyNode._({
-    required this.key,
+  PropertyAsyncNode._({
+    required super.key,
     required InstanceRef valueRef,
     bool isExpanded = false,
   }) : _valueRef = valueRef {
     uIsExpanded.value = isExpanded;
   }
 
-  factory PropertyNode({
-    PropertyNode? parent,
+  factory PropertyAsyncNode({
+    PropertyAsyncNode? parent,
     required String key,
     required InstanceRef valueRef,
     bool isExpanded = false,
   }) {
     return Rt.createState(
-      () => PropertyNode._(
+      () => PropertyAsyncNode._(
         key: key,
         valueRef: valueRef,
         isExpanded: isExpanded,
@@ -99,6 +133,34 @@ base class PropertyNode extends TreeNode<PropertyNode> {
             case InstanceKind.kString:
               value = '"${valueRef.valueAsString}"';
               uChildren.value.clear();
+              break;
+            case InstanceKind.kClosure:
+              final instance = await valueRef.safeGetInstance(_isAlive);
+
+              final children = SplayTreeMap<String, dynamic>();
+
+              final name = instance?.closureFunction?.name;
+              final location = instance?.closureFunction?.location?.script?.uri;
+              final locationLine = instance?.closureFunction?.location?.line;
+              final locationColumn =
+                  instance?.closureFunction?.location?.column;
+
+              children['location'] = location;
+              children['locationLine'] = locationLine;
+              children['locationColumn'] = locationColumn;
+
+              await addChildren(children);
+
+              uInstanceInfo.value = {
+                'name': name,
+                'key': valueRef.identityHashCode.toString(),
+                'type': 'Function',
+                'kind': 'closure',
+                ...children,
+              };
+
+              value = "Function($name) $location $locationLine:$locationColumn";
+
               break;
             default:
               value = valueRef.valueAsString;
@@ -209,21 +271,44 @@ base class PropertyNode extends TreeNode<PropertyNode> {
     );
   }
 
-  Future<void> addChildren(SplayTreeMap<String, InstanceRef> children) async {
+  Future<void> addChildren(SplayTreeMap<String, dynamic> children) async {
     final childrenToRemove = _childNodeRefs.keys.toSet();
 
     for (final child in children.entries) {
-      final isRemoved = childrenToRemove.remove(child.key);
+      final childCurrent = _childNodeRefs[child.key];
+      final isAsyncValue = child.value is InstanceRef;
+      final isValueTypeSame =
+          (childCurrent is PropertyAsyncNode && isAsyncValue) ||
+              (childCurrent is PropertyNode && !isAsyncValue);
+
+      if (!isValueTypeSame) _childNodeRefs.remove(child.key);
+
+      final isRemoveSkip =
+          isValueTypeSame && childrenToRemove.remove(child.key);
+
       final childNode = _childNodeRefs.putIfAbsent(
         child.key,
-        () => PropertyNode(
-          key: child.key,
-          valueRef: child.value,
-        ),
+        () {
+          if (isAsyncValue) {
+            return PropertyAsyncNode(
+              key: child.key,
+              valueRef: child.value,
+            );
+          }
+
+          return PropertyNode(
+            key: child.key,
+            value: child.value.toString(),
+          );
+        },
       );
 
-      if (isRemoved) {
-        childNode.updateValueRef(child.value);
+      if (isRemoveSkip) {
+        if (childNode is PropertyAsyncNode) {
+          childNode.updateValueRef(child.value);
+        } else if (childNode is PropertyNode) {
+          childNode.updateValue(child.value.toString());
+        }
       } else {
         addChild(childNode);
       }
@@ -247,9 +332,14 @@ base class PropertyNode extends TreeNode<PropertyNode> {
     for (var i = 0; i < children.length; i++) {
       final child = children[i];
       final isLast = i == children.length - 1;
+
+      if (child is PropertyNode) continue;
+
+      assert(child is PropertyAsyncNode);
+
       String? value;
 
-      switch (child.valueRef.kind) {
+      switch ((child as PropertyAsyncNode).valueRef.kind) {
         case InstanceKind.kMap:
         case InstanceKind.kSet:
           value = '{...}';
@@ -301,21 +391,9 @@ base class PropertyNode extends TreeNode<PropertyNode> {
       ),
     );
 
-    final instance = await valueRef.safeGetInstance(_isAlive);
-    final fields = instance?.fields?.cast<BoundField>() ?? [];
-    final SplayTreeMap<String, InstanceRef> children = SplayTreeMap();
-
-    for (final field in fields) {
-      if (field.value is InstanceRef) {
-        children[field.name] = field.value as InstanceRef;
-      }
-    }
-
-    await addChildren(children);
-
     if (valueInfo.kind != InstanceKind.kMap) return null;
 
-    final valueInfoMap = await valueInfo.evalValue(_isAlive);
+    final valueInfoMap = await valueInfo.evalValue(_isAlive, 2);
 
     if (valueInfoMap is! Map) return null;
 
@@ -325,7 +403,29 @@ base class PropertyNode extends TreeNode<PropertyNode> {
     final String type = valueInfoMap['type'];
     final String? id = valueInfoMap['id'];
     final String? debugLabel = valueInfoMap['debugLabel'];
+    final Map? valueInfoFields = valueInfoMap['fields'];
     final String? idOrDebugLabel = id ?? debugLabel;
+
+    final instance = await valueRef.safeGetInstance(_isAlive);
+    final fields = instance?.fields?.cast<BoundField>() ?? [];
+    final SplayTreeMap<String, InstanceRef> children = SplayTreeMap();
+
+    for (final field in fields) {
+      if (field.value is InstanceRef) {
+        if (field.name.startsWith('_') || field.name.startsWith('\$')) {
+          continue;
+        }
+        children[field.name] = field.value as InstanceRef;
+      }
+    }
+
+    if (valueInfoFields != null) {
+      for (final entry in valueInfoFields.entries) {
+        children[entry.key] = entry.value;
+      }
+    }
+
+    await addChildren(children);
 
     return idOrDebugLabel != null
         ? "$type($idOrDebugLabel) #$key"

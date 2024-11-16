@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_reactter/flutter_reactter.dart';
 import 'package:reactter_devtools_extension/src/controllers/nodes_controller.dart';
+import 'package:reactter_devtools_extension/src/data/constants.dart';
 import 'package:reactter_devtools_extension/src/data/property_node.dart';
 import 'package:reactter_devtools_extension/src/widgets/instance_title.dart';
 import 'package:reactter_devtools_extension/src/widgets/loading.dart';
@@ -12,7 +13,7 @@ class PropertyTile extends StatelessWidget {
     required this.propertyNode,
   });
 
-  final PropertyNode propertyNode;
+  final IPropertyNode propertyNode;
 
   @override
   Widget build(BuildContext context) {
@@ -28,12 +29,15 @@ class PropertyTile extends StatelessWidget {
                 ?.copyWith(color: Theme.of(context).colorScheme.primary),
           ),
           RtWatcher((context, watch) {
-            final isLoading = watch(propertyNode.uIsLoading).value;
+            if (propertyNode is PropertyAsyncNode) {
+              final propertyAsynNode = propertyNode as PropertyAsyncNode;
+              final isLoading = watch(propertyAsynNode.uIsLoading).value;
 
-            if (isLoading) return const Loading();
+              if (isLoading) return const Loading();
 
-            watch(propertyNode.uValueFuture).value ??
-                propertyNode.getValueAsync();
+              watch(propertyAsynNode.uValueFuture).value ??
+                  propertyAsynNode.getValueAsync();
+            }
 
             final value = watch(propertyNode.uValue).value;
 
@@ -44,21 +48,29 @@ class PropertyTile extends StatelessWidget {
               final nodesController = context.use<NodesController>();
               final node = nodesController.uNodes.value[nKey];
 
-              return Row(
-                children: [
-                  if (node != null)
-                    InkWell(
-                      child: const Icon(Icons.reply),
-                      onTap: () {
-                        nodesController.selectNodeByKey(nKey);
-                      },
-                    ),
-                  InstanceTitle(
-                    type: instanceInfo['type'],
-                    label: instanceInfo['id'] ?? instanceInfo['debugLabel'],
-                    nKey: nKey,
-                  ),
-                ],
+              if (node != null) watch(node.uInfo);
+
+              final type = node != null ? node.type : instanceInfo['type'];
+              final kind = node != null ? node.kind : instanceInfo['kind'];
+              final label = node != null
+                  ? node.label
+                  : instanceInfo['id'] ??
+                      instanceInfo['debugLabel'] ??
+                      instanceInfo['name'];
+              final dependencyRef = node != null
+                  ? node.uInfo.value?.dependencyRef
+                  : instanceInfo['dependencyRef'];
+
+              return InstanceTitle(
+                nKey: nKey,
+                type: type,
+                kind:
+                    node == null && kind == NodeKind.instance.key ? null : kind,
+                label: label,
+                isDependency: dependencyRef != null,
+                onTapIcon: node != null
+                    ? () => nodesController.selectNodeByKey(nKey)
+                    : null,
               );
             }
 

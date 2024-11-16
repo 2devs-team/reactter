@@ -20,23 +20,53 @@ enum NodeType {
 }
 
 enum NodeKind {
-  instance(label: 'Instance', abbr: 'I', color: Colors.orange),
-  state(label: 'State', abbr: 'S', color: Colors.blue),
-  hook(label: 'Hook', abbr: 'H', color: Colors.purple),
-  signal(label: 'Signal', abbr: 'S', color: Colors.green);
+  dependency(
+    key: 'dependency',
+    label: 'Dependency',
+    abbr: 'D',
+    color: Colors.teal,
+  ),
+  instance(
+    key: 'instance',
+    label: 'Instance',
+    abbr: 'I',
+    color: Colors.orange,
+  ),
+  state(
+    key: 'state',
+    label: 'State',
+    abbr: 'S',
+    color: Colors.blue,
+  ),
+  hook(
+    key: 'hook',
+    label: 'Hook',
+    abbr: 'H',
+    color: Colors.purple,
+  ),
+  signal(
+    key: 'signal',
+    label: 'Signal',
+    abbr: 'S',
+    color: Colors.green,
+  );
 
   const NodeKind({
+    required this.key,
     required this.label,
     required this.abbr,
     required this.color,
   });
 
+  final String key;
   final String label;
   final String abbr;
   final Color color;
 
-  static NodeKind getKind(String kind) {
+  static NodeKind? getKind(String kind) {
     switch (kind) {
+      case 'dependency':
+        return dependency;
       case 'instance':
         return instance;
       case 'state':
@@ -46,7 +76,7 @@ enum NodeKind {
       case 'signal':
         return signal;
       default:
-        return instance;
+        return null;
     }
   }
 }

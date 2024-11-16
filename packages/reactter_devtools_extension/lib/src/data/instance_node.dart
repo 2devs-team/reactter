@@ -10,9 +10,7 @@ base class InstanceNode extends INode<InstanceInfo> {
     required super.key,
     required super.kind,
     required super.type,
-  }) {
-    // _loadStateNode();
-  }
+  });
 
   factory InstanceNode({
     required String key,
@@ -26,10 +24,5 @@ base class InstanceNode extends INode<InstanceInfo> {
         type: type,
       ),
     );
-  }
-
-  @override
-  Future<void> loadDetails() async {
-    // TODO: implement loadDetails
   }
 }

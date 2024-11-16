@@ -3,7 +3,9 @@ import 'package:reactter_devtools_extension/src/services/eval_service.dart';
 import 'package:vm_service/vm_service.dart';
 
 extension InstanceExt on Instance {
-  Future<dynamic> evalValue([Disposable? isAlive]) async {
+  Future<dynamic> evalValue([Disposable? isAlive, int? level]) async {
+    if (level != null && level == 0) return this;
+
     switch (kind) {
       case InstanceKind.kNull:
         return null;
@@ -22,8 +24,10 @@ extension InstanceExt on Instance {
           final InstanceRef keyRef = entry.key;
           final InstanceRef valueRef = entry.value;
 
-          nodeInfo[await keyRef.evalValue(isAlive)] =
-              await valueRef.evalValue(isAlive);
+          nodeInfo[await keyRef.evalValue(isAlive)] = await valueRef.evalValue(
+            isAlive,
+            level == null ? null : level - 1,
+          );
         }
 
         return nodeInfo;
@@ -32,7 +36,10 @@ extension InstanceExt on Instance {
         final listValues = <dynamic>[];
 
         for (final e in list) {
-          final value = await e.evalValue(isAlive);
+          final value = await e.evalValue(
+            isAlive,
+            level == null ? null : level - 1,
+          );
           listValues.add(value);
         }
 
@@ -91,9 +98,11 @@ extension InstanceRefExt on InstanceRef {
     }
   }
 
-  Future<dynamic> evalValue([Disposable? isAlive]) async {
+  Future<dynamic> evalValue([Disposable? isAlive, int? level]) async {
+    if (level != null && level == 0) return this;
+
     final instance = await safeGetInstance(isAlive);
-    return await instance?.evalValue(isAlive);
+    return await instance?.evalValue(isAlive, level);
   }
 
   Future<dynamic> evalValueFirstLevel([Disposable? isAlive]) async {

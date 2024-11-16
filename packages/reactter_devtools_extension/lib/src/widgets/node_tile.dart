@@ -30,41 +30,6 @@ class NodeTile extends StatelessWidget {
   }
 }
 
-class NodeTileIcon extends StatelessWidget {
-  final String kind;
-  final bool isDependency;
-
-  const NodeTileIcon({
-    super.key,
-    required this.kind,
-    this.isDependency = false,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final nodeKind = NodeKind.getKind(kind);
-
-    return Badge(
-      backgroundColor: isDependency ? Colors.teal : Colors.transparent,
-      child: Padding(
-        padding: const EdgeInsets.all(2.0),
-        child: Center(
-          child: CircleAvatar(
-            backgroundColor: nodeKind.color,
-            child: Text(
-              nodeKind.abbr,
-              style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
 class NodeTileTitle extends StatelessWidget {
   final INode node;
 
@@ -79,24 +44,12 @@ class NodeTileTitle extends StatelessWidget {
       final info = watch(node.uInfo).value;
       final dependencyRef = info?.dependencyRef;
 
-      return Row(
-        children: [
-          SizedBox.square(
-            dimension: 24,
-            child: Padding(
-              padding: const EdgeInsets.all(1),
-              child: NodeTileIcon(
-                kind: node.kind,
-                isDependency: dependencyRef != null,
-              ),
-            ),
-          ),
-          InstanceTitle(
-            type: node.type,
-            label: node.label,
-            nKey: node.key,
-          ),
-        ],
+      return InstanceTitle(
+        nKey: node.key,
+        type: node.type,
+        kind: node.kind,
+        label: node.label,
+        isDependency: dependencyRef != null,
       );
     });
   }
