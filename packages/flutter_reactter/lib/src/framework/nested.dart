@@ -48,31 +48,32 @@ class NestedElement extends StatelessElement {
     }
   }
 
-  WrapperWidget? _wrappedChild;
-  WrapperWidget? get wrappedChild => _wrappedChild;
-  set wrappedChild(WrapperWidget? value) {
-    if (_wrappedChild != value) {
-      _wrappedChild = value;
+  WrapperWidget? _wrappedWidget;
+  WrapperWidget? get wrappedWidget => _wrappedWidget;
+  set wrappedWidget(WrapperWidget? value) {
+    if (_wrappedWidget != value) {
+      _wrappedWidget?.dispose();
+      _wrappedWidget = value;
       markNeedsBuild();
     }
   }
 
   @override
   void mount(Element? parent, dynamic newSlot) {
-    widget.owner.nodes.add(this);
-    _wrappedChild = widget.wrappedWidget;
+    widget.owner.addNode(this);
+    _wrappedWidget = widget.wrappedWidget;
     _injectedChild = widget.injectedChild;
     super.mount(parent, newSlot);
   }
 
   @override
   void unmount() {
-    widget.owner.nodes.remove(this);
+    widget.owner.removeNode(this);
     super.unmount();
   }
 
   @override
   Widget build() {
-    return wrappedChild!;
+    return wrappedWidget!;
   }
 }

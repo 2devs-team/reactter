@@ -70,13 +70,12 @@ class MasterDependency<T extends Object?> extends Dependency<T> {
     super.dispose();
   }
 
+  // coverage:ignore-start
   @override
   void commitToMaster(MasterDependency<T> masterDependency) {
-    if (_instance != null) masterDependency._instance = _instance;
-
-    masterDependency._states.addAll(_states);
-    masterDependency._selects.addAll(_selects);
+    assert(true, 'This method should not be called');
   }
+  // coverage:ignore-end
 
   @override
   void listen(void Function() callback) {

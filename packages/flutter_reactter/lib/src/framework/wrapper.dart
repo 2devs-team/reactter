@@ -5,6 +5,8 @@ part of '../framework.dart';
 abstract class WrapperWidget implements Widget {
   @override
   WrapperElementMixin createElement();
+
+  void dispose();
 }
 
 /// Mixin to [WrapperWidget]'s Element
@@ -34,5 +36,13 @@ mixin WrapperElementMixin<T extends Widget> on Element {
       }
       return false;
     });
+  }
+
+  void addNode(NestedElement node) {
+    nodes.add(node);
+  }
+
+  void removeNode(NestedElement node) {
+    nodes.remove(node);
   }
 }

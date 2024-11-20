@@ -158,12 +158,7 @@ class RtProvider<T extends Object?> extends ProviderBase<T>
           child: child,
           builder: builder,
         ) {
-    Rt.create(
-      instanceBuilder,
-      id: id,
-      mode: mode,
-      ref: this,
-    );
+    createInstance();
   }
 
   /// Creates a lazy instance of [T] dependency and provides it to tree widget.
@@ -183,6 +178,19 @@ class RtProvider<T extends Object?> extends ProviderBase<T>
           child: child,
           lazyBuilder: builder,
         );
+
+  void createInstance() {
+    Rt.create<T>(instanceBuilder, id: id, mode: mode, ref: this);
+  }
+
+  void disposeInstance() {
+    Rt.delete<T>(id, this);
+  }
+
+  @override
+  void dispose() {
+    disposeInstance();
+  }
 
   Widget buildWithChild(Widget? child) {
     if (id != null) {
@@ -238,14 +246,10 @@ class RtProvider<T extends Object?> extends ProviderBase<T>
 class RtProviderElement<T extends Object?> extends ComponentElement
     with WrapperElementMixin<RtProvider<T>> {
   bool get isRoot {
-    return Rt.getRefAt<T>(0, widget.id) == _widget;
+    return Rt.getRefAt<T>(0, widget.id) == widget;
   }
 
-  final RtProvider<T> _widget;
-
-  RtProviderElement(RtProvider<T> widget)
-      : _widget = widget,
-        super(widget);
+  RtProviderElement(Widget widget) : super(widget);
 
   @override
   Widget build() {

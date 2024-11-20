@@ -29,7 +29,7 @@ void main() {
 
         expect(find.text("total: 0"), findsOneWidget);
 
-        signalList.value.addAll([1, 1, 2]);
+        signalList.update((value) => value.addAll([1, 1, 2]));
         await tester.pumpAndSettle();
 
         expect(find.text("total: 4"), findsOneWidget);

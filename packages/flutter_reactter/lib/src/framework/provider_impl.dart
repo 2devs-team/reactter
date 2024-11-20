@@ -148,10 +148,6 @@ class ProviderElement<T extends Object?> extends InheritedElement
   HashMap<RtDependency, ProviderElement<T>>? _inheritedElementsWithId;
   bool _isLazyInstanceObtained = false;
 
-  bool get isRoot {
-    return Rt.getRefAt<T>(0, widget.id) == widget;
-  }
-
   @override
   ProvideImpl<T, String?> get widget {
     return super.widget as ProvideImpl<T, String?>;
@@ -174,17 +170,7 @@ class ProviderElement<T extends Object?> extends InheritedElement
     required ProvideImpl<T, String?> widget,
     String? id,
   }) : super(widget) {
-    if (widget.init && !widget.isLazy) {
-      // TODO: Remove this when the `init` property is removed
-      Rt.create<T>(
-        widget.instanceBuilder,
-        id: widget.id,
-        mode: widget.mode,
-        ref: widget,
-      );
-
-      return;
-    }
+    if (widget.init && !widget.isLazy) return;
 
     Rt.register<T>(
       widget.instanceBuilder,
@@ -201,7 +187,7 @@ class ProviderElement<T extends Object?> extends InheritedElement
     final shouldNotifyMount = count == 1;
 
     if (!widget.init && !widget.isLazy) {
-      Rt.get<T>(widget.id, widget);
+      Rt.get<T>(widget.id, widget.ref);
     }
 
     _updateInheritedElementWithId(parent);
@@ -230,8 +216,7 @@ class ProviderElement<T extends Object?> extends InheritedElement
 
   @override
   void unmount() {
-    final id = widget.id;
-    final ref = widget;
+    final ref = widget.ref;
     final dependency = RtDependency<T?>(widget.id);
     final count = (_instanceMountCount[dependency] ?? 0) - 1;
     final shouldNotifyUnmount = count < 1;
@@ -253,7 +238,8 @@ class ProviderElement<T extends Object?> extends InheritedElement
         Rt.emit(dependency, Lifecycle.didUnmount);
       }
 
-      Rt.delete<T>(id, ref);
+      if (ref is RtProvider) ref.disposeInstance();
+
       _inheritedElementsWithId = null;
       _prevChild = null;
     }
