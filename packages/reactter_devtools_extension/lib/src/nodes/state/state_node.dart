@@ -1,11 +1,10 @@
-import 'package:devtools_app_shared/service.dart';
 import 'package:flutter_reactter/flutter_reactter.dart';
-import 'package:reactter_devtools_extension/src/interfaces/node.dart';
-import 'package:reactter_devtools_extension/src/data/property_node.dart';
-import 'package:reactter_devtools_extension/src/data/state_info.dart';
+import 'package:reactter_devtools_extension/src/bases/node.dart';
+import 'package:reactter_devtools_extension/src/nodes/property/property_async_node.dart';
+import 'package:reactter_devtools_extension/src/nodes/state/state_info.dart';
 import 'package:reactter_devtools_extension/src/services/eval_service.dart';
 
-base class StateNode extends INode<StateInfo> {
+base class StateNode extends Node<StateInfo> {
   final uIsLoading = UseState(false);
 
   @override
@@ -44,7 +43,6 @@ base class StateNode extends INode<StateInfo> {
 
   Future<void> loadBoundInstance() async {
     final eval = await EvalService.devtoolsEval;
-    final isAlive = Disposable();
 
     final boundInstanceValue = await eval.evalInstance(
       'RtDevTools._instance?.getBoundInstance("$key")',
@@ -75,7 +73,6 @@ base class StateNode extends INode<StateInfo> {
 
   Future<void> loadDebugInfo() async {
     final eval = await EvalService.devtoolsEval;
-    final isAlive = Disposable();
 
     final debugInfoValue = await eval.evalInstance(
       'RtDevTools._instance?.getDebugInfo("$key")',

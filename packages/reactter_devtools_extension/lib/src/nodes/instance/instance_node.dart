@@ -1,8 +1,8 @@
 import 'package:flutter_reactter/reactter.dart';
-import 'package:reactter_devtools_extension/src/data/instance_info.dart';
-import 'package:reactter_devtools_extension/src/interfaces/node.dart';
+import 'package:reactter_devtools_extension/src/nodes/instance/instance_info.dart';
+import 'package:reactter_devtools_extension/src/bases/node.dart';
 
-base class InstanceNode extends INode<InstanceInfo> {
+final class InstanceNode extends Node<InstanceInfo> {
   @override
   final label = null;
 

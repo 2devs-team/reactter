@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_reactter/flutter_reactter.dart';
 import 'package:reactter_devtools_extension/src/controllers/nodes_controller.dart';
-import 'package:reactter_devtools_extension/src/widgets/node_tile.dart';
+import 'package:reactter_devtools_extension/src/widgets/dependency_tile.dart';
 import 'package:reactter_devtools_extension/src/widgets/offset_scrollbar.dart';
 
-class NodesList extends StatelessWidget {
-  const NodesList({super.key});
+class DependenciesList extends StatelessWidget {
+  const DependenciesList({super.key});
 
   @override
   Widget build(BuildContext context) {
     final nodesController = context.use<NodesController>();
-    final listViewKey = nodesController.nodesListViewKey;
+    final listViewKey = nodesController.dependenciesListViewKey;
     final scrollControllerX = ScrollController();
-    final scrollControllerY = nodesController.nodesListScrollControllerY;
+    final scrollControllerY = nodesController.dependencyListScrollControllerY;
     final focusNode = FocusNode();
 
     return LayoutBuilder(
@@ -27,8 +27,7 @@ class NodesList extends StatelessWidget {
             scrollDirection: Axis.horizontal,
             child: Material(
               child: RtWatcher((context, watch) {
-                final maxDepth = watch(nodesController.uMaxDepth).value;
-                final minWith = 400 + (24.0 * maxDepth);
+                const minWith = 500.0;
 
                 return ConstrainedBox(
                   constraints: BoxConstraints(
@@ -44,8 +43,9 @@ class NodesList extends StatelessWidget {
                       focusNode: focusNode,
                       selectionControls: materialTextSelectionControls,
                       child: RtWatcher((context, watch) {
-                        final nodesList = watch(nodesController.nodesList);
-                        final length = nodesList.length;
+                        final dependenciesList =
+                            watch(nodesController.dependenciesList);
+                        final length = dependenciesList.length;
 
                         return ListView.custom(
                           key: listViewKey,
@@ -53,9 +53,9 @@ class NodesList extends StatelessWidget {
                           itemExtent: 24,
                           childrenDelegate: SliverChildBuilderDelegate(
                             (context, index) {
-                              final node = nodesList.elementAt(index);
+                              final node = dependenciesList.elementAt(index);
 
-                              return NodeTile(
+                              return DependencyTile(
                                 key: Key(node.key),
                                 node: node,
                                 onTap: () => nodesController.selectNode(node),

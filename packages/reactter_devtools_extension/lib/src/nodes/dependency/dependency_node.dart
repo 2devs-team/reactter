@@ -1,11 +1,10 @@
-import 'package:devtools_app_shared/service.dart';
 import 'package:flutter_reactter/reactter.dart';
-import 'package:reactter_devtools_extension/src/data/dependency_info.dart';
-import 'package:reactter_devtools_extension/src/interfaces/node.dart';
+import 'package:reactter_devtools_extension/src/nodes/dependency/dependency_info.dart';
+import 'package:reactter_devtools_extension/src/bases/node.dart';
 import 'package:reactter_devtools_extension/src/services/eval_service.dart';
 import 'package:vm_service/vm_service.dart';
 
-base class DependencyNode extends INode<DependencyInfo> {
+final class DependencyNode extends Node<DependencyInfo> {
   final uIsLoading = UseState(false);
 
   @override
@@ -15,9 +14,7 @@ base class DependencyNode extends INode<DependencyInfo> {
     required super.key,
     required super.kind,
     required super.type,
-  }) {
-    _loadDependencyNode();
-  }
+  });
 
   factory DependencyNode({
     required String key,
@@ -37,7 +34,6 @@ base class DependencyNode extends INode<DependencyInfo> {
     uIsLoading.value = true;
 
     final eval = await EvalService.devtoolsEval;
-    final isAlive = Disposable();
 
     final dependencyNode = await eval.evalInstance(
       'RtDevTools._instance?.getDependencyInfo("$key")',

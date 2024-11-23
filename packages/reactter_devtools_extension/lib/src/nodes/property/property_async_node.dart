@@ -2,62 +2,23 @@ import 'dart:async';
 import 'dart:collection';
 
 import 'package:devtools_app_shared/service.dart';
-
 import 'package:flutter_reactter/reactter.dart';
-import 'package:reactter_devtools_extension/src/data/tree_node.dart';
+import 'package:reactter_devtools_extension/src/bases/property_node.dart';
+import 'package:reactter_devtools_extension/src/constants.dart';
+import 'package:reactter_devtools_extension/src/nodes/property/propery_sync_node.dart';
 import 'package:reactter_devtools_extension/src/services/eval_service.dart';
 import 'package:reactter_devtools_extension/src/utils/extensions.dart';
 import 'package:vm_service/vm_service.dart';
 
-const _kMaxValueLength = 50;
-
-abstract base class IPropertyNode extends TreeNode<IPropertyNode> {
-  final String key;
-  final uValue = UseState<String?>(null);
-  final uInstanceInfo = UseState<Map<String, dynamic>?>(null);
-
-  IPropertyNode({required this.key, String? value, bool isExpanded = false}) {
-    uValue.value = value;
-    uIsExpanded.value = isExpanded;
-  }
-}
-
-base class PropertyNode extends IPropertyNode {
-  PropertyNode._({
-    required super.key,
-    required super.value,
-    required super.isExpanded,
-  });
-
-  factory PropertyNode({
-    IPropertyNode? parent,
-    required String key,
-    required String value,
-    bool isExpanded = false,
-  }) {
-    return Rt.createState(
-      () => PropertyNode._(
-        key: key,
-        value: value,
-        isExpanded: isExpanded,
-      ),
-    );
-  }
-
-  void updateValue(String value) {
-    uValue.value = value;
-  }
-}
-
-base class PropertyAsyncNode extends IPropertyNode {
+final class PropertyAsyncNode extends PropertyNode {
   InstanceRef _valueRef;
   InstanceRef get valueRef => _valueRef;
 
   Disposable? _isAlive;
   bool _isResolved = false;
   bool _isValueUpdating = false;
-  final LinkedHashMap<String, IPropertyNode> _childNodeRefs =
-      LinkedHashMap<String, IPropertyNode>();
+  final LinkedHashMap<String, PropertyNode> _childNodeRefs =
+      LinkedHashMap<String, PropertyNode>();
 
   final uValueFuture = UseState<FutureOr<String?>?>(null);
   final uIsLoading = UseState(false);
@@ -279,7 +240,7 @@ base class PropertyAsyncNode extends IPropertyNode {
       final isAsyncValue = child.value is InstanceRef;
       final isValueTypeSame =
           (childCurrent is PropertyAsyncNode && isAsyncValue) ||
-              (childCurrent is PropertyNode && !isAsyncValue);
+              (childCurrent is PropertySyncNode && !isAsyncValue);
 
       if (!isValueTypeSame) _childNodeRefs.remove(child.key);
 
@@ -296,7 +257,7 @@ base class PropertyAsyncNode extends IPropertyNode {
             );
           }
 
-          return PropertyNode(
+          return PropertySyncNode(
             key: child.key,
             value: child.value.toString(),
           );
@@ -306,7 +267,7 @@ base class PropertyAsyncNode extends IPropertyNode {
       if (isRemoveSkip) {
         if (childNode is PropertyAsyncNode) {
           childNode.updateValueRef(child.value);
-        } else if (childNode is PropertyNode) {
+        } else if (childNode is PropertySyncNode) {
           childNode.updateValue(child.value.toString());
         }
       } else {
@@ -333,7 +294,7 @@ base class PropertyAsyncNode extends IPropertyNode {
       final child = children[i];
       final isLast = i == children.length - 1;
 
-      if (child is PropertyNode) continue;
+      if (child is PropertySyncNode) continue;
 
       assert(child is PropertyAsyncNode);
 
@@ -357,7 +318,7 @@ base class PropertyAsyncNode extends IPropertyNode {
         "${buildValue(child.key, value)}${isLast ? '' : ', '}",
       );
 
-      if (childrenValueBuffer.length > _kMaxValueLength) {
+      if (childrenValueBuffer.length > kMaxValueLength) {
         isFull = isLast;
         break;
       }
@@ -365,7 +326,7 @@ base class PropertyAsyncNode extends IPropertyNode {
 
     final moreEllipsis = isFull ? '' : ', ...';
     final maxValueBufferLength =
-        _kMaxValueLength - prefix.length - moreEllipsis.length - suffix.length;
+        kMaxValueLength - prefix.length - moreEllipsis.length - suffix.length;
     final childrenValue = childrenValueBuffer.toString();
     final shouldBeCutted = childrenValue.length > maxValueBufferLength;
     final cuttedEllipsis = shouldBeCutted ? '...' : '';

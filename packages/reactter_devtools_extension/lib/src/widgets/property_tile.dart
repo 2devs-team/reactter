@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_reactter/flutter_reactter.dart';
 import 'package:reactter_devtools_extension/src/controllers/nodes_controller.dart';
-import 'package:reactter_devtools_extension/src/data/constants.dart';
-import 'package:reactter_devtools_extension/src/data/property_node.dart';
+import 'package:reactter_devtools_extension/src/constants.dart';
+import 'package:reactter_devtools_extension/src/bases/property_node.dart';
+import 'package:reactter_devtools_extension/src/nodes/property/property_async_node.dart';
 import 'package:reactter_devtools_extension/src/widgets/instance_title.dart';
 import 'package:reactter_devtools_extension/src/widgets/loading.dart';
 import 'package:reactter_devtools_extension/src/widgets/tile_builder.dart';
@@ -13,7 +14,7 @@ class PropertyTile extends StatelessWidget {
     required this.propertyNode,
   });
 
-  final IPropertyNode propertyNode;
+  final PropertyNode propertyNode;
 
   @override
   Widget build(BuildContext context) {

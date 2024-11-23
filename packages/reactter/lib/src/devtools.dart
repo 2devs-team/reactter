@@ -35,43 +35,25 @@ class RtDevTools with RtStateObserver, RtDependencyObserver {
   @override
   void onStateCreated(RtState state) {
     final stateKey = state.hashCode.toString();
-
-    _addNode(state);
-
-    // print("++ onStateCreated ++");
-    // print("stateNode: ${stateNode.toJson()}");
-    // print("++++++++++++++");
-    // for (var e in nodes) {
-    //   print("${e.toJson()}");
-    // }
-    // print("______________");
+    final stateNode = _addNode(state);
 
     dev.postEvent('ext.reactter.onStateCreated', {
       'stateKey': stateKey,
+      'state': stateNode.toJson(),
     });
   }
 
   @override
   void onStateBound(RtState state, Object instance) {
     final stateKey = state.hashCode.toString();
-    final instanceKey = instance.hashCode.toString();
     final stateNode = _nodesByKey[stateKey];
     final instanceNode = _addNode(instance);
 
     if (stateNode != null) instanceNode.addChild(stateNode);
 
-    // print("++ onStateBound ++");
-    // print("stateNode: ${stateNode?.toJson()}");
-    // print("instanceNode: ${instanceNode.toJson()}");
-    // print("++++++++++++++");
-    // for (var e in nodes) {
-    //   print("${e.toJson()}");
-    // }
-    // print("______________");
-
     dev.postEvent('ext.reactter.onStateBound', {
-      'stateKey': stateKey,
-      'instanceKey': instanceKey,
+      'state': stateNode?.toJson(),
+      'instance': instanceNode.toJson(),
     });
   }
 
@@ -85,15 +67,6 @@ class RtDevTools with RtStateObserver, RtDependencyObserver {
     if (stateNode != null) instanceNode?.removeChild(stateNode);
 
     final isInstanceRemoved = _removeNode(instanceKey);
-
-    // print("++ onStateUnbound ++");
-    // print("stateNode: ${stateNode?.toJson()}");
-    // print("instanceNode: ${instanceNode?.toJson()}");
-    // print("++++++++++++++");
-    // for (var e in nodes) {
-    //   print("${e.toJson()}");
-    // }
-    // print("______________");
 
     dev.postEvent('ext.reactter.onStateUnbound', {
       'stateKey': stateKey,
@@ -125,44 +98,24 @@ class RtDevTools with RtStateObserver, RtDependencyObserver {
 
   @override
   void onDependencyRegistered(DependencyRef dependency) {
-    final dependencyKey = dependency.hashCode.toString();
-
-    _addNode(dependency);
-
-    // print("++ onDependencyRegistered ++");
-    // print("dependencyNode: ${dependencyNode.toJson()}");
-    // print("++++++++++++++");
-    // for (var e in nodes) {
-    //   print("${e.toJson()}");
-    // }
-    // print("______________");
+    final dependencyNode = _addNode(dependency);
 
     dev.postEvent('ext.reactter.onDependencyRegistered', {
-      'dependencyKey': dependencyKey,
+      'dependency': dependencyNode.toJson(),
     });
   }
 
   @override
   void onDependencyCreated(DependencyRef dependency, Object? instance) {
     final dependencyKey = dependency.hashCode.toString();
-    final instanceKey = instance.hashCode.toString();
+    final dependencyNode = _nodesByKey[dependencyKey];
 
-    if (instance != null) _addNode(instance);
-
-    // print("++ onDependencyCreated ++");
-    // if (instance != null) {
-    //   final instanceNode = ;
-    //   print("instanceNode: ${instanceNode.toJson()}");
-    // }
-    // print("++++++++++++++");
-    // for (var e in nodes) {
-    //   print("${e.toJson()}");
-    // }
-    // print("______________");
+    _Node? instanceNode;
+    if (instance != null) instanceNode = _addNode(instance);
 
     dev.postEvent('ext.reactter.onDependencyCreated', {
-      'dependencyKey': dependencyKey,
-      'instanceKey': instanceKey,
+      'dependency': dependencyNode?.toJson(),
+      'instance': instanceNode?.toJson(),
     });
   }
 
@@ -434,7 +387,7 @@ abstract class _Node<T extends Object> extends LinkedListEntry<_Node> {
 
   _Node({required this.instance});
 
-  Map<String, dynamic> toJson() {
+  Map<String, String?> toJson() {
     final dependencyRef = Rt.getDependencyRef(instance);
     final dependencyId = dependencyRef?.id;
 
@@ -447,6 +400,13 @@ abstract class _Node<T extends Object> extends LinkedListEntry<_Node> {
 
   _Node? get lastDescendant =>
       children.isEmpty ? this : children.last.lastDescendant as _Node;
+
+  @override
+  void unlink() {
+    if (list == null) return;
+
+    super.unlink();
+  }
 
   void addChild(_Node node) {
     if (node._parent == this) return;
@@ -529,7 +489,7 @@ class _InstanceNode extends _Node {
   }
 
   @override
-  Map<String, dynamic> toJson() {
+  Map<String, String?> toJson() {
     return {
       ...getInstanceInfo(instance),
       ...super.toJson(),
@@ -568,7 +528,7 @@ class _StateNode extends _Node<RtState> {
   }
 
   @override
-  Map<String, dynamic> toJson() {
+  Map<String, String?> toJson() {
     return {
       ...getInstanceInfo(instance),
       ...super.toJson(),
@@ -604,7 +564,7 @@ class _DependencyNode extends _Node<DependencyRef> {
   }
 
   @override
-  Map<String, dynamic> toJson() {
+  Map<String, String?> toJson() {
     return {
       ...getInstanceInfo(instance),
       ...super.toJson(),

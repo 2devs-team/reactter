@@ -1,9 +1,13 @@
-import 'package:devtools_app_shared/service.dart';
+import 'package:devtools_app_shared/service.dart' hide SentinelException;
 import 'package:reactter_devtools_extension/src/services/eval_service.dart';
 import 'package:vm_service/vm_service.dart';
 
 extension InstanceExt on Instance {
-  Future<dynamic> evalValue([Disposable? isAlive, int? level]) async {
+  Future<dynamic> evalValue([
+    Disposable? isAlive,
+    int? level,
+    throwOnError = false,
+  ]) async {
     if (level != null && level == 0) return this;
 
     switch (kind) {
@@ -23,11 +27,14 @@ extension InstanceExt on Instance {
         for (final entry in associations!) {
           final InstanceRef keyRef = entry.key;
           final InstanceRef valueRef = entry.value;
-
-          nodeInfo[await keyRef.evalValue(isAlive)] = await valueRef.evalValue(
+          final key = await keyRef.evalValue(isAlive, null, throwOnError);
+          final value = await valueRef.evalValue(
             isAlive,
             level == null ? null : level - 1,
+            throwOnError,
           );
+
+          nodeInfo[key] = value;
         }
 
         return nodeInfo;
@@ -83,7 +90,10 @@ extension InstanceExt on Instance {
 }
 
 extension InstanceRefExt on InstanceRef {
-  Future<Instance?> safeGetInstance([Disposable? isAlive]) async {
+  Future<Instance?> safeGetInstance([
+    Disposable? isAlive,
+    throwOnError = false,
+  ]) async {
     try {
       final eval = await EvalService.devtoolsEval;
 
@@ -93,16 +103,26 @@ extension InstanceRefExt on InstanceRef {
 
       return instance;
     } catch (e) {
-      print('safeGetInstance error: $e');
-      return null;
+      if (!throwOnError) return null;
+      rethrow;
     }
   }
 
-  Future<dynamic> evalValue([Disposable? isAlive, int? level]) async {
+  Future<dynamic> evalValue([
+    Disposable? isAlive,
+    int? level,
+    throwOnError = false,
+  ]) async {
     if (level != null && level == 0) return this;
 
-    final instance = await safeGetInstance(isAlive);
-    return await instance?.evalValue(isAlive, level);
+    try {
+      final instance = await safeGetInstance(isAlive, throwOnError);
+      return await instance?.evalValue(isAlive, level);
+    } catch (e) {
+      if (!throwOnError) return null;
+
+      rethrow;
+    }
   }
 
   Future<dynamic> evalValueFirstLevel([Disposable? isAlive]) async {

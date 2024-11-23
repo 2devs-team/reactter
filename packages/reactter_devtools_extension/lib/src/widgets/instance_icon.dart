@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:reactter_devtools_extension/src/data/constants.dart';
+import 'package:reactter_devtools_extension/src/constants.dart';
 
 class InstanceIcon extends StatelessWidget {
   final String kind;
@@ -16,6 +16,7 @@ class InstanceIcon extends StatelessWidget {
     final nodeKind = NodeKind.getKind(kind);
 
     if (nodeKind == null) return const SizedBox();
+
     return SizedBox.square(
       dimension: 24,
       child: Padding(

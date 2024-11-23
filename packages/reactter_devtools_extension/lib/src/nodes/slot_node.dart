@@ -1,8 +1,8 @@
 import 'package:flutter_reactter/reactter.dart';
-import 'package:reactter_devtools_extension/src/interfaces/node.dart';
-import 'package:reactter_devtools_extension/src/interfaces/node_info.dart';
+import 'package:reactter_devtools_extension/src/bases/node.dart';
+import 'package:reactter_devtools_extension/src/bases/node_info.dart';
 
-base class SlotNode extends INode<INodeInfo> {
+final class SlotNode extends Node<NodeInfo> {
   @override
   final String? label = null;
 

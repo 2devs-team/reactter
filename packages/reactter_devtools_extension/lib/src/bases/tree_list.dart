@@ -1,10 +1,12 @@
 import 'dart:collection';
 
 import 'package:flutter_reactter/reactter.dart';
-import 'package:reactter_devtools_extension/src/data/tree_node.dart';
+import 'package:reactter_devtools_extension/src/bases/tree_node.dart';
 
-final class TreeList<E extends TreeNode<E>> extends LinkedList<E>
+base class TreeList<E extends TreeNode<E>> extends LinkedList<E>
     with RtContext, RtStateBase<TreeList<E>> {
+  final uMaxDepth = UseState(0);
+
   TreeList._();
 
   factory TreeList() => Rt.createState(() => TreeList<E>._());
@@ -22,15 +24,14 @@ final class TreeList<E extends TreeNode<E>> extends LinkedList<E>
   bool remove(E entry) => entry.remove();
 
   @override
+  void dispose() {
+    clear();
+    super.dispose();
+  }
+
+  @override
   void clear() {
-    Rt.batch(() {
-      for (final entry in this) {
-        if (!entry.isDisposed) entry.dispose();
-      }
-
-      super.clear();
-
-      notify();
-    });
+    super.clear();
+    if (!isDisposed) notify();
   }
 }

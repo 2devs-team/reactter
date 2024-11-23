@@ -1,6 +1,6 @@
-import 'package:reactter_devtools_extension/src/interfaces/node_info.dart';
+import 'package:reactter_devtools_extension/src/bases/node_info.dart';
 
-class StateInfo extends INodeInfo {
+final class StateInfo extends NodeInfo {
   final String? debugLabel;
   final String? boundInstanceKey;
   final List<String> kinds;

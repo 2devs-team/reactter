@@ -1,4 +1,4 @@
-import 'package:devtools_app_shared/service.dart';
+import 'package:devtools_app_shared/service.dart' hide SentinelException;
 import 'package:reactter_devtools_extension/src/services/eval_service.dart';
 import 'package:reactter_devtools_extension/src/utils/extensions.dart';
 import 'package:vm_service/vm_service.dart';
@@ -33,23 +33,35 @@ class DevtoolsService {
     return nodeInfos + nextNodeInfos;
   }
 
-  Future<Map> getNodeBykey(String nodeKey) async {
-    final eval = await EvalService.devtoolsEval;
+  Future<Map> getNodeBykey(String nodeKey, [Map fallback = const {}]) async {
+    try {
+      final eval = await EvalService.devtoolsEval;
+      final isAlive =
+          _nodesDisposables.putIfAbsent(nodeKey, () => Disposable());
 
-    final isAlive = _nodesDisposables.putIfAbsent(nodeKey, () => Disposable());
+      final nodeInst = await EvalService.evalsQueue.add(
+        () => eval.evalInstance(
+          'RtDevTools._instance?._nodesByKey["$nodeKey"]?.toJson()',
+          isAlive: isAlive,
+        ),
+      );
 
-    final nodeInst = await EvalService.evalsQueue.add(
-      () => eval.evalInstance(
-        'RtDevTools._instance?._nodesByKey["$nodeKey"]?.toJson()',
-        isAlive: isAlive,
-      ),
-    );
+      if (nodeInst.kind == InstanceKind.kNull) return {};
 
-    if (nodeInst.kind == InstanceKind.kNull) return {};
+      assert(nodeInst.kind == InstanceKind.kMap);
 
-    assert(nodeInst.kind == InstanceKind.kMap);
+      return await nodeInst.evalValue(isAlive, null, true);
+    } catch (error) {
+      if (error is CancelledException) {
+        return {};
+      }
 
-    return await nodeInst.evalValue(isAlive);
+      return {
+        ...fallback,
+        'key': nodeKey,
+        'error': error,
+      };
+    }
   }
 
   void disposeNodeByKey(String nodeKey) {

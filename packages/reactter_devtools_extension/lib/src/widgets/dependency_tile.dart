@@ -4,11 +4,11 @@ import 'package:reactter_devtools_extension/src/bases/node.dart';
 import 'package:reactter_devtools_extension/src/widgets/instance_title.dart';
 import 'package:reactter_devtools_extension/src/widgets/tile_builder.dart';
 
-class NodeTile extends StatelessWidget {
+class DependencyTile extends StatelessWidget {
   final Node node;
   final void Function()? onTap;
 
-  const NodeTile({
+  const DependencyTile({
     super.key,
     required this.node,
     this.onTap,

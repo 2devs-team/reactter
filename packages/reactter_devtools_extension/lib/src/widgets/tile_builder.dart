@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_reactter/flutter_reactter.dart';
-import 'package:reactter_devtools_extension/src/data/tree_node.dart';
+import 'package:reactter_devtools_extension/src/bases/tree_node.dart';
 
 class TreeNodeTileBuilder extends StatelessWidget {
   final TreeNode treeNode;
@@ -32,16 +32,21 @@ class TreeNodeTileBuilder extends StatelessWidget {
       title: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          ...List.generate(
-            treeNode.depth.toInt() - 1,
-            (index) => Container(
-              padding: EdgeInsets.only(
-                left: 10,
-                right: (index == treeNode.depth.toInt() - 2) ? 0 : 0,
+          RtWatcher((context, watch) {
+            final depth = watch(treeNode.uDepth).value;
+
+            return Row(
+              children: List.generate(
+                depth.toInt(),
+                (index) => Container(
+                  padding: const EdgeInsets.only(
+                    left: 11,
+                  ),
+                  child: const VerticalDivider(width: 1),
+                ),
               ),
-              child: const VerticalDivider(width: 1),
-            ),
-          ),
+            );
+          }),
           TileExpandable(treeNode: treeNode),
           title,
         ],

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+const int kMaxValueLength = 50;
 const double kNodeTileHeight = 24;
 
 enum NodeType {

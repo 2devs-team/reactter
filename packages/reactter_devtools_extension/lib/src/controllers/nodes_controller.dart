@@ -1,32 +1,42 @@
 import 'dart:async';
 import 'dart:collection';
+import 'dart:math';
 
 import 'package:devtools_extensions/devtools_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_reactter/reactter.dart';
-import 'package:reactter_devtools_extension/src/data/constants.dart';
+import 'package:reactter_devtools_extension/src/constants.dart';
+import 'package:reactter_devtools_extension/src/nodes/dependency/dependency_info.dart';
+import 'package:reactter_devtools_extension/src/nodes/dependency/dependency_node.dart';
 
-import 'package:reactter_devtools_extension/src/data/instance_info.dart';
-import 'package:reactter_devtools_extension/src/data/instance_node.dart';
-import 'package:reactter_devtools_extension/src/data/slot_node.dart';
-import 'package:reactter_devtools_extension/src/data/state_info.dart';
-import 'package:reactter_devtools_extension/src/data/tree_list.dart';
-import 'package:reactter_devtools_extension/src/interfaces/node.dart';
+import 'package:reactter_devtools_extension/src/nodes/instance/instance_info.dart';
+import 'package:reactter_devtools_extension/src/nodes/instance/instance_node.dart';
+import 'package:reactter_devtools_extension/src/nodes/sentinel_node.dart';
+import 'package:reactter_devtools_extension/src/nodes/slot_node.dart';
+import 'package:reactter_devtools_extension/src/nodes/state/state_info.dart';
+import 'package:reactter_devtools_extension/src/bases/tree_list.dart';
+import 'package:reactter_devtools_extension/src/bases/node.dart';
 import 'package:reactter_devtools_extension/src/services/devtools_service.dart';
-import 'package:reactter_devtools_extension/src/data/state_node.dart';
+import 'package:reactter_devtools_extension/src/nodes/state/state_node.dart';
+import 'package:vm_service/vm_service.dart';
 
 class NodesController {
   StreamSubscription? extEventSubscription;
 
   final devtoolsSevices = DevtoolsService();
-  final nodesList = TreeList<INode>();
-  final uNodes = UseState(LinkedHashMap<String, INode>());
+  final nodesList = TreeList<Node>();
+  final dependenciesList = TreeList<Node>();
+  final uNodes = UseState(LinkedHashMap<String, Node>());
   final uCurrentNodeKey = UseState<String?>(null);
+  final uMaxDepth = UseState(0);
 
-  final listViewKey = GlobalKey();
-  final scrollControllerY = ScrollController();
+  final nodesListViewKey = GlobalKey();
+  final dependenciesListViewKey = GlobalKey();
 
-  INode? get currentNode => uNodes.value[uCurrentNodeKey.value];
+  final nodesListScrollControllerY = ScrollController();
+  final dependencyListScrollControllerY = ScrollController();
+
+  Node? get currentNode => uNodes.value[uCurrentNodeKey.value];
 
   NodesController() {
     init();
@@ -49,14 +59,14 @@ class NodesController {
 
       switch (event.extensionKind) {
         case 'ext.reactter.onStateCreated':
-          final String stateKey = eventData['stateKey'];
-          addNodeByKey(stateKey);
+          final Map<String, dynamic> state = eventData['state'];
+          addNodeByMapInfo(state);
           break;
         case 'ext.reactter.onStateBound':
-          final String instanceKey = eventData['instanceKey'];
-          final String stateKey = eventData['stateKey'];
-          addNodeByKey(instanceKey);
-          addNodeByKey(stateKey);
+          final Map<String, dynamic> state = eventData['state'];
+          final Map<String, dynamic> instance = eventData['instance'];
+          addNodeByMapInfo(state);
+          addNodeByMapInfo(instance);
           break;
         case 'ext.reactter.onStateUnbound':
           final String instanceKey = eventData['instanceKey'];
@@ -72,14 +82,25 @@ class NodesController {
           final bool isStateRemoved = eventData['isStateRemoved'];
           if (isStateRemoved) removeNodeByKey(stateKey);
           break;
+        case 'ext.reactter.onDependencyRegistered':
+          final Map<String, dynamic> dependency = eventData['dependency'];
+          addNodeByMapInfo(dependency);
+          break;
         case 'ext.reactter.onDependencyCreated':
-          final String instanceKey = eventData['instanceKey'];
-          addNodeByKey(instanceKey);
+          final Map<String, dynamic> dependency = eventData['dependency'];
+          final Map<String, dynamic> instance = eventData['instance'];
+          addNodeByMapInfo(dependency);
+          addNodeByMapInfo(instance);
           break;
         case 'ext.reactter.onDependencyDeleted':
           final String instanceKey = eventData['instanceKey'];
           final bool isInstanceRemoved = eventData['isInstanceRemoved'];
           if (isInstanceRemoved) removeNodeByKey(instanceKey);
+          break;
+        case 'ext.reactter.onDependencyUnregistered':
+          final String dependencyKey = eventData['dependencyKey'];
+          removeNodeByKey(dependencyKey);
+          break;
       }
     });
   }
@@ -92,8 +113,10 @@ class NodesController {
 
   void resetState() {
     nodesList.clear();
+    dependenciesList.clear();
     uNodes.value.clear();
     uCurrentNodeKey.value = null;
+    uMaxDepth.value = 0;
   }
 
   void selectNodeByKey(String nodeKey) {
@@ -106,16 +129,26 @@ class NodesController {
     if (index == null) return;
 
     final offset = index * kNodeTileHeight;
+    final list = node?.list;
+    final isDependenciesList = list == dependenciesList;
+    final scrollController = isDependenciesList
+        ? dependencyListScrollControllerY
+        : nodesListScrollControllerY;
+    final scrollBottom =
+        scrollController.offset + scrollController.position.viewportDimension;
+    final nodeBottom = offset + kNodeTileHeight;
 
-    scrollControllerY.animateTo(
+    if (offset > scrollController.offset && nodeBottom < scrollBottom) return;
+
+    scrollController.animateTo(
       offset,
       duration: const Duration(milliseconds: 300),
       curve: Curves.bounceIn,
     );
   }
 
-  Future<void> addNodeByKey(String nodeKey) async {
-    final nodeInfo = await devtoolsSevices.getNodeBykey(nodeKey);
+  Future<void> addNodeByKey(String nodeKey, [Map fallback = const {}]) async {
+    final nodeInfo = await devtoolsSevices.getNodeBykey(nodeKey, fallback);
     addNodeByMapInfo(nodeInfo);
   }
 
@@ -123,9 +156,6 @@ class NodesController {
     Rt.batch(() {
       for (final nodeInfo in nodesInfo) {
         addNodeByMapInfo(nodeInfo);
-        // print(
-        //   "key: ${nodeInfo['key']}, label: ${nodeInfo['debugLabel']}, type: ${nodeInfo['type']}, kind: ${nodeInfo['kind']}, boundInstanceKey: ${nodeInfo['boundInstanceKey']}",
-        // );
       }
     });
   }
@@ -134,10 +164,43 @@ class NodesController {
     final kind = nodeInfo['kind'];
     final key = nodeInfo['key'];
     final type = nodeInfo['type'];
+    final error = nodeInfo['error'];
     final dependencyRef = nodeInfo['dependencyRef'];
+
+    if (error is SentinelException) {
+      final nodePrev = uNodes.value[key];
+      final node = nodePrev ??
+          SentinelNode(
+            key: key,
+            kind: kind,
+            type: type ?? 'Unknown',
+          );
+
+      if (kind == 'dependency') {
+        addDependencyNode(node);
+      } else {
+        addNode(node);
+      }
+
+      return;
+    }
 
     switch (kind) {
       case 'dependency':
+        final nodePrev = uNodes.value[key];
+        final node = nodePrev is DependencyNode
+            ? nodePrev
+            : DependencyNode(
+                key: key,
+                kind: kind,
+                type: type,
+              );
+
+        node.uInfo.value = DependencyInfo(
+          id: nodeInfo['id'],
+        );
+
+        addDependencyNode(node);
         break;
       case 'state':
       case 'hook':
@@ -197,17 +260,7 @@ class NodesController {
     }
   }
 
-  void addNode(INode node) {
-    // if (node is SlotNode) {
-    //   print("SloteNode(key: ${node.key})");
-    // } else if (node is StateNode) {
-    //   print("StateNode(key: ${node.key})");
-    // } else if (node is InstanceNode) {
-    //   print("InstanceNode(key: ${node.key})");
-    // } else {
-    //   print("Node(key: ${node.key})");
-    // }
-
+  void addNode(Node node) {
     final nodePrev = uNodes.value[node.key];
 
     if (nodePrev == node) return;
@@ -215,11 +268,18 @@ class NodesController {
     uNodes.value[node.key] = node;
     uNodes.notify();
 
-    nodePrev?.replace(node);
-
     if (node is SlotNode) return;
 
     if (node.list == null) nodesList.add(node);
+
+    nodePrev?.replaceFor(node);
+    uMaxDepth.value = max(uMaxDepth.value, node.uDepth.value);
+  }
+
+  void addDependencyNode(Node node) {
+    uNodes.value[node.key] = node;
+    uNodes.notify();
+    if (node.list == null) dependenciesList.add(node);
   }
 
   void removeNodeByKey(String nodeKey) {
@@ -235,7 +295,7 @@ class NodesController {
       ..notify();
   }
 
-  Future<void> selectNode(INode node) async {
+  Future<void> selectNode(Node node) async {
     currentNode?.uIsSelected.value = false;
     uCurrentNodeKey.value = node.key;
     node.uIsSelected.value = true;

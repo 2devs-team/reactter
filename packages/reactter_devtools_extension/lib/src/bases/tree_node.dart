@@ -5,11 +5,10 @@ abstract base class TreeNode<E extends TreeNode<E>> extends LinkedListEntry<E>
     with RtStateBase<E>, RtContext {
   final uChildren = UseState(LinkedHashSet<E>());
   final uIsExpanded = UseState(true);
+  final uDepth = UseState(0);
 
   E? _parent;
   E? get parent => _parent;
-
-  int get depth => (parent?.depth ?? 0) + 1;
 
   E get lastDescendant {
     if (!uIsExpanded.value) return this as E;
@@ -21,10 +20,7 @@ abstract base class TreeNode<E extends TreeNode<E>> extends LinkedListEntry<E>
   int? getIndex() => list?.indexed.firstWhere((e) => e.$2 == this).$1;
 
   TreeNode() {
-    UseEffect(
-      _onIsExpandedChanged,
-      [uIsExpanded],
-    );
+    UseEffect(_onIsExpandedChanged, [uIsExpanded]);
 
     if (list != null) bind(list!);
   }
@@ -54,26 +50,21 @@ abstract base class TreeNode<E extends TreeNode<E>> extends LinkedListEntry<E>
     if (list is RtState) (list as RtState).notify();
   }
 
-  void replace(E entry) {
+  void replaceFor(E entry) {
     Rt.batch(() {
-      if (parent != null) {
-        entry._parent = parent;
-        insertBefore(entry);
-      }
+      entry._toParent(parent);
 
-      if (entry.list == null) {
-        list?.add(entry);
-      }
-
-      entry.uIsExpanded.value = uIsExpanded.value;
-
-      final children = uChildren.value;
-
-      for (final child in [...children]) {
+      for (final child in [...uChildren.value]) {
         entry.addChild(child);
       }
 
-      children.clear();
+      entry.uIsExpanded.update(() {
+        entry.uIsExpanded.value = uIsExpanded.value;
+      });
+
+      uChildren.update(() {
+        uChildren.value.clear();
+      });
 
       remove();
     });
@@ -81,44 +72,61 @@ abstract base class TreeNode<E extends TreeNode<E>> extends LinkedListEntry<E>
 
   void addChild(E entry) {
     Rt.batch(() {
-      if (entry.parent != this) {
-        entry.parent?.uChildren.value.remove(entry);
-        entry.parent?.uChildren.notify();
-        entry._parent = this as E;
-        entry
-          ..unbind()
-          ..bind(this);
-      }
+      entry._toParent(this as E);
 
-      uChildren.value.add(entry);
-      uChildren.notify();
-
-      if (uIsExpanded.value) {
-        _showChildren();
-      } else {
-        _hideChildren();
-      }
+      uChildren.update(() {
+        uChildren.value.add(entry);
+      });
     });
   }
 
   bool remove() {
     Rt.batch(() {
-      final children = uChildren.value.toList();
+      unlink();
 
-      for (final node in children) {
+      for (final node in [...uChildren.value]) {
         node.remove();
       }
 
-      unlink();
-
-      parent?.uChildren
-        ?..value.remove(this)
-        ..notify();
+      final parentIsDisposed = parent?.uChildren.isDisposed ?? true;
+      if (!parentIsDisposed) {
+        parent?.uChildren.update(() {
+          parent?.uChildren.value.remove(this);
+        });
+      }
 
       if (!isDisposed) dispose();
     });
 
     return list == null;
+  }
+
+  void _toParent(E? parentToSet) {
+    if (parentToSet == _parent) return;
+
+    _parent?.uChildren.value.remove(this);
+    _parent?.uChildren.notify();
+    _parent = parentToSet;
+
+    unbind();
+    unlink();
+
+    if (_parent != null) bind(_parent!);
+
+    if (_parent?.uIsExpanded.value ?? false) {
+      _parent?.lastDescendant.insertAfter(this as E);
+    }
+
+    _recalculateDepth();
+    uIsExpanded.notify();
+  }
+
+  void _recalculateDepth() {
+    uDepth.value = parent?.uDepth.value == null ? 0 : parent!.uDepth.value + 1;
+
+    for (final child in [...uChildren.value]) {
+      child._recalculateDepth();
+    }
   }
 
   void _onIsExpandedChanged() {
@@ -132,10 +140,12 @@ abstract base class TreeNode<E extends TreeNode<E>> extends LinkedListEntry<E>
   }
 
   void _showChildren() {
+    if (list == null) return;
+
     Rt.batch(() {
       E? prevChild;
 
-      for (final node in uChildren.value) {
+      for (final node in [...uChildren.value]) {
         node.unlink();
 
         if (prevChild == null) {
@@ -158,9 +168,7 @@ abstract base class TreeNode<E extends TreeNode<E>> extends LinkedListEntry<E>
   void _hideChildren() {
     Rt.batch(() {
       for (final node in uChildren.value) {
-        if (node.list == null) {
-          continue;
-        }
+        if (node.list == null) continue;
 
         node._hideChildren();
         node.unlink();
