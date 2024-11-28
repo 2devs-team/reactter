@@ -1,26 +1,18 @@
-import 'package:reactter_devtools_extension/src/bases/node_info.dart';
+import 'package:reactter_devtools_extension/src/nodes/instance/instance_info.dart';
 
-final class StateInfo extends NodeInfo {
+final class StateInfo extends InstanceInfo {
   final String? debugLabel;
   final String? boundInstanceKey;
-  final List<String> kinds;
 
-  StateInfo({
-    super.dependencyRef,
+  StateInfo(
+    super.node, {
+    super.nodeKind,
+    super.type,
+    super.identify,
+    super.identityHashCode,
+    super.value,
+    super.dependencyKey,
     this.debugLabel,
     this.boundInstanceKey,
-    this.kinds = const ['RtState'],
   });
-
-  StateInfo copyWith({
-    String? dependencyRef,
-    String? debugLabel,
-    String? boundInstanceKey,
-  }) {
-    return StateInfo(
-      dependencyRef: dependencyRef ?? this.dependencyRef,
-      debugLabel: debugLabel ?? this.debugLabel,
-      boundInstanceKey: boundInstanceKey ?? this.boundInstanceKey,
-    );
-  }
 }

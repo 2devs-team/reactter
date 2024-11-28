@@ -1,46 +1,44 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_reactter/flutter_reactter.dart';
-import 'package:reactter_devtools_extension/src/controllers/nodes_controller.dart';
+import 'package:reactter_devtools_extension/src/controllers/node_details_controller.dart';
 import 'package:reactter_devtools_extension/src/widgets/bidirectional_scroll_view.dart';
-import 'package:reactter_devtools_extension/src/widgets/node_tile.dart';
+import 'package:reactter_devtools_extension/src/widgets/detail_node_tile.dart';
 
-class NodesList extends StatelessWidget {
-  const NodesList({super.key});
+class DetailNodeList extends StatelessWidget {
+  const DetailNodeList({super.key});
 
   @override
   Widget build(BuildContext context) {
     final focusNode = FocusNode();
-    final nodesController = context.use<NodesController>();
-    final listViewKey = nodesController.nodesListViewKey;
-    final scrollControllerY = nodesController.nodesListScrollControllerY;
+    final scrollControllerY = ScrollController();
+    final nodeDetailsController = context.use<NodeDetailsController>();
 
     return RtWatcher((context, watch) {
-      final maxDepth = watch(nodesController.nodesList.uMaxDepth).value;
+      final maxDepth =
+          watch(nodeDetailsController.detailNodeList.uMaxDepth).value;
 
       return BidirectionalScrollView(
         scrollControllerY: scrollControllerY,
-        maxWidth: 400 + (24.0 * maxDepth),
+        maxWidth: 600 + (24.0 * maxDepth),
         builder: (context, constraints) {
           return SelectableRegion(
             focusNode: focusNode,
             selectionControls: materialTextSelectionControls,
             child: RtWatcher((context, watch) {
-              final nodesList = watch(nodesController.nodesList);
-              final length = nodesList.length;
+              final detailNodeList =
+                  watch(nodeDetailsController.detailNodeList);
+
+              final length = detailNodeList.length;
 
               return ListView.custom(
-                key: listViewKey,
+                key: ObjectKey(detailNodeList),
                 controller: scrollControllerY,
                 itemExtent: 24,
                 childrenDelegate: SliverChildBuilderDelegate(
                   (context, index) {
-                    final node = nodesList.elementAt(index);
+                    final detailNode = detailNodeList.elementAt(index);
 
-                    return NodeTile(
-                      key: Key(node.key),
-                      node: node,
-                      onTap: () => nodesController.selectNode(node),
-                    );
+                    return DetailNodeTile(node: detailNode);
                   },
                   childCount: length,
                 ),

@@ -32,6 +32,7 @@ base class TreeList<E extends TreeNode<E>> extends LinkedList<E>
   @override
   void clear() {
     super.clear();
+    uMaxDepth.value = 0;
     if (!isDisposed) notify();
   }
 }

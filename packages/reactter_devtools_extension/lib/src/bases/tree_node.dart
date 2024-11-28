@@ -1,10 +1,11 @@
 import 'dart:collection';
 import 'package:flutter_reactter/reactter.dart';
+import 'package:reactter_devtools_extension/src/bases/tree_list.dart';
 
 abstract base class TreeNode<E extends TreeNode<E>> extends LinkedListEntry<E>
     with RtStateBase<E>, RtContext {
   final uChildren = UseState(LinkedHashSet<E>());
-  final uIsExpanded = UseState(true);
+  final uIsExpanded = UseState(false);
   final uDepth = UseState(0);
 
   E? _parent;
@@ -21,6 +22,17 @@ abstract base class TreeNode<E extends TreeNode<E>> extends LinkedListEntry<E>
 
   TreeNode() {
     UseEffect(_onIsExpandedChanged, [uIsExpanded]);
+    UseEffect(() {
+      if (list is! TreeList) return;
+
+      final rList = list as TreeList<E>;
+      final nodeDepth = uDepth.value;
+      final listMaxDepth = rList.uMaxDepth.value;
+
+      if (listMaxDepth >= nodeDepth) return;
+
+      rList.uMaxDepth.value = nodeDepth;
+    }, [uDepth]);
 
     if (list != null) bind(list!);
   }

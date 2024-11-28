@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_reactter/flutter_reactter.dart';
 import 'package:reactter_devtools_extension/src/bases/node.dart';
+import 'package:reactter_devtools_extension/src/nodes/instance/instance_info.dart';
 import 'package:reactter_devtools_extension/src/widgets/instance_title.dart';
 import 'package:reactter_devtools_extension/src/widgets/tile_builder.dart';
 
@@ -40,15 +41,15 @@ class NodeTileTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RtWatcher((context, watch) {
-      final info = watch(node.uInfo).value;
-      final dependencyRef = info?.dependencyRef;
+      final nodeInfo = watch(node.uInfo).value;
 
       return InstanceTitle(
-        nKey: node.key,
-        type: node.type,
-        kind: node.kind,
-        label: node.label,
-        isDependency: dependencyRef != null,
+        nodeKey: node.key,
+        nodeKind: nodeInfo?.nodeKind,
+        type: nodeInfo?.type,
+        label: nodeInfo?.identify,
+        isDependency:
+            nodeInfo is InstanceInfo ? nodeInfo.dependencyKey != null : false,
       );
     });
   }

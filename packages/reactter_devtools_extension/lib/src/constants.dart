@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:reactter_devtools_extension/src/bases/node.dart';
 
 const int kMaxValueLength = 50;
 const double kNodeTileHeight = 24;
@@ -20,45 +21,60 @@ enum NodeType {
   }
 }
 
+abstract class NodeKindKey {
+  static const String dependency = 'dependency';
+  static const String instance = 'instance';
+  static const String state = 'state';
+  static const String hook = 'hook';
+  static const String signal = 'signal';
+}
+
 enum NodeKind {
   dependency(
-    key: 'dependency',
+    type: NodeType.dependency,
+    key: NodeKindKey.dependency,
     label: 'Dependency',
     abbr: 'D',
     color: Colors.teal,
   ),
   instance(
-    key: 'instance',
+    type: NodeType.instance,
+    key: NodeKindKey.instance,
     label: 'Instance',
     abbr: 'I',
     color: Colors.orange,
   ),
   state(
-    key: 'state',
+    type: NodeType.state,
+    key: NodeKindKey.state,
     label: 'State',
     abbr: 'S',
     color: Colors.blue,
   ),
   hook(
-    key: 'hook',
+    type: NodeType.state,
+    key: NodeKindKey.hook,
     label: 'Hook',
     abbr: 'H',
     color: Colors.purple,
   ),
   signal(
-    key: 'signal',
+    type: NodeType.state,
+    key: NodeKindKey.signal,
     label: 'Signal',
     abbr: 'S',
     color: Colors.green,
   );
 
   const NodeKind({
+    required this.type,
     required this.key,
     required this.label,
     required this.abbr,
     required this.color,
   });
 
+  final NodeType type;
   final String key;
   final String label;
   final String abbr;
@@ -66,15 +82,15 @@ enum NodeKind {
 
   static NodeKind? getKind(String kind) {
     switch (kind) {
-      case 'dependency':
+      case NodeKindKey.dependency:
         return dependency;
-      case 'instance':
+      case NodeKindKey.instance:
         return instance;
-      case 'state':
+      case NodeKindKey.state:
         return state;
-      case 'hook':
+      case NodeKindKey.hook:
         return hook;
-      case 'signal':
+      case NodeKindKey.signal:
         return signal;
       default:
         return null;

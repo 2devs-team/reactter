@@ -1,5 +1,16 @@
 import 'package:reactter_devtools_extension/src/bases/node_info.dart';
+import 'package:reactter_devtools_extension/src/constants.dart';
 
-final class InstanceInfo extends NodeInfo {
-  const InstanceInfo({super.dependencyRef});
+base class InstanceInfo extends NodeInfo {
+  final String? dependencyKey;
+
+  InstanceInfo(
+    super.node, {
+    super.nodeKind = NodeKind.instance,
+    super.type,
+    super.identify,
+    super.identityHashCode,
+    super.value,
+    this.dependencyKey,
+  });
 }

@@ -3,31 +3,21 @@ import 'package:reactter_devtools_extension/src/bases/node.dart';
 import 'package:reactter_devtools_extension/src/bases/node_info.dart';
 
 final class SentinelNode extends Node<NodeInfo> {
-  @override
-  String? get label => 'Sentinel';
+  SentinelNode._({required super.key}) : super(kind: 'sentinel');
 
-  SentinelNode._({
-    required super.key,
-    required super.kind,
-    required super.type,
-  });
-
-  factory SentinelNode({
-    required String key,
-    required String kind,
-    required String type,
-  }) {
+  factory SentinelNode({required String key}) {
     return Rt.createState(
-      () => SentinelNode._(
-        key: key,
-        kind: kind,
-        type: type,
-      ),
+      () => SentinelNode._(key: key),
     );
   }
 
   @override
-  Future<void> loadDetails() async {
-    // TODO: implement loadDetails
+  Future<void> loadNode() {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<List<Node<NodeInfo>>> getDetails() {
+    throw UnimplementedError();
   }
 }

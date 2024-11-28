@@ -1,28 +1,39 @@
 import 'package:flutter_reactter/reactter.dart';
-import 'package:reactter_devtools_extension/src/nodes/instance/instance_info.dart';
 import 'package:reactter_devtools_extension/src/bases/node.dart';
+import 'package:reactter_devtools_extension/src/bases/node_info.dart';
+import 'package:reactter_devtools_extension/src/nodes/instance/instance_info.dart';
+import 'package:reactter_devtools_extension/src/services/eval_service.dart';
+import 'package:reactter_devtools_extension/src/utils/extensions.dart';
+import 'package:vm_service/vm_service.dart';
 
-final class InstanceNode extends Node<InstanceInfo> {
-  @override
-  final label = null;
+base class InstanceNode<I extends InstanceInfo> extends Node<I> {
+  InstanceNode.$({required super.key})
+      : super(kind: InstanceKind.kPlainInstance);
 
-  InstanceNode._({
-    required super.key,
-    required super.kind,
-    required super.type,
-  });
-
-  factory InstanceNode({
-    required String key,
-    required String kind,
-    required String type,
-  }) {
+  factory InstanceNode({required String key}) {
     return Rt.createState(
-      () => InstanceNode._(
-        key: key,
-        kind: kind,
-        type: type,
-      ),
+      () => InstanceNode.$(key: key),
     );
   }
+
+  Future<Node?> getDependency() async {
+    try {
+      final eval = await EvalService.devtoolsEval;
+      final dependencyKey = uInfo.value?.dependencyKey;
+      final dependencyRef = await eval.safeEval(
+        'RtDevTools._instance?.getDependencyRef("$dependencyKey")',
+        isAlive: isAlive,
+      );
+      return dependencyRef.getNode('dependency');
+    } catch (e) {
+      print(e);
+    }
+
+    return null;
+  }
+
+  @override
+  Future<List<Node<NodeInfo>>> getDetails() async => [
+        await getDependency(),
+      ].whereType<Node>().toList();
 }

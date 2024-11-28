@@ -2,19 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:reactter_devtools_extension/src/constants.dart';
 
 class InstanceIcon extends StatelessWidget {
-  final String kind;
+  final NodeKind? nodeKind;
   final bool isDependency;
 
   const InstanceIcon({
     super.key,
-    required this.kind,
+    required this.nodeKind,
     this.isDependency = false,
   });
 
   @override
   Widget build(BuildContext context) {
-    final nodeKind = NodeKind.getKind(kind);
-
     if (nodeKind == null) return const SizedBox();
 
     return SizedBox.square(
@@ -27,9 +25,9 @@ class InstanceIcon extends StatelessWidget {
             padding: const EdgeInsets.all(2.0),
             child: Center(
               child: CircleAvatar(
-                backgroundColor: nodeKind.color,
+                backgroundColor: nodeKind!.color,
                 child: Text(
-                  nodeKind.abbr,
+                  nodeKind!.abbr,
                   style: Theme.of(context).textTheme.labelSmall?.copyWith(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,

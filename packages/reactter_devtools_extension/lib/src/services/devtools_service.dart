@@ -24,13 +24,13 @@ class DevtoolsService {
 
     final Map pageInfo = await pageNodes.evalValue(isAlive);
     final totalPages = pageInfo['totalPages'] as int;
-    final nodeInfos = (pageInfo['nodes'] as List).cast<Map>();
+    final dataNodes = (pageInfo['nodes'] as List).cast<Map>();
 
-    if (page >= totalPages - 1) return nodeInfos;
+    if (page >= totalPages - 1) return dataNodes;
 
-    final nextNodeInfos = await getAllNodes(page: page + 1, pageSize: pageSize);
+    final nextDataNodes = await getAllNodes(page: page + 1, pageSize: pageSize);
 
-    return nodeInfos + nextNodeInfos;
+    return dataNodes + nextDataNodes;
   }
 
   Future<Map> getNodeBykey(String nodeKey, [Map fallback = const {}]) async {

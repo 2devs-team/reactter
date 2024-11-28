@@ -3,27 +3,22 @@ import 'package:reactter_devtools_extension/src/bases/node.dart';
 import 'package:reactter_devtools_extension/src/bases/node_info.dart';
 
 final class SlotNode extends Node<NodeInfo> {
-  @override
-  final String? label = null;
+  SlotNode._({required super.key}) : super(kind: 'slot');
 
-  SlotNode._({required super.key, required super.kind, required super.type});
-
-  factory SlotNode({
-    required String key,
-    required String kind,
-    required String type,
-  }) {
+  factory SlotNode({required String key}) {
     return Rt.createState(
-      () => SlotNode._(
-        key: key,
-        kind: kind,
-        type: type,
-      ),
+      () => SlotNode._(key: key),
     );
   }
 
   @override
-  Future<void> loadDetails() async {
-    // TODO: implement loadDetails
+  Future<void> loadNode() {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<List<Node<NodeInfo>>> getDetails() {
+    // TODO: implement getDetails
+    throw UnimplementedError();
   }
 }

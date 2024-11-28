@@ -297,6 +297,26 @@ class RtDevTools with RtStateObserver, RtDependencyObserver {
     return dependencyRef.instance;
   }
 
+  Map<String, dynamic> getDependencyInfo(String dependencyKey) {
+    final dependencyRef = _nodesByKey[dependencyKey];
+
+    if (dependencyRef is! _DependencyNode) return {};
+
+    return dependencyRef.toJson();
+  }
+
+  Map<String, dynamic> getPlainInstanceInfo(Object instance) {
+    if (instance is DependencyRef) {
+      return _DependencyNode.getInstanceInfo(instance);
+    }
+
+    if (instance is RtState) {
+      return _StateNode.getInstanceInfo(instance);
+    }
+
+    return getInstanceInfo(instance);
+  }
+
   Map<String, dynamic> getInstanceInfo(Object instance) {
     if (instance is Enum) {
       return {
@@ -316,55 +336,6 @@ class RtDevTools with RtStateObserver, RtDependencyObserver {
     }
 
     return _InstanceNode.getInstanceInfo(instance);
-  }
-
-  String getPropertyValue(value) {
-    if (value is List) {
-      return getListString(value);
-    }
-    if (value is Map) {
-      return getMapString(value);
-    }
-    if (value is Set) {
-      return getSetString(value);
-    }
-    return value.toString();
-  }
-
-  Map<String, dynamic> getPlainInstanceInfo(Object instance) {
-    if (instance is DependencyRef) {
-      return _DependencyNode.getInstanceInfo(instance);
-    }
-
-    if (instance is RtState) {
-      return _StateNode.getInstanceInfo(instance);
-    }
-
-    return getInstanceInfo(instance);
-  }
-
-  String getListString(List data) {
-    var listString = data.toString();
-    if (listString.length > 60) {
-      listString = '${listString.substring(0, 60)}...]';
-    }
-    return listString;
-  }
-
-  String getMapString(Map data) {
-    var mapString = data.toString();
-    if (mapString.length > 60) {
-      mapString = '${mapString.substring(0, 60)}...}';
-    }
-    return mapString;
-  }
-
-  String getSetString(Set data) {
-    var setString = data.toString();
-    if (setString.length > 60) {
-      setString = '${setString.substring(0, 60)}...}';
-    }
-    return setString;
   }
 }
 
@@ -394,7 +365,7 @@ abstract class _Node<T extends Object> extends LinkedListEntry<_Node> {
     return {
       'key': key,
       'dependencyId': dependencyId,
-      'dependencyRef': dependencyRef?.hashCode.toString(),
+      'dependencyKey': dependencyRef?.hashCode.toString(),
     };
   }
 
@@ -500,7 +471,7 @@ class _InstanceNode extends _Node {
   bool remove() {
     final json = toJson();
 
-    if (json['dependencyRef'] == null) {
+    if (json['dependencyKey'] == null) {
       return super.remove();
     }
 
@@ -539,7 +510,7 @@ class _StateNode extends _Node<RtState> {
   bool remove() {
     final json = toJson();
 
-    if (json['dependencyRef'] == null) {
+    if (json['dependencyKey'] == null) {
       return super.remove();
     }
 
@@ -552,14 +523,15 @@ class _DependencyNode extends _Node<DependencyRef> {
       : super(instance: instance);
 
   static Map<String, dynamic> getInstanceInfo(DependencyRef instance) {
+    final dependencyRef = Rt.getDependencyRegisterByRef(instance);
+
     return {
       'kind': _NodeKind.dependency,
       'key': instance.hashCode.toString(),
       'type': instance.type.toString(),
       'id': instance.id,
-      'instanceKey': Rt.getDependencyRegisterByRef(
-        instance,
-      )?.instance.hashCode.toString(),
+      'mode': dependencyRef?.mode.toString(),
+      'instanceKey': dependencyRef?.instance.hashCode.toString(),
     };
   }
 

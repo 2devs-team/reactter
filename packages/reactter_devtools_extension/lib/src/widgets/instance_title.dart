@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:reactter_devtools_extension/src/constants.dart';
 import 'package:reactter_devtools_extension/src/widgets/instance_icon.dart';
 
 class InstanceTitle extends StatelessWidget {
-  final String nKey;
-  final String type;
-  final String? kind;
+  final String nodeKey;
+  final String? type;
+  final NodeKind? nodeKind;
   final String? label;
   final bool isDependency;
   final void Function()? onTapIcon;
 
   const InstanceTitle({
+    required this.nodeKey,
     super.key,
-    required this.nKey,
-    required this.type,
-    this.kind,
+    this.type,
+    this.nodeKind,
     this.label,
     this.isDependency = false,
     this.onTapIcon,
@@ -23,11 +24,11 @@ class InstanceTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        if (kind != null)
+        if (nodeKind != null)
           InkWell(
             onTap: onTapIcon,
             child: InstanceIcon(
-              kind: kind!,
+              nodeKind: nodeKind,
               isDependency: isDependency,
             ),
           ),
@@ -58,7 +59,7 @@ class InstanceTitle extends StatelessWidget {
                   ],
                 ),
               TextSpan(
-                text: " #$nKey",
+                text: " #$nodeKey",
                 style: Theme.of(context).textTheme.labelSmall?.copyWith(
                       color: Theme.of(context).colorScheme.secondary,
                     ),

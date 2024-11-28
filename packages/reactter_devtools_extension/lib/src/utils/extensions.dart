@@ -1,4 +1,7 @@
 import 'package:devtools_app_shared/service.dart' hide SentinelException;
+import 'package:reactter_devtools_extension/src/bases/node.dart';
+import 'package:reactter_devtools_extension/src/nodes/dart/plain_instance_node.dart';
+import 'package:reactter_devtools_extension/src/nodes/dart/null_node.dart';
 import 'package:reactter_devtools_extension/src/services/eval_service.dart';
 import 'package:vm_service/vm_service.dart';
 
@@ -22,7 +25,7 @@ extension InstanceExt on Instance {
       case InstanceKind.kBool:
         return bool.tryParse(valueAsString!);
       case InstanceKind.kMap:
-        final nodeInfo = <dynamic, dynamic>{};
+        final dataNode = <dynamic, dynamic>{};
 
         for (final entry in associations!) {
           final InstanceRef keyRef = entry.key;
@@ -34,10 +37,10 @@ extension InstanceExt on Instance {
             throwOnError,
           );
 
-          nodeInfo[key] = value;
+          dataNode[key] = value;
         }
 
-        return nodeInfo;
+        return dataNode;
       case InstanceKind.kList:
         final list = elements!.cast<InstanceRef>();
         final listValues = <dynamic>[];
@@ -90,6 +93,18 @@ extension InstanceExt on Instance {
 }
 
 extension InstanceRefExt on InstanceRef {
+  Node getNode(String key) {
+    switch (kind) {
+      case InstanceKind.kNull:
+        return NullNode(key: key);
+      case InstanceKind.kPlainInstance:
+        return PlainInstanceNode(key: key, instanceRef: this);
+      case InstanceKind.kClosure:
+      default:
+        return PlainInstanceNode(key: key, instanceRef: this);
+    }
+  }
+
   Future<Instance?> safeGetInstance([
     Disposable? isAlive,
     throwOnError = false,
