@@ -80,10 +80,15 @@ abstract class EventHandler implements IContext {
     final notifiers = _notifiers.where((notifier) {
       if (!generic && notifier._dependencyRef != null) return false;
 
-      return notifier == instance;
+      return instance != null && notifier.isInstanceOrDependencyRef(instance);
     });
 
+    final boundInstance = instance is RtState ? instance.boundInstance : null;
+
     for (final notifier in notifiers.toList(growable: false)) {
+      if (boundInstance != null &&
+          notifier.isInstanceOrDependencyRef(boundInstance)) continue;
+
       notifier.dispose();
       _notifiers.remove(notifier);
       stateManagement._deferredEvents.remove(notifier);
@@ -92,7 +97,10 @@ abstract class EventHandler implements IContext {
 
   /// Checks if an object has any listeners.
   bool _hasListeners(Object? instance) {
-    return _notifiers.any((notifier) => notifier == instance);
+    return instance != null &&
+        _notifiers.any(
+          (notifier) => notifier.isInstanceOrDependencyRef(instance),
+        );
   }
 
   /// Retrieves the [EventNotifier] for the given [instance] and [eventName].

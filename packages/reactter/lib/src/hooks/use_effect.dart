@@ -227,6 +227,8 @@ class UseEffect extends RtHook {
   }
 
   void _unwatchInstanceAttached() {
+    if (boundInstance == null) return;
+
     Rt.off(
       boundInstance!,
       Lifecycle.didMount,

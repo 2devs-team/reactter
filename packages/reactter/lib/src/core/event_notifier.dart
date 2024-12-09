@@ -59,7 +59,7 @@ class EventNotifier extends EventNotifierRef with Notifier {
   String get target => "$instanceObj about $event";
   final void Function(EventNotifier notifier) onNotifyComplete;
 
-  DependencyRef? get instanceRef =>
+  DependencyRef? get dependencyRef =>
       _dependencyRef ?? dependencyInjection.getDependencyRef(_instanceObj);
 
   Object? get instanceObj =>
@@ -82,21 +82,15 @@ class EventNotifier extends EventNotifierRef with Notifier {
 
   @override
   bool operator ==(Object other) {
-    if (other is EventNotifierRef) {
-      return super == other;
-    }
+    return other is EventNotifierRef && super == other;
+  }
 
-    if (other is DependencyRef) {
-      return instanceRef == other;
-    }
+  bool isInstanceOrDependencyRef(Object other) {
+    if (other == _instanceObj || other == _dependencyRef) return true;
 
-    final instanceRefSelf = instanceRef;
+    if (other is DependencyRef) return other == dependencyRef;
 
-    if (instanceRefSelf != null) {
-      return instanceRefSelf == dependencyInjection.getDependencyRef(other);
-    }
-
-    return instanceObj == other;
+    return other == instanceObj;
   }
 
   /// Copied from Flutter
@@ -118,10 +112,13 @@ class EventNotifier extends EventNotifierRef with Notifier {
   void notifyListeners(Object? param) {
     try {
       super.notifyListeners(param);
-    } catch (e) {
-      if (e is! AssertionError) rethrow;
-    } finally {
       onNotifyComplete(this);
+    } catch (err) {
+      if (err is AssertionError) {
+        onNotifyComplete(this);
+      }
+
+      rethrow;
     }
   }
 

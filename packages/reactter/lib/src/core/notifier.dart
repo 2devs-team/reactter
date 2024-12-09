@@ -206,6 +206,7 @@ abstract class Notifier<T extends Function> {
           // effectively shrink the list.
           _removeAt(i);
         }
+
         break;
       }
     }
@@ -275,6 +276,8 @@ abstract class Notifier<T extends Function> {
     _notificationCallStackDepth++;
 
     final int end = _count;
+    Object? error;
+
     for (int i = 0; i < end; i++) {
       final listener = _listeners[i];
 
@@ -287,16 +290,8 @@ abstract class Notifier<T extends Function> {
         }
 
         listenerCall(listener, param);
-      } catch (error) {
-        assert(() {
-          throw AssertionError(
-            'An error was thrown by a listener of $target.\n'
-            'The error thrown was:\n'
-            '  $error\n',
-          );
-        }());
-
-        rethrow;
+      } catch (err) {
+        error = err;
       } finally {
         // ignore: control_flow_in_finally
         continue;
@@ -344,6 +339,16 @@ abstract class Notifier<T extends Function> {
       _reentrantlyRemovedListeners = 0;
       _count = newLength;
     }
+
+    assert(() {
+      if (error == null) return true;
+
+      throw AssertionError(
+        'An error was thrown by a listener of $target.\n'
+        'The error thrown was:\n'
+        '  $error\n',
+      );
+    }());
   }
 
   /// Calls the [listener] with the given [param].

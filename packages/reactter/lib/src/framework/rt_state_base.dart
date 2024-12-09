@@ -112,18 +112,21 @@ abstract class RtStateBase<E extends RtStateBase<E>> implements RtState {
       "The fnUpdate must be a function without arguments",
     );
 
-    if (!_hasListeners || _isUpdating) {
+    if (_isUpdating || !_hasListeners) {
       fnUpdate?.call();
       _notifyUpdated();
       return;
     }
 
-    _isUpdating = true;
-    _notify(Lifecycle.willUpdate);
-    fnUpdate?.call();
-    _notify(Lifecycle.didUpdate);
-    _notifyUpdated();
-    _isUpdating = false;
+    try {
+      _isUpdating = true;
+      _notify(Lifecycle.willUpdate);
+      fnUpdate?.call();
+      _notify(Lifecycle.didUpdate);
+      _notifyUpdated();
+    } finally {
+      _isUpdating = false;
+    }
   }
 
   @override
@@ -131,15 +134,18 @@ abstract class RtStateBase<E extends RtStateBase<E>> implements RtState {
   void notify() {
     assert(!_isDisposed, "Can't refresh when it's been disposed");
 
-    if (!_hasListeners || _isUpdating) {
+    if (_isUpdating || !_hasListeners) {
       _notifyUpdated();
       return;
     }
 
-    _isUpdating = true;
-    _notify(Lifecycle.didUpdate);
-    _notifyUpdated();
-    _isUpdating = false;
+    try {
+      _isUpdating = true;
+      _notify(Lifecycle.didUpdate);
+      _notifyUpdated();
+    } finally {
+      _isUpdating = false;
+    }
   }
 
   @override
@@ -147,12 +153,12 @@ abstract class RtStateBase<E extends RtStateBase<E>> implements RtState {
   void dispose() {
     assert(!_isDisposed, "Can't dispose when it's been disposed");
 
+    eventHandler.emit(this, Lifecycle.deleted);
+    eventHandler.offAll(this);
+
     if (_boundInstance != null) {
       unbind();
     }
-
-    eventHandler.emit(this, Lifecycle.deleted);
-    eventHandler.offAll(this);
 
     if (_isDisposed) return;
 
