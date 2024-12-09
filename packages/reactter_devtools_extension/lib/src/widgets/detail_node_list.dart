@@ -38,7 +38,10 @@ class DetailNodeList extends StatelessWidget {
                   (context, index) {
                     final detailNode = detailNodeList.elementAt(index);
 
-                    return DetailNodeTile(node: detailNode);
+                    return DetailNodeTile(
+                      key: ObjectKey(detailNode),
+                      node: detailNode,
+                    );
                   },
                   childCount: length,
                 ),

@@ -77,7 +77,7 @@ class RtDevToolsExtension extends StatelessWidget {
                             "Details of ",
                           ),
                           InstanceTitle(
-                            nodeKey: selectedNode.key,
+                            identifyHashCode: selectedNode.key,
                             type: nodeInfo?.type,
                             nodeKind: nodeInfo?.nodeKind,
                             label: nodeInfo?.identify,

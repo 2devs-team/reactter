@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:reactter_devtools_extension/src/constants.dart';
+import 'package:reactter_devtools_extension/src/utils/color_palette.dart';
 import 'package:reactter_devtools_extension/src/widgets/instance_icon.dart';
 
 class InstanceTitle extends StatelessWidget {
-  final String nodeKey;
+  final String? identifyHashCode;
   final String? type;
   final NodeKind? nodeKind;
   final String? label;
@@ -11,8 +12,8 @@ class InstanceTitle extends StatelessWidget {
   final void Function()? onTapIcon;
 
   const InstanceTitle({
-    required this.nodeKey,
     super.key,
+    this.identifyHashCode,
     this.type,
     this.nodeKind,
     this.label,
@@ -43,7 +44,7 @@ class InstanceTitle extends StatelessWidget {
                 style: Theme.of(context)
                     .textTheme
                     .labelSmall
-                    ?.copyWith(color: Colors.amber),
+                    ?.copyWith(color: ColorPalette.of(context).type),
               ),
               if (label != null)
                 TextSpan(
@@ -52,18 +53,19 @@ class InstanceTitle extends StatelessWidget {
                     TextSpan(
                       text: label!,
                       style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                            color: Theme.of(context).colorScheme.primary,
+                            color: ColorPalette.of(context).label,
                           ),
                     ),
                     const TextSpan(text: ")"),
                   ],
                 ),
-              TextSpan(
-                text: " #$nodeKey",
-                style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                      color: Theme.of(context).colorScheme.secondary,
-                    ),
-              ),
+              if (identifyHashCode != null)
+                TextSpan(
+                  text: " #$identifyHashCode",
+                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                        color: ColorPalette.of(context).identifyHashCode,
+                      ),
+                ),
             ],
           ),
         ),

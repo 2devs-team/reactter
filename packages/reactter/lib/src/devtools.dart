@@ -452,10 +452,14 @@ class _InstanceNode extends _Node {
   _InstanceNode({required Object instance}) : super(instance: instance);
 
   static Map<String, dynamic> getInstanceInfo(Object instance) {
+    final value = instance.toString();
+    final type = instance.runtimeType.toString();
+
     return {
       'kind': _NodeKind.instance,
       'key': instance.hashCode.toString(),
-      'type': instance.runtimeType.toString(),
+      'type': type,
+      'value': value.startsWith("Instance of") || value == type ? null : value,
     };
   }
 

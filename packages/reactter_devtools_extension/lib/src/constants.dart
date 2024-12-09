@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:reactter_devtools_extension/src/bases/node.dart';
 
-const int kMaxValueLength = 50;
+const int kMaxValueLength = 150;
 const double kNodeTileHeight = 24;
 
 enum NodeType {
@@ -63,7 +62,7 @@ enum NodeKind {
     key: NodeKindKey.signal,
     label: 'Signal',
     abbr: 'S',
-    color: Colors.green,
+    color: Colors.deepPurpleAccent,
   );
 
   const NodeKind({

@@ -21,4 +21,9 @@ final class SlotNode extends Node<NodeInfo> {
     // TODO: implement getDetails
     throw UnimplementedError();
   }
+
+  @override
+  void markToLoadNode(covariant Function? onUpdate) {
+    // TODO: implement updateNode
+  }
 }

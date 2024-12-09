@@ -44,7 +44,7 @@ class NodeTileTitle extends StatelessWidget {
       final nodeInfo = watch(node.uInfo).value;
 
       return InstanceTitle(
-        nodeKey: node.key,
+        identifyHashCode: node.key,
         nodeKind: nodeInfo?.nodeKind,
         type: nodeInfo?.type,
         label: nodeInfo?.identify,

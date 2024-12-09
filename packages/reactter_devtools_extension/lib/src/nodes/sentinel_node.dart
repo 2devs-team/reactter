@@ -13,11 +13,19 @@ final class SentinelNode extends Node<NodeInfo> {
 
   @override
   Future<void> loadNode() {
+    assert(false, 'SentinelNode should not be loaded');
     throw UnimplementedError();
   }
 
   @override
   Future<List<Node<NodeInfo>>> getDetails() {
+    assert(false, 'SentinelNode should not be expanded');
+    throw UnimplementedError();
+  }
+
+  @override
+  void markToLoadNode(covariant Function? onUpdate) {
+    assert(false, 'SentinelNode should not be updated');
     throw UnimplementedError();
   }
 }

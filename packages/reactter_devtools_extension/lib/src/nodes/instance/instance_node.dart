@@ -20,9 +20,11 @@ base class InstanceNode<I extends InstanceInfo> extends Node<I> {
     try {
       final eval = await EvalService.devtoolsEval;
       final dependencyKey = uInfo.value?.dependencyKey;
-      final dependencyRef = await eval.safeEval(
-        'RtDevTools._instance?.getDependencyRef("$dependencyKey")',
-        isAlive: isAlive,
+      final dependencyRef = await EvalService.evalsQueue.add(
+        () => eval.safeEval(
+          'RtDevTools._instance?.getDependencyRef("$dependencyKey")',
+          isAlive: isAlive,
+        ),
       );
       return dependencyRef.getNode('dependency');
     } catch (e) {
@@ -36,4 +38,9 @@ base class InstanceNode<I extends InstanceInfo> extends Node<I> {
   Future<List<Node<NodeInfo>>> getDetails() async => [
         await getDependency(),
       ].whereType<Node>().toList();
+
+  @override
+  void markToLoadNode(covariant Function? onUpdate) {
+    onUpdate?.call();
+  }
 }

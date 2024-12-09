@@ -64,7 +64,11 @@ abstract base class TreeNode<E extends TreeNode<E>> extends LinkedListEntry<E>
 
   void replaceFor(E entry) {
     Rt.batch(() {
-      entry._toParent(parent);
+      if (parent != null) {
+        entry._toParent(parent);
+      } else {
+        insertAfter(entry);
+      }
 
       for (final child in [...uChildren.value]) {
         entry.addChild(child);

@@ -1,7 +1,11 @@
 import 'package:devtools_app_shared/service.dart' hide SentinelException;
 import 'package:reactter_devtools_extension/src/bases/node.dart';
+import 'package:reactter_devtools_extension/src/nodes/dart/closure_node.dart';
+import 'package:reactter_devtools_extension/src/nodes/dart/iterable_node.dart';
+import 'package:reactter_devtools_extension/src/nodes/dart/key_value_node.dart';
+import 'package:reactter_devtools_extension/src/nodes/dart/map_node.dart';
 import 'package:reactter_devtools_extension/src/nodes/dart/plain_instance_node.dart';
-import 'package:reactter_devtools_extension/src/nodes/dart/null_node.dart';
+import 'package:reactter_devtools_extension/src/nodes/dart/record_node.dart';
 import 'package:reactter_devtools_extension/src/services/eval_service.dart';
 import 'package:vm_service/vm_service.dart';
 
@@ -83,9 +87,13 @@ extension InstanceExt on Instance {
       case InstanceKind.kString:
         return '"$valueAsString"';
       case InstanceKind.kMap:
-        return '{...}';
+        return 'Map{...}(length: ${associations?.length})';
       case InstanceKind.kList:
-        return '[...]';
+        return 'List[...](length: ${elements?.length})';
+      case InstanceKind.kSet:
+        return 'Set{...}(length: ${elements?.length})';
+      case InstanceKind.kRecord:
+        return 'Record(...)(length: ${fields?.length})';
       default:
         return valueAsString ?? 'unknown';
     }
@@ -94,15 +102,44 @@ extension InstanceExt on Instance {
 
 extension InstanceRefExt on InstanceRef {
   Node getNode(String key) {
-    switch (kind) {
-      case InstanceKind.kNull:
-        return NullNode(key: key);
-      case InstanceKind.kPlainInstance:
-        return PlainInstanceNode(key: key, instanceRef: this);
-      case InstanceKind.kClosure:
-      default:
-        return PlainInstanceNode(key: key, instanceRef: this);
-    }
+    return switch (kind) {
+      InstanceKind.kNull ||
+      InstanceKind.kBool ||
+      InstanceKind.kDouble ||
+      InstanceKind.kInt =>
+        KeyValueNode(
+          kind: kind!,
+          key: key,
+          value: '$valueAsString',
+        ),
+      InstanceKind.kString => KeyValueNode(
+          kind: kind!,
+          key: key,
+          value: '"$valueAsString"',
+        ),
+      InstanceKind.kMap => MapNode(key: key, instanceRef: this),
+      InstanceKind.kList => IterableNode(
+          key: key,
+          instanceRef: this,
+        ),
+      InstanceKind.kSet => IterableNode(
+          key: key,
+          instanceRef: this,
+        ),
+      InstanceKind.kRecord => RecordNode(
+          key: key,
+          instanceRef: this,
+        ),
+      InstanceKind.kClosure => ClosureNode(
+          key: key,
+          instanceRef: this,
+        ),
+      InstanceKind.kPlainInstance => PlainInstanceNode(
+          key: key,
+          instanceRef: this,
+        ),
+      _ => PlainInstanceNode(key: key, instanceRef: this),
+    };
   }
 
   Future<Instance?> safeGetInstance([
@@ -111,7 +148,6 @@ extension InstanceRefExt on InstanceRef {
   ]) async {
     try {
       final eval = await EvalService.devtoolsEval;
-
       final instance = await EvalService.evalsQueue.add(
         () => eval.safeGetInstance(this, isAlive),
       );

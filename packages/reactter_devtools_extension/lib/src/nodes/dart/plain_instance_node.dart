@@ -10,9 +10,11 @@ import 'package:reactter_devtools_extension/src/services/eval_service.dart';
 import 'package:reactter_devtools_extension/src/utils/extensions.dart';
 import 'package:vm_service/vm_service.dart';
 
-base class PlainInstanceNode extends AsyncNode<NodeInfo> {
-  PlainInstanceNode._({required super.key, required super.instanceRef})
-      : super(kind: InstanceKind.kPlainInstance);
+base class PlainInstanceNode extends AsyncNode {
+  PlainInstanceNode._({
+    required super.key,
+    required super.instanceRef,
+  });
 
   factory PlainInstanceNode({
     required String key,
@@ -48,8 +50,9 @@ base class PlainInstanceNode extends AsyncNode<NodeInfo> {
     final String type = instanceInfoMap['type'];
     final String? id = instanceInfoMap['id'];
     final String? debugLabel = instanceInfoMap['debugLabel'];
-    final String? identify = id ?? debugLabel;
-    final String value =
+    final String? value = instanceInfoMap['value'];
+    final String? identify = id ?? debugLabel ?? value;
+    final String formattedValue =
         identify != null ? "$type($identify) #$key" : "$type #$key";
     final nodeKind = NodeKind.getKind(kind)!;
 
@@ -62,6 +65,7 @@ base class PlainInstanceNode extends AsyncNode<NodeInfo> {
           type: type,
           identify: id,
           mode: mode,
+          value: formattedValue,
         );
       case NodeKind.instance:
         final dependencyKey = instanceInfoMap['dependencyKey'];
@@ -70,7 +74,9 @@ base class PlainInstanceNode extends AsyncNode<NodeInfo> {
           this,
           type: type,
           identityHashCode: key,
+          identify: value,
           dependencyKey: dependencyKey,
+          value: formattedValue,
         );
       case NodeKind.state:
       case NodeKind.hook:
@@ -81,7 +87,7 @@ base class PlainInstanceNode extends AsyncNode<NodeInfo> {
           type: type,
           identify: debugLabel,
           identityHashCode: key,
-          value: value,
+          value: formattedValue,
           debugLabel: debugLabel,
         );
       default:
@@ -89,14 +95,15 @@ base class PlainInstanceNode extends AsyncNode<NodeInfo> {
           this,
           nodeKind: NodeKind.getKind(kind),
           type: type,
+          identify: value,
           identityHashCode: key,
-          value: value,
+          value: formattedValue,
         );
     }
   }
 
   @override
-  Future<List<Node<NodeInfo>>> getDetails() async {
+  Future<List<Node>> getDetails() async {
     final instance = await instanceRef.safeGetInstance(isAlive);
     final fields = instance?.fields?.cast<BoundField>() ?? [];
     final nodes = fields.map((field) {

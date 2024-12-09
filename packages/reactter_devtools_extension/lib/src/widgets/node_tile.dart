@@ -46,7 +46,7 @@ class NodeTileTitle extends StatelessWidget {
           nodeInfo is InstanceInfo ? nodeInfo.dependencyKey : null;
 
       return InstanceTitle(
-        nodeKey: node.key,
+        identifyHashCode: node.key,
         nodeKind: nodeInfo?.nodeKind,
         type: nodeInfo?.type,
         label: nodeInfo?.identify,

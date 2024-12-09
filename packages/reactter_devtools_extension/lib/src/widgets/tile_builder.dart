@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_reactter/flutter_reactter.dart';
 import 'package:reactter_devtools_extension/src/bases/tree_node.dart';
+import 'package:reactter_devtools_extension/src/utils/color_palette.dart';
 
 class TreeNodeTileBuilder extends StatelessWidget {
   final TreeNode treeNode;
@@ -27,7 +28,7 @@ class TreeNodeTileBuilder extends StatelessWidget {
       contentPadding: EdgeInsets.zero,
       minTileHeight: 24,
       selected: isSelected,
-      selectedTileColor: Theme.of(context).focusColor,
+      selectedTileColor: ColorPalette.of(context).selected,
       onTap: onTap,
       title: Row(
         mainAxisAlignment: MainAxisAlignment.start,
