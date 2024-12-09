@@ -70,13 +70,6 @@ class MasterDependency<T extends Object?> extends Dependency<T> {
     super.dispose();
   }
 
-  // coverage:ignore-start
-  @override
-  void commitToMaster(MasterDependency<T> masterDependency) {
-    assert(true, 'This method should not be called');
-  }
-  // coverage:ignore-end
-
   @override
   void listen(void Function() callback) {
     final eventListener = _buildListenerCallback(callback);
@@ -108,6 +101,13 @@ class MasterDependency<T extends Object?> extends Dependency<T> {
 
     super.unlisten();
   }
+
+  // coverage:ignore-start
+  @override
+  void commitToMaster(MasterDependency<T> masterDependency) {
+    assert(true, 'This method should not be called');
+  }
+  // coverage:ignore-end
 
   // coverage:ignore-start
   @override

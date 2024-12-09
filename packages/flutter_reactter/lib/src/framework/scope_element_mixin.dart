@@ -22,7 +22,6 @@ mixin ScopeElementMixin on InheritedElement {
 
   @override
   void updated(InheritedWidget oldWidget) {
-    // This point is generally reached when applying the hot reload.
     if (_updatedShouldNotify) {
       // If the widget tree is updated, we need to reset the state
       // to avoid memory leaks.
@@ -30,7 +29,7 @@ mixin ScopeElementMixin on InheritedElement {
       notifyClients(oldWidget);
       return;
     }
-
+    // coverage:ignore-line
     super.updated(oldWidget);
   }
 
@@ -65,6 +64,7 @@ mixin ScopeElementMixin on InheritedElement {
     // If the aspect is not a Dependency or if the widget tree is marked as
     // needing build, we can skip the update of the dependencies.
     if (aspect is! Dependency || _isMarkNeedsBuild) {
+      // coverage:ignore-line
       return super.updateDependencies(dependent, aspect);
     }
 
@@ -72,6 +72,7 @@ mixin ScopeElementMixin on InheritedElement {
 
     // If no MasterDependency is stored, we can skip the update of the dependencies.
     if (dependency != null && dependency is! MasterDependency) {
+      // coverage:ignore-line
       return super.updateDependencies(dependent, aspect);
     }
 
@@ -128,7 +129,7 @@ mixin ScopeElementMixin on InheritedElement {
 
     _isFlushDependentsScheduled = true;
 
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       _isFlushDependentsScheduled = false;
       _dependentsFlushReady.clear();
     });
@@ -163,7 +164,15 @@ mixin ScopeElementMixin on InheritedElement {
     if (_isMarkNeedsBuild) return;
 
     _isMarkNeedsBuild = true;
-    super.markNeedsBuild();
+    try {
+      super.markNeedsBuild();
+    } catch (error) {
+      if (error is! AssertionError) rethrow;
+
+      WidgetsBinding.instance.addPostFrameCallback(
+        (_) => super.markNeedsBuild(),
+      );
+    }
   }
 
   void _removeDependencies(Element dependent) {

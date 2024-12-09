@@ -60,8 +60,10 @@ class ProvideImpl<T extends Object?, I extends String?> extends ProviderBase<T>
     return super.child!;
   }
 
+  // coverage:ignore-start
   @override
   bool updateShouldNotify(covariant InheritedWidget oldWidget) => false;
+  // coverage:ignore-end
 
   @override
   ProviderElement<T> createElement() => ProviderElement<T>(widget: this);
