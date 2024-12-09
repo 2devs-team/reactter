@@ -147,6 +147,67 @@ void main() {
       expect(find.text("stateInt: 2"), findsOneWidget);
     });
 
+    testWidgets("should watch dependency's states while rebuilding",
+        (tester) async {
+      late TestController instanceObtained;
+      late TestController instanceObtainedWithId;
+
+      await tester.pumpWidget(
+        TestBuilder(
+          child: RtMultiProviderBuilder(
+            builder: (context, _) {
+              instanceObtained = context.watch<TestController>(
+                (inst) => [inst.stateInt],
+              );
+              instanceObtainedWithId = context.watch<TestController>(
+                (inst) => [inst.stateInt],
+                'uniqueId',
+              );
+
+              return Column(
+                children: [
+                  Text("stateString: ${instanceObtained.stateString.value}"),
+                  Text("stateInt: ${instanceObtained.stateInt.value}"),
+                  Text(
+                    "stateStringWithId: ${instanceObtainedWithId.stateString.value}",
+                  ),
+                  Text(
+                    "stateIntWithId: ${instanceObtainedWithId.stateInt.value}",
+                  ),
+                  Builder(builder: (context) {
+                    if (instanceObtained.stateInt.value == 1) {
+                      instanceObtained.stateInt.value += 1;
+                    }
+
+                    return const SizedBox();
+                  })
+                ],
+              );
+            },
+          ),
+        ),
+      );
+
+      await tester.pumpAndSettle();
+
+      expectLater(instanceObtained, isInstanceOf<TestController>());
+      expectLater(instanceObtainedWithId, isInstanceOf<TestController>());
+
+      expect(find.text("stateString: initial"), findsOneWidget);
+      expect(find.text("stateInt: 0"), findsOneWidget);
+      expect(find.text("stateStringWithId: from uniqueId"), findsOneWidget);
+      expect(find.text("stateIntWithId: 0"), findsOneWidget);
+
+      instanceObtained.stateInt.value += 1;
+      instanceObtainedWithId.stateInt.value += 1;
+      await tester.pumpAndSettle();
+
+      expect(find.text("stateString: initial"), findsOneWidget);
+      expect(find.text("stateInt: 2"), findsOneWidget);
+      expect(find.text("stateStringWithId: from uniqueId"), findsOneWidget);
+      expect(find.text("stateIntWithId: 1"), findsOneWidget);
+    });
+
     testWidgets(
         "should watch multiple dependency's states, using different context.watch",
         (tester) async {

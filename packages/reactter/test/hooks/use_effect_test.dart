@@ -254,17 +254,21 @@ void main() {
       UseEffect(
         () {
           return () {
-            nCalls += 1;
+            nCalls++;
 
             if (nCalls == 1) {
-              expect(stateA.value, true);
+              expect(stateA.value, false);
               expect(stateB.value, 0);
               expect(stateC.value, "initial");
             } else if (nCalls == 2) {
               expect(stateA.value, true);
-              expect(stateB.value, 1);
+              expect(stateB.value, 0);
               expect(stateC.value, "initial");
             } else if (nCalls == 3) {
+              expect(stateA.value, true);
+              expect(stateB.value, 1);
+              expect(stateC.value, "initial");
+            } else if (nCalls == 4) {
               expect(stateA.value, true);
               expect(stateB.value, 1);
               expect(stateC.value, "new value");

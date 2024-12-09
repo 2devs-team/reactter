@@ -286,7 +286,7 @@ void _testControllerLate([String? id]) {
   late final TestController instance;
   final useDependency = UseDependency<TestController>(id: id);
 
-  UseEffect(() {
+  final uEffect = UseEffect(() {
     if (useDependency.instance != null) {
       instance = useDependency.instance!;
     }
@@ -294,6 +294,9 @@ void _testControllerLate([String? id]) {
 
   Rt.create(() => TestController(), id: id);
   Rt.destroy<TestController>(id: id);
+
+  uEffect.dispose();
+  useDependency.dispose();
 
   expectLater(instance, isA<TestController>());
 }
