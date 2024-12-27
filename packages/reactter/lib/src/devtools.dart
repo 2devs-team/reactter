@@ -1,3 +1,4 @@
+// coverage:ignore-file
 import 'dart:collection';
 import 'dart:developer' as dev;
 
@@ -8,23 +9,41 @@ import 'framework.dart';
 import 'internals.dart';
 
 extension RtDevToolsExt on RtInterface {
+  /// Initialize the devtools for observing the states and dependencies.
+  /// This will enable the devtools extension in the `Reactter` tab.
   void initializeDevTools() {
     RtDevTools.initialize();
   }
 }
 
+/// This class is used internally by the devtools extension only
+/// and should not be used directly by the users.
+///
+/// To enable it, call the [Rt.initializeDevTools] method.
+/// This will initialize the devtools and start observing changes.
+///
+/// To access the Reactter devtools, open the devtools extension
+/// and navigate to the Reactter tab.
 @internal
 class RtDevTools with RtStateObserver, RtDependencyObserver {
-  static RtDevTools? _instance;
+  static RtDevTools? instance;
 
   final LinkedList<_Node> _nodes = LinkedList();
   final LinkedHashMap<String, _Node> _nodesByKey = LinkedHashMap();
 
   static void initialize() {
-    assert(_instance == null, 'The devtools has already been initialized.');
+    assert(() {
+      if (kDebugMode && instance != null) {
+        throw RtDevToolsInitializeAssertionError(
+          'The devtools has already been initialized.',
+        );
+      }
+
+      return true;
+    }());
 
     if (kDebugMode) {
-      _instance ??= RtDevTools._();
+      instance ??= RtDevTools._();
     }
   }
 
@@ -339,7 +358,8 @@ class RtDevTools with RtStateObserver, RtDependencyObserver {
   }
 }
 
-abstract class _NodeKind {
+@internal
+abstract class NodeKind {
   static const String state = 'state';
   static const String hook = 'hook';
   static const String signal = 'signal';
@@ -456,7 +476,7 @@ class _InstanceNode extends _Node {
     final type = instance.runtimeType.toString();
 
     return {
-      'kind': _NodeKind.instance,
+      'kind': NodeKind.instance,
       'key': instance.hashCode.toString(),
       'type': type,
       'value': value.startsWith("Instance of") || value == type ? null : value,
@@ -487,9 +507,9 @@ class _StateNode extends _Node<RtState> {
   _StateNode({required RtState instance}) : super(instance: instance);
 
   static String resolveKind(RtState instance) {
-    if (instance is Signal) return _NodeKind.signal;
-    if (instance is RtHook) return _NodeKind.hook;
-    return _NodeKind.state;
+    if (instance is Signal) return NodeKind.signal;
+    if (instance is RtHook) return NodeKind.hook;
+    return NodeKind.state;
   }
 
   static Map<String, dynamic> getInstanceInfo(RtState instance) {
@@ -530,7 +550,7 @@ class _DependencyNode extends _Node<DependencyRef> {
     final dependencyRef = Rt.getDependencyRegisterByRef(instance);
 
     return {
-      'kind': _NodeKind.dependency,
+      'kind': NodeKind.dependency,
       'key': instance.hashCode.toString(),
       'type': instance.type.toString(),
       'id': instance.id,
@@ -547,3 +567,6 @@ class _DependencyNode extends _Node<DependencyRef> {
     };
   }
 }
+
+@internal
+typedef RtDevToolsInitializeAssertionError = AssertionError;

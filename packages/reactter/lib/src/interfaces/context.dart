@@ -10,11 +10,14 @@ part of '../internals.dart';
 /// - [logger]: An instance of the [Logger] class that provides logging functionality.
 abstract class IContext {
   @internal
+  @protected
   DependencyInjection get dependencyInjection;
 
   @internal
+  @protected
   StateManagement get stateManagement;
 
   @internal
+  @protected
   EventHandler get eventHandler;
 }

@@ -60,14 +60,14 @@ class UseCompute<T> extends RtHook {
     String? debugLabel,
   })  : _debugLabel = debugLabel,
         _valueComputed = compute() {
-    for (var dependency in dependencies.toList(growable: false)) {
+    for (final dependency in dependencies.toList(growable: false)) {
       Rt.on(dependency, Lifecycle.didUpdate, _onDependencyChanged);
     }
   }
 
   @override
   void dispose() {
-    for (var dependency in dependencies.toList(growable: false)) {
+    for (final dependency in dependencies.toList(growable: false)) {
       Rt.off(dependency, Lifecycle.didUpdate, _onDependencyChanged);
     }
 

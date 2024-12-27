@@ -3,14 +3,15 @@ import 'internals.dart';
 
 export 'internals.dart'
     show
+        DependencyMode,
         Lifecycle,
         LifecycleObserver,
-        DependencyMode,
-        RtInterface,
-        RtStateObserver,
+        RtDependencyObserver,
         RtHook,
+        RtInterface,
         RtState,
-        RtStateBase;
+        RtStateBase,
+        RtStateObserver;
 
 part 'framework/rt_context.dart';
 part 'framework/rt_dependency.dart';
