@@ -22,10 +22,4 @@ final class SentinelNode extends Node<NodeInfo> {
     assert(false, 'SentinelNode should not be expanded');
     throw UnimplementedError();
   }
-
-  @override
-  void markToLoadNode(covariant Function? onUpdate) {
-    assert(false, 'SentinelNode should not be updated');
-    throw UnimplementedError();
-  }
 }

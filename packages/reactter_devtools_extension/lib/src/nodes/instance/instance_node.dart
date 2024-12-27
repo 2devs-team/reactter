@@ -38,9 +38,4 @@ base class InstanceNode<I extends InstanceInfo> extends Node<I> {
   Future<List<Node<NodeInfo>>> getDetails() async => [
         await getDependency(),
       ].whereType<Node>().toList();
-
-  @override
-  void markToLoadNode(covariant Function? onUpdate) {
-    onUpdate?.call();
-  }
 }
