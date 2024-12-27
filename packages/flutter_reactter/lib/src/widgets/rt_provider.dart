@@ -124,7 +124,7 @@ part of '../widgets.dart';
 /// * [RtMultiProvider], a widget that allows to use multiple [RtProvider].
 /// {@endtemplate}
 class RtProvider<T extends Object?> extends ProviderBase<T>
-    implements ProviderWrapper, ProviderRef {
+    implements ProviderWrapper, ProviderRef<T> {
   /// Creates an instance of [T] dependency and provides it to tree widget.
   const RtProvider(
     InstanceBuilder<T> instanceBuilder, {
@@ -179,19 +179,7 @@ class RtProvider<T extends Object?> extends ProviderBase<T>
           lazyBuilder: builder,
         );
 
-  void createInstance() {
-    Rt.create<T>(instanceBuilder, id: id, mode: mode, ref: this);
-  }
-
-  void disposeInstance() {
-    Rt.delete<T>(id, this);
-  }
-
-  @override
-  void dispose() {
-    disposeInstance();
-  }
-
+  @protected
   Widget buildWithChild(Widget? child) {
     if (id != null) {
       return ProvideImpl<T?, WithId>(
@@ -222,6 +210,41 @@ class RtProvider<T extends Object?> extends ProviderBase<T>
       lazyBuilder: lazyBuilder,
       child: child,
     );
+  }
+
+  @protected
+  @override
+  void registerInstance() {
+    Rt.register<T>(instanceBuilder, id: id, mode: mode);
+  }
+
+  @override
+  T? findInstance() {
+    return Rt.find<T>(id);
+  }
+
+  @protected
+  @override
+  T? getInstance() {
+    return Rt.get<T>(id, this);
+  }
+
+  @protected
+  @override
+  T? createInstance() {
+    return Rt.create<T>(instanceBuilder, id: id, mode: mode, ref: this);
+  }
+
+  @protected
+  @override
+  void disposeInstance() {
+    Rt.delete<T>(id, this);
+  }
+
+  @protected
+  @override
+  void dispose() {
+    disposeInstance();
   }
 
   @override

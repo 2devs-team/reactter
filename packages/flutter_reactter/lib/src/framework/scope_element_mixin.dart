@@ -29,8 +29,8 @@ mixin ScopeElementMixin on InheritedElement {
       notifyClients(oldWidget);
       return;
     }
-    // coverage:ignore-line
-    super.updated(oldWidget);
+
+    super.updated(oldWidget); // coverage:ignore-line
   }
 
   @override
@@ -64,7 +64,6 @@ mixin ScopeElementMixin on InheritedElement {
     // If the aspect is not a Dependency or if the widget tree is marked as
     // needing build, we can skip the update of the dependencies.
     if (aspect is! Dependency || _isMarkNeedsBuild) {
-      // coverage:ignore-line
       return super.updateDependencies(dependent, aspect);
     }
 
@@ -72,8 +71,8 @@ mixin ScopeElementMixin on InheritedElement {
 
     // If no MasterDependency is stored, we can skip the update of the dependencies.
     if (dependency != null && dependency is! MasterDependency) {
-      // coverage:ignore-line
-      return super.updateDependencies(dependent, aspect);
+      return super
+          .updateDependencies(dependent, aspect); // coverage:ignore-line
     }
 
     assert(dependency is MasterDependency?);
@@ -92,7 +91,7 @@ mixin ScopeElementMixin on InheritedElement {
     masterDependency ??= aspect.toMaster();
 
     if (masterDependency.isDirty) {
-      markNeedsBuild();
+      markNeedsBuild(); // coverage:ignore-line
     } else {
       masterDependency.listen(markNeedsBuild);
     }

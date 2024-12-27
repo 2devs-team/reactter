@@ -90,10 +90,10 @@ class RtMultiProvider extends StatelessWidget implements ProviderWrapper {
     return RtMultiProviderElement(this);
   }
 
+  // coverage:ignore-start
   @override
-  void dispose() {
-    // TODO: implement dispose
-  }
+  void dispose() {}
+  // coverage:ignore-end
 }
 
 class RtMultiProviderElement extends StatelessElement

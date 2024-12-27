@@ -10,8 +10,10 @@ class RtScope extends InheritedWidget {
     required Widget child,
   }) : super(key: key, child: child);
 
+  // coverage:ignore-start
   @override
   bool updateShouldNotify(covariant InheritedWidget oldWidget) => false;
+  // coverage:ignore-end
 
   @override
   RtScopeElement createElement() => RtScopeElement(this);

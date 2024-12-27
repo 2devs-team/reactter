@@ -3,12 +3,23 @@
 part of '../framework.dart';
 
 @internal
-abstract class ProviderRef {}
+abstract class ProviderRef<T extends Object?> {
+  @protected
+  void registerInstance();
+  @protected
+  T? findInstance();
+  @protected
+  T? getInstance();
+  @protected
+  T? createInstance();
+  @protected
+  void disposeInstance();
+}
 
 @internal
 class ProvideImpl<T extends Object?, I extends String?> extends ProviderBase<T>
     implements InheritedWidget {
-  final ProviderRef ref;
+  final ProviderRef<T> ref;
 
   const ProvideImpl(
     InstanceBuilder<T> instanceBuilder, {
@@ -37,22 +48,21 @@ class ProvideImpl<T extends Object?, I extends String?> extends ProviderBase<T>
   Widget get child {
     assert(
       super.child != null ||
-          (!super.isLazy && super.builder != null ||
-              super.isLazy && super.lazyBuilder != null),
+          (!isLazy && builder != null || isLazy && lazyBuilder != null),
     );
 
-    if (super.isLazy && super.lazyBuilder != null) {
+    if (isLazy && lazyBuilder != null) {
       return Builder(
         builder: (context) {
-          return super.lazyBuilder!(context, super.child);
+          return lazyBuilder!(context, super.child);
         },
       );
     }
 
-    if (super.builder != null) {
+    if (builder != null) {
       return Builder(
         builder: (context) {
-          return super.builder!(context, context.use<T>(id), super.child);
+          return builder!(context, context.use<T>(id), super.child);
         },
       );
     }
@@ -157,14 +167,14 @@ class ProviderElement<T extends Object?> extends InheritedElement
 
   T? get instance {
     if (!_isLazyInstanceObtained && widget.isLazy) {
-      final instance = Rt.get<T>(widget.id, widget);
+      final instance = widget.ref.getInstance();
 
       _isLazyInstanceObtained = instance != null;
 
       return instance;
     }
 
-    return Rt.find<T>(widget.id);
+    return widget.ref.findInstance();
   }
 
   /// Creates an element that uses the given widget as its configuration.
@@ -174,11 +184,7 @@ class ProviderElement<T extends Object?> extends InheritedElement
   }) : super(widget) {
     if (widget.init && !widget.isLazy) return;
 
-    Rt.register<T>(
-      widget.instanceBuilder,
-      id: widget.id,
-      mode: widget.mode,
-    );
+    widget.ref.registerInstance();
   }
 
   @override
@@ -189,7 +195,7 @@ class ProviderElement<T extends Object?> extends InheritedElement
     final shouldNotifyMount = count == 1;
 
     if (!widget.init && !widget.isLazy) {
-      Rt.get<T>(widget.id, widget.ref);
+      widget.ref.getInstance();
     }
 
     _updateInheritedElementWithId(parent);
@@ -203,6 +209,19 @@ class ProviderElement<T extends Object?> extends InheritedElement
     if (shouldNotifyMount) {
       Rt.emit(dependency, Lifecycle.didMount);
     }
+  }
+
+  @override
+  void update(covariant InheritedWidget newWidget) {
+    final ref = widget.ref;
+
+    if (newWidget is ProvideImpl<T, String?>) {
+      newWidget.ref.createInstance();
+    }
+
+    super.update(newWidget);
+
+    if (ref is RtProvider) ref.disposeInstance();
   }
 
   @override

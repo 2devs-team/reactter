@@ -16,7 +16,6 @@ class NestedWidget<W extends StatelessWidget> extends StatelessWidget {
 
   @override
   NestedElement createElement() => NestedElement(this);
-
   // coverage:ignore-start
   @override
   Widget build(BuildContext context) => throw StateError('handled internally');
