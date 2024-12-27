@@ -229,6 +229,29 @@ void main() {
       "should unlisten event with id",
       () => _testUnlistenEvent(withId: true),
     );
+
+    test('should catch error while emit event', () {
+      final testController = Rt.create(() => TestController());
+
+      Rt.on(
+        testController,
+        Events.TestEvent,
+        (inst, param) {
+          throw Error();
+        },
+      );
+
+      expect(
+        () => Rt.emit(
+          testController,
+          Events.TestEvent,
+          TEST_EVENT_PARAM_NAME,
+        ),
+        throwsA(isA<Error>()),
+      );
+
+      Rt.offAll(testController);
+    });
   });
 }
 

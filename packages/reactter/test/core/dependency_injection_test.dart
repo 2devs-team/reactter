@@ -246,7 +246,7 @@ void main() {
     });
 
     test("should check if an instance is registered", () {
-      final testController = Rt.createState(() => TestController());
+      final testController = TestController();
       bool isActive = Rt.isActive(testController);
       expect(isActive, false);
 
@@ -260,7 +260,7 @@ void main() {
     });
 
     test("should check if a dependency is registered", () {
-      final testController = Rt.createState(() => TestController());
+      final testController = TestController();
       bool hasRegister = Rt.hasRegister<TestController>();
       expect(hasRegister, false);
 

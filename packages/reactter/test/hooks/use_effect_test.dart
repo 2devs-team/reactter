@@ -151,7 +151,7 @@ void main() {
     });
 
     test("shouldn't be called by instance that was not registered", () {
-      final testController = Rt.createState(() => TestController());
+      final testController = TestController();
       int nCalls = 0;
 
       UseEffect(
@@ -170,6 +170,16 @@ void main() {
       testController.stateInt.value += 1;
 
       expect(nCalls, 2);
+    });
+    test("should catch error", () {
+      expect(
+        () {
+          UseEffect.runOnInit(() {
+            throw Exception("Error");
+          }, []);
+        },
+        throwsA(isA<AssertionError>()),
+      );
     });
   });
 
@@ -244,7 +254,7 @@ void main() {
     });
 
     test("should be called with dispatchEffect", () {
-      final testController = Rt.createState(() => TestController());
+      final testController = TestController();
       final stateA = testController.stateBool;
       final stateB = testController.stateInt;
       final stateC = testController.signalString;
@@ -328,13 +338,61 @@ void main() {
 
       Rt.unregister<UseEffectTestController>();
     });
+
+    test("should catch error", () {
+      expect(
+        () {
+          UseEffect.runOnInit(() {
+            () => throw Exception("Error");
+          }, []);
+        },
+        isNot(throwsA(isA<AssertionError>())),
+      );
+
+      expect(
+        () {
+          final stateA = UseState('initial');
+
+          UseEffect.runOnInit(() {
+            return () => throw Exception(stateA.value);
+          }, [stateA]);
+
+          stateA.value = 'throw error';
+        },
+        throwsA(isA<AssertionError>()),
+      );
+    });
+  });
+
+  test("UseEffect should get debug label", () {
+    final uEffect = UseEffect(() {}, [], debugLabel: "uEffect");
+
+    expect(uEffect.debugLabel, "uEffect");
+  });
+
+  test("UseEffect should get debug info", () {
+    final testController = Rt.create(() => UseEffectTestController())!;
+    final stateA = testController.stateBool;
+    final stateB = testController.stateInt;
+    final stateC = testController.signalString;
+
+    final uEffect = UseEffect(() {}, [stateA, stateB, stateC]);
+
+    expect(
+      uEffect.debugInfo,
+      {
+        "dependencies": [stateA, stateB, stateC],
+      },
+    );
+
+    Rt.delete<UseEffectTestController>();
   });
 }
 
 class UseEffectDispatchController extends DispatchEffect {}
 
 class UseEffectTestController extends TestController {
-  final testControllerInner = Rt.createState(() => TestController());
+  final testControllerInner = TestController();
 
   int nCalls1 = 0;
   int nCalls2 = 0;

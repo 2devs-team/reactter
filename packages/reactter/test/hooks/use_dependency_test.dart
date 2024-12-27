@@ -269,6 +269,37 @@ void main() {
 
       Rt.destroy<TestController>(id: ID);
     });
+
+    test('should get debug label', () {
+      final useDependency = UseDependency.lazySingleton(
+        () => TestController(),
+        debugLabel: 'useDependency',
+      );
+
+      expect(useDependency.debugLabel, 'useDependency');
+
+      Rt.destroy<TestController>();
+    });
+
+    test('should get debug info', () {
+      final testController = Rt.create(() => TestController(), id: 'TEST')!;
+
+      final useDependency = UseDependency.create(
+        () => testController,
+        id: 'TEST',
+        debugLabel: 'useDependency',
+      );
+
+      expect(
+        useDependency.debugInfo,
+        {
+          'id': 'TEST',
+          'instance': testController,
+        },
+      );
+
+      Rt.destroy<TestController>(id: 'TEST');
+    });
   });
 }
 

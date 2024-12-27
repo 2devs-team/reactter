@@ -90,11 +90,9 @@ void main() {
         },
       );
 
-      testController.update(
-        () => testController.stateInt.update(() {
-          testController.stateInt.value = 3;
-        }),
-      );
+      testController.stateInt.update(() {
+        testController.stateInt.value = 3;
+      });
 
       expectLater(testController.stateInt.value, 3);
 
@@ -129,6 +127,32 @@ void main() {
       });
 
       expect(testController.stateInt.value, 2);
+
+      Rt.delete<TestController>();
+    });
+
+    test("should get debug label", () {
+      final testController = Rt.create<TestController>(() => TestController())!;
+
+      expect(testController.stateInt.debugLabel, 'stateInt');
+
+      Rt.delete<TestController>();
+    });
+
+    test("should get debug info", () {
+      final testController = Rt.create<TestController>(() => TestController())!;
+
+      expect(
+        testController.stateInt.debugInfo,
+        {'value': 0},
+      );
+
+      testController.stateInt.value = 1;
+
+      expect(
+        testController.stateInt.debugInfo,
+        {'value': 1},
+      );
 
       Rt.delete<TestController>();
     });

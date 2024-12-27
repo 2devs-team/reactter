@@ -6,13 +6,13 @@ import '../shareds/test_controllers.dart';
 void main() {
   group("UseReducer", () {
     test("should have a initial value", () {
-      final testController = Rt.createState(() => TestController());
+      final testController = TestController();
 
       expect(testController.stateReduce.value.count, 0);
     });
 
     test("should dispatch a action", () {
-      final testController = Rt.createState(() => TestController());
+      final testController = TestController();
 
       testController.stateReduce.dispatch(IncrementAction());
       expect(testController.stateReduce.value.count, 1);
@@ -32,7 +32,7 @@ void main() {
     });
 
     test("should dispatch a action callable", () {
-      final testController = Rt.createState(() => TestController());
+      final testController = TestController();
 
       testController.stateReduce.dispatch(IncrementActionCallable(quantity: 2));
       expect(testController.stateReduce.value.count, 2);
@@ -42,7 +42,7 @@ void main() {
     });
 
     test("should update state when dispatch action", () {
-      final testController = Rt.createState(() => TestController());
+      final testController = TestController();
       late bool? isStateChanged;
 
       UseEffect(() {
@@ -52,6 +52,22 @@ void main() {
       testController.stateReduce.dispatch(IncrementAction());
 
       expectLater(isStateChanged, true);
+    });
+
+    test('should get debug label', () {
+      final testController = TestController();
+
+      expect(testController.stateReduce.debugLabel, 'stateReduce');
+    });
+
+    test('should get debug info', () {
+      final testController = TestController();
+
+      expect(testController.stateReduce.debugInfo['value'].count, 0);
+
+      testController.stateReduce.dispatch(IncrementAction());
+
+      expect(testController.stateReduce.debugInfo['value'].count, 1);
     });
   });
 }

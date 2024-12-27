@@ -142,5 +142,31 @@ void main() {
         throwsA(isA<AssertionError>()),
       );
     });
+
+    test("should get debug label", () {
+      final signal = Signal("initial", debugLabel: "signal");
+
+      expect(signal.debugLabel, "signal");
+    });
+
+    test("should get debug info", () {
+      final signal = Signal("initial");
+
+      expect(signal.debugInfo, {"value": "initial"});
+
+      signal("change value");
+
+      expect(signal.debugInfo, {"value": "change value"});
+    });
+
+    test("should get value as String", () {
+      final signal = Signal("initial");
+
+      expect(signal.toString(), "initial");
+
+      signal("change value");
+
+      expect("$signal", "change value");
+    });
   });
 }

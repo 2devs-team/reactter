@@ -75,32 +75,44 @@ TestStore _reducer(TestStore state, RtAction action) {
   }
 }
 
-class TestController with RtContext, RtStateBase<TestController> {
-  final signalString = Signal("initial");
-  final stateBool = UseState(false);
-  final stateString = UseState("initial");
-  final stateInt = UseState(0);
-  final stateDouble = UseState(0.0);
-  final stateList = UseState([]);
-  final stateMap = UseState({});
-  final stateClass = UseState<TestClass?>(null);
-  final stateAsync = UseAsyncState(_resolveStateAsync, "initial");
+class TestController {
+  final signalString = Signal("initial", debugLabel: "signalString");
+  final stateBool = UseState(false, debugLabel: "stateBool");
+  final stateString = UseState("initial", debugLabel: "stateString");
+  final stateInt = UseState(0, debugLabel: "stateInt");
+  final stateDouble = UseState(0.0, debugLabel: "stateDouble");
+  final stateList = UseState([], debugLabel: "stateList");
+  final stateMap = UseState({}, debugLabel: "stateMap");
+  final stateClass = UseState<TestClass?>(null, debugLabel: "stateClass");
+  final stateAsync = UseAsyncState(
+    _resolveStateAsync,
+    "initial",
+    debugLabel: "stateAsync",
+  );
   final stateAsyncWithArg = UseAsyncState.withArg(
     _resolveStateAsync,
     "initial",
+    debugLabel: "stateAsyncWithArg",
   );
   final stateAsyncWithError = UseAsyncState(
-    () {
+    () async {
+      await Future.delayed(Duration(milliseconds: 1));
       throw Exception("has a error");
     },
     "initial",
+    debugLabel: "stateAsyncWithError",
   );
-  final stateReduce = UseReducer(_reducer, TestStore(count: 0));
+  final stateReduce = UseReducer(
+    _reducer,
+    TestStore(count: 0),
+    debugLabel: "stateReduce",
+  );
 
   late final stateCompute = Rt.lazyState(
     () => UseCompute(
       () => (stateInt.value + stateDouble.value).clamp(5, 10),
       [stateInt, stateDouble],
+      debugLabel: "stateCompute",
     ),
     this,
   );
@@ -131,6 +143,12 @@ class TestController with RtContext, RtStateBase<TestController> {
   final inlineMemo = Memo.inline((Args? args) {
     return args?.arguments ?? [];
   });
+
+  // TestController() {
+  //   assert(dependencyInjection == Rt);
+  //   assert(stateManagement == Rt);
+  //   assert(eventHandler == Rt);
+  // }
 }
 
 class TestLifecycleController extends LifecycleObserver {

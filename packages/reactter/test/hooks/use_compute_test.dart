@@ -55,6 +55,35 @@ void main() {
           Rt.delete<TestController>();
         },
       );
+
+      test('should get debug label', () {
+        final testController = Rt.create<TestController>(
+          () => TestController(),
+        )!;
+
+        expect(testController.stateCompute.debugLabel, 'stateCompute');
+
+        Rt.delete<TestController>();
+      });
+
+      test('should get debug info', () {
+        final testController = Rt.create<TestController>(
+          () => TestController(),
+        )!;
+
+        expect(
+          testController.stateCompute.debugInfo,
+          {
+            'value': 5,
+            'dependencies': [
+              testController.stateInt,
+              testController.stateDouble,
+            ],
+          },
+        );
+
+        Rt.delete<TestController>();
+      });
     },
   );
 }
