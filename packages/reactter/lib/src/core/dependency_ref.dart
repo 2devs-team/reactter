@@ -8,14 +8,14 @@ part of '../internals.dart';
 class DependencyRef<T extends Object?> {
   final String? id;
 
-  Type get type => T;
+  Type get type => getType<T?>();
 
   const DependencyRef([this.id]);
 
-  int _getTypeHashCode<TT extends T?>() => TT.hashCode;
+  Type getType<TT extends T?>() => TT;
 
   @override
-  int get hashCode => Object.hash(_getTypeHashCode<T?>(), id.hashCode);
+  int get hashCode => Object.hash(type, id);
 
   @override
   bool operator ==(Object other) {

@@ -62,10 +62,9 @@ abstract class RtStateBase<E extends RtStateBase<E>> implements RtState {
   @protected
   @mustCallSuper
   void _register() {
-    BindingZone.recollectState(this);
-
     if (_isRegistered) return;
 
+    BindingZone.recollectState(this);
     _notifyCreated();
     _isRegistered = true;
   }

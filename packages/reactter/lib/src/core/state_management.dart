@@ -61,12 +61,7 @@ abstract class StateManagement<S extends IState> implements IContext {
   /// ```
   /// {@endtemplate}
   T lazyState<T extends S>(T Function() buildState, Object instance) {
-    final zone = BindingZone();
-    try {
-      return createState(buildState);
-    } finally {
-      zone.bindInstanceToStates(instance);
-    }
+    return BindingZone.autoBinding(buildState, instance);
   }
 
   /// {@template reactter.untracked}

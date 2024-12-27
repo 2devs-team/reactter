@@ -36,13 +36,19 @@ class BindingZone<T extends Object?> {
   }
 
   /// {@template reactter.binding_zone.auto_binding}
-  /// It's used to bind the instance to the stored states([IState]).
+  /// Automatically binds the instance to the stored states([IState]).
   /// If the instance is null, it adds the stored states to the [BindingZone] parent.
   /// {@endtemplate}
-  static T autoBinding<T extends Object?>(T Function() getInstance) {
+  static T autoBinding<T extends Object?>(
+    T Function() getInstance, [
+    Object? boundInstance,
+  ]) {
     final zone = BindingZone<T?>();
     final instance = getInstance();
-    zone.bindInstanceToStates(instance);
+
+    final instanceToBind = boundInstance ?? instance;
+
+    zone.bindInstanceToStates(instanceToBind);
 
     return instance;
   }
