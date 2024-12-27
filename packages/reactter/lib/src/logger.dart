@@ -31,16 +31,16 @@ extension RtLoggerExt on RtInterface {
 
 @internal
 class RtLogger with RtStateObserver, RtDependencyObserver {
-  static RtLogger? _instance;
+  static RtLogger? instance;
 
   static void initialize({
     String name = 'REACTTER',
     LogOutput output = dev.log,
   }) {
-    assert(_instance == null, 'The logger has already been initialized.');
+    assert(instance == null, 'The logger has already been initialized.');
 
     if (kDebugMode) {
-      _instance ??= RtLogger._(name: name, output: output);
+      instance ??= RtLogger._(name: name, output: output);
     }
   }
 
@@ -63,43 +63,10 @@ class RtLogger with RtStateObserver, RtDependencyObserver {
     );
   }
 
-  String _prettyFormat(Object? instance) {
-    if (instance is DependencyRef) {
-      final type = instance.type.toString().replaceAll('?', '');
-      final id = instance.id;
-      final idStr = id != null ? "id: '$id'" : null;
-      final mode = instance is DependencyRegister
-          ? instance.mode.label
-          : Rt.getDependencyRegisterByRef(instance)?.mode.label;
-      final modeStr = mode != null ? "mode: '$mode'" : null;
-      final params = [
-        if (idStr != null) idStr,
-        if (modeStr != null) modeStr,
-      ].join(', ');
-      final paramsStr = params.isNotEmpty ? '($params)' : '';
-
-      return '[DEPENDENCY | $type$paramsStr]';
-    }
-
-    if (instance is RtState) {
-      final type = instance.runtimeType.toString();
-      final label = instance.debugLabel;
-      final labelStr = label != null ? "(label: '$label')" : '';
-
-      if (instance is RtHook) {
-        return '[HOOK | $type$labelStr | #${instance.hashCode}]';
-      }
-
-      return '[STATE | $type$labelStr | #${instance.hashCode}]';
-    }
-
-    return '[UNKNOWN | ${instance.runtimeType} | #${instance.hashCode}]';
-  }
-
   @override
   void onStateCreated(RtState state) {
     log(
-      '${_prettyFormat(state)} created.',
+      '${prettyFormat(state)} created.',
       level: LogLevel.finer,
       stackTrace: StackTrace.current,
     );
@@ -108,7 +75,7 @@ class RtLogger with RtStateObserver, RtDependencyObserver {
   @override
   void onStateBound(RtState state, Object instance) {
     log(
-      '${_prettyFormat(state)} bound to ${_prettyFormat(instance)}.',
+      '${prettyFormat(state)} bound to ${prettyFormat(instance)}.',
       level: LogLevel.finer,
       stackTrace: StackTrace.current,
     );
@@ -117,14 +84,14 @@ class RtLogger with RtStateObserver, RtDependencyObserver {
       final T = instance.runtimeType;
 
       log(
-        'The bound instance(${_prettyFormat(instance)}) to state(${_prettyFormat(state)}) is not in Reactter\'s context and cannot be disposed automatically.\n'
-        'You can solve this problem in one of the following ways:\n'
-        '\t- Call `dispose` method manually when state is no longer needed:\n'
-        '\t\t`state.dispose();`\n'
-        '\t- Create bound instance using the dependency injection methods:\n'
-        '\t\t`Rt.register<$T>(() => $T(...));`\n'
-        '\t\t`Rt.create<$T>(() => $T(...));`\n'
-        '**Ignore this message if you are sure that it will be disposed.**',
+        "The bound instance(${prettyFormat(instance)}) to state(${prettyFormat(state)}) is not in Reactter's context and cannot be disposed automatically.\n"
+        "You can solve this problem in one of the following ways:\n"
+        "\t- Call `dispose` method manually when state is no longer needed:\n"
+        "\t\t`state.dispose();`\n"
+        "\t- Create bound instance using the dependency injection methods:\n"
+        "\t\t`Rt.register<$T>(() => $T(...));`\n"
+        "\t\t`Rt.create<$T>(() => $T(...));`\n"
+        "**Ignore this message if you are sure that it will be disposed.**",
         level: LogLevel.warning,
         stackTrace: StackTrace.current,
       );
@@ -134,7 +101,7 @@ class RtLogger with RtStateObserver, RtDependencyObserver {
   @override
   void onStateUnbound(RtState state, Object instance) {
     log(
-      '${_prettyFormat(state)} unbound from ${_prettyFormat(instance)}.',
+      '${prettyFormat(state)} unbound from ${prettyFormat(instance)}.',
       level: LogLevel.finer,
       stackTrace: StackTrace.current,
     );
@@ -143,7 +110,7 @@ class RtLogger with RtStateObserver, RtDependencyObserver {
   @override
   void onStateUpdated(RtState state) {
     log(
-      '${_prettyFormat(state)} updated.',
+      '${prettyFormat(state)} updated.',
       level: LogLevel.finer,
       stackTrace: StackTrace.current,
     );
@@ -152,7 +119,7 @@ class RtLogger with RtStateObserver, RtDependencyObserver {
   @override
   void onStateDisposed(RtState state) {
     log(
-      '${_prettyFormat(state)} disposed.',
+      '${prettyFormat(state)} disposed.',
       level: LogLevel.finer,
       stackTrace: StackTrace.current,
     );
@@ -161,7 +128,7 @@ class RtLogger with RtStateObserver, RtDependencyObserver {
   @override
   void onDependencyRegistered(DependencyRef dependency) {
     log(
-      '${_prettyFormat(dependency)} registered.',
+      '${prettyFormat(dependency)} registered.',
       level: LogLevel.fine,
       stackTrace: StackTrace.current,
     );
@@ -170,7 +137,7 @@ class RtLogger with RtStateObserver, RtDependencyObserver {
   @override
   void onDependencyCreated(DependencyRef dependency, Object? instance) {
     log(
-      '${_prettyFormat(dependency)} created. Its instance: ${_prettyFormat(instance)}.',
+      '${prettyFormat(dependency)} created. Its instance: ${prettyFormat(instance)}.',
       level: LogLevel.fine,
       stackTrace: StackTrace.current,
     );
@@ -179,7 +146,7 @@ class RtLogger with RtStateObserver, RtDependencyObserver {
   @override
   void onDependencyMounted(DependencyRef dependency, Object? instance) {
     log(
-      '${_prettyFormat(dependency)} mounted. Its instance: ${_prettyFormat(instance)}.',
+      '${prettyFormat(dependency)} mounted. Its instance: ${prettyFormat(instance)}.',
       level: LogLevel.fine,
       stackTrace: StackTrace.current,
     );
@@ -188,7 +155,7 @@ class RtLogger with RtStateObserver, RtDependencyObserver {
   @override
   void onDependencyUnmounted(DependencyRef dependency, Object? instance) {
     log(
-      '${_prettyFormat(dependency)} unmounted. Its instance: ${_prettyFormat(instance)}.',
+      '${prettyFormat(dependency)} unmounted. Its instance: ${prettyFormat(instance)}.',
       level: LogLevel.fine,
       stackTrace: StackTrace.current,
     );
@@ -197,7 +164,7 @@ class RtLogger with RtStateObserver, RtDependencyObserver {
   @override
   void onDependencyDeleted(DependencyRef dependency, Object? instance) {
     log(
-      '${_prettyFormat(dependency)} deleted. Its instance: ${_prettyFormat(instance)}.',
+      '${prettyFormat(dependency)} deleted. Its instance: ${prettyFormat(instance)}.',
       level: LogLevel.fine,
       stackTrace: StackTrace.current,
     );
@@ -206,7 +173,7 @@ class RtLogger with RtStateObserver, RtDependencyObserver {
   @override
   void onDependencyUnregistered(DependencyRef dependency) {
     log(
-      '${_prettyFormat(dependency)} unregistered.',
+      '${prettyFormat(dependency)} unregistered.',
       level: LogLevel.fine,
       stackTrace: StackTrace.current,
     );
@@ -224,67 +191,63 @@ class RtLogger with RtStateObserver, RtDependencyObserver {
     switch (fail) {
       case DependencyFail.alreadyRegistered:
         log(
-          '${_prettyFormat(dependency)} already registered.',
+          '${prettyFormat(dependency)} already registered.',
           level: LogLevel.info,
           stackTrace: StackTrace.current,
         );
         break;
       case DependencyFail.alreadyCreated:
         log(
-          '${_prettyFormat(dependency)} already created.',
+          '${prettyFormat(dependency)} already created.',
           level: LogLevel.info,
           stackTrace: StackTrace.current,
         );
         break;
       case DependencyFail.alreadyDeleted:
         log(
-          '${_prettyFormat(dependency)} already deleted.',
+          '${prettyFormat(dependency)} already deleted.',
           level: LogLevel.info,
           stackTrace: StackTrace.current,
         );
         break;
       case DependencyFail.alreadyUnregistered:
         log(
-          '${_prettyFormat(dependency)} already unregistered.',
+          '${prettyFormat(dependency)} already unregistered.',
           level: LogLevel.info,
           stackTrace: StackTrace.current,
         );
         break;
       case DependencyFail.builderRetainedAsFactory:
         log(
-          '${_prettyFormat(dependency)}\'s instance retained because it\'s factory mode.',
+          "${prettyFormat(dependency)}'s instance retained because it's factory mode.",
           level: LogLevel.info,
           stackTrace: StackTrace.current,
         );
         break;
       case DependencyFail.dependencyRetainedAsSingleton:
         log(
-          '${_prettyFormat(dependency)} retained because it\'s singleton mode.',
+          "${prettyFormat(dependency)} retained because it's singleton mode.",
           level: LogLevel.info,
           stackTrace: StackTrace.current,
         );
         break;
       case DependencyFail.missingInstanceBuilder:
         log(
-          '${_prettyFormat(dependency)} couldn\'t register.\n'
-          'You should register the instance build with: \n'
-          '\t`Rt.register<$T>(() => $T(...)$idParam);` \n'
-          '\t`Rt.create<$T>(() => $T(...)$idParam);`',
+          "${prettyFormat(dependency)} couldn't register.\n"
+          "You should register the instance build with: \n"
+          "\t`Rt.register<$T>(() => $T(...)$idParam);`\n"
+          "\t`Rt.create<$T>(() => $T(...)$idParam);`",
           level: LogLevel.warning,
           stackTrace: StackTrace.current,
         );
         break;
       case DependencyFail.cannotUnregisterActiveInstance:
-        final instance = dependency is DependencyRegister
-            ? dependency.instance
-            : Rt.getDependencyRegisterByRef(dependency)?.instance;
-
         log(
-          '${_prettyFormat(dependency)} couldn\'t unregister '
-          'because ${_prettyFormat(instance)} is active.\n'
-          'You should delete the instance before with:\n'
-          '\t`Rt.delete<$T>(${id ?? ''});`\n'
-          '\t`Rt.destroy<$T>($idParam, onlyInstance: true);`\n',
+          "${prettyFormat(dependency)} couldn't unregister "
+          "because ${prettyFormat(instance)} is active.\n"
+          "You should delete the instance before with:\n"
+          "\t`Rt.delete<$T>(${id ?? ''});`\n"
+          "\t`Rt.destroy<$T>($idParam, onlyInstance: true);`\n",
           level: LogLevel.severe,
           stackTrace: StackTrace.current,
         );
@@ -293,16 +256,53 @@ class RtLogger with RtStateObserver, RtDependencyObserver {
   }
 }
 
+@internal
+String prettyFormat(Object? instance) {
+  if (instance is DependencyRef) {
+    final type = instance.type.toString().replaceAll('?', '');
+    final id = instance.id;
+    final idStr = id != null ? "id: '$id'" : null;
+    final mode = instance is DependencyRegister
+        ? instance.mode.label
+        : Rt.getDependencyRegisterByRef(instance)?.mode.label;
+    final modeStr = mode != null ? "mode: '$mode'" : null;
+    final params = [
+      if (idStr != null) idStr,
+      if (modeStr != null) modeStr,
+    ].join(', ');
+    final paramsStr = params.isNotEmpty ? '($params)' : '';
+
+    return '[DEPENDENCY | $type$paramsStr]';
+  }
+
+  if (instance is RtState) {
+    final type = instance.runtimeType.toString();
+    final label = instance.debugLabel;
+    final labelStr = label != null ? "(debugLabel: '$label')" : '';
+
+    if (instance is RtHook) {
+      return '[HOOK | $type$labelStr | #${instance.hashCode}]';
+    }
+
+    return '[STATE | $type$labelStr | #${instance.hashCode}]';
+  }
+
+  return '[UNKNOWN | ${instance.runtimeType} | #${instance.hashCode}]';
+}
+
+@internal
+typedef RtLoggerInitializeAssertionError = AssertionError;
+
 /// Copy from `package:logging`.
-/// [Level]s to control logging output. Logging can be enabled to include all
-/// levels above certain [Level]. The predefined [Level] constants below are sorted as
-/// follows (in descending order): [Level.shout], [Level.severe],
-/// [Level.warning], [Level.info], [Level.config], [Level.fine], [Level.finer],
-/// [Level.finest], and [Level.all].
+/// [LogLevel]s to control logging output. Logging can be enabled to include all
+/// levels above certain [LogLevel]. The predefined [LogLevel] constants below are sorted as
+/// follows (in descending order): [LogLevel.shout], [LogLevel.severe],
+/// [LogLevel.warning], [LogLevel.info], [LogLevel.config], [LogLevel.fine], [LogLevel.finer],
+/// [LogLevel.finest], and [LogLevel.all].
 ///
 /// We recommend using one of the predefined logging levels. If you define your
-/// own level, make sure you use a value between those used in [Level.all] and
-/// [Level.off].
+/// own level, make sure you use a value between those used in [LogLevel.all] and
+/// [LogLevel.off].
 class LogLevel {
   /// Special key to turn on logging for all levels (0).
   static const int all = 0;

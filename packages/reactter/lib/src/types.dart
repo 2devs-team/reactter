@@ -3,6 +3,7 @@ import 'dart:async';
 import 'args.dart';
 import 'hooks/hooks.dart';
 import 'memo/memo.dart' show Memo;
+import 'logger.dart' show LogLevel;
 
 /// {@template log_output}
 /// An function to specify the log output destination.
@@ -14,8 +15,8 @@ import 'memo/memo.dart' show Memo;
 /// {@endtemplate}
 typedef LogOutput = void Function(
   String message, {
-  String name,
-  int level,
+  required String name,
+  required int level,
   StackTrace? stackTrace,
 });
 
