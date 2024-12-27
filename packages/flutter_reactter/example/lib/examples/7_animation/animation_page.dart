@@ -24,9 +24,9 @@ class AnimationPage extends StatelessWidget {
               direction: Axis.horizontal,
               children: [
                 RtSelector<AnimationController, bool>(
-                  selector: (inst, $) {
+                  selector: (inst, watch) {
                     return inst.checkIfPlaying(
-                      $(inst.uBorderRadiusAnimation.uControl).value,
+                      watch(inst.uBorderRadiusAnimation.uControl).value,
                     );
                   },
                   child: RtConsumer<AnimationController>(
@@ -51,9 +51,9 @@ class AnimationPage extends StatelessWidget {
                   },
                 ),
                 RtSelector<AnimationController, bool>(
-                  selector: (inst, $) {
+                  selector: (inst, watch) {
                     return inst.checkIfPlaying(
-                      $(inst.uSizeAnimation.uControl).value,
+                      watch(inst.uSizeAnimation.uControl).value,
                     );
                   },
                   child: RtConsumer<AnimationController>(
@@ -77,9 +77,9 @@ class AnimationPage extends StatelessWidget {
                   },
                 ),
                 RtSelector<AnimationController, bool>(
-                  selector: (inst, $) {
+                  selector: (inst, watch) {
                     return inst.checkIfPlaying(
-                      $(inst.uColorAnimation.uControl).value,
+                      watch(inst.uColorAnimation.uControl).value,
                     );
                   },
                   child: RtConsumer<AnimationController>(
@@ -101,11 +101,11 @@ class AnimationPage extends StatelessWidget {
                   },
                 ),
                 RtSelector<AnimationController, bool>(
-                  selector: (inst, $) {
+                  selector: (inst, watch) {
                     return [
-                      $(inst.uSizeAnimation.uControl).value,
-                      $(inst.uBorderRadiusAnimation.uControl).value,
-                      $(inst.uColorAnimation.uControl).value,
+                      watch(inst.uSizeAnimation.uControl).value,
+                      watch(inst.uBorderRadiusAnimation.uControl).value,
+                      watch(inst.uColorAnimation.uControl).value,
                     ].every(inst.checkIfPlaying);
                   },
                   child: RtConsumer<AnimationController>(

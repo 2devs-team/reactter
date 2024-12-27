@@ -1,8 +1,7 @@
+import 'package:examples/examples/2_calculator/controllers/calculator_controller.dart';
+import 'package:examples/examples/2_calculator/widgets/button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_reactter/flutter_reactter.dart';
-
-import 'package:examples/examples/2_calculator/widgets/button.dart';
-import 'package:examples/examples/2_calculator/controllers/calculator_controller.dart';
 
 final actionLabel = {
   ActionCalculator.add: '+',
@@ -12,7 +11,7 @@ final actionLabel = {
   ActionCalculator.multiply: '×',
   ActionCalculator.point: '.',
   ActionCalculator.porcentage: '%',
-  ActionCalculator.sign: '+/–',
+  ActionCalculator.sign: 'ᐩ⁄-',
   ActionCalculator.subtract: '–',
 };
 
@@ -29,14 +28,13 @@ class CalculatorActionButton extends StatelessWidget {
     final calculatorController = context.use<CalculatorController>();
     final isMathOperation = mathOperationMethods.keys.contains(action);
     final label = actionLabel[action] ?? 'N/A';
-
     void onPressed() => calculatorController.executeAction(action);
 
     if (isMathOperation) {
       return Expanded(
         child: RtSelector<CalculatorController, bool>(
-          selector: (inst, $) {
-            return $(calculatorController.mathOperation).value == action;
+          selector: (inst, watch) {
+            return watch(calculatorController.uMathOperation).value == action;
           },
           builder: (_, __, isSelected, ___) {
             return Button.primary(

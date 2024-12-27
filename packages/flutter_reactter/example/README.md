@@ -13,20 +13,17 @@ flutter create .
 flutter run
 ```
 
-for [Github search example](#github-search), add http permission:
-
-- [Android](https://docs.flutter.dev/development/data-and-backend/networking#android)
-- [IOS](https://guides.codepath.com/ios/Internet-Permissions)
+for [Github search example](#github-search), add http permission(This is the documented [here](https://docs.flutter.dev/data-and-backend/networking))
 
 ## Counter
 
 Increase and decrease the counter.
 
-> Learn how to use reactive state using signal.
+> Learn how to use reactive state using UseState.
 
 [![Counter example](https://raw.githubusercontent.com/2devs-team/reactter_assets/main/examples/counter_example.gif)](https://github.com/2devs-team/reactter/tree/master/packages/flutter_reactter/example/lib/counter)
 
-Implements: `ReactterWatcher`, `Signal`.
+Implements: `RtWatcher`, `UseState`.
 
 ## Calculator
 
@@ -36,7 +33,7 @@ Performs simple arithmetic operations on numbers
 
 [![Counter example](https://raw.githubusercontent.com/2devs-team/reactter_assets/main/examples/calculator_example.png)](https://github.com/2devs-team/reactter/tree/master/packages/flutter_reactter/example/lib/calculator)
 
-Implements: `BuildContext.use`, `ReactterConsumer`, `ReactterProvider`, `ReactterSelector`, `Signal`.
+Implements: `BuildContext.use`, `RtProvider`, `RtSelector`, `RtWatcher`, `UseState`.
 
 ## Shopping cart
 
@@ -46,7 +43,7 @@ Add, remove product to cart and checkout.
 
 [![Shopping cart example](https://raw.githubusercontent.com/2devs-team/reactter_assets/main/examples/cart_example.gif)](https://github.com/2devs-team/reactter/tree/master/packages/flutter_reactter/example/lib/shopping_cart)
 
-Implements: `ReactterComponent`, `ReactterConsumer`, `ReactterProvider`, `ReactterProviders`, `ReactterSelector`, `UseDependencycy`, `UseState`.
+Implements: `ReactterComponent`, `RtConsumer`, `RtProvider`, `RtProviders`, `RtSelector`, `UseDependencycy`, `UseState`.
 
 ## Tree widget
 
@@ -56,7 +53,7 @@ Add, remove and hide child widget with counter.
 
 [![Tree widget example](https://raw.githubusercontent.com/2devs-team/reactter_assets/main/examples/tree_example.gif)](https://github.com/2devs-team/reactter/tree/master/packages/flutter_reactter/example/lib/tree)
 
-Implements: `BuilContext.use`, `BuilContext.watchId`, `Reactter.lazyState`, `ReactterComponent`, `ReactterProvider`, `UseEffect`, `UseState`.
+Implements: `BuilContext.use`, `BuilContext.watchId`, `Reactter.lazyState`, `ReactterComponent`, `RtProvider`, `UseEffect`, `UseState`.
 
 ## Github search
 
@@ -66,7 +63,7 @@ Search user or repository and show info about it.
 
 [![Github search example](https://raw.githubusercontent.com/2devs-team/reactter_assets/main/examples/api_example.png)](https://github.com/2devs-team/reactter/tree/master/packages/flutter_reactter/example/lib/api)
 
-Implements: `Memo`, `ReactterConsumer`, `ReactterProvider`, `UseAsyncState`.
+Implements: `Memo`, `RtConsumer`, `RtProvider`, `UseAsyncState`.
 
 ## To-Do List
 
@@ -76,7 +73,7 @@ Add and remove to-do, mark and unmark to-do as done and filter to-do list.
 
 [![To-Do List example](https://raw.githubusercontent.com/2devs-team/reactter_assets/main/examples/todos_example.png)](https://github.com/2devs-team/reactter/tree/master/packages/flutter_reactter/example/lib/todo)
 
-Implements: `Reactter.lazyState`, `ReactterActionCallable`, `ReactterCompontent`, `ReactterConsumer`, `ReactterProvider`, `ReactterSelector`, `UseCompute`, `UseReducer`.
+Implements: `Reactter.lazyState`, `ReactterActionCallable`, `ReactterCompontent`, `RtConsumer`, `RtProvider`, `RtSelector`, `UseCompute`, `UseReducer`.
 
 ## Animate widget
 
@@ -86,4 +83,4 @@ Change size, shape and color using animations.
 
 [![Animate widget example](https://raw.githubusercontent.com/2devs-team/reactter_assets/main/examples/animation_example.gif)](https://github.com/2devs-team/reactter/tree/master/packages/flutter_reactter/example/lib/animation)
 
-Implements: `Reactter.lazyState`, `ReactterConsumer`, `ReactterHook`, `ReactterProvider`, `ReactterSelector`, `UseCompute`, `UseEffect`, `UseState`.
+Implements: `Reactter.lazyState`, `RtConsumer`, `ReactterHook`, `RtProvider`, `RtSelector`, `UseCompute`, `UseEffect`, `UseState`.

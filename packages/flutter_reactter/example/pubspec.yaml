@@ -1,10 +1,10 @@
 name: examples
 description: Reactter examples
-version: 2.3.0+1
+version: 3.0.0+1
 publish_to: "none"
 
 environment:
-  sdk: ">=2.19.0 <4.0.0"
+  sdk: ">3.2.0 <4.0.0"
 
 dependencies:
   flutter:
@@ -12,11 +12,14 @@ dependencies:
   http: ^0.13.6
   url_launcher: ^6.1.2
   intl: ^0.17.0
-  flutter_reactter: ^7.3.1
+  flutter_reactter:
+    path: ../
 
 dev_dependencies:
+  custom_lint: ^0.5.11
   flutter_lints: ^2.0.2
-  reactter_lint: ^0.1.0
+  reactter_lint:
+    path: ../../reactter_lint
 
 flutter:
   uses-material-design: true

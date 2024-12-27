@@ -42,18 +42,23 @@ class Button extends StatelessWidget {
         onPressed: onPressed ?? () {},
         style: ElevatedButton.styleFrom(
           backgroundColor: color ?? Colors.grey.shade700,
+          padding: const EdgeInsets.symmetric(
+            horizontal: 16,
+          ),
           side: BorderSide(
             width: isSelected ? 4 : 1,
             color: Theme.of(context).scaffoldBackgroundColor,
           ),
           shape: const ContinuousRectangleBorder(side: BorderSide.none),
         ),
-        child: Text(
-          label,
-          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                color: Colors.white,
-                fontSize: isSmall ? 16 : null,
-              ),
+        child: FittedBox(
+          child: Text(
+            label,
+            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                  color: Colors.white,
+                  fontSize: isSmall ? 16 : null,
+                ),
+          ),
         ),
       ),
     );

@@ -4,6 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_reactter/flutter_reactter.dart';
 
+class UseX extends RtHook {
+  @override
+  final $ = RtHook.$register;
+
+  late final uCounter = Rt.lazyState(() => UseState(0), this);
+}
+
 /// Defines different control options for playing an animation. Each option
 /// represents a specific behavior for the animation playback:
 enum AnimationControl {
@@ -62,7 +69,6 @@ class AnimationOptions<T> {
 
 class UseAnimation<T> extends RtHook implements TickerProvider {
   @override
-  @protected
   final $ = RtHook.$register;
 
   late final uTween = Rt.lazyState(
@@ -92,6 +98,14 @@ class UseAnimation<T> extends RtHook implements TickerProvider {
   );
 
   T get value => _animation.value;
+
+  @override
+  Map<String, dynamic> get debugInfo => {
+        'value': value,
+        'duration': uDuration.value,
+        'control': uControl.value,
+        'curve': uCurve.value,
+      };
 
   final AnimationOptions<T> options;
 

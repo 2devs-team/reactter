@@ -114,29 +114,29 @@ packages:
     source: hosted
     version: "3.0.3"
   custom_lint:
-    dependency: transitive
+    dependency: "direct dev"
     description:
       name: custom_lint
-      sha256: b09a939c3bb062fdf072aa4c8eb5447231338854c4fefb23e4c9f7cef41cb3ff
+      sha256: "22bd87a362f433ba6aae127a7bac2838645270737f3721b180916d7c5946cb5d"
       url: "https://pub.dev"
     source: hosted
-    version: "0.5.0"
+    version: "0.5.11"
   custom_lint_builder:
     dependency: transitive
     description:
       name: custom_lint_builder
-      sha256: f1430048ccddcd82cbf7722fce7701530fd535b82e91f45b0c81ed07814143bf
+      sha256: "0d48e002438950f9582e574ef806b2bea5719d8d14c0f9f754fbad729bcf3b19"
       url: "https://pub.dev"
     source: hosted
-    version: "0.5.0"
+    version: "0.5.14"
   custom_lint_core:
     dependency: transitive
     description:
       name: custom_lint_core
-      sha256: a39e98cba1d96076e2e5c96aad582a776909c78b4d7480d0efdcc3791b225c1b
+      sha256: "2952837953022de610dacb464f045594854ced6506ac7f76af28d4a6490e189b"
       url: "https://pub.dev"
     source: hosted
-    version: "0.5.0"
+    version: "0.5.14"
   dart_style:
     dependency: transitive
     description:
@@ -169,10 +169,9 @@ packages:
   flutter_reactter:
     dependency: "direct main"
     description:
-      name: flutter_reactter
-      sha256: ade4971b87071de16f81b18f2dd021eec76daa1d6734d50b59266b381fb647d0
-      url: "https://pub.dev"
-    source: hosted
+      path: ".."
+      relative: true
+    source: path
     version: "7.3.1"
   flutter_web_plugins:
     dependency: transitive
@@ -263,18 +262,18 @@ packages:
     dependency: transitive
     description:
       name: material_color_utilities
-      sha256: "0e0a020085b65b6083975e499759762399b4475f766c21668c4ecca34ea74e5a"
+      sha256: f7142bb1154231d7ea5f96bc7bde4bda2a0945d2806bb11670e30b850d56bdec
       url: "https://pub.dev"
     source: hosted
-    version: "0.8.0"
+    version: "0.11.1"
   meta:
     dependency: transitive
     description:
       name: meta
-      sha256: d584fa6707a52763a52446f02cc621b077888fb63b93bbcb1143a7be5a0c0c04
+      sha256: bdb68674043280c3428e9ec998512fb681678676b3c54e773629ffe74419f8c7
       url: "https://pub.dev"
     source: hosted
-    version: "1.11.0"
+    version: "1.15.0"
   package_config:
     dependency: transitive
     description:
@@ -318,19 +317,17 @@ packages:
   reactter:
     dependency: transitive
     description:
-      name: reactter
-      sha256: ad773608411600531cbc3513ae05a4ce91610ccb93701f24e79d26999b663f04
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../reactter"
+      relative: true
+    source: path
     version: "7.3.0"
   reactter_lint:
     dependency: "direct dev"
     description:
-      name: reactter_lint
-      sha256: "14e1d927b7e4f9e079a480582d1f34d9b0fd54d121e6f64c29d034e35c745f39"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.1.0"
+      path: "../../reactter_lint"
+      relative: true
+    source: path
+    version: "1.0.0"
   rxdart:
     dependency: transitive
     description:
@@ -513,5 +510,5 @@ packages:
     source: hosted
     version: "3.1.2"
 sdks:
-  dart: ">=3.2.0-0 <4.0.0"
+  dart: ">=3.3.0-0 <4.0.0"
   flutter: ">=3.7.0"

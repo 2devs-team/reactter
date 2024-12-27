@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_reactter/flutter_reactter.dart';
 
-final count = UseState(0);
+final uCount = UseState(0, debugLabel: "uCount");
 
 class CounterPage extends StatelessWidget {
   const CounterPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         title: const Text("Counter"),
@@ -21,7 +20,7 @@ class CounterPage extends StatelessWidget {
           runSpacing: 8,
           children: [
             ElevatedButton(
-              onPressed: () => count.value--,
+              onPressed: () => uCount.value--,
               style: ElevatedButton.styleFrom(
                 shape: const CircleBorder(),
                 backgroundColor: Colors.red,
@@ -40,7 +39,7 @@ class CounterPage extends StatelessWidget {
               child: FittedBox(
                 child: RtWatcher((context, watch) {
                   return Text(
-                    "${watch(count).value}",
+                    "${watch(uCount).value}",
                     style: Theme.of(context).textTheme.displaySmall,
                     textAlign: TextAlign.center,
                   );
@@ -48,7 +47,7 @@ class CounterPage extends StatelessWidget {
               ),
             ),
             ElevatedButton(
-              onPressed: () => count.value++,
+              onPressed: () => uCount.value++,
               style: ElevatedButton.styleFrom(
                 shape: const CircleBorder(),
                 backgroundColor: Colors.green,

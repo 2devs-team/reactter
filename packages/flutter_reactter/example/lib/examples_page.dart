@@ -3,10 +3,10 @@ import 'package:examples/custom_list.dart';
 
 import 'examples/1_counter/counter_page.dart';
 import 'examples/2_calculator/calculator_page.dart';
-import 'examples/4_shopping_cart/shopping_cart_page.dart';
-import 'examples/3_tree/tree_page.dart';
-import 'examples/5_api/api_page.dart';
-import 'examples/6_todo/todo_page.dart';
+import 'examples/3_shopping_cart/shopping_cart_page.dart';
+import 'examples/6_tree/tree_page.dart';
+import 'examples/4_github_search/github_search_page.dart';
+import 'examples/5_todo/todo_page.dart';
 import 'examples/7_animation/animation_page.dart';
 
 final examples = [
@@ -16,7 +16,7 @@ final examples = [
     "Increase and decrease the counter",
     [
       "RtWatcher",
-      "Signal",
+      "UseState",
     ],
     () => const CounterPage(),
   ),
@@ -26,18 +26,62 @@ final examples = [
     "Performs simple arithmetic operations on numbers",
     [
       "BuilContext.use",
-      "Rt.batch",
-      "RtConsumer",
       "RtProvider",
       "RtSelector",
       "RtWatcher",
-      "Signal",
+      "UseState",
     ],
     () => const CalculatorPage(),
   ),
   ExampleItem(
+    "/shopping-cart",
+    "3. Shopping Cart",
+    "Add, remove product to cart and checkout",
+    [
+      "Rt.lazyState",
+      "RtComponent",
+      "RtConsumer",
+      "RtProvider",
+      "RtMultiProvider",
+      "RtSelector",
+      "RtWatcher",
+      "UseDependency",
+      "UseState",
+    ],
+    () => const ShoppingCartPage(),
+  ),
+  ExampleItem(
+    "/github-search",
+    "4. Github Search",
+    "Search user or repository and show info about it.",
+    [
+      "Memo",
+      "Rt.lazyState",
+      "RtConsumer",
+      "RtProvider",
+      "UseAsyncState",
+      "UseDependency",
+    ],
+    () => const GithubSearchPage(),
+  ),
+  ExampleItem(
+    "/todo",
+    "5. To-Do List",
+    "Add and remove to-do, mark and unmark to-do as done and filter to-do list",
+    [
+      "Rt.lazyState",
+      "RtActionCallable",
+      "RtComponent",
+      "RtConsumer",
+      "RtProvider",
+      "RtSelector",
+      "UseReducer",
+    ],
+    () => const TodoPage(),
+  ),
+  ExampleItem(
     "/tree",
-    "3. Tree widget",
+    "6. Tree widget",
     "Add, remove and hide child widget with counter.",
     [
       "Rt.batch",
@@ -54,50 +98,6 @@ final examples = [
       "UseState",
     ],
     () => const TreePage(),
-  ),
-  ExampleItem(
-    "/shopping-cart",
-    "4. Shopping Cart",
-    "Add, remove product to cart and checkout",
-    [
-      "Rt.lazyState",
-      "RtComponent",
-      "RtConsumer",
-      "RtProvider",
-      "RtMultiProvider",
-      "RtSelector",
-      "UseDependency",
-      "UseState",
-    ],
-    () => const ShoppingCartPage(),
-  ),
-  ExampleItem(
-    "/api",
-    "5. Github Search",
-    "Search user or repository and show info about it.",
-    [
-      "Memo",
-      "Rt.lazyState",
-      "RtConsumer",
-      "RtProvider",
-      "UseAsyncState",
-    ],
-    () => const ApiPage(),
-  ),
-  ExampleItem(
-    "/todo",
-    "6. To-Do List",
-    "Add and remove to-do, mark and unmark to-do as done and filter to-do list",
-    [
-      "Rt.lazyState",
-      "RtActionCallable",
-      "RtComponent",
-      "RtConsumer",
-      "RtProvider",
-      "RtSelector",
-      "UseReducer",
-    ],
-    () => const TodoPage(),
   ),
   ExampleItem(
     "/animation",

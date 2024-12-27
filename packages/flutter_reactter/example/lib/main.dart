@@ -3,6 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_reactter/flutter_reactter.dart';
 
 Future<void> main() async {
-  Rt.initializeDebugging();
+  Rt.initializeDevTools();
   runApp(const MyApp());
 }
