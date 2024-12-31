@@ -12,7 +12,7 @@ ____
 [![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/2devs-team/reactter/dart.yml?branch=master)](https://github.com/2devs-team/reactter/actions)
 [![Codecov](https://img.shields.io/codecov/c/github/2devs-team/reactter?logo=codecov)](https://app.codecov.io/gh/2devs-team/reactter)
 
-# A lightweight, powerful, and reactive State Management, Dependency Injection and Event Handler for Dart/Flutter
+A lightweight, powerful, and reactive **State Management**, **Dependency Injection** and **Event Handler** for Dart/Flutter
 
 ## Features
 
@@ -25,7 +25,7 @@ ____
 - ♻️ **Reusable States and Logic** with [Custom hooks]([#custom-hooks](https://2devs-team.github.io/reactter/core_concepts/hooks/#custom-hook)).
 - 🎮 Fully **[Rendering Control]([#rendering-control](https://2devs-team.github.io/reactter/core_concepts/rendering_control))**.
 - 🧪 Fully **Testable**, 100% code coverage.
-- 🔬 Fully **debuggable** using the **[Reactter DevTools extension](https://2devs-team.github.io/reactter/devtools_extension)**
+- 🔬 Fully **Debuggable** using the **[Reactter DevTools extension](https://2devs-team.github.io/reactter/devtools_extension)**
 - 🪄 **Zero Dependencies**, **Zero Configuration** and **No Code Generation**.
 - 💙 **Compatible with Dart and Flutter**, supports the latest version of Dart.
 
