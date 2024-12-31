@@ -172,7 +172,7 @@ The state must be create under the Reactter context.
 Cause: The state cannot be created outside Reactter context.
 
 ```dart
-class MyState with RtStateBase, RtContext {...}
+class MyState with RtStateBase, RtContextMixin {...}
 
 > final myState = MyState();
 ```
@@ -182,7 +182,7 @@ class MyState with RtStateBase, RtContext {...}
 Fix: Use `Rt.createState` method for creating the state under the Reactter context.
 
 ```dart
-class MyState with RtStateBase, RtContext {...}
+class MyState with RtStateBase, RtContextMixin {...}
 
 final myState = Rt.createState(() => MyState());
 ```

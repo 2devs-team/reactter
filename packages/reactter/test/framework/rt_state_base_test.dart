@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:reactter/reactter.dart';
 
-class CountTest with RtContext, RtStateBase<CountTest> {
+class CountTest with RtContextMixin, RtStateBase<CountTest> {
   int _count = 0;
   int get count => _count;
   set count(int value) {
@@ -21,7 +21,7 @@ class CountTest with RtContext, RtStateBase<CountTest> {
       };
 }
 
-class StateTest with RtContext, RtStateBase<StateTest> {
+class StateTest with RtContextMixin, RtStateBase<StateTest> {
   StateTest._() {
     assert(dependencyInjection == Rt);
     assert(stateManagement == Rt);

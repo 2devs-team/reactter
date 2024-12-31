@@ -2,7 +2,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:reactter/reactter.dart';
 import 'package:reactter/src/logger.dart';
 
-class StateTest with RtContext, RtStateBase<StateTest> {
+class StateTest
+    with RtContextMixin, RtStateBase<StateTest> {
   StateTest._();
 
   factory StateTest() {

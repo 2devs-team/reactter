@@ -8,7 +8,7 @@ part of '../framework.dart';
 /// {@endtemplate}
 final Rt = RtInterface();
 
-mixin RtContext implements IContext {
+mixin RtContextMixin implements IContext {
   @override
   @internal
   DependencyInjection get dependencyInjection => Rt;

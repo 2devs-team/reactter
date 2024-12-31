@@ -73,7 +73,7 @@ enum SignalEvent { onGetValue, onSetValue }
 /// package on your dependencies and use its Widgets.
 ///
 /// {@endtemplate}
-class Signal<T> with RtContext, RtStateBase<Signal<T>> {
+class Signal<T> with RtContextMixin, RtStateBase<Signal<T>> {
   /// {@macro reactter.signal}
   Signal._(
     T value, {
