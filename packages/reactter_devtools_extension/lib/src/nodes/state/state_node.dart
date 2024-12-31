@@ -31,7 +31,7 @@ final class StateNode extends InstanceNode<StateInfo> {
     try {
       final eval = await EvalService.devtoolsEval;
       final boundInstanceRef = await eval.evalInstance(
-        'RtDevTools._instance?.getBoundInstance("$key")',
+        'RtDevTools.instance?.getBoundInstance("$key")',
         isAlive: isAlive,
       );
       return boundInstanceRef.getNode('boundInstance');
@@ -45,7 +45,7 @@ final class StateNode extends InstanceNode<StateInfo> {
     try {
       final eval = await EvalService.devtoolsEval;
       final debugInfoRef = await eval.evalInstance(
-        'RtDevTools._instance?.getDebugInfo("$key")',
+        'RtDevTools.instance?.getDebugInfo("$key")',
         isAlive: isAlive,
       );
       return debugInfoRef.getNode('debugInfo');

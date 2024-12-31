@@ -33,7 +33,7 @@ base class PlainInstanceNode extends AsyncNode {
     final eval = await EvalService.devtoolsEval;
     final instanceInfo = await EvalService.evalsQueue.add(
       () => eval.evalInstance(
-        'RtDevTools._instance?.getPlainInstanceInfo(instance)',
+        'RtDevTools.instance?.getPlainInstanceInfo(instance)',
         isAlive: isAlive,
         scope: {'instance': instanceRef.id!},
       ),

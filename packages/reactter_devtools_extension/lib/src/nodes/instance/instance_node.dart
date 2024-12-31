@@ -22,7 +22,7 @@ base class InstanceNode<I extends InstanceInfo> extends Node<I> {
       final dependencyKey = uInfo.value?.dependencyKey;
       final dependencyRef = await EvalService.evalsQueue.add(
         () => eval.safeEval(
-          'RtDevTools._instance?.getDependencyRef("$dependencyKey")',
+          'RtDevTools.instance?.getDependencyRef("$dependencyKey")',
           isAlive: isAlive,
         ),
       );

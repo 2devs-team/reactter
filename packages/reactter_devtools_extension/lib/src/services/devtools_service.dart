@@ -15,7 +15,7 @@ class DevtoolsService {
 
     final pageNodes = await EvalService.evalsQueue.add(
       () => eval.evalInstance(
-        'RtDevTools._instance?.getNodes($page, $pageSize)',
+        'RtDevTools.instance?.getNodes($page, $pageSize)',
         isAlive: isAlive,
       ),
     );
@@ -41,7 +41,7 @@ class DevtoolsService {
 
       final nodeInst = await EvalService.evalsQueue.add(
         () => eval.evalInstance(
-          'RtDevTools._instance?._nodesByKey["$nodeKey"]?.toJson()',
+          'RtDevTools.instance?._nodesByKey["$nodeKey"]?.toJson()',
           isAlive: isAlive,
         ),
       );
