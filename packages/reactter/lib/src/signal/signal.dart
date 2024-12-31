@@ -1,4 +1,17 @@
+import 'dart:math';
 import 'package:reactter/src/framework.dart';
+
+part 'extensions/signal_bigint.dart';
+part 'extensions/signal_bool.dart';
+part 'extensions/signal_date_time.dart';
+part 'extensions/signal_double.dart';
+part 'extensions/signal_int.dart';
+part 'extensions/signal_iterable.dart';
+part 'extensions/signal_list.dart';
+part 'extensions/signal_map.dart';
+part 'extensions/signal_num.dart';
+part 'extensions/signal_set.dart';
+part 'extensions/signal_string.dart';
 
 /// This enumeration is used to represent different events that can occur when
 /// getting or setting the value of a `Signal` object.

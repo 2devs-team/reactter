@@ -3,7 +3,7 @@ import 'dart:collection';
 import 'dart:developer' as dev;
 
 import 'package:meta/meta.dart';
-import 'package:reactter/src/signal.dart';
+import 'package:reactter/src/signal/signal.dart';
 
 import 'framework.dart';
 import 'internals.dart';

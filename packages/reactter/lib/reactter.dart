@@ -6,8 +6,7 @@ export 'src/devtools.dart'
 export 'src/framework.dart';
 export 'src/hooks/hooks.dart' hide UseAsyncStateBase;
 export 'src/memo/memo.dart';
-
-export 'src/signal.dart';
+export 'src/signal/signal.dart';
 export 'src/logger.dart'
     hide RtLogger, RtLoggerInitializeAssertionError, prettyFormat;
 export 'src/types.dart';
