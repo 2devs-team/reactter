@@ -4,7 +4,7 @@ import 'package:examples/examples/6_tree/states/tree_node.dart';
 import 'package:flutter_reactter/reactter.dart';
 
 base class TreeList extends LinkedList<TreeNode>
-    with RtContext, RtStateBase<TreeList> {
+    with RtContextMixin, RtStateBase<TreeList> {
   TreeList._();
 
   factory TreeList() {

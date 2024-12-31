@@ -87,7 +87,7 @@ final examples = [
       "Rt.batch",
       "Rt.createSate",
       "Rt.lazyState",
-      "RtContext",
+      "RtContextMixin",
       "RtComponent",
       "RtConsumer",
       "RtProvider",
