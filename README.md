@@ -27,7 +27,6 @@ ____
 - 🧪 Fully **Testable**, 100% code coverage.
 - 🔬 Fully **debuggable** using the **[Reactter DevTools extension](https://2devs-team.github.io/reactter/devtools_extension)**
 - 🪄 **Zero Dependencies**, **Zero Configuration** and **No Code Generation**.
-
 - 💙 **Compatible with Dart and Flutter**, supports the latest version of Dart.
 
 **To start using Reactter, check out the full documentation on [The Official Documentation](https://2devs-team.github.io/reactter).**
@@ -71,3 +70,8 @@ Any idean is welcome!
 
 - **[Carlos León](https://twitter.com/CarLeonDev)** - <carleon.dev@gmail.com>
 - **[Leo Castellanos](https://twitter.com/leoocast10)** - <leoocast.dev@gmail.com>
+
+Flutter 3.24.3 • channel stable • https://github.com/flutter/flutter.git
+Framework • revision 2663184aa7 (4 months ago) • 2024-09-11 16:27:48 -0500
+Engine • revision 36335019a8
+Tools • Dart 3.5.3 • DevTools 2.37.3
