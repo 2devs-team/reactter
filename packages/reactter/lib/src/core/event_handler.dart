@@ -87,7 +87,9 @@ abstract class EventHandler implements IContext {
 
     for (final notifier in notifiers.toList(growable: false)) {
       if (boundInstance != null &&
-          notifier.isInstanceOrDependencyRef(boundInstance)) continue;
+          notifier.isInstanceOrDependencyRef(boundInstance)) {
+        continue;
+      }
 
       notifier.dispose();
       _notifiers.remove(notifier);

@@ -541,9 +541,10 @@ abstract class DependencyInjection implements IContext {
 
   /// Returns the [DependencyRegister] of [T] type with a given [dependencyRef].
   DependencyRegister<T>? getDependencyRegisterByRef<T extends Object?>(
-    DependencyRef<T>? dependencyRef,
+    DependencyRef<T?>? dependencyRef,
   ) {
-    return _dependencyRegisters.lookup(dependencyRef) as DependencyRegister<T>?;
+    return _dependencyRegisters.lookup(dependencyRef as Object)
+        as DependencyRegister<T>?;
   }
 
   void _notifyDependencyFailed(
