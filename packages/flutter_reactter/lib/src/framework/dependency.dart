@@ -23,7 +23,6 @@ abstract class Dependency<T extends Object?> {
 
   void listen(covariant void Function() callback);
 
-  @mustBeOverridden
   @mustCallSuper
   void unlisten() {
     _listener = null;

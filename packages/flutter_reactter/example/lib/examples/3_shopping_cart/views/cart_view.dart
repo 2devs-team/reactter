@@ -43,11 +43,14 @@ class CartView extends RtComponent<CartController> {
             itemBuilder: (context, index) {
               return RtSelector<CartController, int>(
                 selector: (inst, watch) {
-                  return watch(inst.uCartItems)
-                          .value
-                          .elementAtOrNull(index)
-                          ?.quantity ??
-                      0;
+                  try {
+                    return watch(inst.uCartItems)
+                        .value
+                        .elementAt(index)
+                        .quantity;
+                  } catch (e) {
+                    return 0;
+                  }
                 },
                 builder: (_, cartController, __, ___) {
                   final item = cartController.uCartItems.value[index];

@@ -62,10 +62,11 @@ class CalculatorController {
   }
 
   void _insertNumber(int value) {
-    if (_lastAction
-        case != ActionCalculator.number &&
-            != ActionCalculator.point &&
-            != ActionCalculator.sign) {
+    if ([
+      ActionCalculator.number,
+      ActionCalculator.point,
+      ActionCalculator.sign,
+    ].contains(_lastAction)) {
       _resetResult();
     }
 
