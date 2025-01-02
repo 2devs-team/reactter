@@ -4,7 +4,6 @@ import 'package:examples/examples/3_shopping_cart/models/cart.dart';
 import 'package:examples/examples/3_shopping_cart/models/cart_item.dart';
 import 'package:examples/examples/3_shopping_cart/models/product.dart';
 import 'package:examples/examples/3_shopping_cart/utils/lorem_gen.dart';
-import 'package:flutter/material.dart';
 
 const delay = Duration(milliseconds: 500);
 
