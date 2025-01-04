@@ -520,7 +520,7 @@ abstract class DependencyInjection implements IContext {
     eventHandler.emit(instance, Lifecycle.deleted, instance);
     eventHandler.emit(dependencyRegister, Lifecycle.deleted, instance);
 
-    if (instance is IState && !(instance as IState).isDisposed) {
+    if (instance is IState && !instance.isDisposed) {
       instance.dispose();
     }
   }
@@ -540,11 +540,13 @@ abstract class DependencyInjection implements IContext {
   }
 
   /// Returns the [DependencyRegister] of [T] type with a given [dependencyRef].
-  DependencyRegister<T>? getDependencyRegisterByRef<T extends Object?>(
+  DependencyRegister<T?>? getDependencyRegisterByRef<T extends Object?>(
     DependencyRef<T?>? dependencyRef,
   ) {
-    return _dependencyRegisters.lookup(dependencyRef as Object)
-        as DependencyRegister<T>?;
+    if (dependencyRef == null) return null;
+
+    return _dependencyRegisters.lookup(dependencyRef as dynamic)
+        as DependencyRegister<T?>?;
   }
 
   void _notifyDependencyFailed(
