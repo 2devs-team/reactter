@@ -20,6 +20,7 @@ class TodoItem extends StatelessWidget {
       value: todo.isDone,
       onChanged: (_) => onTap?.call(),
       dense: true,
+      visualDensity: VisualDensity.compact,
       controlAffinity: ListTileControlAffinity.leading,
       title: Text(
         todo.title,
@@ -33,7 +34,7 @@ class TodoItem extends StatelessWidget {
         onPressed: onRemove,
         color: Colors.red.shade400,
         padding: EdgeInsets.zero,
-        constraints: const BoxConstraints.tightFor(width: 42),
+        constraints: const BoxConstraints.tightFor(width: 24),
         splashRadius: 18,
         iconSize: 24,
         icon: const Icon(Icons.close_outlined),

@@ -51,6 +51,7 @@ class InputBar extends StatelessWidget {
       decoration: InputDecoration(
         isDense: true,
         filled: true,
+        fillColor: Theme.of(context).colorScheme.surface,
         hintText: 'What needs to be done?',
         border: const OutlineInputBorder(
           borderSide: BorderSide(

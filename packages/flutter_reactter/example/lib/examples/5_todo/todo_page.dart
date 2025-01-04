@@ -14,13 +14,11 @@ class TodoPage extends StatelessWidget {
     return RtProvider(
       TodoController.new,
       builder: (context, todoController, _) {
-        final size = MediaQuery.of(context).size;
-
         return Scaffold(
           appBar: AppBar(
             title: const Text("To-Do List"),
             bottom: PreferredSize(
-              preferredSize: Size.fromHeight(size.width >= 480 ? 82 : 110),
+              preferredSize: const Size.fromHeight(40),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -30,8 +28,10 @@ class TodoPage extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         InputBar(onAdd: todoController.addTodo),
-                        const SizedBox(height: 4),
-                        const TodoFilter(),
+                        // const Padding(
+                        //   padding: EdgeInsets.symmetric(vertical: 8.0),
+                        //   child: TodoFilter(),
+                        // ),
                       ],
                     ),
                   ),
@@ -39,7 +39,22 @@ class TodoPage extends StatelessWidget {
               ),
             ),
           ),
-          body: const TodoList(),
+          body: const Padding(
+            padding: EdgeInsets.all(8),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                TodoFilter(),
+                SizedBox(height: 4),
+                Expanded(
+                  child: Card(
+                    child: TodoList(),
+                  ),
+                ),
+              ],
+            ),
+          ),
         );
       },
     );

@@ -62,7 +62,7 @@ class CalculatorController {
   }
 
   void _insertNumber(int value) {
-    if ([
+    if (![
       ActionCalculator.number,
       ActionCalculator.point,
       ActionCalculator.sign,

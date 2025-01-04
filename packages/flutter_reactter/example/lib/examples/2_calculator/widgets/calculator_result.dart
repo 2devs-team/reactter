@@ -21,7 +21,8 @@ class CalculatorResult extends StatelessWidget {
 
           return Text(
             result,
-            style: const TextStyle(
+            style: TextStyle(
+              color: Colors.grey.shade100,
               fontSize: 48,
               fontWeight: FontWeight.w200,
             ),

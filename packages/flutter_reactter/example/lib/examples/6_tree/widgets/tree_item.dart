@@ -27,35 +27,38 @@ class TreeItem extends RtComponent<TreeNode> {
 
   @override
   Widget render(context, treeNode) {
-    return InkWell(
-      onTap: () => _openDialog(context),
-      child: Stack(
-        clipBehavior: Clip.none,
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 2),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    SizedBox(width: 22.0 * treeNode.depth),
-                    _buildNode(),
-                    const Expanded(
-                      child: Divider(
-                        height: 2,
-                        thickness: 2,
+    return SizedBox(
+      height: 36,
+      child: InkWell(
+        onTap: () => _openDialog(context),
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 2),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      SizedBox(width: 22.0 * treeNode.depth),
+                      _buildNode(),
+                      const Expanded(
+                        child: Divider(
+                          height: 2,
+                          thickness: 2,
+                        ),
                       ),
-                    ),
-                    _buildCount(),
-                  ],
-                ),
-              ],
+                      _buildCount(),
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ),
-          _buildTreeLine(),
-        ],
+            _buildTreeLine(),
+          ],
+        ),
       ),
     );
   }
@@ -142,7 +145,7 @@ class TreeItem extends RtComponent<TreeNode> {
         decoration: ShapeDecoration(
           shape: RoundedRectangleBorder(
             side: BorderSide(
-              color: Theme.of(context).colorScheme.outlineVariant,
+              color: Theme.of(context).dividerColor,
               width: 2,
             ),
             borderRadius: const BorderRadius.all(Radius.circular(20)),
@@ -189,7 +192,7 @@ class TreeItem extends RtComponent<TreeNode> {
           decoration: ShapeDecoration(
             shape: RoundedRectangleBorder(
               side: BorderSide(
-                color: Theme.of(context).colorScheme.outlineVariant,
+                color: Theme.of(context).dividerColor,
                 width: 2,
               ),
             ),
@@ -224,8 +227,8 @@ class TreeItem extends RtComponent<TreeNode> {
 
     return Positioned(
       top: -2,
-      bottom: -4,
       left: -6,
+      bottom: 2,
       child: Align(
         alignment: Alignment.topLeft,
         child: Row(
@@ -237,7 +240,7 @@ class TreeItem extends RtComponent<TreeNode> {
                 height: treeNode.parent != null &&
                         watch(treeNode.parent!.uChildren).value.first ==
                             treeNode
-                    ? 22
+                    ? 21
                     : null,
                 child: const VerticalDivider(
                   width: 2,
@@ -245,16 +248,21 @@ class TreeItem extends RtComponent<TreeNode> {
                 ),
               );
             }),
-            RtWatcher((context, watch) {
-              return SizedBox(
-                width: watch(treeNode.uChildren).value.isEmpty ? 32 : 4,
-                height: 46,
-                child: const Divider(
-                  height: 2,
-                  thickness: 2,
-                ),
-              );
-            }),
+            Column(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                const SizedBox(height: 19),
+                RtWatcher((context, watch) {
+                  return SizedBox(
+                    width: watch(treeNode.uChildren).value.isEmpty ? 32 : 4,
+                    child: const Divider(
+                      height: 2,
+                      thickness: 2,
+                    ),
+                  );
+                }),
+              ],
+            ),
           ],
         ),
       ),

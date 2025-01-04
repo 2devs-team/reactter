@@ -28,13 +28,9 @@ class SearchBar extends StatelessWidget {
           decoration: InputDecoration(
             isDense: true,
             filled: true,
+            fillColor: Theme.of(context).colorScheme.surface,
             hintText: 'Type a username or repository (like "flutter/flutter")',
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(30),
-              borderSide: const BorderSide(
-                strokeAlign: BorderSide.strokeAlignOutside,
-              ),
-            ),
+            border: const OutlineInputBorder(),
             counter: const SizedBox(),
             prefixIcon: const Icon(Icons.search),
             suffixIcon: Padding(
@@ -47,9 +43,6 @@ class SearchBar extends StatelessWidget {
                     strokeAlign: BorderSide.strokeAlignOutside,
                     width: 0.5,
                     color: Theme.of(context).colorScheme.primary,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30.0),
                   ),
                 ),
                 onPressed: searchInputController.onButtonPressed,

@@ -1,36 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'package:examples/examples_page.dart';
-import 'package:examples/page_404.dart';
-
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData.light().copyWith(
-        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-      ),
-      darkTheme: ThemeData.dark().copyWith(
-        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-      ),
-      initialRoute: '/',
-      routes: {
-        '/': (context) => const ExamplesPage(),
-        for (final e in examples) e.routeName: (context) => e.renderPage(),
-      },
-      onUnknownRoute: (RouteSettings settings) {
-        return MaterialPageRoute(
-          builder: (_) => const Page404(),
-        );
-      },
-      navigatorObservers: [TitleRouteObserver()],
-    );
-  }
-}
+import 'package:examples/examples.dart';
 
 class TitleRouteObserver extends RouteObserver<PageRoute> {
   static Map<String, String> titleRoute = {

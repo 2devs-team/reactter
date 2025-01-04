@@ -18,9 +18,9 @@ class Quantity extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const ShapeDecoration(
-        color: Colors.black38,
-        shape: StadiumBorder(),
+      decoration: ShapeDecoration(
+        color: Theme.of(context).highlightColor,
+        shape: const StadiumBorder(),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -34,13 +34,8 @@ class Quantity extends StatelessWidget {
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Text(
-              "$quantity",
-              style: Theme.of(context)
-                  .textTheme
-                  .titleMedium!
-                  .copyWith(color: Colors.white),
-            ),
+            child: Text("$quantity",
+                style: Theme.of(context).textTheme.titleMedium),
           ),
           CustomIconButton(
             icon: Icons.add,

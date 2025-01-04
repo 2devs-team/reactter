@@ -107,7 +107,10 @@ class CartView extends RtComponent<CartController> {
                       else
                         Text(
                           formatCurrency(total),
-                          style: Theme.of(context).textTheme.titleLarge,
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleLarge!
+                              .copyWith(color: Colors.grey.shade200),
                         ),
                     ],
                   );

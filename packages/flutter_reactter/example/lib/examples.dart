@@ -116,24 +116,6 @@ final examples = [
   ),
 ];
 
-class ExamplesPage extends StatelessWidget {
-  const ExamplesPage({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Title(
-      title: 'Reactter | Examples',
-      color: Theme.of(context).primaryColor,
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text("Examples"),
-        ),
-        body: CustomList(items: examples),
-      ),
-    );
-  }
-}
-
 /// A ListItem that contains data to display a message.
 class ExampleItem implements ListItem {
   final String routeName;
