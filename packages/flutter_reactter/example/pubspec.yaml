@@ -4,7 +4,7 @@ version: 3.0.0+1
 publish_to: "none"
 
 environment:
-  sdk: ">3.2.0 <4.0.0"
+  sdk: ">=2.19.2 <4.0.0"
 
 dependencies:
   flutter:
@@ -12,14 +12,12 @@ dependencies:
   http: ^0.13.6
   url_launcher: ^6.1.2
   intl: ^0.17.0
-  flutter_reactter: ^8.0.0-dev.5
-  #  path: ../
+  flutter_reactter: ^8.0.0-dev.14
 
 dev_dependencies:
-  custom_lint: ^0.5.11
+  custom_lint: ^0.5.0
   flutter_lints: ^2.0.2
-  reactter_lint:
-    path: ../../reactter_lint
+  reactter_lint: ^1.0.0
 
 flutter:
   uses-material-design: true
