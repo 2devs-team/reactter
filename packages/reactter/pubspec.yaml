@@ -4,13 +4,20 @@ homepage: https://2devs-team.github.io/reactter/
 documentation: https://2devs-team.github.io/reactter/
 repository: https://github.com/2devs-team/reactter/tree/master/packages/reactter
 license: MIT License
-version: 8.0.0-dev.13
+version: 8.0.0-dev.15
 
 topics:
   - reactive
   - state
   - dependency
   - event
+
+screenshots:
+  - description: "Reactter DevTools Extension"
+    path: doc/screenshots/devtools.png
+  - description: "Reactter Example App"
+    path: doc/screenshots/example_app.png
+
 
 environment:
   sdk: ">=2.19.2 <4.0.0"
