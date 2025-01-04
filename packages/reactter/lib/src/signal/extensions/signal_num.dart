@@ -4,24 +4,24 @@ part of '../signal.dart';
 extension SignalNumExt on Signal<num> {
   /// Adds [other] to this number.
   ///
-  /// The result is an [Signal] of [double], as described by [double.+],
-  /// if both `this` and [other] is an [Signal] of [double],
-  /// otherwise the result is a [Signal] of [int].
-  Signal<num> operator +(Signal<num> other) => Signal(value + other.value);
+  /// The result is a [double], as described by [double.+],
+  /// if both `this` and [other] is a [double],
+  /// otherwise the result is an [int].
+  num operator +(num other) => value + other;
 
   /// Subtracts [other] from this number.
   ///
-  /// The result is an [Signal] of [double], as described by [double.-],
-  /// if both `this` and [other] is an [Signal] of [double],
-  /// otherwise the result is a [Signal] of [int].
-  Signal<num> operator -(Signal<num> other) => Signal(value - other.value);
+  /// The result is a [double], as described by [double.-],
+  /// if both `this` and [other] is a [double],
+  /// otherwise the result is a [int].
+  num operator -(num other) => value - other;
 
   /// Multiplies this number by [other].
   ///
-  /// The result is an [Signal] of [double], as described by [double.*],
-  /// if both `this` and [other] is an [Signal] of [double],
-  /// otherwise the result is a [Signal] of [int].
-  Signal<num> operator *(Signal<num> other) => Signal(value * other.value);
+  /// The result is a [double], as described by [double.*],
+  /// if both `this` and [other] is a [double],
+  /// otherwise the result is an [int].
+  num operator *(num other) => value * other;
 
   /// Euclidean modulo of this number by [other].
   ///
@@ -38,21 +38,21 @@ extension SignalNumExt on Signal<num> {
   ///
   /// See [remainder] for the remainder of the truncating division.
   ///
-  /// The result is an [Signal] of [double], as described by [double.%],
-  /// if both `this` and [other] are [Signal] of [double],
-  /// otherwise the result is a [Signal] of [int].
+  /// The result is a [double], as described by [double.%],
+  /// if both `this` and [other] are [double],
+  /// otherwise the result is an [int].
   ///
   /// Example:
   /// ```dart
-  /// print(Signal(5) % Signal(3)); // Signal(2)
-  /// print(Signal(-5) % Signal(3)); // Signal(1)
-  /// print(Signal(5) % Signal(-3)); // Signal(2)
-  /// print(Signal(-5) % Signal(-3)); // Signal(1)
+  /// print(Signal(5) % 3); // 2
+  /// print(Signal(-5) % 3); // 1
+  /// print(Signal(5) % -3); // 2
+  /// print(Signal(-5) % -3); // 1
   /// ```
-  Signal<num> operator %(Signal<num> other) => Signal(value % other.value);
+  num operator %(num other) => value % other;
 
   /// Divides this number by [other].
-  Signal<double> operator /(Signal<num> other) => Signal(value / other.value);
+  double operator /(num other) => value / other;
 
   /// Truncating division operator.
   ///
@@ -69,7 +69,7 @@ extension SignalNumExt on Signal<num> {
   /// Then `a ~/ b` is equivalent to `(a / b).truncate()`.
   /// This means that the intermediate result of the double division
   /// must be a finite integer (not an infinity or [double.nan]).
-  Signal<int> operator ~/(Signal<num> other) => Signal(value ~/ other.value);
+  int operator ~/(num other) => value ~/ other;
 
   /// The negation of this value.
   ///
@@ -87,35 +87,35 @@ extension SignalNumExt on Signal<num> {
   ///
   /// (Both properties generally also hold for the other type,
   /// but with a few edge case exceptions).
-  Signal<num> operator -() => Signal(-value);
+  num operator -() => -value;
 
   /// Whether this number is numerically smaller than [other].
   ///
   /// Returns `true` if this number is smaller than [other].
   /// Returns `false` if this number is greater than or equal to [other]
   /// or if either value is a NaN value like [double.nan].
-  bool operator <(Signal<num> other) => value < other.value;
+  bool operator <(num other) => value < other;
 
   /// Whether this number is numerically smaller than or equal to [other].
   ///
   /// Returns `true` if this number is smaller than or equal to [other].
   /// Returns `false` if this number is greater than [other]
   /// or if either value is a NaN value like [double.nan].
-  bool operator <=(Signal<num> other) => value <= other.value;
+  bool operator <=(num other) => value <= other;
 
   /// Whether this number is numerically greater than [other].
   ///
   /// Returns `true` if this number is greater than [other].
   /// Returns `false` if this number is smaller than or equal to [other]
   /// or if either value is a NaN value like [double.nan].
-  bool operator >(Signal<num> other) => value > other.value;
+  bool operator >(num other) => value > other;
 
   /// Whether this number is numerically greater than or equal to [other].
   ///
   /// Returns `true` if this number is greater than or equal to [other].
   /// Returns `false` if this number is smaller than [other]
   /// or if either value is a NaN value like [double.nan].
-  bool operator >=(Signal<num> other) => value >= other.value;
+  bool operator >=(num other) => value >= other;
 
   /// Compares this to `other`.
   ///
