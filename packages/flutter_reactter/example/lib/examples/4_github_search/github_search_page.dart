@@ -1,3 +1,5 @@
+// ignore_for_file: undefined_hidden_name
+
 import 'package:examples/examples/4_github_search/widgets/info_card.dart';
 import 'package:flutter/material.dart' hide SearchBar;
 import 'package:flutter_reactter/flutter_reactter.dart';

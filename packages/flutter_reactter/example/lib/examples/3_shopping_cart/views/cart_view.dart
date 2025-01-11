@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_renaming_method_parameters
+
 import 'package:examples/examples/3_shopping_cart/controllers/cart_controller.dart';
 import 'package:examples/examples/3_shopping_cart/utils/format_currency.dart';
 import 'package:examples/examples/3_shopping_cart/widgets/cart_item_card.dart';

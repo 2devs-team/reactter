@@ -39,12 +39,12 @@ class TodoPage extends StatelessWidget {
               ),
             ),
           ),
-          body: const Padding(
-            padding: EdgeInsets.all(8),
+          body: Padding(
+            padding: const EdgeInsets.all(8),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+              children: const [
                 TodoFilter(),
                 SizedBox(height: 4),
                 Expanded(

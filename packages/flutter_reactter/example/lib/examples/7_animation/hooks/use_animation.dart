@@ -4,87 +4,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_reactter/flutter_reactter.dart';
 
-class UseX extends RtHook {
-  @override
-  final $ = RtHook.$register;
-
-  late final uCounter = Rt.lazyState(() => UseState(0), this);
-}
-
-/// Defines different control options for playing an animation. Each option
-/// represents a specific behavior for the animation playback:
-enum AnimationControl {
-  /// Plays the animation from the current position to the end.
-  play,
-
-  /// Plays the animation from the current position reverse to the start.
-  playReverse,
-
-  /// Reset the position of the animation to `0.0` and starts playing
-  /// to the end.
-  playFromStart,
-
-  /// Reset the position of the animation to `1.0` and starts playing
-  /// reverse to the start.
-  playReverseFromEnd,
-
-  /// Endlessly plays the animation from the start to the end.
-  loop,
-
-  /// Endlessly plays the animation from the start to the end, then
-  /// it plays reverse to the start, then forward again and so on.
-  mirror,
-
-  /// Stops the animation at the current position.
-  pause,
-
-  /// Stops and resets animation.
-  stop,
-}
-
-/// The `AnimationOptions` class represents the options for an animation,
-/// including the tween, duration, control, curve, start position,
-/// frames per second, delay, and animation status listener.
-class AnimationOptions<T> {
-  final Animatable<T> tween;
-  final Duration duration;
-  final AnimationControl control;
-  final Curve curve;
-  final double startPosition;
-  final int? fps;
-  final Duration delay;
-  final AnimationStatusListener? animationStatusListener;
-
-  const AnimationOptions({
-    required this.tween,
-    this.control = AnimationControl.play,
-    this.duration = const Duration(seconds: 1),
-    this.curve = Curves.linear,
-    this.startPosition = 0.0,
-    this.fps,
-    this.delay = Duration.zero,
-    this.animationStatusListener,
-  });
-}
-
-class UseAnimation<T> extends RtHook implements TickerProvider {
+class UseAnimation<T> extends RtHook
+    with AutoDispatchEffect
+    implements TickerProvider {
   @override
   final $ = RtHook.$register;
 
   late final uTween = Rt.lazyState(
-    () => UseState(options.tween),
+    () => UseState(options.tween, debugLabel: 'uTween'),
     this,
   );
   late final uControl = Rt.lazyState(
-    () => UseState(options.control),
+    () => UseState(options.control, debugLabel: 'uControl'),
     this,
   );
   late final uDuration = Rt.lazyState(
-    () => UseState(options.duration),
+    () => UseState(options.duration, debugLabel: 'uDuration'),
     this,
   );
   late final uCurve = Rt.lazyState(
-    () => UseState(options.curve),
+    () => UseState(options.curve, debugLabel: 'uCurve'),
     this,
   );
 
@@ -100,6 +39,9 @@ class UseAnimation<T> extends RtHook implements TickerProvider {
   T get value => _animation.value;
 
   @override
+  final String? debugLabel;
+
+  @override
   Map<String, dynamic> get debugInfo => {
         'value': value,
         'duration': uDuration.value,
@@ -109,13 +51,18 @@ class UseAnimation<T> extends RtHook implements TickerProvider {
 
   final AnimationOptions<T> options;
 
-  UseAnimation(this.options) {
+  UseAnimation(this.options, {this.debugLabel});
+
+  @override
+  void initHook() {
     controller.addStatusListener(_onAnimationStatus);
     _buildAnimation();
 
     UseEffect(_addFrameLimitingUpdater, []);
     UseEffect(_rebuild, [uTween, uControl, uCurve]);
     UseEffect(() => controller.duration = uDuration.value, [uDuration]);
+
+    super.initHook();
   }
 
   @override
@@ -261,6 +208,62 @@ class UseAnimation<T> extends RtHook implements TickerProvider {
     assert(_tickers!.contains(ticker));
     _tickers!.remove(ticker);
   }
+}
+
+/// Defines different control options for playing an animation. Each option
+/// represents a specific behavior for the animation playback:
+enum AnimationControl {
+  /// Plays the animation from the current position to the end.
+  play,
+
+  /// Plays the animation from the current position reverse to the start.
+  playReverse,
+
+  /// Reset the position of the animation to `0.0` and starts playing
+  /// to the end.
+  playFromStart,
+
+  /// Reset the position of the animation to `1.0` and starts playing
+  /// reverse to the start.
+  playReverseFromEnd,
+
+  /// Endlessly plays the animation from the start to the end.
+  loop,
+
+  /// Endlessly plays the animation from the start to the end, then
+  /// it plays reverse to the start, then forward again and so on.
+  mirror,
+
+  /// Stops the animation at the current position.
+  pause,
+
+  /// Stops and resets animation.
+  stop,
+}
+
+/// The `AnimationOptions` class represents the options for an animation,
+/// including the tween, duration, control, curve, start position,
+/// frames per second, delay, and animation status listener.
+class AnimationOptions<T> {
+  final Animatable<T> tween;
+  final Duration duration;
+  final AnimationControl control;
+  final Curve curve;
+  final double startPosition;
+  final int? fps;
+  final Duration delay;
+  final AnimationStatusListener? animationStatusListener;
+
+  const AnimationOptions({
+    required this.tween,
+    this.control = AnimationControl.play,
+    this.duration = const Duration(seconds: 1),
+    this.curve = Curves.linear,
+    this.startPosition = 0.0,
+    this.fps,
+    this.delay = Duration.zero,
+    this.animationStatusListener,
+  });
 }
 
 /// Provides additional methods for playing, reversing, looping, and mirroring animations.
