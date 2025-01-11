@@ -4,7 +4,7 @@ homepage: https://2devs-team.github.io/reactter/
 documentation: https://2devs-team.github.io/reactter/
 repository: https://github.com/2devs-team/reactter/tree/master/packages/flutter_reactter
 license: MIT License
-version: 8.0.0-dev.18
+version: 8.0.0-dev.19
 
 topics:
   - reactive
@@ -25,12 +25,13 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  meta: ^1.7.0
+  reactter: ^8.0.0-dev.17
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.3
-  reactter: ^8.0.0-dev.17
 
 scripts:
   test: "flutter test --coverage"
