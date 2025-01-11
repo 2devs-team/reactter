@@ -12,7 +12,7 @@ class BindingZone<T extends Object?> {
   final _parentZone = _currentZone;
 
   /// It's used to store a collection of [IState].
-  final states = <IState>{};
+  final _states = <IState>{};
 
   /// Returns the current [BindingZone].
   static BindingZone? get currentZone => _currentZone;
@@ -48,26 +48,26 @@ class BindingZone<T extends Object?> {
 
     final instanceToBind = boundInstance ?? instance;
 
-    zone.bindInstanceToStates(instanceToBind);
+    zone._bindInstanceToStates(instanceToBind);
 
     return instance;
   }
 
   /// Stores the state given from parameter.
   static void recollectState(IState state) {
-    _currentZone?.states.add(state);
+    _currentZone?._states.add(state);
   }
 
   /// Attaches the instance to the stored states([IState]), and if the instance is null,
   /// it adds the stored states to the [BindingZone] parent.
-  E bindInstanceToStates<E extends Object?>(E instance) {
+  E _bindInstanceToStates<E extends Object?>(E instance) {
     try {
       if (instance == null) {
-        _parentZone?.states.addAll(states);
+        _parentZone?._states.addAll(_states);
         return instance;
       }
 
-      for (final state in states.toList(growable: false)) {
+      for (final state in _states.toList(growable: false)) {
         if (state != instance && state.boundInstance == null) {
           state.bind(instance);
         }

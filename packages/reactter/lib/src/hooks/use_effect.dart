@@ -71,11 +71,11 @@ part of 'hooks.dart';
 /// );
 /// ```
 ///
-/// You can also use the [DispatchEffect] mixin to execute the effect
+/// You can also use the [AutoDispatchEffect] mixin to execute the effect
 /// on initialization:
 ///
 /// ```dart
-/// class AppController with DispatchEffect {
+/// class AppController with AutoDispatchEffect {
 ///   AppController() {
 ///     UseEffect(
 ///       () {
@@ -186,7 +186,7 @@ class UseEffect extends RtHook {
 
     _watchInstanceAttached();
 
-    if (!_isDispatched && boundInstance is DispatchEffect) {
+    if (!_isDispatched && boundInstance is AutoDispatchEffect) {
       _runCleanupAndUnwatchDependencies(boundInstance);
       _runCallbackAndWatchDependencies(boundInstance);
       return;
@@ -314,4 +314,4 @@ class UseEffect extends RtHook {
   }
 }
 
-abstract class DispatchEffect {}
+abstract class AutoDispatchEffect {}

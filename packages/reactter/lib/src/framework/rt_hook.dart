@@ -19,20 +19,20 @@ part of '../internals.dart';
 ///   void toggle() => _state.value = !_state.value;
 /// }
 /// ```
-/// > **IMPORTANT**: All [RtHook] must be registered using the final [$] variable.:
+/// > **RECOMMENDED**: All [RtHook] must be registered using the final [$] variable.:
 ///
 /// and use it, like so:
 ///
 /// >```dart
 /// > class AppController {
-/// >   final state = UseToggle(false);
+/// >   final uToggle = UseToggle(false);
 /// >
 /// >   UserContext() {
-/// >     print('initial value: ${state.value}');
+/// >     print('initial value: ${uToggle.value}');
 /// >
-/// >     state.toggle();
+/// >     uToggle.toggle();
 /// >
-/// >     print('toggle value: ${state.value}');
+/// >     print('toggle value: ${uToggle.value}');
 /// >   }
 /// > }
 /// > ```
@@ -61,7 +61,33 @@ abstract class RtHook
   /// This constructor calls the `end` method of the [BindingHookZone] instance
   /// to register the hook and attach the collected states.
   RtHook() {
-    $.bindInstanceToStates(this);
+    initHook();
+  }
+
+  /// Initializes the hook.
+  /// This method is called when the hook is created.
+  /// You can override this method to ensure that the hook is properly
+  /// initialized and to bind the instance to the states.
+  /// This is particularly useful for setting up state dependencies or
+  /// performing side effects when the hook is first created.
+  ///
+  /// For example, you can use the [UseEffect] hook to execute a side effect when a state changes:
+  ///
+  /// ```dart
+  /// @override
+  /// void initHook() {
+  ///   UseEffect(
+  ///     () {
+  ///       print("Executed by state changed");
+  ///     },
+  ///     [state],
+  ///   );
+  ///
+  ///   super.initHook();
+  /// }
+  @mustCallSuper
+  void initHook() {
+    $._bindInstanceToStates(this);
   }
 
   @override

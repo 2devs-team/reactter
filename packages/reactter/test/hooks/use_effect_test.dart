@@ -128,7 +128,8 @@ void main() {
       Rt.delete<UseEffectTestController>();
     });
 
-    test("should be called with DispatchEffect when it initialized later", () {
+    test("should be called with AutoDispatchEffect when it initialized later",
+        () {
       final testController = UseEffectDispatchController();
       int nCalls = 0;
 
@@ -146,7 +147,7 @@ void main() {
 
       expect(nCalls, 0);
       expect(uEffect, isA<UseEffect>());
-      expect(uEffect.boundInstance, isA<DispatchEffect>());
+      expect(uEffect.boundInstance, isA<AutoDispatchEffect>());
       expect(nCalls, 1);
     });
 
@@ -253,7 +254,7 @@ void main() {
       Rt.delete<UseEffectTestController>();
     });
 
-    test("should be called with dispatchEffect", () {
+    test("should be called with autodispatchEffect", () {
       final testController = TestController();
       final stateA = testController.stateBool;
       final stateB = testController.stateInt;
@@ -389,7 +390,7 @@ void main() {
   });
 }
 
-class UseEffectDispatchController extends DispatchEffect {}
+class UseEffectDispatchController extends AutoDispatchEffect {}
 
 class UseEffectTestController extends TestController {
   final testControllerInner = TestController();
