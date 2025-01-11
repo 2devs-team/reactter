@@ -25,6 +25,7 @@ class TreeNodeTileBuilder extends StatelessWidget {
       visualDensity: const VisualDensity(vertical: 0, horizontal: 0),
       horizontalTitleGap: 0,
       minVerticalPadding: 0,
+      minTileHeight: 24,
       contentPadding: EdgeInsets.zero,
       selected: isSelected,
       selectedTileColor: ColorPalette.of(context).selected,

@@ -97,6 +97,5 @@ class MyApp extends StatelessWidget {
 }
 
 void main() {
-  Rt.initializeDevTools();
   runApp(const MyApp());
 }

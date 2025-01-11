@@ -20,16 +20,16 @@ A lightweight, powerful, and reactive **State Management**, **Dependency Injecti
 - ⚖️ Super **Lightweight**.
 - 📏 **Reduce Boilerplate Code** significantly.
 - ✏️ Improve **Code Readability**.
-- 💧 **Flexible** and **Adaptable** to any architecture.
-- ☢️ **Reactive States** using [State](https://2devs-team.github.io/reactter/classes/rt_state_base) and [Hooks](https://2devs-team.github.io/reactter/core_concepts/hooks).
-- ♻️ **Reusable States and Logic** with [Custom hooks]([#custom-hooks](https://2devs-team.github.io/reactter/core_concepts/hooks/#custom-hook)).
-- 🎮 Fully **[Rendering Control]([#rendering-control](https://2devs-team.github.io/reactter/core_concepts/rendering_control))**.
+- ☢️ **Reactive States**, using [State](https://2devs-team.github.io/reactter/classes/rt_state_base) and [Hooks](https://2devs-team.github.io/reactter/core_concepts/hooks).
+- ♻️ **Highly reusable** states and logic, using [Custom Hooks]([#custom-hooks](https://2devs-team.github.io/reactter/core_concepts/hooks/#custom-hook)) and [Dependency Injection](https://2devs-team.github.io/reactter/core_concepts/dependency_injection/).
+- 🎮 Fully **[Rendering Control](https://2devs-team.github.io/reactter/core_concepts/rendering_control)**.
 - 🧪 Fully **Testable**, 100% code coverage.
-- 🔬 Fully **Debuggable** using the **[Reactter DevTools extension](https://2devs-team.github.io/reactter/devtools_extension)**
+- 🔬 Fully **Debuggable**, using the **[Reactter DevTools extension](https://2devs-team.github.io/reactter/devtools_extension)**
+- 💧 **Not opinionated**. You can use it with any architecture or pattern.
 - 🪄 **Zero Dependencies**, **Zero Configuration** and **No Code Generation**.
 - 💙 **Compatible with Dart and Flutter**, supports the latest version of Dart.
 
-**To start using Reactter, check out the full documentation on [The Official Documentation](https://2devs-team.github.io/reactter).**
+_To start using Reactter, check out the full documentation on [The Official Documentation](https://2devs-team.github.io/reactter)._
 
 ## Resources
 
