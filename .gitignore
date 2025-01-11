@@ -79,4 +79,4 @@ build/
 **/lcov.info
 **/coverage
 
-**/pubspec.lock
+pubspec.lock
