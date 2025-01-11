@@ -25,12 +25,12 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_lints: ^2.0.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^2.0.1
+  flutter_lints: ^2.0.3
+  reactter: ^8.0.0-dev.17
 
 scripts:
   test: "flutter test --coverage"
