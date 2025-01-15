@@ -26,7 +26,6 @@ export default defineConfig({
         src: "./public/logo.svg",
       },
       customCss: ["./src/styles/custom.css"],
-      defaultLocale: "root",
       expressiveCode: {
         themes: [myTheme],
       },
@@ -39,6 +38,7 @@ export default defineConfig({
         ThemeProvider: "./src/components/ThemeProvider.astro",
         ThemeSelect: "./src/components/ThemeSelect.astro",
       },
+      defaultLocale: "root",
       locales: {
         root: {
           label: "English",
@@ -46,6 +46,7 @@ export default defineConfig({
         },
         es: {
           label: "Español",
+          lang: "es",
         },
       },
       social: {
