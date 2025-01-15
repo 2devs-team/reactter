@@ -1,0 +1,54 @@
+---
+title: Introducción
+description: Conoce Reactter, por qué se creó y sus características.
+---
+
+La gestión de estados es fundamental en las aplicaciones, ya que determina cómo se almacena, actualiza y comparte la información dentro de la misma.
+En Flutter nos proporciona la clase `StafulWidget` para manejar el estado local, que suele ser suficiente para aplicaciones pequeñas,
+sin embargo, a medida que la aplicación crece, la gestión del estado se vuelve más compleja y difícil de mantener. Tambien contamos
+con la clase `InheritedWidget` para gestionar el estado global, pero es un poco complicado de usar.
+Es por ello que existen diversos paquetes para gestionar el estado global.
+
+Aunque la gestión del estado es un componente clave de la arquitectura de una aplicación, no es el único factor a tener en cuenta.
+La inyección de dependencias, el manejo de eventos, y, en el caso de las aplicaciones Flutter, un control adecuado del renderizado,
+son igualmente cruciales para asegurar que la aplicación sea escalable, flexible y fácil de mantener a largo plazo.
+Todos estos aspectos deben ser considerados de forma conjunta para crear una arquitectura sólida y eficiente.
+
+Si bien existen numerosos paquetes para gestionar el estado, muchos de ellos no ofrecen soluciones completas ni lo suficientemente robustas.
+Este desafío se intensifica aún más en aplicaciones desarrolladas exclusivamente con Dart, donde la falta de opciones adecuadas para el manejo del estado global hace que la gestión se vuelva aún más desafiante.
+
+Con esto en mente, se creó **Reactter**, un paquete **_ligero_**, **_poderoso_** y **_reactivo_** [**gestión de estados**](/reactter/es/core_concepts/state_management), [**inyección de dependencias**](/reactter/es/core_concepts/dependency_injection) y [**manejo de eventos**](/reactter/es/core_concepts/event_handler) para Dart/Flutter.
+
+## Motivación
+
+**Reactter** nace como un experimento al desarrollar una nueva forma de gestionar el estado en proyectos Flutter que fuera eficiente, reactivo, escalable, y a la vez simple y fácil de usar.
+
+Inspirado en ReactJS, Reactter(**Reac**t-Fu**tter**) adopta conceptos clave de esta biblioteca a Dart y Flutter, ofreciendo una solución optimizada y coherente con las necesidades del desarrollo actual.
+
+## Características
+
+Reactter ofrece las siguientes características:
+
+- ⚡️ Diseñado para ser **rapido**.
+- 🪶 Ultra **ligero**.
+- 👓 **Sintaxis simple**, fácil de aprender.
+- ✂️ **Reduce el código repetitivo** significativamente.
+- 👁️ Mejora la **legibilidad del código**.
+- 🚀 **Reactividad granular** usando [state](/reactter/es/core_concepts/state_management/#state) and [hooks](/reactter/es/core_concepts/hooks).
+- 🧩 Estados y lógica **altamente reutilizables** mediante [hooks personalizados](/reactter/core_concepts/hooks/#custom-hook) y [inyección de dependencias](/reactter/core_concepts/dependency_injection/).
+- 🎮 Total **[control del renderizado](/reactter/es/core_concepts/rendering_control)**.
+- ✅ **Altamente testeable** con un 100% de cobertura de código.
+- 🐞 **Totalmente depurable** utilizando la [extensión Reactter DevTools](/reactter/es/devtools_extension).
+- 💧 **No es dogmático**. Úsalo con cualquier arquitectura o patrón.
+- 🪄 **Sin dependencias**, **sin configuración** y **sin generación de código**
+- 💙 **Compatible con Dart y Flutter**, soporta la última versión de Dart.
+
+## Prueba Reactter
+
+Experimenta todo el potencial de Reactter probándolo en <a href="https://zapp.run/pub/flutter_reactter" target="_blank">Zapp</a>.
+
+<iframe src="https://zapp.run/edit/zn9806bin990?theme=dark&lazy=false&file=lib/examples/1_counter/counter_page.dart" class="w-full !h-[600px]" style="border: 0; overflow: hidden;"></iframe>
+
+:::tip[¡El poder está en tus manos!]
+  [Empieza instalando](/reactter/es/getting_started) Reactter en tus proyectos y desbloquea todo su potencial.
+:::

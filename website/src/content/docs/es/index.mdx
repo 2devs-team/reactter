@@ -1,0 +1,84 @@
+---
+title: Reactter
+description: Un ligero, potente y reactivo Gestor de Estados, Inyector de Dependencia y Manejador de Eventos para Dart/Flutter.
+template: splash
+hero:
+  title: <h1 class="text-5xl sm:text-6xl bg-gradient-to-b from-accent-400 to-accent-300 md:bg-gradient-to-l md:from-accent-300 md:to-accent-400 bg-clip-text text-transparent">Reactter</h1>
+  tagline:
+    <h3 class="font-normal text-xl sm:text-2xl md:text-3xl sm:mt-2 sm:mb-1 text-gray-200">
+      Un paquete
+      <span class="font-semibold text-accent-100">ligero</span>,
+      <span class="font-semibold text-accent-100">potente</span> y
+      <span class="font-semibold text-accent-100">reactivo</span>
+    </h3>
+    <h2 class="font-normal text-2xl sm:text-3xl md:text-4xl text-gray-200">
+      <span class="font-semibold text-accent-300">Gestor de Estados</span>,
+      <span class="font-semibold text-accent-300">Inyector de Dependencias</span> y
+      <span class="font-semibold text-accent-300">Manejador de Eventos</span> para
+      <span class="font-semibold text-accent-100">Dart</span>/<span class="font-semibold text-accent-100">Flutter</span>.
+    </h2>
+  image:
+    html: <div id="hero_logo"></div>
+  actions:
+    - text: <span class="text-lg sm:text-xl font-medium">Empezar</span>
+      link: /reactter/es/getting_started/
+      icon: rocket
+      variant: primary
+    - text: <span class="text-lg sm:text-xl">Explore en pub.dev</span>
+      link: https://pub.dev/packages/reactter
+      icon: external
+      attrs:
+        target: _blank
+  footer: TEST
+---
+
+import { CardGrid } from "@astrojs/starlight/components";
+import Card from "@/components/Card.astro";
+
+<div class="flex flex-col items-start justify-start">
+  ## Pruébalo
+  <p class="text-lg sm:text-xl">Experimente todo el potencial de Reactter probando en <a href="https://zapp.run/pub/flutter_reactter" target="_blank">Zapp</a>.</p>
+  <iframe
+    class="!hidden sm:!block rounded-2xl w-full !h-[600px] border shadow-2xl border-accent-700/[0.5] shadow-accent-700/[.5] bg-accent-950/[.5] hover:boder-accent-700 hover:shadow-accent-700 hover:bg-accent-950 ease-in-out duration-300"
+    src="https://zapp.run/edit/zn9806bin990?theme=dark&lazy=false&file=lib/examples/1_counter/counter_page.dart"
+  />
+  <iframe
+    class="!block sm:!hidden rounded-2xl w-full !h-[600px] border shadow-2xl border-accent-700/[0.5] shadow-accent-700/[.5] bg-accent-950/[.5] hover:boder-accent-700 hover:shadow-accent-700 hover:bg-accent-950 ease-in-out duration-300"
+    src="https://zapp.run/edit/zn9806bin990?theme=dark&lazy=true&file=lib/examples/1_counter/counter_page.dart"
+  />
+</div>
+
+## Características
+<div>
+  <CardGrid stagger>
+    <Card title="Reactividad granular" icon="mdi:creation">
+      Reacciona a los cambios al más mínimo nivel de granularidad, proporcionando un control preciso y capacidad de respuesta en tu aplicación.
+      Saber más sobre [Control de Renderizado](/reactter/es/core_concepts/rendering_control).
+    </Card>
+    <Card title="Ligero" icon="mdi:telegram">
+      Reactter es superligero, lo que garantiza un rendimiento eficiente sin dependencias externas.
+    </Card>
+    <Card title="Altamente reutilizable" icon="mdi:json">
+      Comparta estados y lógica en su aplicación mediante [Inyección de Dependencias](/reactter/es/core_concepts/dependency_injection) y [Hooks Personalizados](/reactter/es/core_concepts/hooks/#custom-hook).
+    </Card>
+    <Card title="Fácil de usar" icon="mdi:star">
+      Sólo unas pocas líneas de código para empezar.
+      Sin generación de código ni configuraciones complejas.
+    </Card>
+    <Card title="100% Dart" icon="dart">
+      Soporta servidor Dart, Dart JS (HTML), Flutter (Web, Móvil y Escritorio), etc.
+      ¡Reactter se puede utilizar en cualquier proyecto Dart!
+      Compatible con las últimas versiones de Dart/Flutter.
+    </Card>
+    <Card title="Totalmente testeable" icon="mdi:code-tags-check">
+      Pruebe sus estados y lógica fácilmente. Reactter cumple con el 100% de cobertura en pruebas.
+      <div class="flex">
+        [![Codecov](https://img.shields.io/codecov/c/github/2devs-team/reactter?logo=codecov)](https://app.codecov.io/gh/2devs-team/reactter)
+      </div>
+    </Card>
+    <Card title="No Boilerplate" icon="mdi:code-tags">
+      Reduzca significativamente el código y simplifique su aplicación.
+    </Card>
+  </CardGrid>
+
+</div>

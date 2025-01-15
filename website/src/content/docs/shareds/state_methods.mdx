@@ -6,7 +6,7 @@ import { HE, HM, HT } from '@/components/Highlight';
 - <HM><a href="https://pub.dev/documentation/reactter/latest/reactter/RtState/update.html" target="_blank">`update`</a></HM>: Executes a callback function and notify its listeners that the state has changed.
 When it is invoked, it emits two events to signal the state transition:
 <HE>`Lifecycle.willUpdate`</HE> is emitted first, indicating the impending update, followed by <HE>`Lifecycle.didUpdate`</HE> once the update process is complete.
-- <HM><a href="https://pub.dev/documentation/reactter/latest/reactter/RtState/refresh.html" target="_blank">`refresh`</a></HM>: Forces the state to notify its listeners that it has changed.
+- <HM><a href="https://pub.dev/documentation/reactter/latest/reactter/RtState/notify.html" target="_blank">`notify`</a></HM>: Forces the state to notify its listeners that it has changed.
 Unlike <HM>`update`</HM>, it emits only the <HE>`Lifecycle.didUpdate`</HE> event, as it doesn't involve any preparatory steps before the notification.
 - <HM><a href="https://pub.dev/documentation/reactter/latest/reactter/RtState/bind.html" target="_blank">`bind`</a></HM>: Establishes a connection between the state and a specific instance.
 This connection allows the instance to reactively update based on changes to the state.

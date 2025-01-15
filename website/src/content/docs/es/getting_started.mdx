@@ -1,0 +1,153 @@
+---
+title: Empezando
+description: Una guía paso a paso sobre la instalación y el uso de Reactter.
+---
+
+import { Code } from "@astrojs/starlight/components";
+
+import reactterVersion from "@/data/reactter_version";
+import flutterReactterVersion from "@/data/flutter_reactter_version";
+import { Tabs, TabItem } from "@/components/Tabs";
+
+
+export const reactterPubspecCode = `
+dependencies:
+  reactter: ${reactterVersion ? `^${reactterVersion}` : "# add version here"}
+`;
+
+Antes de nada, debes saber que Reactter se distribuye en dos paquetes:
+
+<ul>
+  <li>
+    <a href="https://pub.dev/packages/reactter" class="inline-block align-middle">
+      <img class="min-w-28" src="https://img.shields.io/pub/v/reactter?color=1d7fac&amp;labelColor=29b6f6&amp;label=reactter&amp;logo=dart" alt="Reactter" />
+    </a>
+    <span>: El paquete central que contiene las funcionalidades básicas de Reactter. Se recomienda utilizar este paquete si está desarrollando una aplicación Dart.</span>
+  </li>
+  <li>
+    <a href="https://pub.dev/packages/flutter_reactter" class="inline-block align-middle">
+      <img src="https://img.shields.io/pub/v/flutter_reactter?color=1d7fac&amp;labelColor=29b6f6&amp;label=flutter_reactter&amp;logo=flutter" alt="Flutter Reactter" />
+    </a>
+    <span>: Este paquete incluye el paquete principal y funciones adicionales de Flutter. Se recomienda utilizar este paquete si está desarrollando una aplicación Flutter.</span>
+  </li>
+</ul>
+
+<div x-data="{ currentTab: 1}">
+
+## Instalación
+
+Para seguir esta guía, necesitarás un proyecto Dart/Flutter existente.
+Si aún no tienes uno, puedes crear una app Dart <a href="https://dart.dev/tutorials/server/get-started" target="_blank">aquí</a> o una app Flutter <a href="https://docs.flutter.dev/get-started/install" target="_blank">aquí</a>.
+
+Una vez configurado el proyecto, proceda a instalar el paquete utilizando uno de los siguientes métodos:
+
+- [Instalación automatizada](#instalación-automatizada)
+- [Instalación manual](#instalación-manual)
+
+### Instalación automatizada
+
+Añada el paquete a su proyecto ejecutando el siguiente comando:
+
+<Tabs groupName="project_type">
+  <TabItem name="dart" label="Solo Dart" icon="dart">
+    ```shell showLineNumbers=false
+    dart pub add reactter
+    ```
+  </TabItem>
+  <TabItem name="flutter" label="Con Flutter" icon="flutter">
+    ```shell showLineNumbers=false
+    flutter pub add flutter_reactter
+    ```
+  </TabItem>
+</Tabs>
+
+### Instalación manual
+
+Añada el paquete a su proyecto añadiendo la siguiente línea a su archivo `pubspec.yaml`:
+
+<Tabs groupName="project_type">
+  <TabItem name="dart" label="Solo Dart" icon="dart">
+    <Code
+      title="pubspec.yaml"
+      lang="yaml"
+      showLineNumbers={false}
+      code={`
+dependencies:
+  reactter: ${reactterVersion ? `^${reactterVersion}` : "# add version here"}
+      `}
+    />
+  </TabItem>
+  <TabItem name="flutter" label="Con Flutter" icon="flutter">
+    <Code
+      title="pubspec.yaml"
+      lang="yaml"
+      showLineNumbers={false}
+      code={`
+dependencies:
+  flutter_reactter: ${flutterReactterVersion ? `^${flutterReactterVersion}` : "# add version here"}
+      `}
+    />
+  </TabItem>
+</Tabs>
+
+Y ejecute el siguiente comando para instalar el paquete:
+
+<Tabs groupName="project_type">
+  <TabItem name="dart" label="Solo Dart" icon="dart">
+    ```shell showLineNumbers=false
+dart pub get
+    ```
+  </TabItem>
+  <TabItem name="flutter" label="Con Flutter" icon="flutter">
+    ```shell showLineNumbers=false
+flutter pub get
+    ```
+  </TabItem>
+</Tabs>
+
+## Configuraciones adicionales
+
+Este paso es opcional pero recomendable.
+Utilice el paquete <span class="inline-block align-middle">[![Reactter Lint](https://img.shields.io/pub/v/reactter_lint?color=1d7fac&labelColor=29b6f6&label=reactter_lint&logo=dart)](https://pub.dev/packages/reactter_lint)</span> para aplicar las mejores prácticas y convenciones en su proyecto::
+
+```shell showLineNumbers=false
+dart pub add reactter_lint
+```
+
+Además, si estás desarrollando con Visual Studio Code, es una buena idea utilizar [Reactter Snippets](https://marketplace.visualstudio.com/items?itemName=CarLeonDev.reacttersnippets) para mejorar la productividad.
+
+## Uso
+
+Para utilizar Reactter, debe importar el paquete en su archivo Dart donde lo necesite:
+
+<Tabs groupName="project_type">
+  <TabItem name="dart" label="Solo Dart" icon="dart">
+    ```dart
+import 'package:reactter/reactter.dart';
+    ```
+  </TabItem>
+  <TabItem name="flutter" label="Con Flutter" icon="flutter">
+    ```dart
+import 'package:flutter_reactter/flutter_reactter.dart';
+    ```
+  </TabItem>
+</Tabs>
+
+Listo! No tienes que preocuparte por la configuración, Reactter ya esta listo para usarse en su proyecto.
+
+</div>
+
+### ¿Qué sigue?
+
+Si eres nuevo en Reactter, puedes empezar leyendo la sección de _**Conceptos básicos**_ .
+Esto te ayudará a entender los conceptos básicos de Reactter y cómo utilizarlos en tu proyecto.
+
+En esta sección, los temas que aprenderá son:
+
+- [Gestor de estados](/reactter/es/core_concepts/state_management)
+- [Inyección de dependencia](/reactter/es/core_concepts/dependency_injection)
+- [Manejador de eventos](/reactter/es/core_concepts/event_handler)
+- [Control del renderizado](/reactter/es/core_concepts/rendering_control)
+- [Ciclo de vida](/reactter/es/core_concepts/lifecycle)
+- [Hooks](/reactter/es/core_concepts/hooks)
+
