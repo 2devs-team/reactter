@@ -20,14 +20,14 @@ Reactter proporciona una gran variedad de mecanismos para la gestión de estados
 
 - Mixins
   - <HT>[`RtStateBase`](/reactter/es/classes/RtStateBase)</HT>
-- Classes
+- Clases
   - <HT>[`Signal`](/reactter/es/classes/signal)</HT>
 - Hooks
   - <HT>[`UseState`](/reactter/es/hooks/use_state)</HT>
   - <HT>[`UseAsyncState`](/reactter/es/hooks/use_async_state)</HT>
   - <HT>[`UseReducer`](/reactter/es/hooks/use_reducer)</HT>
   - <HT>[`UseCompute`](/reactter/es/hooks/use_compute)</HT>
-- Methods
+- Metodos
   - <HM>[`Rt.lazyState`](/reactter/es/methods/state_management_methods/#rtlazy_state)</HM>
   - <HM>[`Rt.batch`](/reactter/es/methods/state_management_methods/#rtbatch)</HM>
   - <HM>[`Rt.untracked`](/reactter/es/methods/state_management_methods/#rtuntracked)</HM>
@@ -36,7 +36,7 @@ Reactter proporciona una gran variedad de mecanismos para la gestión de estados
   Aprende sobre <HT>[Hooks](/reactter/es/core_concepts/hooks)</HT>.
 :::
 
-## Cómo funciona
+## ¿Cómo funciona?
 
 El sistema de gestión de estados de Reactter se basa en el concepto de _reactividad_.
 Contrario a la noción predominante de que implementar programación reactiva en Dart puede ser desafiante,
@@ -58,7 +58,7 @@ La clase <HT><a href="https://pub.dev/documentation/reactter/latest/reactter/RtS
 
 ### Ejemplo
 
-Veamos un ejemplo de un cuenta-atras utilizando <HT>`Signal`</HT> y desentrañaremos lo qué sucede bajo el capó.
+Veamos un ejemplo de una cuenta regresiva utilizando <HT>`Signal`</HT> y desentrañaremos lo qué sucede bajo el capó.
 
 ```dart title="main.dart" /(Signal)(?!\u0060)/ /count(?!down)(?!\u0060)/ "count.value" "Rt.on" "Lifecycle.didUpdate"
 import 'dart:async';

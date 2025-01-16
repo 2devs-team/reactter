@@ -1,4 +1,5 @@
 export const marks = [
+  "Rt.creteState",
   "Rt.lazyState",
   "Rt.batch",
   "Rt.untracked",
@@ -24,7 +25,9 @@ export const marks = [
   "Rt.off",
   "Rt.offAll",
   "RtHook",
+  "RtContextMixin",
   "RtState",
+  "RtStateBase",
   "RtDependency",
   "RtDependencyMode",
   "RtDependencyMode.builder",
