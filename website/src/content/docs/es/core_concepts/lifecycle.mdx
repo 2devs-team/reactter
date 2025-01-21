@@ -1,6 +1,6 @@
 ---
-title: Lifecycle
-description: Learn about the lifecycle in Reactter.
+title: Cliclo de vida
+description: Aprende sobre el ciclo de vida en Reactter.
 sidebar:
   order: 5
 ---
@@ -12,7 +12,7 @@ import ZappButton from "@/components/ZappButton.astro";
 import { Code } from "@astrojs/starlight/components";
 import { marks } from '@/examples/marks.ts'
 
-import TipLifecycleExample from '@/content/docs/shareds/tip_lifecycle_example.mdx';
+import TipLifecycleExample from '@/content/docs/es/shareds/tip_lifecycle_example.mdx';
 
 import counterControllerEventHandlerCode from '@/examples/lifecycle_event_handler/lib/counter_controller.dart?raw';
 import counterEventHandlerCode from '@/examples/lifecycle_event_handler/lib/counter.dart?raw';
@@ -29,26 +29,27 @@ import counterLifecycleUseEffectCode from '@/examples/lifecycle_use_effect/lib/c
 import counterViewLifecycleUseEffectCode from '@/examples/lifecycle_use_effect/lib/counter_view.dart?raw';
 import counterMainLifecycleUseEffectCode from '@/examples/lifecycle_use_effect/lib/main.dart?raw';
 
-In Reactter, both the states and the dependency (managed by the [dependency injection](/reactter/core_concepts/dependency_injection)) contain different stages,
-also known as <HT><a href="https://pub.dev/documentation/reactter/latest/reactter/Lifecycle.html" target="_blank">`Lifecycle`</a></HT>.
-The lifecycle entails events emitted through the [event handler](/reactter/core_concepts/event_handler).
 
-Let's explore the lifecycle events:
+En Reactter, tanto los estados como la dependencia (gestionada por la [inyección de dependencia](/reactter/es/core_concepts/dependency_injection)) contienen diferentes etapas,
+también conocidas como ciclo de vida (<HT><a href="https://pub.dev/documentation/reactter/latest/reactter/Lifecycle.html" target="_blank">`Lifecycle`</a></HT>).
+El ciclo de vida implica eventos emitidos a través del [manejador de eventos](/reactter/es/core_concepts/event_handler).
 
-- <HE>`Lifecycle.registered`</HE>: is triggered when the dependency has been registered.
-- <HE>`Lifecycle.created`</HE>: is triggered when the dependency instance has been created.
-- <HE>`Lifecycle.willMount`</HE> (exclusive of _**flutter_reactter**_ package): is triggered when the dependency is going to be mounted in the widget tree.
-- <HE>`Lifecycle.didMount`</HE> (exclusive of _**flutter_reactter**_ package): is triggered after the dependency has been successfully mounted in the widget tree.
-- <HE>`Lifecycle.willUpdate`</HE>: is triggered anytime the state or the dependency is about to be updated. The event parameter is a <HT>`RtState`</HT>.
-- <HE>`Lifecycle.didUpdate`</HE>: is triggered anytime the state or the dependency has been updated. The event parameter is a <HT>`RtState`</HT>.
-- <HE>`Lifecycle.willUnmount`</HE>(exclusive of _**flutter_reactter**_ package): is triggered when the dependency is about to be unmounted from the widget tree.
-- <HE>`Lifecycle.didUnmount`</HE>(exclusive of _**flutter_reactter**_ package): is triggered when  the dependency has been successfully unmounted from the widget tree.
-- <HE>`Lifecycle.deleted`</HE>: is triggered when the dependency instance has been deleted.
-- <HE>`Lifecycle.unregistered`</HE>: is triggered when the dependency is no longer registered.
+Estos son los eventos del ciclo de vida:
 
-## Using Event Handler
+- <HE>`Lifecycle.registered`</HE>: se activa cuando la dependencia ha sido registrada.
+- <HE>`Lifecycle.created`</HE>: se activa cuando la instancia de la dependencia ha sido creada.
+- <HE>`Lifecycle.willMount`</HE> (exclusivo del paquete _**flutter_reactter**_): se activa cuando la dependencia va a ser montada en el árbol de widgets.
+- <HE>`Lifecycle.didMount`</HE> (exclusivo del paquete _**flutter_reactter**_): se activa después de que la dependencia se haya montado con éxito en el árbol de widgets.
+- <HE>`Lifecycle.willUpdate`</HE>: se activa en cualquier momento en que el estado o la dependencia estén a punto de ser actualizados. El parámetro de evento es un <HT>`RtState`</HT>.
+- <HE>`Lifecycle.didUpdate`</HE>: se activa en cualquier momento en que el estado o la dependencia ha sido actualizado. El parámetro de evento es un <HT>`RtState`</HT>.
+- <HE>`Lifecycle.willUnmount`</HE> (exclusivo del paquete _**flutter_reactter**_): se activa cuando la dependencia está a punto de ser desmontada del árbol de widgets.
+- <HE>`Lifecycle.didUnmount`</HE> (exclusivo del paquete _**flutter_reactter**_): se activa cuando la dependencia ha sido desmontada con éxito del árbol de widgets.
+- <HE>`Lifecycle.deleted`</HE>: se activa cuando la instancia de la dependencia ha sido eliminada.
+- <HE>`Lifecycle.unregistered`</HE>: se activa cuando la dependencia ya no está registrada.
 
-You can listen to the lifecycle events of an instance (like a dependency or state) using <HM>[`Rt.on`](/reactter/api/methods/event_handler_methods/#rton)</HM> or <HM>[`Rt.one`](/reactter/api/methods/event_handler_methods/#rtone)</HM> method of the event handler. e.g:
+## Usando el manejador de eventos
+
+Puedes escuchar los eventos del ciclo de vida de una instancia (como una dependencia o un estado) usando el método <HM>[`Rt.on`](/reactter/es/api/methods/event_handler_methods/#rton)</HM> o <HM>[`Rt.one`](/reactter/es/api/methods/event_handler_methods/#rtone)</HM> del manejador de eventos. Por ejemplo:
 
 <TipLifecycleExample />
 
@@ -77,14 +78,13 @@ You can listen to the lifecycle events of an instance (like a dependency or stat
 </CodeTabs>
 
 :::note
-  The <HT>[`RtDependency`](/reactter/api/classes/rt_dependency)</HT> is a generic class used to identify the dependency in the event handler.
-  It ideal to use the <HT>[`RtDependency`](/reactter/api/classes/rt_dependency)</HT> class when the dependency is not initialize yet.
+  El <HT>[`RtDependency`](/reactter/es/api/classes/rt_dependency)</HT> es una clase genérica que se utiliza para identificar la dependencia en el manejador de eventos.
+  Es ideal usar la clase <HT>[`RtDependency`](/reactter/es/api/classes/rt_dependency)</HT> cuando la dependencia aún no se ha inicializado.
 :::
 
-## Using LifecycleObserver
+## Usando LifecycleObserver
 
-Extend your instances with <HT>[`LifecycleObserver`](/reactter/api/classes/lifecycle_observer)</HT>
-and use its methods to observe the lifecycle events. e.g:
+Extiende tus instancias con <HT>[`LifecycleObserver`](/reactter/es/api/classes/lifecycle_observer)</HT> para escuchar los eventos del ciclo de vida de una dependencia o estado. Por ejemplo:
 
 <TipLifecycleExample />
 
@@ -111,9 +111,9 @@ and use its methods to observe the lifecycle events. e.g:
   </Tabs>
 </CodeTabs>
 
-## Using UseEffect
+## Usando UseEffect
 
-The <HT>[`UseEffect`](/reactter/api/hooks/use_effect)</HT> hook can be used to listen to the lifecycle events of a dependency or state. e.g:
+El hook <HT>[`UseEffect`](/reactter/es/api/hooks/use_effect)</HT> se puede usar para escuchar los eventos del ciclo de vida de una dependencia o estado. Por ejemplo:
 
 <TipLifecycleExample />
 
