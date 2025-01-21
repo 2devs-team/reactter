@@ -154,7 +154,7 @@ print("${uAsyncStateWithArg.value}"); // Resolved value with arg: 10
 }}/>
 
 If you want to add more arguments, you can supply it using the <HT><a href="https://dart.dev/language/records" target="_blank">`Record`</a></HT>(if your proyect support)
-or <HT>[`Args`](/reactter/classes/args)</HT>(A generic arguments provided by Reactter), e.g.:
+or <HT>[`Args`](/reactter/api/classes/args)</HT>(A generic arguments provided by Reactter), e.g.:
 
 ```dart showLineNumbers=false "UseAsyncState.withArg" "asyncFunctionWithArgs" ".resolve" ".value"
 final uAsyncStateWithArgs = UseAsyncState.withArg<String, ArgsX3<String>>(
@@ -174,7 +174,7 @@ print("${uAsyncStateWithArgs.value}"); // Resolved value with args: arg1, arg2, 
 
 ### Using with Memo
 
-<HT>`UseAsyncState`</HT> does not cache the resolving `value`, meaning that it will resolve the `value` every time <HM>`resolve`</HM> is called, potentially impacting performance, especially if the <HM>`asyncFunction`</HM> is expensive. In this case, you should consider using <HT>[`Memo`](/reactter/classes/memo)</HT> to cache the resolving `value`, e.g.:
+<HT>`UseAsyncState`</HT> does not cache the resolving `value`, meaning that it will resolve the `value` every time <HM>`resolve`</HM> is called, potentially impacting performance, especially if the <HM>`asyncFunction`</HM> is expensive. In this case, you should consider using <HT>[`Memo`](/reactter/api/classes/memo)</HT> to cache the resolving `value`, e.g.:
 
 ```dart "UseAsyncState" "Memo.inline"
 final translateState = UseAsyncState.withArg<String?, ArgsX3<String>>(

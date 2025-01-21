@@ -131,9 +131,9 @@ class MyController {
 :::note
 The default constructor only will find the dependency by <HT>`T`</HT> type. Note that the `instance` property will be <HN>`null`</HN> if the dependency is not created already.
 
-To register and create the dependency instance, using the <HT>`UseDependency.create`</HT> hook instead. Learn more about it in [Creating a dependency](/reactter/hooks/use_dependency#creating-a-dependency).
+To register and create the dependency instance, using the <HT>`UseDependency.create`</HT> hook instead. Learn more about it in [Creating a dependency](/reactter/api/hooks/use_dependency#creating-a-dependency).
 
-If only you need to retrieve the dependency instance, using the <HT>`UseDependency.get`</HT> hook instead. Learn more about it in [Getting a dependency](/reactter/hooks/use_dependency#getting-a-dependency).
+If only you need to retrieve the dependency instance, using the <HT>`UseDependency.get`</HT> hook instead. Learn more about it in [Getting a dependency](/reactter/api/hooks/use_dependency#getting-a-dependency).
 :::
 
 :::tip
@@ -269,7 +269,7 @@ class MyController {
 :::note
 <HT>`UseDependency.get`</HT> hook will get the dependency instance inmediately. If the dependency is not created yet, it will create it, but if the dependency is not registered, the `instance` property will be <HN>`null`</HN>.
 
-To ensure that the dependency is created, you can using the <HT>`UseDependency.create`</HT> hook instead. Learn more about it in [Creating a dependency](/reactter/hooks/use_dependency#creating-a-dependency).
+To ensure that the dependency is created, you can using the <HT>`UseDependency.create`</HT> hook instead. Learn more about it in [Creating a dependency](/reactter/api/hooks/use_dependency#creating-a-dependency).
 :::
 
 :::tip
@@ -341,7 +341,7 @@ class MyController {
 }
 ```
 
-Also, you can create the dependency instance inmediately using the <HT>`UseDependency.create`</HT> hook instead. Learn more about it in [Creating a dependency](/reactter/hooks/use_dependency#creating-a-dependency).
+Also, you can create the dependency instance inmediately using the <HT>`UseDependency.create`</HT> hook instead. Learn more about it in [Creating a dependency](/reactter/api/hooks/use_dependency#creating-a-dependency).
 :::
 
 :::tip

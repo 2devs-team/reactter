@@ -1,6 +1,6 @@
 ---
-title: State Management
-description: Reactter provides a simple and efficient way to manage the state of your application.
+title: State management
+description: Learn about the state management system in Reactter and how it works.
 sidebar:
   order: 1
 ---
@@ -16,23 +16,21 @@ To continue, we will show you the mechanisms that Reactter offers for state mana
 
 ## API
 
-## API
-
 Reactter provides a variety of mechanisms for state management, including classes, hooks, and methods:
 
 - Mixins
-  - <HT>[`RtStateBase`](/reactter/classes/RtStateBase)</HT>
+  - <HT>[`RtStateBase`](/reactter/api/classes/RtStateBase)</HT>
 - Classes
-  - <HT>[`Signal`](/reactter/classes/signal)</HT>
+  - <HT>[`Signal`](/reactter/api/classes/signal)</HT>
 - Hooks
-  - <HT>[`UseState`](/reactter/hooks/use_state)</HT>
-  - <HT>[`UseAsyncState`](/reactter/hooks/use_async_state)</HT>
-  - <HT>[`UseReducer`](/reactter/hooks/use_reducer)</HT>
-  - <HT>[`UseCompute`](/reactter/hooks/use_compute)</HT>
+  - <HT>[`UseState`](/reactter/api/hooks/use_state)</HT>
+  - <HT>[`UseAsyncState`](/reactter/api/hooks/use_async_state)</HT>
+  - <HT>[`UseReducer`](/reactter/api/hooks/use_reducer)</HT>
+  - <HT>[`UseCompute`](/reactter/api/hooks/use_compute)</HT>
 - Methods
-  - <HM>[`Rt.lazyState`](/reactter/methods/state_management_methods/#rtlazy_state)</HM>
-  - <HM>[`Rt.batch`](/reactter/methods/state_management_methods/#rtbatch)</HM>
-  - <HM>[`Rt.untracked`](/reactter/methods/state_management_methods/#rtuntracked)</HM>
+  - <HM>[`Rt.lazyState`](/reactter/api/methods/state_management_methods/#rtlazy_state)</HM>
+  - <HM>[`Rt.batch`](/reactter/api/methods/state_management_methods/#rtbatch)</HM>
+  - <HM>[`Rt.untracked`](/reactter/api/methods/state_management_methods/#rtuntracked)</HM>
 
 :::tip
   Learn about <HT>[Hooks](/reactter/core_concepts/hooks)</HT>.
@@ -50,7 +48,7 @@ To dive into the concept, let's start by exploring what constitutes a state in R
 All states in Reactter are classes that inherit <HT><a href="https://pub.dev/documentation/reactter/latest/reactter/RtState-class.html" target="_blank">`RtState`</a></HT>,
 which encapsulates the data and behavior of a particular state, and provides a way to notify observers when the state changes.
 
-Reactter offers three fundamental approaches for creating states: <HT>[`RtStateBase`](/reactter/classes/RtStateBase)</HT>, <HT>[`Signal`](/reactter/classes/signal)</HT> and <HT>[`Hooks`](/reactter/core_concepts/hooks)</HT>.
+Reactter offers three fundamental approaches for creating states: <HT>[`RtStateBase`](/reactter/api/classes/RtStateBase)</HT>, <HT>[`Signal`](/reactter/api/classes/signal)</HT> and <HT>[`Hooks`](/reactter/core_concepts/hooks)</HT>.
 
 ### State methods
 
@@ -125,8 +123,8 @@ class Signal<T> with RtContextMixin, RtStateBase<Signal<T>> {
 }
 ```
 
-During the process, as the `value` of `count` changes, the <HE>`Lifecycle.didUpdate`</HE> event is triggered, which is fired by the <HM>`update`</HM> method(`signal.dart`, line 22).
-This event is listened to by the <HM>`Rt.on`</HM> method(`main.dart`, line 10), which prints the `value` of `count`.
+During the process, as the `value` of `count` changes, the <HE>`Lifecycle.didUpdate`</HE> event is triggered, which is fired by the <HM>`update`</HM> method (`signal.dart`, line 22).
+This event is listened to by the <HM>`Rt.on`</HM> method (`main.dart`, line 10), which prints the `value` of `count`.
 
 This occurs thanks to the reactivity of Reactter, which is responsible for notifying listeners by emitting events related to the **_lifecycle_** of the state.
 

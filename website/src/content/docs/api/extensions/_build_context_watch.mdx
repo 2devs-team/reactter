@@ -19,12 +19,12 @@ import counterCode from '@/examples/build_context/lib/counter.dart?raw';
 import counterViewCode from '@/examples/build_context/lib/counter_view.dart?raw';
 import mainCode from '@/examples/build_context/lib/main.dart?raw';
 
-<HT><a href="https://pub.dev/documentation/flutter_reactter/latest/flutter_reactter/BuildContextExtension/watch.html" target="_blank">`BuildContext.watch`</a></HT> is a method similar to <HT>[`BuildContext.use`](/reactter/extensions/build_context_use)</HT>, but with an added functionality.
+<HT><a href="https://pub.dev/documentation/flutter_reactter/latest/flutter_reactter/BuildContextExtension/watch.html" target="_blank">`BuildContext.watch`</a></HT> is a method similar to <HT>[`BuildContext.use`](/reactter/api/extensions/build_context_use)</HT>, but with an added functionality.
 It not only retrieves the <HT>`T`</HT> dependency but also registers the current widget as a listener for any changes to the states set or otherwise any changes in the <HT>`T`</HT> dependency.
 Consequently, whenever changes, the widget using <HT>`BuildContext.watch`</HT> is automatically notified and rebuilt.
 
 :::tip
-You can optionally use <HT>`BuildContext.watch`</HT> with an `id`, but when you need to listen changes in a dependency's states using an `id`, it's better to use <HT>[`BuildContext.watchId`](/reactter/extensions/build_context_watch_id)</HT> for improved readability and clarity.
+You can optionally use <HT>`BuildContext.watch`</HT> with an `id`, but when you need to listen changes in a dependency's states using an `id`, it's better to use <HT>[`BuildContext.watchId`](/reactter/api/extensions/build_context_watch_id)</HT> for improved readability and clarity.
 
 ```dart showLineNumbers=false
 context.watch<MyDependency>(null, 'myId');
@@ -34,7 +34,7 @@ context.watchId<MyDependency>('myId');
 :::
 
 :::caution
-To render using a computed value based on multiple states, use <HT>[`BuildContext.select`](/reactter/extensions/build_context_select)</HT> instead of <HT>`BuildContext.watch`</HT> or pre-compute the value using <HT>[`UseCompute`](/reactter/hooks/use_compute)</HT> to prevent unnecessary rebuilds.
+To render using a computed value based on multiple states, use <HT>[`BuildContext.select`](/reactter/api/extensions/build_context_select)</HT> instead of <HT>`BuildContext.watch`</HT> or pre-compute the value using <HT>[`UseCompute`](/reactter/api/hooks/use_compute)</HT> to prevent unnecessary rebuilds.
 
 <MDXRedry mdx={WatchVsSelectComparation} />
 :::

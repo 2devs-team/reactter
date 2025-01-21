@@ -24,12 +24,12 @@ Hooks are classes with the ability to use states and manage side effects. They a
 
 Reactter provider some hooks to manage the state and side effects of the application, which are:
 
-- <HT>[`UseState`](/reactter/hooks/use_state)</HT>
-- <HT>[`UseAsyncState`](/reactter/hooks/use_async_state)</HT>
-- <HT>[`UseReducer`](/reactter/hooks/use_reducer)</HT>
-- <HT>[`UseCompute`](/reactter/hooks/use_compute)</HT>
-- <HT>[`UseEffect`](/reactter/hooks/use_effect)</HT>
-- <HT>[`UseDependency`](/reactter/hooks/use_instance)</HT>
+- <HT>[`UseState`](/reactter/api/hooks/use_state)</HT>
+- <HT>[`UseAsyncState`](/reactter/api/hooks/use_async_state)</HT>
+- <HT>[`UseReducer`](/reactter/api/hooks/use_reducer)</HT>
+- <HT>[`UseCompute`](/reactter/api/hooks/use_compute)</HT>
+- <HT>[`UseEffect`](/reactter/api/hooks/use_effect)</HT>
+- <HT>[`UseDependency`](/reactter/api/hooks/use_instance)</HT>
 
 ## How it works
 
@@ -75,7 +75,7 @@ It's important to note that the states and hooks defined above this line are not
 To avoid this, it's recommended to place this line as the first line in the class body.
 :::
 
-As shown in the example above, we can utilize other hooks such as <HT>[`UseEffect`](/reactter/hooks/use_effect)</HT> to monitor changes in the text input's controller and ensure it is disposed when the hook is destroyed.
+As shown in the example above, we can utilize other hooks such as <HT>[`UseEffect`](/reactter/api/hooks/use_effect)</HT> to monitor changes in the text input's controller and ensure it is disposed when the hook is destroyed.
 
 The <HM>`update`</HM> method is used to set the internal `_value` to the current text in the controller, which keeps the state synchronized with the input.
 This methods is a part of the <HT>`RtHook`</HT> class that allows you to update the state of the hook.
@@ -110,5 +110,5 @@ You can then call that _**Custom Hook**_ from anywhere in the code and get acces
 
 In the example above, the form captures first and last name inputs, combines them into a full name, and displays the result.
 <HT>`MyController`</HT> uses <HT>`UseTextInput`</HT> hook for capturing the first and last name.
-The `fullName` state is defined using <HT>[`UseCompute`](/reactter/hooks/use_compute)</HT> to compute the full name based on the values of `firstNameInput` and `lastNameInput`. This ensures the full name is automatically updated whenever either input changes.
+The `fullName` state is defined using <HT>[`UseCompute`](/reactter/api/hooks/use_compute)</HT> to compute the full name based on the values of `firstNameInput` and `lastNameInput`. This ensures the full name is automatically updated whenever either input changes.
 

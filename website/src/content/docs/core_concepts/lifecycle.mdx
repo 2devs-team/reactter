@@ -47,7 +47,7 @@ Let's explore the lifecycle events:
 
 ## Using Event Handler
 
-You can listen to the lifecycle events of a dependency using <HM>`Rt.on`</HM> or <HM>`Rt.one`</HM> method of the event handler. e.g:
+You can listen to the lifecycle events of an instance (like a dependency or state) using <HM>`Rt.on`</HM> or <HM>`Rt.one`</HM> method of the event handler. e.g:
 
 <TipLifecycleExample />
 
@@ -76,7 +76,7 @@ You can listen to the lifecycle events of a dependency using <HM>`Rt.on`</HM> or
 </CodeTabs>
 
 :::note
-  The <HT>`RtDependency`</HT> is a generic class that takes the type of the dependency and optionally pass an `id`.
+  The <HT>`RtDependency`</HT> is a generic class that takes the type of the dependency and optionally an `id`.
   This class is used to identify the dependency in the event handler.
   It ideal to use the <HT>`RtDependency`</HT> class when the dependency is not initialize yet.
 :::
@@ -113,7 +113,7 @@ and use its methods to observe the lifecycle events. e.g:
 
 ## Using UseEffect
 
-The <HT>[`UseEffect`](/reactter/hooks/use_effect)</HT> hook can be used to listen to the lifecycle events of a dependency. e.g:
+The <HT>[`UseEffect`](/reactter/api/hooks/use_effect)</HT> hook can be used to listen to the lifecycle events of a dependency or state. e.g:
 
 <TipLifecycleExample />
 

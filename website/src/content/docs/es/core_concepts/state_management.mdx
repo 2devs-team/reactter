@@ -1,6 +1,6 @@
 ---
 title: Gestor de estados
-description: Reactter proporciona una forma simple y eficiente de gestionar el estado de tu aplicación.
+description: Aprende sobre el sistema de gestión de estados en Reactter y cómo funciona.
 sidebar:
   order: 1
 ---
@@ -19,18 +19,18 @@ A continuación, te mostramos los mecanimos que Reactter ofrece para la gestión
 Reactter proporciona una gran variedad de mecanismos para la gestión de estados, incluyendo clases, hooks y métodos:
 
 - Mixins
-  - <HT>[`RtStateBase`](/reactter/es/classes/RtStateBase)</HT>
+  - <HT>[`RtStateBase`](/reactter/es/api/classes/RtStateBase)</HT>
 - Clases
-  - <HT>[`Signal`](/reactter/es/classes/signal)</HT>
+  - <HT>[`Signal`](/reactter/es/api/classes/signal)</HT>
 - Hooks
-  - <HT>[`UseState`](/reactter/es/hooks/use_state)</HT>
-  - <HT>[`UseAsyncState`](/reactter/es/hooks/use_async_state)</HT>
-  - <HT>[`UseReducer`](/reactter/es/hooks/use_reducer)</HT>
-  - <HT>[`UseCompute`](/reactter/es/hooks/use_compute)</HT>
+  - <HT>[`UseState`](/reactter/es/api/hooks/use_state)</HT>
+  - <HT>[`UseAsyncState`](/reactter/es/api/hooks/use_async_state)</HT>
+  - <HT>[`UseReducer`](/reactter/es/api/hooks/use_reducer)</HT>
+  - <HT>[`UseCompute`](/reactter/es/api/hooks/use_compute)</HT>
 - Metodos
-  - <HM>[`Rt.lazyState`](/reactter/es/methods/state_management_methods/#rtlazy_state)</HM>
-  - <HM>[`Rt.batch`](/reactter/es/methods/state_management_methods/#rtbatch)</HM>
-  - <HM>[`Rt.untracked`](/reactter/es/methods/state_management_methods/#rtuntracked)</HM>
+  - <HM>[`Rt.lazyState`](/reactter/es/api/methods/state_management_methods/#rtlazy_state)</HM>
+  - <HM>[`Rt.batch`](/reactter/es/api/methods/state_management_methods/#rtbatch)</HM>
+  - <HM>[`Rt.untracked`](/reactter/es/api/methods/state_management_methods/#rtuntracked)</HM>
 
 :::tip
   Aprende sobre <HT>[Hooks](/reactter/es/core_concepts/hooks)</HT>.
@@ -48,7 +48,7 @@ Para adentrarnos en el concepto, comencemos explorando qué constituye un estado
 Todos los estados en Reactter son clases que heredan de <HT><a href="https://pub.dev/documentation/reactter/latest/reactter/RtState-class.html" target="_blank">`RtState`</a></HT>,
 la cual encapsula los datos y el comportamiento de un estado particular, y proporciona una forma de notificar a los observadores cuando el estado cambia.
 
-Reactter ofrece tres enfoques fundamentales para crear estados: <HT>[`RtStateBase`](/reactter/es/classes/RtStateBase)</HT>, <HT>[`Signal`](/reactter/es/classes/signal)</HT> y <HT>[`Hooks`](/reactter/es/core_concepts/hooks)</HT>.
+Reactter ofrece tres enfoques fundamentales para crear estados: <HT>[`RtStateBase`](/reactter/es/api/classes/RtStateBase)</HT>, <HT>[`Signal`](/reactter/es/api/classes/signal)</HT> y <HT>[`Hooks`](/reactter/es/core_concepts/hooks)</HT>.
 
 ### Metodos del estado
 
@@ -122,8 +122,8 @@ class Signal<T> with RtContextMixin, RtStateBase<Signal<T>> {
 }
 ```
 
-Durante el proceso, a medida que el `value` de `count` cambia, se desencadena el evento <HE>`Lifecycle.didUpdate`</HE>, el cual es disparado por el método <HM>`update`</HM>(`signal.dart`, linea 22).
-Este evento es escuchado por el método <HM>`Rt.on`</HM>(`main.dart`, linea 10), que imprime el `value` de `count`.
+Durante el proceso, a medida que el `value` de `count` cambia, se desencadena el evento <HE>`Lifecycle.didUpdate`</HE>, el cual es disparado por el método <HM>`update`</HM> (`signal.dart`, linea 22).
+Este evento es escuchado por el método <HM>`Rt.on`</HM> (`main.dart`, linea 10), que imprime el `value` de `count`.
 
 Esto ocurre gracias a la reactividad de Reactter, que es encargada de notificar a los oyentes mediante la emisión de eventos relacionados con el **_ciclo de vida_** del estado.
 

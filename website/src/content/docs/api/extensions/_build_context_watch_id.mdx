@@ -17,12 +17,12 @@ import counterCode from '@/examples/build_context/lib/counter.dart?raw';
 import counterViewCode from '@/examples/build_context/lib/counter_view.dart?raw';
 import mainCode from '@/examples/build_context/lib/main.dart?raw';
 
-<HT><a href="https://pub.dev/documentation/flutter_reactter/latest/flutter_reactter/BuildContextExtension/watchId.html" target="_blank">`BuildContext.watchId`</a></HT> is a method similar to <HT>[`BuildContext.watch`](/reactter/extensions/build_context_watch)</HT>, but use `id` as first argument to locate the dependency.
+<HT><a href="https://pub.dev/documentation/flutter_reactter/latest/flutter_reactter/BuildContextExtension/watchId.html" target="_blank">`BuildContext.watchId`</a></HT> is a method similar to <HT>[`BuildContext.watch`](/reactter/api/extensions/build_context_watch)</HT>, but use `id` as first argument to locate the dependency.
 
 :::tip
 This approach is useful when you have multiple dependencies of the same type and you want to access a specific one.
 
-While you can use <HT>[`BuildContext.watch`](/reactter/extensions/build_context_watch)</HT> with `id`, <HT>`BuildContext.watchId`</HT> is more readable and clear when an `id` is required.
+While you can use <HT>[`BuildContext.watch`](/reactter/api/extensions/build_context_watch)</HT> with `id`, <HT>`BuildContext.watchId`</HT> is more readable and clear when an `id` is required.
 
 ```dart showLineNumbers=false
 context.watch<MyDependency>(null, 'myId');

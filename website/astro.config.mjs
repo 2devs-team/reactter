@@ -73,6 +73,13 @@ export default defineConfig({
                 es: "Empezando",
               },
             },
+            {
+              label: "DevTools extension 🚧",
+              link: "/devtools_extension",
+              translations: {
+                es: "Extensión de DevTools 🚧",
+              },
+            },
           ],
         },
         {
@@ -85,51 +92,61 @@ export default defineConfig({
           },
         },
         {
-          label: "Hooks",
+          label: "API",
           translations: {
-            es: "Hooks",
+            es: "API",
           },
           autogenerate: {
-            directory: "hooks",
+            directory: "api",
           },
-        },
-        {
-          label: "Classes",
-          translations: {
-            es: "Clases",
-          },
-          autogenerate: {
-            directory: "classes",
-          },
-        },
-        {
-          label: "Widgets",
-          badge: "Flutter",
-          translations: {
-            es: "Widgets",
-          },
-          autogenerate: {
-            directory: "widgets",
-          },
-        },
-        {
-          label: "Methods",
-          translations: {
-            es: "Métodos",
-          },
-          autogenerate: {
-            directory: "methods",
-          },
-        },
-        {
-          label: "Extensions",
-          badge: "Flutter",
-          translations: {
-            es: "Extensiones",
-          },
-          autogenerate: {
-            directory: "extensions",
-          },
+          items: [
+            {
+              label: "Hooks",
+              translations: {
+                es: "Hooks",
+              },
+              autogenerate: {
+                directory: "api/hooks",
+              },
+            },
+            {
+              label: "Widgets",
+              badge: "Flutter",
+              translations: {
+                es: "Widgets",
+              },
+              autogenerate: {
+                directory: "api/widgets",
+              },
+            },
+            {
+              label: "Classes",
+              translations: {
+                es: "Clases",
+              },
+              autogenerate: {
+                directory: "api/classes",
+              },
+            },
+            {
+              label: "Methods",
+              translations: {
+                es: "Métodos",
+              },
+              autogenerate: {
+                directory: "api/methods",
+              },
+            },
+            {
+              label: "Extensions",
+              translations: {
+                es: "Extensiones",
+              },
+              autogenerate: {
+                directory: "api/extensions",
+              },
+            },
+          ],
         },
         {
           label: "Extra topics",

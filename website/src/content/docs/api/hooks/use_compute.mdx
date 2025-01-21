@@ -147,7 +147,7 @@ But when the calculated `value` is same as the previous `value`, it will not not
 
 ### Using with Memo
 
-<HT>`UseCompute`</HT> does not cache the computed `value`, meaning that it will computing the `value` every time the `dependencies` is changed, potentially impacting performance, especially if the <HM>`computeValue`</HM> is expensive. In this case, you should consider using <HT>[`Memo`](/reactter/classes/memo)</HT> to cache the computed `value`, e.g.:
+<HT>`UseCompute`</HT> does not cache the computed `value`, meaning that it will computing the `value` every time the `dependencies` is changed, potentially impacting performance, especially if the <HM>`computeValue`</HM> is expensive. In this case, you should consider using <HT>[`Memo`](/reactter/api/classes/memo)</HT> to cache the computed `value`, e.g.:
 
 ```dart showLineNumbers=false "UseCompute" "Memo"
 final addAB = Memo(
