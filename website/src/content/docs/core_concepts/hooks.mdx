@@ -4,6 +4,7 @@ description: Learn how to create a custom hook in Reactter.
 sidebar:
   order: 6
 ---
+
 import { HE, HM, HN, HT } from '@/components/Highlight';
 import CodeTabs from '@/components/CodeTabs.astro';
 import { Tabs, TabItem } from "@/components/Tabs";
@@ -22,7 +23,7 @@ Hooks are classes with the ability to use states and manage side effects. They a
 
 ## API
 
-Reactter provider some hooks to manage the state and side effects of the application, which are:
+Reactter provides the following hooks:
 
 - <HT>[`UseState`](/reactter/api/hooks/use_state)</HT>
 - <HT>[`UseAsyncState`](/reactter/api/hooks/use_async_state)</HT>
@@ -33,18 +34,18 @@ Reactter provider some hooks to manage the state and side effects of the applica
 
 ## How it works
 
-Hooks in Reactter are classes that extend <HT><a href="https://pub.dev/documentation/reactter/latest/reactter/RtHook-class.html" target="_blank">`RtHook`</a></HT> and follow a special naming convention with the  <HT>`Use`</HT>  prefix. The <HT>`RtHook`</HT> class is responsible for binding the hook to other hooks and states, and managing the lifecycle of the hook.
+Hooks in Reactter are classes that extend <HT>[`RtHook`](/reactter/api/classes/rt_hook)</HT> and follow a special naming convention with the  <HT>`Use`</HT>  prefix. The <HT>`RtHook`</HT> class is responsible for binding the hook to other hooks and states, and managing the lifecycle of the hook.
 
-Hooks in Reactter are essentially stateful entities because <HT>`RtHook`</HT> inherits from <HT>`RtState`</HT> this inheritance allows hooks to manage both state and lifecycle methods efficiently.
+Hooks in Reactter are essentially stateful entities because <HT>[`RtHook`](/reactter/api/classes/rt_hook)</HT> inherits from <HT>`RtState`</HT> this inheritance allows hooks to manage both state and lifecycle methods efficiently.
 
 To manage these aspects, Hooks provide the following:
 <StateMethodsLite/>
 
 ## Custom hook
 
-Reactter provides a way to create _**Custom Hooks**_ to encapsulate logic that can be reused across the application.
+Reactter provides a way to create _**custom hooks**_ to encapsulate logic that can be reused across the application.
 
-There are several advantages to using _**Custom Hooks**_:
+There are several advantages to using _**custom hooks**_:
 
 - **Reusability**: to use the same hook again and again, without the need to write it twice.
 - **Clean Code**: extracting part of code into a hook will provide a cleaner codebase.
@@ -52,20 +53,14 @@ There are several advantages to using _**Custom Hooks**_:
 
 ### Creating a custom hook
 
-To create a _**Custom hook**_, you need to create a class that extends <HT>`RtHook`</HT> and follow the naming convention with the <HT>`Use`</HT> prefix.
+To create a _**custom hook**_, you need to create a class that extends <HT>[`RtHook`](/reactter/api/classes/rt_hook)</HT> and follow the naming convention with the <HT>`Use`</HT> prefix.
 
-:::note
-<HT>`RtHook`</HT> is a class that inherits from <HT>`RtState`</HT>.
-It provides a set of methods to manage the state and lifecycle of the hook.
-Learn more about [State methods](/reactter/core_concepts/state_management/#state-methods).
-:::
-
-Here's an example of a _**Custom Hook**_ that manages the state of a text input:
+Here's an example of a _**custom hook**_ that manages the state of a text input:
 
 <Code code={UseTextInputCode} lang="dart" mark={[...marks, {range: "5-6", label: "*      This line is REQUIRED!        "}]} />
 
 :::caution[Attention!!]
-To create a _**Custom Hook**_(<HT>`RtHook`</HT>), you need to register it by adding the following line:
+To create a _**hook**_, you need to register it by adding the following line:
 
 ```dart showLineNumbers=false
 final $ = RtHook.$register;
@@ -108,7 +103,8 @@ You can then call that _**Custom Hook**_ from anywhere in the code and get acces
   </Tabs>
 </CodeTabs>
 
-In the example above, the form captures first and last name inputs, combines them into a full name, and displays the result.
-<HT>`MyController`</HT> uses <HT>`UseTextInput`</HT> hook for capturing the first and last name.
-The `fullName` state is defined using <HT>[`UseCompute`](/reactter/api/hooks/use_compute)</HT> to compute the full name based on the values of `firstNameInput` and `lastNameInput`. This ensures the full name is automatically updated whenever either input changes.
+In the previous example, the form captures the input from the name and surname fields, combines them into a full name, and displays the result.
+The <HT>`MyController`</HT> component uses the <HT>`UseTextInput`</HT> hook (_**custom hook**_ created previously) to manage the name and lastname inputs.
 
+The `fullName` state is defined using <HT>[`UseCompute`](/reactter/api/hooks/use_compute)</HT>, which calculates the full name based on the values of `firstNameInput` and `lastNameInput`.
+This ensures that the full name updates automatically whenever either input changes.
