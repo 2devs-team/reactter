@@ -20,13 +20,19 @@ It's recommended read that first if you're new in Reactter.
 - <HT>`UseDependency`</HT>: Default constructor to get the <HT>`T`</HT> dependency. It's similar to using <HM>`Rt.find`</HM>.
 
     ```dart showLineNumbers=false
-    UseDependency<T>([String? id]);
+    UseDependency<T>({
+      String? id,
+      String? debugLabel
+    });
     ```
 
 - <HT>`UseDependency.get`</HT>: Get a <HT>`T`</HT> dependency inmediately. It's similar to using <HM>`Rt.get`</HM>.
 
     ```dart showLineNumbers=false
-    UseDependency<T>.get([String? id]);
+    UseDependency<T>.get({
+      String? id,
+      String? debugLabel
+    });
     ```
 
 - <HT>`UseDependency.register`</HT>: Register a builder function to create a <HT>`T`</HT> dependency. It's similar to using <HM>`Rt.register`</HM>.
@@ -35,6 +41,7 @@ It's recommended read that first if you're new in Reactter.
     UseDependency<T>.register(T Function() builder, {
       String? id,
       DependencyMode mode = DependencyMode.builder,
+      String? debugLabel,
     });
     ```
 
@@ -44,25 +51,35 @@ It's recommended read that first if you're new in Reactter.
     UseDependency<T>.create(T Function() builder, {
       String? id,
       DependencyMode mode = DependencyMode.builder,
+      String? debugLabel,
     });
     ```
 
 - <HT>`UseDependency.lazyBuilder`</HT>: Registers a builder function, to create a instance of the <HT>`T`</HT> dependency as [Builder](/reactter/core_concepts/dependency_injection/#builder) mode. It's similar to using <HM>`Rt.lazyBuilder`</HM>.
 
     ```dart showLineNumbers=false
-    UseDependency<T>.lazyBuilder(T Function() builder, [String? id]);
+    UseDependency<T>.lazyBuilder(T Function() builder, {
+      String? id,
+      String? debugLabel
+    });
     ```
 
 - <HT>`UseDependency.lazyFactory`</HT>: Registers a builder function, to create a instance of the <HT>`T`</HT> dependency as [Factory](/reactter/core_concepts/dependency_injection/#factory) mode. It's similar to using <HM>`Rt.lazyFactory`</HM>.
 
     ```dart showLineNumbers=false
-    UseDependency<T>.lazyFactory(T Function() builder, [String? id]);
+    UseDependency<T>.lazyFactory(T Function() builder, {
+      String? id,
+      String? debugLabel
+    });
     ```
 
 - <HT>`UseDependency.lazySingleton`</HT>: Registers a builder function, to create a instance of the <HT>`T`</HT> dependency as [Singleton](/reactter/core_concepts/dependency_injection/#singleton) mode. It's similar to using <HM>`Rt.lazySingleton`</HM>.
 
     ```dart showLineNumbers=false
-    UseDependency<T>.lazySingleton(T Function() builder, [String? id]);
+    UseDependency<T>.lazySingleton(T Function() builder, {
+      String? id,
+      String? debugLabel
+    });
     ```
 
 - <HT>`UseDependency.builder`</HT>: Registers, creates and gets a <HT>`T`</HT> dependency inmediately as [Builder](/reactter/core_concepts/dependency_injection/#builder) mode. It's similar to using <HM>`Rt.builder`</HM>.
@@ -71,6 +88,7 @@ It's recommended read that first if you're new in Reactter.
     UseDependency<T>.builder(T Function() builder, {
       String? id,
       DependencyMode mode = DependencyMode.builder,
+      String? debugLabel,
     });
     ```
 
@@ -80,6 +98,7 @@ It's recommended read that first if you're new in Reactter.
     UseDependency<T>.factory(T Function() builder, {
       String? id,
       DependencyMode mode = DependencyMode.builder,
+      String? debugLabel,
     });
     ```
 
@@ -89,21 +108,23 @@ It's recommended read that first if you're new in Reactter.
     UseDependency<T>.singleton(T Function() builder, {
       String? id,
       DependencyMode mode = DependencyMode.builder,
+      String? debugLabel,
     });
     ```
 
-### Arguments
+### Parameters
 
-- `id`: An optional <HT>`String`</HT> value to identify the dependency of <HT>`T`</HT> type.
-- <HM>`builder`</HM>: A function that returns an instance of the dependency of <HT>`T`</HT> type.
-- `mode`: An optional <HT>`DependencyMode`</HT> value to define the dependency mode. Default value is <HE>`DependencyMode.builder`</HE>.
-Learn more about it in [DependencyMode](/reactter/core_concepts/dependency_injection#dependency-modes).
+- **`id`**: *(Optional)* A <HT>`String`</HT> used to identify the dependency of type <HT>`T`</HT>.
+- **`builder`**: A function that returns an instance of the dependency of type <HT>`T`</HT>.
+- **`mode`**: *(Optional)* A <HT>`DependencyMode`</HT> that defines the dependency mode. Defaults to <HE>`DependencyMode.builder`</HE>.
+  Learn more in [DependencyMode](/reactter/core_concepts/dependency_injection#dependency-modes).
+- **`debugLabel`**: *(Optional)* A <HT>`String`</HT> used to identify the hook in the [DevTools extension](/reactter/devtools_extension).
 
 :::note
-Some constructors and factories don't have all the arguments. For example,
-<HM>`builder`</HM> is not available in <HT>`UseDependency`</HT> and <HT>`UseDependency.get`</HT>, and `mode` is available only in <HT>`UseDependency.register`</HT> and <HT>`UseDependency.create`</HT>.
+Some constructors and factories do not include all parameters. For example:
+- **`builder`** is not available in <HT>`UseDependency`</HT> and <HT>`UseDependency.get`</HT>.
+- **`mode`** is available only in <HT>`UseDependency.register`</HT> and <HT>`UseDependency.create`</HT>.
 :::
-
 
 ## Properties and methods
 

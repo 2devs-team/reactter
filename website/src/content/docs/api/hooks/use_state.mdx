@@ -17,18 +17,19 @@ import * as ListeningChangesState from '@/content/docs/shareds/listening_changes
 ## Syntax
 
 ```dart showLineNumbers=false
-UseState<T>(T initialValue);
+UseState<T>(T initialValue, { String? debugLabel });
 ```
 
-<HT>`UseState`</HT> accepts this argument:
+<HT>`UseState`</HT> accepts these parameters:
 
-- `initialValue`: Initial value of <HT>`T`</HT> type that it will hold.
+- **`initialValue`**: Initial value of <HT>`T`</HT> type that it will hold.
+- **`debugLabel`**: *(Optional)* A label to identify the hook in the [DevTools extension](/reactter/devtools_extension).
 
 ## Properties & Methods
 
 <HT>`UseState`</HT> provides the following properties and methods:
 
-- `value`: A getter/setter that allows to read and write its state.
+- **`value`**: A getter/setter that allows to read and write its state.
 <StateMethodsLite/>
 
 ## Usage

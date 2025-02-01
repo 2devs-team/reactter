@@ -235,7 +235,7 @@ V context.select<T, V>(
 - `context`: The <HT>`BuildContext`</HT> object, which provides information about the current widget in the tree.
 - <HT>`T`</HT>: The type of the dependency you want to select. It is used to locate the dependency from the nearest ancestor provider.
 - <HT>`V`</HT>: The type of the value you want to compute. It is the return type of the <HM>`computeValue`</HM> function.
-- <HM>`computeValue`</HM>: A function that computes the value based on the selected states. It takes two arguments:
+- <HM>`computeValue`</HM>: A function that computes the value based on the selected states. It takes two parameters:
   - `instance`: The instance of the dependency of type <HT>`T`</HT>.
   - <HM>`select`</HM>: A function that allows you to wrap the state (<HT>`RtState`</HT>) to be listened for changes and returns it.
 - `id`: An optional identifier for the <HT>`T`</HT> dependency. If omitted, the dependency will be located by its type (<HT>`T`</HT>).

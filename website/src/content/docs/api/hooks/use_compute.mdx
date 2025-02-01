@@ -21,13 +21,15 @@ import * as ListeningChangesState from '@/content/docs/shareds/listening_changes
 UseCompute<T>(
   T computeValue(),
   List<RtState> dependencies,
+  { String? debugLabel },
 );
 ```
 
-<HT>`UseCompute`</HT> accepts these arguments:
+<HT>`UseCompute`</HT> accepts these parameters:
 
 - <HM>`computeValue`</HM>: A function that returns a value based on the current state of the dependencies.
 - `dependencies`: A list of state(<HT>`RtState`</HT>, learn about it [here](/reactter/core_concepts/state_management/#state)) that the computation depends on. When any of these dependencies change, the `value` is recalculated.
+- `debugLabel`: A label to identify the hook in the [DevTools extension](/reactter/devtools_extension).
 
 ## Properties & Methods
 

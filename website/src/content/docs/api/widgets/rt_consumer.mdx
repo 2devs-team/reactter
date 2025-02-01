@@ -4,7 +4,7 @@ description: Learn how to use the RtConsumer in Reactter.
 sidebar:
   order: 4
 ---
-import { HM, HN, HS, HT } from '@/components/Highlight';
+import { HB, HM, HS, HT } from '@/components/Highlight';
 import CodeTabs from '@/components/CodeTabs.astro';
 import { Tabs, TabItem } from "@/components/Tabs";
 import ZappButton from "@/components/ZappButton.astro";
@@ -74,13 +74,13 @@ RtConsumer<T>({
 - `child`: An optional <HT>`Widget`</HT> that remains static while the widget tree is rebuilt.
   It is passed to the <HM>`builder`</HM> function if it is defined.
 - `listenAll`: A boolean that determines whether to listen to all states provided by the <HT>`T`</HT> dependency.
-  If set to <HN>`true`</HN>, the <HM>`listenStates`</HM> function is ignored.
-  The default value is <HN>`false`</HN>.
+  If set to <HB>`true`</HB>, the <HM>`listenStates`</HM> function is ignored.
+  The default value is <HB>`false`</HB>.
 - <HM>`listenStates`</HM>: An optional function that returns a list of state(<HT>`RtState`</HT>) to listen to.
   It takes the instance of the <HT>`T`</HT> dependency as an argument.
   If omitted, the `listenAll` property is checked.
 - <HM>`builder`</HM>: A function that rebuilds a widget depending on the <HT>`RtConsumer`</HT>.
-  It receives the following arguments:
+  It receives the following parameters:
   - `context`: The <HT>`BuildContext`</HT> of the <HT>`RtConsumer`</HT> widget.
   - `instance`: The instance of <HT>`T`</HT> dependency provided by the closest <HT>`RtProvider`</HT> widget.
   - `child`: The `child` widget passed to <HT>`RtConsumer`</HT>.
@@ -126,12 +126,12 @@ Consequently, it does not rebuild whenever there are changes in the `count` stat
 :::note
 For specific state listening, you can use the <HM>`listenStates`</HM> property(see the [Listening to specific states](#listening-to-specific-states) section).
 
-Alternatively, you can set the `listenAll` property to <HN>`true`</HN> to listen to all states provided by the <HT>`CounterController`</HT> dependency(see the [Listening to all states](#listening-to-all-states) section).
+Alternatively, you can set the `listenAll` property to <HB>`true`</HB> to listen to all states provided by the <HT>`CounterController`</HT> dependency(see the [Listening to all states](#listening-to-all-states) section).
 :::
 
 ### Listening to all state
 
-To listen to all states, set the `listenAll` property to <HN>`true`</HN>. This ensures that <HT>`RtConsumer`</HT> rebuilds whenever any state in the dependency changes.
+To listen to all states, set the `listenAll` property to <HB>`true`</HB>. This ensures that <HT>`RtConsumer`</HT> rebuilds whenever any state in the dependency changes.
 
 :::caution
 Using the `listenAll` property indiscriminately is not recommended, especially when some states are not directly involved in rendering the widget subtree.

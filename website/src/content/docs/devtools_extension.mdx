@@ -1,4 +1,48 @@
 ---
-title: DevTools extension 🚧
+title: DevTools extension
 description: Reactter DevTools Extension
 ---
+import { HM } from '@/components/Highlight';
+
+Now you can integrate Reactter into the DevTools tooling suite as an extension to inspect states and dependencies in the finest detail.
+
+![Reactter DevTools extension](/public/devtools_extension/devtools.png)
+
+## Enable the extension
+
+:::note
+Ensure that you have the Reactter [installed](/reactter/getting_started#instalaci%C3%B3n) in your project before enabling the extension.
+:::
+
+To install the Reactter DevTools extension, you need to follow these steps:
+
+- Open the DevTools in your browser.
+Visit the [official documentation](https://docs.flutter.dev/tools/devtools#start) to learn how to open the DevTools in your browser.
+
+- Go to the Extensions tab.
+![Extension tab](/public/devtools_extension/extension_tab.png)
+
+- Click on the "Enable" button on the Reactter DevTools extension.
+![Enable button](/public/devtools_extension/enable_button.png)
+
+Once you have enabled the Reactter DevTools extension, you can start using it here.
+
+![Reactter DevTools extension tab](/public/devtools_extension/reactter_extension.png)
+
+## Usage
+
+To use the Reactter DevTools extension, it is necessary to call <HM>`Rt.initializeDevTools`</HM> in your main file.
+
+```dart title="main.dart"
+import 'package:reactter/reactter.dart';
+
+void main() {
+  Rt.initializeDevtools();
+  runApp(MyApp());
+}
+```
+
+:::tip
+Use `debugLabel` and `debugInfo` property in your states and dependencies for better visualization in the DevTools extension.
+:::
+

@@ -4,7 +4,7 @@ description: Learn how to use the RtComponent in Reactter.
 sidebar:
   order: 7
 ---
-import { HM, HT, HN } from '@/components/Highlight';
+import { HB, HM, HT } from '@/components/Highlight';
 import CodeTabs from '@/components/CodeTabs.astro';
 import { Tabs, TabItem } from "@/components/Tabs";
 import ZappButton from "@/components/ZappButton.astro";
@@ -46,8 +46,8 @@ abstract class RtComponent<T> extends StatelessWidget {
   It exposes the instance of the <HT>`T`</HT> dependency as argument of the function.
   If omitted, the `listenAll` getter is checked.
 - `listenAll`: A boolean value that determines whether to listen to all states(<HT>`RtState`</HT>) of the <HT>`T`</HT> dependency for rebuilds the widget tree defined in the <HM>`render`</HM> method.
-  For default, it is set to <HN>`false`</HN>.
-- <HM>`render`</HM>: A required function that builds the widget tree based on the instance of the <HT>`T`</HT> dependency. It receives the following arguments:
+  For default, it is set to <HB>`false`</HB>.
+- <HM>`render`</HM>: A required function that builds the widget tree based on the instance of the <HT>`T`</HT> dependency. It receives the following parameters:
   - `context`: The <HT>`BuildContext`</HT> of the <HT>`RtComponent`</HT> widget.
   - `inst`: The instance of the <HT>`T`</HT> dependency.
 

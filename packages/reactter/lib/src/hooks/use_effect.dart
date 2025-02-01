@@ -314,4 +314,5 @@ class UseEffect extends RtHook {
   }
 }
 
+/// A mixin to execute the effect on initialization.
 abstract class AutoDispatchEffect {}

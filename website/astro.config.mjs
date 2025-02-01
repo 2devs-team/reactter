@@ -74,10 +74,10 @@ export default defineConfig({
               },
             },
             {
-              label: "DevTools extension 🚧",
+              label: "DevTools extension",
               link: "/devtools_extension",
               translations: {
-                es: "Extensión de DevTools 🚧",
+                es: "Extensión de DevTools",
               },
             },
           ],

@@ -61,11 +61,11 @@ RtSelector<T, V>({
 - `child`: An optional <HT>`Widget`</HT> that remains static while the widget tree is rebuilt.
   If defined, it is passed to the <HM>`builder`</HM> function.
 - <HM>`selector`</HM>: A function that computes a value <HT>`V`</HT> from one or more states and listens for changes to rebuild the widget tree when the value computed changes.
-  It receives the following arguments:
+  It receives the following parameters:
   - `instance`: The instance of <HT>`T`</HT> dependency provided by the closest <HT>`RtProvider`</HT> widget.
   - <HM>`select`</HM>: A function that allows you to wrap the state(<HT>`RtState`</HT>) to be listened for changes and returns it.
 - <HM>`builder`</HM>: A function that rebuilds a widget depending on the <HT>`RtSelector`</HT>.
-It receives the following arguments:
+It receives the following parameters:
   - `context`: The <HT>`BuildContext`</HT> of the <HT>`RtSelector`</HT> widget.
   - `instance`: The instance of <HT>`T`</HT> dependency provided by the closest <HT>`RtProvider`</HT> widget.
   - `value`: The selected value computed <HT>`V`</HT> by the <HM>`selector`</HM> function.

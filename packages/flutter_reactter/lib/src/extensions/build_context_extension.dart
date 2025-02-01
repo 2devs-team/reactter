@@ -8,7 +8,7 @@ extension ReactterBuildContextExtension on BuildContext {
   /// This evaluation only occurs if one of the selected [RtState]s gets updated,
   /// or by the dependency if the [selector] does not have any selected [RtState]s.
   ///
-  /// The [selector] callback has a two arguments, the first one is
+  /// The [selector] callback has two parameters, the first one is
   /// the dependency of [T] type which is obtained from the closest ancestor
   /// of [RtProvider] and the second one is a [Select] function which
   /// allows to wrapper any [RtState]s to listen.

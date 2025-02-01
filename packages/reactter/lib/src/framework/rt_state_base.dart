@@ -103,12 +103,12 @@ abstract class RtStateBase<E extends RtStateBase<E>> implements RtState {
 
   /// {@macro reactter.istate.update}
   ///
-  /// The [fnUpdate] must be a function without arguments(Function()).
+  /// The [fnUpdate] must be a function without parameters(Function()).
   void update(covariant Function? fnUpdate) {
     assert(!_isDisposed, "Can't update when it's been disposed");
     assert(
       fnUpdate is Function(),
-      "The fnUpdate must be a function without arguments",
+      "The fnUpdate must be a function without parameters",
     );
 
     if (_isUpdating || !_hasListeners) {

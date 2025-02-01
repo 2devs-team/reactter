@@ -2,10 +2,10 @@
 title: Dependency Injection Methods
 description: Documentation of Dependency Injection Methods in Reactter.
 sidebar:
-  order: 3
+  order: 2
 ---
 
-import { HE, HK, HM, HN, HS, HT } from '@/components/Highlight';
+import { HB, HE, HK, HM, HN, HS, HT } from '@/components/Highlight';
 import CodeTabs from '@/components/CodeTabs.astro';
 import { Tabs, TabItem } from "@/components/Tabs";
 import ZappButton from "@/components/ZappButton.astro";
@@ -71,7 +71,7 @@ These methods are used to create and manipulate dependencies in a more organized
 ## <HM>`Rt.register`</HM>
 
 The <HM>`Rt.register`</HM> method registers a new dependency.
-It returns <HN>`true`</HN> if the dependency is registered successfully, otherwise return <HN>`false`</HN>.
+It returns <HB>`true`</HB> if the dependency is registered successfully, otherwise return <HB>`false`</HB>.
 
 #### Syntax
 
@@ -112,7 +112,7 @@ See the example below to understand how to use the <HM>`Rt.register`</HM> method
 ## <HM>`Rt.lazyBuilder`</HM>
 
 The <HM>`Rt.lazyBuilder`</HM> method registers a new dependency as [<HE>`DependencyMode.builder`</HE>](/reactter/core_concepts/dependency_injection/#builder).
-It returns <HN>`true`</HN> if the dependency is registered successfully, otherwise return <HN>`false`</HN>.
+It returns <HB>`true`</HB> if the dependency is registered successfully, otherwise return <HB>`false`</HB>.
 
 This method is similar to the <HM>`Rt.register`</HM> method but with the <HE>`DependencyMode.builder`</HE> mode only.
 
@@ -152,7 +152,7 @@ See the example below to understand how to use the <HM>`Rt.lazyBuilder`</HM> met
 ## <HM>`Rt.lazyFactory`</HM>
 
 The <HM>`Rt.lazyFactory`</HM> method registers a new dependency as [<HE>`DependencyMode.factory`</HE>](/reactter/core_concepts/dependency_injection/#factory).
-It returns <HN>`true`</HN> if the dependency is registered successfully, otherwise return <HN>`false`</HN>.
+It returns <HB>`true`</HB> if the dependency is registered successfully, otherwise return <HB>`false`</HB>.
 
 This method is similar to the <HM>`Rt.register`</HM> method but with the <HE>`DependencyMode.factory`</HE> mode only.
 
@@ -192,7 +192,7 @@ See the example below to understand how to use the <HM>`Rt.lazyFactory`</HM> met
 ## <HM>`Rt.lazySingleton`</HM>
 
 The <HM>`Rt.lazySingleton`</HM> method registers a new dependency as [<HE>`DependencyMode.singleton`</HE>](/reactter/core_concepts/dependency_injection/#singleton).
-It returns <HN>`true`</HN> if the dependency is registered successfully, otherwise return <HN>`false`</HN>.
+It returns <HB>`true`</HB> if the dependency is registered successfully, otherwise return <HB>`false`</HB>.
 
 This method is similar to the <HM>`Rt.register`</HM> method but with the <HE>`DependencyMode.singleton`</HE> mode.
 
@@ -449,7 +449,7 @@ See the example below to understand how to use the <HM>`Rt.find`</HM> method in 
 
 ## <HM>`Rt.exists`</HM>
 
-The <HM>`Rt.exists`</HM> method checks if the dependency instance exists in Reactter. It returns <HN>`true`</HN> if the dependency exists, otherwise return <HN>`false`</HN>.
+The <HM>`Rt.exists`</HM> method checks if the dependency instance exists in Reactter. It returns <HB>`true`</HB> if the dependency exists, otherwise return <HB>`false`</HB>.
 
 #### Syntax
 
@@ -516,7 +516,7 @@ See the example below to understand how to use the <HM>`Rt.getDependencyMode`</H
 ## <HM>`Rt.delete`</HM>
 
 The <HM>`Rt.delete`</HM> method removes the dependency instance and its registration from the Reactter based on the dependency mode.
-It returns <HN>`true`</HN> if the dependency is successfully deleted, otherwise return <HN>`false`</HN>.
+It returns <HB>`true`</HB> if the dependency is successfully deleted, otherwise return <HB>`false`</HB>.
 
 :::note
 The behavior of the <HM>`Rt.delete`</HM> method depends on the dependency mode:
@@ -559,7 +559,7 @@ See the example below to understand how to use the <HM>`Rt.delete`</HM> method i
 ## <HM>`Rt.destroy`</HM>
 
 The <HM>`Rt.destroy`</HM> method forcibly removes the dependency instance and its registration from the Reactter.
-It returns <HN>`true`</HN> if the dependency is successfully destroyed, otherwise return <HN>`false`</HN>.
+It returns <HB>`true`</HB> if the dependency is successfully destroyed, otherwise return <HB>`false`</HB>.
 
 #### Syntax
 
@@ -573,7 +573,7 @@ bool Rt.destroy<T>({
 #### Parameters
 
 - `id`: An optional identifier for the <HT>`T`</HT> dependency. If not provided, the default instance of the <HT>`T`</HT> dependency is used.
-- `onlyDependency`: An optional parameter to delete the dependency instance only. The default value is <HN>`false`</HN>.
+- `onlyDependency`: An optional parameter to delete the dependency instance only. The default value is <HB>`false`</HB>.
 
 #### Example
 
@@ -597,7 +597,7 @@ See the example below to understand how to use the <HM>`Rt.destroy`</HM> method 
 ## <HM>`Rt.unregister`</HM>
 
 The <HM>`Rt.unregister`</HM> method is used to unregister the dependency from the Reactter.
-It returns <HN>`true`</HN> if the dependency is unregistered successfully, otherwise return <HN>`false`</HN>.
+It returns <HB>`true`</HB> if the dependency is unregistered successfully, otherwise return <HB>`false`</HB>.
 
 #### Syntax
 
@@ -631,7 +631,7 @@ See the example below to understand how to use the <HM>`Rt.unregister`</HM> meth
 ## <HM>`Rt.isActive`</HM>
 
 The <HM>`Rt.isActive`</HM> method is used to check if the dependency is registered in Reactter.
-It returns <HN>`true`</HN> if the dependency is registered, otherwise return <HN>`false`</HN>.
+It returns <HB>`true`</HB> if the dependency is registered, otherwise return <HB>`false`</HB>.
 
 #### Syntax
 

@@ -27,13 +27,15 @@ An alternative to <HT>[`UseState`](/reactter/api/hooks/use_state)</HT>.
 UseReducer<T>(
   T reducer(T state, RtAction action),
   T initialValue,
+  { String? debugLabel },
 );
 ```
 
-<HT>`UseReducer`</HT> accepts these arguments:
+<HT>`UseReducer`</HT> accepts these parameters:
 
 - <HM>`reducer`</HM>: A function that takes the current `state` and an `action`, and returns a new state.
 - `initialState`: Initial value of <HT>`T`</HT> type that it will hold.
+- `debugLabel`: A label to identify the hook in the [DevTools extension](/reactter/devtools_extension).
 
 ## Properties & Methods
 

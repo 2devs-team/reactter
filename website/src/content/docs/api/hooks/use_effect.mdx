@@ -22,18 +22,20 @@ In this case, we will refer to the _**instance**_ as the _**dependency**_ which 
 UseEffect(
   void | Function callback(),
   List<RtState> dependencies,
+  { String? debugLabel },
 );
 
 // UseEffect run on init
 UseEffect.runOnInit(
   void | Function callback(),
   List<RtState> dependencies,
+  { String? debugLabel },
 );
 ```
 
-<HT>`UseEffect`</HT> accepts these arguments:
+<HT>`UseEffect`</HT> accepts these parameters:
 
-- <HM>`callback`</HM>: A function that performs side effects. This function is executed when the `dependencies` argument changes or the _**instance**_ trigger <HE>`Lifecycle.didMount`</HE> event.
+- <HM>`callback`</HM>: A function that performs side effects. This function is executed when the `dependencies` trigger <HE>`Lifecycle.didUpdate`</HE> event or the _**instance**_ trigger <HE>`Lifecycle.didMount`</HE> event.
   If the `callback` returns a <HT>`Function`</HT>(considers as an _**effect cleanup**_), it will be called before the next effect is run or the _**instance**_ trigger <HE>`Lifecycle.willUnmount`</HE> event.
   :::tip
   The _**effect cleanup**_ is useful for cleaning up any resources or subscriptions that the effect may have created.
@@ -43,6 +45,7 @@ UseEffect.runOnInit(
   The <HM>`callback`</HM> and _**effect cleanup**_ function may be called by <HT>[`Lifecycle`](/reactter/core_concepts/lifecycle)</HT> events, such as <HE>`Lifecycle.didMount`</HE> and <HE>`Lifecycle.willUnmount`</HE>. However, they work only if the instance is provided to the widget tree using the API of _**flutter_reactter**_ package.
   :::
 - `dependencies`: A list of state(<HT>`RtState`</HT>, learn about it [here](/reactter/core_concepts/state_management/#state)) that the effect depends on.
+- `debugLabel`: A label to identify the hook in the [DevTools extension](/reactter/devtools_extension).
 
 ## Properties & Methods
 

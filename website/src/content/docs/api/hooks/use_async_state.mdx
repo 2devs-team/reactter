@@ -4,7 +4,7 @@ description: UseAsyncState hook documentation.
 sidebar:
   order: 2
 ---
-import { HE, HK, HM, HT } from '@/components/Highlight';
+import { HB, HE, HK, HM, HT } from '@/components/Highlight';
 import MDXRedry from '@/components/MDXRedry.astro';
 import StateMethodsLite from '@/content/docs/shareds/state_methods_lite.mdx';
 import * as NoteLateState from '@/content/docs/shareds/note_late_state.mdx';
@@ -17,57 +17,91 @@ import * as ListeningChangesState from '@/content/docs/shareds/listening_changes
 
 ```dart showLineNumbers=false
 UseAsyncState<T>(
-  T initialValue,
   Future<T> asyncFunction(),
+  T initialValue,
+  { String? debugLabel },
 );
 
 // UseAsyncState with arguments
 UseAsyncState<T, A>.withArg(
-  T initialValue,
   Future<T> asyncFunction(A arg),
+  T initialValue,
+  { String? debugLabel },
 );
 ```
 
-<HT>`UseAsyncState`</HT> accepts these arguments:
+<HT>`UseAsyncState`</HT> accepts these parameters:
 
-- `initialValue`: Initial value of <HT>`T`</HT> type that it will hold.
-- <HM>`asyncFunction`</HM>: A function that returns a <HT>`Future<T>`</HT> to update the state asynchronously.
+- <HM>**`asyncFunction`**</HM>: A function that returns a <HT>`Future<T>`</HT> to update the state asynchronously.
   This function is called by the <HM>`resolve`</HM> method and sets the `value` property.
+-  **`initialValue`**: Initial value of <HT>`T`</HT> type that it will hold.
+- **`debugLabel`**: A label to identify the hook in the [DevTools extension](/reactter/devtools_extension).
 
 ## Properties & Methods
 
-<HT>`UseAsyncState`</HT> provides the following properties and methods:
+The <HT>`UseAsyncState`</HT> utility provides the following properties and methods to manage asynchronous states effectively:
 
-- `value`: A getter that allows to read its state.
-- `status`: A getter that allows to read its status. It can be:
-  - <HE>`UseAsyncStateStatus.standby`</HE>: Represents the standby status, indicating that the state is idle.
-  - <HE>`UseAsyncStateStatus.loading`</HE>: Denotes the loading status, indicating that an asynchronous operation is in progress.
-  - <HE>`UseAsyncStateStatus.done`</HE>: Indicates that the asynchronous operation has been successfully completed.
-  - <HE>`UseAsyncStateStatus.error`</HE>: Signifies that an error has occurred during the asynchronous operation.
-- `error`: A getter that allows to get the error object when the <HM>`asyncFunction`</HM> fails.
-- <HM>`resolve`</HM>: A method that updates the state asynchronously by calling the <HM>`asyncFunction`</HM> function.
-  - Syntax:
+- **`value`**:
+  A getter to retrieve the current state of <HT>`T`</HT> type.
+  The `value` can either be the `initialValue` or the resolved value returned by the <HM>`asyncFunction`</HM>.
+- **`status`**:
+  A getter to access the current status of the asynchronous state. The possible statuses are:
+  - <HE>**`UseAsyncStateStatus.idle`**</HE>: Indicates that the state is in stand by and no operation is in progress.
+  - <HE>**`UseAsyncStateStatus.loading`**</HE>: Indicates that an asynchronous operation is currently running.
+  - <HE>**`UseAsyncStateStatus.done`**</HE>: Indicates that the asynchronous operation has completed successfully.
+  - <HE>**`UseAsyncStateStatus.error`**</HE>: Indicates that an error occurred during the asynchronous operation.
+- **`isLoading`**:
+A boolean getter that returns <HB>`true`</HB> if the <HM>`asyncFunction`</HM> is currently in progress.
+- **`isDone`**:
+  A boolean getter that returns <HB>`true`</HB> if the <HM>`asyncFunction`</HM> has successfully completed.
+- **`isError`**:
+  A boolean getter that returns <HB>`true`</HB> if the <HM>`asyncFunction`</HM> has failed.
+- **`error`**:
+  A getter that returns the error object if the <HM>`asyncFunction`</HM> has failed.
+- **`future`**:
+  A getter that returns the <HT>`Future`</HT> of the asynchronous operation.
+- **`uValue`**:
+  A reactive state object that provides the current value and notifies listeners when the value changes.
+- **`uStatus`**:
+  A reactive state object that provides the current status and notifies listeners when the status changes.
+- **`uIsLoading`**:
+  A reactive state object that provides a boolean indicating whether the <HM>`asyncFunction`</HM> is in progress, with notifications for changes.
+- **`uIsDone`**:
+  A reactive state object that provides a boolean indicating whether the <HM>`asyncFunction`</HM> has completed, with notifications for changes.
+- **`uIsError`**:
+  A reactive state object that provides a boolean indicating whether the <HM>`asyncFunction`</HM> has failed, with notifications for changes.
+- **`uError`**:
+  A reactive state object that provides the error information and notifies listeners if an error occurs.
+- **<HM>`resolve`</HM>**:
+  Executes the <HM>`asyncFunction`</HM> and updates the state asynchronously.
+  - **Syntax**:
     ```dart showLineNumbers=false
     FutureOr<T?> resolve();
-    // for UseAsyncState.withArg
+    // For UseAsyncState.withArg
     FutureOr<T?> resolve(A arg);
     ```
-- <HM>`when`</HM>: A method that allows to computed a value depending on its status.
-  - Syntax:
+- **<HM>`cancel`</HM>**:
+  Cancels the currently running asynchronous operation, if applicable.
+  - **Syntax**:
+    ```dart showLineNumbers=false
+    void cancel();
+    ```
+- **<HM>`when`</HM>**:
+  Evaluates and returns a value based on the current state. Useful for rendering or handling state-specific logic.
+  - **Syntax**:
     ```dart showLineNumbers=false
     R? when<R>({
-      WhenValueReturn<T, R>? standby,
+      WhenValueReturn<T, R>? idle,
       WhenValueReturn<T, R>? loading,
       WhenValueReturn<T, R>? done,
       WhenErrorReturn<R>? error,
     });
     ```
-  - Arguments:
-    - <HM>`standby`</HM>: A function that returns a value when the state is <HE>`UseAsyncStateStatus.standby`</HE>.
-    - <HM>`loading`</HM>: A function that returns a value when the state is <HE>`UseAsyncStateStatus.loading`</HE>.
-    - <HM>`done`</HM>: A function that returns a value when the state is <HE>`UseAsyncStateStatus.done`</HE>.
-    - <HM>`error`</HM>: A function that returns a value when the state is <HE>`UseAsyncStateStatus.error`</HE>.
-
+  - **parameters**:
+    - **`idle`**: A callback function invoked when the state is <HE>`UseAsyncStateStatus.idle`</HE>.
+    - **`loading`**: A callback function invoked when the state is <HE>`UseAsyncStateStatus.loading`</HE>.
+    - **`done`**: A callback function invoked when the state is <HE>`UseAsyncStateStatus.done`</HE>.
+    - **`error`**: A callback function invoked when the state is <HE>`UseAsyncStateStatus.error`</HE>.
 <StateMethodsLite />
 
 ## Usage
@@ -77,7 +111,7 @@ UseAsyncState<T, A>.withArg(
 <HT>`UseAsyncState`</HT> can be initialized using the constructor class:
 
 ```dart showLineNumbers=false "UseAsyncState" "asyncFunction"
-final uAsyncState = UseAsyncState<String>('Initial value', asyncFunction);
+final uAsyncState = UseAsyncState<String>(asyncFunction, 'Initial value');
 
 Future<String> asyncFunction() async {
   await Future.delayed(Duration(seconds: 2));
@@ -92,7 +126,7 @@ class UserController {
   final String userId;
 
   late final uUser = Rt.lazyState(
-    () => UseAsyncState<User?>.withArg(null, this.getUser),
+    () => UseAsyncState<User?>.withArg(this.getUser, null),
     this,
   );
 
@@ -130,8 +164,8 @@ print("${uAsyncState.value}"); // Resolved value
 
 ```dart showLineNumbers=false "UseAsyncState.withArg" "asyncFunctionWithArg"
 final uAsyncStateWithArg = UseAsyncState.withArg<String, int>(
+  asyncFunctionWithArg,
   'Initial value',
-  asyncFunctionWithArg
 );
 
 Future<String> asyncFunctionWithArg(int arg) async {
@@ -158,8 +192,8 @@ or <HT>[`Args`](/reactter/api/classes/args)</HT>(A generic arguments provided by
 
 ```dart showLineNumbers=false "UseAsyncState.withArg" "asyncFunctionWithArgs" ".resolve" ".value"
 final uAsyncStateWithArgs = UseAsyncState.withArg<String, ArgsX3<String>>(
+  asyncFunctionWithArgs,
   'Initial value',
-  asyncFunctionWithArgs
 );
 
 Future<String> asyncFunctionWithArgs(ArgsX3<String> args) async {
@@ -172,13 +206,12 @@ await uAsyncStateWithArgs.resolve(ArgsX3('arg1', 'arg2', 'arg3'));
 print("${uAsyncStateWithArgs.value}"); // Resolved value with args: arg1, arg2, arg3
 ```
 
-### Using with Memo
+### Caching the value
 
-<HT>`UseAsyncState`</HT> does not cache the resolving `value`, meaning that it will resolve the `value` every time <HM>`resolve`</HM> is called, potentially impacting performance, especially if the <HM>`asyncFunction`</HM> is expensive. In this case, you should consider using <HT>[`Memo`](/reactter/api/classes/memo)</HT> to cache the resolving `value`, e.g.:
+<HT>`UseAsyncState`</HT> doesn't cache the resolving `value` by default, meaning that it will resolve the `value` every time <HM>`resolve`</HM> is called, potentially impacting performance, especially if the <HM>`asyncFunction`</HM> is expensive. In this case, you should consider using <HT>[`Memo`](/reactter/api/classes/memo)</HT> to cache the resolving `value`, e.g.:
 
 ```dart "UseAsyncState" "Memo.inline"
 final translateState = UseAsyncState.withArg<String?, ArgsX3<String>>(
-  null,
   /// `Memo` stores the value resolved in cache,
   /// and retrieving that same value from the cache the next time
   /// it's needed instead of resolving it again.
@@ -192,6 +225,7 @@ final translateState = UseAsyncState.withArg<String?, ArgsX3<String>>(
     },
     AsyncMemoSafe(), // avoid to save in cache when throw a error
   ),
+  null,
 );
 ```
 
@@ -201,7 +235,7 @@ final translateState = UseAsyncState.withArg<String?, ArgsX3<String>>(
 
 ```dart showLineNumbers=false ".when"
 final result = uAsyncState.when(
-  standby: (value) => "Standby",
+  idle: (value) => "Standby",
   loading: (value) => "Loading",
   done: (value) => "Done",
   error: (error) => "Error: $error",
@@ -220,7 +254,7 @@ Builder(
     );
 
     return myController.uAsyncState.when(
-      standby: (value) => Text("Standby: $value"),
+      idle: (value) => Text("Standby: $value"),
       loading: (value) => CircularProgressIndicator(),
       done: (value) => Text("Done: $value"),
       error: (error) => Text("Error: $error"),
@@ -242,10 +276,10 @@ uAsyncState.update((value) {
 });
 ```
 
-Use <HM>`refresh`</HM> method to force to notify changes.
+Use <HM>`notify`</HM> method to force to notify changes.
 
-```dart showLineNumbers=false ".refresh"
-uAsyncState.refresh();
+```dart showLineNumbers=false ".notify"
+uAsyncState.notify();
 ```
 
 ### Listening to changes

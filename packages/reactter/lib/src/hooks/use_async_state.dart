@@ -127,7 +127,7 @@ abstract class UseAsyncStateBase<T> extends RtHook {
 
   /// Returns a new value of [R] depending on the state of the hook:
   ///
-  /// `standby`: When the state has the initial value.
+  /// `idle`: When the state has the initial value.
   /// `loading`: When the request for the state is retrieving the value.
   /// `done`: When the request is done.
   /// `error`: If any errors happens in the request.
@@ -136,7 +136,7 @@ abstract class UseAsyncStateBase<T> extends RtHook {
   ///
   /// ```dart
   /// final valueComputed = appController.asyncState.when<String>(
-  ///   standby: (value) => "⚓️ Standby: ${value}",
+  ///   idle: (value) => "⚓️ Idle: ${value}",
   ///   loading: (value) => "⏳ Loading...",
   ///   done: (value) => "✅ Resolved: ${value}",
   ///   error: (error) => "❌ Error: ${error}",
@@ -210,7 +210,7 @@ abstract class UseAsyncStateBase<T> extends RtHook {
 ///
 /// ```dart
 /// final valueComputed = appController.asyncState.when<String>(
-///   standby: (value) => "⚓️ Standby: $value",
+///   idle: (value) => "⚓️ Standby: $value",
 ///   loading: (value) => "⏳ Loading...",
 ///   done: (value) => "✅ Resolved: $value",
 ///   error: (error) => "❌ Error: $error",
@@ -292,7 +292,7 @@ class UseAsyncState<T> extends UseAsyncStateBase<T> {
 ///
 /// ```dart
 /// final valueComputed = appController.asyncState.when<String>(
-///   standby: (value) => "⚓️ Standby: $value",
+///   idle: (value) => "⚓️ Standby: $value",
 ///   loading: (value) => "⏳ Loading...",
 ///   done: (value) => "✅ Resolved: $value",
 ///   error: (error) => "❌ Error: $error",

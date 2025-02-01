@@ -119,7 +119,7 @@ The <HT>`RtProvider`</HT> class has three constructors, each catering to differe
   It is passed to the <HM>`builder`</HM> function if it is defined.
 - <HM>`builder`</HM>: An optional function which builds a widget based on the dependency.
 If it not defined, the <HT>`child`</HT> widget is returned.
-It receives the following arguments:
+It receives the following parameters:
   - `context`: The <HM>`BuildContext`</HM> of the widget. A handle to the location of <HT>`RtProvider`</HT> in the widget tree.
   - `instance`: The instance of the <HT>`T`</HT> dependency. It is available only to default constructor.
   - `child`: The `child` widget passed to the <HT>`RtProviders`</HT> widget.
