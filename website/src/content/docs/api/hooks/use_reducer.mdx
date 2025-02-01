@@ -33,17 +33,17 @@ UseReducer<T>(
 
 <HT>`UseReducer`</HT> accepts these parameters:
 
-- <HM>`reducer`</HM>: A function that takes the current `state` and an `action`, and returns a new state.
-- `initialState`: Initial value of <HT>`T`</HT> type that it will hold.
-- `debugLabel`: A label to identify the hook in the [DevTools extension](/reactter/devtools_extension).
+- <HM>**`reducer`**</HM>: A function that takes the current `state` and an `action`, and returns a new state.
+- **`initialState`**: Initial value of <HT>`T`</HT> type that it will hold.
+- **`debugLabel`**: *(Optional)* A label to identify the hook in the [DevTools extension](/reactter/devtools_extension).
 
 ## Properties & Methods
 
 <HT>`UseReducer`</HT> provides the following properties and methods:
 
-- `value`: A getter that allows to read its state.
-- <HM>`dispatch`</HM>: A method that allows to dispatch an action to update the state.
-  - Syntax:
+- **`value`**: A getter that allows to read its state.
+- <HM>**`dispatch`**</HM>: A method that allows to dispatch an action to update the state.
+  - **Syntax**:
     ```dart
     void dispatch(RtAction action);
     ```
@@ -64,7 +64,7 @@ class UserController {
   final String userId;
 
   late final uUser = Rt.lazyState(
-    () => UseReducer<User?>.withArg(this.reducer, null),
+    () => UseReducer<User?>(this.reducer, null),
     this,
   );
 
@@ -161,10 +161,10 @@ uState.update((value) {
 });
 ```
 
-Use <HM>`refresh`</HM> method to force to notify changes.
+Use <HM>`notify`</HM> method to force to notify changes.
 
-```dart showLineNumbers=false ".refresh"
-userState.refresh();
+```dart showLineNumbers=false ".notify"
+userState.notify();
 ```
 
 ### Listening to changes

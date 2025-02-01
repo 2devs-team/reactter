@@ -13,7 +13,8 @@ import * as NoteLateState from '@/content/docs/shareds/note_late_state.mdx';
 import * as NoteStateValueNotifies from '@/content/docs/shareds/note_state_value_notifies.mdx';
 import * as ListeningChangesState from '@/content/docs/shareds/listening_changes_state.mdx';
 
-<HT><a href="https://pub.dev/documentation/reactter/latest/reactter/UseCompute-class.html" target="_blank">`UseCompute`</a></HT> is a [hook](/reactter/core_concepts/hooks) that allows you to define a computation method (<HM>`computeValue`</HM>) to derive a value based on the current state of one or more dependencies. When any of these dependencies change, the hook recalculates the `value` and provides the updated result.
+<HT><a href="https://pub.dev/documentation/reactter/latest/reactter/UseCompute-class.html" target="_blank">`UseCompute`</a></HT> is a [hook](/reactter/core_concepts/hooks) that allows you to define a computation method (<HM>`computeValue`</HM>) to derive a value based on the current state of one or more dependencies.
+When any of these `dependencies` notify to change, the hook recalculates the `value` and provides the updated result.
 
 ## Syntax
 
@@ -27,9 +28,9 @@ UseCompute<T>(
 
 <HT>`UseCompute`</HT> accepts these parameters:
 
-- <HM>`computeValue`</HM>: A function that returns a value based on the current state of the dependencies.
-- `dependencies`: A list of state(<HT>`RtState`</HT>, learn about it [here](/reactter/core_concepts/state_management/#state)) that the computation depends on. When any of these dependencies change, the `value` is recalculated.
-- `debugLabel`: A label to identify the hook in the [DevTools extension](/reactter/devtools_extension).
+- <HM>**`computeValue`**</HM>: A function that returns a value based on the current state of the dependencies.
+- **`dependencies`**: A list of state(<HT>`RtState`</HT>, learn about it [here](/reactter/core_concepts/state_management/#state)) that the computation depends on. When any of these `dependencies` trigger <HE>`Lifecycle.didUpdate`</HE> event, the `value` is recalculated.
+- **`debugLabel`**: *(Optional)* A label to identify the hook in the [DevTools extension](/reactter/devtools_extension).
 
 ## Properties & Methods
 

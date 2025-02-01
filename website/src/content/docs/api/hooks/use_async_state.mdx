@@ -35,7 +35,7 @@ UseAsyncState<T, A>.withArg(
 - <HM>**`asyncFunction`**</HM>: A function that returns a <HT>`Future<T>`</HT> to update the state asynchronously.
   This function is called by the <HM>`resolve`</HM> method and sets the `value` property.
 -  **`initialValue`**: Initial value of <HT>`T`</HT> type that it will hold.
-- **`debugLabel`**: A label to identify the hook in the [DevTools extension](/reactter/devtools_extension).
+- **`debugLabel`**: *(Optional)* A label to identify the hook in the [DevTools extension](/reactter/devtools_extension).
 
 ## Properties & Methods
 
@@ -211,7 +211,7 @@ print("${uAsyncStateWithArgs.value}"); // Resolved value with args: arg1, arg2, 
 <HT>`UseAsyncState`</HT> doesn't cache the resolving `value` by default, meaning that it will resolve the `value` every time <HM>`resolve`</HM> is called, potentially impacting performance, especially if the <HM>`asyncFunction`</HM> is expensive. In this case, you should consider using <HT>[`Memo`](/reactter/api/classes/memo)</HT> to cache the resolving `value`, e.g.:
 
 ```dart "UseAsyncState" "Memo.inline"
-final translateState = UseAsyncState.withArg<String?, ArgsX3<String>>(
+final uTranslateState = UseAsyncState.withArg<String?, ArgsX3<String>>(
   /// `Memo` stores the value resolved in cache,
   /// and retrieving that same value from the cache the next time
   /// it's needed instead of resolving it again.
@@ -227,6 +227,8 @@ final translateState = UseAsyncState.withArg<String?, ArgsX3<String>>(
   ),
   null,
 );
+
+await uTranslateState.resolve(ArgsX3('Hello', 'en', 'es'));
 ```
 
 ### Using `when` method

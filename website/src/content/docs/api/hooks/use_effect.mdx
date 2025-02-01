@@ -9,10 +9,10 @@ import { HE, HN, HM, HT } from '@/components/Highlight';
 import StateMethodsLite from '@/content/docs/shareds/state_methods_lite.mdx';
 import * as ListeningChangesState from '@/content/docs/shareds/listening_changes_state.mdx';
 
-<HT><a href="https://pub.dev/documentation/reactter/latest/reactter/UseEffect-class.html" target="_blank">`UseEffect`</a></HT> is a [RtHook](https://pub.dev/documentation/reactter/latest/reactter/RtHook-class.html) that allows to manage side-effect, and its functionality is closely related to <HT>[Lifecycle](/reactter/core_concepts/lifecycle)</HT> of the _**instance**_ and its dependencies.
+<HT><a href="https://pub.dev/documentation/reactter/latest/reactter/UseEffect-class.html" target="_blank">`UseEffect`</a></HT> is a [hook](/reactter/core_concepts/hooks) that allows to manage side-effect, and its functionality is closely related to <HT>[Lifecycle](/reactter/core_concepts/lifecycle)</HT> of its `dependencies` or the bound **_instance_**.
 
 :::note
-The _**instance**_(or dependency) is the instance of the class where the hook is used.
+The bound _**instance**_(or dependency) is the instance of the class where the hook is used.
 In this case, we will refer to the _**instance**_ as the _**dependency**_ which is managed by [dependency injection](/reactter/core_concepts/dependency_injection).
 :::
 
@@ -35,8 +35,8 @@ UseEffect.runOnInit(
 
 <HT>`UseEffect`</HT> accepts these parameters:
 
-- <HM>`callback`</HM>: A function that performs side effects. This function is executed when the `dependencies` trigger <HE>`Lifecycle.didUpdate`</HE> event or the _**instance**_ trigger <HE>`Lifecycle.didMount`</HE> event.
-  If the `callback` returns a <HT>`Function`</HT>(considers as an _**effect cleanup**_), it will be called before the next effect is run or the _**instance**_ trigger <HE>`Lifecycle.willUnmount`</HE> event.
+- <HM>**`callback`**</HM>: A function that performs side effects. This function is executed when the `dependencies` trigger <HE>`Lifecycle.didUpdate`</HE> event or the bound _**instance**_ trigger <HE>`Lifecycle.didMount`</HE> event.
+  If the `callback` returns a <HT>`Function`</HT>(considers as an _**effect cleanup**_), it will be called before the next effect is run or the bound _**instance**_ trigger <HE>`Lifecycle.willUnmount`</HE> event.
   :::tip
   The _**effect cleanup**_ is useful for cleaning up any resources or subscriptions that the effect may have created.
   :::
@@ -44,8 +44,8 @@ UseEffect.runOnInit(
   :::note
   The <HM>`callback`</HM> and _**effect cleanup**_ function may be called by <HT>[`Lifecycle`](/reactter/core_concepts/lifecycle)</HT> events, such as <HE>`Lifecycle.didMount`</HE> and <HE>`Lifecycle.willUnmount`</HE>. However, they work only if the instance is provided to the widget tree using the API of _**flutter_reactter**_ package.
   :::
-- `dependencies`: A list of state(<HT>`RtState`</HT>, learn about it [here](/reactter/core_concepts/state_management/#state)) that the effect depends on.
-- `debugLabel`: A label to identify the hook in the [DevTools extension](/reactter/devtools_extension).
+- **`dependencies`**: A list of state(<HT>`RtState`</HT>, learn about it [here](/reactter/core_concepts/state_management/#state)) that the effect depends on.
+- **`debugLabel`**: *(Optional)* A label to identify the hook in the [DevTools extension](/reactter/devtools_extension).
 
 ## Properties & Methods
 
@@ -66,12 +66,14 @@ class MyCounter {
   const MyCounter() {
     final timer = Timer.periodic(Duration(seconds: 1), (_) => uCount.value++);
 
-    UseEffect(() {
-      // Execute by `uCount` state changed or 'Lifecycle.didMount' event
+    UseEffect(() { // Effect callback
+      // Executed by `Lifecycle.didUpdate` event of `uCount` state
+      // or `Lifecycle.didMount` event of `MyCounter` instance
       print("Count: ${uCount.value}");
 
-      return () {
-        // Effect cleanup - Execute before `uCount` state changed or 'Lifecycle.willUnmount' event
+      return () { // Effect cleanup
+        // Executed by `Lifecycle.willUpdate` event of `uCount` state
+        // or `Lifecycle.willUnmount` event of `MyCounter` instance
         if (uCount.value == 10 && timer.isActive) {
           timer.cancel();
           print("Counter stopped");
@@ -86,19 +88,23 @@ In the example above, the <HT>`UseEffect`</HT> hook is used to print the `value`
 
 ### Running it inmediately
 
-Sometime you may want to execute inmediately the <HT>`UseEffect`</HT> is initialized, you can use <HM>`UseEffect.runOnInit`</HM> to do that, e.g.:
+Sometimes you may want to execute the <HT>`UseEffect`</HT> immediately upon initialization.
+You can use <HM>`UseEffect.runOnInit`</HM> or the <HT>`AutoDispatchEffect`</HT> mixin to archive this.
+Here's an example:
+
+#### Using <HM>`UseEffect.runOnInit`</HM>
 
 ```dart collapse={1-3, 14-14} "UseEffect.runOnInit" /(uCount)(?!\u0060)/
 final uCount = UseState(0);
 
 void main() {
-  UseEffect.runOnInit(() {
-    // Execute by `uCount` state changed or 'Lifecycle.didMount' event
+  UseEffect.runOnInit(() { // Effect callback
+    // Executed at the initiation and by `Lifecycle.didUpdate` event of `uCount` state.
     print("Count: ${uCount.value}");
     Future.delayed(const Duration(seconds: 1), () => uCount.value++);
 
-    return () {
-      // Effect cleanup - Execute before `uCount` state changed or 'Lifecycle.willUnmount' event
+    return () { // Effect cleanup
+      // Executed by `Lifecycle.willUpdate` event of `uCount` state.
       print("Cleanup executed");
     };
   }, [uCount]);
@@ -108,5 +114,38 @@ void main() {
 In the example above, the <HT>`UseEffect.runOnInit`</HT> hook is used to print the `value` of the `uCount` state inmediately and increment the value every second.
 
 :::tip
-The <HM>`UseEffect.runOnInit`</HM> is useful when you want to execute the `callback` function inmediately without waiting for <HE>`Lifecycle.didMount`</HE> event of _**instance**_.
+The <HM>`UseEffect.runOnInit`</HM> is useful when you want to execute the <HM>`callback`</HM> function inmediately without waiting for <HE>`Lifecycle.didMount`</HE> event of _**instance**_.
 :::
+
+#### Using <HT>`AutoDispatchEffect`</HT> mixin.
+
+The <HT>`AutoDispatchEffect`</HT> mixin can be used to automatically execute the effect when the class is initialized.
+This is particularly useful when you want to ensure that the side effect runs as soon as the instance is created. Here's an example:
+
+```dart collapse={1-3, 14-14} "AutoDispatchEffect" /(uCount)(?!\u0060)/
+class MyCounter with AutoDispatchEffect {
+  final uCount = UseState(0);
+
+  MyCounter() {
+    final timer = Timer.periodic(Duration(seconds: 1), (_) => uCount.value++);
+
+    UseEffect(() { // Effect callback
+      // Executed by `Lifecycle.didUpdate` event of `uCount` state
+      // or `Lifecycle.didMount` event of `MyCounter` instance
+      print("Count: ${uCount.value}");
+
+      return () { // Effect cleanup
+        // Executed by `Lifecycle.willUpdate` event of `uCount` state
+        // or `Lifecycle.willUnmount` event of `MyCounter` instance
+        if (uCount.value == 10 && timer.isActive) {
+          timer.cancel();
+          print("Counter stopped");
+        }
+      };
+    }, [uCount]);
+  }
+}
+```
+
+In this example, the <HT>`AutoDispatchEffect`</HT> mixin ensures that the <HT>`UseEffect`</HT> <HM>`callback`</HM> is executed immediately when the <HT>`MyCounter`</HT> instance is created.
+This eliminates the need to manually call <HM>`UseEffect.runOnInit`</HM>.
