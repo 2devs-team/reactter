@@ -27,7 +27,7 @@
 
 - Remove [`Reactter`](https://pub.dev/documentation/reactter/7.3.0/reactter/Reactter.html), use [`Rt`](https://pub.dev/documentation/reactter/8.0.0-dev.19/reactter/Rt.html) instead.
 - Remove [`ReactterStateImpl`](https://pub.dev/documentation/reactter/7.3.0/reactter/ReactterStateImpl.html) and [`RtStateImpl`](https://pub.dev/documentation/reactter/7.3.0/reactter/RtStateImpl-class.html), use [`RtStateBase`](https://pub.dev/documentation/reactter/8.0.0-dev.19/reactter/RtStateBase-class.html) instead.
-- Replace [`UseAsyncStateStatus.standby`](https://pub.dev/documentation/reactter/7.3.0/reactter/UseAsyncStateStatus.html) to `UseAsyncStateStatus.idle`.
+- Replace [`UseAsyncStateStatus.standby`](https://pub.dev/documentation/reactter/7.3.0/reactter/UseAsyncStateStatus.html) to [`UseAsyncStateStatus.idle`](https://pub.dev/documentation/reactter/8.0.0-dev.19/reactter/UseAsyncStateStatus.html).
 - Rename [`DispatchEffect`](https://pub.dev/documentation/reactter/7.3.0/reactter/DispatchEffect-class.html) to [`AutoDispatchEffect`](https://pub.dev/documentation/reactter/8.0.0-dev.19/reactter/DispatchEffect-class.html).
 - Move `asyncFunction` to the first parameter of [`UseAsyncState`](https://pub.dev/documentation/reactter/8.0.0-dev.19/reactter/UseAsyncState-class.html) and [`UseAsyncState.withArg`](https://pub.dev/documentation/reactter/8.0.0-dev.19/reactter/UseAsyncState/withArg.html).
 - Convert [`RtState`](https://pub.dev/documentation/reactter/8.0.0-dev.19/reactter/RtState-class.html) to interface class, use [`RtStateBase`](https://pub.dev/documentation/reactter/8.0.0-dev.19/reactter/RtStateBase-class.html) abstract class instead, to implement the state logic.
@@ -44,7 +44,7 @@
 - Remove [`UseInstance`](https://pub.dev/documentation/reactter/7.3.0/reactter/UseInstance-class.html), use [`UseDependency`](https://pub.dev/documentation/reactter/8.0.0-dev.19/reactter/UseDependency-class.html) instead.
 - Remove [`ReactterAction`](https://pub.dev/documentation/reactter/7.3.0/reactter/ReactterAction.html), use [`RtAction`](https://pub.dev/documentation/reactter/8.0.0-dev.19/reactter/RtAction-class.html) instead.
 - Remove [`ReactterActionCallable`](https://pub.dev/documentation/reactter/7.3.0/reactter/ReactterActionCallable.html), use [`RtActionCallable`](https://pub.dev/documentation/reactter/8.0.0-dev.19/reactter/RtActionCallable-class.html) instead.
-- Remove [`MemoInterceptors`](https://pub.dev/documentation/reactter/7.3.0/reactter/MemoInterceptors.html), use [`MemoMultiInterceptor`](https://pub.dev/documentation/reactter/8.0.0-dev.19/reactter/MemoMultiInterceptor-class.html) instead.
+- Remove [`MemoInterceptors`](https://pub.dev/documentation/reactter/7.3.0/reactter/MemoInterceptors.html), use [`MultiMemoInterceptor`](https://pub.dev/documentation/reactter/8.0.0-dev.19/reactter/MultiMemoInterceptor-class.html) instead.
 - Remove [`AsyncMemoSafe`](https://pub.dev/documentation/reactter/7.3.0/reactter/AsyncMemoSafe.html), use [`MemoSafeAsyncInterceptor`](https://pub.dev/documentation/reactter/8.0.0-dev.19/reactter/MemoSafeAsyncInterceptor-class.html) instead.
 - Remove [`TemporaryCacheMemo`](https://pub.dev/documentation/reactter/7.3.0/reactter/TemporaryCacheMemo.html), use [`MemoTemporaryCacheInterceptor`](https://pub.dev/documentation/reactter/8.0.0-dev.19/reactter/MemoTemporaryCacheInterceptor-class.html) instead.
 - Remove [`MemoInterceptorWrapper`](https://pub.dev/documentation/reactter/7.3.0/reactter/MemoInterceptorWrapper.html), use [`MemoWrapperInterceptor`](https://pub.dev/documentation/reactter/8.0.0-dev.19/reactter/MemoWrapperInterceptor-class.html) instead.
@@ -59,7 +59,7 @@
 - Remove [`ReactterDependencyNotFoundException`](https://pub.dev/documentation/reactter/7.3.0/flutter_reactter/ReactterDependencyNotFoundException-class.html), use [`RtDependencyNotFoundException`](https://pub.dev/documentation/reactter/8.0.0-dev.19/flutter_reactter/RtDependencyNotFoundException-class.html) instead.
 - Remove [`ReactterScopeNotFoundException`](https://pub.dev/documentation/reactter/7.3.0/flutter_reactter/ReactterScopeNotFoundException-class.html), use [`RtScopeNotFoundException`](https://pub.dev/documentation/reactter/8.0.0-dev.19/flutter_reactter/RtScopeNotFoundException-class.html) instead.
 
-## Fixes
+### Fixes
 
 - Fix bug in [`UseEffect`](https://pub.dev/documentation/reactter/8.0.0-dev.19/reactter/UseEffect-class.html) causing dependencies to not be unwatched.
 - Fix to show the correct dependency mode in the logger of the [`Rt.register`](https://pub.dev/documentation/reactter/8.0.0-dev.19/reactter/RtInterface/register.html) method.
@@ -106,7 +106,7 @@
 
 ## 7.3.1
 
-## Fixes
+### Fixes
 
 - **fix:** Update `RtComponentWidget` typedef to `ReactterComponent`.
 
@@ -132,7 +132,7 @@
   - Deprecate [`ReactterAction`](https://pub.dev/documentation/reactter/7.2.0/reactter/ReactterAction-class.html), use [`RtAction`](https://pub.dev/documentation/reactter/7.3.0/reactter/RtAction-class.html) instead.
   - Deprecate [`ReactterActionCallable`](https://pub.dev/documentation/reactter/7.2.0/reactter/ReactterActionCallable-class.html), use [`RtActionCallable`](https://pub.dev/documentation/reactter/7.3.0/reactter/RtActionCallable-class.html) instead.
 - **refactor:** Update memo interceptors to use more descriptive names.
-  - Deprecate [`MemoInterceptors`](https://pub.dev/documentation/reactter/7.2.0/reactter/MemoInterceptors-class.html), use [`MemoMultiInterceptor`](https://pub.dev/documentation/reactter/7.3.0/reactter/MemoMultiInterceptor-class.html) instead.
+  - Deprecate [`MemoInterceptors`](https://pub.dev/documentation/reactter/7.2.0/reactter/MemoInterceptors-class.html), use [`MultiMemoInterceptor`](https://pub.dev/documentation/reactter/7.3.0/reactter/MultiMemoInterceptor-class.html) instead.
   - Deprecate [`AsyncMemoSafe`](https://pub.dev/documentation/reactter/7.2.0/reactter/AsyncMemoSafe-class.html) , use [`MemoSafeAsyncInterceptor`](https://pub.dev/documentation/reactter/7.3.0/reactter/MemoSafeAsyncInterceptor-class.html) instead.
   - Deprecate [`TemporaryCacheMemo`](https://pub.dev/documentation/reactter/7.2.0/reactter/TemporaryCacheMemo-class.html), use [`MemoTemporaryCacheInterceptor`](https://pub.dev/documentation/reactter/7.3.0/reactter/MemoTemporaryCacheInterceptor-class.html) instead.
   - Deprecate [`MemoInterceptorWrapper`](https://pub.dev/documentation/reactter/7.2.0/reactter/MemoInterceptorWrapper-class.html), use [`MemoWrapperInterceptor`](https://pub.dev/documentation/reactter/7.3.0/reactter/MemoWrapperInterceptor-class.html) instead.

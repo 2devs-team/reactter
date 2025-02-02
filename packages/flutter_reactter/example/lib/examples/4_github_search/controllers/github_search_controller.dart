@@ -15,7 +15,7 @@ class GithubSearchController {
   late final uEntity = Rt.lazyState(() {
     final getEntityMemo = Memo.inline<Future<Object?>, String>(
       _getEntity,
-      const MemoMultiInterceptor([
+      const MultiMemoInterceptor([
         MemoSafeAsyncInterceptor(),
         MemoTemporaryCacheInterceptor(Duration(seconds: 30)),
       ]),

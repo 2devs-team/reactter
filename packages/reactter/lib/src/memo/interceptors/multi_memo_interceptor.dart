@@ -3,11 +3,11 @@ part of '../memo.dart';
 /// {@template reactter.memo_multi_interceptor}
 /// It allows multiple memoization interceptors to be used together.
 /// {@endtemplate}
-class MemoMultiInterceptor<T, A> extends MemoInterceptor<T, A> {
+class MultiMemoInterceptor<T, A> extends MemoInterceptor<T, A> {
   final List<MemoInterceptor<T, A>> interceptors;
 
   /// {@macro reactter.memo_multi_interceptor}
-  const MemoMultiInterceptor(this.interceptors);
+  const MultiMemoInterceptor(this.interceptors);
 
   @override
   void onInit(Memo<T, A> memo, A arg) {

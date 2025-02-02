@@ -103,7 +103,7 @@ void main() {
 
     test(
         "shouldn't memoize when an error Future occurs "
-        "using AsyncMemoSafe interceptor", () async {
+        "using MemoSafeAsyncInterceptor interceptor", () async {
       final memo = Memo<Future<dynamic>, Args1<Error>>(
         (Args1 args) {
           return Future.error(args.arg1);
@@ -165,7 +165,7 @@ void main() {
 
       final nInterceptors = 2;
 
-      final memoInterceptors = MemoMultiInterceptor<dynamic, Args1>([
+      final memoInterceptors = MultiMemoInterceptor<dynamic, Args1>([
         FakeInterceptorForCoverage(),
         ...List.generate(
           nInterceptors,
