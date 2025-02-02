@@ -67,7 +67,8 @@ You can:
 
 Any idean is welcome!
 
-## Authors
+## Contributors
 
-- **[Carlos León](https://twitter.com/CarLeonDev)** - <carleon.dev@gmail.com>
-- **[Leo Castellanos](https://twitter.com/leoocast10)** - <leoocast.dev@gmail.com>
+<a href="https://github.com/2devs-team/reactter/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=2devs-team/reactter" />
+</a>
