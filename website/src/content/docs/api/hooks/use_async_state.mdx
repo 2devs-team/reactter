@@ -223,7 +223,7 @@ final uTranslateState = UseAsyncState.withArg<String?, ArgsX3<String>>(
       // this is fake code, which simulates a request to API
       return await api.translate(text, from, to);
     },
-    AsyncMemoSafe(), // avoid to save in cache when throw a error
+    MemoSafeAsyncInterceptor(), // avoid to save in cache when throw a error
   ),
   null,
 );

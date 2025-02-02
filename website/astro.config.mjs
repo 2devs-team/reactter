@@ -92,6 +92,15 @@ export default defineConfig({
           },
         },
         {
+          label: "Migration",
+          translations: {
+            es: "Migración",
+          },
+          autogenerate: {
+            directory: "migration",
+          },
+        },
+        {
           label: "API",
           translations: {
             es: "API",
