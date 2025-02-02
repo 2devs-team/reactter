@@ -22,13 +22,22 @@ import * as ListeningChangesState from '@/content/docs/shareds/listening_changes
 
 <HT>`Signal`</HT> accepts this property:
 
-- `initialValue`: Initial value of <HT>`T`</HT> type that the it will hold.
+- **`initialValue`**: Initial value of <HT>`T`</HT> type that the it will hold.
 
 ## Properties & Methods
 
 <HT>`Signal`</HT> provides the following properties and methods:
 
-- `value`: A getter/setter that allows to read and write its state.
+- **`value`**: A getter/setter that allows to read and write its state.
+
+- Various properties and methods depending on the type of <HT>`T`</HT>. For example, if <HT>`T`</HT> is a <HT>`List`</HT>, you can use the methods and properties of the <HT>`List`</HT> class:
+
+  ```dart showLineNumbers=false
+  final listSignal = Signal<List<int>>([]);
+  listSignal.addAll([1, 2, 3]);
+  listSignal.removeAt(0);
+  listSignal.clear();
+  ```
 <StateMethodsLite/>
 
 ## Usage
@@ -97,10 +106,10 @@ userSignal.update((user) {
 });
 ```
 
-Use <HM>`refresh`</HM> method to force to notify changes.
+Use <HM>`notify`</HM> method to force to notify changes.
 
 ```dart showLineNumbers=false
-userSignal.refresh();
+userSignal.notify();
 ```
 
 ### Listening to changes
