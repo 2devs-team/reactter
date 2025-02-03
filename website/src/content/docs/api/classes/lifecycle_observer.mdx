@@ -5,6 +5,16 @@ sidebar:
   order: 5
 ---
 import { HM, HT } from '@/components/Highlight';
+import CodeTabs from '@/components/CodeTabs.astro';
+import { Tabs, TabItem } from "@/components/Tabs";
+import ZappButton from "@/components/ZappButton.astro";
+import { Code } from "@astrojs/starlight/components";
+import { marks } from '@/examples/marks.ts'
+
+import counterControllerLifecycleObserverCode from '@/examples/lifecycle_observer/lib/counter_controller.dart?raw';
+import counterLifecycleObserverCode from '@/examples/lifecycle_observer/lib/counter.dart?raw';
+import counterViewLifecycleObserverCode from '@/examples/lifecycle_observer/lib/counter_view.dart?raw';
+import counterMainLifecycleObserverCode from '@/examples/lifecycle_observer/lib/main.dart?raw';
 
 :::tip
 This documentation assumes you've already read the [Lifecycle](/reactter/core_concepts/lifecycle/).
@@ -17,77 +27,58 @@ It's recommended read that first if you're new in Reactter.
 
 ```dart showLineNumbers=false
 abstract class LifecycleObserver {
-  /// This method is called when the dependency instance is created.
   void onCreated() {}
-
-  /// This method is called when the dependency is going to be mounted
-  /// in the widget tree(exclusive to `flutter_reactter`).
   void onWillMount() {}
-
-  /// This method is called when the dependency has been successfully mounted
-  /// in the widget tree(exclusive to `flutter_reactter`).
   void onDidMount() {}
-
-  /// This method is called when the dependency's state is about to be updated.
-  /// The parameter is a [IState].
-  void onWillUpdate(covariant IState? state) {}
-
-  /// This method is called when the dependency's state has been updated.
-  /// The parameter is a [IState].
-  void onDidUpdate(covariant IState? state) {}
-
-  /// This method is called when the dependency is going to be unmounted
-  /// from the widget tree(exclusive to `flutter_reactter`).
+  void onWillUpdate(RtState state) {}
+  void onDidUpdate(RtState state) {}
   void onWillUnmount() {}
-
-  /// This method is called when the dependency has been successfully unmounted
-  /// from the widget tree(exclusive to `flutter_reactter`).
   void onDidUnmount() {}
 }
 ```
 
+## Methods
+
+- <HM>**`onCreated`**</HM>: Called when the dependency is created.
+This is the first lifecycle method invoked.
+- <HM>**`onWillMount`**</HM>(only in **flutter_reactter**): Called just before the dependency is mounted.
+Useful for pre-mount setup.
+- <HM>**`onDidMount`**</HM>(only in **flutter_reactter**): Called immediately after the dependency is mounted.
+Ideal for post-mount initialization.
+- <HM>**`onWillUpdate`**</HM>: Called before the dependency is updated.
+The parameter is the state (RtState) that triggered the update.
+Use this to react to state changes before they take effect.
+- <HM>**`onDidUpdate`**</HM>: Called after the dependency is updated.
+The parameter is the state (RtState) that triggered the update.
+Use this to react to state changes after they take effect.
+- <HM>**`onWillUnmount`**</HM>(only in **flutter_reactter**): Called just before the dependency is unmounted.
+Useful for cleanup tasks.
+- <HM>**`onDidUnmount`**</HM>(only in **flutter_reactter**): Called immediately after the dependency is unmounted.
+Ideal for final cleanup or resource release.
+
 ## Example
 
-Here's an example of a simple `LifecycleObserver`:
+Here's an example of a simple LifecycleObserver implementation:
 
-```dart
-class MyDependency extends LifecycleObserver {
-  @override
-  void onCreated() {
-    print('MyObserver created');
-  }
+<CodeTabs>
+  <ZappButton path="examples/lifecycle_observer"/>
 
-  @override
-  void onWillMount() {
-    print('MyObserver will mount');
-  }
+  <Tabs>
+    <TabItem>
+      <HM single slot="label">counter_controller.dart</HM>
+      <Code code={counterControllerLifecycleObserverCode} lang="dart" mark={[...marks, {range: "14-17"}, {range: "19-22"}, {range: "24-27"}, {range: "29-32"}, {range: "34-37"}, {range: "39-42"}, {range: "44-47"}]}/>
+    </TabItem>
 
-  @override
-  void onDidMount() {
-    print('MyObserver did mount');
-  }
+    <TabItem label="counter_view.dart">
+      <Code code={counterViewLifecycleObserverCode} lang="dart" mark={marks} />
+    </TabItem>
 
-  @override
-  void onWillUpdate(RtState? state) {
-    print('MyObserver will update with state: $state');
-  }
+    <TabItem label="counter.dart">
+      <Code code={counterLifecycleObserverCode} lang="dart" mark={marks} />
+    </TabItem>
 
-  @override
-  void onDidUpdate(RtState? state) {
-    print('MyObserver did update with state: $state');
-  }
-
-  @override
-  void onWillUnmount() {
-    print('MyObserver will unmount');
-  }
-
-  @override
-  void onDidUnmount() {
-    print('MyObserver did unmount');
-  }
-}
-```
-
-In the above example, the `MyDependency` class extends `LifecycleObserver` and overrides all the lifecycle methods.
-When an instance of `MyDependency` is created, the lifecycle methods are called in the order they are defined.
+    <TabItem label="main.dart">
+      <Code code={counterMainLifecycleObserverCode} lang="dart" mark={marks} />
+    </TabItem>
+  </Tabs>
+</CodeTabs>
