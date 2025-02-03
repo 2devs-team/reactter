@@ -1,0 +1,30 @@
+---
+title: Creating a custom hook
+---
+
+import { HT, HM } from '@/components/Highlight';
+import { Code } from "@astrojs/starlight/components";
+import { marks } from '@/examples/marks.ts'
+import UseTextInputCode from '@/examples/custom_hook/lib/use_text_input.dart?raw';
+
+To create a [custom hook](/reactter/core_concepts/hooks/#custom-hook), you need to create a class that extends <HT>[`RtHook`](/reactter/api/classes/rt_hook)</HT> and follow the naming convention with the <HT>`Use`</HT> prefix.
+
+Here's an example of a [custom hook](/reactter/core_concepts/hooks/#custom-hook) that manages the state of a text input:
+
+<Code code={UseTextInputCode} lang="dart" mark={[...marks, {range: "5-6", label: "*      This line is REQUIRED!        "}]} />
+
+:::caution[Attention!!]
+To create a _**hook**_, you need to register it by adding the following line:
+
+```dart showLineNumbers=false
+final $ = RtHook.$register;
+```
+
+It's important to note that the states and hooks defined above this line are not linked to the hook.
+To avoid this, it's recommended to place this line as the first line in the class body.
+:::
+
+As shown in the example above, we can utilize other hooks such as <HT>[`UseEffect`](/reactter/api/hooks/use_effect)</HT> to monitor changes in the text input's controller and ensure it is disposed when the hook is destroyed.
+
+The <HM>`update`</HM> method is used to set the internal `_value` to the current text in the controller, which keeps the state synchronized with the input.
+This methods is a part of the <HT>`RtHook`</HT> class that allows you to update the state of the hook.
