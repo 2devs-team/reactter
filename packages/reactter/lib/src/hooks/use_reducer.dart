@@ -5,7 +5,7 @@ part of 'hooks.dart';
 ///
 /// [UseReducer] accepts a [reducer] method
 ///  and returns the current state paired with a [dispatch] method.
-/// (If you’re familiar with Redux, you already know how this works.)
+/// (If you're familiar with Redux, you already know how this works.)
 ///
 /// Contains a [value] of type [T] which represents the current state.
 ///

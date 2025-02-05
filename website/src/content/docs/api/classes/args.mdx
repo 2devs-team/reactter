@@ -44,6 +44,8 @@ In each of the methods it provides these properties and methods:
 
 ## Usage
 
+### Define Arguments
+
 To use it, you can create an instance and provide the specified types of arguments, e.g.:
 
 ```dart
@@ -81,7 +83,7 @@ void myFunction(ArgsX3<int> args) {
 myFunction(ArgsX3(1, 2, 3));
 ```
 
-## Type compatibility
+### Type compatibility
 
 The <HT>`Args`</HT> classes are compatible with each other, so you can pass an <HT>`Args`</HT> instance to a function that expects an <HT>`Args`</HT> instance with fewer arguments, e.g.:
 
@@ -114,7 +116,7 @@ myFunction(Args2(1, "foo"));
 myFunction(Args3(1, "bar", false));
 ```
 
-## Equality Comparation
+### Equality Comparation
 
 The <HT>`Args`</HT> classes are comparable, so you can compare them with each other.
 Two Args instances are considered equal if they contain the same number of arguments and the values in each corresponding position match, e.g.:
@@ -140,7 +142,7 @@ print(Args3(1, "foo", false) == Args([1, "foo", false, "bar"])); // false
 print(ArgsX3(3, "bar", false) == Args3("bar", 3, false)); // false
 ```
 
-## Ary Function
+### Ary Function
 
 > The _**arity**_ or _**adicity**_ of a function is the number of arguments (i.e. inputs or parameters) it takes.
 
