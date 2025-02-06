@@ -1,70 +1,70 @@
 # Reactter
 
-## 8.0.0-dev.19
+## 8.0.0-dev.20
 
 ### Enhancements
 
 - Add Reactter devtools extension.
-- Add [`Rt.addObserver`](https://pub.dev/documentation/reactter/8.0.0-dev.19/reactter/RtInterface/addObserver.html) and [`Rt.removeObserver`](https://pub.dev/documentation/reactter/8.0.0-dev.19/reactter/RtInterface/removeObserver.html) methods to manage the observers.
-- Add [`RtStateObserver`](https://pub.dev/documentation/reactter/8.0.0-dev.19/reactter/RtStateObserver-class.html) class to monitor the lifecycle of state(`onStateCreated`, `onStateBound`, `onStateUnbound`,  `onStateUpdated` and `onStateDisposed`).
-- Add [`RtDependencyObserver`](https://pub.dev/documentation/reactter/8.0.0-dev.19/reactter/RtDependencyObserver-class.html) class to monitor the lifecycle of dependency(`onDependencyRegistered`, `onDependencyCreated`, `onDependencyMounted`, `onDependencyUnmounted`, `onDependencyDeleted`, `onDependencyUnregistered` and `onDependencyFailed`).
-- Add [`Rt.initializeLogger`](https://pub.dev/documentation/reactter/8.0.0-dev.19/reactter/RtLoggerExt/initializeLogger.html) to initialize the Reactter logger.
-- Add [`Rt.initializeDevTools`](https://pub.dev/documentation/reactter/8.0.0-dev.19/reactter/RtDevToolsExt/initializeDevTools.html) to initialize the devtools for observing the states and dependencies.
-- Add [`debugLabel`](https://pub.dev/documentation/reactter/8.0.0-dev.19/reactter/RtStateBase/debugLabel.html) and [`debugInfo`](https://pub.dev/documentation/reactter/8.0.0-dev.19/reactter/RtStateBase/debugInfo.html) to states and hooks to get info for debugging.
-- Add [`RtContextMixin`](https://pub.dev/documentation/reactter/8.0.0-dev.19/reactter/RtContextMixin-mixin.html) mixin to provide access to the `Rt` instance.
-- Add [`RtStateBase`](https://pub.dev/documentation/reactter/8.0.0-dev.19/reactter/RtStateBase-class.html) abstract class to implement the base logic of the state.
-- Add [`Rt.createState`](https://pub.dev/documentation/reactter/8.0.0-dev.19/reactter/RtInterface/createState.html) method to create a new state.
-- Add [`Rt.getRefAt`](https://pub.dev/documentation/reactter/8.0.0-dev.19/reactter/RtInterface/getRefAt.html) to get the reference of dependency created.
-- Add [`initHook`](https://pub.dev/documentation/reactter/8.0.0-dev.19/reactter/RtHook/initHook.html) method to `RtHook` to call when hook is created.
-- Add [`cancel`](https://pub.dev/documentation/reactter/8.0.0-dev.19/reactter/UseAsyncState/cancel.html) method to `UseAsyncState` to cancel current method.
-- Update [`batch`](https://pub.dev/documentation/reactter/8.0.0-dev.19/reactter/RtInterface/batch.html) and [`untracked`](https://pub.dev/documentation/reactter/8.0.0-dev.19/reactter/RtInterface/untracked.html) methods to support asynchronous callbacks.
+- Add [`Rt.addObserver`](https://pub.dev/documentation/reactter/8.0.0-dev.20/reactter/RtInterface/addObserver.html) and [`Rt.removeObserver`](https://pub.dev/documentation/reactter/8.0.0-dev.20/reactter/RtInterface/removeObserver.html) methods to manage the observers.
+- Add [`RtStateObserver`](https://pub.dev/documentation/reactter/8.0.0-dev.20/reactter/RtStateObserver-class.html) class to monitor the lifecycle of state(`onStateCreated`, `onStateBound`, `onStateUnbound`,  `onStateUpdated` and `onStateDisposed`).
+- Add [`RtDependencyObserver`](https://pub.dev/documentation/reactter/8.0.0-dev.20/reactter/RtDependencyObserver-class.html) class to monitor the lifecycle of dependency(`onDependencyRegistered`, `onDependencyCreated`, `onDependencyMounted`, `onDependencyUnmounted`, `onDependencyDeleted`, `onDependencyUnregistered` and `onDependencyFailed`).
+- Add [`Rt.initializeLogger`](https://pub.dev/documentation/reactter/8.0.0-dev.20/reactter/RtLoggerExt/initializeLogger.html) to initialize the Reactter logger.
+- Add [`Rt.initializeDevTools`](https://pub.dev/documentation/reactter/8.0.0-dev.20/reactter/RtDevToolsExt/initializeDevTools.html) to initialize the devtools for observing the states and dependencies.
+- Add [`debugLabel`](https://pub.dev/documentation/reactter/8.0.0-dev.20/reactter/RtStateBase/debugLabel.html) and [`debugInfo`](https://pub.dev/documentation/reactter/8.0.0-dev.20/reactter/RtStateBase/debugInfo.html) to states and hooks to get info for debugging.
+- Add [`RtContextMixin`](https://pub.dev/documentation/reactter/8.0.0-dev.20/reactter/RtContextMixin-mixin.html) mixin to provide access to the `Rt` instance.
+- Add [`RtStateBase`](https://pub.dev/documentation/reactter/8.0.0-dev.20/reactter/RtStateBase-class.html) abstract class to implement the base logic of the state.
+- Add [`Rt.createState`](https://pub.dev/documentation/reactter/8.0.0-dev.20/reactter/RtInterface/createState.html) method to create a new state.
+- Add [`Rt.getRefAt`](https://pub.dev/documentation/reactter/8.0.0-dev.20/reactter/RtInterface/getRefAt.html) to get the reference of dependency created.
+- Add [`initHook`](https://pub.dev/documentation/reactter/8.0.0-dev.20/reactter/RtHook/initHook.html) method to `RtHook` to call when hook is created.
+- Add [`cancel`](https://pub.dev/documentation/reactter/8.0.0-dev.20/reactter/UseAsyncState/cancel.html) method to `UseAsyncState` to cancel current method.
+- Update [`batch`](https://pub.dev/documentation/reactter/8.0.0-dev.20/reactter/RtInterface/batch.html) and [`untracked`](https://pub.dev/documentation/reactter/8.0.0-dev.20/reactter/RtInterface/untracked.html) methods to support asynchronous callbacks.
 - Enhance event handling and notifier logic for improved stability and performance.
 - Enhance state management and error handling.
-- Add dependency `mode` to [`RtComponent`](https://pub.dev/documentation/flutter_reactter/8.0.0-dev.19/flutter_reactter/RtComponent-class.html).
+- Add dependency `mode` to [`RtComponent`](https://pub.dev/documentation/flutter_reactter/8.0.0-dev.20/flutter_reactter/RtComponent-class.html).
 - Enhance dependency management to ensure to re-build when is detected changes while building.
 
 ### Breakings
 
-- Remove [`Reactter`](https://pub.dev/documentation/reactter/7.3.0/reactter/Reactter.html), use [`Rt`](https://pub.dev/documentation/reactter/8.0.0-dev.19/reactter/Rt.html) instead.
-- Remove [`ReactterStateImpl`](https://pub.dev/documentation/reactter/7.3.0/reactter/ReactterStateImpl.html) and [`RtStateImpl`](https://pub.dev/documentation/reactter/7.3.0/reactter/RtStateImpl-class.html), use [`RtStateBase`](https://pub.dev/documentation/reactter/8.0.0-dev.19/reactter/RtStateBase-class.html) instead.
-- Replace [`UseAsyncStateStatus.standby`](https://pub.dev/documentation/reactter/7.3.0/reactter/UseAsyncStateStatus.html) to [`UseAsyncStateStatus.idle`](https://pub.dev/documentation/reactter/8.0.0-dev.19/reactter/UseAsyncStateStatus.html).
-- Rename [`DispatchEffect`](https://pub.dev/documentation/reactter/7.3.0/reactter/DispatchEffect-class.html) to [`AutoDispatchEffect`](https://pub.dev/documentation/reactter/8.0.0-dev.19/reactter/DispatchEffect-class.html).
-- Move `asyncFunction` to the first parameter of [`UseAsyncState`](https://pub.dev/documentation/reactter/8.0.0-dev.19/reactter/UseAsyncState-class.html) and [`UseAsyncState.withArg`](https://pub.dev/documentation/reactter/8.0.0-dev.19/reactter/UseAsyncState/withArg.html).
-- Convert [`RtState`](https://pub.dev/documentation/reactter/8.0.0-dev.19/reactter/RtState-class.html) to interface class, use [`RtStateBase`](https://pub.dev/documentation/reactter/8.0.0-dev.19/reactter/RtStateBase-class.html) abstract class instead, to implement the state logic.
-- Remove [`Rt.isRegistered`](https://pub.dev/documentation/reactter/7.3.0/reactter/RtInterface/isRegistered.html), use [`Rt.isActive`](https://pub.dev/documentation/reactter/8.0.0-dev.19/reactter/RtInterface/isActive.html) instead.
-- Remove [`Rt.getInstanceManageMode`](https://pub.dev/documentation/reactter/7.3.0/reactter/RtInterface/getInstanceManageMode.html), use [`Rt.getDependencyMode`](https://pub.dev/documentation/reactter/8.0.0-dev.19/reactter/RtInterface/getDependencyMode.html) instead.
-- Remove [`InstanceManageMode`](https://pub.dev/documentation/reactter/7.3.0/reactter/InstanceManageMode.html), use [`DependencyMode`](https://pub.dev/documentation/reactter/8.0.0-dev.19/reactter/DependencyMode.html) instead.
-- Remove [`Lifecycle.initialized`](https://pub.dev/documentation/reactter/7.3.0/reactter/Lifecycle.html), use [`Lifecycle.created`](https://pub.dev/documentation/reactter/8.0.0-dev.19/reactter/Lifecycle.html) instead.
-- Remove [`Lifecycle.destroyed`](https://pub.dev/documentation/reactter/7.3.0/reactter/Lifecycle.html), use [`Lifecycle.deleted`](https://pub.dev/documentation/reactter/8.0.0-dev.19/reactter/Lifecycle.html) instead.
-- Remove [`LifecycleObserver.onInitialized`](https://pub.dev/documentation/reactter/7.3.0/reactter/LifecycleObserver/onInitialized.html), use [`LifecycleObserver.onCreated`](https://pub.dev/documentation/reactter/8.0.0-dev.19//reactter/LifecycleObserver/onCreated.html) instead.
-- Remove [`ReactterInstance`](https://pub.dev/documentation/reactter/7.3.0/reactter/ReactterInstance.html) and [`ReactterDependency`](https://pub.dev/documentation/reactter/7.3.0/reactter/ReactterDependency.html), use [`RtDependency`](https://pub.dev/documentation/reactter/8.0.0-dev.19//reactter/RtDependency-class.html) instead.
-- Remove [`ReactterHook`](https://pub.dev/documentation/reactter/7.3.0/reactter/ReactterHook.html), use [`RtHook`](https://pub.dev/documentation/reactter/8.0.0-dev.19//reactter/RtHook-class.html) instead.
-- Remove [`ReactterInterface`](https://pub.dev/documentation/reactter/7.3.0/reactter/ReactterInterface.html), use [`RtInterface`](https://pub.dev/documentation/reactter/8.0.0-dev.19//reactter/RtInterface-class.html) instead.
-- Remove [`RtState.refresh`](https://pub.dev/documentation/reactter/7.3.0/reactter/RtState/refresh.html), use [`RtState.notify`](https://pub.dev/documentation/reactter/8.0.0-dev.19/reactter/RtState/notify.html) instead.
-- Remove [`UseInstance`](https://pub.dev/documentation/reactter/7.3.0/reactter/UseInstance-class.html), use [`UseDependency`](https://pub.dev/documentation/reactter/8.0.0-dev.19/reactter/UseDependency-class.html) instead.
-- Remove [`ReactterAction`](https://pub.dev/documentation/reactter/7.3.0/reactter/ReactterAction.html), use [`RtAction`](https://pub.dev/documentation/reactter/8.0.0-dev.19/reactter/RtAction-class.html) instead.
-- Remove [`ReactterActionCallable`](https://pub.dev/documentation/reactter/7.3.0/reactter/ReactterActionCallable.html), use [`RtActionCallable`](https://pub.dev/documentation/reactter/8.0.0-dev.19/reactter/RtActionCallable-class.html) instead.
-- Remove [`MemoInterceptors`](https://pub.dev/documentation/reactter/7.3.0/reactter/MemoInterceptors.html), use [`MultiMemoInterceptor`](https://pub.dev/documentation/reactter/8.0.0-dev.19/reactter/MultiMemoInterceptor-class.html) instead.
-- Remove [`AsyncMemoSafe`](https://pub.dev/documentation/reactter/7.3.0/reactter/AsyncMemoSafe.html), use [`MemoSafeAsyncInterceptor`](https://pub.dev/documentation/reactter/8.0.0-dev.19/reactter/MemoSafeAsyncInterceptor-class.html) instead.
-- Remove [`TemporaryCacheMemo`](https://pub.dev/documentation/reactter/7.3.0/reactter/TemporaryCacheMemo.html), use [`MemoTemporaryCacheInterceptor`](https://pub.dev/documentation/reactter/8.0.0-dev.19/reactter/MemoTemporaryCacheInterceptor-class.html) instead.
-- Remove [`MemoInterceptorWrapper`](https://pub.dev/documentation/reactter/7.3.0/reactter/MemoInterceptorWrapper.html), use [`MemoWrapperInterceptor`](https://pub.dev/documentation/reactter/8.0.0-dev.19/reactter/MemoWrapperInterceptor-class.html) instead.
+- Remove [`Reactter`](https://pub.dev/documentation/reactter/7.3.0/reactter/Reactter.html), use [`Rt`](https://pub.dev/documentation/reactter/8.0.0-dev.20/reactter/Rt.html) instead.
+- Remove [`ReactterStateImpl`](https://pub.dev/documentation/reactter/7.3.0/reactter/ReactterStateImpl.html) and [`RtStateImpl`](https://pub.dev/documentation/reactter/7.3.0/reactter/RtStateImpl-class.html), use [`RtStateBase`](https://pub.dev/documentation/reactter/8.0.0-dev.20/reactter/RtStateBase-class.html) instead.
+- Replace [`UseAsyncStateStatus.standby`](https://pub.dev/documentation/reactter/7.3.0/reactter/UseAsyncStateStatus.html) to [`UseAsyncStateStatus.idle`](https://pub.dev/documentation/reactter/8.0.0-dev.20/reactter/UseAsyncStateStatus.html).
+- Rename [`DispatchEffect`](https://pub.dev/documentation/reactter/7.3.0/reactter/DispatchEffect-class.html) to [`AutoDispatchEffect`](https://pub.dev/documentation/reactter/8.0.0-dev.20/reactter/DispatchEffect-class.html).
+- Move `asyncFunction` to the first parameter of [`UseAsyncState`](https://pub.dev/documentation/reactter/8.0.0-dev.20/reactter/UseAsyncState-class.html) and [`UseAsyncState.withArg`](https://pub.dev/documentation/reactter/8.0.0-dev.20/reactter/UseAsyncState/withArg.html).
+- Convert [`RtState`](https://pub.dev/documentation/reactter/8.0.0-dev.20/reactter/RtState-class.html) to interface class, use [`RtStateBase`](https://pub.dev/documentation/reactter/8.0.0-dev.20/reactter/RtStateBase-class.html) abstract class instead, to implement the state logic.
+- Remove [`Rt.isRegistered`](https://pub.dev/documentation/reactter/7.3.0/reactter/RtInterface/isRegistered.html), use [`Rt.isActive`](https://pub.dev/documentation/reactter/8.0.0-dev.20/reactter/RtInterface/isActive.html) instead.
+- Remove [`Rt.getInstanceManageMode`](https://pub.dev/documentation/reactter/7.3.0/reactter/RtInterface/getInstanceManageMode.html), use [`Rt.getDependencyMode`](https://pub.dev/documentation/reactter/8.0.0-dev.20/reactter/RtInterface/getDependencyMode.html) instead.
+- Remove [`InstanceManageMode`](https://pub.dev/documentation/reactter/7.3.0/reactter/InstanceManageMode.html), use [`DependencyMode`](https://pub.dev/documentation/reactter/8.0.0-dev.20/reactter/DependencyMode.html) instead.
+- Remove [`Lifecycle.initialized`](https://pub.dev/documentation/reactter/7.3.0/reactter/Lifecycle.html), use [`Lifecycle.created`](https://pub.dev/documentation/reactter/8.0.0-dev.20/reactter/Lifecycle.html) instead.
+- Remove [`Lifecycle.destroyed`](https://pub.dev/documentation/reactter/7.3.0/reactter/Lifecycle.html), use [`Lifecycle.deleted`](https://pub.dev/documentation/reactter/8.0.0-dev.20/reactter/Lifecycle.html) instead.
+- Remove [`LifecycleObserver.onInitialized`](https://pub.dev/documentation/reactter/7.3.0/reactter/LifecycleObserver/onInitialized.html), use [`LifecycleObserver.onCreated`](https://pub.dev/documentation/reactter/8.0.0-dev.20//reactter/LifecycleObserver/onCreated.html) instead.
+- Remove [`ReactterInstance`](https://pub.dev/documentation/reactter/7.3.0/reactter/ReactterInstance.html) and [`ReactterDependency`](https://pub.dev/documentation/reactter/7.3.0/reactter/ReactterDependency.html), use [`RtDependency`](https://pub.dev/documentation/reactter/8.0.0-dev.20//reactter/RtDependency-class.html) instead.
+- Remove [`ReactterHook`](https://pub.dev/documentation/reactter/7.3.0/reactter/ReactterHook.html), use [`RtHook`](https://pub.dev/documentation/reactter/8.0.0-dev.20//reactter/RtHook-class.html) instead.
+- Remove [`ReactterInterface`](https://pub.dev/documentation/reactter/7.3.0/reactter/ReactterInterface.html), use [`RtInterface`](https://pub.dev/documentation/reactter/8.0.0-dev.20//reactter/RtInterface-class.html) instead.
+- Remove [`RtState.refresh`](https://pub.dev/documentation/reactter/7.3.0/reactter/RtState/refresh.html), use [`RtState.notify`](https://pub.dev/documentation/reactter/8.0.0-dev.20/reactter/RtState/notify.html) instead.
+- Remove [`UseInstance`](https://pub.dev/documentation/reactter/7.3.0/reactter/UseInstance-class.html), use [`UseDependency`](https://pub.dev/documentation/reactter/8.0.0-dev.20/reactter/UseDependency-class.html) instead.
+- Remove [`ReactterAction`](https://pub.dev/documentation/reactter/7.3.0/reactter/ReactterAction.html), use [`RtAction`](https://pub.dev/documentation/reactter/8.0.0-dev.20/reactter/RtAction-class.html) instead.
+- Remove [`ReactterActionCallable`](https://pub.dev/documentation/reactter/7.3.0/reactter/ReactterActionCallable.html), use [`RtActionCallable`](https://pub.dev/documentation/reactter/8.0.0-dev.20/reactter/RtActionCallable-class.html) instead.
+- Remove [`MemoInterceptors`](https://pub.dev/documentation/reactter/7.3.0/reactter/MemoInterceptors.html), use [`MultiMemoInterceptor`](https://pub.dev/documentation/reactter/8.0.0-dev.20/reactter/MultiMemoInterceptor-class.html) instead.
+- Remove [`AsyncMemoSafe`](https://pub.dev/documentation/reactter/7.3.0/reactter/AsyncMemoSafe.html), use [`MemoSafeAsyncInterceptor`](https://pub.dev/documentation/reactter/8.0.0-dev.20/reactter/MemoSafeAsyncInterceptor-class.html) instead.
+- Remove [`TemporaryCacheMemo`](https://pub.dev/documentation/reactter/7.3.0/reactter/TemporaryCacheMemo.html), use [`MemoTemporaryCacheInterceptor`](https://pub.dev/documentation/reactter/8.0.0-dev.20/reactter/MemoTemporaryCacheInterceptor-class.html) instead.
+- Remove [`MemoInterceptorWrapper`](https://pub.dev/documentation/reactter/7.3.0/reactter/MemoInterceptorWrapper.html), use [`MemoWrapperInterceptor`](https://pub.dev/documentation/reactter/8.0.0-dev.20/reactter/MemoWrapperInterceptor-class.html) instead.
 - Remove [`Obj`](https://pub.dev/documentation/reactter/7.3.0/reactter/Obj-class.html).
-- Remove [`init`](https://pub.dev/documentation/flutter_reactter/7.3.1/flutter_reactter/RtProvider/init.html) property from `RtProvider`, use [`RtProvider.init`](https://pub.dev/documentation/flutter_reactter/8.0.0-dev.19/flutter_reactter/RtProvider/RtProvider.init.html) instead.
-- Remove [`ReactterComponent`](https://pub.dev/documentation/flutter_reactter/7.3.1/flutter_reactter/ReactterComponent-class.html), use [`RtComponent`](https://pub.dev/documentation/flutter_reactter/8.0.0-dev.19/flutter_reactter/RtComponent-class.html) instead.
-- Remove [`ReactterConsumer`](https://pub.dev/documentation/flutter_reactter/7.3.1/flutter_reactter/ReactterConsumer-class.html), use [`RtConsumer`](https://pub.dev/documentation/flutter_reactter/8.0.0-dev.19/flutter_reactter/RtConsumer-class.html) instead.
-- Remove [`ReactterProvider`](https://pub.dev/documentation/flutter_reactter/7.3.1/flutter_reactter/ReactterProvider-class.html), use [`RtProvider`](https://pub.dev/documentation/flutter_reactter/8.0.0-dev.19/flutter_reactter/RtProvider-class.html) instead.
-- Remove [`ReactterProviders`](https://pub.dev/documentation/flutter_reactter/7.3.1/flutter_reactter/ReactterProviders-class.html), use [`RtMultiProvider`](https://pub.dev/documentation/flutter_reactter/8.0.0-dev.19/flutter_reactter/RtMultiProvider-class.html) instead.
-- Remove [`ReactterScope`](https://pub.dev/documentation/flutter_reactter/7.3.1/flutter_reactter/ReactterScope-class.html), use [`RtScope`](https://pub.dev/documentation/flutter_reactter/8.0.0-dev.19/flutter_reactter/RtScope-class.html) instead.
-- Remove [`ReactterWatcher`](https://pub.dev/documentation/flutter_reactter/7.3.1/flutter_reactter/ReactterWatcher-class.html), use [`RtSignalWatcher`](https://pub.dev/documentation/flutter_reactter/8.0.0-dev.19/flutter_reactter/RtSignalWatcher-class.html) instead.
-- Remove [`ReactterDependencyNotFoundException`](https://pub.dev/documentation/reactter/7.3.0/flutter_reactter/ReactterDependencyNotFoundException-class.html), use [`RtDependencyNotFoundException`](https://pub.dev/documentation/reactter/8.0.0-dev.19/flutter_reactter/RtDependencyNotFoundException-class.html) instead.
-- Remove [`ReactterScopeNotFoundException`](https://pub.dev/documentation/reactter/7.3.0/flutter_reactter/ReactterScopeNotFoundException-class.html), use [`RtScopeNotFoundException`](https://pub.dev/documentation/reactter/8.0.0-dev.19/flutter_reactter/RtScopeNotFoundException-class.html) instead.
+- Remove [`init`](https://pub.dev/documentation/flutter_reactter/7.3.1/flutter_reactter/RtProvider/init.html) property from `RtProvider`, use [`RtProvider.init`](https://pub.dev/documentation/flutter_reactter/8.0.0-dev.20/flutter_reactter/RtProvider/RtProvider.init.html) instead.
+- Remove [`ReactterComponent`](https://pub.dev/documentation/flutter_reactter/7.3.1/flutter_reactter/ReactterComponent-class.html), use [`RtComponent`](https://pub.dev/documentation/flutter_reactter/8.0.0-dev.20/flutter_reactter/RtComponent-class.html) instead.
+- Remove [`ReactterConsumer`](https://pub.dev/documentation/flutter_reactter/7.3.1/flutter_reactter/ReactterConsumer-class.html), use [`RtConsumer`](https://pub.dev/documentation/flutter_reactter/8.0.0-dev.20/flutter_reactter/RtConsumer-class.html) instead.
+- Remove [`ReactterProvider`](https://pub.dev/documentation/flutter_reactter/7.3.1/flutter_reactter/ReactterProvider-class.html), use [`RtProvider`](https://pub.dev/documentation/flutter_reactter/8.0.0-dev.20/flutter_reactter/RtProvider-class.html) instead.
+- Remove [`ReactterProviders`](https://pub.dev/documentation/flutter_reactter/7.3.1/flutter_reactter/ReactterProviders-class.html), use [`RtMultiProvider`](https://pub.dev/documentation/flutter_reactter/8.0.0-dev.20/flutter_reactter/RtMultiProvider-class.html) instead.
+- Remove [`ReactterScope`](https://pub.dev/documentation/flutter_reactter/7.3.1/flutter_reactter/ReactterScope-class.html), use [`RtScope`](https://pub.dev/documentation/flutter_reactter/8.0.0-dev.20/flutter_reactter/RtScope-class.html) instead.
+- Remove [`ReactterWatcher`](https://pub.dev/documentation/flutter_reactter/7.3.1/flutter_reactter/ReactterWatcher-class.html), use [`RtSignalWatcher`](https://pub.dev/documentation/flutter_reactter/8.0.0-dev.20/flutter_reactter/RtSignalWatcher-class.html) instead.
+- Remove [`ReactterDependencyNotFoundException`](https://pub.dev/documentation/reactter/7.3.0/flutter_reactter/ReactterDependencyNotFoundException-class.html), use [`RtDependencyNotFoundException`](https://pub.dev/documentation/reactter/8.0.0-dev.20/flutter_reactter/RtDependencyNotFoundException-class.html) instead.
+- Remove [`ReactterScopeNotFoundException`](https://pub.dev/documentation/reactter/7.3.0/flutter_reactter/ReactterScopeNotFoundException-class.html), use [`RtScopeNotFoundException`](https://pub.dev/documentation/reactter/8.0.0-dev.20/flutter_reactter/RtScopeNotFoundException-class.html) instead.
 
 ### Fixes
 
-- Fix bug in [`UseEffect`](https://pub.dev/documentation/reactter/8.0.0-dev.19/reactter/UseEffect-class.html) causing dependencies to not be unwatched.
-- Fix to show the correct dependency mode in the logger of the [`Rt.register`](https://pub.dev/documentation/reactter/8.0.0-dev.19/reactter/RtInterface/register.html) method.
-- Fix nested [`Rt.batch`](https://pub.dev/documentation/reactter/8.0.0-dev.19/reactter/RtInterface/batch.html) method to work correctly.
-- Add error handling listeners and continue to next listeners in [`Notifier`](https://pub.dev/documentation/reactter/8.0.0-dev.19/reactter/Notifier-class.html) class.
+- Fix bug in [`UseEffect`](https://pub.dev/documentation/reactter/8.0.0-dev.20/reactter/UseEffect-class.html) causing dependencies to not be unwatched.
+- Fix to show the correct dependency mode in the logger of the [`Rt.register`](https://pub.dev/documentation/reactter/8.0.0-dev.20/reactter/RtInterface/register.html) method.
+- Fix nested [`Rt.batch`](https://pub.dev/documentation/reactter/8.0.0-dev.20/reactter/RtInterface/batch.html) method to work correctly.
+- Add error handling listeners and continue to next listeners in [`Notifier`](https://pub.dev/documentation/reactter/8.0.0-dev.20/reactter/Notifier-class.html) class.
 - Fix to propagate state param to `boundInstance`.
 - Remove listeners correctly from single-use listeners and handle null cases.
 
