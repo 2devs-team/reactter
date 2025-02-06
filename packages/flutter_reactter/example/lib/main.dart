@@ -12,7 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_reactter/flutter_reactter.dart';
 
 // Global state for theme mode
-final uThemeMode = UseState(ThemeMode.dark);
+final uThemeMode = UseState(ThemeMode.dark, debugLabel: 'uThemeMode');
 
 class IndexPage extends StatelessWidget {
   const IndexPage({Key? key}) : super(key: key);
@@ -97,6 +97,5 @@ class MyApp extends StatelessWidget {
 }
 
 void main() {
-  Rt.initializeDevTools();
   runApp(const MyApp());
 }
