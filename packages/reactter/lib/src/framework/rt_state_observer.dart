@@ -1,37 +1,91 @@
 part of '../internals.dart';
 
 /// {@template reactter.rt_state_observer}
-/// An abstract class that defines the interface for observing state changes.
-/// Implementations of this class can be used to monitor the lifecycle of states.
+/// A class that implements the [IStateObserver] interface.
+///
+/// It provides a set of callback functions that can be used to observe
+/// the lifecycle of states.
+///
+/// This observer should be added to Reactter's observers for it to work,
+/// using the [Rt.addObserver] method, like so:
+///
+/// ```dart
+/// final stateObserver = RtStateObserver(
+///   onCreated: (state) {
+///     print('State created: $state');
+///   },
+///   onBound: (state, instance) {
+///     print('State bound: $state, instance: $instance');
+///   },
+///   onUnbound: (state, instance) {
+///     print('State unbound: $state, instance: $instance');
+///   },
+///   onUpdated: (state) {
+///      print('State updated: $state');
+///   },
+///   onDisposed: (state) {
+///     print('State disposed: $state');
+///   },
+/// );
+///
+/// Rt.addObserver(stateObserver);
+/// ```
+///
+/// See also:
+/// - [IStateObserver] - An abstract class that defines the interface for observing lifecycle of states.
+/// - [Rt.addObserver] - A method that adds an observer to Reactter's observers.
 /// {@endtemplate}
-abstract class RtStateObserver implements IObserver {
-  /// A set of all registered state observers.
-  static final _observers = <RtStateObserver>{};
+class RtStateObserver implements IStateObserver {
+  /// {@macro reactter.i_state_observer.on_state_bound}
+  final void Function(RtState state, Object instance)? onBound;
 
-  /// Called when a state is created.
-  ///
-  /// [state] - The state that was created.
-  void onStateCreated(covariant RtState state);
+  /// {@macro reactter.i_state_observer.on_state_created}
+  final void Function(RtState state)? onCreated;
 
-  /// Called when a state is bound to an instance.
-  ///
-  /// [state] - The state that was bound.
-  /// [instance] - The instance to which the state was bound.
-  void onStateBound(covariant RtState state, Object instance);
+  /// {@macro reactter.i_state_observer.on_state_mounted}
+  final void Function(RtState state)? onDisponsed;
 
-  /// Called when a state is unbound from an instance.
-  ///
-  /// [state] - The state that was unbound.
-  /// [instance] - The instance from which the state was unbound.
-  void onStateUnbound(covariant RtState state, Object instance);
+  /// {@macro reactter.i_state_observer.on_state_unbound}
+  final void Function(RtState state, Object instance)? onUnbound;
 
-  /// Called when a state is updated.
-  ///
-  /// [state] - The state that was updated.
-  void onStateUpdated(covariant RtState state);
+  /// {@macro reactter.i_state_observer.on_state_updated}
+  final void Function(RtState state)? onUpdated;
 
-  /// Called when a state is disposed.
-  ///
-  /// [state] - The state that was disposed.
-  void onStateDisposed(covariant RtState state);
+  RtStateObserver({
+    this.onBound,
+    this.onCreated,
+    this.onDisponsed,
+    this.onUnbound,
+    this.onUpdated,
+  });
+
+  /// {@macro reactter.i_state_observer.on_state_bound}
+  @override
+  void onStateBound(RtState state, Object instance) {
+    onBound?.call(state, instance);
+  }
+
+  /// {@macro reactter.i_state_observer.on_state_created}
+  @override
+  void onStateCreated(RtState state) {
+    onCreated?.call(state);
+  }
+
+  /// {@macro reactter.i_state_observer.on_state_mounted}
+  @override
+  void onStateDisposed(RtState state) {
+    onDisponsed?.call(state);
+  }
+
+  /// {@macro reactter.i_state_observer.on_state_unbound}
+  @override
+  void onStateUnbound(RtState state, Object instance) {
+    onUnbound?.call(state, instance);
+  }
+
+  /// {@macro reactter.i_state_observer.on_state_updated}
+  @override
+  void onStateUpdated(RtState state) {
+    onUpdated?.call(state);
+  }
 }

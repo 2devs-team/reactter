@@ -30,7 +30,7 @@ extension RtLoggerExt on RtInterface {
 }
 
 @internal
-class RtLogger with RtStateObserver, RtDependencyObserver {
+class RtLogger implements IStateObserver, IDependencyObserver {
   static RtLogger? instance;
 
   static void initialize({

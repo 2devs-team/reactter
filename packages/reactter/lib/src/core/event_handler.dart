@@ -176,7 +176,7 @@ abstract class EventHandler implements IContext {
     if (dependencyRef == null) return;
 
     for (final observer
-        in RtDependencyObserver._observers.toList(growable: false)) {
+        in IDependencyObserver._observers.toList(growable: false)) {
       switch (lifecycle) {
         case Lifecycle.registered:
           observer.onDependencyRegistered(dependencyRef);

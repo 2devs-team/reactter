@@ -25,7 +25,7 @@ extension RtDevToolsExt on RtInterface {
 /// To access the Reactter devtools, open the devtools extension
 /// and navigate to the Reactter tab.
 @internal
-class RtDevTools with RtStateObserver, RtDependencyObserver {
+class RtDevTools implements IStateObserver, IDependencyObserver {
   static RtDevTools? instance;
 
   final LinkedList<_Node> _nodes = LinkedList();

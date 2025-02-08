@@ -554,7 +554,7 @@ abstract class DependencyInjection implements IContext {
     DependencyFail fail,
   ) {
     for (final observer
-        in RtDependencyObserver._observers.toList(growable: false)) {
+        in IDependencyObserver._observers.toList(growable: false)) {
       observer.onDependencyFailed(dependencyRef, fail);
     }
   }

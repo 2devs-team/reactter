@@ -10,8 +10,7 @@ export 'internals.dart'
         RtHook,
         RtInterface,
         RtState,
-        RtStateBase,
-        RtStateObserver;
+        RtStateBase;
 
 part 'framework/rt_context.dart';
 part 'framework/rt_dependency.dart';

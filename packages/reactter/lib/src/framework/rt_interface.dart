@@ -23,23 +23,23 @@ class RtInterface
 
   @override
   void addObserver(covariant IObserver observer) {
-    if (observer is RtStateObserver) {
-      RtStateObserver._observers.add(observer);
+    if (observer is IStateObserver) {
+      IStateObserver._observers.add(observer);
     }
 
-    if (observer is RtDependencyObserver) {
-      RtDependencyObserver._observers.add(observer);
+    if (observer is IDependencyObserver) {
+      IDependencyObserver._observers.add(observer);
     }
   }
 
   @override
   void removeObserver(covariant IObserver observer) {
-    if (observer is RtStateObserver) {
-      RtStateObserver._observers.remove(observer);
+    if (observer is IStateObserver) {
+      IStateObserver._observers.remove(observer);
     }
 
-    if (observer is RtDependencyObserver) {
-      RtDependencyObserver._observers.remove(observer);
+    if (observer is IDependencyObserver) {
+      IDependencyObserver._observers.remove(observer);
     }
   }
 }
