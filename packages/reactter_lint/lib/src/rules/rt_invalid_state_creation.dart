@@ -29,7 +29,7 @@ class RtInvalidStateCreation extends DartLintRule {
       if (element == null ||
           element.isFactory ||
           rtHookType.isAssignableFromType(element.returnType) ||
-          !rtStateBaseType.isAssignableFromType(element.returnType) ||
+          !rtStateType.isAssignableFromType(element.returnType) ||
           iAutoRegisterStateType.isAssignableFromType(element.returnType)) {
         return;
       }

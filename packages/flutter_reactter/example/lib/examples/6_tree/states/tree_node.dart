@@ -4,8 +4,7 @@
 import 'dart:collection';
 import 'package:flutter_reactter/flutter_reactter.dart';
 
-class TreeNode extends LinkedListEntry<TreeNode>
-    with RtStateBase<TreeNode>, RtContextMixin {
+class TreeNode extends LinkedListEntry<TreeNode> with RtState<TreeNode> {
   /// A unique identifier for each instance of [TreeNode].
   static int _lastId = 0;
   static String _getId() => (_lastId++).toString();

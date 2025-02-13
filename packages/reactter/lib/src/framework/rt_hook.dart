@@ -40,9 +40,7 @@ part of '../internals.dart';
 /// See also:
 /// * [RtState], adds state management features to [RtHook].
 /// {@endtemplate}
-abstract class RtHook
-    with RtContextMixin, RtStateBase<RtHook>
-    implements IHook {
+abstract class RtHook extends RtState<RtHook> implements IHook {
   /// {@template reactter.rt_hook.register}
   /// This getter allows access to the [HookBindingZone] instance
   /// which is responsible for registering a [RtHook]
@@ -62,6 +60,7 @@ abstract class RtHook
   /// to register the hook and attach the collected states.
   RtHook() {
     initHook();
+    $._bindInstanceToStates(this);
   }
 
   /// Initializes the hook.
@@ -82,13 +81,8 @@ abstract class RtHook
   ///     },
   ///     [state],
   ///   );
-  ///
-  ///   super.initHook();
   /// }
-  @mustCallSuper
-  void initHook() {
-    $._bindInstanceToStates(this);
-  }
+  void initHook() {}
 
   @override
   @mustCallSuper

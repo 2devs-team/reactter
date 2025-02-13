@@ -86,20 +86,7 @@ enum SignalEvent { onGetValue, onSetValue }
 /// package on your dependencies and use its Widgets.
 ///
 /// {@endtemplate}
-class Signal<T> with RtContextMixin, RtStateBase<Signal<T>> {
-  /// {@macro reactter.signal}
-  Signal._(
-    T value, {
-    String? debugLabel,
-  })  : _value = value,
-        _debugLabel = debugLabel;
-
-  factory Signal(T value, {String? debugLabel}) {
-    return Rt.createState(
-      () => Signal._(value, debugLabel: debugLabel),
-    );
-  }
-
+class Signal<T> with RtState<Signal<T>> {
   bool _shouldGetValueNotify = true;
   bool _shouldSetValueNotify = true;
 
@@ -128,6 +115,17 @@ class Signal<T> with RtContextMixin, RtStateBase<Signal<T>> {
       _value = val;
       _notifySetValue();
     });
+  }
+
+  /// {@macro reactter.signal}
+  Signal._(
+    T value, {
+    String? debugLabel,
+  })  : _value = value,
+        _debugLabel = debugLabel;
+
+  factory Signal(T value, {String? debugLabel}) {
+    return Rt.createState(() => Signal._(value, debugLabel: debugLabel));
   }
 
   /// Gets and/or sets to [value] like a function

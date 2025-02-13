@@ -19,7 +19,6 @@ part 'framework/rt_dependency_observer.dart';
 part 'framework/rt_hook.dart';
 part 'framework/rt_interface.dart';
 part 'framework/rt_state.dart';
-part 'framework/rt_state_base.dart';
 part 'framework/rt_state_observer.dart';
 part 'interfaces/context.dart';
 part 'interfaces/hook.dart';

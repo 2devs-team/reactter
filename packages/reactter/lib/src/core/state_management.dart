@@ -17,7 +17,7 @@ abstract class StateManagement<S extends IState> implements IContext {
   ///
   /// Example usage:
   /// ```dart
-  /// class MyState with RtContextMixin, RtStateBase<MyState> {
+  /// class MyState extends RtState<MyState> {
   ///   int _value = 0;
   ///   int get value => value;
   ///   set value(int n) {
