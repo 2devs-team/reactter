@@ -6,7 +6,7 @@ sidebar:
 ---
 import { HB, HE, HK, HM, HT } from '@/components/Highlight';
 import MDXRedry from '@/components/MDXRedry.astro';
-import StateMethodsLite from '@/content/docs/shareds/state_methods_lite.mdx';
+import StatePropertiesMethodsRef from '@/content/docs/shareds/state_properties_methods_ref.mdx';
 import * as NoteLateState from '@/content/docs/shareds/note_late_state.mdx';
 import * as NoteStateValueNotifies from '@/content/docs/shareds/note_state_value_notifies.mdx';
 import * as ListeningChangesState from '@/content/docs/shareds/listening_changes_state.mdx';
@@ -35,7 +35,7 @@ UseAsyncState<T, A>.withArg(
 - <HM>**`asyncFunction`**</HM>: A function that returns a <HT>`Future<T>`</HT> to update the state asynchronously.
   This function is called by the <HM>`resolve`</HM> method and sets the `value` property.
 -  **`initialValue`**: Initial value of <HT>`T`</HT> type that it will hold.
-- **`debugLabel`**: *(Optional)* A label to identify the hook in the [DevTools extension](/reactter/devtools_extension).
+- **`debugLabel`**: *(optional)* A label to identify the hook in the [DevTools extension](/reactter/devtools_extension).
 
 ## Properties & Methods
 
@@ -102,7 +102,7 @@ A boolean getter that returns <HB>`true`</HB> if the <HM>`asyncFunction`</HM> is
     - **`loading`**: A callback function invoked when the state is <HE>`UseAsyncStateStatus.loading`</HE>.
     - **`done`**: A callback function invoked when the state is <HE>`UseAsyncStateStatus.done`</HE>.
     - **`error`**: A callback function invoked when the state is <HE>`UseAsyncStateStatus.error`</HE>.
-<StateMethodsLite />
+<StatePropertiesMethodsRef />
 
 ## Usage
 

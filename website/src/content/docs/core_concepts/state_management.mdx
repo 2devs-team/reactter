@@ -4,6 +4,7 @@ description: Learn about the state management system in Reactter and how it work
 sidebar:
   order: 1
 ---
+
 import { HE, HM, HT } from '@/components/Highlight';
 import StateMethods from '@/content/docs/shareds/state_methods.mdx';
 
@@ -18,10 +19,10 @@ To continue, we will show you the mechanisms that Reactter offers for state mana
 
 Reactter provides a variety of mechanisms for state management, including classes, hooks, and methods:
 
-- Mixins
-  - <HT>[`RtStateBase`](/reactter/api/classes/RtStateBase)</HT>
 - Classes
   - <HT>[`Signal`](/reactter/api/classes/signal)</HT>
+  - <HT>[`RtState`](/reactter/api/classes/rt_state)</HT>
+  - <HT>[`RtHook`](/reactter/api/classes/rt_hook)</HT>
 - Hooks
   - <HT>[`UseState`](/reactter/api/hooks/use_state)</HT>
   - <HT>[`UseAsyncState`](/reactter/api/hooks/use_async_state)</HT>
@@ -45,14 +46,16 @@ To dive into the concept, let's start by exploring what constitutes a state in R
 
 ### State
 
-All states in Reactter are classes that inherit <HT><a href="https://pub.dev/documentation/reactter/latest/reactter/RtState-class.html" target="_blank">`RtState`</a></HT>,
+All states in Reactter are classes that inherit <HT>[`RtState`](/reactter/api/classes/rt_state)</HT>,
 which encapsulates the data and behavior of a particular state, and provides a way to notify observers when the state changes.
 
-Reactter offers three fundamental approaches for creating states: <HT>[`RtStateBase`](/reactter/api/classes/RtStateBase)</HT>, <HT>[`Signal`](/reactter/api/classes/signal)</HT> and <HT>[`Hooks`](/reactter/core_concepts/hooks)</HT>.
+:::note
+Reactter offers three fundamental approaches for creating states: <HT>[`RtState`](/reactter/api/classes/rt_state)</HT>, <HT>[`Signal`](/reactter/api/classes/signal)</HT> and <HT>[`Hooks`](/reactter/core_concepts/hooks)</HT>.
+:::
 
 ### State methods
 
-<HT><a href="https://pub.dev/documentation/reactter/latest/reactter/RtState-class.html" target="_blank">`RtState`</a></HT> class provides some methods for managing states, which are:
+<HT>[`RtState`](/reactter/api/classes/rt_state)</HT> class provides some methods for managing states. Let's know about them:
 
 <StateMethods />
 
@@ -90,24 +93,13 @@ void countdown(Timer timer) {
   }
 }
 ```
-Ahora veamos que contiene la clase <HT>`Signal`</HT> y cómo se actualiza el estado `count` en el ejemplo anterior.
 
 Now let's see what the <HT>`Signal`</HT> class contains and how the `count` state is updated in the example above.
 
-```dart title="signal.dart" "RtContextMixin" "Rt.createState" "RtStateBase" "_value" "update"
-class Signal<T> with RtContextMixin, RtStateBase<Signal<T>> {
+```dart title="signal.dart" "RtContextMixin" "Rt.createState" "RtState" "_value" "update"
+class Signal<T> with RtState<Signal<T>> {
   // State value
   T _value;
-
-  // Private constructor, only a `Signal` instance can be created through the factory.
-  Signal._(this._value);
-
-  factory Signal(T value) {
-    // Register a new state in the Reactter context
-    return Rt.createState(
-      () => Signal._(value),
-    );
-  }
 
   T get value => _value;
 
@@ -119,11 +111,20 @@ class Signal<T> with RtContextMixin, RtStateBase<Signal<T>> {
     update((_) => _value = val);
   }
 
+  // Private constructor, only a `Signal` instance can be created through the factory.
+  Signal._(this._value);
+
+  factory Signal(T value) {
+    // Register a new state in the Reactter context
+    return Rt.createState(
+      () => Signal._(value),
+    );
+  }
   [...]
 }
 ```
 
-During the process, as the `value` of `count` changes, the <HE>`Lifecycle.didUpdate`</HE> event is triggered, which is fired by the <HM>`update`</HM> method (`signal.dart`, line 22).
+During the process, as the `value` of `count` changes, the <HE>`Lifecycle.didUpdate`</HE> event is triggered, which is fired by the <HM>`update`</HM> method (`signal.dart`, line 12).
 This event is listened to by the <HM>`Rt.on`</HM> method (`main.dart`, line 10), which prints the `value` of `count`.
 
 This occurs thanks to the reactivity of Reactter, which is responsible for notifying listeners by emitting events related to the **_lifecycle_** of the state.

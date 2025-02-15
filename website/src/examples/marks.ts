@@ -27,7 +27,6 @@ export const marks = [
   "RtHook",
   "RtContextMixin",
   "RtState",
-  "RtStateBase",
   "RtDependency",
   "RtDependencyMode",
   "RtDependencyMode.builder",

@@ -7,7 +7,7 @@ sidebar:
 import { Code } from "@astrojs/starlight/components";
 import { HK, HM, HT } from '@/components/Highlight';
 import MDXRedry from '@/components/MDXRedry.astro';
-import StateMethodsLite from '@/content/docs/shareds/state_methods_lite.mdx';
+import StatePropertiesMethodsRef from '@/content/docs/shareds/state_properties_methods_ref.mdx';
 import * as NoteLateState from '@/content/docs/shareds/note_late_state.mdx';
 import * as NoteStateValueNotifies from '@/content/docs/shareds/note_state_value_notifies.mdx';
 import * as ListeningChangesState from '@/content/docs/shareds/listening_changes_state.mdx';
@@ -23,14 +23,14 @@ UseState<T>(T initialValue, { String? debugLabel });
 <HT>`UseState`</HT> accepts these parameters:
 
 - **`initialValue`**: Initial value of <HT>`T`</HT> type that it will hold.
-- **`debugLabel`**: *(Optional)* A label to identify the hook in the [DevTools extension](/reactter/devtools_extension).
+- **`debugLabel`**: *(optional)* A label to identify the hook in the [DevTools extension](/reactter/devtools_extension).
 
 ## Properties & Methods
 
 <HT>`UseState`</HT> provides the following properties and methods:
 
 - **`value`**: A getter/setter that allows to read and write its state.
-<StateMethodsLite/>
+<StatePropertiesMethodsRef/>
 
 ## Usage
 

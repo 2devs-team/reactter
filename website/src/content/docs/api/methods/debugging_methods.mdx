@@ -46,25 +46,25 @@ typedef LogOutput = void Function(
 
 ### Parameters
 
-- **`name`**: *(Optional)* The name of the logger. Default is <HS>`'REACTTER'`</HS>.
-- <HM>**`output`**</HM>: *(Optional)* The output function for the logger. Default is <HM>`dev.log`</HM>.
+- **`name`**: *(optional)* The name of the logger. Default is <HS>`'REACTTER'`</HS>.
+- <HM>**`output`**</HM>: *(optional)* The output function(<HT>`LogOutput`</HT>) for the logger. Default is <HM>`dev.log`</HM>.
 
-The Parameters of the output function(<HT>`LogOutput`</HT>) are:
-  - **`message`**: The message to log.
-  - **`name`**: The name of the logger.
-  - **`level`**: The level of the log message.
-    The levels are(Copy from [package:logging](https://pub.dev/packages/logging)):
-    - <HN>`0`</HN>: Special key to turn on logging for all levels.
-    - <HN>`300`</HN>: Key for highly detailed tracing.
-    - <HN>`400`</HN>: Key for fairly detailed tracing.
-    - <HN>`500`</HN>: Key for tracing information.
-    - <HN>`700`</HN>: Key for static configuration messages.
-    - <HN>`800`</HN>: Key for informational messages.
-    - <HN>`900`</HN>: Key for potential problems.
-    - <HN>`1000`</HN>: Key for serious failures.
-    - <HN>`1200`</HN>: Key for extra debugging loudness.
-    - <HN>`2000`</HN>: Special key to turn off all logging.
-  - **`stackTrace`**: *(Optional)* The stack trace of the log message.
+  The Parameters of the output function(<HT>`LogOutput`</HT>) are:
+    - **`message`**: The message to log.
+    - **`name`**: The name of the logger.
+    - **`level`**: The level of the log message.
+      The levels are(Copy from [package:logging](https://pub.dev/packages/logging)):
+      - <HN>`0`</HN>: Special key to turn on logging for all levels.
+      - <HN>`300`</HN>: Key for highly detailed tracing.
+      - <HN>`400`</HN>: Key for fairly detailed tracing.
+      - <HN>`500`</HN>: Key for tracing information.
+      - <HN>`700`</HN>: Key for static configuration messages.
+      - <HN>`800`</HN>: Key for informational messages.
+      - <HN>`900`</HN>: Key for potential problems.
+      - <HN>`1000`</HN>: Key for serious failures.
+      - <HN>`1200`</HN>: Key for extra debugging loudness.
+      - <HN>`2000`</HN>: Special key to turn off all logging.
+    - **`stackTrace`**: *(optional)* The stack trace of the log message.
 
 ### Usage
 
@@ -161,7 +161,15 @@ Rt.removeObserver(IObserver observer);
 
 You can remove the observer added before, e.g.:
 
-```dart showLineNumbers=false
+```dart showLineNumbers=false collapse={1-8}
+final stateObserver = RtStateObserver(
+  onChanged: (state) {
+    print('State changed: $state');
+  },
+);
+
+Rt.addObserver(stateObserver);
+// {...}
 Rt.removeObserver(stateObserver);
 ```
 

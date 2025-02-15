@@ -18,10 +18,9 @@ A continuación, te mostramos los mecanimos que Reactter ofrece para la gestión
 
 Reactter proporciona una gran variedad de mecanismos para la gestión de estados, incluyendo clases, hooks y métodos:
 
-- Mixins
-  - <HT>[`RtStateBase`](/reactter/es/api/classes/RtStateBase)</HT>
 - Clases
   - <HT>[`Signal`](/reactter/es/api/classes/signal)</HT>
+  - <HT>[`RtState`](/reactter/es/api/classes/RtState)</HT>
 - Hooks
   - <HT>[`UseState`](/reactter/es/api/hooks/use_state)</HT>
   - <HT>[`UseAsyncState`](/reactter/es/api/hooks/use_async_state)</HT>
@@ -46,11 +45,10 @@ Para adentrarnos en el concepto, comencemos explorando qué constituye un estado
 ### Estado
 
 Todos los estados en Reactter son clases que heredan de <HT><a href="https://pub.dev/documentation/reactter/latest/reactter/RtState-class.html" target="_blank">`RtState`</a></HT>,
-la cual encapsula los datos y el comportamiento de un estado particular, y proporciona una forma de notificar a los observadores cuando el estado cambia.
-
-Reactter ofrece tres enfoques fundamentales para crear estados: <HT>[`RtStateBase`](/reactter/es/api/classes/RtStateBase)</HT>, <HT>[`Signal`](/reactter/es/api/classes/signal)</HT> y <HT>[`Hooks`](/reactter/es/core_concepts/hooks)</HT>.
+la cual encapsula los datos y el comportamiento de un estado particular, y proporciona una forma de notificar a los observadores cuando el estado cambia
 
 ### Metodos del estado
+Reactter ofrece tres enfoques fundamentales para crear estados: <HT>[`RtState`](/reactter/es/api/classes/RtState)</HT>, <HT>[`Signal`](/reactter/es/api/classes/signal)</HT> y <HT>[`Hooks`](/reactter/es/core_concepts/hooks)</HT>.
 
 La clase <HT><a href="https://pub.dev/documentation/reactter/latest/reactter/RtState-class.html" target="_blank">`RtState`</a></HT> proporciona algunos métodos para gestionar los estados, que son:
 
@@ -91,11 +89,10 @@ void countdown(Timer timer) {
 }
 ```
 
-Ahora veamos que contiene la clase <HT>`Signal`</HT> y cómo se actualiza el estado `count` en el ejemplo anterior.
-
-```dart title="signal.dart" "RtContextMixin" "Rt.createState" "RtStateBase" "_value" "update"
-class Signal<T> with RtContextMixin, RtStateBase<Signal<T>> {
+Ahora veamos que contiene la clase <HT>`Signal`</HT> y cómo se actualiza el estado `count` en el ejemplo anterior
+class Signal<T> with RtContextMixin, RtState<Signal<T>> {
   // Valor del estado
+```dart title="signal.dart" "RtContextMixin" "Rt.createState" "RtState" "_value" "update"
   T _value;
 
   // Constructor privada, solo se puede crear una instancia de `Signal` a través del factory.

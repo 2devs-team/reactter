@@ -8,7 +8,7 @@ sidebar:
 import { HE, HM, HT } from '@/components/Highlight';
 import { Code } from "@astrojs/starlight/components";
 import MDXRedry from '@/components/MDXRedry.astro';
-import StateMethodsLite from '@/content/docs/shareds/state_methods_lite.mdx';
+import StatePropertiesMethodsRef from '@/content/docs/shareds/state_properties_methods_ref.mdx';
 import * as NoteLateState from '@/content/docs/shareds/note_late_state.mdx';
 import * as NoteStateValueNotifies from '@/content/docs/shareds/note_state_value_notifies.mdx';
 import * as ListeningChangesState from '@/content/docs/shareds/listening_changes_state.mdx';
@@ -30,14 +30,14 @@ UseCompute<T>(
 
 - <HM>**`computeValue`**</HM>: A function that returns a value based on the current state of the dependencies.
 - **`dependencies`**: A list of state(<HT>`RtState`</HT>, learn about it [here](/reactter/core_concepts/state_management/#state)) that the computation depends on. When any of these `dependencies` trigger <HE>`Lifecycle.didUpdate`</HE> event, the `value` is recalculated.
-- **`debugLabel`**: *(Optional)* A label to identify the hook in the [DevTools extension](/reactter/devtools_extension).
+- **`debugLabel`**: *(optional)* A label to identify the hook in the [DevTools extension](/reactter/devtools_extension).
 
 ## Properties & Methods
 
 <HT>`UseCompute`</HT> provides the following properties and methods:
 
-- `value`: A getter that allows you to read the computed value.
-<StateMethodsLite/>
+- **`value`**: A getter that allows you to read the computed value.
+<StatePropertiesMethodsRef/>
 
 ## Usage
 

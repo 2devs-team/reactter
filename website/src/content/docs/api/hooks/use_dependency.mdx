@@ -8,7 +8,7 @@ sidebar:
 import CodeTabs from '@/components/CodeTabs.astro';
 import { Tabs, TabItem } from "@/components/Tabs";
 import { HE, HM, HN, HS, HT } from '@/components/Highlight';
-import StateMethodsLite from '@/content/docs/shareds/state_methods_lite.mdx';
+import StatePropertiesMethodsRef from '@/content/docs/shareds/state_properties_methods_ref.mdx';
 import TipDependencyChecking from '@/content/docs/shareds/tip_dependency_checking.mdx';
 
 :::tip
@@ -133,11 +133,11 @@ It's recommended read that first if you're new in Reactter.
 
 ### Parameters
 
-- **`id`**: *(Optional)* A <HT>`String`</HT> used to identify the dependency of type <HT>`T`</HT>.
+- **`id`**: *(optional)* A <HT>`String`</HT> used to identify the dependency of type <HT>`T`</HT>.
 - **`builder`**: A function that returns an instance of the dependency of type <HT>`T`</HT>.
-- **`mode`**: *(Optional)* A <HT>`DependencyMode`</HT> that defines the dependency mode. Defaults to <HE>`DependencyMode.builder`</HE>.
+- **`mode`**: *(optional)* A <HT>`DependencyMode`</HT> that defines the dependency mode. Defaults to <HE>`DependencyMode.builder`</HE>.
   Learn more in [DependencyMode](/reactter/core_concepts/dependency_injection#dependency-modes).
-- **`debugLabel`**: *(Optional)* A <HT>`String`</HT> used to identify the hook in the [DevTools extension](/reactter/devtools_extension).
+- **`debugLabel`**: *(optional)* A <HT>`String`</HT> used to identify the hook in the [DevTools extension](/reactter/devtools_extension).
 
 :::note
 Some constructors and factories do not include all parameters. For example:
@@ -148,7 +148,7 @@ Some constructors and factories do not include all parameters. For example:
 ## Properties and methods
 
 - **`instance`**: A getter property to get the dependency instance of <HT>`T`</HT> type.
-<StateMethodsLite />
+<StatePropertiesMethodsRef />
 
 ## Usage
 

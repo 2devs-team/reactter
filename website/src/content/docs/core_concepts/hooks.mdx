@@ -12,7 +12,7 @@ import ZappButton from "@/components/ZappButton.astro";
 import { Code } from "@astrojs/starlight/components";
 import { marks } from '@/examples/marks.ts'
 
-import StateMethodsLite from '@/content/docs/shareds/state_methods_lite.mdx';
+import StatePropertiesMethodsRef from '@/content/docs/shareds/state_properties_methods_ref.mdx';
 import CreatingCustomHook from '@/content/docs/shareds/creating_custom_hook.mdx';
 import UsingCustomHook from '@/content/docs/shareds/using_custom_hook.mdx';
 
@@ -41,7 +41,7 @@ Hooks in Reactter are classes that extend <HT>[`RtHook`](/reactter/api/classes/r
 Hooks in Reactter are essentially stateful entities because <HT>[`RtHook`](/reactter/api/classes/rt_hook)</HT> inherits from <HT>`RtState`</HT> this inheritance allows hooks to manage both state and lifecycle methods efficiently.
 
 To manage these aspects, Hooks provide the following:
-<StateMethodsLite/>
+<StatePropertiesMethodsRef/>
 
 ## Custom hook
 

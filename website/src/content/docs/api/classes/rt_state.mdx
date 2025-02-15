@@ -1,0 +1,158 @@
+---
+title: RtState
+description: The base class for all states in Reactter.
+sidebar:
+  order: 1
+---
+
+import { HE, HN, HM, HT, HS } from '@/components/Highlight';
+import StatePropertiesMethods from '@/content/docs/shareds/state_properties_methods.mdx';
+
+:::tip
+This documentation assumes you've already read the [State Management](/reactter/core_concepts/state_management/).
+It's recommended read that first if you're new in Reactter.
+:::
+
+The <HT>`RtState`</HT> class is a foundational class in the Reactter framework, designed to manage state in a Dart application.
+It provides a structured way to create, update, and dispose of state, ensuring that state changes are tracked and propagated efficiently.
+This class is typically extended to create custom state that can be used within the Reactter ecosystem.
+
+## Syntax
+
+```dart showLineNumbers=false
+abstract class RtState<E extends RtState<E>> {
+  String? get debugLabel;
+  Map<String, dynamic> get debugInfo;
+  void update(Function? fnUpdate)
+  void notify()
+  void bind(Object instance)
+  void unbind()
+  void dispose()
+}
+```
+
+## Properties & Methods
+
+<StatePropertiesMethods/>
+
+## Usage
+
+### Declaration
+
+To create a custom state, extend the <HT>`RtState`</HT> class and define the state properties and methods.
+Register the state using <HM>`Rt.createState`</HM> or as a dependency within the Reactter framework, e.g.:
+
+```dart collapse={13-20} mark={1,12} "RtState" "Rt.createState" "Rt.on" "Lifecycle.didUpdate" /update(?=\u0028)/
+class MyState extends RtState<MyState> {
+  int _value = 0;
+  int get value => _value;
+  set value(int n) {
+    if (n == _value) return;
+    update(() => _value = n); // set new value and notify observers
+  }
+
+  MyState([int value = 0]) : _value = value;
+}
+
+final state = Rt.createState<MyState>(() => MyState()); // Register state
+
+Rt.on(
+  state,
+  Lifecycle.didUpdate,
+  (_, __) => print('State updated: ${state.value}')
+);
+
+state.value = 42; // Calls update internally
+```
+
+:::tip
+You can also use the factory constructor to create a state, e.g.:
+
+```dart collapse={2-8, 15-21} mark={11-13} "RtState" "Rt.createState" "Rt.on" "Lifecycle.didUpdate" /update(?=\u0028)/
+class MyState extends RtState<MyState> {
+  int _value = 0;
+  int get value => _value;
+  set value(int n) {
+    if (n == _value) return;
+    update(() => _value = n); // set new value and notify observers
+  }
+
+  MyState._([int value = 0]) : _value = value;
+
+  factory MyState(int value) {
+    return Rt.createState(() => MyState._(value)); // Register state
+  }
+}
+
+Rt.on(
+  state,
+  Lifecycle.didUpdate,
+  (_, __) => print('State updated: ${state.value}')
+);
+
+state.value = 42; // Calls update internally
+```
+
+This approach allows you to create a state directly without the need to call the <HM>`Rt.createState`</HM> method explicitly.
+:::
+
+### Updating the state
+
+To update the state, call the <HM>`update`</HM> method and provide a callback function that modifies the state, e.g.:
+
+```dart collapse={2-3, 8-13} mark={6, 22} "RtState" "Rt.createState" "Rt.on" "Lifecycle.didUpdate" /update(?=\u0028)/
+class MyState extends RtState<MyState> {
+  int _value = 0;
+  int get value => _value;
+  set value(int n) {
+    if (n == _value) return;
+    update(() => _value = n); // set new value and notify observers
+  }
+
+  MyState._([int value = 0]) : _value = value;
+
+  factory MyState(int value) {
+    return Rt.createState(() => MyState._(value)); // Register state
+  }
+}
+
+Rt.on(
+  state,
+  Lifecycle.didUpdate,
+  (_, __) => print('State updated: ${state.value}')
+);
+
+state.value = 42; // Calls update internally
+```
+
+### Listening to changes
+
+When a state is updated, it emits the following lifecycle events:
+
+- <HE>`Lifecycle.willUpdate`</HE> event is triggered before the callback function of <HM>`update`</HM> method have been executed.
+- <HE>`Lifecycle.didUpdate`</HE> event is triggered after the callback function of <HM>`update`</HM> method have been executed or after the <HM>`notify`</HM> method have been invoked.
+
+```dart collapse={2-3, 8-13} mark={16-20} "RtState" "Rt.createState" "Rt.on" "Lifecycle.didUpdate" /update(?=\u0028)/
+class MyState extends RtState<MyState> {
+  int _value = 0;
+  int get value => _value;
+  set value(int n) {
+    if (n == _value) return;
+    update(() => _value = n); // set new value and notify observers
+  }
+
+  MyState._([int value = 0]) : _value = value;
+
+  factory MyState(int value) {
+    return Rt.createState(() => MyState._(value)); // Register state
+  }
+}
+
+Rt.on(
+  state,
+  Lifecycle.didUpdate,
+  (_, __) => print('State updated: ${state.value}')
+);
+
+state.value = 42; // Calls update internally
+```

@@ -21,9 +21,9 @@ If you encounter any issues, refer to the [official documentation](https://pub.d
 - Add [`RtDependencyObserver`](https://pub.dev/documentation/reactter/8.0.0/reactter/RtDependencyObserver-class.html) class to monitor the lifecycle of dependency(`onDependencyRegistered`, `onDependencyCreated`, `onDependencyMounted`, `onDependencyUnmounted`, `onDependencyDeleted`, `onDependencyUnregistered` and `onDependencyFailed`).
 - Add [`Rt.initializeLogger`](https://pub.dev/documentation/reactter/8.0.0/reactter/RtLoggerExt/initializeLogger.html) to initialize the Reactter logger.
 - Add [`Rt.initializeDevTools`](https://pub.dev/documentation/reactter/8.0.0/reactter/RtDevToolsExt/initializeDevTools.html) to initialize the devtools for observing the states and dependencies.
-- Add [`debugLabel`](https://pub.dev/documentation/reactter/8.0.0/reactter/RtStateBase/debugLabel.html) and [`debugInfo`](https://pub.dev/documentation/reactter/8.0.0/reactter/RtStateBase/debugInfo.html) to states and hooks to get info for debugging.
+- Add [`debugLabel`](https://pub.dev/documentation/reactter/8.0.0/reactter/RtState/debugLabel.html) and [`debugInfo`](https://pub.dev/documentation/reactter/8.0.0/reactter/RtState/debugInfo.html) to states and hooks to get info for debugging.
 - Add [`RtContextMixin`](https://pub.dev/documentation/reactter/8.0.0/reactter/RtContextMixin-mixin.html) mixin to provide access to the `Rt` instance.
-- Add [`RtStateBase`](https://pub.dev/documentation/reactter/8.0.0/reactter/RtStateBase-class.html) abstract class to implement the base logic of the state.
+- Add [`RtState`](https://pub.dev/documentation/reactter/8.0.0/reactter/RtState-class.html) abstract class to implement the base logic of the state.
 - Add [`Rt.createState`](https://pub.dev/documentation/reactter/8.0.0/reactter/RtInterface/createState.html) method to create a new state.
 - Add [`Rt.getRefAt`](https://pub.dev/documentation/reactter/8.0.0/reactter/RtInterface/getRefAt.html) to get the reference of dependency created.
 - Add [`initHook`](https://pub.dev/documentation/reactter/8.0.0/reactter/RtHook/initHook.html) method to `RtHook` to call when hook is created.
@@ -37,11 +37,10 @@ If you encounter any issues, refer to the [official documentation](https://pub.d
 ### Breakings
 
 - Remove [`Reactter`](https://pub.dev/documentation/reactter/7.3.0/reactter/Reactter.html), use [`Rt`](https://pub.dev/documentation/reactter/8.0.0/reactter/Rt.html) instead.
-- Remove [`ReactterStateImpl`](https://pub.dev/documentation/reactter/7.3.0/reactter/ReactterStateImpl.html) and [`RtStateImpl`](https://pub.dev/documentation/reactter/7.3.0/reactter/RtStateImpl-class.html), use [`RtStateBase`](https://pub.dev/documentation/reactter/8.0.0/reactter/RtStateBase-class.html) instead.
+- Remove [`ReactterStateImpl`](https://pub.dev/documentation/reactter/7.3.0/reactter/ReactterStateImpl.html) and [`RtStateImpl`](https://pub.dev/documentation/reactter/7.3.0/reactter/RtStateImpl-class.html), use [`RtState`](https://pub.dev/documentation/reactter/8.0.0/reactter/RtState-class.html) instead.
 - Replace [`UseAsyncStateStatus.standby`](https://pub.dev/documentation/reactter/7.3.0/reactter/UseAsyncStateStatus.html) to [`UseAsyncStateStatus.idle`](https://pub.dev/documentation/reactter/8.0.0/reactter/UseAsyncStateStatus.html).
 - Rename [`DispatchEffect`](https://pub.dev/documentation/reactter/7.3.0/reactter/DispatchEffect-class.html) to [`AutoDispatchEffect`](https://pub.dev/documentation/reactter/8.0.0/reactter/DispatchEffect-class.html).
 - Move `asyncFunction` to the first parameter of [`UseAsyncState`](https://pub.dev/documentation/reactter/8.0.0/reactter/UseAsyncState-class.html) and [`UseAsyncState.withArg`](https://pub.dev/documentation/reactter/8.0.0/reactter/UseAsyncState/withArg.html).
-- Convert [`RtState`](https://pub.dev/documentation/reactter/8.0.0/reactter/RtState-class.html) to interface class, use [`RtStateBase`](https://pub.dev/documentation/reactter/8.0.0/reactter/RtStateBase-class.html) abstract class instead, to implement the state logic.
 - Remove [`Rt.isRegistered`](https://pub.dev/documentation/reactter/7.3.0/reactter/RtInterface/isRegistered.html), use [`Rt.isActive`](https://pub.dev/documentation/reactter/8.0.0/reactter/RtInterface/isActive.html) instead.
 - Remove [`Rt.getInstanceManageMode`](https://pub.dev/documentation/reactter/7.3.0/reactter/RtInterface/getInstanceManageMode.html), use [`Rt.getDependencyMode`](https://pub.dev/documentation/reactter/8.0.0/reactter/RtInterface/getDependencyMode.html) instead.
 - Remove [`InstanceManageMode`](https://pub.dev/documentation/reactter/7.3.0/reactter/InstanceManageMode.html), use [`DependencyMode`](https://pub.dev/documentation/reactter/8.0.0/reactter/DependencyMode.html) instead.
@@ -90,11 +89,11 @@ If you encounter any issues, refer to the [official documentation](https://pub.d
   RtProvider(...);
   ```
 
-- If you're using <HT>`ReactterStateImpl`</HT> or <HT>`RtStateImpl`</HT>, migrate to <HT>`RtStateBase`</HT> with <HT>`RtContextMixin`</HT>.
+- If you're using <HT>`ReactterStateImpl`</HT> or <HT>`RtStateImpl`</HT>, migrate to <HT>`RtState`</HT>.
 
-  ```dart showLineNumbers=false del={1} del="ReactterStateImpl" ins={2} ins="RtStateBase with RtContextMixin"
+  ```dart showLineNumbers=false del={1} del="ReactterStateImpl" ins={2} ins="RtState"
   class MyState extends ReactterStateImpl {
-  class MyState extends RtStateBase with RtContextMixin {
+  class MyState extends RtState<MyState> {
     // Implementation
   }
   ```

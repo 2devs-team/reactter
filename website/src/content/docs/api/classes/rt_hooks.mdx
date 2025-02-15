@@ -2,11 +2,11 @@
 title: RtHook
 description: Aprende aceca de los Hooks en Reactter.
 sidebar:
-  order: 6
+  order: 3
 ---
 
 import { HM, HK, HT } from '@/components/Highlight';
-import StateMethodsLite from '@/content/docs/shareds/state_methods_lite.mdx';
+import StatePropertiesMethodsRef from '@/content/docs/shareds/state_properties_methods_ref.mdx';
 import CreatingCustomHook from '@/content/docs/shareds/creating_custom_hook.mdx';
 import UsingCustomHook from '@/content/docs/shareds/using_custom_hook.mdx';
 
@@ -20,7 +20,7 @@ It's recommended read that first if you're new in Reactter.
 ## Syntax
 
 ```dart showLineNumbers=false
-abstract class RtHook with RtContextMixin, RtStateBase<RtHook> {
+abstract class RtHook with RtState<RtHook> {
   static get $register => HookBindingZone<RtHook>();
   HookBindingZone<RtHook> get $;
   void initHook()
@@ -41,7 +41,7 @@ It must be defined has a <HK>`final`</HK> property on first line of the class fo
 - <HM>**`initHook`**</HM>: Called when the hook is initialized.
 Useful for setting up state dependencies or performing side effects when the hook is first created.
 
-<StateMethodsLite/>
+<StatePropertiesMethodsRef/>
 
 ## Usage
 
