@@ -41,12 +41,13 @@ If you encounter any issues, refer to the [official documentation](https://pub.d
 - Replace [`UseAsyncStateStatus.standby`](https://pub.dev/documentation/reactter/7.3.0/reactter/UseAsyncStateStatus.html) to [`UseAsyncStateStatus.idle`](https://pub.dev/documentation/reactter/8.0.0/reactter/UseAsyncStateStatus.html).
 - Rename [`DispatchEffect`](https://pub.dev/documentation/reactter/7.3.0/reactter/DispatchEffect-class.html) to [`AutoDispatchEffect`](https://pub.dev/documentation/reactter/8.0.0/reactter/DispatchEffect-class.html).
 - Move `asyncFunction` to the first parameter of [`UseAsyncState`](https://pub.dev/documentation/reactter/8.0.0/reactter/UseAsyncState-class.html) and [`UseAsyncState.withArg`](https://pub.dev/documentation/reactter/8.0.0/reactter/UseAsyncState/withArg.html).
-- Remove [`Rt.isRegistered`](https://pub.dev/documentation/reactter/7.3.0/reactter/RtInterface/isRegistered.html), use [`Rt.isActive`](https://pub.dev/documentation/reactter/8.0.0/reactter/RtInterface/isActive.html) instead.
-- Remove [`Rt.getInstanceManageMode`](https://pub.dev/documentation/reactter/7.3.0/reactter/RtInterface/getInstanceManageMode.html), use [`Rt.getDependencyMode`](https://pub.dev/documentation/reactter/8.0.0/reactter/RtInterface/getDependencyMode.html) instead.
-- Remove [`InstanceManageMode`](https://pub.dev/documentation/reactter/7.3.0/reactter/InstanceManageMode.html), use [`DependencyMode`](https://pub.dev/documentation/reactter/8.0.0/reactter/DependencyMode.html) instead.
-- Remove [`Lifecycle.initialized`](https://pub.dev/documentation/reactter/7.3.0/reactter/Lifecycle.html), use [`Lifecycle.created`](https://pub.dev/documentation/reactter/8.0.0/reactter/Lifecycle.html) instead.
-- Remove [`Lifecycle.destroyed`](https://pub.dev/documentation/reactter/7.3.0/reactter/Lifecycle.html), use [`Lifecycle.deleted`](https://pub.dev/documentation/reactter/8.0.0/reactter/Lifecycle.html) instead.
-- Remove [`LifecycleObserver.onInitialized`](https://pub.dev/documentation/reactter/7.3.0/reactter/LifecycleObserver/onInitialized.html), use [`LifecycleObserver.onCreated`](https://pub.dev/documentation/reactter/8.0.0//reactter/LifecycleObserver/onCreated.html) instead.
+- Remove [`Rt.isRegistered`](https://pub.dev/documentation/reactter/7.3.0/reactter/RtInterface/isRegistered.html), use [`Rt.isActive`](https://pub.dev/documentation/reactter/8.0.0/reactter/RtInterface/isActive.html) instead.
+- Remove [`Rt.getInstanceManageMode`](https://pub.dev/documentation/reactter/7.3.0/reactter/RtInterface/getInstanceManageMode.html), use [`Rt.getDependencyMode`](https://pub.dev/documentation/reactter/8.0.0/reactter/RtInterface/getDependencyMode.html) instead.
+- Remove [`InstanceManageMode`](https://pub.dev/documentation/reactter/7.3.0/reactter/InstanceManageMode.html), use [`DependencyMode`](https://pub.dev/documentation/reactter/8.0.0/reactter/DependencyMode.html) instead.
+- Remove [`Lifecycle.initialized`](https://pub.dev/documentation/reactter/7.3.0/reactter/Lifecycle.html), use [`Lifecycle.created`](https://pub.dev/documentation/reactter/8.0.0/reactter/Lifecycle.html) instead.
+- Remove [`Lifecycle.destroyed`](https://pub.dev/documentation/reactter/7.3.0/reactter/Lifecycle.html), use [`Lifecycle.deleted`](https://pub.dev/documentation/reactter/8.0.0/reactter/Lifecycle.html) instead.
+- Replace [`LifecycleObserver`](https://pub.dev/documentation/reactter/7.3.0/reactter/LifecycleObserver-class.html) to [`RtDependencyLifecycle`](https://pub.dev/documentation/reactter/8.0.0-dev.25/reactter/RtDependencyLifecycle-class.html).
+- Remove [`LifecycleObserver.onInitialized`](https://pub.dev/documentation/reactter/7.3.0/reactter/LifecycleObserver/onInitialized.html), use [`RtDependencyLifecycle.onCreated`](https://pub.dev/documentation/reactter/8.0.0//reactter/RtDependencyLifecycle/onCreated.html) instead.
 - Remove [`ReactterInstance`](https://pub.dev/documentation/reactter/7.3.0/reactter/ReactterInstance.html) and [`ReactterDependency`](https://pub.dev/documentation/reactter/7.3.0/reactter/ReactterDependency.html), use [`RtDependency`](https://pub.dev/documentation/reactter/8.0.0//reactter/RtDependency-class.html) instead.
 - Remove [`ReactterHook`](https://pub.dev/documentation/reactter/7.3.0/reactter/ReactterHook.html), use [`RtHook`](https://pub.dev/documentation/reactter/8.0.0//reactter/RtHook-class.html) instead.
 - Remove [`ReactterInterface`](https://pub.dev/documentation/reactter/7.3.0/reactter/ReactterInterface.html), use [`RtInterface`](https://pub.dev/documentation/reactter/8.0.0//reactter/RtInterface-class.html) instead.
@@ -159,12 +160,21 @@ If you encounter any issues, refer to the [official documentation](https://pub.d
   Lifecycle.destroyed;
   Lifecycle.deleted;
   ```
+- Replace <HM>`LifecycleObserver`</HM> with <HM>`RtDependencyLifecycle`</HM>.
 
-- Replace <HM>`LifecycleObserver.onInitialized`</HM> with <HM>`LifecycleObserver.onCreated`</HM>.
+  ```dart showLineNumbers=false del={1} del="LifecycleObserver" ins={2} ins="RtDependencyLifecycle"
+  class MyClass extends LifecycleObserver {
+  class MyClass extends RtDependencyLifecycle {
+      // Implementation
+  }
+  ```
 
-  ```dart showLineNumbers=false del={2} del="onInitialized" ins={3} ins="onCreated"
+- Replace <HM>`LifecycleObserver.onInitialized`</HM> with <HM>`RtDependencyLifecycle.onCreated`</HM>.
+
+  ```dart showLineNumbers=false del={1,2} del="LifecycleObserver" del="onInitialized" ins={3,4} ins="RtDependencyLifecycle" ins="onCreated"
   class MyClass extends LifecycleObserver {
     void onInitialized() {
+  class MyClass extends RtDependencyLifecycle {
     void onCreated() {
       // Implementation
     }

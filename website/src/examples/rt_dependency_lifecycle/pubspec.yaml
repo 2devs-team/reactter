@@ -1,5 +1,5 @@
-name: LifecycleObserver
-description: LifecycleObserver example
+name: RtDependencyLifecycle
+description: RtDependencyLifecycle example
 version: 0.1.0
 
 environment:

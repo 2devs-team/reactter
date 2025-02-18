@@ -11,7 +11,7 @@ class CounterView extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Counter - Lifecycle using LifecycleObserver"),
+        title: const Text("Counter - Lifecycle using RtDependencyLifecycle"),
       ),
       body: RtSignalWatcher(
         builder: (context, child) {

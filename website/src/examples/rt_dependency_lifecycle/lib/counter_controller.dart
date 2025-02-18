@@ -1,6 +1,6 @@
 import 'package:flutter_reactter/flutter_reactter.dart';
 
-class CounterController extends LifecycleObserver {
+class CounterController extends RtDependencyLifecycle {
   final count = Signal(0);
 
   void increment() {

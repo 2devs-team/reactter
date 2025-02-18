@@ -19,10 +19,10 @@ import counterEventHandlerCode from '@/examples/lifecycle_event_handler/lib/coun
 import counterViewEventHandlerCode from '@/examples/lifecycle_event_handler/lib/counter_view.dart?raw';
 import counterMainEventHandlerCode from '@/examples/lifecycle_event_handler/lib/main.dart?raw';
 
-import counterControllerLifecycleObserverCode from '@/examples/lifecycle_observer/lib/counter_controller.dart?raw';
-import counterLifecycleObserverCode from '@/examples/lifecycle_observer/lib/counter.dart?raw';
-import counterViewLifecycleObserverCode from '@/examples/lifecycle_observer/lib/counter_view.dart?raw';
-import counterMainLifecycleObserverCode from '@/examples/lifecycle_observer/lib/main.dart?raw';
+import counterControllerRtDependencyLifecycleCode from '@/examples/rt_dependency_lifecycle/lib/counter_controller.dart?raw';
+import counterRtDependencyLifecycleCode from '@/examples/rt_dependency_lifecycle/lib/counter.dart?raw';
+import counterViewRtDependencyLifecycleCode from '@/examples/rt_dependency_lifecycle/lib/counter_view.dart?raw';
+import counterMainRtDependencyLifecycleCode from '@/examples/rt_dependency_lifecycle/lib/main.dart?raw';
 
 import counterControllerLifecycleUseEffectCode from '@/examples/lifecycle_use_effect/lib/counter_controller.dart?raw';
 import counterLifecycleUseEffectCode from '@/examples/lifecycle_use_effect/lib/counter.dart?raw';
@@ -81,32 +81,32 @@ You can listen to the lifecycle events of an instance (like a dependency or stat
   It ideal to use the <HT>[`RtDependency`](/reactter/api/classes/rt_dependency)</HT> class when the dependency is not initialize yet.
 :::
 
-## Using LifecycleObserver
+## Using RtDependencyLifecycle
 
-Extend your instances with <HT>[`LifecycleObserver`](/reactter/api/classes/lifecycle_observer)</HT>
+Extend your instances with <HT>[`RtDependencyLifecycle`](/reactter/api/classes/)</HT>
 and use its methods to observe the lifecycle events. e.g:
 
 <TipLifecycleExample />
 
 <CodeTabs>
-  <ZappButton path="examples/lifecycle_observer"/>
+  <ZappButton path="examples/"/>
 
   <Tabs>
     <TabItem>
       <HM single slot="label">counter_controller.dart</HM>
-      <Code code={counterControllerLifecycleObserverCode} lang="dart" mark={[...marks, {range: "14-17"}, {range: "19-22"}, {range: "24-27"}, {range: "29-32"}, {range: "34-37"}, {range: "39-42"}, {range: "44-47"}]}/>
+      <Code code={counterControllerRtDependencyLifecycleCode} lang="dart" mark={[...marks, {range: "14-17"}, {range: "19-22"}, {range: "24-27"}, {range: "29-32"}, {range: "34-37"}, {range: "39-42"}, {range: "44-47"}]}/>
     </TabItem>
 
     <TabItem label="counter_view.dart">
-      <Code code={counterViewLifecycleObserverCode} lang="dart" mark={marks} />
+      <Code code={counterViewRtDependencyLifecycleCode} lang="dart" mark={marks} />
     </TabItem>
 
     <TabItem label="counter.dart">
-      <Code code={counterLifecycleObserverCode} lang="dart" mark={marks} />
+      <Code code={counterRtDependencyLifecycleCode} lang="dart" mark={marks} />
     </TabItem>
 
     <TabItem label="main.dart">
-      <Code code={counterMainLifecycleObserverCode} lang="dart" mark={marks} />
+      <Code code={counterMainRtDependencyLifecycleCode} lang="dart" mark={marks} />
     </TabItem>
   </Tabs>
 </CodeTabs>

@@ -19,10 +19,10 @@ import counterEventHandlerCode from '@/examples/lifecycle_event_handler/lib/coun
 import counterViewEventHandlerCode from '@/examples/lifecycle_event_handler/lib/counter_view.dart?raw';
 import counterMainEventHandlerCode from '@/examples/lifecycle_event_handler/lib/main.dart?raw';
 
-import counterControllerLifecycleObserverCode from '@/examples/lifecycle_observer/lib/counter_controller.dart?raw';
-import counterLifecycleObserverCode from '@/examples/lifecycle_observer/lib/counter.dart?raw';
-import counterViewLifecycleObserverCode from '@/examples/lifecycle_observer/lib/counter_view.dart?raw';
-import counterMainLifecycleObserverCode from '@/examples/lifecycle_observer/lib/main.dart?raw';
+import counterControllerRtDependencyLifecycleCode from '@/examples/rt_dependency_lifecycle/lib/counter_controller.dart?raw';
+import counterRtDependencyLifecycleCode from '@/examples/rt_dependency_lifecycle/lib/counter.dart?raw';
+import counterViewRtDependencyLifecycleCode from '@/examples/rt_dependency_lifecycle/lib/counter_view.dart?raw';
+import counterMainRtDependencyLifecycleCode from '@/examples/rt_dependency_lifecycle/lib/main.dart?raw';
 
 import counterControllerLifecycleUseEffectCode from '@/examples/lifecycle_use_effect/lib/counter_controller.dart?raw';
 import counterLifecycleUseEffectCode from '@/examples/lifecycle_use_effect/lib/counter.dart?raw';
@@ -82,9 +82,9 @@ Puedes escuchar los eventos del ciclo de vida de una instancia (como una depende
   Es ideal usar la clase <HT>[`RtDependency`](/reactter/es/api/classes/rt_dependency)</HT> cuando la dependencia aún no se ha inicializado.
 :::
 
-## Usando LifecycleObserver
+## Usando RtDependencyLifecycle
 
-Extiende tus instancias con <HT>[`LifecycleObserver`](/reactter/es/api/classes/lifecycle_observer)</HT> para escuchar los eventos del ciclo de vida de una dependencia o estado. Por ejemplo:
+Extiende tus instancias con <HT>[`RtDependencyLifecycle`](/reactter/es/api/classes/lifecycle_observer)</HT> para escuchar los eventos del ciclo de vida de una dependencia o estado. Por ejemplo:
 
 <TipLifecycleExample />
 
@@ -94,19 +94,19 @@ Extiende tus instancias con <HT>[`LifecycleObserver`](/reactter/es/api/classes/l
   <Tabs>
     <TabItem>
       <HM single slot="label">counter_controller.dart</HM>
-      <Code code={counterControllerLifecycleObserverCode} lang="dart" mark={[...marks, {range: "6-8"}, {range: "10-12"}, {range: "14-16"}, {range: "18-20"}, {range: "22-24"}, {range: "26-28"}, {range: "30-32"}]}/>
+      <Code code={counterControllerRtDependencyLifecycleCode} lang="dart" mark={[...marks, {range: "6-8"}, {range: "10-12"}, {range: "14-16"}, {range: "18-20"}, {range: "22-24"}, {range: "26-28"}, {range: "30-32"}]}/>
     </TabItem>
 
     <TabItem label="counter_view.dart">
-      <Code code={counterViewLifecycleObserverCode} lang="dart" mark={marks} />
+      <Code code={counterViewRtDependencyLifecycleCode} lang="dart" mark={marks} />
     </TabItem>
 
     <TabItem label="counter.dart">
-      <Code code={counterLifecycleObserverCode} lang="dart" mark={marks} />
+      <Code code={counterRtDependencyLifecycleCode} lang="dart" mark={marks} />
     </TabItem>
 
     <TabItem label="main.dart">
-      <Code code={counterMainLifecycleObserverCode} lang="dart" mark={marks} />
+      <Code code={counterMainRtDependencyLifecycleCode} lang="dart" mark={marks} />
     </TabItem>
   </Tabs>
 </CodeTabs>

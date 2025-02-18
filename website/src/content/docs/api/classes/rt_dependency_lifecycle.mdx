@@ -1,5 +1,5 @@
 ---
-title: LifecycleObserver
+title: RtDependencyLifecycle
 description: The base class for all lifecycle observers in Reactter.
 sidebar:
   order: 6
@@ -11,22 +11,22 @@ import ZappButton from "@/components/ZappButton.astro";
 import { Code } from "@astrojs/starlight/components";
 import { marks } from '@/examples/marks.ts'
 
-import counterControllerLifecycleObserverCode from '@/examples/lifecycle_observer/lib/counter_controller.dart?raw';
-import counterLifecycleObserverCode from '@/examples/lifecycle_observer/lib/counter.dart?raw';
-import counterViewLifecycleObserverCode from '@/examples/lifecycle_observer/lib/counter_view.dart?raw';
-import counterMainLifecycleObserverCode from '@/examples/lifecycle_observer/lib/main.dart?raw';
+import counterControllerRtDependencyLifecycleCode from '@/examples/rt_dependency_lifecycle/lib/counter_controller.dart?raw';
+import counterRtDependencyLifecycleCode from '@/examples/rt_dependency_lifecycle/lib/counter.dart?raw';
+import counterViewRtDependencyLifecycleCode from '@/examples/rt_dependency_lifecycle/lib/counter_view.dart?raw';
+import counterMainRtDependencyLifecycleCode from '@/examples/rt_dependency_lifecycle/lib/main.dart?raw';
 
 :::tip
 This documentation assumes you've already read the [Lifecycle](/reactter/core_concepts/lifecycle/).
 It's recommended read that first if you're new in Reactter.
 :::
 
-<HT><a href="https://pub.dev/documentation/reactter/latest/reactter/LifecycleObserver-class.html" target="_blank">`LifecycleObserver`</a></HT> is a class that provides a way to observe the lifecycle of a dependency. 
+<HT><a href="https://pub.dev/documentation/reactter/latest/reactter/RtDependencyLifecycle-class.html" target="_blank">`RtDependencyLifecycle`</a></HT> is a class that provides a way to observe the lifecycle of a dependency. 
 
 ## Syntax
 
 ```dart showLineNumbers=false
-abstract class LifecycleObserver {
+abstract class RtDependencyLifecycle {
   void onCreated() {}
   void onWillMount() {}
   void onDidMount() {}
@@ -58,27 +58,27 @@ Ideal for final cleanup or resource release.
 
 ## Example
 
-Here's an example of a simple LifecycleObserver implementation:
+Here's an example of a simple RtDependencyLifecycle implementation:
 
 <CodeTabs>
-  <ZappButton path="examples/lifecycle_observer"/>
+  <ZappButton path="examples/"/>
 
   <Tabs>
     <TabItem>
       <HM single slot="label">counter_controller.dart</HM>
-      <Code code={counterControllerLifecycleObserverCode} lang="dart" mark={[...marks, {range: "14-17"}, {range: "19-22"}, {range: "24-27"}, {range: "29-32"}, {range: "34-37"}, {range: "39-42"}, {range: "44-47"}]}/>
+      <Code code={counterControllerRtDependencyLifecycleCode} lang="dart" mark={[...marks, {range: "14-17"}, {range: "19-22"}, {range: "24-27"}, {range: "29-32"}, {range: "34-37"}, {range: "39-42"}, {range: "44-47"}]}/>
     </TabItem>
 
     <TabItem label="counter_view.dart">
-      <Code code={counterViewLifecycleObserverCode} lang="dart" mark={marks} />
+      <Code code={counterViewRtDependencyLifecycleCode} lang="dart" mark={marks} />
     </TabItem>
 
     <TabItem label="counter.dart">
-      <Code code={counterLifecycleObserverCode} lang="dart" mark={marks} />
+      <Code code={counterRtDependencyLifecycleCode} lang="dart" mark={marks} />
     </TabItem>
 
     <TabItem label="main.dart">
-      <Code code={counterMainLifecycleObserverCode} lang="dart" mark={marks} />
+      <Code code={counterMainRtDependencyLifecycleCode} lang="dart" mark={marks} />
     </TabItem>
   </Tabs>
 </CodeTabs>
