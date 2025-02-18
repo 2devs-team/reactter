@@ -2,6 +2,10 @@ part of '../internals.dart';
 
 @internal
 abstract class StateManagement<S extends IState> implements IContext {
+  @override
+  @internal
+  StateManagement<S> get stateManagement => this;
+
   int _batchRunningCount = 0;
   bool get _isBatchRunning => _batchRunningCount > 0;
 

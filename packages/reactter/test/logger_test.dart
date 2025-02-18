@@ -2,7 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:reactter/reactter.dart';
 import 'package:reactter/src/logger.dart';
 
-class StateTest with RtState<StateTest> {
+class StateTest with RtState {
   StateTest._();
 
   factory StateTest() {

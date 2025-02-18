@@ -86,7 +86,7 @@ enum SignalEvent { onGetValue, onSetValue }
 /// package on your dependencies and use its Widgets.
 ///
 /// {@endtemplate}
-class Signal<T> with RtState<Signal<T>> {
+class Signal<T> with RtState {
   bool _shouldGetValueNotify = true;
   bool _shouldSetValueNotify = true;
 

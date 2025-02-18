@@ -1,4 +1,4 @@
-part of '../internals.dart';
+part of '../framework.dart';
 
 /// {@template reactter.rt_hook}
 /// An abstract-class that provides the functionality of [RtState].
@@ -40,49 +40,13 @@ part of '../internals.dart';
 /// See also:
 /// * [RtState], adds state management features to [RtHook].
 /// {@endtemplate}
-abstract class RtHook extends RtState<RtHook> implements IHook {
+abstract class RtHook extends IHook with RtState {
   /// {@template reactter.rt_hook.register}
   /// This getter allows access to the [HookBindingZone] instance
   /// which is responsible for registering a [RtHook]
   /// and attaching previously collected states to it.
   /// {@endtemplate}
   static get $register => HookBindingZone<RtHook>();
-
-  /// This variable is used to register [RtHook]
-  /// and attach the [RtState] that are defined here.
-  @override
-  @protected
-  HookBindingZone<RtHook> get $;
-
-  /// Initializes a new instance of the [RtHook] class.
-  ///
-  /// This constructor calls the `end` method of the [BindingHookZone] instance
-  /// to register the hook and attach the collected states.
-  RtHook() {
-    initHook();
-    $._bindInstanceToStates(this);
-  }
-
-  /// Initializes the hook.
-  /// This method is called when the hook is created.
-  /// You can override this method to ensure that the hook is properly
-  /// initialized and to bind the instance to the states.
-  /// This is particularly useful for setting up state dependencies or
-  /// performing side effects when the hook is first created.
-  ///
-  /// For example, you can use the [UseEffect] hook to execute a side effect when a state changes:
-  ///
-  /// ```dart
-  /// @override
-  /// void initHook() {
-  ///   UseEffect(
-  ///     () {
-  ///       print("Executed by state changed");
-  ///     },
-  ///     [state],
-  ///   );
-  /// }
-  void initHook() {}
 
   @override
   @mustCallSuper

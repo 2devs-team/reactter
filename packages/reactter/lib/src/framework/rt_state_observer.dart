@@ -1,4 +1,4 @@
-part of '../internals.dart';
+part of '../framework.dart';
 
 /// {@template reactter.rt_state_observer}
 /// A class that implements the [IStateObserver] interface.

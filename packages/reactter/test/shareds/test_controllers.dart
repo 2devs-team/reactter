@@ -151,7 +151,7 @@ class TestController {
   // }
 }
 
-class TestLifecycleController extends LifecycleObserver {
+class TestLifecycleController with RtDependencyLifecycle {
   final stateString = UseState("initial");
   final stateInt = UseState(0);
 

@@ -23,21 +23,19 @@ part of '../internals.dart';
 /// - [Rt.createState], for creating a state object.
 ///
 /// {@endtemplate}
-abstract class RtState<E extends RtState<E>> implements IState {
+abstract class RtState implements IState {
   /// Debug assertion for registering a state object.
   ///
   /// This method is used to assert that a state object is being created within
   /// a binding zone. If the assertion fails, an [AssertionError] is thrown.
-  static bool debugAssertRegistering<E>() {
+  static bool debugAssertRegistering() {
     assert(() {
       final currentZone = BindingZone.currentZone;
-      final isRegistering = currentZone != null &&
-          (currentZone is BindingZone<E> || currentZone is BindingZone<E?>) &&
-          !currentZone.isVerified;
+      final isRegistering = currentZone != null && !currentZone.isVerified;
 
       if (!isRegistering) {
         throw AssertionError(
-          "The state($E) must be create within the BindingZone.\n"
+          "The state must be create within the BindingZone.\n"
           "You can use the 'Rt.createState' method or register as dependency "
           "using the dependency injection to ensure that the state is registered.",
         );
@@ -49,7 +47,7 @@ abstract class RtState<E extends RtState<E>> implements IState {
   }
 
   // ignore: unused_field
-  final _debugAssertRegistering = debugAssertRegistering<E>();
+  final _debugAssertRegistering = debugAssertRegistering();
 
   @override
   @internal

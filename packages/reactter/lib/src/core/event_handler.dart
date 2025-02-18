@@ -6,6 +6,10 @@ part of '../internals.dart';
 /// as well as storing event callbacks.
 @internal
 abstract class EventHandler implements IContext {
+  @override
+  @internal
+  EventHandler get eventHandler => this;
+
   final _notifiers = HashSet<EventNotifier>();
 
   /// Puts on to listen [eventName] event.
@@ -153,8 +157,8 @@ abstract class EventHandler implements IContext {
         ? dependencyInjection.getDependencyRegisterByRef(instance)?.instance
         : instance;
 
-    if (instanceObj is LifecycleObserver) {
-      _executeLifecycleObserver(instanceObj, lifecycle, param);
+    if (instanceObj is DependencyLifecycle) {
+      _processLifecycleCallbacks(instanceObj, lifecycle, param);
     }
   }
 

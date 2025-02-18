@@ -1,4 +1,4 @@
-part of '../internals.dart';
+part of '../framework.dart';
 
 ///{@template reactter.rt_interface}
 /// A class that represents the interface for Rt.
@@ -10,36 +10,10 @@ class RtInterface
         StateManagement<RtState>,
         DependencyInjection,
         EventHandler,
-        ObserverManager {
-  @override
-  @internal
-  StateManagement<RtState> get stateManagement => this;
-  @override
-  @internal
-  DependencyInjection get dependencyInjection => this;
-  @override
-  @internal
-  EventHandler get eventHandler => this;
+        ObserverManager {}
 
-  @override
-  void addObserver(covariant IObserver observer) {
-    if (observer is IStateObserver) {
-      IStateObserver._observers.add(observer);
-    }
-
-    if (observer is IDependencyObserver) {
-      IDependencyObserver._observers.add(observer);
-    }
-  }
-
-  @override
-  void removeObserver(covariant IObserver observer) {
-    if (observer is IStateObserver) {
-      IStateObserver._observers.remove(observer);
-    }
-
-    if (observer is IDependencyObserver) {
-      IDependencyObserver._observers.remove(observer);
-    }
-  }
-}
+/// {@template reactter.rt}
+/// This class represents the interface for the Reactter framework.
+/// It provides methods and properties for interacting with the Reactter framework.
+/// {@endtemplate}
+final Rt = RtInterface();

@@ -1,4 +1,4 @@
-part of '../internals.dart';
+part of '../framework.dart';
 
 /// {@template reactter.rt_dependency_observer}
 /// A class that implements the [IDependencyObserver] interface.

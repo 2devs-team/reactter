@@ -4,7 +4,7 @@ import 'package:flutter_reactter/reactter.dart';
 import 'package:reactter_devtools_extension/src/bases/tree_node.dart';
 
 base class TreeList<E extends TreeNode<E>> extends LinkedList<E>
-    with RtState<TreeList<E>> {
+    with RtState {
   final uMaxDepth = UseState(0);
 
   TreeList._();

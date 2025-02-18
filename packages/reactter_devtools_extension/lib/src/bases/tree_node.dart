@@ -3,7 +3,7 @@ import 'package:flutter_reactter/reactter.dart';
 import 'package:reactter_devtools_extension/src/bases/tree_list.dart';
 
 abstract base class TreeNode<E extends TreeNode<E>> extends LinkedListEntry<E>
-    with RtState<E> {
+    with RtState {
   final uChildren = UseState(LinkedHashSet<E>());
   final uIsExpanded = UseState(false);
   final uDepth = UseState(0);

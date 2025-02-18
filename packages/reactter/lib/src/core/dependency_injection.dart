@@ -14,6 +14,10 @@ part of '../internals.dart';
 /// initialized, and destroyed.
 @internal
 abstract class DependencyInjection implements IContext {
+  @override
+  @internal
+  DependencyInjection get dependencyInjection => this;
+
   /// It stores the dependencies registered.
   final _dependencyRegisters = HashSet<DependencyRegister>();
 

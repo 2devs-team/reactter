@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:reactter/reactter.dart';
 
-class CountTest extends RtState<CountTest> {
+class CountTest extends RtState {
   int _count = 0;
   int get count => _count;
   set count(int value) {
@@ -21,7 +21,7 @@ class CountTest extends RtState<CountTest> {
       };
 }
 
-class StateTest with RtState<StateTest> {
+class StateTest with RtState {
   StateTest._() {
     assert(dependencyInjection == Rt);
     assert(stateManagement == Rt);

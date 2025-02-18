@@ -4,9 +4,9 @@ import 'package:test/test.dart';
 import '../shareds/test_controllers.dart';
 
 void main() {
-  group("LifecycleObserver", () {
+  group("DependencyLifecycle", () {
     test(
-      "should resolve the lifecycle event of a LifecycleObserver instance",
+      "should resolve the lifecycle event of a DependencyLifecycle instance",
       () {
         late TestLifecycleController? testLifecycleController;
 
