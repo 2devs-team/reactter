@@ -133,7 +133,7 @@ void main() {
       String? lastStateDisposed;
 
       final observer = RtStateObserver(
-        onDisponsed: (state) {
+        onDisposed: (state) {
           expect(state, isA<RtState>());
           onDisposedCalledCount++;
           lastStateDisposed = state.debugLabel;

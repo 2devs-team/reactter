@@ -1,6 +1,6 @@
 ---
 title: RtStateObserver
-description: The base class for all state observers in Reactter.
+description: The base class for observing and reacting to the lifecycle events of states in Reactter, such as creation, binding, updating, and disposal.
 sidebar:
   order: 2
 ---
@@ -17,26 +17,27 @@ import { HM, HT } from '@/components/Highlight';
     void onUnbound(RtState state, Object instance)?,
     void onCreated(RtState state)?,
     void onUpdated(RtState state)?,
-    void onDisponsed(RtState state)?,
+    void onDisposed(RtState state)?,
   });
 ```
-## Properties
 
-- <HM>**`onBound`**</HM>: *(optional)* A callback that is called when a `state` is bound to an `instance`.
-- <HM>**`onUnbound`**</HM>: *(optional)* A callback that is called when a `state` is unbound from an `instance`.
-- <HM>**`onCreated`**</HM>: *(optional)* A callback that is called when a `state` is created.
-- <HM>**`onUpdated`**</HM>: *(optional)* A callback that is called when a `state` is updated.
-- <HM>**`onDisposed`**</HM>: *(optional)* A callback that is called when a `state` is disposed.
+The <HT>`RtStateObserver`</HT> class accepts these parameters:
+
+- <HM>**`onBound`**</HM>: *(optional)* Called when a `state` is bound to an `instance`.
+- <HM>**`onUnbound`**</HM>: *(optional)* Called when a `state` is unbound from an `instance`.
+- <HM>**`onCreated`**</HM>: *(optional)* Called when a `state` is initialized.
+- <HM>**`onUpdated`**</HM>: *(optional)* Called when a `state` undergoes a change or update.
+- <HM>**`onDisposed`**</HM>: *(optional)* Called when a `state` is disposed or cleaned up.
 
 ## Usage
 
-To use <HT>`RtStateObserver`</HT>, you need to instantiate it, pass the callbacks you want to use and then add it using the <HM>`Rt.addObserver`</HM> method.
+To use <HT>`RtStateObserver`</HT>, you need to instantiate it, pass the callbacks you want to use and then add it using the <HM>`Rt.addObserver`</HM> method, e.g.:
 
 ```dart "RtStateObserver" "Rt.addObserver"
 import 'package:reactter/reactter.dart';
 
 void main() {
-  // Create a state observer
+  // Create a state observer with lifecycle callbacks
   final stateObserver = RtStateObserver(
     onBound: (state, instance) {
       print('State($state) bound to instance($instance)');
@@ -55,8 +56,7 @@ void main() {
     },
   );
 
-  // Add the state observer
+  // Add the state observer to Reactter's observer system
   Rt.addObserver(stateObserver);
 }
-
 ```

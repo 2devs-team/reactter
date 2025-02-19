@@ -189,7 +189,7 @@ abstract class RtState implements IState {
 
     if (_isDisposed) return;
 
-    _notifyDisponsed();
+    _notifyDisposed();
     _isDisposed = true;
   }
 
@@ -248,7 +248,7 @@ abstract class RtState implements IState {
     }
   }
 
-  void _notifyDisponsed() {
+  void _notifyDisposed() {
     for (final observer in IStateObserver._observers.toList(growable: false)) {
       observer.onStateDisposed(this);
     }

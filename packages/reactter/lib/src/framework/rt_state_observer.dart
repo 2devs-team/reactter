@@ -43,7 +43,7 @@ class RtStateObserver implements IStateObserver {
   final void Function(RtState state)? onCreated;
 
   /// {@macro reactter.i_state_observer.on_state_mounted}
-  final void Function(RtState state)? onDisponsed;
+  final void Function(RtState state)? onDisposed;
 
   /// {@macro reactter.i_state_observer.on_state_unbound}
   final void Function(RtState state, Object instance)? onUnbound;
@@ -54,7 +54,7 @@ class RtStateObserver implements IStateObserver {
   RtStateObserver({
     this.onBound,
     this.onCreated,
-    this.onDisponsed,
+    this.onDisposed,
     this.onUnbound,
     this.onUpdated,
   });
@@ -74,7 +74,7 @@ class RtStateObserver implements IStateObserver {
   /// {@macro reactter.i_state_observer.on_state_mounted}
   @override
   void onStateDisposed(RtState state) {
-    onDisponsed?.call(state);
+    onDisposed?.call(state);
   }
 
   /// {@macro reactter.i_state_observer.on_state_unbound}
