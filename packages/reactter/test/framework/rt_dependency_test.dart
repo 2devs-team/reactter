@@ -4,7 +4,7 @@ import 'package:test/test.dart';
 import '../shareds/test_controllers.dart';
 
 void main() {
-  group("RtDependency", () {
+  group("RtDependencyRef", () {
     test("should throw the life-cycle events", () async {
       late TestController? instance;
       late bool willUpdateChecked;
@@ -12,14 +12,14 @@ void main() {
       late bool isDeleted;
 
       Rt.on(
-        RtDependency<TestController>(),
+        RtDependencyRef<TestController>(),
         Lifecycle.created,
         (TestController? inst, __) {
           instance = inst;
         },
       );
       Rt.on(
-        RtDependency<TestController>(),
+        RtDependencyRef<TestController>(),
         Lifecycle.willUpdate,
         (TestController? inst, UseState hook) {
           willUpdateChecked = true;
@@ -28,7 +28,7 @@ void main() {
         },
       );
       Rt.on(
-        RtDependency<TestController>(),
+        RtDependencyRef<TestController>(),
         Lifecycle.didUpdate,
         (TestController? inst, UseState hook) {
           didUpdateChecked = true;
@@ -37,7 +37,7 @@ void main() {
         },
       );
       Rt.on(
-        RtDependency<TestController>(),
+        RtDependencyRef<TestController>(),
         Lifecycle.deleted,
         (_, __) {
           isDeleted = true;

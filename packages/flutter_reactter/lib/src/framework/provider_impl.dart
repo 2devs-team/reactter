@@ -149,15 +149,15 @@ class ProvideImpl<T extends Object?, I extends String?> extends ProviderBase<T>
   }
 }
 
-/// [ProviderElement] is a class that manages the lifecycle of the [RtDependency] and
-/// provides the [RtDependency] to its descendants
+/// [ProviderElement] is a class that manages the lifecycle of the [RtDependencyRef] and
+/// provides the [RtDependencyRef] to its descendants
 @internal
 class ProviderElement<T extends Object?> extends InheritedElement
     with ScopeElementMixin {
-  static final Map<RtDependency, int> _instanceMountCount = {};
+  static final Map<RtDependencyRef, int> _instanceMountCount = {};
 
   Widget? _prevChild;
-  HashMap<RtDependency, ProviderElement<T>>? _inheritedElementsWithId;
+  HashMap<RtDependencyRef, ProviderElement<T>>? _inheritedElementsWithId;
   bool _isLazyInstanceObtained = false;
 
   @override
@@ -189,7 +189,7 @@ class ProviderElement<T extends Object?> extends InheritedElement
 
   @override
   void mount(Element? parent, Object? newSlot) {
-    final dependency = RtDependency<T?>(widget.id);
+    final dependency = RtDependencyRef<T?>(widget.id);
     var count = _instanceMountCount.putIfAbsent(dependency, () => 0);
     _instanceMountCount[dependency] = ++count;
     final shouldNotifyMount = count == 1;
@@ -238,7 +238,7 @@ class ProviderElement<T extends Object?> extends InheritedElement
   @override
   void unmount() {
     final ref = widget.ref;
-    final dependency = RtDependency<T?>(widget.id);
+    final dependency = RtDependencyRef<T?>(widget.id);
     final count = (_instanceMountCount[dependency] ?? 0) - 1;
     final shouldNotifyUnmount = count < 1;
 
@@ -266,11 +266,11 @@ class ProviderElement<T extends Object?> extends InheritedElement
     }
   }
 
-  /// Gets [ProviderElement] that it has the [RtDependency]'s id.
+  /// Gets [ProviderElement] that it has the [RtDependencyRef]'s id.
   ProviderElement<T>? getInheritedElementOfExactId(
     String id,
   ) =>
-      _inheritedElementsWithId?[RtDependency<T?>(id)];
+      _inheritedElementsWithId?[RtDependencyRef<T?>(id)];
 
   /// updates [inheritedElementsWithId]
   /// with all ancestor [ProviderElement] with id
@@ -282,14 +282,15 @@ class ProviderElement<T extends Object?> extends InheritedElement
         as ProviderElement<T>?;
 
     if (ancestorInheritedElement?._inheritedElementsWithId != null) {
-      _inheritedElementsWithId = HashMap<RtDependency, ProviderElement<T>>.of(
+      _inheritedElementsWithId =
+          HashMap<RtDependencyRef, ProviderElement<T>>.of(
         ancestorInheritedElement!._inheritedElementsWithId!,
       );
     } else {
-      _inheritedElementsWithId = HashMap<RtDependency, ProviderElement<T>>();
+      _inheritedElementsWithId = HashMap<RtDependencyRef, ProviderElement<T>>();
     }
 
-    _inheritedElementsWithId![RtDependency<T?>(widget.id)] = this;
+    _inheritedElementsWithId![RtDependencyRef<T?>(widget.id)] = this;
   }
 }
 

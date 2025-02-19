@@ -54,7 +54,7 @@ void main() {
 
       final observer = RtDependencyObserver(
         onMounted: (dependencyRef, instance) {
-          expect(dependencyRef, isA<RtDependency<TestController>>());
+          expect(dependencyRef, isA<RtDependencyRef<TestController>>());
           expect(instance, isA<TestController>());
           onMountedCalled = true;
           instanceMounted = instance;
@@ -63,7 +63,7 @@ void main() {
       Rt.addObserver(observer);
 
       final instance = Rt.create(() => TestController());
-      Rt.emit(RtDependency<TestController>(), Lifecycle.didMount, instance);
+      Rt.emit(RtDependencyRef<TestController>(), Lifecycle.didMount, instance);
 
       expect(onMountedCalled, isTrue);
       expect(instanceMounted, instance);
@@ -78,7 +78,7 @@ void main() {
 
       final observer = RtDependencyObserver(
         onUnmounted: (dependencyRef, instance) {
-          expect(dependencyRef, isA<RtDependency<TestController>>());
+          expect(dependencyRef, isA<RtDependencyRef<TestController>>());
           expect(instance, isA<TestController>());
           onUnmountedCalled = true;
           instanceUnmounted = instance;
@@ -87,7 +87,8 @@ void main() {
       Rt.addObserver(observer);
 
       final instance = Rt.create(() => TestController());
-      Rt.emit(RtDependency<TestController>(), Lifecycle.didUnmount, instance);
+      Rt.emit(
+          RtDependencyRef<TestController>(), Lifecycle.didUnmount, instance);
 
       expect(onUnmountedCalled, isTrue);
       expect(instanceUnmounted, instance);

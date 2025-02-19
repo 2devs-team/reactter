@@ -43,19 +43,19 @@ void main() {
     });
 
     test(
-      "should listen and emit event using RtDependency",
+      "should listen and emit event using RtDependencyRef",
       () {
         _testListenAndEmitEvent(
-          RtDependency<TestController>(),
-          RtDependency<TestController>(),
+          RtDependencyRef<TestController>(),
+          RtDependencyRef<TestController>(),
           instanceMatcher: isNull,
         );
 
         final testController = Rt.create(() => TestController())!;
 
         _testListenAndEmitEvent(
-          RtDependency<TestController>(),
-          RtDependency<TestController>(),
+          RtDependencyRef<TestController>(),
+          RtDependencyRef<TestController>(),
           instanceMatcher: testController,
         );
 
@@ -64,11 +64,11 @@ void main() {
     );
 
     test(
-      "should listen and emit event using RtDependency with id",
+      "should listen and emit event using RtDependencyRef with id",
       () {
         _testListenAndEmitEvent(
-          RtDependency<TestController>('uniqueId'),
-          RtDependency<TestController>('uniqueId'),
+          RtDependencyRef<TestController>('uniqueId'),
+          RtDependencyRef<TestController>('uniqueId'),
           instanceMatcher: isNull,
         );
 
@@ -78,8 +78,8 @@ void main() {
         )!;
 
         _testListenAndEmitEvent(
-          RtDependency<TestController>('uniqueId'),
-          RtDependency<TestController>('uniqueId'),
+          RtDependencyRef<TestController>('uniqueId'),
+          RtDependencyRef<TestController>('uniqueId'),
           instanceMatcher: testController,
         );
 
@@ -88,13 +88,13 @@ void main() {
     );
 
     test(
-      "should listen event using dependency and emit event using RtDependency",
+      "should listen event using dependency and emit event using RtDependencyRef",
       () {
         final testController = Rt.create(() => TestController())!;
 
         _testListenAndEmitEvent(
           testController,
-          RtDependency<TestController>(),
+          RtDependencyRef<TestController>(),
           instanceMatcher: testController,
         );
 
@@ -103,7 +103,7 @@ void main() {
     );
 
     test(
-      "should listen event using the dependency and emit event using RtDependency with id",
+      "should listen event using the dependency and emit event using RtDependencyRef with id",
       () {
         final testController = Rt.create(
           () => TestController(),
@@ -112,7 +112,7 @@ void main() {
 
         _testListenAndEmitEvent(
           testController,
-          RtDependency<TestController>('uniqueId'),
+          RtDependencyRef<TestController>('uniqueId'),
           instanceMatcher: testController,
         );
 
@@ -121,12 +121,12 @@ void main() {
     );
 
     test(
-      "should listen event using RtDependency and emit event using the dependency",
+      "should listen event using RtDependencyRef and emit event using the dependency",
       () {
         final testController = Rt.create(() => TestController())!;
 
         _testListenAndEmitEvent(
-          RtDependency<TestController>(),
+          RtDependencyRef<TestController>(),
           testController,
           instanceMatcher: testController,
         );
@@ -136,7 +136,7 @@ void main() {
     );
 
     test(
-      "should listen event using RtDependency and emit event using the dependency with id",
+      "should listen event using RtDependencyRef and emit event using the dependency with id",
       () {
         final testController = Rt.create(
           () => TestController(),
@@ -144,7 +144,7 @@ void main() {
         )!;
 
         _testListenAndEmitEvent(
-          RtDependency<TestController>('uniqueId'),
+          RtDependencyRef<TestController>('uniqueId'),
           testController,
           instanceMatcher: testController,
         );
@@ -164,21 +164,21 @@ void main() {
       );
 
       _testListenAndEmitEvent(
-        RtDependency<TestController>(),
-        RtDependency<TestController>(),
+        RtDependencyRef<TestController>(),
+        RtDependencyRef<TestController>(),
         instanceMatcher: testController,
         isOnce: true,
       );
 
       _testListenAndEmitEvent(
         testController,
-        RtDependency<TestController>(),
+        RtDependencyRef<TestController>(),
         instanceMatcher: testController,
         isOnce: true,
       );
 
       _testListenAndEmitEvent(
-        RtDependency<TestController>(),
+        RtDependencyRef<TestController>(),
         testController,
         instanceMatcher: testController,
         isOnce: true,
@@ -201,21 +201,21 @@ void main() {
       );
 
       _testListenAndEmitEvent(
-        RtDependency<TestController>('uniqueId'),
-        RtDependency<TestController>('uniqueId'),
+        RtDependencyRef<TestController>('uniqueId'),
+        RtDependencyRef<TestController>('uniqueId'),
         instanceMatcher: testController,
         isOnce: true,
       );
 
       _testListenAndEmitEvent(
         testController,
-        RtDependency<TestController>('uniqueId'),
+        RtDependencyRef<TestController>('uniqueId'),
         instanceMatcher: testController,
         isOnce: true,
       );
 
       _testListenAndEmitEvent(
-        RtDependency<TestController>('uniqueId'),
+        RtDependencyRef<TestController>('uniqueId'),
         testController,
         instanceMatcher: testController,
         isOnce: true,
@@ -316,7 +316,7 @@ void _testUnlistenEvent({bool withId = false}) {
 
   Rt.on(testController, Events.TestEvent, onTestEvent);
   Rt.on(
-    RtDependency<TestController>(id),
+    RtDependencyRef<TestController>(id),
     Events.TestEvent,
     (inst, param) {
       expect(inst, testController);
@@ -324,7 +324,7 @@ void _testUnlistenEvent({bool withId = false}) {
     },
   );
   Rt.on(
-    RtDependency<TestController>(id),
+    RtDependencyRef<TestController>(id),
     Events.TestEvent2,
     onTestEvent2,
   );
@@ -338,7 +338,7 @@ void _testUnlistenEvent({bool withId = false}) {
   expect(countEvent2, 0);
 
   Rt.emit(
-    RtDependency<TestController>(id),
+    RtDependencyRef<TestController>(id),
     Events.TestEvent,
     TEST_EVENT_PARAM_NAME,
   );
@@ -347,7 +347,7 @@ void _testUnlistenEvent({bool withId = false}) {
   expect(countEvent2, 0);
 
   Rt.emit(
-    RtDependency<TestController>(id),
+    RtDependencyRef<TestController>(id),
     Events.TestEvent2,
     TEST_EVENT2_PARAM_NAME,
   );
@@ -357,7 +357,7 @@ void _testUnlistenEvent({bool withId = false}) {
 
   Rt.off(testController, Events.TestEvent, onTestEvent);
   Rt.emit(
-    RtDependency<TestController>(id),
+    RtDependencyRef<TestController>(id),
     Events.TestEvent,
     TEST_EVENT_PARAM_NAME,
   );
@@ -372,13 +372,13 @@ void _testUnlistenEvent({bool withId = false}) {
   expect(countEvent2, 2);
 
   Rt.off(
-    RtDependency<TestController>(id),
+    RtDependencyRef<TestController>(id),
     Events.TestEvent2,
     onTestEvent2,
   );
   Rt.emit(testController, Events.TestEvent2, TEST_EVENT2_PARAM_NAME);
   Rt.emit(
-    RtDependency<TestController>(id),
+    RtDependencyRef<TestController>(id),
     Events.TestEvent2,
     TEST_EVENT2_PARAM_NAME,
   );

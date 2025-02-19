@@ -118,11 +118,11 @@ void main() {
       expect(logs.last['level'], LogLevel.fine);
       expect(
         logs.last['message'],
-        '${prettyFormat(RtDependency<StateTest>(id))} registered.',
+        '${prettyFormat(RtDependencyRef<StateTest>(id))} registered.',
       );
 
       final dependency = Rt.getDependencyRegisterByRef(
-        RtDependency<StateTest>(id),
+        RtDependencyRef<StateTest>(id),
       );
 
       Rt.create(() => instance, id: id);
@@ -191,7 +191,7 @@ void main() {
       expect(logs.last['level'], LogLevel.info);
       expect(
         logs.last['message'],
-        '${prettyFormat(RtDependency<StateTest>(id))} already deleted.',
+        '${prettyFormat(RtDependencyRef<StateTest>(id))} already deleted.',
       );
 
       Rt.unregister<StateTest>(id);
@@ -200,12 +200,12 @@ void main() {
       expect(logs.last['level'], LogLevel.info);
       expect(
         logs.last['message'],
-        '${prettyFormat(RtDependency<StateTest>(id))} already unregistered.',
+        '${prettyFormat(RtDependencyRef<StateTest>(id))} already unregistered.',
       );
 
       Rt.create(() => StateTest(), id: id, mode: DependencyMode.factory);
       final dependencyFactoryRef = Rt.getDependencyRegisterByRef(
-        RtDependency<StateTest>(id),
+        RtDependencyRef<StateTest>(id),
       );
       Rt.delete<StateTest>(id);
 
@@ -218,7 +218,7 @@ void main() {
       Rt.destroy<StateTest>(id: id);
       Rt.create(() => StateTest(), id: id, mode: DependencyMode.singleton);
       final dependencySingletonRef = Rt.getDependencyRegisterByRef(
-        RtDependency<StateTest>(id),
+        RtDependencyRef<StateTest>(id),
       );
       Rt.delete<StateTest>(id);
 
@@ -235,7 +235,7 @@ void main() {
       expect(
         logs.last['message'],
         startsWith(
-            "${prettyFormat(RtDependency<StateTest>(id))} couldn't register."),
+            "${prettyFormat(RtDependencyRef<StateTest>(id))} couldn't register."),
       );
 
       Rt.create(() => StateTest(), id: id);
@@ -245,7 +245,7 @@ void main() {
       expect(
         logs.last['message'],
         startsWith(
-          "${prettyFormat(RtDependency<StateTest>(id))} couldn't unregister",
+          "${prettyFormat(RtDependencyRef<StateTest>(id))} couldn't unregister",
         ),
       );
     });
