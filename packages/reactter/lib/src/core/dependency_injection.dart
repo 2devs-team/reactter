@@ -339,14 +339,14 @@ abstract class DependencyInjection implements IContext {
 
         _notifyDependencyFailed(
           dependencyRegister,
-          DependencyFail.builderRetainedAsFactory,
+          DependencyFail.builderRetained,
         );
 
         return true;
       case DependencyMode.singleton:
         _notifyDependencyFailed(
           dependencyRegister,
-          DependencyFail.dependencyRetainedAsSingleton,
+          DependencyFail.dependencyRetained,
         );
     }
 

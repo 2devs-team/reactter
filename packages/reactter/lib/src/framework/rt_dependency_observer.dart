@@ -42,25 +42,25 @@ part of '../framework.dart';
 /// {@endtemplate}
 class RtDependencyObserver implements IDependencyObserver {
   /// {@macro reactter.i_dependency_observer.on_dependency_registered}
-  final void Function(DependencyRef)? onRegistered;
+  final void Function(DependencyRef dependency)? onRegistered;
 
   /// {@macro reactter.i_dependency_observer.on_dependency_created}
-  final void Function(DependencyRef, Object?)? onCreated;
+  final void Function(DependencyRef dependency, Object? instance)? onCreated;
 
   /// {@macro reactter.i_dependency_observer.on_dependency_mounted}
-  final void Function(DependencyRef, Object?)? onMounted;
+  final void Function(DependencyRef dependency, Object? instance)? onMounted;
 
   /// {@macro reactter.i_dependency_observer.on_dependency_unmounted}
-  final void Function(DependencyRef, Object?)? onUnmounted;
+  final void Function(DependencyRef dependency, Object? instance)? onUnmounted;
 
   /// {@macro reactter.i_dependency_observer.on_dependency_deleted}
-  final void Function(DependencyRef, Object?)? onDeleted;
+  final void Function(DependencyRef dependency, Object? instance)? onDeleted;
 
   /// {@macro reactter.i_dependency_observer.on_dependency_unregistered}
-  final void Function(DependencyRef)? onUnregistered;
+  final void Function(DependencyRef dependency)? onUnregistered;
 
   /// {@macro reactter.i_dependency_observer.on_dependency_failed}
-  final void Function(DependencyRef, DependencyFail)? onFailed;
+  final void Function(DependencyRef dependency, DependencyFail fail)? onFailed;
 
   RtDependencyObserver({
     this.onRegistered,

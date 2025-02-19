@@ -3,6 +3,7 @@ import 'package:reactter/reactter.dart';
 import 'package:reactter/src/internals.dart';
 
 import '../shareds/test_controllers.dart';
+
 void main() {
   group("RtDependencyObserver", () {
     test("should be observed when a dependency is registered", () {
@@ -183,14 +184,14 @@ void main() {
       Rt.delete<TestController>();
 
       expect(onFailedCalledCount, 7);
-      expect(lastFail, DependencyFail.builderRetainedAsFactory);
+      expect(lastFail, DependencyFail.builderRetained);
 
       Rt.destroy<TestController>();
       Rt.create(() => TestController(), mode: DependencyMode.singleton);
       Rt.delete<TestController>();
 
       expect(onFailedCalledCount, 8);
-      expect(lastFail, DependencyFail.dependencyRetainedAsSingleton);
+      expect(lastFail, DependencyFail.dependencyRetained);
 
       Rt.unregister<TestController>();
 

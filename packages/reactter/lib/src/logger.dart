@@ -217,14 +217,14 @@ class RtLogger implements IStateObserver, IDependencyObserver {
           stackTrace: StackTrace.current,
         );
         break;
-      case DependencyFail.builderRetainedAsFactory:
+      case DependencyFail.builderRetained:
         log(
           "${prettyFormat(dependency)}'s instance retained because it's factory mode.",
           level: LogLevel.info,
           stackTrace: StackTrace.current,
         );
         break;
-      case DependencyFail.dependencyRetainedAsSingleton:
+      case DependencyFail.dependencyRetained:
         log(
           "${prettyFormat(dependency)} retained because it's singleton mode.",
           level: LogLevel.info,
@@ -233,7 +233,7 @@ class RtLogger implements IStateObserver, IDependencyObserver {
         break;
       case DependencyFail.missingInstanceBuilder:
         log(
-          "${prettyFormat(dependency)} couldn't register.\n"
+          "${prettyFormat(dependency)} builder was not registered previously.\n"
           "You should register the instance build with: \n"
           "\t`Rt.register<$T>(() => $T(...)$idParam);`\n"
           "\t`Rt.create<$T>(() => $T(...)$idParam);`",

@@ -146,7 +146,7 @@ enum DependencyFail {
   alreadyDeleted,
   alreadyUnregistered,
   missingInstanceBuilder,
-  builderRetainedAsFactory,
-  dependencyRetainedAsSingleton,
+  builderRetained,
+  dependencyRetained,
   cannotUnregisterActiveInstance,
 }
