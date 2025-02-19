@@ -13,20 +13,20 @@ import { HM, HT } from '@/components/Highlight';
 
 ```dart showLineNumbers=false
   RtStateObserver({
-    void onBound(RtState state, Object instance),
-    void onUnbound(RtState state, Object instance),,
-    void onCreated(RtState state),
-    void onUpdated(RtState state),
-    void onDisponsed(RtState state),
+    void onBound(RtState state, Object instance)?,
+    void onUnbound(RtState state, Object instance)?,
+    void onCreated(RtState state)?,
+    void onUpdated(RtState state)?,
+    void onDisponsed(RtState state)?,
   });
 ```
 ## Properties
 
-- <HM>**`onBound`**</HM>: A callback that is called when a state is bound to an instance.
-- <HM>**`onUnbound`**</HM>: A callback that is called when a state is unbound from an instance.
-- <HM>**`onCreated`**</HM>: A callback that is called when a state is created.
-- <HM>**`onUpdated`**</HM>: A callback that is called when a state is updated.
-- <HM>**`onDisposed`**</HM>: A callback that is called when a state is disposed.
+- <HM>**`onBound`**</HM>: *(optional)* A callback that is called when a `state` is bound to an `instance`.
+- <HM>**`onUnbound`**</HM>: *(optional)* A callback that is called when a `state` is unbound from an `instance`.
+- <HM>**`onCreated`**</HM>: *(optional)* A callback that is called when a `state` is created.
+- <HM>**`onUpdated`**</HM>: *(optional)* A callback that is called when a `state` is updated.
+- <HM>**`onDisposed`**</HM>: *(optional)* A callback that is called when a `state` is disposed.
 
 ## Usage
 
