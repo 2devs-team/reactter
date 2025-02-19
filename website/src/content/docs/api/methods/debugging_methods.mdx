@@ -115,11 +115,11 @@ Rt.addObserver(IObserver observer);
 
 ### Parameters
 
-- **`observer`**: The observer to add like <HT>`RtStateObserver`</HT> or <HT>`RtDependencyObserver`</HT>.
+- **`observer`**: The observer to add like <HT>[`RtStateObserver`](/reactter/api/classes/rt_state_observer)</HT> or <HT>[`RtDependencyObserver`](/reactter/api/classes/rt_dependency_observer)</HT>.
 
 ### Usage
 
-You can add a <HT>`RtStateObserver`</HT> to listen to the state lifecycle, e.g.:
+You can add a <HT>[`RtStateObserver`](/reactter/api/classes/rt_state_observer)</HT> to listen to the state lifecycle, e.g.:
 
 ```dart showLineNumbers=false
 final stateObserver = RtStateObserver(
@@ -131,7 +131,7 @@ final stateObserver = RtStateObserver(
 Rt.addObserver(stateObserver);
 ```
 
-Or add a <HT>`RtDependencyObserver`</HT> to listen to the dependency lifecycle, e.g.:
+Or add a <HT>[`RtDependencyObserver`](/reactter/api/classes/rt_dependency_observer)</HT> to listen to the dependency lifecycle, e.g.:
 
 ```dart showLineNumbers=false
 final dependencyObserver = RtDependencyObserver(
