@@ -21,7 +21,7 @@ void onDidUpdateStateB(instance, Signal state) {
 void main() {
   // Listen to the `myEvent` event of the `MyDependency` before it's created.
   Rt.on(
-    RtDependency<MyDependency>(),
+    RtDependencyRef<MyDependency>(),
     CustomEvent.myEvent,
     onMyEvent,
   );
@@ -61,7 +61,7 @@ void main() {
 
   // Stop listening to the `myEvent` event of the `MyDependency`
   Rt.off(
-    RtDependency<MyDependency>(),
+    RtDependencyRef<MyDependency>(),
     CustomEvent.myEvent,
     onMyEvent,
   );

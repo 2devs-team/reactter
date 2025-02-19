@@ -5,7 +5,7 @@ import 'my_dependency.dart';
 void main() {
   // Listen to the `myEvent` event of the `MyDependency` before it's created.
   Rt.on(
-    RtDependency<MyDependency>(),
+    RtDependencyRef<MyDependency>(),
     CustomEvent.myEvent,
     (instance, param) => print('CustomEvent emitted with param: $param'),
   );
@@ -55,7 +55,7 @@ void main() {
   Rt.offAll(myDependency.stateA);
 
   // Remove all event listeners of `myDependency`,
-  // including the generic listeners (using `RtDependency`).
+  // including the generic listeners (using `RtDependencyRef`).
   Rt.offAll(myDependency, true);
 
   // No print for neither `stateA` nor the `MyDependency` instance

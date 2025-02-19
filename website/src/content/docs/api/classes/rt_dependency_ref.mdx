@@ -1,0 +1,55 @@
+---
+title: RtDependencyRef
+description: Represents dependency managed by Reactter's dependency injection.
+sidebar:
+  order: 4
+---
+
+import { HE, HM, HT } from '@/components/Highlight';
+
+<HT><a href="https://pub.dev/documentation/reactter/latest/reactter/RtDependencyRef-class.html" target="_blank">`RtDependencyRef`</a></HT> is a class that represents a reference to a dependency managed by Reactter's dependency injection system.
+
+## Syntax
+
+```dart showLineNumbers=false
+  RtDependencyRef<T>([String? id]);
+```
+
+The <HT>`RtDependencyRef`</HT> class accepts this parameter:
+
+- <HM>**`id`**</HM>: *(optional)* A unique identifier for the dependency.
+
+## Usage
+
+To use <HT>`RtDependencyRef`</HT>, you need to instantiate it, pass the type of dependency you want to reference and use for event handling, e.g.:
+
+```dart "RtDependencyRef" "Rt.on" "Rt.register" "Rt.get" "Rt.delete"
+import 'package:reactter/reactter.dart';
+
+// Define a dependency class
+class MyDependency {}
+
+void main() {
+  // Create a dependency reference
+  final dependencyRef = RtDependencyRef<MyDependency>();
+
+  // Use the dependency reference for event handling
+  Rt.on(dependencyRef, Lifecycle.registered, (_, __) {
+    print('Dependency registered');
+  });
+  Rt.on(dependencyRef, Lifecycle.created, (_, __) {
+    print('Dependency created');
+  });
+  Rt.on(dependencyRef, Lifecycle.deleted, (_, __) {
+    print('Dependency deleted');
+  });
+  Rt.on(dependencyRef, Lifecycle.unregistered, (_, __) {
+    print('Dependency unregistered');
+  });
+
+  // Register, create, delete, and unregister the dependency
+  Rt.register(() => MyDependency());
+  Rt.get<MyDependency>();
+  Rt.delete<MyDependency>();
+}
+```
