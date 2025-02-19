@@ -42,7 +42,7 @@ It's recommended read that first if you're new in Reactter.
 
     ```dart showLineNumbers=false
     UseDependency<T>.register(
-      T Function() builder, {
+      T builder(), {
         String? id,
         DependencyMode mode = DependencyMode.builder,
         String? debugLabel,
@@ -54,7 +54,7 @@ It's recommended read that first if you're new in Reactter.
 
     ```dart showLineNumbers=false
     UseDependency<T>.create(
-      T Function() builder, {
+      T builder(), {
         String? id,
         DependencyMode mode = DependencyMode.builder,
         String? debugLabel,
@@ -66,7 +66,7 @@ It's recommended read that first if you're new in Reactter.
 
     ```dart showLineNumbers=false
     UseDependency<T>.lazyBuilder(
-      T Function() builder, {
+      T builder(), {
         String? id,
         String? debugLabel
       },
@@ -77,7 +77,7 @@ It's recommended read that first if you're new in Reactter.
 
     ```dart showLineNumbers=false
     UseDependency<T>.lazyFactory(
-      T Function() builder, {
+      T builder(), {
         String? id,
         String? debugLabel
       },
@@ -88,7 +88,7 @@ It's recommended read that first if you're new in Reactter.
 
     ```dart showLineNumbers=false
     UseDependency<T>.lazySingleton(
-      T Function() builder, {
+      T builder(), {
         String? id,
         String? debugLabel
       },
@@ -99,7 +99,7 @@ It's recommended read that first if you're new in Reactter.
 
     ```dart showLineNumbers=false
     UseDependency<T>.builder(
-      T Function() builder, {
+      T builder(), {
         String? id,
         DependencyMode mode = DependencyMode.builder,
         String? debugLabel,
@@ -111,7 +111,7 @@ It's recommended read that first if you're new in Reactter.
 
     ```dart showLineNumbers=false
     UseDependency<T>.factory(
-      T Function() builder, {
+      T builder(), {
         String? id,
         DependencyMode mode = DependencyMode.builder,
         String? debugLabel,
@@ -123,7 +123,7 @@ It's recommended read that first if you're new in Reactter.
 
     ```dart showLineNumbers=false
     UseDependency<T>.singleton(
-      T Function() builder, {
+      T builder(), {
         String? id,
         DependencyMode mode = DependencyMode.builder,
         String? debugLabel,
