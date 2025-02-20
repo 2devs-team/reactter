@@ -4,7 +4,7 @@ homepage: https://2devs-team.github.io/reactter/
 documentation: https://2devs-team.github.io/reactter/
 repository: https://github.com/2devs-team/reactter/tree/master/packages/flutter_reactter
 license: MIT License
-version: 8.0.0-dev.22
+version: 8.0.0-dev.31
 
 topics:
   - reactive
@@ -26,7 +26,9 @@ dependencies:
   flutter:
     sdk: flutter
   meta: ^1.7.0
-  reactter: ^8.0.0-dev.20
+  reactter: ^8.0.0-dev.31
+  # reactter:
+  #   path: ../reactter
 
 dev_dependencies:
   flutter_test:
@@ -34,7 +36,7 @@ dev_dependencies:
   flutter_lints: ^2.0.3
 
 scripts:
-  test: "flutter test --coverage"
-  analyze: "dart analyze ."
-  public-dry-run: "dart pub publish --dry-run"
-  public: "dart pub publish"
+  test: "fvm flutter test --coverage"
+  analyze: "fvm dart analyze ."
+  public-dry-run: "fvm dart pub publish --dry-run"
+  public: "fvm dart pub publish"

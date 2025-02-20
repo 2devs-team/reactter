@@ -4,7 +4,7 @@ homepage: https://2devs-team.github.io/reactter/
 documentation: https://2devs-team.github.io/reactter/
 repository: https://github.com/2devs-team/reactter/tree/master/packages/reactter
 license: MIT License
-version: 8.0.0-dev.20
+version: 8.0.0-dev.31
 
 topics:
   - reactive
@@ -18,7 +18,6 @@ screenshots:
   - description: "Reactter Example App"
     path: doc/screenshots/example_app.png
 
-
 environment:
   sdk: ">=2.19.2 <4.0.0"
 
@@ -28,12 +27,11 @@ dependencies:
 dev_dependencies:
   fake_async: ^1.3.1
   lints: ^2.0.1
-  test: ^1.24.0
   flutter_test:
     sdk: flutter
 
 scripts:
-  test: "flutter test --coverage"
-  analyze: "dart analyze ."
-  public-dry-run: "dart pub publish --dry-run"
-  public: "dart pub publish"
+  test: "fvm flutter test --coverage"
+  analyze: "fvm dart analyze ."
+  public-dry-run: "fvm dart pub publish --dry-run"
+  public: "fvm dart pub publish"
