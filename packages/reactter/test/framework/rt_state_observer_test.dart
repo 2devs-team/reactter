@@ -1,6 +1,6 @@
 import 'package:reactter/reactter.dart';
 import 'package:reactter/src/internals.dart';
-import 'package:test/test.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group("RtStateObserver", () {

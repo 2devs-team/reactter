@@ -1,7 +1,7 @@
 import 'package:fake_async/fake_async.dart';
 import 'package:reactter/reactter.dart';
 
-import 'package:test/test.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 import 'shareds/test_controllers.dart';
 

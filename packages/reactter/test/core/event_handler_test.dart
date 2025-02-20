@@ -1,7 +1,7 @@
 // ignore_for_file: constant_identifier_names
 
 import 'package:reactter/reactter.dart';
-import 'package:test/test.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 import '../shareds/test_controllers.dart';
 

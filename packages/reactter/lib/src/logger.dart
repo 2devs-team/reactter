@@ -219,14 +219,14 @@ class RtLogger implements IStateObserver, IDependencyObserver {
         break;
       case DependencyFail.builderRetained:
         log(
-          "${prettyFormat(dependency)}'s instance retained because it's factory mode.",
+          "${prettyFormat(dependency)}'s instance retained because is in factory mode.",
           level: LogLevel.info,
           stackTrace: StackTrace.current,
         );
         break;
       case DependencyFail.dependencyRetained:
         log(
-          "${prettyFormat(dependency)} retained because it's singleton mode.",
+          "${prettyFormat(dependency)} retained because is in singleton mode.",
           level: LogLevel.info,
           stackTrace: StackTrace.current,
         );

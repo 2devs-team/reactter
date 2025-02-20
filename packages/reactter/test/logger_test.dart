@@ -212,7 +212,7 @@ void main() {
       expect(logs.last['level'], LogLevel.info);
       expect(
         logs.last['message'],
-        "${prettyFormat(dependencyFactoryRef)}'s instance retained because it's factory mode.",
+        "${prettyFormat(dependencyFactoryRef)}'s instance retained because is in factory mode.",
       );
 
       Rt.destroy<StateTest>(id: id);
@@ -225,7 +225,7 @@ void main() {
       expect(logs.last['level'], LogLevel.info);
       expect(
         logs.last['message'],
-        "${prettyFormat(dependencySingletonRef)} retained because it's singleton mode.",
+        "${prettyFormat(dependencySingletonRef)} retained because is in singleton mode.",
       );
 
       Rt.destroy<StateTest>(id: id);
@@ -235,7 +235,7 @@ void main() {
       expect(
         logs.last['message'],
         startsWith(
-            "${prettyFormat(RtDependencyRef<StateTest>(id))} couldn't register."),
+            "${prettyFormat(RtDependencyRef<StateTest>(id))} builder was not registered previously."),
       );
 
       Rt.create(() => StateTest(), id: id);
