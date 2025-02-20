@@ -40,7 +40,7 @@ abstract class RtState<E extends RtState<E>> {
 ### Declaration
 
 To create a custom state, extend the <HT>`RtState`</HT> class and define the state properties and methods.
-Register the state using <HM>`Rt.createState`</HM> or as a dependency within the Reactter framework, e.g.:
+Register the state using <HM>[`Rt.createState`](/reactter/api/methods/state_management_methods/#rtcreatestate)</HM> or as a dependency within the Reactter framework, e.g.:
 
 ```dart collapse={13-20} mark={1,12} "RtState" "Rt.createState" "Rt.on" "Lifecycle.didUpdate" /update(?=\u0028)/
 class MyState extends RtState<MyState> {

@@ -63,6 +63,51 @@ void main() {
 
 In the example, the `uCount` state is lazily declared inside the <HT>`CountController`</HT> class using <HM>`Rt.lazyState`</HM>. It's accessed after creating the <HT>`CountController`</HT> instance, and when the instance is deleted, the state is automatically disposed, ensuring efficient resource management.
 
+
+## <HM>`Rt.createState`</HM>
+
+<HM>`Rt.createState`</HM> is a method that allows to register a <HT>[`RtState`](/reactter/api/classes/rt_state)</HT> instance.
+All states created must be registered using this method for proper management and disposal.
+
+:::note
+In most cases, you don't need to manually use the `Rt.createState` method to create a state when using `RtHook` or `Signal` classes, as they automatically handle the registration of the state instance.
+
+However, if you're creating a custom state using the `RtState` class directly, you **must** use `Rt.createState` to properly register the state instance.
+:::
+
+#### Syntax
+
+```dart showLineNumbers=false
+T Rt.createState<T extends RtState>(T stateFn());
+```
+
+#### Example
+
+In this example, the custom state using <HT>[`RtState`](/reactter/api/classes/rt_state)</HT> class is created and registered using <HM>`Rt.createState`</HM> method.
+
+```dart collapse={13-20} mark={1,12} "RtState" "Rt.createState" "Rt.on" "Lifecycle.didUpdate" /update(?=\u0028)/
+class MyState extends RtState<MyState> {
+  int _value = 0;
+  int get value => _value;
+  set value(int n) {
+    if (n == _value) return;
+    update(() => _value = n); // set new value and notify observers
+  }
+
+  MyState([int value = 0]) : _value = value;
+}
+
+final state = Rt.createState<MyState>(() => MyState()); // Register state
+
+Rt.on(
+  state,
+  Lifecycle.didUpdate,
+  (_, __) => print('State updated: ${state.value}')
+);
+
+state.value = 42; // Calls update internally
+```
+
 ## <HM>`Rt.batch`</HM>
 
 The <HM>`Rt.batch`</HM> method allows multiple state changes to be grouped together, triggering them all at the end when the <HM>`callback`</HM> completes. This ensures that associated side effects occur only once, improving performance and reducing unnecessary re-renders.
