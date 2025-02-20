@@ -6,6 +6,16 @@ sidebar:
 ---
 
 import { HE, HM, HT } from '@/components/Highlight';
+import CodeTabs from '@/components/CodeTabs.astro';
+import { Tabs, TabItem } from "@/components/Tabs";
+import ZappButton from "@/components/ZappButton.astro";
+import { Code } from "@astrojs/starlight/components";
+import { marks } from '@/examples/marks.ts'
+
+import counterControllerEventHandlerCode from '@/examples/lifecycle_event_handler/lib/counter_controller.dart?raw';
+import counterEventHandlerCode from '@/examples/lifecycle_event_handler/lib/counter.dart?raw';
+import counterViewEventHandlerCode from '@/examples/lifecycle_event_handler/lib/counter_view.dart?raw';
+import counterMainEventHandlerCode from '@/examples/lifecycle_event_handler/lib/main.dart?raw';
 
 <HT><a href="https://pub.dev/documentation/reactter/latest/reactter/RtDependencyRef-class.html" target="_blank">`RtDependencyRef`</a></HT> is a class that represents a reference to a dependency managed by Reactter's dependency injection system.
 
@@ -23,33 +33,25 @@ The <HT>`RtDependencyRef`</HT> class accepts this parameter:
 
 To use <HT>`RtDependencyRef`</HT>, you need to instantiate it, pass the type of dependency you want to reference and use for event handling, e.g.:
 
-```dart "RtDependencyRef" "Rt.on" "Rt.register" "Rt.get" "Rt.delete"
-import 'package:reactter/reactter.dart';
+<CodeTabs>
+  <ZappButton path="examples/lifecycle_event_handler"/>
 
-// Define a dependency class
-class MyDependency {}
+  <Tabs>
+    <TabItem>
+      <HM single slot="label">counter_view.dart</HM>
+      <Code code={counterViewEventHandlerCode} lang="dart" collapse={["34-60"]} mark={[...marks, {range: "11-15"}, {range: "17-21"}, {range: "23-27"}, {range: "29-33"}]} />
+    </TabItem>
 
-void main() {
-  // Create a dependency reference
-  final dependencyRef = RtDependencyRef<MyDependency>();
+    <TabItem label="counter_controller.dart">
+      <Code code={counterControllerEventHandlerCode} lang="dart" mark={marks}/>
+    </TabItem>
 
-  // Use the dependency reference for event handling
-  Rt.on(dependencyRef, Lifecycle.registered, (_, __) {
-    print('Dependency registered');
-  });
-  Rt.on(dependencyRef, Lifecycle.created, (_, __) {
-    print('Dependency created');
-  });
-  Rt.on(dependencyRef, Lifecycle.deleted, (_, __) {
-    print('Dependency deleted');
-  });
-  Rt.on(dependencyRef, Lifecycle.unregistered, (_, __) {
-    print('Dependency unregistered');
-  });
+    <TabItem label="counter.dart">
+      <Code code={counterEventHandlerCode} lang="dart" mark={marks} />
+    </TabItem>
 
-  // Register, create, delete, and unregister the dependency
-  Rt.register(() => MyDependency());
-  Rt.get<MyDependency>();
-  Rt.delete<MyDependency>();
-}
-```
+    <TabItem label="main.dart">
+      <Code code={counterMainEventHandlerCode} lang="dart" mark={marks} />
+    </TabItem>
+  </Tabs>
+</CodeTabs>
