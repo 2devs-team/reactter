@@ -16,7 +16,7 @@ abstract class StateManagement<S extends IState> implements IContext {
 
   /// Creates a new state by invoking the provided `buildState` function.
   ///
-  /// The `buildState` function should return an instance of a class that extends [IState].
+  /// The `buildState` function should return an instance of a class that extends [S].
   /// The created state is automatically bound to the current binding zone using `BindingZone.autoBinding`.
   ///
   /// Example usage:
