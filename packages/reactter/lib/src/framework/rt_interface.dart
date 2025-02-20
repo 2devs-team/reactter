@@ -16,4 +16,5 @@ class RtInterface
 /// This class represents the interface for the Reactter framework.
 /// It provides methods and properties for interacting with the Reactter framework.
 /// {@endtemplate}
+// ignore: non_constant_identifier_names
 final Rt = RtInterface();
