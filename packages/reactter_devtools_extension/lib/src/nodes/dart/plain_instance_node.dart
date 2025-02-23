@@ -20,7 +20,7 @@ base class PlainInstanceNode extends AsyncNode {
     required String key,
     required InstanceRef instanceRef,
   }) {
-    return Rt.createState(
+    return Rt.registerState(
       () => PlainInstanceNode._(
         key: key,
         instanceRef: instanceRef,

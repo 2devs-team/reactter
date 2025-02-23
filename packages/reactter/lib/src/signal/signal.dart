@@ -125,7 +125,7 @@ class Signal<T> with RtState {
         _debugLabel = debugLabel;
 
   factory Signal(T value, {String? debugLabel}) {
-    return Rt.createState(() => Signal._(value, debugLabel: debugLabel));
+    return Rt.registerState(() => Signal._(value, debugLabel: debugLabel));
   }
 
   /// Gets and/or sets to [value] like a function

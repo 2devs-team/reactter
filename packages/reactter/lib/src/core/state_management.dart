@@ -14,10 +14,10 @@ abstract class StateManagement<S extends IState> implements IContext {
 
   final LinkedHashMap<EventNotifier, Object?> _deferredEvents = LinkedHashMap();
 
-  /// Creates a new state by invoking the provided `buildState` function.
+  /// Register a new state by invoking the provided `buildState` function.
   ///
   /// The `buildState` function should return an instance of a class that extends [S].
-  /// The created state is automatically bound to the current binding zone using `BindingZone.autoBinding`.
+  /// The register state is automatically bound to the current binding zone using `BindingZone.autoBinding`.
   ///
   /// Example usage:
   /// ```dart
@@ -30,11 +30,11 @@ abstract class StateManagement<S extends IState> implements IContext {
   ///   }
   /// }
   ///
-  /// final state = Rt.createState<MyState>(() => MyState());
+  /// final state = Rt.registerState<MyState>(() => MyState());
   /// ```
   ///
-  /// Returns the created state.
-  T createState<T extends S>(T Function() buildState) {
+  /// Returns [T] state.
+  T registerState<T extends S>(T Function() buildState) {
     return BindingZone.autoBinding(buildState);
   }
 

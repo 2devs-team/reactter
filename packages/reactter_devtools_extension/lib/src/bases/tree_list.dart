@@ -3,13 +3,12 @@ import 'dart:collection';
 import 'package:flutter_reactter/reactter.dart';
 import 'package:reactter_devtools_extension/src/bases/tree_node.dart';
 
-base class TreeList<E extends TreeNode<E>> extends LinkedList<E>
-    with RtState {
+base class TreeList<E extends TreeNode<E>> extends LinkedList<E> with RtState {
   final uMaxDepth = UseState(0);
 
   TreeList._();
 
-  factory TreeList() => Rt.createState(() => TreeList<E>._());
+  factory TreeList() => Rt.registerState(() => TreeList<E>._());
 
   @override
   void add(E entry) => update(() => super.add(entry));

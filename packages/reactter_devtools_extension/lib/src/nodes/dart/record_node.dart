@@ -15,7 +15,7 @@ final class RecordNode extends AsyncNode {
   });
 
   factory RecordNode({required String key, required InstanceRef instanceRef}) {
-    return Rt.createState(
+    return Rt.registerState(
       () => RecordNode.$(
         key: key,
         instanceRef: instanceRef,

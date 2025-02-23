@@ -11,7 +11,7 @@ final class StateNode extends InstanceNode<StateInfo> {
   StateNode.$({required super.key}) : super.$();
 
   factory StateNode({required String key}) {
-    return Rt.createState(
+    return Rt.registerState(
       () => StateNode.$(key: key),
     );
   }

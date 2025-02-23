@@ -11,8 +11,9 @@ class RtInvalidStateCreation extends DartLintRule {
   static const _code = LintCode(
     name: "rt_invalid_state_creation",
     errorSeverity: ErrorSeverity.WARNING,
-    problemMessage: "The `{0}` state must be create under the Reactter context.",
-    correctionMessage: "Use `Rt.createState` method.",
+    problemMessage:
+        "The `{0}` state must be create under the Reactter context.",
+    correctionMessage: "Use `Rt.registerState` method.",
   );
 
   @override
@@ -37,12 +38,12 @@ class RtInvalidStateCreation extends DartLintRule {
       final methodInvocation = node.thisOrAncestorOfType<MethodInvocation>();
       final targetType = methodInvocation?.realTarget?.staticType;
       final methodName = methodInvocation?.methodName.staticElement;
-      final isCreateState = targetType != null &&
+      final isRegisterState = targetType != null &&
           methodName != null &&
           rtInterface.isAssignableFromType(targetType) &&
-          createStateType.isAssignableFrom(methodName);
+          registerStateType.isAssignableFrom(methodName);
 
-      if (methodInvocation == null || !isCreateState) return onInvalid(node);
+      if (methodInvocation == null || !isRegisterState) return onInvalid(node);
 
       final functionArg = methodInvocation.argumentList.arguments
           .whereType<FunctionExpression>()
@@ -64,7 +65,7 @@ class RtInvalidStateCreation extends DartLintRule {
     });
   }
 
-  bool isUsedCreateStateMethod(Set<AstNode> nodes, FunctionBody body) {
+  bool isUsedRegisterStateMethod(Set<AstNode> nodes, FunctionBody body) {
     final returnExpression = body.returnExpression;
     print(
         "RETURN EXPRESSION: $returnExpression, ${returnExpression.runtimeType}");
@@ -116,14 +117,14 @@ class _RtInvalidStateCreationFix extends DartFix {
         try {
           final changeBuilder = reporter.createChangeBuilder(
             message:
-                "Convert '${node.toString()}' to use `Rt.createState` method.",
+                "Convert '${node.toString()}' to use `Rt.registerState` method.",
             priority: 1,
           );
 
           changeBuilder.addDartFileEdit((builder) {
             builder.addSimpleReplacement(
               node.sourceRange,
-              "Rt.createState(() => ${node.toString()})",
+              "Rt.registerState(() => ${node.toString()})",
             );
           });
         } catch (e) {

@@ -6,7 +6,7 @@ class StateTest with RtState {
   StateTest._();
 
   factory StateTest() {
-    return Rt.createState(() => StateTest._());
+    return Rt.registerState(() => StateTest._());
   }
 
   @override

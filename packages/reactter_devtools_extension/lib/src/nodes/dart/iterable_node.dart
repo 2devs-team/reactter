@@ -18,7 +18,7 @@ final class IterableNode extends AsyncNode {
     required String key,
     required InstanceRef instanceRef,
   }) {
-    return Rt.createState(
+    return Rt.registerState(
       () => IterableNode.$(
         key: key,
         instanceRef: instanceRef,

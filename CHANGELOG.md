@@ -13,7 +13,7 @@
 - Add [`debugLabel`](https://pub.dev/documentation/reactter/8.0.0-dev.31/reactter/RtState/debugLabel.html) and [`debugInfo`](https://pub.dev/documentation/reactter/8.0.0-dev.31/reactter/RtState/debugInfo.html) to states and hooks to get info for debugging.
 - Add [`RtContextMixin`](https://pub.dev/documentation/reactter/8.0.0-dev.31/reactter/RtContextMixin-mixin.html) mixin to provide access to the `Rt` instance.
 - Add [`RtState`](https://pub.dev/documentation/reactter/8.0.0-dev.31/reactter/RtState-class.html) abstract class to implement the base logic of the state.
-- Add [`Rt.createState`](https://pub.dev/documentation/reactter/8.0.0-dev.31/reactter/RtInterface/createState.html) method to create a new state.
+- Add [`Rt.registerState`](https://pub.dev/documentation/reactter/8.0.0-dev.31/reactter/RtInterface/registerState.html) method to create a new state.
 - Add [`Rt.getRefAt`](https://pub.dev/documentation/reactter/8.0.0-dev.31/reactter/RtInterface/getRefAt.html) to get the reference of dependency created.
 - Add [`initHook`](https://pub.dev/documentation/reactter/8.0.0-dev.31/reactter/RtHook/initHook.html) method to `RtHook` to call when hook is created.
 - Add [`cancel`](https://pub.dev/documentation/reactter/8.0.0-dev.31/reactter/UseAsyncState/cancel.html) method to `UseAsyncState` to cancel current method.

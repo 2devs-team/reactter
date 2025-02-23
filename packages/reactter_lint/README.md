@@ -179,24 +179,24 @@ class MyState with RtState<MyState> {...}
 
 #### God
 
-Fix: Use `Rt.createState` method for creating the state under the Reactter context.
+Fix: Use `Rt.registerState` method for registering the state under the Reactter context.
 
 ```dart
 class MyState with RtState<MyState> {...}
 
-final myState = Rt.createState(() => MyState());
+final myState = Rt.registerState(() => MyState());
 ```
 
 ### rt_no_logic_in_create_state
 
-Don't put logic in `createState` method
+Don't put logic in `registerState` method
 
 #### Bad
 
-Cause: The `createState` method includes additional logic.
+Cause: The `registerState` method includes additional logic.
 
 ```dart
-> final myState = Rt.createState(() {
+> final myState = Rt.registerState(() {
 >   final inst = MyState();
 >   inst.foo();
 >   return inst;
@@ -204,7 +204,7 @@ Cause: The `createState` method includes additional logic.
 ```
 
 ```dart
-> final myState = Rt.createState(() {
+> final myState = Rt.registerState(() {
 >   if (flag) return MyState();
 >
 >   return OtherState();
@@ -213,17 +213,17 @@ Cause: The `createState` method includes additional logic.
 
 #### God
 
-Fix: Try moving the logic out of `createState` method.
+Fix: Try moving the logic out of `registerState` method.
 
 ```dart
-final myState = Rt.createState(() => MyState());
+final myState = Rt.registerState(() => MyState());
 myState.foo();
 ```
 
 ```dart
 final myState = flag 
-  ? Rt.createState(() => MyState())
-  : Rt.createState(() => OtherState());
+  ? Rt.registerState(() => MyState())
+  : Rt.registerState(() => OtherState());
 ```
 
 ### rt_state_late_convention

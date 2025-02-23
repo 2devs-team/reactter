@@ -11,7 +11,7 @@ base class InstanceNode<I extends InstanceInfo> extends Node<I> {
       : super(kind: InstanceKind.kPlainInstance);
 
   factory InstanceNode({required String key}) {
-    return Rt.createState(
+    return Rt.registerState(
       () => InstanceNode.$(key: key),
     );
   }

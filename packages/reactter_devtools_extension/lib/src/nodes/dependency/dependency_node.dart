@@ -8,7 +8,7 @@ final class DependencyNode extends InstanceNode<DependencyInfo> {
   DependencyNode.$({required super.key}) : super.$();
 
   factory DependencyNode({required String key}) {
-    return Rt.createState(
+    return Rt.registerState(
       () => DependencyNode.$(key: key),
     );
   }

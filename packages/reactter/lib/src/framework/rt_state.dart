@@ -3,7 +3,7 @@ part of '../internals.dart';
 /// {@template reactter.rt_state}
 /// A base class for creating a state object in Reactter.
 ///
-/// The state object must be registered using the [Rt.createState] method or
+/// The state object must be registered using the [Rt.registerState] method or
 /// registered as a dependency using the dependency injection. e.g.
 ///
 /// ```dart
@@ -16,11 +16,11 @@ part of '../internals.dart';
 ///   }
 /// }
 ///
-/// final state = Rt.createState<MyState>(() => MyState());
+/// final state = Rt.registerState<MyState>(() => MyState());
 /// ```
 ///
 /// See also:
-/// - [Rt.createState], for creating a state object.
+/// - [Rt.registerState], for register a state object.
 ///
 /// {@endtemplate}
 abstract class RtState implements IState {
@@ -36,7 +36,7 @@ abstract class RtState implements IState {
       if (!isRegistering) {
         throw AssertionError(
           "The state must be create within the BindingZone.\n"
-          "You can use the 'Rt.createState' method or register as dependency "
+          "You can use the 'Rt.registerState' method or register as dependency "
           "using the dependency injection to ensure that the state is registered.",
         );
       }

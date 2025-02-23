@@ -5,14 +5,14 @@ import 'package:custom_lint_builder/custom_lint_builder.dart';
 import 'package:reactter_lint/src/extensions.dart';
 import 'package:reactter_lint/src/types.dart';
 
-class RtNoLogicInCreateState extends DartLintRule {
-  const RtNoLogicInCreateState() : super(code: _code);
+class RtNoLogicInRegisterState extends DartLintRule {
+  const RtNoLogicInRegisterState() : super(code: _code);
 
   static const _code = LintCode(
     name: "rt_no_logic_in_create_state",
     errorSeverity: ErrorSeverity.WARNING,
-    problemMessage: "Don't put logic in `createState` method.",
-    correctionMessage: "Try moving the logic out of `createState` method.",
+    problemMessage: "Don't put logic in `registerState` method.",
+    correctionMessage: "Try moving the logic out of `registerState` method.",
   );
 
   static whenIsInvalid({
@@ -26,7 +26,7 @@ class RtNoLogicInCreateState extends DartLintRule {
 
       if (targetType == null || methodName == null) return;
       if (!rtInterface.isAssignableFromType(targetType)) return;
-      if (!createStateType.isAssignableFrom(methodName)) return;
+      if (!registerStateType.isAssignableFrom(methodName)) return;
       final functionArg = _getFunctionFromArgument(node);
 
       if (functionArg == null || functionArg.body is! BlockFunctionBody) return;

@@ -80,7 +80,7 @@ class TreeNode extends LinkedListEntry<TreeNode> with RtState {
   /// and keep it in memory until it is destroyed.
   factory TreeNode([TreeNode? parent]) {
     return Rt.singleton(
-      () => Rt.createState(() {
+      () => Rt.registerState(() {
         return TreeNode._(parent);
       }),
       id: _lastId.toString(),

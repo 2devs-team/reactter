@@ -16,7 +16,7 @@ final class ClosureNode extends AsyncNode {
   });
 
   factory ClosureNode({required String key, required InstanceRef instanceRef}) {
-    return Rt.createState(
+    return Rt.registerState(
       () => ClosureNode.$(
         key: key,
         instanceRef: instanceRef,

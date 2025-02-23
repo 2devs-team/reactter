@@ -19,7 +19,7 @@ class _ReactterLinter extends PluginBase {
       RtHookNameConvention(),
       RtInvalidHookPosition(),
       RtInvalidHookRegister(),
-      RtNoLogicInCreateState(),
+      RtNoLogicInRegisterState(),
       RtInvalidStateCreation(),
     ];
   }

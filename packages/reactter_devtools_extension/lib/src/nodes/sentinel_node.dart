@@ -6,7 +6,7 @@ final class SentinelNode extends Node<NodeInfo> {
   SentinelNode._({required super.key}) : super(kind: 'sentinel');
 
   factory SentinelNode({required String key}) {
-    return Rt.createState(
+    return Rt.registerState(
       () => SentinelNode._(key: key),
     );
   }

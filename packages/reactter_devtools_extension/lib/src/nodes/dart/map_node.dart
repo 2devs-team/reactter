@@ -15,7 +15,7 @@ final class MapNode extends AsyncNode {
   });
 
   factory MapNode({required String key, required InstanceRef instanceRef}) {
-    return Rt.createState(
+    return Rt.registerState(
       () => MapNode.$(key: key, instanceRef: instanceRef),
     );
   }

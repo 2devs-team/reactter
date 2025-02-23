@@ -7,7 +7,7 @@ class TreeList extends LinkedList<TreeNode> with RtState {
   TreeList._();
 
   factory TreeList() {
-    return Rt.createState(() => TreeList._());
+    return Rt.registerState(() => TreeList._());
   }
 
   @override

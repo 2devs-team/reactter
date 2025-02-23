@@ -11,7 +11,7 @@ final reactterType = TypeChecker.fromPackage('reactter');
 
 final rtInterface =
     TypeChecker.fromName('RtInterface', packageName: 'reactter');
-final createStateType =
-    TypeChecker.fromName('createState', packageName: 'reactter');
+final registerStateType =
+    TypeChecker.fromName('registerState', packageName: 'reactter');
 final lazyStateType =
     TypeChecker.fromName('lazyState', packageName: 'reactter');

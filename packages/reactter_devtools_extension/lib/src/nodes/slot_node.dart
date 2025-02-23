@@ -6,7 +6,7 @@ final class SlotNode extends Node<NodeInfo> {
   SlotNode._({required super.key}) : super(kind: 'slot');
 
   factory SlotNode({required String key}) {
-    return Rt.createState(
+    return Rt.registerState(
       () => SlotNode._(key: key),
     );
   }

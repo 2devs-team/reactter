@@ -26,7 +26,7 @@ final class KeyValueNode extends Node {
     required String value,
     required String kind,
   }) {
-    return Rt.createState(
+    return Rt.registerState(
       () => KeyValueNode.$(key: key, value: value, kind: kind),
     );
   }

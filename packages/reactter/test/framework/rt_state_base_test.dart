@@ -29,7 +29,7 @@ class StateTest with RtState {
   }
 
   factory StateTest() {
-    return Rt.createState(() => StateTest._());
+    return Rt.registerState(() => StateTest._());
   }
 
   @override
@@ -41,7 +41,7 @@ void main() {
     test('should create a state object within the BindingZone', () {
       expect(() => CountTest(), throwsA(isA<AssertionError>()));
 
-      final countState = Rt.createState(() => CountTest());
+      final countState = Rt.registerState(() => CountTest());
       expect(countState.debugLabel, 'CountTest');
 
       final state = StateTest();
@@ -62,7 +62,7 @@ void main() {
     });
 
     test('should update the state', () {
-      final countState = Rt.createState(() => CountTest());
+      final countState = Rt.registerState(() => CountTest());
       expect(countState.count, 0);
 
       countState.count = 1;
@@ -70,7 +70,7 @@ void main() {
     });
 
     test('should have debug info', () {
-      final countState = Rt.createState(() => CountTest());
+      final countState = Rt.registerState(() => CountTest());
       expect(countState.debugInfo, {"count": 0});
 
       countState.count = 1;
