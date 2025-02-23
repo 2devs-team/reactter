@@ -64,28 +64,28 @@ void main() {
 In the example, the `uCount` state is lazily declared inside the <HT>`CountController`</HT> class using <HM>`Rt.lazyState`</HM>. It's accessed after creating the <HT>`CountController`</HT> instance, and when the instance is deleted, the state is automatically disposed, ensuring efficient resource management.
 
 
-## <HM>`Rt.createState`</HM>
+## <HM>`Rt.registerState`</HM>
 
-<HM>`Rt.createState`</HM> is a method that allows to register a <HT>[`RtState`](/reactter/api/classes/rt_state)</HT> instance.
+<HM>`Rt.registerState`</HM> is a method that allows to register a <HT>[`RtState`](/reactter/api/classes/rt_state)</HT> instance.
 All states created must be registered using this method for proper management and disposal.
 
 :::note
-In most cases, you don't need to manually use the `Rt.createState` method to create a state when using `RtHook` or `Signal` classes, as they automatically handle the registration of the state instance.
+In most cases, you don't need to manually use the <HM>`Rt.registerState`</HM> method to create a state when using <HT>[`RtHook`](/reactter/api/classes/rt_hook)</HT> or <HT>[`Signal`](/reactter/api/classes/signal)</HT> classes, as they automatically handle the registration of the state instance.
 
-However, if you're creating a custom state using the `RtState` class directly, you **must** use `Rt.createState` to properly register the state instance.
+However, if you're creating a custom state using the <HT>[`RtState`](/reactter/api/classes/rt_state)</HT> class directly, you **must** use <HM>`Rt.registerState`</HM> to properly register the state instance.
 :::
 
 #### Syntax
 
 ```dart showLineNumbers=false
-T Rt.createState<T extends RtState>(T stateFn());
+T Rt.registerState<T extends RtState>(T stateFn());
 ```
 
 #### Example
 
-In this example, the custom state using <HT>[`RtState`](/reactter/api/classes/rt_state)</HT> class is created and registered using <HM>`Rt.createState`</HM> method.
+In this example, the custom state using <HT>[`RtState`](/reactter/api/classes/rt_state)</HT> class is created and registered using <HM>`Rt.registerState`</HM> method.
 
-```dart collapse={13-20} mark={1,12} "RtState" "Rt.createState" "Rt.on" "Lifecycle.didUpdate" /update(?=\u0028)/
+```dart collapse={13-20} mark={1,12} "RtState" "Rt.registerState" "Rt.on" "Lifecycle.didUpdate" /update(?=\u0028)/
 class MyState extends RtState<MyState> {
   int _value = 0;
   int get value => _value;
@@ -97,7 +97,7 @@ class MyState extends RtState<MyState> {
   MyState([int value = 0]) : _value = value;
 }
 
-final state = Rt.createState<MyState>(() => MyState()); // Register state
+final state = Rt.registerState<MyState>(() => MyState()); // Register state
 
 Rt.on(
   state,

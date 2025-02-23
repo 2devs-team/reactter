@@ -40,9 +40,9 @@ abstract class RtState<E extends RtState<E>> {
 ### Declaration
 
 To create a custom state, extend the <HT>`RtState`</HT> class and define the state properties and methods.
-Register the state using <HM>[`Rt.createState`](/reactter/api/methods/state_management_methods/#rtcreatestate)</HM> or as a dependency within the Reactter framework, e.g.:
+Register the state using <HM>[`Rt.registerState`](/reactter/api/methods/state_management_methods/#rtregisterstate)</HM> or as a dependency within the Reactter framework, e.g.:
 
-```dart collapse={13-20} mark={1,12} "RtState" "Rt.createState" "Rt.on" "Lifecycle.didUpdate" /update(?=\u0028)/
+```dart collapse={13-20} mark={1,12} "RtState" "Rt.registerState" "Rt.on" "Lifecycle.didUpdate" /update(?=\u0028)/
 class MyState extends RtState<MyState> {
   int _value = 0;
   int get value => _value;
@@ -54,7 +54,7 @@ class MyState extends RtState<MyState> {
   MyState([int value = 0]) : _value = value;
 }
 
-final state = Rt.createState<MyState>(() => MyState()); // Register state
+final state = Rt.registerState<MyState>(() => MyState()); // Register state
 
 Rt.on(
   state,
@@ -68,7 +68,7 @@ state.value = 42; // Calls update internally
 :::tip
 You can also use the factory constructor to create a state, e.g.:
 
-```dart collapse={2-8, 15-21} mark={11-13} "RtState" "Rt.createState" "Rt.on" "Lifecycle.didUpdate" /update(?=\u0028)/
+```dart collapse={2-8, 15-21} mark={11-13} "RtState" "Rt.registerState" "Rt.on" "Lifecycle.didUpdate" /update(?=\u0028)/
 class MyState extends RtState<MyState> {
   int _value = 0;
   int get value => _value;
@@ -80,7 +80,7 @@ class MyState extends RtState<MyState> {
   MyState._([int value = 0]) : _value = value;
 
   factory MyState(int value) {
-    return Rt.createState(() => MyState._(value)); // Register state
+    return Rt.registerState(() => MyState._(value)); // Register state
   }
 }
 
@@ -93,14 +93,14 @@ Rt.on(
 state.value = 42; // Calls update internally
 ```
 
-This approach allows you to create a state directly without the need to call the <HM>`Rt.createState`</HM> method explicitly.
+This approach allows you to create a state directly without the need to call the <HM>`Rt.registerState`</HM> method explicitly.
 :::
 
 ### Updating the state
 
 To update the state, call the <HM>`update`</HM> method and provide a callback function that modifies the state, e.g.:
 
-```dart collapse={2-3, 8-13} mark={6, 22} "RtState" "Rt.createState" "Rt.on" "Lifecycle.didUpdate" /update(?=\u0028)/
+```dart collapse={2-3, 8-13} mark={6, 22} "RtState" "Rt.registerState" "Rt.on" "Lifecycle.didUpdate" /update(?=\u0028)/
 class MyState extends RtState<MyState> {
   int _value = 0;
   int get value => _value;
@@ -112,7 +112,7 @@ class MyState extends RtState<MyState> {
   MyState._([int value = 0]) : _value = value;
 
   factory MyState(int value) {
-    return Rt.createState(() => MyState._(value)); // Register state
+    return Rt.registerState(() => MyState._(value)); // Register state
   }
 }
 
@@ -132,7 +132,7 @@ When a state is updated, it emits the following lifecycle events:
 - <HE>`Lifecycle.willUpdate`</HE> event is triggered before the callback function of <HM>`update`</HM> method have been executed.
 - <HE>`Lifecycle.didUpdate`</HE> event is triggered after the callback function of <HM>`update`</HM> method have been executed or after the <HM>`notify`</HM> method have been invoked.
 
-```dart collapse={2-3, 8-13} mark={16-20} "RtState" "Rt.createState" "Rt.on" "Lifecycle.didUpdate" /update(?=\u0028)/
+```dart collapse={2-3, 8-13} mark={16-20} "RtState" "Rt.registerState" "Rt.on" "Lifecycle.didUpdate" /update(?=\u0028)/
 class MyState extends RtState<MyState> {
   int _value = 0;
   int get value => _value;
@@ -144,7 +144,7 @@ class MyState extends RtState<MyState> {
   MyState._([int value = 0]) : _value = value;
 
   factory MyState(int value) {
-    return Rt.createState(() => MyState._(value)); // Register state
+    return Rt.registerState(() => MyState._(value)); // Register state
   }
 }
 
