@@ -3,27 +3,24 @@ title: Introducción
 description: Conoce Reactter, por qué se creó y sus características.
 ---
 
-La gestión de estados es fundamental en las aplicaciones, ya que determina cómo se almacena, actualiza y comparte la información dentro de la misma.
-En Flutter nos proporciona la clase `StafulWidget` para manejar el estado local, que suele ser suficiente para aplicaciones pequeñas,
-sin embargo, a medida que la aplicación crece, la gestión del estado se vuelve más compleja y difícil de mantener. Tambien contamos
-con la clase `InheritedWidget` para gestionar el estado global, pero es un poco complicado de usar.
-Es por ello que existen diversos paquetes para gestionar el estado global.
+import { HT } from '@/components/Highlight';
 
-Aunque la gestión del estado es un componente clave de la arquitectura de una aplicación, no es el único factor a tener en cuenta.
-La inyección de dependencias, el manejo de eventos, y, en el caso de las aplicaciones Flutter, un control adecuado del renderizado,
-son igualmente cruciales para asegurar que la aplicación sea escalable, flexible y fácil de mantener a largo plazo.
-Todos estos aspectos deben ser considerados de forma conjunta para crear una arquitectura sólida y eficiente.
+La gestión del estado es la columna vertebral de cualquier aplicación Flutter, pero a medida que las aplicaciones crecen en complejidad, también lo hacen los retos de mantener un código limpio, escalable y eficiente.
+Aunque Flutter ofrece herramientas integradas como <HT>`StatefulWidget`</HT>, a menudo se quedan cortas cuando se trata de gestionar el estado global o manejar casos de uso avanzados.
+Esto ha dado lugar a una amplia variedad de paquetes de gestión de estado, cada uno con sus propios puntos fuertes, pero también con sus propias desventajas.
 
-Si bien existen numerosos paquetes para gestionar el estado, muchos de ellos no ofrecen soluciones completas ni lo suficientemente robustas.
-Este desafío se intensifica aún más en aplicaciones desarrolladas exclusivamente con Dart, donde la falta de opciones adecuadas para el manejo del estado global hace que la gestión se vuelva aún más desafiante.
+**Reactter** nació del deseo de crear algo diferente, una solución de gestión de estados que no se limita a resolver problemas, sino que eleva toda la experiencia de desarrollo.
+Inspirado en la simplicidad y reactividad de ReactJS, Reactter aporta un enfoque fresco y moderno al desarrollo con Dart y Flutter.
+No es sólo otro paquete de gestión de estado, es un framework completo, diseñado para hacer su aplicación más rápida, su código más limpio y su vida como desarrollador más fácil.
 
-Con esto en mente, se creó **Reactter**, un paquete **_ligero_**, **_poderoso_** y **_reactivo_** [**gestión de estados**](/reactter/es/core_concepts/state_management), [**inyección de dependencias**](/reactter/es/core_concepts/dependency_injection) y [**manejo de eventos**](/reactter/es/core_concepts/event_handler) para Dart/Flutter.
+¿Qué diferencia a Reactter? Mientras que otros paquetes se centran únicamente en la gestión de estados, Reactter va más allá integrando a la perfección **inyección de dependencias**, **manejo de eventos** y **control de renderizado** en un único framework cohesionado.
+Es ligero pero potente, sencillo pero flexible, y está diseñado para funcionar a la perfección con cualquier arquitectura o patrón.
+Tanto si estás construyendo un proyecto pequeño como una aplicación a gran escala, Reactter te da las herramientas para escribir menos codigo repetitivo, mejorar la legibilidad y mantener un control granular sobre el comportamiento de tu aplicación.
 
-## Motivación
-
-**Reactter** nace como un experimento al desarrollar una nueva forma de gestionar el estado en proyectos Flutter que fuera eficiente, reactivo, escalable, y a la vez simple y fácil de usar.
-
-Inspirado en ReactJS, Reactter(**Reac**t-Fu**tter**) adopta conceptos clave de esta biblioteca a Dart y Flutter, ofreciendo una solución optimizada y coherente con las necesidades del desarrollo actual.
+Pero Reactter no se trata sólo de características, se trata de una filosofía.
+Creemos que la gestión de estados debe ser intuitiva, no intimidante.
+Es por eso que Reactter se construye con una mentalidad *centrada en el desarrollador*, ofreciendo una sintaxis que es fácil de aprender, un flujo de trabajo que es fácil de depurar, y un diseño que es fácil de amar.
+Con Reactter, no solo gestionas el estado, sino que desbloqueas todo el potencial de tus aplicaciones.
 
 ## Características
 

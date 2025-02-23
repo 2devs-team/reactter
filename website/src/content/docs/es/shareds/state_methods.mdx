@@ -3,21 +3,22 @@ title: Metodos del estado
 ---
 import { HE, HM, HT } from '@/components/Highlight';
 
-- <HM><a href="https://pub.dev/documentation/reactter/latest/reactter/RtState/update.html" target="_blank">`update`</a></HM>: Ejecuta una función de devolución de llamada y notifica a sus oyentes que el estado ha cambiado.
-Cuando se invoca, emite dos eventos para señalar la transición de estado:
-Primeramente se emite <HE>`Lifecycle.willUpdate`</HE>, indicando la próxima actualización, seguido de <HE>`Lifecycle.didUpdate`</HE> una vez que el proceso de actualización está completo.
-- <HM><a href="https://pub.dev/documentation/reactter/latest/reactter/RtState/notify.html" target="_blank">`notify`</a></HM>: Fuerza la notificacion a los oyentes del estado de su cambio.
-A diferencia de <HM>`update`</HM>, emite solo el evento <HE>`Lifecycle.didUpdate`</HE>, ya que no implica ningún paso preparatorio antes de la notificación.
-- <HM><a href="https://pub.dev/documentation/reactter/latest/reactter/RtState/bind.html" target="_blank">`bind`</a></HM>: Establece una conexión entre el estado y una instancia específica.
-Esta conexión permite que la instancia se actualice de forma reactiva en función de los cambios en el estado.
-Al enlazar el estado, la instancia es notificada de los cambios en el estado y puede reflejar adecuadamente esos cambios en su comportamiento.
-- <HM><a href="https://pub.dev/documentation/reactter/latest/reactter/RtState/unbind.html" target="_blank">`unbind`</a></HM>: Libera la conexión entre el estado y la instancia.
-Al desvincular, la instancia ya no recibirá actualizaciones del estado.
-Esto puede ser útil cuando una instancia ya no está utilizando activamente el estado o cuando necesita separarse del estado temporalmente o permanentemente.
-- <HM><a href="https://pub.dev/documentation/reactter/latest/reactter/RtState/dispose.html" target="_blank">`dispose`</a></HM>: Es responsable de limpiar el estado y cualquier oyente o recurso asociado.
+- <HM>**`update`**</HM>: Ejecuta una función callback y notifica a sus observadores que el estado ha cambiado.
+Cuando se invoca, emite dos eventos [lifecycle](/reactter/es/core_concepts/lifecycle) para señalar la transición de estado:
+  - <HE>`Lifecycle.willUpdate`</HE> se emite primero, indicando la actualización inminente.
+  - <HE>`Lifecycle.didUpdate`</HE> se emite una vez que el proceso de actualización se ha completado.
+- <HM>**`notify`**</HM>: Fuerza al estado a notificar a sus observadores.
+A diferencia de <HM>`update`</HM>, sólo emite el evento <HE>`Lifecycle.didUpdate`</HE>, ya que no implica ningún paso previo a la notificación.
+- <HM>**`bind`**</HM>: Establece una conexión entre el estado y una instancia específica.
+Esta conexión permite a la instancia actualizarse de forma reactiva en función de los cambios en el estado.
+Al vincular el estado, la instancia se da cuenta de los cambios en el estado y puede reflejar adecuadamente esos cambios en su comportamiento.
+- <HM>**`unbind`**</HM>: Libera la conexión entre el estado y la instancia.
+Al desvincularse, la instancia dejará de recibir actualizaciones del estado.
+Esto puede ser útil cuando una instancia ya no está utilizando activamente el estado o cuando necesita desvincularse del estado temporal o permanentemente.
+- <HM>**`dispose`**</HM>: Es responsable de limpiar el estado y cualquier observador o recurso asociado.
 Disponer del estado garantiza que se libere correctamente y que ya no consuma memoria o recursos de procesamiento innecesariamente.
 
 :::note
-Los métodos <HM>`bind`</HM>, <HM>`unbind`</HM> y <HM>`dispose`</HM> se utilizan normalmente para gestionar el <HT>[Ciclo de vida](/reactter/es/core_concepts/lifecycle)</HT> de un estado.
-Sin embargo, Reactter maneja esto automáticamente, cuando el estado se declara dentro de una instancia que existe dentro del contexto de Reactter a través de la [inyección de dependencias](/reactter/es/core_concepts/dependency_injection/), por lo que no es necesario preocuparse por ello(Aprende más sobre [vinculación del estado a una dependencia](/reactter/es/extra_topics/binding_state_to_dependency/)).
+Mientras que los métodos <HM>`bind`</HM>, <HM>`unbind`</HM> y <HM>`dispose`</HM> se utilizan normalmente para gestionar el [ciclo de vida](/reactter/es/core_concepts/lifecycle) de un estado,
+Reactter maneja esto automáticamente, cuando el estado es declarado dentro de una instancia que existe dentro del contexto de Reactter vía [dependecy injection](/reactter/es/core_concepts/dependency_injection/), por lo que no necesitas preocuparte por ello(Learn more about [Binding State to Dependency](/reactter/es/extra_topics/binding_state_to_dependency/)).
 :::

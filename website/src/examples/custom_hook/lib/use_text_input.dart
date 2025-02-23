@@ -19,7 +19,5 @@ class UseTextInput extends RtHook {
 
       return controller.dispose;
     }, []);
-
-    super.initHook();
   }
 }

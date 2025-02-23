@@ -48,9 +48,8 @@ Todos los estados en Reactter son clases que heredan de <HT><a href="https://pub
 la cual encapsula los datos y el comportamiento de un estado particular, y proporciona una forma de notificar a los observadores cuando el estado cambia
 
 ### Metodos del estado
-Reactter ofrece tres enfoques fundamentales para crear estados: <HT>[`RtState`](/reactter/es/api/classes/RtState)</HT>, <HT>[`Signal`](/reactter/es/api/classes/signal)</HT> y <HT>[`Hooks`](/reactter/es/core_concepts/hooks)</HT>.
 
-La clase <HT><a href="https://pub.dev/documentation/reactter/latest/reactter/RtState-class.html" target="_blank">`RtState`</a></HT> proporciona algunos métodos para gestionar los estados, que son:
+<HT>[`RtState`](/reactter/api/classes/rt_state)</HT> clase proporciona algunos métodos para la gestión de estados. Conozcámoslos:
 
 <StateMethods />
 
@@ -90,9 +89,10 @@ void countdown(Timer timer) {
 ```
 
 Ahora veamos que contiene la clase <HT>`Signal`</HT> y cómo se actualiza el estado `count` en el ejemplo anterior
-class Signal<T> with RtContextMixin, RtState<Signal<T>> {
+
+```dart title="signal.dart" "Rt.registerState" "RtState" "_value" "update"
+class Signal<T> with RtState {
   // Valor del estado
-```dart title="signal.dart" "RtContextMixin" "Rt.createState" "RtState" "_value" "update"
   T _value;
 
   // Constructor privada, solo se puede crear una instancia de `Signal` a través del factory.
@@ -100,7 +100,7 @@ class Signal<T> with RtContextMixin, RtState<Signal<T>> {
 
   factory Signal(T value) {
     // Se registra un nuevo estado en el contexto de Reactter
-    return Rt.createState(
+    return Rt.registerState(
       () => Signal._(value),
     );
   }

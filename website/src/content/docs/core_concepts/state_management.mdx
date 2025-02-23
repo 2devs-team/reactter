@@ -96,8 +96,8 @@ void countdown(Timer timer) {
 
 Now let's see what the <HT>`Signal`</HT> class contains and how the `count` state is updated in the example above.
 
-```dart title="signal.dart" "RtContextMixin" "Rt.createState" "RtState" "_value" "update"
-class Signal<T> with RtState<Signal<T>> {
+```dart title="signal.dart" "RtContextMixin" "Rt.registerState" "RtState" "_value" "update"
+class Signal<T> with RtState {
   // State value
   T _value;
 
@@ -116,7 +116,7 @@ class Signal<T> with RtState<Signal<T>> {
 
   factory Signal(T value) {
     // Register a new state in the Reactter context
-    return Rt.createState(
+    return Rt.registerState(
       () => Signal._(value),
     );
   }
