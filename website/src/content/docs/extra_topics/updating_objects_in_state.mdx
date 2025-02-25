@@ -4,10 +4,10 @@ description: Updating objects in state
 ---
 import { HM, HN, HS, HT } from '@/components/Highlight';
 
-States(<HT>`RtState`</HT>) like <HT>`Signal`</HT>, <HT>`UseState`</HT>, <HT>`UseAsyncState`</HT>, <HT>`UseReducer`</HT> and <HT>`UseCompute`</HT> can hold any type of Dart value, including objects.
-However, you should not modify objects held in the Reactter state directly,
-when you need to update an object, create a new one or make a copy of the existing object,
-and then set the state to use this new or copied object.
+A Reactter state(<HT>`RtState`</HT>) such as <HT>`Signal`</HT>, <HT>`UseState`</HT>, <HT>`UseAsyncState`</HT>, <HT>`UseReducer`</HT> and <HT>`UseCompute`</HT> can hold any type of Dart value, including objects.
+However, you should never modify objects held in a Reactter state directly.
+
+In this guide, you'll learn how to safely and effectively update objects in a Reactter state.
 
 ## What is a mutation?
 
@@ -41,7 +41,7 @@ class User {
 final user = Signal(User(name: "Jane Doe", age: 25));
 ```
 
-Technically, it is possible to change the contents of the object itself. This is called a mutation:
+Technically, it is possible to change the contents of the object itself. This is called a **mutation**:
 
 ```dart showLineNumbers=false
 user.value.name = "John Doe";
@@ -54,7 +54,7 @@ Instead of mutating them, you should always replace them.
 
 In other words, you should treat any Dart object that you put into state as read-only.
 
-This example holds an object in state to represent the user.
+The following example holds an object in state to represent the user.
 The user's name is changed from <HS>`"Jane Doe"`</HS> to <HS>`"John Doe"`</HS> when you click the button.
 But the user's name stays the same.
 
@@ -135,7 +135,7 @@ user.value = User(name: user.value.name, age: 30);
 
 This is a common pattern when working with objects in state.
 However, creating a new object every time you want to change a property can be cumbersome.
-To simplify this process, you can add the following method to the <HT>`User`</HT> class:
+To simplify this process, you can add the following method(<HM>`copyWith`</HM>) to the <HT>`User`</HT> class:
 
 ```dart collapse={2-6} ins="final" ins={7-13} mark={2-3} mark="copyWith"
 class User {

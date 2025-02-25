@@ -11,7 +11,7 @@ Cuando se invoca, emite dos eventos [lifecycle](/reactter/es/core_concepts/lifec
 A diferencia de <HM>`update`</HM>, sólo emite el evento <HE>`Lifecycle.didUpdate`</HE>, ya que no implica ningún paso previo a la notificación.
 - <HM>**`bind`**</HM>: Establece una conexión entre el estado y una instancia específica.
 Esta conexión permite a la instancia actualizarse de forma reactiva en función de los cambios en el estado.
-Al vincular el estado, la instancia se da cuenta de los cambios en el estado y puede reflejar adecuadamente esos cambios en su comportamiento.
+Al vincular el estado, la instancia es notificado de los cambios en el estado y puede reflejar adecuadamente esos cambios en su comportamiento.
 - <HM>**`unbind`**</HM>: Libera la conexión entre el estado y la instancia.
 Al desvincularse, la instancia dejará de recibir actualizaciones del estado.
 Esto puede ser útil cuando una instancia ya no está utilizando activamente el estado o cuando necesita desvincularse del estado temporal o permanentemente.
@@ -20,5 +20,5 @@ Disponer del estado garantiza que se libere correctamente y que ya no consuma me
 
 :::note
 Mientras que los métodos <HM>`bind`</HM>, <HM>`unbind`</HM> y <HM>`dispose`</HM> se utilizan normalmente para gestionar el [ciclo de vida](/reactter/es/core_concepts/lifecycle) de un estado,
-Reactter maneja esto automáticamente, cuando el estado es declarado dentro de una instancia que existe dentro del contexto de Reactter vía [dependecy injection](/reactter/es/core_concepts/dependency_injection/), por lo que no necesitas preocuparte por ello(Learn more about [Binding State to Dependency](/reactter/es/extra_topics/binding_state_to_dependency/)).
+Reactter maneja esto automáticamente, cuando el estado es declarado dentro de una instancia que existe dentro del contexto de Reactter vía [dependecy injection](/reactter/es/core_concepts/dependency_injection/), por lo que no necesitas preocuparte por ello(Apendas más acerca de la [vinculación del estado a la dependencia](/reactter/es/extra_topics/binding_state_to_dependency/)).
 :::
