@@ -1,0 +1,663 @@
+---
+title: Dependency Injection Methods
+description: Documentation of Dependency Injection Methods in Reactter.
+sidebar:
+  order: 2
+---
+
+import { HB, HE, HK, HM, HN, HS, HT } from '@/components/Highlight';
+import CodeTabs from '@/components/CodeTabs.astro';
+import { Tabs, TabItem } from "@/components/Tabs";
+import ZappButton from "@/components/ZappButton.astro";
+import { Code } from "@astrojs/starlight/components";
+import { marks } from '@/examples/marks.ts'
+
+import counterRegisterCode from '@/examples/dependency_injection_register/lib/counter.dart?raw';
+import mainRegisterCode from '@/examples/dependency_injection_register/lib/main.dart?raw';
+
+import counterLazyBuilderCode from '@/examples/dependency_injection_lazy_builder/lib/counter.dart?raw';
+import mainLazyBuilderCode from '@/examples/dependency_injection_lazy_builder/lib/main.dart?raw';
+
+import counterLazyFactoryCode from '@/examples/dependency_injection_lazy_factory/lib/counter.dart?raw';
+import mainLazyFactoryCode from '@/examples/dependency_injection_lazy_factory/lib/main.dart?raw';
+
+import counterLazySingletonCode from '@/examples/dependency_injection_lazy_singleton/lib/counter.dart?raw';
+import mainLazySingletonCode from '@/examples/dependency_injection_lazy_singleton/lib/main.dart?raw';
+
+import counterCreateCode from '@/examples/dependency_injection_create/lib/counter.dart?raw';
+import mainCreateCode from '@/examples/dependency_injection_create/lib/main.dart?raw';
+
+import counterBuilderCode from '@/examples/dependency_injection_builder/lib/counter.dart?raw';
+import mainBuilderCode from '@/examples/dependency_injection_builder/lib/main.dart?raw';
+
+import counterFactoryCode from '@/examples/dependency_injection_factory/lib/counter.dart?raw';
+import mainFactoryCode from '@/examples/dependency_injection_factory/lib/main.dart?raw';
+
+import counterSingletonCode from '@/examples/dependency_injection_singleton/lib/counter.dart?raw';
+import mainSingletonCode from '@/examples/dependency_injection_singleton/lib/main.dart?raw';
+
+import counterGetCode from '@/examples/dependency_injection_get/lib/counter.dart?raw';
+import mainGetCode from '@/examples/dependency_injection_get/lib/main.dart?raw';
+
+import counterFindCode from '@/examples/dependency_injection_find/lib/counter.dart?raw';
+import mainFindCode from '@/examples/dependency_injection_find/lib/main.dart?raw';
+
+import counterExistsCode from '@/examples/dependency_injection_exists/lib/counter.dart?raw';
+import mainExistsCode from '@/examples/dependency_injection_exists/lib/main.dart?raw';
+
+import counterGetDependencyModeCode from '@/examples/dependency_injection_get_dependency_mode/lib/counter.dart?raw';
+import mainGetDependencyModeCode from '@/examples/dependency_injection_get_dependency_mode/lib/main.dart?raw';
+
+import counterDeleteCode from '@/examples/dependency_injection_delete/lib/counter.dart?raw';
+import mainDeleteCode from '@/examples/dependency_injection_delete/lib/main.dart?raw';
+
+import counterDestroyCode from '@/examples/dependency_injection_destroy/lib/counter.dart?raw';
+import mainDestroyCode from '@/examples/dependency_injection_destroy/lib/main.dart?raw';
+
+import counterUnregisterCode from '@/examples/dependency_injection_unregister/lib/counter.dart?raw';
+import mainUnregisterCode from '@/examples/dependency_injection_unregister/lib/main.dart?raw';
+
+import counterIsActiveCode from '@/examples/dependency_injection_is_active/lib/counter.dart?raw';
+import mainIsActiveCode from '@/examples/dependency_injection_is_active/lib/main.dart?raw';
+
+:::tip
+This documentation assumes you've already read the [Dependency Injection](/reactter/core_concepts/dependency_injection).
+It's recommended read that first if you're new in Reactter.
+:::
+
+Reactter provides several methods to manage dependencies in a more efficient way.
+These methods are used to create and manipulate dependencies in a more organized way.
+
+## <HM>`Rt.register`</HM>
+
+The <HM>`Rt.register`</HM> method registers a new dependency.
+It returns <HB>`true`</HB> if the dependency is registered successfully, otherwise return <HB>`false`</HB>.
+
+#### Syntax
+
+```dart showLineNumbers=false
+bool Rt.register<T>(
+  T Function() builder, {
+  String? id,
+  DependencyMode mode = DependencyMode.builder,
+});
+```
+
+#### Parameters
+
+- <HM>`builder`</HM>: A function that returns an instance of the <HT>`T`</HT> dependency.
+- `id`: An optional identifier for the <HT>`T`</HT> dependency. If not provided, the dependency is registered by its type(<HT>`T`</HT>).
+- `mode`: The mode of the dependency. It can be <HE>`DependencyMode.builder`</HE>, <HE>`DependencyMode.factory`</HE>, or <HE>`DependencyMode.singleton`</HE>. 
+The default value is <HE>`DependencyMode.builder`</HE>. Learn more about it in [DependencyMode](/reactter/core_concepts/dependency_injection#dependency-modes).
+
+#### Example
+
+See the example below to understand how to use the <HM>`Rt.register`</HM> method in different scenarios.
+
+<CodeTabs>
+  <ZappButton path="examples/dependency_injection_register"/>
+
+  <Tabs>
+    <TabItem>
+      <HM single slot="label">main.dart</HM>
+      <Code code={mainRegisterCode} lang="dart" mark={[...marks, {range: "7, 37, 47"}]} collapse={["8-35", "38-45", "48-74", "76-100"]} />
+    </TabItem>
+
+    <TabItem label="counter.dart">
+      <Code code={counterRegisterCode} lang="dart" mark={marks} />
+    </TabItem>
+  </Tabs>
+</CodeTabs>
+
+## <HM>`Rt.lazyBuilder`</HM>
+
+The <HM>`Rt.lazyBuilder`</HM> method registers a new dependency as [<HE>`DependencyMode.builder`</HE>](/reactter/core_concepts/dependency_injection/#builder).
+It returns <HB>`true`</HB> if the dependency is registered successfully, otherwise return <HB>`false`</HB>.
+
+This method is similar to the <HM>`Rt.register`</HM> method but with the <HE>`DependencyMode.builder`</HE> mode only.
+
+#### Syntax
+
+```dart showLineNumbers=false
+bool Rt.lazyBuilder<T>(
+  T Function() builder, {
+  String? id,
+});
+```
+
+#### Parameters
+
+- <HM>`builder`</HM>: A function that returns an instance of the <HT>`T`</HT> dependency.
+- `id`: An optional identifier for the <HT>`T`</HT> dependency. If not provided, the dependency is registered by its type(<HT>`T`</HT>).
+
+#### Example
+
+See the example below to understand how to use the <HM>`Rt.lazyBuilder`</HM> method in different scenarios.
+
+<CodeTabs>
+  <ZappButton path="examples/dependency_injection_lazy_builder"/>
+
+  <Tabs>
+    <TabItem>
+      <HM single slot="label">main.dart</HM>
+      <Code code={mainLazyBuilderCode} lang="dart" mark={[...marks, {range: "7, 37"}]} collapse={["8-35", "38-46", "48-100"]} />
+    </TabItem>
+
+    <TabItem label="counter.dart">
+      <Code code={counterLazyBuilderCode} lang="dart" mark={marks} />
+    </TabItem>
+  </Tabs>
+</CodeTabs>
+
+## <HM>`Rt.lazyFactory`</HM>
+
+The <HM>`Rt.lazyFactory`</HM> method registers a new dependency as [<HE>`DependencyMode.factory`</HE>](/reactter/core_concepts/dependency_injection/#factory).
+It returns <HB>`true`</HB> if the dependency is registered successfully, otherwise return <HB>`false`</HB>.
+
+This method is similar to the <HM>`Rt.register`</HM> method but with the <HE>`DependencyMode.factory`</HE> mode only.
+
+#### Syntax
+
+```dart showLineNumbers=false
+bool Rt.lazyFactory<T>(
+  T Function() builder, {
+  String? id,
+});
+```
+
+#### Parameters
+
+- <HM>`builder`</HM>: A function that returns an instance of the <HT>`T`</HT> dependency.
+- `id`: An optional identifier for the <HT>`T`</HT> dependency. If not provided, the dependency is registered by its type(<HT>`T`</HT>).
+
+#### Example
+
+See the example below to understand how to use the <HM>`Rt.lazyFactory`</HM> method in different scenarios.
+
+<CodeTabs>
+  <ZappButton path="examples/dependency_injection_lazy_factory"/>
+
+  <Tabs>
+    <TabItem>
+      <HM single slot="label">main.dart</HM>
+      <Code code={mainLazyFactoryCode} lang="dart" mark={[...marks, {range: "7, 44"}]} collapse={["8-42", "45-53", "55-100"]} />
+    </TabItem>
+
+    <TabItem label="counter.dart">
+      <Code code={counterLazyFactoryCode} lang="dart" mark={marks} />
+    </TabItem>
+  </Tabs>
+</CodeTabs>
+
+## <HM>`Rt.lazySingleton`</HM>
+
+The <HM>`Rt.lazySingleton`</HM> method registers a new dependency as [<HE>`DependencyMode.singleton`</HE>](/reactter/core_concepts/dependency_injection/#singleton).
+It returns <HB>`true`</HB> if the dependency is registered successfully, otherwise return <HB>`false`</HB>.
+
+This method is similar to the <HM>`Rt.register`</HM> method but with the <HE>`DependencyMode.singleton`</HE> mode.
+
+#### Syntax
+
+```dart showLineNumbers=false
+bool Rt.lazySingleton<T>(
+  T Function() builder, {
+  String? id,
+});
+```
+
+#### Parameters
+
+- <HM>`builder`</HM>: A function that returns an instance of the <HT>`T`</HT> dependency.
+- `id`: An optional identifier for the <HT>`T`</HT> dependency. If not provided, the dependency is registered by its type(<HT>`T`</HT>).
+
+#### Example
+
+See the example below to understand how to use the <HM>`Rt.lazySingleton`</HM> method in different scenarios.
+
+<CodeTabs>
+  <ZappButton path="examples/dependency_injection_lazy_singleton"/>
+
+  <Tabs>
+    <TabItem>
+      <HM single slot="label">main.dart</HM>
+      <Code code={mainLazySingletonCode} lang="dart" mark={[...marks, {range: "7, 51"}]} collapse={["8-49", "52-60", "62-100"]} />
+    </TabItem>
+
+    <TabItem label="counter.dart">
+      <Code code={counterLazySingletonCode} lang="dart" mark={marks} />
+    </TabItem>
+  </Tabs>
+</CodeTabs>
+
+## <HM>`Rt.create`</HM>
+
+The <HM>`Rt.create`</HM> method registers a dependency(if not already registered), create its instance(if not created yet) and return it.
+
+#### Syntax
+
+```dart showLineNumbers=false
+T Rt.create<T>(T Function() builder, {
+  String? id,
+  DependencyMode mode = DependencyMode.builder,
+});
+```
+
+#### Parameters
+
+- <HM>`builder`</HM>: A function that returns an instance of the <HT>`T`</HT> dependency.
+- `id`: An optional identifier for the <HT>`T`</HT> dependency. If not provided, the default instance of the <HT>`T`</HT> dependency is used.
+
+#### Example
+
+See the example below to understand how to use the <HM>`Rt.create`</HM> method in different scenarios.
+
+<CodeTabs>
+  <ZappButton path="examples/dependency_injection_create"/>
+
+  <Tabs>
+    <TabItem>
+      <HM single slot="label">main.dart</HM>
+      <Code code={mainCreateCode} lang="dart" mark={[...marks, {range: "7, 34, 41-44"}]} collapse={["8-32", "35-39", "45-68", "70-100"]} />
+    </TabItem>
+
+    <TabItem label="counter.dart">
+      <Code code={counterCreateCode} lang="dart" mark={marks} />
+    </TabItem>
+  </Tabs>
+</CodeTabs>
+
+## <HM>`Rt.builder`</HM>
+
+The <HM>`Rt.create`</HM> method registers a dependency as [<HE>`DependencyMode.builder`</HE>](/reactter/core_concepts/dependency_injection/#builder)(if not already registered), create its instance(if not created yet) and return it.
+
+This method is similar to the <HM>`Rt.create`</HM> method.
+
+#### Syntax
+
+```dart showLineNumbers=false
+T Rt.builder<T>(T Function() builder, {
+  String? id,
+});
+```
+
+#### Parameters
+
+- <HM>`builder`</HM>: A function that returns an instance of the <HT>`T`</HT> dependency.
+- `id`: An optional identifier for the <HT>`T`</HT> dependency. If not provided, the default instance of the <HT>`T`</HT> dependency is used.
+
+#### Example
+
+See the example below to understand how to use the <HM>`Rt.builder`</HM> method in different scenarios.
+
+<CodeTabs>
+  <ZappButton path="examples/dependency_injection_builder"/>
+
+  <Tabs>
+    <TabItem>
+      <HM single slot="label">main.dart</HM>
+      <Code code={mainBuilderCode} lang="dart" mark={[...marks, {range: "7, 34-37"}]} collapse={["8-32", "38-43", "44-100"]} />
+    </TabItem>
+
+    <TabItem label="counter.dart">
+      <Code code={counterBuilderCode} lang="dart" mark={marks} />
+    </TabItem>
+  </Tabs>
+</CodeTabs>
+
+## <HM>`Rt.factory`</HM>
+
+The <HM>`Rt.factory`</HM> method registers a dependency as [<HE>`DependencyMode.factory`</HE>](/reactter/core_concepts/dependency_injection/#factory)(if not already registered), create its instance(if not created yet) and return it.
+
+This method is similar to the <HM>`Rt.create`</HM> method but with the <HE>`DependencyMode.factory`</HE> mode.
+
+#### Syntax
+
+```dart showLineNumbers=false
+T Rt.factory<T>(T Function() builder, {
+  String? id,
+});
+```
+
+#### Parameters
+
+- <HM>`builder`</HM>: A function that returns an instance of the <HT>`T`</HT> dependency.
+- `id`: An optional identifier for the <HT>`T`</HT> dependency. If not provided, the default instance of the <HT>`T`</HT> dependency is used.
+
+#### Example
+
+See the example below to understand how to use the <HM>`Rt.factory`</HM> method in different scenarios.
+
+<CodeTabs>
+  <ZappButton path="examples/dependency_injection_factory"/>
+
+  <Tabs>
+    <TabItem>
+      <HM single slot="label">main.dart</HM>
+      <Code code={mainFactoryCode} lang="dart" mark={[...marks, {range: "7, 41-42"}]} collapse={["8-39", "42-47", "49-100"]} />
+    </TabItem>
+
+    <TabItem label="counter.dart">
+      <Code code={counterFactoryCode} lang="dart" mark={marks} />
+    </TabItem>
+  </Tabs>
+</CodeTabs>
+
+## <HM>`Rt.singleton`</HM>
+
+The <HM>`Rt.singleton`</HM> method registers a dependency as [<HE>`DependencyMode.singleton`</HE>](/reactter/core_concepts/dependency_injection/#singleton)(if not already registered), create its instance(if not created yet) and return it.
+
+This method is similar to the <HM>`Rt.create`</HM> method but with the <HE>`DependencyMode.singleton`</HE> mode.
+
+#### Syntax
+
+```dart showLineNumbers=false
+T Rt.singleton<T>(T Function() builder, {
+  String? id,
+});
+```
+
+#### Parameters
+
+- <HM>`builder`</HM>: A function that returns an instance of the <HT>`T`</HT> dependency.
+- `id`: An optional identifier for the <HT>`T`</HT> dependency. If not provided, the default instance of the <HT>`T`</HT> dependency is used.
+
+#### Example
+
+See the example below to understand how to use the <HM>`Rt.singleton`</HM> method in different scenarios.
+
+<CodeTabs>
+  <ZappButton path="examples/dependency_injection_singleton"/>
+
+  <Tabs>
+    <TabItem>
+      <HM single slot="label">main.dart</HM>
+      <Code code={mainSingletonCode} lang="dart" mark={[...marks, {range: "7, 48"}]} collapse={["8-46", "49-54", "56-200"]} />
+    </TabItem>
+
+    <TabItem label="counter.dart">
+      <Code code={counterSingletonCode} lang="dart" mark={marks} />
+    </TabItem>
+  </Tabs>
+</CodeTabs>
+
+## <HM>`Rt.get`</HM>
+
+The <HM>`Rt.get`</HM> method creates the dependency instance(if not created yet), retrieves it, and then return it.
+If the dependency is not created, it will return <HN>`null`</HN>.
+
+#### Syntax
+
+```dart showLineNumbers=false
+T? Rt.get<T>([String? id]);
+```
+
+#### Parameters
+
+- `id`: An optional identifier for the <HT>`T`</HT> dependency. If not provided, the default instance of the <HT>`T`</HT> dependency is used.
+
+#### Example
+
+See the example below to understand how to use the <HM>`Rt.get`</HM> method in different scenarios.
+
+<CodeTabs>
+  <ZappButton path="examples/dependency_injection_get"/>
+
+  <Tabs>
+    <TabItem>
+      <HM single slot="label">main.dart</HM>
+      <Code code={mainGetCode} lang="dart" mark={[...marks, {range: "10, 17, 24, 31"}]} collapse={["6-8", "11-15", "18-22", "25-29", "32-34", "36-100"]} />
+    </TabItem>
+
+    <TabItem label="counter.dart">
+      <Code code={counterGetCode} lang="dart" mark={marks} />
+    </TabItem>
+  </Tabs>
+</CodeTabs>
+
+## <HM>`Rt.find`</HM>
+
+The <HM>`Rt.find`</HM> method retrieves the created dependency instance and returns it. If the dependency is not created, returns <HN>`null`</HN>.
+
+#### Syntax
+
+```dart showLineNumbers=false
+T? Rt.find<T>([String? id]);
+```
+
+#### Parameters
+
+- `id`: An optional identifier for the <HT>`T`</HT> dependency. If not provided, the default instance of the <HT>`T`</HT> dependency is used.
+
+#### Example
+
+See the example below to understand how to use the <HM>`Rt.find`</HM> method in different scenarios.
+
+<CodeTabs>
+  <ZappButton path="examples/dependency_injection_find"/>
+
+  <Tabs>
+    <TabItem>
+      <HM single slot="label">main.dart</HM>
+      <Code code={mainFindCode} lang="dart" mark={[...marks, {range: "10, 17, 24, 31"}]} collapse={["6-8", "11-15", "18-22", "25-29", "32-34", "36-100"]} />
+    </TabItem>
+
+    <TabItem label="counter.dart">
+      <Code code={counterFindCode} lang="dart" mark={marks} />
+    </TabItem>
+  </Tabs>
+</CodeTabs>
+
+## <HM>`Rt.exists`</HM>
+
+The <HM>`Rt.exists`</HM> method checks if the dependency instance exists in Reactter. It returns <HB>`true`</HB> if the dependency exists, otherwise return <HB>`false`</HB>.
+
+#### Syntax
+
+```dart showLineNumbers=false
+bool Rt.exists<T>([String? id]);
+```
+
+#### Parameters
+
+- `id`: An optional identifier for the <HT>`T`</HT> dependency. If not provided, the default instance of the <HT>`T`</HT> dependency is used.
+
+#### Example
+
+See the example below to understand how to use the <HM>`Rt.exists`</HM> method in different scenarios.
+
+<CodeTabs>
+  <ZappButton path="examples/dependency_injection_exists"/>
+
+  <Tabs>
+    <TabItem>
+      <HM single slot="label">main.dart</HM>
+      <Code code={mainExistsCode} lang="dart" mark={[...marks, {range: "10, 17, 26, 33"}]} collapse={["6-8", "11-15", "18-24", "27-31", "34-38", "40-100"]} />
+    </TabItem>
+
+    <TabItem label="counter.dart">
+      <Code code={counterExistsCode} lang="dart" mark={marks} />
+    </TabItem>
+  </Tabs>
+</CodeTabs>
+
+## <HM>`Rt.getDependencyMode`</HM>
+
+The <HM>`Rt.getDependencyMode`</HM> method retrieves the dependency mode of a registered dependency. If the dependency is not registered, it returns <HN>`null`</HN>.
+
+#### Syntax
+
+```dart showLineNumbers=false
+DependencyMode? Rt.getDependencyMode<T>([String? id]);
+```
+
+#### Parameters
+
+- `id`: An optional identifier for the <HT>`T`</HT> dependency. If not provided, the default instance of the <HT>`T`</HT> dependency is used.
+
+#### Example
+
+See the example below to understand how to use the <HM>`Rt.getDependencyMode`</HM> method in different scenarios.
+
+<CodeTabs>
+  <ZappButton path="examples/dependency_injection_get_dependency_mode"/>
+
+  <Tabs>
+    <TabItem>
+      <HM single slot="label">main.dart</HM>
+      <Code code={mainGetDependencyModeCode} lang="dart" mark={[...marks, {range: "16-19"}]} collapse={["20-34", "36-100"]} />
+    </TabItem>
+
+    <TabItem label="counter.dart">
+      <Code code={counterGetDependencyModeCode} lang="dart" mark={marks} />
+    </TabItem>
+  </Tabs>
+</CodeTabs>
+
+## <HM>`Rt.delete`</HM>
+
+The <HM>`Rt.delete`</HM> method removes the dependency instance and its registration from the Reactter based on the dependency mode.
+It returns <HB>`true`</HB> if the dependency is successfully deleted, otherwise return <HB>`false`</HB>.
+
+:::note
+The behavior of the <HM>`Rt.delete`</HM> method depends on the dependency mode:
+- If the dependency is registered as <HE>Builder</HE> mode, both the dependency instance and its registration will be deleted.
+- If the dependency is registered as <HE>Factory</HE> mode, only the dependency instance will be deleted, but its registration remains.
+- If the dependency is registered as <HE>Singleton</HE> mode, nothing will be deleted.
+
+For more information about the dependency modes, refer to [Dependency Modes](/reactter/core_concepts/dependency_injection/#dependency-modes).
+:::
+
+#### Syntax
+
+```dart showLineNumbers=false
+bool Rt.delete<T>([String? id]);
+```
+
+#### Parameters
+
+- `id`: An optional identifier for the <HT>`T`</HT> dependency. If not provided, the default instance of the <HT>`T`</HT> dependency is used.
+
+#### Example
+
+See the example below to understand how to use the <HM>`Rt.delete`</HM> method in different scenarios.
+
+<CodeTabs>
+  <ZappButton path="examples/dependency_injection_delete"/>
+
+  <Tabs>
+    <TabItem>
+      <HM single slot="label">main.dart</HM>
+      <Code code={mainDeleteCode} lang="dart" mark={[...marks, {range: "16-19"}]} collapse={["20-57", "59-100"]} />
+    </TabItem>
+
+    <TabItem label="counter.dart">
+      <Code code={counterDeleteCode} lang="dart" mark={marks} />
+    </TabItem>
+  </Tabs>
+</CodeTabs>
+
+## <HM>`Rt.destroy`</HM>
+
+The <HM>`Rt.destroy`</HM> method forcibly removes the dependency instance and its registration from the Reactter.
+It returns <HB>`true`</HB> if the dependency is successfully destroyed, otherwise return <HB>`false`</HB>.
+
+#### Syntax
+
+```dart showLineNumbers=false
+bool Rt.destroy<T>({
+  String? id,
+  bool onlyDependency = false,
+});
+```
+
+#### Parameters
+
+- `id`: An optional identifier for the <HT>`T`</HT> dependency. If not provided, the default instance of the <HT>`T`</HT> dependency is used.
+- `onlyDependency`: An optional parameter to delete the dependency instance only. The default value is <HB>`false`</HB>.
+
+#### Example
+
+See the example below to understand how to use the <HM>`Rt.destroy`</HM> method in different scenarios.
+
+<CodeTabs>
+  <ZappButton path="examples/dependency_injection_destroy"/>
+
+  <Tabs>
+    <TabItem>
+      <HM single slot="label">main.dart</HM>
+      <Code code={mainDestroyCode} lang="dart" mark={[...marks, {range: "13-16"}]} collapse={["17-42", "44-100"]} />
+    </TabItem>
+
+    <TabItem label="counter.dart">
+      <Code code={counterDestroyCode} lang="dart" mark={marks} />
+    </TabItem>
+  </Tabs>
+</CodeTabs>
+
+## <HM>`Rt.unregister`</HM>
+
+The <HM>`Rt.unregister`</HM> method is used to unregister the dependency from the Reactter.
+It returns <HB>`true`</HB> if the dependency is unregistered successfully, otherwise return <HB>`false`</HB>.
+
+#### Syntax
+
+```dart showLineNumbers=false
+bool Rt.unregister<T>([String? id]);
+```
+
+#### Parameters
+
+- `id`: An optional identifier for the <HT>`T`</HT> dependency. If not provided, the method will attempt to unregister the default instance of the dependency.
+
+#### Example
+
+See the example below to understand how to use the <HM>`Rt.unregister`</HM> method in different scenarios.
+
+<CodeTabs>
+  <ZappButton path="examples/dependency_injection_unregister"/>
+
+  <Tabs>
+    <TabItem>
+      <HM single slot="label">main.dart</HM>
+      <Code code={mainUnregisterCode} lang="dart" mark={[...marks, {range: "13-16, 31-34"}]} collapse={["17-23", "35-52", "54-100"]} />
+    </TabItem>
+
+    <TabItem label="counter.dart">
+      <Code code={counterUnregisterCode} lang="dart" mark={marks} />
+    </TabItem>
+  </Tabs>
+</CodeTabs>
+
+## <HM>`Rt.isActive`</HM>
+
+The <HM>`Rt.isActive`</HM> method is used to check if the dependency is registered in Reactter.
+It returns <HB>`true`</HB> if the dependency is registered, otherwise return <HB>`false`</HB>.
+
+#### Syntax
+
+```dart showLineNumbers=false
+bool Rt.isActive<T>([String? id]);
+```
+
+#### Parameters
+
+- `id`: An optional identifier for the <HT>`T`</HT> dependency. If not provided, the method will attempt to check the default instance of the dependency.
+
+#### Example
+
+See the example below to understand how to use the <HM>`Rt.isActive`</HM> method in different scenarios.
+
+<CodeTabs>
+  <ZappButton path="examples/dependency_injection_is_active"/>
+
+  <Tabs>
+    <TabItem>
+      <HM single slot="label">main.dart</HM>
+      <Code code={mainIsActiveCode} lang="dart" mark={[...marks, {range: "16-19, 34-37"}]} collapse={["20-26", "38-53", "55-100"]} />
+    </TabItem>
+
+    <TabItem label="counter.dart">
+      <Code code={counterIsActiveCode} lang="dart" mark={marks} />
+    </TabItem>
+  </Tabs>
+</CodeTabs>

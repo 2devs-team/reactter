@@ -1,0 +1,124 @@
+---
+title: Signal
+description: The base class for all signals in Reactter.
+sidebar:
+  order: 7
+---
+
+import { HM, HT } from '@/components/Highlight';
+import MDXRedry from '@/components/MDXRedry.astro';
+import StatePropertiesMethodsRef from '@/content/docs/shareds/state_properties_methods_ref.mdx';
+import * as NoteLateState from '@/content/docs/shareds/note_late_state.mdx';
+import * as NoteStateValueNotifies from '@/content/docs/shareds/note_state_value_notifies.mdx';
+import * as ListeningChangesState from '@/content/docs/shareds/listening_changes_state.mdx';
+
+<HT><a href="https://pub.dev/documentation/reactter/latest/reactter/Signal-class.html" target="_blank">`Signal`</a></HT> is reactive state that encapsulate a `value` changing over time. When the `value` of a signal changes, it automatically notifies its observers.
+
+## Syntax
+
+```dart showLineNumbers=false
+  Signal<T>(T initialValue);
+```
+
+<HT>`Signal`</HT> accepts this parameter:
+
+- **`initialValue`**: Initial value of <HT>`T`</HT> type that the it will hold.
+
+## Properties & Methods
+
+<HT>`Signal`</HT> provides the following properties and methods:
+
+- **`value`**: A getter/setter that allows to read and write its state.
+
+- Various properties and methods depending on the type of <HT>`T`</HT>. For example, if <HT>`T`</HT> is a <HT>`List`</HT>, you can use the methods and properties of the <HT>`List`</HT> class:
+
+  ```dart showLineNumbers=false
+  final listSignal = Signal<List<int>>([]);
+  listSignal.addAll([1, 2, 3]);
+  listSignal.removeAt(0);
+  listSignal.clear();
+  ```
+<StatePropertiesMethodsRef/>
+
+## Usage
+
+### Declaration
+
+<HT>`Signal`</HT> can be initialized using the constructor class:
+
+```dart showLineNumbers=false
+final intSignal = Signal<int>(0);
+final strSignal = Signal("initial value");
+final userSignal = Signal(User());
+```
+
+<MDXRedry mdx={NoteLateState} vars={{stateName: 'Signal'}}>
+  <Fragment slot="exampleCode">
+```dart title="counter_controller.dart" collapse={1-3, 8-10} "late" "Rt.lazyState" "Signal"
+class CounterController {
+  final int initialCount;
+
+  late final count = Rt.lazyState(
+    () => Signal(this.initialCount),
+    this
+  );
+
+  Counter([this.initialCount = 0]);
+}
+```
+  </Fragment>
+</MDXRedry>
+
+### Reading and writing the value
+
+<HT>`Signal`</HT> has a `value` property that allows to read and write its state:
+
+```dart showLineNumbers=false ".value"
+intSignal.value = 10;
+print("Current state: ${intSignal.value}");
+```
+
+or also can use the callable function:
+
+```dart showLineNumbers=false
+intSignal(10);
+print("Current state: ${intSignal()}");
+```
+
+or simply use <HM>`.toString()`</HM> implicit to get its `value` as String:
+
+```dart showLineNumbers=false
+print("Current state: $intSignal");
+```
+
+<MDXRedry mdx={NoteStateValueNotifies} vars={{
+  stateName: 'Signal',
+}}/>
+
+### Updating the value
+
+Use <HM>`update`</HM> method to notify changes after run a set of instructions:
+
+```dart showLineNumbers=false
+userSignal.update((user) {
+  user.firstname = "Firstname";
+  user.lastname = "Lastname";
+});
+```
+
+Use <HM>`notify`</HM> method to force to notify changes.
+
+```dart showLineNumbers=false
+userSignal.notify();
+```
+
+### Listening to changes
+
+<MDXRedry mdx={ListeningChangesState} vars={{
+  stateName: 'Signal',
+  stateVariable: 'mySignal',
+}}/>
+
+:::note[With Flutter]
+<HT>[`RtSignalWatcher`](/reactter/api/widgets/rt_signal_watcher)</HT> is a way to keep the widgets automatically updates, accessing the `value` of <HT>`Signal`</HT> reactively.
+:::

@@ -1,7 +1,7 @@
 import 'package:fake_async/fake_async.dart';
 import 'package:reactter/reactter.dart';
-import 'package:reactter/src/memo/memo.dart';
-import 'package:test/test.dart';
+
+import 'package:flutter_test/flutter_test.dart';
 
 import 'shareds/test_controllers.dart';
 
@@ -103,7 +103,7 @@ void main() {
 
     test(
         "shouldn't memoize when an error Future occurs "
-        "using AsyncMemoSafe interceptor", () async {
+        "using MemoSafeAsyncInterceptor interceptor", () async {
       final memo = Memo<Future<dynamic>, Args1<Error>>(
         (Args1 args) {
           return Future.error(args.arg1);
@@ -131,7 +131,7 @@ void main() {
       fakeAsync((async) {
         final memo = Memo<dynamic, Args1>(
           (Args1 args) => args.arg1,
-          TemporaryCacheMemo(
+          MemoTemporaryCacheInterceptor(
             Duration(minutes: 1),
           ),
         );
@@ -165,11 +165,11 @@ void main() {
 
       final nInterceptors = 2;
 
-      final memoInterceptors = MemoInterceptors<dynamic, Args1>([
+      final memoInterceptors = MultiMemoInterceptor<dynamic, Args1>([
         FakeInterceptorForCoverage(),
         ...List.generate(
           nInterceptors,
-          (_) => MemoInterceptorWrapper<dynamic, Args1>(
+          (_) => MemoWrapperInterceptor<dynamic, Args1>(
             onInit: (memo, args) {
               nCallOnInit += 1;
             },

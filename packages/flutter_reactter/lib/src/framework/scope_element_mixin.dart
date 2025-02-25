@@ -4,14 +4,14 @@ part of '../framework.dart';
 /// and notify when should be updated its dependencies.
 @internal
 mixin ScopeElementMixin on InheritedElement {
+  final _dependents = HashMap<Element, MasterDependency>();
+  final _dependentsFlushReady = <Element>{};
   bool _isFlushDependentsScheduled = false;
   bool _updatedShouldNotify = false;
-  final _dependenciesDirty = HashSet<Dependency>();
-  final _dependents = HashMap<Element, Object?>();
-  final _instancesAndStatesDependencies = HashMap<Object, Set<Dependency>>();
-  final _dependentsFlushReady = <Element>{};
+  bool _isMarkNeedsBuild = false;
 
-  bool get hasDependenciesDirty => _dependenciesDirty.isNotEmpty;
+  bool get hasDirtyDependencies =>
+      _isMarkNeedsBuild || _dependents.values.any((dep) => dep.isDirty);
 
   @override
   void update(InheritedWidget newWidget) {
@@ -22,226 +22,178 @@ mixin ScopeElementMixin on InheritedElement {
 
   @override
   void updated(InheritedWidget oldWidget) {
-    super.updated(oldWidget);
-
     if (_updatedShouldNotify) {
+      // If the widget tree is updated, we need to reset the state
+      // to avoid memory leaks.
+      _resetState();
       notifyClients(oldWidget);
+      return;
     }
+
+    super.updated(oldWidget); // coverage:ignore-line
   }
 
   @override
   void unmount() {
-    _dependents.clear();
-    _dependenciesDirty.clear();
-    _removeListeners();
+    _resetState();
     return super.unmount();
   }
 
+  /// Returns the value of the dependency of the dependent.
+  /// If a MasterDepndency is stored in this scope, it will be returned.
+  /// Otherwise, it will return the value of the dependency of the dependent in
+  /// the parent scope.
   @override
   Object? getDependencies(Element dependent) {
     return _dependents[dependent] ?? super.getDependencies(dependent);
   }
 
-  @override
-  void updateDependencies(Element dependent, Object? aspect) {
-    // coverage:ignore-start
-    if (aspect is! Dependency) {
-      return super.updateDependencies(dependent, aspect);
-    }
-
-    var masterDependency = getDependencies(dependent);
-
-    if (masterDependency != null && masterDependency is! MasterDependency) {
-      return super.updateDependencies(dependent, aspect);
-    }
-    // coverage:ignore-end
-
-    _scheduleflushDependents();
-
-    masterDependency = _flushDependent(dependent, masterDependency);
-
-    if (masterDependency is MasterDependency) {
-      masterDependency.putDependency(aspect);
-    }
-
-    masterDependency ??= aspect.makeMaster();
-    _addListener(masterDependency as MasterDependency);
-
-    return setDependencies(dependent, masterDependency);
-  }
-
+  /// Sets the value of the dependency of the dependent.
+  /// If a MasterDepndency is stored in this scope, it will be set.
+  /// Otherwise, it will set the value of the dependency of the dependent in
+  /// the parent scope.
   @override
   void setDependencies(Element dependent, Object? value) {
-    if (value is MasterDependency) {
-      _dependents[dependent] = value;
-    }
+    if (value is MasterDependency) _dependents[dependent] = value;
 
     super.setDependencies(dependent, value);
   }
 
   @override
+  void updateDependencies(Element dependent, Object? aspect) {
+    // If the aspect is not a Dependency or if the widget tree is marked as
+    // needing build, we can skip the update of the dependencies.
+    if (aspect is! Dependency || _isMarkNeedsBuild) {
+      return super.updateDependencies(dependent, aspect);
+    }
+
+    var dependency = getDependencies(dependent);
+
+    // If no MasterDependency is stored, we can skip the update of the dependencies.
+    if (dependency != null && dependency is! MasterDependency) {
+      return super
+          .updateDependencies(dependent, aspect); // coverage:ignore-line
+    }
+
+    assert(dependency is MasterDependency?);
+
+    MasterDependency? masterDependency = dependency as MasterDependency?;
+
+    // Flush the dependent element and dispose of the dependency if it exists.
+    masterDependency = _flushDependent(dependent, masterDependency);
+
+    // If the dependency is a MasterDependency, add the aspect to it.
+    if (masterDependency is MasterDependency) {
+      masterDependency.putDependency(aspect);
+    }
+
+    // If the dependency is not a MasterDependency, create a new MasterDependency.
+    masterDependency ??= aspect.toMaster();
+
+    if (masterDependency.isDirty) {
+      markNeedsBuild(); // coverage:ignore-line
+    } else {
+      masterDependency.listen(markNeedsBuild);
+    }
+
+    return setDependencies(dependent, masterDependency);
+  }
+
+  @override
   void notifyDependent(InheritedWidget oldWidget, Element dependent) {
-    // select can never be used inside `didChangeDependencies`, so if the
-    // dependent is already marked as needed build, there is no point
-    // in executing the selectors.
+    // if the dependent is already marked as needed build, there is no point
+    // in executing the evaluations about the dirty dependencies, because
+    // the dependent will be rebuild anyway.
     if (dependent.dirty) return;
 
+    if (!_isMarkNeedsBuild) return super.notifyDependent(oldWidget, dependent);
+
     final dependency = getDependencies(dependent);
-    final dependencies = {
-      dependency,
-      if (dependency is MasterDependency) ...dependency._selects,
-    };
 
-    if (dependencies.any(_dependenciesDirty.contains)) {
-      dependent.didChangeDependencies();
-      _removeDependencies(dependent);
-      _dependenciesDirty.removeAll(dependencies);
-    }
+    if (dependency is! MasterDependency) return;
+
+    final isDirty =
+        dependency.isDirty || dependency._selects.any((dep) => dep.isDirty);
+
+    if (!isDirty) return;
+
+    _removeDependencies(dependent);
+    _isMarkNeedsBuild = false;
+    dependent.didChangeDependencies();
   }
 
-  void _addListener(Dependency dependency) {
-    if (dependency._instance != null) {
-      _addInstanceListener(dependency._instance!, dependency);
-    }
-
-    if (dependency._states.isNotEmpty) {
-      _addStatesListener(dependency._states, dependency);
-    }
-
-    if (dependency is MasterDependency && dependency._selects.isNotEmpty) {
-      for (final dependency in dependency._selects) {
-        _addListener(dependency);
-      }
-    }
-  }
-
-  void _addInstanceListener(
-    Object instance,
-    Dependency dependency,
-  ) {
-    if (!_instancesAndStatesDependencies.containsKey(instance)) {
-      Rt.on(instance, Lifecycle.didUpdate, _markNeedsNotifyDependents);
-    }
-
-    _instancesAndStatesDependencies[instance] ??= {};
-    _instancesAndStatesDependencies[instance]?.add(dependency);
-  }
-
-  void _addStatesListener(
-    Set<RtState> states,
-    Dependency dependency,
-  ) {
-    for (final state in states) {
-      if (!_instancesAndStatesDependencies.containsKey(state)) {
-        Rt.on(state, Lifecycle.didUpdate, _markNeedsNotifyDependents);
-      }
-
-      _instancesAndStatesDependencies[state] ??= {};
-      _instancesAndStatesDependencies[state]?.add(dependency);
-    }
-  }
-
-  void _markNeedsNotifyDependents(Object? instanceOrState, _) {
-    assert(instanceOrState != null);
-
-    final dependencies = _instancesAndStatesDependencies[instanceOrState];
-
-    if (dependencies?.isEmpty ?? true) return;
-
-    final dependenciesDirty = <Dependency>[
-      for (final dependency in dependencies!)
-        if (dependency is! SelectDependency)
-          dependency
-        else if (dependency.value != dependency.resolve())
-          dependency
-    ];
-
-    if (dependenciesDirty.isEmpty) return;
-
-    _dependenciesDirty.addAll(dependenciesDirty);
-    dependencies.removeAll(dependenciesDirty);
-
-    if (dependencies.isEmpty) {
-      _clearInstanceOrStateDependencies(instanceOrState);
-    }
-
-    markNeedsBuild();
-  }
-
+  /// Schedules a callback to flush dependents after the current frame.
   void _scheduleflushDependents() {
     if (_isFlushDependentsScheduled) return;
 
     _isFlushDependentsScheduled = true;
 
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       _isFlushDependentsScheduled = false;
       _dependentsFlushReady.clear();
     });
   }
 
-  Object? _flushDependent(Element dependent, Object? dependency) {
+  /// Flushes the dependent element and disposes of the dependency if it exists.
+  ///
+  /// This method schedules the flushing of dependents and ensures that the
+  /// dependent element is marked as ready for flushing. If the dependent element
+  /// is already marked as ready, it returns the existing dependency.
+  ///
+  /// If the dependency is of type [MasterDependency], it is disposed of.
+  ///
+  /// Returns `null` after disposing of the dependency.
+  MasterDependency<T>? _flushDependent<T>(
+    Element dependent,
+    MasterDependency<T>? dependency,
+  ) {
+    _scheduleflushDependents();
+
     if (_dependentsFlushReady.contains(dependent)) return dependency;
 
     _dependentsFlushReady.add(dependent);
 
-    if (dependency is! MasterDependency) return dependency;
-
-    _clearDependency(dependency);
+    if (dependency is MasterDependency<T>) dependency.dispose();
 
     return null;
   }
 
-  void _removeDependencies(Element dependent) {
-    setDependencies(dependent, null);
-    _dependents.remove(dependent);
-  }
+  @override
+  void markNeedsBuild() {
+    if (_isMarkNeedsBuild) return;
 
-  void _removeListeners() {
-    for (final instancesOrStates in _instancesAndStatesDependencies.keys) {
-      Rt.off(
-        instancesOrStates,
-        Lifecycle.didUpdate,
-        _markNeedsNotifyDependents,
+    _isMarkNeedsBuild = true;
+    try {
+      super.markNeedsBuild();
+    } catch (error) {
+      if (error is! AssertionError) rethrow;
+
+      WidgetsBinding.instance.addPostFrameCallback(
+        (_) => super.markNeedsBuild(),
       );
     }
-
-    _instancesAndStatesDependencies.clear();
   }
 
-  void _clearDependency(Dependency dependency) {
-    if (dependency._instance != null) {
-      final dependencies =
-          _instancesAndStatesDependencies[dependency._instance];
-      dependencies?.remove(dependency);
-
-      if (dependencies?.isEmpty ?? false) {
-        _clearInstanceOrStateDependencies(dependency._instance);
-      }
-    }
-
-    for (final state in dependency._states) {
-      final dependenciesOfState = _instancesAndStatesDependencies[state];
-      dependenciesOfState?.remove(dependency);
-
-      if (dependenciesOfState?.isEmpty ?? false) {
-        _clearInstanceOrStateDependencies(state);
-      }
-    }
-
-    if (dependency is MasterDependency) {
-      for (final select in dependency._selects) {
-        _clearDependency(select);
-      }
-    }
+  void _removeDependencies(Element dependent) {
+    setDependencies(dependent, null);
+    _dependents.remove(dependent)?.dispose();
   }
 
-  void _clearInstanceOrStateDependencies(Object? instanceOrState) {
-    Rt.off(
-      instanceOrState,
-      Lifecycle.didUpdate,
-      _markNeedsNotifyDependents,
-    );
+  void _resetState() {
+    _disposeDependencies();
+    _dependentsFlushReady.clear();
+    _isFlushDependentsScheduled = false;
+    _updatedShouldNotify = false;
+    _isMarkNeedsBuild = false;
+  }
 
-    _instancesAndStatesDependencies.remove(instanceOrState);
+  void _disposeDependencies() {
+    final dependencies = _dependents.values;
+
+    for (final dependency in dependencies) {
+      dependency.dispose();
+    }
+
+    _dependents.clear();
   }
 }

@@ -10,8 +10,10 @@ class RtScope extends InheritedWidget {
     required Widget child,
   }) : super(key: key, child: child);
 
+  // coverage:ignore-start
   @override
   bool updateShouldNotify(covariant InheritedWidget oldWidget) => false;
+  // coverage:ignore-end
 
   @override
   RtScopeElement createElement() => RtScopeElement(this);
@@ -57,7 +59,7 @@ class RtScopeElement extends InheritedElement with ScopeElementMixin {
 
   @override
   Widget build() {
-    if (hasDependenciesDirty) {
+    if (hasDirtyDependencies) {
       notifyClients(widget);
 
       if (prevChild != null) return prevChild!;
@@ -91,16 +93,3 @@ https://stackoverflow.com/questions/tagged/flutter
     ''';
   }
 }
-
-/// {@macro flutter_reactter.rt_scope}
-@Deprecated(
-  'Use `RtScope` instead. '
-  'This feature was deprecated after v7.3.0.',
-)
-typedef ReactterScope = RtScope;
-
-@Deprecated(
-  'Use `RtScopeNotFoundException` instead. '
-  'This feature was deprecated after v7.3.0.',
-)
-typedef ReactterScopeNotFoundException = RtScopeNotFoundException;

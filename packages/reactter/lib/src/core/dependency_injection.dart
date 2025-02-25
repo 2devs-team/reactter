@@ -1,4 +1,4 @@
-part of 'core.dart';
+part of '../internals.dart';
 
 /// A mixin-class that adds dependency injection features
 /// to classes that use it.
@@ -13,9 +13,10 @@ part of 'core.dart';
 /// emits lifecycle events when dependencies are registered, unregistered,
 /// initialized, and destroyed.
 @internal
-abstract class DependencyInjection {
-  Logger get logger;
-  EventHandler get eventHandler;
+abstract class DependencyInjection implements IContext {
+  @override
+  @internal
+  DependencyInjection get dependencyInjection => this;
 
   /// It stores the dependencies registered.
   final _dependencyRegisters = HashSet<DependencyRegister>();
@@ -23,7 +24,7 @@ abstract class DependencyInjection {
   /// It stores the dependencies and its registers for quick access.
   final _instances = HashMap<Object, DependencyRegister>();
 
-  /// {@template register}
+  /// {@template reactter.register}
   /// Register a [builder] function of the [T] dependency with/without [id].
   /// {@endtemplate}
   ///
@@ -38,9 +39,11 @@ abstract class DependencyInjection {
     var dependencyRegister = _getDependencyRegister<T?>(id);
 
     if (dependencyRegister != null) {
-      logger.log(
-        'The "$dependencyRegister" builder already registered as `$mode`.',
+      _notifyDependencyFailed(
+        dependencyRegister,
+        DependencyFail.alreadyRegistered,
       );
+
       return false;
     }
 
@@ -53,13 +56,10 @@ abstract class DependencyInjection {
     _dependencyRegisters.add(dependencyRegister);
 
     eventHandler.emit(dependencyRegister, Lifecycle.registered);
-    logger.log(
-      'The "$dependencyRegister" builder has been registered as `$mode`.',
-    );
     return true;
   }
 
-  /// {@template lazy_builder}
+  /// {@template reactter.lazy_builder}
   /// Register a [builder] function of the [T] dependency with/without [id]
   /// as [DependencyMode.builder].
   /// {@endtemplate}
@@ -89,7 +89,7 @@ abstract class DependencyInjection {
     );
   }
 
-  /// {@template lazy_factory}
+  /// {@template reactter.lazy_factory}
   /// Register a [builder] function of the [T] dependency with/without [id]
   /// as [DependencyMode.factory].
   /// {@endtemplate}
@@ -119,7 +119,7 @@ abstract class DependencyInjection {
     );
   }
 
-  /// {@template lazy_singleton}
+  /// {@template reactter.lazy_singleton}
   /// Register a [builder] function of the [T] dependency with/without [id]
   /// as [DependencyMode.singleton].
   /// {@endtemplate}
@@ -149,7 +149,7 @@ abstract class DependencyInjection {
     );
   }
 
-  /// {@template create}
+  /// {@template reactter.create}
   /// Register a [builder] function of the [T] dependency with/without [id]
   /// and creates the instance if it isn't already registered,
   /// else gets its instance only.
@@ -157,7 +157,7 @@ abstract class DependencyInjection {
   ///
   /// Use [mode] parameter for defining how to manage the dependency.
   ///
-  /// {@template create_conditions}
+  /// {@template reactter.create_conditions}
   /// Under the following conditions:
   ///
   /// - if not found and hasn't registered it, registers, creates and returns it.
@@ -176,7 +176,7 @@ abstract class DependencyInjection {
     return _getOrCreateIfNotExtist<T>(id, ref)?.instance;
   }
 
-  /// {@template builder}
+  /// {@template reactter.builder}
   /// Register a [builder] function of the [T] dependency with/without [id]
   /// as [DependencyMode.builder]
   /// and creates the instance if it isn't already registered,
@@ -212,7 +212,7 @@ abstract class DependencyInjection {
     );
   }
 
-  /// {@template factory}
+  /// {@template reactter.factory}
   /// Register a [builder] function of the [T] dependency with/without [id]
   /// as [DependencyMode.factory]
   /// and creates the instance if it isn't already registered,
@@ -247,7 +247,7 @@ abstract class DependencyInjection {
     );
   }
 
-  /// {@template singleton}
+  /// {@template reactter.singleton}
   /// Register a [builder] function of the [T] dependency with/without [id]
   /// as [DependencyMode.singleton]
   /// and creates the instance if it isn't already registered,
@@ -282,11 +282,11 @@ abstract class DependencyInjection {
     );
   }
 
-  /// {@template get}
+  /// {@template reactter.get}
   /// Creates and/or gets the instance of the [T] dependency with/without [id].
   /// {@endtemplate}
   ///
-  /// {@template get_conditions}
+  /// {@template reactter.get_conditions}
   /// Under the following conditions:
   ///
   /// - if found it, returns it.
@@ -314,13 +314,16 @@ abstract class DependencyInjection {
     if (dependencyRegister?.instance == null) {
       final dependencyRef = DependencyRef<T>(id);
 
-      logger.log('The "$dependencyRef" dependency already deleted.');
+      _notifyDependencyFailed(
+        dependencyRef,
+        DependencyFail.alreadyDeleted,
+      );
 
       return false;
     }
 
     if (ref != null) {
-      dependencyRegister!.refs.remove(ref.hashCode);
+      dependencyRegister!.refs.remove(ref);
     }
 
     if (dependencyRegister!.refs.isNotEmpty) {
@@ -333,15 +336,17 @@ abstract class DependencyInjection {
         return true;
       case DependencyMode.factory:
         _removeInstance<T>(dependencyRegister);
-        logger.log(
-          'The "$dependencyRegister" builder has been retained '
-          'because it\'s `${DependencyMode.factory}`.',
+
+        _notifyDependencyFailed(
+          dependencyRegister,
+          DependencyFail.builderRetained,
         );
+
         return true;
       case DependencyMode.singleton:
-        logger.log(
-          'The "$dependencyRegister" dependency has been retained '
-          'because it\'s `${DependencyMode.singleton}`.',
+        _notifyDependencyFailed(
+          dependencyRegister,
+          DependencyFail.dependencyRetained,
         );
     }
 
@@ -353,27 +358,22 @@ abstract class DependencyInjection {
   /// Returns `true` when dependency has been unregistered.
   bool unregister<T extends Object?>([String? id]) {
     final dependencyRegister = _getDependencyRegister<T?>(id);
-    final typeLabel =
-        dependencyRegister?.mode.label ?? DependencyMode.builder.label;
 
     if (dependencyRegister == null) {
       final dependencyRef = DependencyRef<T>(id);
 
-      logger.log('The "$dependencyRef" $typeLabel already deregistered.');
+      _notifyDependencyFailed(
+        dependencyRef,
+        DependencyFail.alreadyUnregistered,
+      );
 
       return false;
     }
 
     if (dependencyRegister._instance != null) {
-      final idParam = id != null ? "id: '$id, '" : '';
-
-      logger.log(
-        'The "$T" builder couldn\'t deregister '
-        'because the "$dependencyRegister" dependency is active.\n'
-        'You should delete the instance before with:\n'
-        '`Rt.delete<$T>(${id ?? ''});` or \n'
-        '`Rt.destroy<$T>($idParam, onlyInstance: true);`\n',
-        level: LogLevel.warning,
+      _notifyDependencyFailed(
+        dependencyRegister,
+        DependencyFail.cannotUnregisterActiveInstance,
       );
 
       return false;
@@ -383,7 +383,6 @@ abstract class DependencyInjection {
 
     eventHandler.emit(dependencyRegister, Lifecycle.unregistered);
     eventHandler.offAll(dependencyRegister);
-    logger.log('The "$dependencyRegister" $typeLabel has been deregistered.');
 
     return true;
   }
@@ -403,7 +402,10 @@ abstract class DependencyInjection {
     if (dependencyRegister?.instance == null && onlyInstance) {
       final dependencyRef = DependencyRef<T>(id);
 
-      logger.log('The "$dependencyRef" instance already deleted.');
+      _notifyDependencyFailed(
+        dependencyRef,
+        DependencyFail.alreadyDeleted,
+      );
 
       return false;
     }
@@ -418,7 +420,7 @@ abstract class DependencyInjection {
     return unregister<T>(id);
   }
 
-  /// {@template find}
+  /// {@template reactter.find}
   /// Gets the instance of the [T] dependency with/without [id].
   /// {@endtemplate}
   ///
@@ -432,15 +434,6 @@ abstract class DependencyInjection {
     return _getDependencyRegister<T>(id)?.instance != null;
   }
 
-  /// Checks if an instance is registered in Reactter
-  // coverage:ignore-start
-  @Deprecated(
-    'Use `isActive` instead.'
-    'This feature was deprecated after v7.2.0.',
-  )
-  bool isRegistered(Object? instance) => isActive(instance);
-  // coverage:ignore-end
-
   /// Checks if the [instance] is active in Reactter.
   bool isActive(Object? instance) {
     return _instances[instance] != null;
@@ -452,23 +445,14 @@ abstract class DependencyInjection {
     return _dependencyRegisters.lookup(dependencyRef) != null;
   }
 
-  // coverage:ignore-start
-  @Deprecated(
-    'Use `getDependencyMode` instead. '
-    'This feature was deprecated after v7.1.0.',
-  )
-  InstanceManageMode? getInstanceManageMode(Object? instance) =>
-      getDependencyMode(instance);
-  // coverage:ignore-end
-
   /// Returns [DependencyMode] of instance parameter.
   DependencyMode? getDependencyMode(Object? instance) {
     return _instances[instance]?.mode;
   }
 
-  /// Returns the hashCode reference at a specified index for a given type and
+  /// Returns the reference at a specified index for a given type and
   /// optional ID.
-  int? getHashCodeRefAt<T extends Object?>(int index, [String? id]) {
+  Object? getRefAt<T extends Object?>(int index, [String? id]) {
     final refs = _getDependencyRegister<T>(id)?.refs;
 
     if (refs == null || refs.length < index + 1) return null;
@@ -486,36 +470,35 @@ abstract class DependencyInjection {
 
     if (instanceRegister == null) {
       final dependencyRef = DependencyRef<T>(id);
-      final idParam = id != null ? ", id: '$id'" : '';
 
-      logger.log(
-        'The "$dependencyRef" builder is not registered.\n'
-        'You should register the instance build with: \n'
-        '`Rt.register<$T>(() => $T()$idParam);` or \n'
-        '`Rt.create<$T>(() => $T()$idParam);`.',
-        level: LogLevel.warning,
+      _notifyDependencyFailed(
+        dependencyRef,
+        DependencyFail.missingInstanceBuilder,
       );
 
-      return _getDependencyRegisterByRef<T>(dependencyRef);
+      return getDependencyRegisterByRef<T>(dependencyRef);
+    }
+
+    if (ref != null) {
+      instanceRegister.refs.add(ref);
     }
 
     if (instanceRegister.instance != null) {
-      logger.log('The "$instanceRegister" instance already created.');
+      _notifyDependencyFailed(
+        instanceRegister,
+        DependencyFail.alreadyCreated,
+      );
 
       return instanceRegister;
     }
 
     BindingZone.autoBinding(() => _createInstance<T>(instanceRegister));
 
-    if (ref != null) {
-      instanceRegister.refs.add(ref.hashCode);
-    }
-
-    // ignore: deprecated_member_use_from_same_package
-    eventHandler.emit(instanceRegister, Lifecycle.initialized);
-    eventHandler.emit(instanceRegister, Lifecycle.created);
-
-    logger.log('The "$instanceRegister" instance has been created.');
+    eventHandler.emit(
+      instanceRegister,
+      Lifecycle.created,
+      instanceRegister.instance,
+    );
 
     return instanceRegister;
   }
@@ -533,27 +516,22 @@ abstract class DependencyInjection {
 
   /// Removes an instance of a generic type from a [DependencyRegister].
   void _removeInstance<T>(DependencyRegister<T?> dependencyRegister) {
-    final log = 'The "$dependencyRegister" instance has been deleted.';
     final instance = dependencyRegister.instance;
+
     dependencyRegister._instance = null;
 
     _instances.remove(instance);
+    eventHandler.emit(instance, Lifecycle.deleted, instance);
+    eventHandler.emit(dependencyRegister, Lifecycle.deleted, instance);
 
-    // ignore: deprecated_member_use_from_same_package
-    eventHandler.emit(instance, Lifecycle.destroyed);
-    eventHandler.emit(instance, Lifecycle.deleted);
-
-    // ignore: deprecated_member_use_from_same_package
-    eventHandler.emit(dependencyRegister, Lifecycle.destroyed);
-    eventHandler.emit(dependencyRegister, Lifecycle.deleted);
-    logger.log(log);
-
-    if (instance is StateBase) instance.dispose();
+    if (instance is IState && !instance.isDisposed) {
+      instance.dispose();
+    }
   }
 
   /// Returns the [DependencyRef] associated with the given instance.
   /// If the instance is null or not found, returns null.
-  DependencyRef<T>? _getDependencyRef<T extends Object?>(Object? instance) {
+  DependencyRef<T>? getDependencyRef<T extends Object?>(Object? instance) {
     return _instances[instance] as DependencyRef<T>?;
   }
 
@@ -566,9 +544,22 @@ abstract class DependencyInjection {
   }
 
   /// Returns the [DependencyRegister] of [T] type with a given [dependencyRef].
-  DependencyRegister<T>? _getDependencyRegisterByRef<T extends Object?>(
-    DependencyRef? dependencyRef,
+  DependencyRegister<T?>? getDependencyRegisterByRef<T extends Object?>(
+    DependencyRef<T?>? dependencyRef,
   ) {
-    return _dependencyRegisters.lookup(dependencyRef) as DependencyRegister<T>?;
+    if (dependencyRef == null) return null;
+
+    return _dependencyRegisters.lookup(dependencyRef as dynamic)
+        as DependencyRegister<T?>?;
+  }
+
+  void _notifyDependencyFailed(
+    DependencyRef dependencyRef,
+    DependencyFail fail,
+  ) {
+    for (final observer
+        in IDependencyObserver._observers.toList(growable: false)) {
+      observer.onDependencyFailed(dependencyRef, fail);
+    }
   }
 }

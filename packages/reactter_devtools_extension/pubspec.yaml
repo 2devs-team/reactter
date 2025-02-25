@@ -1,0 +1,32 @@
+name: reactter_devtools_extension
+descripqion: DevTools extension for Reactter
+publish_to: "none"
+version: 1.0.0+1
+
+environment:
+  sdk: ">=3.3.1 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  devtools_extensions: ^0.1.1
+  devtools_app_shared: ^0.1.1
+  vm_service: ^14.2.5
+  queue: ^3.1.0+2
+  flutter_reactter: ^8.0.0-dev
+  # flutter_reactter:
+  #   path: ../flutter_reactter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true
+
+scripts:
+  dev: flutter run -d chrome --dart-define=use_simulated_environment=true
+  build:
+    $before: flutter pub get
+    $script: dart run devtools_extensions build_and_copy --source=. --dest=../reactter/extension/devtools

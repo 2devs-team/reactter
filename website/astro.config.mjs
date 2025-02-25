@@ -26,7 +26,6 @@ export default defineConfig({
         src: "./public/logo.svg",
       },
       customCss: ["./src/styles/custom.css"],
-      defaultLocale: "root",
       expressiveCode: {
         themes: [myTheme],
       },
@@ -39,6 +38,7 @@ export default defineConfig({
         ThemeProvider: "./src/components/ThemeProvider.astro",
         ThemeSelect: "./src/components/ThemeSelect.astro",
       },
+      defaultLocale: "root",
       locales: {
         root: {
           label: "English",
@@ -46,6 +46,7 @@ export default defineConfig({
         },
         es: {
           label: "Español",
+          lang: "es",
         },
       },
       social: {
@@ -72,6 +73,13 @@ export default defineConfig({
                 es: "Empezando",
               },
             },
+            {
+              label: "DevTools extension",
+              link: "/devtools_extension",
+              translations: {
+                es: "Extensión de DevTools",
+              },
+            },
           ],
         },
         {
@@ -84,51 +92,70 @@ export default defineConfig({
           },
         },
         {
-          label: "Hooks",
+          label: "Migration",
           translations: {
-            es: "Hooks",
+            es: "Migración",
           },
           autogenerate: {
-            directory: "hooks",
+            directory: "migration",
           },
         },
         {
-          label: "Classes",
+          label: "API",
           translations: {
-            es: "Clases",
+            es: "API",
           },
           autogenerate: {
-            directory: "classes",
+            directory: "api",
           },
-        },
-        {
-          label: "Widgets",
-          badge: "Flutter",
-          translations: {
-            es: "Widgets",
-          },
-          autogenerate: {
-            directory: "widgets",
-          },
-        },
-        {
-          label: "Methods",
-          translations: {
-            es: "Métodos",
-          },
-          autogenerate: {
-            directory: "methods",
-          },
-        },
-        {
-          label: "Extensions",
-          badge: "Flutter",
-          translations: {
-            es: "Extensiones",
-          },
-          autogenerate: {
-            directory: "extensions",
-          },
+          items: [
+            {
+              label: "Hooks",
+              translations: {
+                es: "Hooks",
+              },
+              autogenerate: {
+                directory: "api/hooks",
+              },
+            },
+            {
+              label: "Classes",
+              translations: {
+                es: "Clases",
+              },
+              autogenerate: {
+                directory: "api/classes",
+              },
+            },
+            {
+              label: "Methods",
+              translations: {
+                es: "Métodos",
+              },
+              autogenerate: {
+                directory: "api/methods",
+              },
+            },
+            {
+              label: "Widgets",
+              badge: "Flutter",
+              translations: {
+                es: "Widgets",
+              },
+              autogenerate: {
+                directory: "api/widgets",
+              },
+            },
+            {
+              label: "Extensions",
+              translations: {
+                es: "Extensiones",
+              },
+              autogenerate: {
+                directory: "api/extensions",
+              },
+            },
+          ],
         },
         {
           label: "Extra topics",

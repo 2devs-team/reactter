@@ -1,0 +1,47 @@
+---
+title: Using the hook
+---
+
+import { HT, HM } from '@/components/Highlight';
+import CodeTabs from '@/components/CodeTabs.astro';
+import { Tabs, TabItem } from "@/components/Tabs";
+import ZappButton from "@/components/ZappButton.astro";
+import { Code } from "@astrojs/starlight/components";
+import { marks } from '@/examples/marks.ts'
+
+import MainCode from '@/examples/custom_hook/lib/main.dart?raw';
+import MyCustomFormCode from '@/examples/custom_hook/lib/my_custom_form.dart?raw';
+import MyControllerCode from '@/examples/custom_hook/lib/my_controller.dart?raw';
+import UseTextInputCode from '@/examples/custom_hook/lib/use_text_input.dart?raw';
+
+You can then call that [custom hook](/reactter/core_concepts/hooks/#custom-hook) from anywhere in the code and get access to its shared logic:
+
+<CodeTabs>
+  <ZappButton path="examples/custom_hook"/>
+
+  <Tabs>
+    <TabItem>
+      <HM single slot="label">my_controller.dart</HM>
+      <Code code={MyControllerCode} lang="dart" mark={[...marks, {range: "5-6"}, 11, 12]}/>
+    </TabItem>
+
+    <TabItem>
+      <HM single slot="label">my_custom_form.dart</HM>
+      <Code code={MyCustomFormCode} lang="dart" mark={[...marks, 43, 49]}/>
+    </TabItem>
+
+    <TabItem label="use_text_input.dart">
+      <Code code={UseTextInputCode} lang="dart" mark={[...marks]}/>
+    </TabItem>
+
+    <TabItem label="main.dart">
+      <Code code={MainCode} lang="dart" mark={marks} />
+    </TabItem>
+  </Tabs>
+</CodeTabs>
+
+In the previous example, the form captures the input from the name and surname fields, combines them into a full name, and displays the result.
+The <HT>`MyController`</HT> component uses the <HT>`UseTextInput`</HT> hook (_**custom hook**_ created previously) to manage the name and lastname inputs.
+
+The `fullName` state is defined using <HT>[`UseCompute`](/reactter/api/hooks/use_compute)</HT>, which calculates the full name based on the values of `firstNameInput` and `lastNameInput`.
+This ensures that the full name updates automatically whenever either input changes.

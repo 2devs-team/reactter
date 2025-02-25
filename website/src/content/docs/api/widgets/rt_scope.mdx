@@ -1,0 +1,55 @@
+---
+title: RtScope
+description: Learn how to use the RtScope in Reactter.
+sidebar:
+  order: 1
+---
+import { HM, HT, HN } from '@/components/Highlight';
+import CodeTabs from '@/components/CodeTabs.astro';
+import { Tabs, TabItem } from "@/components/Tabs";
+import ZappButton from "@/components/ZappButton.astro";
+import { Code } from "@astrojs/starlight/components";
+import { marks } from '@/examples/marks.ts'
+
+import counterViewCode from '@/examples/rt_scope/lib/counter_view.dart?raw';
+import mainCode from '@/examples/rt_scope/lib/main.dart?raw';
+
+The <HT><a href="https://pub.dev/documentation/flutter_reactter/latest/flutter_reactter/RtScope-class.html">`RtScope`</a></HT> widget serves as an entry point for Reactter, allowing you to use any consumer(such as <HT>[`RtConsumer`](/reactter/api/widgets/rt_consumer)</HT>, <HT>[`RtSelector`](/reactter/api/widgets/rt_selector)</HT>, <HT>[`RtComponent`](/reactter/api/widgets/rt_component)</HT>, <HM>[`BuildContext.watch`](/reactter/api/extensions/builder_context_watch)</HM>, <HM>[`BuildContext.select`](/reactter/api/extensions/builder_context_select)</HM>) to observe state changes within the subtree of the widget it wraps, without the need to explicitly define dependencies.
+
+:::caution
+The <HT>`RtScope`</HT> widget is optional, but if you use any consumers without defining dependencies and their ancestor widgets are not wrapped by it, a <HT>`RtScopeNotFoundException`</HT> error will be thrown. Therefore, make sure this widget is correctly placed in the widget tree hierarchy.
+
+To avoid such errors, it is advisable to wrap your application's root widget with it.
+:::
+
+## Syntax
+
+```dart showLineNumbers=false
+RtScope({
+  Key? key,
+  required Widget child,
+})
+```
+
+## Properties
+
+- `key`: An optional <HT>`Key`</HT> to use for identifying the widget.
+- `child`: The <HT>`Widget`</HT> that is to be wrapped by the <HT>`RtScope`</HT> widget.
+
+## Usage
+
+In the following example, we have a simple counter application that uses the <HT>`RtScope`</HT> widget to listen to the state changes of the `count` value.
+
+<CodeTabs>
+  <ZappButton path="examples/rt_scope"/>
+
+  <Tabs>
+    <TabItem>
+      <HM single slot="label">main.dart</HM>
+      <Code code={mainCode} lang="dart" mark={[...marks, {range: "7-9"}]} />
+    </TabItem>
+    <TabItem label="counter_view.dart">
+      <Code code={counterViewCode} lang="dart" mark={marks} />
+    </TabItem>
+  </Tabs>
+</CodeTabs>

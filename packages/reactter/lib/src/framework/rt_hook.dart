@@ -1,4 +1,4 @@
-part of 'framework.dart';
+part of '../framework.dart';
 
 /// {@template reactter.rt_hook}
 /// An abstract-class that provides the functionality of [RtState].
@@ -19,20 +19,20 @@ part of 'framework.dart';
 ///   void toggle() => _state.value = !_state.value;
 /// }
 /// ```
-/// > **IMPORTANT**: All [RtHook] must be registered using the final [$] variable.:
+/// > **RECOMMENDED**: All [RtHook] must be registered using the final [$] variable.:
 ///
 /// and use it, like so:
 ///
 /// >```dart
 /// > class AppController {
-/// >   final state = UseToggle(false);
+/// >   final uToggle = UseToggle(false);
 /// >
 /// >   UserContext() {
-/// >     print('initial value: ${state.value}');
+/// >     print('initial value: ${uToggle.value}');
 /// >
-/// >     state.toggle();
+/// >     uToggle.toggle();
 /// >
-/// >     print('toggle value: ${state.value}');
+/// >     print('toggle value: ${uToggle.value}');
 /// >   }
 /// > }
 /// > ```
@@ -40,29 +40,17 @@ part of 'framework.dart';
 /// See also:
 /// * [RtState], adds state management features to [RtHook].
 /// {@endtemplate}
-abstract class RtHook extends Hook implements RtState {
-  @override
-  @internal
-  DependencyInjection get dependencyInjection => Rt;
-  @override
-  @internal
-  StateManagement get stateManagment => Rt;
-  @override
-  @internal
-  EventHandler get eventHandler => Rt;
-  @override
-  @internal
-  Logger get logger => Rt;
-
-  /// This getter allows access to the [HookRegister] instance
-  /// which is responsible for registering a [Hook]
+abstract class RtHook extends IHook with RtState {
+  /// {@template reactter.rt_hook.register}
+  /// This getter allows access to the [HookBindingZone] instance
+  /// which is responsible for registering a [RtHook]
   /// and attaching previously collected states to it.
-  static HookRegister get $register => HookRegister();
-}
+  /// {@endtemplate}
+  static get $register => HookBindingZone<RtHook>();
 
-/// {@macro reactter.rt_hook}
-@Deprecated(
-  'Use `RtHook` instead. '
-  'This feature was deprecated after v7.3.0.',
-)
-typedef ReactterHook = RtHook;
+  @override
+  @mustCallSuper
+  void update([Function()? fnUpdate]) {
+    return super.update(fnUpdate ?? () {});
+  }
+}

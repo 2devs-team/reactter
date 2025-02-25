@@ -1,10 +1,10 @@
 ---
-title: "Event Handler"
-description: "The base class for all event handlers in Reactter."
+title: Event handler
+description: Learn about the event handler system in Reactter.
 sidebar:
   order: 3
 ---
-import { HE, HN, HM, HT } from '@/components/Highlight';
+import { HE, HK, HN, HM, HT } from '@/components/Highlight';
 
 In Reactter, event handler plays a pivotal role in facilitating seamless communication
 and coordination between various components within the application.
@@ -16,23 +16,26 @@ fostering a cohesive ecosystem where different parts of the application can inte
 Reactter offers the following event handler mechanisms:
 
 - Hooks
-  - <HT>[`UseEffect`](/reactter/hooks/UseEffect)</HT>
+  - <HT>[`UseEffect`](/reactter/api/hooks/UseEffect)</HT>
 - Methods
-  - <HM>[`Rt.on`](/reactter/methods/event_handler_methods/#rton)</HM>
-  - <HM>[`Rt.one`](/reactter/methods/event_handler_methods/#rtone)</HM>
-  - <HM>[`Rt.emit`](/reactter/methods/event_handler_methods/#rtemit)</HM>
-  - <HM>[`Rt.off`](/reactter/methods/event_handler_methods/#rtoff)</HM>
-  - <HM>[`Rt.offAll`](/reactter/methods/event_handler_methods/#rtoffall)</HM>
+  - <HM>[`Rt.on`](/reactter/api/methods/event_handler_methods/#rton)</HM>
+  - <HM>[`Rt.one`](/reactter/api/methods/event_handler_methods/#rtone)</HM>
+  - <HM>[`Rt.emit`](/reactter/api/methods/event_handler_methods/#rtemit)</HM>
+  - <HM>[`Rt.off`](/reactter/api/methods/event_handler_methods/#rtoff)</HM>
+  - <HM>[`Rt.offAll`](/reactter/api/methods/event_handler_methods/#rtoffall)</HM>
 
 ## How it works
 
-Event handler in Reactter is based on a few fundamental concepts:
+The event handler in Reactter is based on some fundamental concepts:
 
-- **Event**: Is a enum that represents a specific action or occurrence in the application.
-- **Instance**: Is an object that emits and listens to events.
-- **Listener**: Is a function that is executed when an event is emitted.
+- **Event**: It is an <HK>`enum`</HK> that represents a specific action or occurrence associated with a particular instance.
+It defines the type of interaction or change that can happen.
+- **Instance**: It is an <HT>`Object`</HT> used to identify the entity that triggers the event and to emit the corresponding events.
+It acts as the emitter that connects the event to the action.
+- **Action**: It is a <HT>`Function`</HT> that executes in response to an emitted event.
+It contains the logic needed to manage the event and define the desired behavior.
 
-Understanding these concepts is crucial for effectively managing event-driven interactions in Reactter apps.
+Understanding these concepts is crucial for efficiently managing event-driven interactions in Reactter applications.
 
 ### Example
 
@@ -55,7 +58,7 @@ void main() async {
   );
 
   // Create a timer that decrements the `value` of `count`
-  // by 1 every second until it reaches 0
+  // by 1 each time second until it reaches 0
   await Timer.periodic(Duration(seconds: 1), countdown);
 }
 
@@ -70,17 +73,11 @@ void countdown(Timer timer) {
 }
 ```
 
-In this example, the line 10 to 14, we see that the <HM>`Rt.on`</HM> method is used to subscribe to the <HE>`Lifecycle.didUpdate`</HE> **event** of the `count` **instance**.
-Whenever the `count` state changes, the **listener** function is invoked, printing the current `value` of the `count` state.
+In this example, we see that the <HM>`Rt.on`</HM> method is used to subscribe to the **event** <HE>`Lifecycle.didUpdate`</HE> of the `count` **instance** from line 10 to 14.
+Whenever the count state changes, the listener function is invoked, printing the current value of the count state.
 
-Here, we can't see the emitter, because it's encapsulated within the <HT>`Signal`</HT> class, and it's called when the `value` of the `count` state changes.
-This mechanism is made possible by the underlying state management system.
-
-:::tip
-  Learn about [Lifecycle](/reactter/core_concepts/lifecycles).
-:::
-
-Now, we do a small tweak to add an emitter:
+Here, we cannot see the emitting statement(<HM>`emit`</HM>) because it is encapsulated inside the <HT>`Signal`</HT> class and is called when the `value` of the `count` state changes.
+To see how an event is emitted, let's make a small adjustment to add an emitter:
 
 ```dart title="main.dart" ins={4,18-24,38-39} /count(?!down)(?!\u0060)/ "count.value" "Rt.on" "Lifecycle.didUpdate" "Rt.emit" /(CustomEvent) / /(CustomEvent(\.countdownFinished))(?!\u0060)/
 import 'dart:async';
@@ -109,7 +106,7 @@ void main() async {
   );
 
   // Create a timer that decrements the `value` of `count`
-  // by 1 every second until it reaches 0
+  // by 1 each time second until it reaches 0
   await Timer.periodic(Duration(seconds: 1), countdown);
 }
 

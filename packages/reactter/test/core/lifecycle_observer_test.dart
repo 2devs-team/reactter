@@ -1,12 +1,12 @@
 import 'package:reactter/reactter.dart';
-import 'package:test/test.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 import '../shareds/test_controllers.dart';
 
 void main() {
-  group("LifecycleObserver", () {
+  group("DependencyLifecycle", () {
     test(
-      "should resolve the lifecycle event of a LifecycleObserver instance",
+      "should resolve the lifecycle event of a DependencyLifecycle instance",
       () {
         late TestLifecycleController? testLifecycleController;
 
@@ -21,7 +21,7 @@ void main() {
         expect(testLifecycleController, isA<TestLifecycleController>());
 
         Rt.emit(
-          RtDependency<TestLifecycleController>(),
+          RtDependencyRef<TestLifecycleController>(),
           Lifecycle.willMount,
         );
 
@@ -35,7 +35,7 @@ void main() {
         expect(testLifecycleController.lastState, null);
 
         Rt.emit(
-          RtDependency<TestLifecycleController>(),
+          RtDependencyRef<TestLifecycleController>(),
           Lifecycle.didMount,
         );
 
@@ -77,7 +77,7 @@ void main() {
         );
 
         Rt.emit(
-          RtDependency<TestLifecycleController>(),
+          RtDependencyRef<TestLifecycleController>(),
           Lifecycle.willUnmount,
         );
 
@@ -94,7 +94,7 @@ void main() {
         );
 
         Rt.emit(
-          RtDependency<TestLifecycleController>(),
+          RtDependencyRef<TestLifecycleController>(),
           Lifecycle.didUnmount,
         );
 

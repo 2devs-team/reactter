@@ -1,0 +1,130 @@
+---
+title: Manejador de eventos
+description: Aprende sobre el sistema de manejo de eventos en Reactter.
+sidebar:
+  order: 3
+---
+import { HE, HK, HN, HM, HT } from '@/components/Highlight';
+
+En Reactter, el manejador de eventos juega un papel fundamental en facilitar la comunicación
+y coordinación sin problemas entre varios componentes dentro de la aplicación.
+Diseñado para garantizar una gestión de estados eficiente e inyección de dependencias,
+fomentando un ecosistema cohesivo donde diferentes partes de la aplicación pueden interactuar armoniosamente.
+
+## API
+
+Reactter ofrece los siguientes mecanismos de manejador de eventos:
+
+- Hooks
+  - <HT>[`UseEffect`](/reactter/es/api/hooks/UseEffect)</HT>
+- Metodos
+  - <HM>[`Rt.on`](/reactter/es/api/methods/event_handler_methods/#rton)</HM>
+  - <HM>[`Rt.one`](/reactter/es/api/methods/event_handler_methods/#rtone)</HM>
+  - <HM>[`Rt.emit`](/reactter/es/api/methods/event_handler_methods/#rtemit)</HM>
+  - <HM>[`Rt.off`](/reactter/es/api/methods/event_handler_methods/#rtoff)</HM>
+  - <HM>[`Rt.offAll`](/reactter/es/api/methods/event_handler_methods/#rtoffall)</HM>
+
+## ¿Cómo funciona?
+
+El manejador de eventos en Reactter se basa en algunos conceptos fundamentales:
+
+- **Evento**: Es un enumerador (<HK>`enum`</HK>) que representa una acción o suceso específico asociado a una instancia en particular.
+Define el tipo de interacción o cambio que puede ocurrir.
+- **Instancia**: Es un objeto (<HT>`Object`</HT>) utilizado para identificar la entidad que origina el evento y para emitir los eventos correspondientes.
+Actúa como el emisor que conecta el evento con la acción.
+- **Acción**: Es una función (<HT>`Function`</HT>) que se ejecuta en respuesta a un evento emitido.
+Contiene la lógica necesaria para gestionar el evento y definir el comportamiento deseado.
+
+Entender estos conceptos es crucial para gestionar eficazmente las interacciones basadas en eventos en las aplicaciones de Reactter.
+
+### Ejemplo
+
+Para ilustrar esto, tomemos un ejemplo de cuenta regresiva visto en la página de [Gestión de estados](/reactter/es/core_concepts/state_management/#ejemplo):
+
+```dart title="main.dart" {10-14} /count(?!down)(?!\u0060)/ "count.value" "Rt.on" "Lifecycle.didUpdate"
+import 'dart:async';
+import 'package:reactter/reactter.dart';
+
+// Crea un estado reactivo llamado `count` utilizando la clase `Signal`
+final count = Signal(10);
+
+void main() async {
+  // Escucha el evento `didUpdate` del estado `count`
+  // e imprime `value` de `count` con cada actualización
+  Rt.on(
+    count,
+    Lifecycle.didUpdate,
+    (_, __) => print('Count: $count')
+  );
+
+  // Crea un temporizador que decrementa el `value` de `count`
+  // en 1 cada segundo hasta que llegue a 0
+  await Timer.periodic(Duration(seconds: 1), countdown);
+}
+
+// Decrementa `value` de `count` en 1 cada ciclo del temporizador
+// y cancela el `timer` cuando `value` de `count` llegue a 0
+void countdown(Timer timer) {
+  count.value -= 1;
+
+  if (count.value == 0) {
+    timer.cancel();
+  }
+}
+```
+
+En este ejemplo, desde la línea 10 a la 14, vemos que el método <HM>`Rt.on`</HM> se utiliza para suscribirse al **evento** <HE>`Lifecycle.didUpdate`</HE> de la **instancia** `count`.
+Cada que cambie el estado de `count`, se invoca la función (**acción**), que imprime el valor (`value`) actual del estado de `count`.
+
+Aquí, no podemos ver la sentencia que emite (<HM>`emit`</HM>) porque se encuentra encapsulada dentro de la clase <HT>`Signal`</HT>, y se llama cuando el `value` del estado `count` cambia.
+Para ver cómo se emite un evento, hagamos un pequeño ajuste para agregar un emisor:
+
+```dart title="main.dart" ins={4,18-24,38-39} /count(?!down)(?!\u0060)/ "count.value" "Rt.on" "Lifecycle.didUpdate" "Rt.emit" /(CustomEvent) / /(CustomEvent(\.countdownFinished))(?!\u0060)/
+import 'dart:async';
+import 'package:reactter/reactter.dart';
+
+enum CustomEvent { countdownFinished }
+
+// Crea un estado reactivo llamado `count` utilizando la clase `Signal`
+final count = Signal(10);
+
+void main() async {
+  // Escucha el evento `didUpdate` del estado `count`
+  // e imprime `value` de `count` con cada actualización
+  Rt.on(
+    count,
+    Lifecycle.didUpdate,
+    (_, __) => print('Count: $count')
+  );
+
+  // Escucha el evento `countdownFinished` del estado `count`
+  // e imprime un mensaje cuando la cuenta regresiva finaliza
+  Rt.on(
+    count,
+    CustomEvent.countdownFinished,
+    (_, __) => print('Countdown finished!')
+  );
+
+  // Crea un temporizador que decrementa el `value` de `count`
+  // en 1 cada segundo hasta que llegue a 0
+  await Timer.periodic(Duration(seconds: 1), countdown);
+}
+
+
+// Decrementa `value` de `count` en 1 cada ciclo del temporizador
+// y cancela el `timer` cuando `value` de `count` llegue a 0
+void countdown(Timer timer) {
+  count.value -= 1;
+
+  if (count.value == 0) {
+    timer.cancel();
+    // Emite el evento `countdownFinished` cuando la cuenta regresiva finaliza
+    Rt.emit(count, CustomEvent.countdownFinished);
+  }
+}
+```
+Hemos añadido un nuevo **evento** llamado <HE>`CustomEvent.countdownFinished`</HE> y una nueva function(**accion**) que imprime un mensaje cuando la cuenta regresiva finaliza.
+Cuando la cuenta regresiva llega a <HN>`0`</HN>, la **instancia** `count` emite el **evento** <HE>`CustomEvent.countdownFinished`</HE>, y la función(**accion**) se invoca, imprimiendo el mensaje.
+
+Este ejemplo demuestra cómo el sistema de manejador de eventos en Reactter facilita la comunicación sin problemas entre diferentes partes de la aplicación,
+facilitando una coordinación e interacción eficientes.

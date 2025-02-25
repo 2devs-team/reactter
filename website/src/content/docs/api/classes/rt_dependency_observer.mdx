@@ -1,0 +1,80 @@
+---
+title: RtDependencyObserver
+description: The base class for observing and reacting to the lifecycle events of dependencies in Reactter, such as registration, creation, mounting, and deletion.
+sidebar:
+  order: 5
+---
+
+import { HE, HM, HT } from '@/components/Highlight';
+
+<HT><a href="https://pub.dev/documentation/reactter/latest/reactter/RtDependencyObserver-class.html" target="_blank">`RtDependencyObserver`</a></HT> is a class that provides a way to observe the lifecycle of dependencies in Reactter.
+
+## Syntax
+
+```dart showLineNumbers=false
+  RtDependencyObserver({
+    void onRegistered(DependencyRef dependency)?,
+    void onCreated(DependencyRef dependency, Object? instance)?,
+    void onMounted(DependencyRef dependency, Object? instance)?,
+    void onUnmounted(DependencyRef dependency, Object? instance)?,
+    void onDeleted(DependencyRef dependency, Object? instance)?,
+    void onUnregistered(DependencyRef dependency)?,
+    void onFailed(DependencyRef dependency, DependencyFail fail)?,
+  });
+```
+
+The <HT>`RtDependencyObserver`</HT> class accepts these parameters:
+
+- <HM>**`onRegistered`**</HM>: *(optional)* Called when a `dependency` is registered.
+- <HM>**`onCreated`**</HM>: *(optional)* Called when a `instance` of a `dependency` is created.
+- <HM>**`onMounted`**</HM>: *(optional)* Called when the `instance` of a `dependency` is mounted.
+- <HM>**`onUnmounted`**</HM>: *(optional)* Called when the `instance` of a `dependency` is unmounted.
+- <HM>**`onDeleted`**</HM>: *(optional)* Called when the `instance` of a `dependency` is deleted.
+- <HM>**`onUnregistered`**</HM>: *(optional)* Called when a `dependency` is unregistered.
+- <HM>**`onFailed`**</HM>: *(optional)* Called when a `dependency` fails, indicating one of the following failures:
+  - <HE>**`DependencyFail.alreadyRegistered`**</HE>: The dependency is already registered.
+  - <HE>**`DependencyFail.alreadyCreated`**</HE>: An instance of dependency is already created.
+  - <HE>**`DependencyFail.alreadyDeleted`**</HE>: The instance of dependency is already deleted.
+  - <HE>**`DependencyFail.alreadyUnregistered`**</HE>: The dependency is already unregistered.
+  - <HE>**`DependencyFail.missingInstanceBuilder`**</HE>: The dependency was not registered previously.
+  - <HE>**`DependencyFail.builderRetained`**</HE>: The builder is retained because is in factory mode.
+  - <HE>**`DependencyFail.dependencyRetained`**</HE>: The builder and instance is retained because is in singleton mode.
+  - <HE>**`DependencyFail.cannotUnregisterActiveInstance`**</HE>: Cannot unregister the dependency because it has an active instance.
+
+## Usage
+
+To use <HT>`RtDependencyObserver`</HT>, you need to instantiate it, pass the callbacks you want to use, and then add it using the <HM>[`Rt.addObserver`](/reactter/api/methods/debugging_methods/#rtaddobserver)</HM> method, e.g.:
+
+```dart "RtDependencyObserver" "Rt.addObserver"
+import 'package:reactter/reactter.dart';
+
+void main() {
+  // Create a dependency observer with lifecycle callbacks
+  final dependencyObserver = RtDependencyObserver(
+    onRegistered: (dependency) {
+      print('Dependency($dependency) registered');
+    },
+    onCreated: (dependency, instance) {
+      print('Dependency($dependency) created with instance($instance)');
+    },
+    onMounted: (dependency, instance) {
+      print('Dependency($dependency) mounted with instance($instance)');
+    },
+    onUnmounted: (dependency, instance) {
+      print('Dependency($dependency) unmounted with instance($instance)');
+    },
+    onDeleted: (dependency, instance) {
+      print('Dependency($dependency) deleted with instance($instance)');
+    },
+    onUnregistered: (dependency) {
+      print('Dependency($dependency) unregistered');
+    },
+    onFailed: (dependency, fail) {
+      print('Dependency($dependency) failed with $fail');
+    },
+  );
+
+  // Add the dependency observer to Reactter's observer system
+  Rt.addObserver(dependencyObserver);
+}
+```

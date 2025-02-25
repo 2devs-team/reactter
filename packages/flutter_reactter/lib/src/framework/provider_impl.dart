@@ -3,12 +3,23 @@
 part of '../framework.dart';
 
 @internal
-abstract class ProviderRef {}
+abstract class ProviderRef<T extends Object?> {
+  @protected
+  void registerInstance();
+  @protected
+  T? findInstance();
+  @protected
+  T? getInstance();
+  @protected
+  T? createInstance();
+  @protected
+  void disposeInstance();
+}
 
 @internal
 class ProvideImpl<T extends Object?, I extends String?> extends ProviderBase<T>
     implements InheritedWidget {
-  final ProviderRef ref;
+  final ProviderRef<T> ref;
 
   const ProvideImpl(
     InstanceBuilder<T> instanceBuilder, {
@@ -37,22 +48,21 @@ class ProvideImpl<T extends Object?, I extends String?> extends ProviderBase<T>
   Widget get child {
     assert(
       super.child != null ||
-          (!super.isLazy && super.builder != null ||
-              super.isLazy && super.lazyBuilder != null),
+          (!isLazy && builder != null || isLazy && lazyBuilder != null),
     );
 
-    if (super.isLazy && super.lazyBuilder != null) {
+    if (isLazy && lazyBuilder != null) {
       return Builder(
         builder: (context) {
-          return super.lazyBuilder!(context, super.child);
+          return lazyBuilder!(context, super.child);
         },
       );
     }
 
-    if (super.builder != null) {
+    if (builder != null) {
       return Builder(
         builder: (context) {
-          return super.builder!(context, context.use<T>(id), super.child);
+          return builder!(context, context.use<T>(id), super.child);
         },
       );
     }
@@ -60,8 +70,10 @@ class ProvideImpl<T extends Object?, I extends String?> extends ProviderBase<T>
     return super.child!;
   }
 
+  // coverage:ignore-start
   @override
   bool updateShouldNotify(covariant InheritedWidget oldWidget) => false;
+  // coverage:ignore-end
 
   @override
   ProviderElement<T> createElement() => ProviderElement<T>(widget: this);
@@ -99,8 +111,8 @@ class ProvideImpl<T extends Object?, I extends String?> extends ProviderBase<T>
     context.dependOnInheritedElement(
       providerInheritedElement!,
       aspect: listenStates == null
-          ? InstanceDependency(instance)
-          : StatesDependency(listenStates(instance).toSet()),
+          ? InstanceDependency<T>(instance)
+          : StatesDependency<T>(listenStates(instance).toSet()),
     );
 
     return instance;
@@ -137,18 +149,16 @@ class ProvideImpl<T extends Object?, I extends String?> extends ProviderBase<T>
   }
 }
 
-/// [ProviderElement] is a class that manages the lifecycle of the [RtDependency] and
-/// provides the [RtDependency] to its descendants
+/// [ProviderElement] is a class that manages the lifecycle of the [RtDependencyRef] and
+/// provides the [RtDependencyRef] to its descendants
 @internal
 class ProviderElement<T extends Object?> extends InheritedElement
     with ScopeElementMixin {
-  Widget? prevChild;
-  HashMap<RtDependency, ProviderElement<T>>? _inheritedElementsWithId;
-  bool _isLazyInstanceObtained = false;
+  static final Map<RtDependencyRef, int> _instanceMountCount = {};
 
-  bool get isRoot {
-    return Rt.getHashCodeRefAt<T>(0, widget.id) == widget.ref.hashCode;
-  }
+  Widget? _prevChild;
+  HashMap<RtDependencyRef, ProviderElement<T>>? _inheritedElementsWithId;
+  bool _isLazyInstanceObtained = false;
 
   @override
   ProvideImpl<T, String?> get widget {
@@ -157,14 +167,14 @@ class ProviderElement<T extends Object?> extends InheritedElement
 
   T? get instance {
     if (!_isLazyInstanceObtained && widget.isLazy) {
-      final instance = Rt.get<T>(widget.id, widget.ref);
+      final instance = widget.ref.getInstance();
 
       _isLazyInstanceObtained = instance != null;
 
       return instance;
     }
 
-    return Rt.find<T>(widget.id);
+    return widget.ref.findInstance();
   }
 
   /// Creates an element that uses the given widget as its configuration.
@@ -172,85 +182,95 @@ class ProviderElement<T extends Object?> extends InheritedElement
     required ProvideImpl<T, String?> widget,
     String? id,
   }) : super(widget) {
-    if (widget.init && !widget.isLazy) {
-      // TODO: Remove this when the `init` property is removed
-      Rt.create<T>(
-        widget.instanceBuilder,
-        id: widget.id,
-        mode: widget.mode,
-        ref: widget.ref,
-      );
+    if (widget.init && !widget.isLazy) return;
 
-      return;
-    }
-
-    Rt.register<T>(
-      widget.instanceBuilder,
-      id: widget.id,
-      mode: widget.mode,
-    );
+    widget.ref.registerInstance();
   }
 
   @override
   void mount(Element? parent, Object? newSlot) {
+    final dependency = RtDependencyRef<T?>(widget.id);
+    var count = _instanceMountCount.putIfAbsent(dependency, () => 0);
+    _instanceMountCount[dependency] = ++count;
+    final shouldNotifyMount = count == 1;
+
     if (!widget.init && !widget.isLazy) {
-      Rt.get<T>(widget.id, widget.ref);
+      widget.ref.getInstance();
     }
 
     _updateInheritedElementWithId(parent);
 
-    if (isRoot) {
-      Rt.emit(instance!, Lifecycle.willMount);
+    if (shouldNotifyMount) {
+      Rt.emit(dependency, Lifecycle.willMount);
     }
 
     super.mount(parent, newSlot);
 
-    if (isRoot) {
-      Rt.emit(instance!, Lifecycle.didMount);
+    if (shouldNotifyMount) {
+      Rt.emit(dependency, Lifecycle.didMount);
     }
+  }
+
+  @override
+  void update(covariant InheritedWidget newWidget) {
+    final ref = widget.ref;
+
+    if (newWidget is ProvideImpl<T, String?>) {
+      newWidget.ref.createInstance();
+    }
+
+    super.update(newWidget);
+
+    if (ref is RtProvider) ref.disposeInstance();
   }
 
   @override
   Widget build() {
-    if (hasDependenciesDirty) {
+    if (hasDirtyDependencies) {
       notifyClients(widget);
 
-      if (prevChild != null) return prevChild!;
+      if (_prevChild != null) return _prevChild!;
     }
 
-    return prevChild = super.build();
+    return _prevChild = super.build();
   }
 
   @override
   void unmount() {
-    final id = widget.id;
     final ref = widget.ref;
-    final isRoot = this.isRoot;
-    final instance = this.instance;
+    final dependency = RtDependencyRef<T?>(widget.id);
+    final count = (_instanceMountCount[dependency] ?? 0) - 1;
+    final shouldNotifyUnmount = count < 1;
+
+    if (shouldNotifyUnmount) {
+      _instanceMountCount.remove(dependency);
+    } else {
+      _instanceMountCount[dependency] = count;
+    }
 
     try {
-      if (isRoot) {
-        Rt.emit(instance!, Lifecycle.willUnmount);
+      if (shouldNotifyUnmount) {
+        Rt.emit(dependency, Lifecycle.willUnmount);
       }
 
       return super.unmount();
     } finally {
-      if (isRoot) {
-        Rt.emit(instance!, Lifecycle.didUnmount);
+      if (shouldNotifyUnmount) {
+        Rt.emit(dependency, Lifecycle.didUnmount);
       }
 
-      Rt.delete<T>(id, ref);
+      if (ref is RtProvider) ref.disposeInstance();
 
       _inheritedElementsWithId = null;
-      prevChild = null;
+      _prevChild = null;
     }
   }
 
-  /// Gets [ProviderElement] that it has the [RtDependency]'s id.
+  /// Gets [ProviderElement] that it has the [RtDependencyRef]'s id.
   ProviderElement<T>? getInheritedElementOfExactId(
     String id,
   ) =>
-      _inheritedElementsWithId?[RtDependency<T?>(id)];
+      _inheritedElementsWithId?[RtDependencyRef<T?>(id)];
 
   /// updates [inheritedElementsWithId]
   /// with all ancestor [ProviderElement] with id
@@ -262,14 +282,15 @@ class ProviderElement<T extends Object?> extends InheritedElement
         as ProviderElement<T>?;
 
     if (ancestorInheritedElement?._inheritedElementsWithId != null) {
-      _inheritedElementsWithId = HashMap<RtDependency, ProviderElement<T>>.of(
+      _inheritedElementsWithId =
+          HashMap<RtDependencyRef, ProviderElement<T>>.of(
         ancestorInheritedElement!._inheritedElementsWithId!,
       );
     } else {
-      _inheritedElementsWithId = HashMap<RtDependency, ProviderElement<T>>();
+      _inheritedElementsWithId = HashMap<RtDependencyRef, ProviderElement<T>>();
     }
 
-    _inheritedElementsWithId![RtDependency<T?>(widget.id)] = this;
+    _inheritedElementsWithId![RtDependencyRef<T?>(widget.id)] = this;
   }
 }
 
@@ -343,10 +364,3 @@ https://stackoverflow.com/questions/tagged/flutter
 ''';
   }
 }
-
-/// {@macro flutter_reactter.provider_not_found_exception}
-@Deprecated(
-  'Use `RtDependencyNotFoundException` instead. '
-  'This feature was deprecated after v7.3.0.',
-)
-typedef ReactterDependencyNotFoundException = RtDependencyNotFoundException;

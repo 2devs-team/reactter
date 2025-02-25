@@ -1,5 +1,5 @@
 import 'package:reactter/reactter.dart';
-import 'package:test/test.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 import '../shareds/test_controllers.dart';
 
@@ -90,15 +90,69 @@ void main() {
         },
       );
 
-      testController.update(
-        () => testController.stateInt.update(() {
-          testController.stateInt.value = 3;
-        }),
-      );
-
-      await Future.microtask(() {});
+      testController.stateInt.update(() {
+        testController.stateInt.value = 3;
+      });
 
       expectLater(testController.stateInt.value, 3);
+
+      Rt.delete<TestController>();
+    });
+
+    test("should update manually", () {
+      final testController = Rt.create<TestController>(() => TestController())!;
+      late bool didUpdate;
+
+      testController.stateInt.value = 1;
+
+      Rt.one(testController.stateInt, Lifecycle.didUpdate, (_, __) {
+        expect(testController.stateInt.value, 1);
+        didUpdate = true;
+      });
+
+      testController.stateInt.update();
+
+      expectLater(didUpdate, true);
+
+      Rt.delete<TestController>();
+    });
+
+    test("should update manually with callback", () {
+      final testController = Rt.create<TestController>(() => TestController())!;
+
+      testController.stateInt.value = 1;
+
+      testController.stateInt.update(() {
+        testController.stateInt.value += 1;
+      });
+
+      expect(testController.stateInt.value, 2);
+
+      Rt.delete<TestController>();
+    });
+
+    test("should get debug label", () {
+      final testController = Rt.create<TestController>(() => TestController())!;
+
+      expect(testController.stateInt.debugLabel, 'stateInt');
+
+      Rt.delete<TestController>();
+    });
+
+    test("should get debug info", () {
+      final testController = Rt.create<TestController>(() => TestController())!;
+
+      expect(
+        testController.stateInt.debugInfo,
+        {'value': 0},
+      );
+
+      testController.stateInt.value = 1;
+
+      expect(
+        testController.stateInt.debugInfo,
+        {'value': 1},
+      );
 
       Rt.delete<TestController>();
     });

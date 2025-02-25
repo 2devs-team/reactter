@@ -124,18 +124,13 @@ part of '../widgets.dart';
 /// * [RtMultiProvider], a widget that allows to use multiple [RtProvider].
 /// {@endtemplate}
 class RtProvider<T extends Object?> extends ProviderBase<T>
-    implements ProviderWrapper, ProviderRef {
+    implements ProviderWrapper, ProviderRef<T> {
   /// Creates an instance of [T] dependency and provides it to tree widget.
   const RtProvider(
     InstanceBuilder<T> instanceBuilder, {
     Key? key,
     String? id,
     DependencyMode mode = DependencyMode.builder,
-    @Deprecated(
-      'This feature not working anymore, use `RtProvider.init` instead. '
-      'It was deprecated after v7.2.0.',
-    )
-    bool init = false,
     Widget? child,
     InstanceChildBuilder<T>? builder,
   }) : super(
@@ -143,7 +138,6 @@ class RtProvider<T extends Object?> extends ProviderBase<T>
           key: key,
           id: id,
           mode: mode,
-          init: init,
           child: child,
           builder: builder,
         );
@@ -164,12 +158,7 @@ class RtProvider<T extends Object?> extends ProviderBase<T>
           child: child,
           builder: builder,
         ) {
-    Rt.create(
-      instanceBuilder,
-      id: id,
-      mode: mode,
-      ref: this,
-    );
+    createInstance();
   }
 
   /// Creates a lazy instance of [T] dependency and provides it to tree widget.
@@ -190,6 +179,7 @@ class RtProvider<T extends Object?> extends ProviderBase<T>
           lazyBuilder: builder,
         );
 
+  @protected
   Widget buildWithChild(Widget? child) {
     if (id != null) {
       return ProvideImpl<T?, WithId>(
@@ -222,6 +212,41 @@ class RtProvider<T extends Object?> extends ProviderBase<T>
     );
   }
 
+  @protected
+  @override
+  void registerInstance() {
+    Rt.register<T>(instanceBuilder, id: id, mode: mode);
+  }
+
+  @override
+  T? findInstance() {
+    return Rt.find<T>(id);
+  }
+
+  @protected
+  @override
+  T? getInstance() {
+    return Rt.get<T>(id, this);
+  }
+
+  @protected
+  @override
+  T? createInstance() {
+    return Rt.create<T>(instanceBuilder, id: id, mode: mode, ref: this);
+  }
+
+  @protected
+  @override
+  void disposeInstance() {
+    Rt.delete<T>(id, this);
+  }
+
+  @protected
+  @override
+  void dispose() {
+    disposeInstance();
+  }
+
   @override
   RtProviderElement<T> createElement() => RtProviderElement<T>(this);
 
@@ -244,14 +269,10 @@ class RtProvider<T extends Object?> extends ProviderBase<T>
 class RtProviderElement<T extends Object?> extends ComponentElement
     with WrapperElementMixin<RtProvider<T>> {
   bool get isRoot {
-    return Rt.getHashCodeRefAt<T>(0, widget.id) == _widget.hashCode;
+    return Rt.getRefAt<T>(0, widget.id) == widget;
   }
 
-  final RtProvider<T> _widget;
-
-  RtProviderElement(RtProvider<T> widget)
-      : _widget = widget,
-        super(widget);
+  RtProviderElement(Widget widget) : super(widget);
 
   @override
   Widget build() {
@@ -280,10 +301,3 @@ class RtProviderElement<T extends Object?> extends ComponentElement
     );
   }
 }
-
-/// {@macro flutter_reactter.rt_provider}
-@Deprecated(
-  'Use `RtProvider` instead. '
-  'This feature was deprecated after v7.3.0.',
-)
-typedef ReactterProvider<T extends Object> = RtProvider<T>;

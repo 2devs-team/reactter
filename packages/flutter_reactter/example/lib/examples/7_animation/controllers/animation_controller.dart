@@ -11,6 +11,7 @@ class AnimationController {
       control: AnimationControl.mirror,
       curve: Curves.easeOut,
     ),
+    debugLabel: 'uSizeAnimation',
   );
 
   final uBorderRadiusAnimation = UseAnimation<BorderRadius?>(
@@ -23,6 +24,7 @@ class AnimationController {
       control: AnimationControl.mirror,
       curve: Curves.easeOut,
     ),
+    debugLabel: 'uBorderRadiusAnimation',
   );
 
   final uColorAnimation = UseAnimation<Color?>(
@@ -63,6 +65,7 @@ class AnimationController {
       control: AnimationControl.mirror,
       curve: Curves.easeInOut,
     ),
+    debugLabel: 'uColorAnimation',
   );
 
   void resumeAllAnimation() {

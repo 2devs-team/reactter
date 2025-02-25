@@ -1,0 +1,29 @@
+---
+title: Tip about the UseDependency hook
+---
+import { HN, HT } from '@/components/Highlight';
+
+:::tip
+
+If the dependency is not registered and created, the `instance` property will be <HN>`null`</HN>.
+
+To avoid this, you can use the <HT>[`UseEffect`](/reactter/api/hooks/use_effect)</HT> hook to get the dependency when it is created, e.g.:
+
+```dart title="my_controller.dart" "UseDependency<MyDependency>" "UseEffect"
+import 'package:reactter/reactter.dart';
+
+class MyController {
+  final uDependency = UseDependency<MyDependency>();
+
+  const MyController() {
+    UseEffect.runOnInit(() {
+      print(
+        uDependency.instance != null
+        ? "MyDependency is available"
+        : "MyDependency is not available yet."
+      );
+    }, [uDependency]);
+  }
+}
+```
+:::

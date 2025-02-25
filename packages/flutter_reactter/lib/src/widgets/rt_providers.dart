@@ -89,6 +89,11 @@ class RtMultiProvider extends StatelessWidget implements ProviderWrapper {
   RtMultiProviderElement createElement() {
     return RtMultiProviderElement(this);
   }
+
+  // coverage:ignore-start
+  @override
+  void dispose() {}
+  // coverage:ignore-end
 }
 
 class RtMultiProviderElement extends StatelessElement
@@ -112,31 +117,33 @@ class RtMultiProviderElement extends StatelessElement
       );
     }
 
-    if (nestedHook != null) {
-      /// We manually update [NestedElement] instead of letter widgets do their thing
-      /// because an item N may be constant but N+1 not. So, if we used widgets
-      /// then N+1 wouldn't rebuild because N didn't change
-      for (final node in nodes) {
-        node
-          ..wrappedChild = nestedHook!.wrappedWidget
-          ..injectedChild = nestedHook.injectedChild;
+    if (nestedHook == null) return nextNode;
 
-        final next = nestedHook.injectedChild;
-        if (next is NestedWidget) {
-          nestedHook = next;
-        } else {
-          break;
-        }
+    /// We manually update [NestedElement] instead of letter widgets do their thing
+    /// because an item N may be constant but N+1 not. So, if we used widgets
+    /// then N+1 wouldn't rebuild because N didn't change
+    for (final node in nodes.toList(growable: false)) {
+      node
+        ..wrappedWidget = nestedHook!.wrappedWidget
+        ..injectedChild = nestedHook.injectedChild;
+
+      final next = nestedHook.injectedChild;
+      if (next is NestedWidget) {
+        nestedHook = next;
+      } else {
+        break;
       }
     }
 
     return nextNode;
   }
-}
 
-/// {@macro flutter_reactter.rt_multi_provider}
-@Deprecated(
-  'Use `RtMultiProvider` instead. '
-  'This feature was deprecated after v7.3.0.',
-)
-typedef ReactterProviders = RtMultiProvider;
+  @override
+  void removeNode(NestedElement node) {
+    super.removeNode(node);
+
+    if (node.wrappedWidget is RtProvider) {
+      (node.wrappedWidget as RtProvider).disposeInstance();
+    }
+  }
+}

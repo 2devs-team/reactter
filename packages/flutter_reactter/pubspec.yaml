@@ -4,21 +4,39 @@ homepage: https://2devs-team.github.io/reactter/
 documentation: https://2devs-team.github.io/reactter/
 repository: https://github.com/2devs-team/reactter/tree/master/packages/flutter_reactter
 license: MIT License
-version: 7.3.1
+version: 8.0.0-dev.31
+
+topics:
+  - reactive
+  - state
+  - dependency
+  - event
+
+screenshots:
+  - description: "Reactter DevTools Extension"
+    path: doc/screenshots/devtools.png
+  - description: "Reactter Example App"
+    path: doc/screenshots/example_app.png
 
 environment:
-  sdk: ">=2.14.0 <4.0.0"
+  sdk: ">=2.19.2 <4.0.0"
   flutter: ">=1.17.0"
 
 dependencies:
   flutter:
     sdk: flutter
   meta: ^1.7.0
-  reactter: ^7.3.0
+  reactter: ^8.0.0-dev.31
+  # reactter:
+  #   path: ../reactter
 
 dev_dependencies:
-  flutter_driver:
-    sdk: flutter
-  flutter_lints: ^2.0.1
   flutter_test:
     sdk: flutter
+  flutter_lints: ^2.0.3
+
+scripts:
+  test: "fvm flutter test --coverage"
+  analyze: "fvm dart analyze ."
+  public-dry-run: "fvm dart pub publish --dry-run"
+  public: "fvm dart pub publish"

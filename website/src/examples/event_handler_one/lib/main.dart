@@ -5,7 +5,7 @@ import 'my_dependency.dart';
 void main() {
   // Listen to the `myEvent` event of the `MyDependency` before it's created.
   Rt.one(
-    RtDependency<MyDependency>(),
+    RtDependencyRef<MyDependency>(),
     CustomEvent.myEvent,
     (instance, param) => print('CustomEvent emitted with param: $param'),
   );
@@ -61,7 +61,7 @@ void main() {
 
   /// Cannot listen to the `myEvent` event using the `MyDependency` instance
   /// because the listener is one-time.
-  Rt.emit(RtDependency<MyDependency>(), CustomEvent.myEvent, 42);
+  Rt.emit(RtDependencyRef<MyDependency>(), CustomEvent.myEvent, 42);
 
   runApp(MyApp());
 }

@@ -1,6 +1,6 @@
 ---
-title: Rendering Control
-description: Learn how to control the rendering of components in Reactter.
+title: Rendering control
+description: Learn how to control the rendering in Reactter.
 sidebar:
   order: 4
   badge:
@@ -18,28 +18,27 @@ import counterCode from '@/examples/counter/lib/counter.dart?raw';
 import counterViewCode from '@/examples/counter/lib/counter_view.dart?raw';
 import counterMainCode from '@/examples/counter/lib/main.dart?raw';
 
-In Flutter, efficient rendering control is essential for crafting high-performance, responsive, and scalable applications.
-Reactter provides a way to easily control the rendering of components in the widget tree behavior effortlessly, using the _**flutter_reactter**_ package.
+In Flutter, efficient rendering control is crucial for building high-performance, responsive, and scalable applications.
+The **_flutter_reactter_** package offers a straightforward way to manage widget tree rendering behavior, enabling to optimize performance and fine-tune their app's responsiveness with ease.
 
 ## API
 
-This package provides a collection of classes, widgets and some methods:
+This package provides the following rendering control mechanisms:
 
-- Classes
-  - <HT>[`RtComponent`](/reactter/widgets/rt_component)</HT>
 - Widgets
-  - <HT>[`RtScope`](/reactter/widgets/rt_scope)</HT>
-  - <HT>[`RtProvider`](/reactter/widgets/rt_provider)</HT>
-  - <HT>[`RtProviders`](/reactter/widgets/rt_providers)</HT>
-  - <HT>[`RtConsumer`](/reactter/widgets/rt_consumer)</HT>
-  - <HT>[`RtSelector`](/reactter/widgets/rt_selector)</HT>
-  - <HT>[`RtWatcher`](/reactter/widgets/rt_watcher)</HT>
-  - <HT>[`RtSignalWatcher`](/reactter/widgets/rt_signal_watcher)</HT>
+  - <HT>[`RtScope`](/reactter/api/widgets/rt_scope)</HT>
+  - <HT>[`RtProvider`](/reactter/api/widgets/rt_provider)</HT>
+  - <HT>[`RtProviders`](/reactter/api/widgets/rt_providers)</HT>
+  - <HT>[`RtConsumer`](/reactter/api/widgets/rt_consumer)</HT>
+  - <HT>[`RtSelector`](/reactter/api/widgets/rt_selector)</HT>
+  - <HT>[`RtWatcher`](/reactter/api/widgets/rt_watcher)</HT>
+  - <HT>[`RtComponent`](/reactter/api/widgets/rt_component)</HT>
+  - <HT>[`RtSignalWatcher`](/reactter/api/widgets/rt_signal_watcher)</HT>
 - Extensions
-  - <HM>[`BuilderContext.use`](/reactter/extensions/builder_context_use)</HM>
-  - <HM>[`BuilderContext.watch`](/reactter/extensions/builder_context_watch)</HM>
-  - <HM>[`BuilderContext.watchId`](/reactter/extensions/builder_context_watch_id)</HM>
-  - <HM>[`BuilderContext.select`](/reactter/extensions/builder_context_select)</HM>
+  - <HM>[`BuilderContext.use`](/reactter/api/extensions/builder_context_use)</HM>
+  - <HM>[`BuilderContext.watch`](/reactter/api/extensions/builder_context_watch)</HM>
+  - <HM>[`BuilderContext.watchId`](/reactter/api/extensions/builder_context_watch_id)</HM>
+  - <HM>[`BuilderContext.select`](/reactter/api/extensions/builder_context_select)</HM>
 
 ## How it works
 
@@ -77,16 +76,15 @@ Let's create a simple counter app using Reactter to demonstrate how to control t
     </TabItem>
   </Tabs>
 </CodeTabs>
+Now, when you run the app, you'll see a counter application with two buttons to increment and decrement the `count` value.
 
-Now, when you run the app, you will see a counter app with two buttons to increment and decrement the `count` value.
+In this scenario, only the <HT>`Text`</HT> widget will rebuild when the `count` value changes, while the <HT>`CounterView`</HT> widget will not rebuild entirely.
+This happens because the <HT>`RtConsumer`</HT> widget observes the `count` property and triggers a rebuild of the widget tree only when the `count` value changes.
 
-In this scenario, only the <HT>`Text`</HT> widget will be rebuilt when the `count` value changes, not the entire <HT>`CounterView`</HT> widget.
-This is because the <HT>`RtConsumer`</HT> widget observes the `count` property and triggers the rebuilding of the widget tree when the `count` value changes.
-
-In example, we used the <HT>`RtConsumer`</HT> widget to observe the `count` property of the `counterController` instance,
+In previous example, we used the <HT>`RtConsumer`</HT> widget to observe the `count` property of the `counterController` instance,
 but we can do the same functionality using the <HM>`watch`</HM> method of the <HT>`BuildContext`</HT> class.
 
-Here's how we can refactor the code to use the <HM>`watch`</HM> method along with a <HT>`Builder`</HT> widget to achieve the same outcome:
+Next, we'll refactor the code to use the <HM>`watch`</HM> method along with the <HT>`Builder`</HT> widget to achieve the same result:
 
 ```dart title="counter_view.dart" startLineNumber={23} del={1-5} ins={6-13} "RtConsumer" "context.watch"
             // Observe the `count` property of the `counterController`
@@ -107,9 +105,8 @@ Here's how we can refactor the code to use the <HM>`watch`</HM> method along wit
             ),
 ```
 
-Although the <HM>`watch`</HM> method can be directly employed within the builder method of the <HT>`RtProvider`</HT> widget,
+Although the <HM>`watch`</HM> method can be directly employed within the <HM>`builder`</HM> method of the <HT>`RtProvider`</HT> widget,
 it's advisable to utilize it alongside a <HT>`Builder`</HT> widget to prevent unnecessary rebuilds of the widget tree.
 This practice leverages the <HT>`BuildContext`</HT> scope, offering a more granular approach to rendering control within the widget tree.
 
 For more advanced use cases, you can employ other Reactter's widgets and <HT>`BuildContext`</HT> methods to further refine the rendering control of the widget tree.
-By embracing these strategies, you can optimize the performance and efficiency of your Flutter applications while ensuring a seamless user experience.

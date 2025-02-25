@@ -10,7 +10,7 @@ part of '../widgets.dart';
 /// This evaluation only occurs if one of the selected [RtState]s gets updated,
 /// or by the dependency if the [selector] does not have any selected [RtState]s.
 ///
-/// The [selector] property has a two arguments, the first one is the instance
+/// The [selector] property has two parameters, the first one is the instance
 /// of [T] dependency which is obtained from the closest ancestor [RtProvider].
 /// and the second one is a [Select] function which allows to wrapper any
 /// [RtState]s to listen, and returns the value in each build. e.g:
@@ -136,7 +136,7 @@ class RtSelector<T extends Object?, V> extends StatelessWidget {
   /// This evaluation only occurs if one of the selected [RtState]s gets updated,
   /// or by the dependency if the [selector] does not have any selected [RtState]s.
   ///
-  /// The [selector] callback has a two arguments, the first one is
+  /// The [selector] callback has two parameters, the first one is
   /// the instance of [T] dependency which is obtained from the closest ancestor
   /// of [RtProvider] and the second one is a [Select] function which
   /// allows to wrapper any [RtState]s to listen.
@@ -163,7 +163,7 @@ class RtSelector<T extends Object?, V> extends StatelessWidget {
         ? inheritedElement.instance
         : null;
 
-    final dependency = SelectDependency(
+    final dependency = SelectDependency<T>(
       instance: instance as T,
       computeValue: selector as dynamic,
     );
@@ -176,10 +176,3 @@ class RtSelector<T extends Object?, V> extends StatelessWidget {
     return dependency.value;
   }
 }
-
-/// {@macro flutter_reactter.rt_selector}
-@Deprecated(
-  'Use `RtSelector` instead. '
-  'This feature was deprecated after v7.3.0.',
-)
-typedef ReactterSelector<T extends Object?, V> = RtSelector<T, V>;

@@ -1,108 +1,127 @@
 ---
-title: Dependency Injection
-description: Learn how to manage dependencies in Reactter.
+title: Dependency injection
+description: Learn about the dependency injection system in Reactter.
 sidebar:
   order: 2
 ---
-import { HE, HM, HN, HT } from '@/components/Highlight';
+import { HE, HM, HN, HS, HT } from '@/components/Highlight';
 import CodeTabs from '@/components/CodeTabs.astro';
 import { Tabs, TabItem } from "@/components/Tabs";
 import { Code } from "@astrojs/starlight/components";
 import { marks } from '@/examples/marks.ts'
 
-With Reactter, managing objects becomes straightforward. You can create, delete, and access desired objects from a single centralized location, accessible from anywhere in your code, all thanks to Reactter's robust dependency injection system.
+Dependency injection is a design pattern that simplifies the management of an object's dependencies.
 
-Dependency injection offers several benefits.
+With Reactter, managing objects becomes easy. You can create, delete, and access desired objects from a single centralized place, accessible from anywhere in your code, all thanks to Reactter's solid dependency injection system.
 
-- **Inversion of Control**: It adheres to the principle of inversion of control, where the responsibility for object creation and management is delegated to Reactter. This results in improved code _modularity_, _reusability_, and _testability_.
-- **Simplified Code**: By offloading the responsibility of creating dependencies from individual classes, dependency injection simplifies code, allowing classes to focus more on their core functionality.
+Dependency injection offers several benefits. Some of the most notable are:
+
+- **Decoupling**: Dependency injection decouples classes from their dependencies, making it easier to modify and reuse code.
+- **Inversion of control**: It adheres to the principle of inversion of control, where the responsibility of creating and managing objects is delegated to Reactter.
+This results in better _modularity_, _reusability_, and _testability_ of the code.
+- **Simplified code**: By delegating the responsibility of creating dependencies from individual classes, dependency injection simplifies the code, allowing classes to focus more on their core functionality.
 
 ## API
 
 Reactter provides the following dependencies injection mechanisms:
 
 - Hooks
-  - <HT>[`UseDependency`](/reactter/hooks/UseDependency)</HT>
+  - <HT>[`UseDependency`](/reactter/api/hooks/UseDependency)</HT>
 - Methods
-  - <HM>[`Rt.register`](/reactter/methods/dependency_injection_methods/#rtregister)</HM>
-  - <HM>[`Rt.lazyBuilder`](/reactter/methods/dependency_injection_methods/#rtlazy_builder)</HM>
-  - <HM>[`Rt.lazyFactory`](/reactter/methods/dependency_injection_methods/#rtlazy_factory)</HM>
-  - <HM>[`Rt.lazySingleton`](/reactter/methods/dependency_injection_methods/#rtlazy_singleton)</HM>
-  - <HM>[`Rt.create`](/reactter/methods/dependency_injection_methods/#rtcreate)</HM>
-  - <HM>[`Rt.builder`](/reactter/methods/dependency_injection_methods/#rtbuilder)</HM>
-  - <HM>[`Rt.factory`](/reactter/methods/dependency_injection_methods/#rtfactory)</HM>
-  - <HM>[`Rt.singleton`](/reactter/methods/dependency_injection_methods/#rtsingleton)</HM>
-  - <HM>[`Rt.get`](/reactter/methods/dependency_injection_methods/#rtget)</HM>
-  - <HM>[`Rt.find`](/reactter/methods/dependency_injection_methods/#rtfind)</HM>
-  - <HM>[`Rt.exists`](/reactter/methods/dependency_injection_methods/#rtexists)</HM>
-  - <HM>[`Rt.getDependencyMode`](/reactter/methods/dependency_injection_methods/#rtget_dependency_mode)</HM>
-  - <HM>[`Rt.delete`](/reactter/methods/dependency_injection_methods/#rtdelete)</HM>
-  - <HM>[`Rt.destroy`](/reactter/methods/dependency_injection_methods/#rtdestroy)</HM>
-  - <HM>[`Rt.unregister`](/reactter/methods/dependency_injection_methods/#rtunregister)</HM>
-  - <HM>[`Rt.isActive`](/reactter/methods/dependency_injection_methods/#rtis_active)</HM>
-
+  - <HM>[`Rt.register`](/reactter/api/methods/dependency_injection_methods/#rtregister)</HM>
+  - <HM>[`Rt.lazyBuilder`](/reactter/api/methods/dependency_injection_methods/#rtlazy_builder)</HM>
+  - <HM>[`Rt.lazyFactory`](/reactter/api/methods/dependency_injection_methods/#rtlazy_factory)</HM>
+  - <HM>[`Rt.lazySingleton`](/reactter/api/methods/dependency_injection_methods/#rtlazy_singleton)</HM>
+  - <HM>[`Rt.create`](/reactter/api/methods/dependency_injection_methods/#rtcreate)</HM>
+  - <HM>[`Rt.builder`](/reactter/api/methods/dependency_injection_methods/#rtbuilder)</HM>
+  - <HM>[`Rt.factory`](/reactter/api/methods/dependency_injection_methods/#rtfactory)</HM>
+  - <HM>[`Rt.singleton`](/reactter/api/methods/dependency_injection_methods/#rtsingleton)</HM>
+  - <HM>[`Rt.get`](/reactter/api/methods/dependency_injection_methods/#rtget)</HM>
+  - <HM>[`Rt.find`](/reactter/api/methods/dependency_injection_methods/#rtfind)</HM>
+  - <HM>[`Rt.exists`](/reactter/api/methods/dependency_injection_methods/#rtexists)</HM>
+  - <HM>[`Rt.isActive`](/reactter/api/methods/dependency_injection_methods/#rtis_active)</HM>
+  - <HM>[`Rt.getDependencyMode`](/reactter/api/methods/dependency_injection_methods/#rtget_dependency_mode)</HM>
+  - <HM>[`Rt.delete`](/reactter/api/methods/dependency_injection_methods/#rtdelete)</HM>
+  - <HM>[`Rt.destroy`](/reactter/api/methods/dependency_injection_methods/#rtdestroy)</HM>
+  - <HM>[`Rt.unregister`](/reactter/api/methods/dependency_injection_methods/#rtunregister)</HM>
 
 :::tip[With Flutter]
-If you are using Flutter, go to [Rendering Control](/reactter/core_concepts/rendering_control) to learn how it manage dependencies through Widgets and BuildContext extension methods.
+If you are using Flutter, go to [rendering control](/reactter/core_concepts/rendering_control) to learn how it manage dependencies through <HT>`Widget`</HT> and <HT>`BuildContext`</HT> extension methods.
 :::
 
-## How it works
+## How It Works
 
-Reactter manages the dependencies through a centralized mechanism.
-This core component serves as a central repository for registering, resolving, and providing dependencies across the app.
-To comprehend this mechanism thoroughly, let's break down the process into five stages:
+Reactter manages dependencies through a centralized mechanism that acts as a main repository responsible for registering, resolving, and providing dependencies throughout the application.
+To understand how this system works in its entirety, we will break down the process into the following stages:
 
-1. **Registration**: This stage involves registering the dependency into Reactter's context with the specified `id` and `mode` params.
+1. **Registration**: This stage involves registering the dependency within the Reactter context using a specific type, a `builder` function, an `id`, and a dependency `mode`.
 
-    For this, you can use the following methods:
-      - <HM>[`Rt.register`](/reactter/methods/dependency_injection_methods/#rtregister)</HM>
-      - <HM>[`Rt.lazyBuilder`](/reactter/methods/dependency_injection_methods/#rtlazy_builder)</HM>(registers with <HE>`builder`</HE> mode)
-      - <HM>[`Rt.lazyFactory`](/reactter/methods/dependency_injection_methods/#rtlazy_factory)</HM>(registers with <HE>`factory`</HE> mode)
-      - <HM>[`Rt.lazySingleton`](/reactter/methods/dependency_injection_methods/#rtlazy_singleton)</HM>(registers with <HE>`singleton`</HE> mode)
+    To perform this registration, you can use the following methods:
+      - <HM>[`Rt.register`](/reactter/en/api/methods/dependency_injection_methods/#rtregister)</HM>
+      - <HM>[`Rt.lazyBuilder`](/reactter/en/api/methods/dependency_injection_methods/#rtlazy_builder)</HM>
+      - <HM>[`Rt.lazyFactory`](/reactter/en/api/methods/dependency_injection_methods/#rtlazy_factory)</HM>
+      - <HM>[`Rt.lazySingleton`](/reactter/en/api/methods/dependency_injection_methods/#rtlazy_singleton)</HM>
 
-    The <HE>`Lifecycle.registered`</HE> event is emitted.
+    During registration, the event <HE>`Lifecycle.registered`</HE> is triggered.
 
-2. **Resolving**: When there is a request for getting a dependency, Reactter gets it according to `id` and the `mode` through the registry.
-If the dependency with/without `id` is not yet created, Reactter initializes it based on registry(this condition doesn't apply to <HM>`find`</HM> method).
+2. **Resolution**: When a dependency is requested, Reactter creates an instance of the dependency from the registered `builder` function, according to the provided type and `id`.
 
     For this, you can use the following methods:
-      - <HM>[`Rt.get`](/reactter/methods/dependency_injection_methods/#rtget)</HM>
-      - <HM>[`Rt.find`](/reactter/methods/dependency_injection_methods/#rtfind)</HM>(doesn't create the dependency)
-      - <HM>[`Rt.create`](/reactter/methods/dependency_injection_methods/#rtcreate)</HM>(registers if not found in registry)
-      - <HM>[`Rt.builder`](/reactter/methods/dependency_injection_methods/#rtbuilder)</HM>(registers with <HE>`builder`</HE> mode if not found in registry)
-      - <HM>[`Rt.factory`](/reactter/methods/dependency_injection_methods/#rtfactory)</HM>(registers with <HE>`factory`</HE> mode if not found in registry)
-      - <HM>[`Rt.singleton`](/reactter/methods/dependency_injection_methods/#rtsingleton)</HM>(registers with <HE>`singleton`</HE> mode if not found in registry)
+      - <HM>[`Rt.get`](/reactter/en/api/methods/dependency_injection_methods/#rtget)</HM>
+      - <HM>[`Rt.create`](/reactter/en/api/methods/dependency_injection_methods/#rtcreate)</HM>
+      - <HM>[`Rt.builder`](/reactter/en/api/methods/dependency_injection_methods/#rtbuilder)</HM>
+      - <HM>[`Rt.factory`](/reactter/en/api/methods/dependency_injection_methods/#rtfactory)</HM>
+      - <HM>[`Rt.singleton`](/reactter/en/api/methods/dependency_injection_methods/#rtsingleton)</HM>
 
-    The following events are fired(only if the dependency instance is created):
+    :::note
+    All of the above methods, except <HM>`Rt.get`</HM>, in addition to instantiating the dependency, may also register it if it hasn't been registered previously.
+    :::
+
+    If a new dependency instance is created, the following events will be emitted:
       - <HE>`Lifecycle.created`</HE>
-      - <HE>`Lifecycle.willMount`</HE>(_flutter_reactter_ only)
-      - <HE>`Lifecycle.didMount`</HE>(_flutter_reactter_ only)
+      - <HE>`Lifecycle.willMount`</HE> (only in _flutter_reactter_)
+      - <HE>`Lifecycle.didMount`</HE> (only in _flutter_reactter_)
 
-3. **Usage**: The dependency is then used across the app as needed.
+3. **Usage**: Once the dependency is resolved, its instance can be used anywhere within the application.
 
-    Some of these events may occur:
+    To access the dependency or check its state, you can use the following methods:
+      - <HM>[`Rt.find`](/reactter/en/api/methods/dependency_injection_methods/#rtfind)</HM>
+      - <HM>[`Rt.get`](/reactter/en/api/methods/dependency_injection_methods/#rtget)</HM>
+      - <HM>[`Rt.exists`](/reactter/en/api/methods/dependency_injection_methods/#rtexists)</HM>
+      - <HM>[`Rt.isActive`](/reactter/en/api/methods/dependency_injection_methods/#rtis_active)</HM>
+      - <HM>[`Rt.getDependencyMode`](/reactter/en/api/methods/dependency_injection_methods/#rtget_dependency_mode)</HM>
+
+    If the dependency's state is updated, the following events will be emitted:
       - <HE>`Lifecycle.willUpdate`</HE>
       - <HE>`Lifecycle.didUpdate`</HE>
 
-4. **Deleting**: When the dependency with/without `id` is no longer required, Reactter deletes it.
+4. **Deletion**: In this stage, Reactter removes the dependency instance based on the provided type and `id`.
 
-    For this, you can use the following methods:
-      - <HM>[`Rt.delete`](/reactter/methods/dependency_injection_methods/#rtdelete)</HM>
-      - <HM>[`Rt.destroy`](/reactter/methods/dependency_injection_methods/#rtdestroy)</HM>(delete & unregister)
+    To do this, you can use the following methods:
+      - <HM>[`Rt.delete`](/reactter/en/api/methods/dependency_injection_methods/#rtdelete)</HM>
+      - <HM>[`Rt.destroy`](/reactter/en/api/methods/dependency_injection_methods/#rtdestroy)</HM>
 
-    The following events are fired:
-      - <HE>`Lifecycle.willUnmount`</HE>(_flutter_reactter_ only)
-      - <HE>`Lifecycle.didUnmount`</HE>(_flutter_reactter_ only)
+    :::note
+    Depending on the dependency `mode`, the dependency instance may not be deleted, or the registration may also be removed.
+    :::
+
+    During deletion, the following events will be emitted:
+      - <HE>`Lifecycle.willUnmount`</HE> (only in _flutter_reactter_)
+      - <HE>`Lifecycle.didUnmount`</HE> (only in _flutter_reactter_)
       - <HE>`Lifecycle.deleted`</HE>
 
-5. **Unregistration**: When the dependency with/without `id` is no longer required and depending on `mode`, Reactter unregisters it.
+5. **Unregistration**: In this stage, Reactter removes the dependency's registration based on the provided type and `id`.
 
-    For this, you can use the following methods:
-      - <HM>[`Rt.unregister`](/reactter/methods/dependency_injection_methods/#rtunregister)</HM>
-      - <HM>[`Rt.delete`](/reactter/methods/dependency_injection_methods/#rtdelete)</HM>
-      - <HM>[`Rt.destroy`](/reactter/methods/dependency_injection_methods/#rtdestroy)</HM>
+    To unregister the dependency, you can use the following methods:
+      - <HM>[`Rt.unregister`](/reactter/en/api/methods/dependency_injection_methods/#rtunregister)</HM>
+      - <HM>[`Rt.delete`](/reactter/en/api/methods/dependency_injection_methods/#rtdelete)</HM>
+      - <HM>[`Rt.destroy`](/reactter/en/api/methods/dependency_injection_methods/#rtdestroy)</HM>
 
-    The <HE>`Lifecycle.unregistered`</HE> event is emitted.
+    :::note
+    Depending on the dependency `mode`, the dependency registration may not be removed.
+    :::
+
+    When the dependency registration is removed, the event <HE>`Lifecycle.unregistered`</HE> will be emitted.
 
 :::note
 `id` and `mode` are optional parameters.
@@ -113,7 +132,7 @@ If `mode` is not provided, Reactter will use the default mode, which is <HE>`Dep
 
 A **dependency** in Reactter is referred to as an **instance** of specific type.
 
-The scope of the registered dependency is global. This indicates that using the [shortcuts to manage dependency](/reactter/shortcuts/dependency) or <HT>[`UseDependency`](/reactter/hooks/UseDependency)</HT> will allow you to access them from anywhere in the project.
+The scope of the registered dependency is global. This indicates that using the [shortcuts to manage dependency](/reactter/shortcuts/dependency) or <HT>[`UseDependency`](/reactter/api/hooks/UseDependency)</HT> will allow you to access them from anywhere in the project.
 :::
 
 :::tip
@@ -122,89 +141,88 @@ The scope of the registered dependency is global. This indicates that using the 
 
 ### Example
 
-To understand it better, we will return to the countdown example seen from the [State Management](/reactter/core_concepts/state_management/#example) page,
-but now using the dependency injection:
+To better understand this, let's go back the countdown example from the [state manager page](/reactter/en/core_concepts/state_management/#example), but now using dependency injection:
 
 <CodeTabs>
   <Tabs>
     <TabItem label="main.dart">
       <Code code={`
-import 'package:reactter/reactter.dart';
-import 'countdown.dart';
+  import 'package:reactter/reactter.dart';
+  import 'countdown.dart';
 
-void main() async {
-  // Create an instance of the \`Countdown\` class
-  final countdown = Rt.create(() => Countdown())!;
-  // Start the countdown
-  await countdown.run();
-}
+  void main() async {
+    // Create an instance of the 'Countdown' class
+    final countdown = Rt.create(() => Countdown())!;
+    // Start the countdown
+    await countdown.run();
+  }
       `} lang="dart" mark={marks} />
     </TabItem>
 
     <TabItem label="countdown.dart">
       <Code code={`
-import 'package:reactter/reactter.dart';
-import 'counter.dart';
+  import 'package:reactter/reactter.dart';
+  import 'counter.dart';
 
-/// A class that represents a countdown using a counter
-class Countdown {
-  // Create an instance of the \`Counter\` class using the \`UseDependency\` hook
-  // and initialize it with an initial value of 10
-  final uCounter = UseDependency.create<Counter>(() => Counter(10));
+  /// A class representing a countdown
+  class Countdown {
+    // Create an instance of the 'Counter' class using the 'UseDependency' hook
+    // with an initial value of 10
+    final uCounter = UseDependency.create<Counter>(() => Counter(10));
 
-  // Get the instance of the \`Counter\` class
-  Counter get counter => uCounter.instance;
+    // Get the 'Counter' instance
+    Counter get counter => uCounter.instance;
 
-  /// Start the countdown
-  Future<void> run() {
-    // Listen to the \`didUpdate\` event of the \`counter\` instance
-    // and print the current \`value\` of \`count\` each time it changes
-    Rt.on(
-      counter,
-      Lifecycle.didUpdate,
-      (_, __) => print('Count: \${counter.count}'),
-    );
+    /// Start the countdown
+    Future<void> run() {
+      // Listen for the 'didUpdate' event on the 'counter' instance
+      // and print the current value of 'count'
+      Rt.on(
+        counter,
+        Lifecycle.didUpdate,
+        (_, __) => print('Count: \${counter.count}'),
+      );
 
-    // Create a timer that decrements the \`count\` state by 1
-    // every second until it reaches 0
-    return Timer.periodic(Duration(seconds: 1), _countdown);
-  }
+      // Create a timer that calls the '_countdown' function
+      // every second
+      return Timer.periodic(Duration(seconds: 1), _countdown);
+    }
 
-  // Decrement the \`count\` state by 1 each time the timer ticks
-  // and delete the \`Counter\` instance when the count value reaches 0
-  void _countdown(Timer timer) {
-    counter.decrement();
+    // Decrement the 'count' state by 1 every timer cycle
+    // and delete the 'Counter' instance when the value reaches 0
+    void _countdown(Timer timer) {
+      counter.decrement();
 
-    if (counter.count == 0) {
-      timer.cancel();
-      Rt.delete<Counter>();
+      if (counter.count == 0) {
+        timer.cancel();
+        Rt.delete<Counter>();
+      }
     }
   }
-}
       `} lang="dart" mark={marks} />
     </TabItem>
 
     <TabItem label="counter.dart">
       <Code code={`
-import 'package:reactter/reactter.dart';
+  import 'package:reactter/reactter.dart';
 
-/// A class that represents a counter with a \`count\` state
-class Counter {
-  final Signal<int> _count;
+  /// A class representing a counter that holds the 'count' state
+  class Counter {
+    final Signal<int> _count;
 
-  int get count => _count.value;
+    int get count => _count.value;
 
-  const Counter(int initialValue) : _count = Signal(initialValue);
+    const Counter(int initialValue) : _count = Signal(initialValue);
 
-  void decrement() => _count.value -= 1;
-}
+    void decrement() => _count.value -= 1;
+  }
       `} lang="dart" mark={marks} />
     </TabItem>
   </Tabs>
 </CodeTabs>
 
-In this example, we have create a countdown of <HN>`10`</HN> seconds, and when it reaches <HN>`0`</HN>, the <HT>`Counter`</HT> instance is deleted.
-But we will make a small tweak to change the countdown behavior.
+In this example, we've created a countdown from <HN>`10`</HN> seconds, and when it reaches <HN>`0`</HN>, the <HT>`Counter`</HT> instance is deleted.
+But if we want to use the <HT>`Counter`</HT> instance elsewhere in the code, we can do it like this:
 
 ```dart title="main.dart" ins={3, 6-7} collapse={8-11} "Rt.register" "Rt.create" /Counter(?!\u0060)/ /Countdown(?!\u0060)/ /(countdown) =/ "countdown.run"
 import 'package:reactter/reactter.dart';
@@ -212,20 +230,20 @@ import 'countdown.dart';
 import 'counter.dart';
 
 void main() async {
-  // Register the `Counter` class with an initial value of 20
+  // Register the 'Counter' class with an initial value of 20
   Rt.register(() => Counter(20));
-  // Create an instance of the `Countdown` class
+  // Create an instance of the 'Countdown' class
   final countdown = Rt.create(() => Countdown())!;
   // Start the countdown
   await countdown.run();
 }
 ```
 
-Now, the countdown will start from <HN>`20`</HN> and when it reaches <HN>`0`</HN>, the <HT>`Counter`</HT> instance is deleted.
-What happens is that the <HT>`Counter`</HT> instance is registered with an initial value of <HN>`20`</HN>,
-and when the <HT>`Countdown`</HT> instance is created, it uses the <HT>`Counter`</HT> instance registered.
+Now, the countdown will start from <HN>`20`</HN>, and when it reaches <HN>`0`</HN>, the instance of <HT>`Counter`</HT> will be deleted.
+What happens is that the instance of <HT>`Counter`</HT> is registered with an initial value of <HN>`20`</HN>,
+and when the instance of <HT>`Countdown`</HT> is created, it uses the registered instance of <HT>`Counter`</HT>.
 
-Ok, but what if we want to use the <HT>`Counter`</HT> instance in another part of the code? Let's look:
+Ok, But what if we want to use the instance of <HT>`Counter`</HT> elsewhere in the code? Let's see:
 
 ```dart title="main.dart" ins={12-15} collapse={6-11} "Rt.register" "Rt.create" "Rt.get" /counter(?!\\.)/ "counter?.count" /Counter(?!\u0060)(?! )/ /Countdown(?!\u0060)/ /(countdown) =/ "countdown.run"
 import 'package:reactter/reactter.dart';
@@ -241,15 +259,16 @@ void main() async {
   await countdown.run();
   // Get the instance of the `Counter` class
   final counter = Rt.get<Counter>();
-  // Try to print the current count value
+  // Try to print the current `count` value
   print('Count: ${counter?.count ?? 'Counter instance not found'}');
 }
 ```
-In this case, the countdown will work as before, but when trying to get the <HT>`Counter`</HT> instance to print its value,
-the ouput will be _“Counter instance not found”_.
-This occurs because <HT>`Counter`</HT> was registered as  <HE>`DependencyMode.builder`</HE>(the default mode),
-so when it was deleted at the end of the countdown its registration was also deleted.
-If we want to get the <HT>`Counter`</HT> instance to print its value, we need to register using the <HE>`DependencyMode.singleton`</HE> mode, looking like this:
+In this case, the countdown will work as before, but when trying to get the instance of <HT>`Counter`</HT> to print its value,
+the output will be <HS>'Counter instance not found'</HS>.
+This happens because <HT>`Counter`</HT> was registered as <HE>`DependencyMode.builder`</HE> (the default mode),
+so when it is deleted at the end of the countdown, its registration is also removed.
+
+If we want to obtain the instance of <HT>Counter</HT> to print its value, we need to register it using the <HE>DependencyMode.singleton</HE> mode, as shown below:
 
 ```dart title="main.dart" {7} collapse={8-15} "Rt.register" "Rt.create" "Rt.get" "DependencyMode.singleton" /counter(?!\\.)/ "counter?.count" /Counter(?!\u0060)(?! )/ /Countdown(?!\u0060)/ /(countdown) =/ "countdown.run"
 import 'package:reactter/reactter.dart';
@@ -265,12 +284,10 @@ void main() async {
   await countdown.run();
   // Get the instance of the `Counter` class
   final counter = Rt.get<Counter>();
-  // Try to print the current count value
+  // Try to print the current `count` value
   print('Count: ${counter?.count ?? 'Counter instance not found'}');
 }
 ```
-
-Let's now delve into the **modes** of dependency registration.
 
 ## Dependency Modes
 
@@ -282,63 +299,54 @@ The **mode** with which a dependency is registered determines how it is managed 
 
 ### Builder
 
-Builder is a ways to manage a dependency,
-which registers a builder function and creates the instance,
-unless it has already done so.
+The Builder mode is a way to manage a dependency by registering a `builder` function and creating an instance only if it hasn't been created previously.
 
-In builder mode, when the dependency tree no longer needs it,
-it is completely deleted,
-including unregistration (deleting the builder function).
+In this mode, when the dependency tree no longer needs it, the instance is completely removed, including the registration and the `builder` function.
 
-Reactter identifies the builder mode as
+Reactter identifies the Builder mode as
 <HE><a href="https://pub.dev/documentation/reactter/latest/DependencyMode/DependencyMode.builder.html" target="_blank">`DependencyMode.builder`</a></HE>
-and it's using for default.
+and uses it by default.
 
 :::note
-  **Builder** uses less RAM than <HE>[Factory](#factory)</HE> and <HE>[Singleton](#singleton)</HE>,
-  but it consumes more CPU than the other modes.
+  Builder uses less RAM than <HE>[Factory](#factory)</HE> and <HE>[Singleton](#singleton)</HE>,
+  but consumes more CPU than the other modes.
 :::
 
 ### Factory
 
-Factory is a ways to manage a dependency,
-which registers a builder function only once
-and creates the instance if not already done.
+The Factory mode is a way to manage a dependency in which a `builder` function is registered, and a new instance is created every time it is requested.
 
-In factory mode, when the dependency tree no longer needs it,
-the instance is deleted and the builder function is kept in the register.
+In this mode, when the dependency tree no longer uses it, the instance is removed, but the `builder` function remains registered.
 
-Reactter identifies the factory mode as
+Reactter identifies the Factory mode as
 <HE><a href="https://pub.dev/documentation/reactter/latest/DependencyMode/DependencyMode.factory.html" target="_blank">`DependencyMode.factory`</a></HE>
-and to active it,set it in the `mode` argument of <HM>[`Rt.register`](/reactter/methods/dependency_injection_methods/#rtregister)</HM> and <HM>[`Rt.create`](/reactter/methods/dependency_injection_methods/#rtcreate)</HM>,
-or use <HM>[`Rt.lazyFactory`](/reactter/methods/dependency_injection_methods/#rtlazy_factory)</HM>,  <HM>[`Rt.factory`](/reactter/methods/dependency_injection_methods/#rtfactory)</HM>.
+and to activate it, set the `mode` in the argument of <HM>[`Rt.register`](/reactter/api/methods/dependency_injection_methods/#rtregister)</HM> and <HM>[`Rt.create`](/reactter/api/methods/dependency_injection_methods/#rtcreate)</HM>,
+or use <HM>[`Rt.lazyFactory`](/reactter/api/methods/dependency_injection_methods/#rtlazy_factory)</HM>, <HM>[`Rt.factory`](/reactter/api/methods/dependency_injection_methods/#rtfactory)</HM>.
 
 :::note
-  **Factory** uses more RAM than <HE>[Builder](#builder)</HE>
+  Factory uses more RAM than <HE>[Builder](#builder)</HE>,
   but not more than <HE>[Singleton](#singleton)</HE>,
-  and consumes more CPU than <HE>[Singleton](#singleton)</HE>
+  and consumes more CPU than <HE>[Singleton](#singleton)</HE>,
   but not more than <HE>[Builder](#builder).</HE>
 :::
 
 ### Singleton
 
-Singleton is a ways to manage a dependency,
-which registers a builder function and creates the instance only once.
+The Singleton mode is a way to manage a dependency by registering a `builder` function and ensuring that the instance is created only once.
 
-The singleton mode preserves the instance and its states,
-even if the dependency tree stops using it.
+When using the singleton mode, the dependency instance and its states remain active, even if the dependency tree no longer uses it.
+This also includes the creation function, unless it is explicitly removed.
 
-Reactter identifies the singleton mode as
-<HE><a href="https://pub.dev/documentation/reactter/latest/DependencyMode/DependencyMode.singleton.html" target="_blank">`DependencyMode.singleton`</a></HE>
-and to active it,
-set it in the `mode` argument of <HM>[`Rt.register`](/reactter/methods/dependency_injection_methods/#rtregister)</HM> and <HM>[`Rt.create`](/reactter/methods/dependency_injection_methods/#rtcreate)</HM>,
-or use <HM>[`Rt.lazySingleton`](/reactter/methods/dependency_injection_methods/#rtlazy_singleton)</HM>, <HM>[`Rt.singleton`](/reactter/methods/dependency_injection_methods/#rtsingleton)</HM>.
-
-:::note
-  **Singleton** consumes less CPU than <HE>[Builder](#builder)</HE> and <HE>[Factory](#factory)</HE>,
-  but uses more RAM than the other modes.
+:::tip
+  Use <HM>[`Rt.destroy`](/reactter/api/methods/dependency_injection_methods/#rtdestroy)</HM> if you want to delete both the instance and the registration of a dependency in singleton mode.
 :::
 
+Reactter identifies the Singleton mode as
+<HE><a href="https://pub.dev/documentation/reactter/latest/DependencyMode/DependencyMode.singleton.html" target="_blank">`DependencyMode.singleton`</a></HE>
+and to activate it, set the `mode` in the argument of <HM>[`Rt.register`](/reactter/api/methods/dependency_injection_methods/#rtregister)</HM> and <HM>[`Rt.create`](/reactter/api/methods/dependency_injection_methods/#rtcreate)</HM>,
+or use <HM>[`Rt.lazySingleton`](/reactter/api/methods/dependency_injection_methods/#rtlazy_singleton)</HM>, <HM>[`Rt.singleton`](/reactter/api/methods/dependency_injection_methods/#rtsingleton)</HM>.
+
 :::note
-  Use <HM>[`Rt.destroy`](/reactter/methods/dependency_injection_methods/#rtdestroy)</HM> if you want to force destroy the instance and its register.
+  Singleton consumes less CPU than <HE>[Builder](#builder)</HE> and <HE>[Factory](#factory)</HE>,
+  but uses more RAM than the other modes.
 :::

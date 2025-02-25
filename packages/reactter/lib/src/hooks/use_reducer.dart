@@ -5,7 +5,7 @@ part of 'hooks.dart';
 ///
 /// [UseReducer] accepts a [reducer] method
 ///  and returns the current state paired with a [dispatch] method.
-/// (If you’re familiar with Redux, you already know how this works.)
+/// (If you're familiar with Redux, you already know how this works.)
 ///
 /// Contains a [value] of type [T] which represents the current state.
 ///
@@ -51,20 +51,28 @@ class UseReducer<T> extends RtHook {
   @override
   final $ = RtHook.$register;
 
-  late final UseState<T> _state;
+  final UseState<T> _state;
 
   /// Calculates a new state with state([T]) and action([RtAction]) given.
   final Reducer<T> reducer;
 
   T get value => _state.value;
 
-  /// {@macro use_reducer}
+  final String? _debugLabel;
+  @override
+  String? get debugLabel => _debugLabel ?? super.debugLabel;
+  @override
+  Map<String, dynamic> get debugInfo => {
+        'value': value,
+      };
+
+  /// {@macro reactter.use_reducer}
   UseReducer(
     this.reducer,
-    T initialState,
-  ) : _state = UseState<T>(initialState) {
-    UseEffect(update, [_state]);
-  }
+    T initialState, {
+    String? debugLabel,
+  })  : _state = UseState<T>(initialState),
+        _debugLabel = debugLabel;
 
   /// Receives a [RtAction] and sends it to [reducer] method for resolved
   void dispatch<A extends RtAction>(A action) {
@@ -170,17 +178,3 @@ abstract class RtActionCallable<T, P> extends RtAction<P> {
   /// the action has been applied).
   T call(T state);
 }
-
-/// {@macro reactter.rt_action}
-@Deprecated(
-  'Use `RtAction` instead. '
-  'This feature was deprecated after v7.3.0.',
-)
-typedef ReactterAction<T> = RtAction<T>;
-
-/// {@macro reactter.rt_action_callable}
-@Deprecated(
-  'Use `RtActionCallable` instead. '
-  'This feature was deprecated after v7.3.0.',
-)
-typedef ReactterActionCallable = RtActionCallable;

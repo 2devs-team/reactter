@@ -16,6 +16,7 @@ void main() {
               child: RtSelector(
                 selector: (_, $) {
                   return $(signalList)
+                      .value
                       .fold<int>(0, (prev, elem) => prev + elem);
                 },
                 builder: (context, inst, total, child) => Text("total: $total"),
@@ -28,7 +29,7 @@ void main() {
 
         expect(find.text("total: 0"), findsOneWidget);
 
-        signalList.addAll([1, 1, 2]);
+        signalList.update((value) => value.addAll([1, 1, 2]));
         await tester.pumpAndSettle();
 
         expect(find.text("total: 4"), findsOneWidget);
@@ -38,7 +39,7 @@ void main() {
 
         expect(find.text("total: 4"), findsOneWidget);
 
-        signalList.refresh();
+        signalList.notify();
         await tester.pumpAndSettle();
 
         expect(find.text("total: 5"), findsOneWidget);

@@ -1,7 +1,7 @@
 // ignore_for_file: constant_identifier_names
 
 import 'package:reactter/reactter.dart';
-import 'package:test/test.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 import '../shareds/test_controllers.dart';
 
@@ -61,8 +61,10 @@ void main() {
     });
 
     test("should register a dependency with id in builder mode", () {
-      final useDependency =
-          UseDependency.lazyBuilder(() => TestController(), ID);
+      final useDependency = UseDependency.lazyBuilder(
+        () => TestController(),
+        id: ID,
+      );
       expect(useDependency.instance, null);
 
       final instance = Rt.get<TestController>(ID);
@@ -94,8 +96,10 @@ void main() {
     });
 
     test("should register a dependency with id in factory mode", () {
-      final useDependency =
-          UseDependency.lazyFactory(() => TestController(), ID);
+      final useDependency = UseDependency.lazyFactory(
+        () => TestController(),
+        id: ID,
+      );
       expect(useDependency.instance, null);
 
       final instance = Rt.get<TestController>(ID);
@@ -127,8 +131,10 @@ void main() {
     });
 
     test("should register a dependency with id in singleton mode", () {
-      final useDependency =
-          UseDependency.lazySingleton(() => TestController(), ID);
+      final useDependency = UseDependency.lazySingleton(
+        () => TestController(),
+        id: ID,
+      );
       expect(useDependency.instance, null);
 
       final instance = Rt.get<TestController>(ID);
@@ -167,7 +173,10 @@ void main() {
     });
 
     test("should create a dependency with id in builder mode", () {
-      final useDependency = UseDependency.builder(() => TestController(), ID);
+      final useDependency = UseDependency.builder(
+        () => TestController(),
+        id: ID,
+      );
       expect(useDependency.instance, isA<TestController>());
 
       final isActive = Rt.isActive(useDependency.instance);
@@ -193,7 +202,10 @@ void main() {
     });
 
     test("should create a dependency with id in factory mode", () {
-      final useDependency = UseDependency.factory(() => TestController(), ID);
+      final useDependency = UseDependency.factory(
+        () => TestController(),
+        id: ID,
+      );
       expect(useDependency.instance, isA<TestController>());
 
       final isActive = Rt.isActive(useDependency.instance);
@@ -219,7 +231,10 @@ void main() {
     });
 
     test("should create a dependency with id in singleton mode", () {
-      final useDependency = UseDependency.singleton(() => TestController(), ID);
+      final useDependency = UseDependency.singleton(
+        () => TestController(),
+        id: ID,
+      );
       expect(useDependency.instance, isA<TestController>());
 
       final isActive = Rt.isActive(useDependency.instance);
@@ -246,7 +261,7 @@ void main() {
     test("should get a dependency with id", () {
       Rt.register(() => TestController(), id: ID);
 
-      final useDependency = UseDependency<TestController>.get(ID);
+      final useDependency = UseDependency<TestController>.get(id: ID);
       expect(useDependency.instance, isA<TestController>());
 
       final isActive = Rt.isActive(useDependency.instance);
@@ -254,13 +269,44 @@ void main() {
 
       Rt.destroy<TestController>(id: ID);
     });
+
+    test('should get debug label', () {
+      final useDependency = UseDependency.lazySingleton(
+        () => TestController(),
+        debugLabel: 'useDependency',
+      );
+
+      expect(useDependency.debugLabel, 'useDependency');
+
+      Rt.destroy<TestController>();
+    });
+
+    test('should get debug info', () {
+      final testController = Rt.create(() => TestController(), id: 'TEST')!;
+
+      final useDependency = UseDependency.create(
+        () => testController,
+        id: 'TEST',
+        debugLabel: 'useDependency',
+      );
+
+      expect(
+        useDependency.debugInfo,
+        {
+          'id': 'TEST',
+          'instance': testController,
+        },
+      );
+
+      Rt.destroy<TestController>(id: 'TEST');
+    });
   });
 }
 
 void _testController([String? id]) {
   Rt.create(() => TestController(), id: id);
 
-  final useDependency = UseDependency<TestController>(id);
+  final useDependency = UseDependency<TestController>(id: id);
 
   expect(useDependency.instance, isA<TestController>());
 
@@ -269,9 +315,9 @@ void _testController([String? id]) {
 
 void _testControllerLate([String? id]) {
   late final TestController instance;
-  final useDependency = UseDependency<TestController>(id);
+  final useDependency = UseDependency<TestController>(id: id);
 
-  UseEffect(() {
+  final uEffect = UseEffect(() {
     if (useDependency.instance != null) {
       instance = useDependency.instance!;
     }
@@ -279,6 +325,9 @@ void _testControllerLate([String? id]) {
 
   Rt.create(() => TestController(), id: id);
   Rt.destroy<TestController>(id: id);
+
+  uEffect.dispose();
+  useDependency.dispose();
 
   expectLater(instance, isA<TestController>());
 }

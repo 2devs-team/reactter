@@ -1,0 +1,75 @@
+---
+title: RtMultiProvider
+dscription: Learn how to use the RtMultiProvider in Reactter.
+sidebar:
+  order: 3
+---
+import { HM, HT } from '@/components/Highlight';
+import CodeTabs from '@/components/CodeTabs.astro';
+import { Tabs, TabItem } from "@/components/Tabs";
+import ZappButton from "@/components/ZappButton.astro";
+import { Code } from "@astrojs/starlight/components";
+import { marks } from '@/examples/marks.ts'
+
+import counterControllerCode from '@/examples/rt_multi_provider/lib/counter_controller.dart?raw';
+import counterCode from '@/examples/rt_multi_provider/lib/counter.dart?raw';
+import counterViewCode from '@/examples/rt_multi_provider/lib/counter_view.dart?raw';
+import mainCode from '@/examples/rt_multi_provider/lib/main.dart?raw';
+
+The <HT><a href="https://pub.dev/documentation/flutter_reactter/latest/flutter_reactter/RtMultiProvider-class.html">`RtMultiProvider`</a></HT> widget is a container for multiple providers that allows you to provide multiple dependencies to the widget tree. 
+
+:::note
+The <HT>`RtMultiProvider`</HT> widget is a more efficient way to provide multiple dependencies to the widget tree than using multiple <HT>`RtProvider`</HT> widgets.
+:::
+
+## Syntax
+
+```dart showLineNumbers=false
+RtMultiProvider(
+  List<RtProvider> providers, {
+  Key? key,
+  Widget? child,
+  Widget builder(
+    BuildContext context,
+    Widget child,
+  )?,
+})
+```
+
+## Properties
+
+- `providers`: A list of <HT>`RtProvider`</HT> widgets that are to be wrapped by the <HT>`RtMultiProvider`</HT>.
+- `key`: An optional <HT>`Key`</HT> to use for identifying the widget.
+- `child`: An optional <HT>`Widget`</HT> that remains static while the widget tree is rebuilt.
+  It is passed to the <HM>`builder`</HM> function if it is defined.
+- <HM>`builder`</HM>: An optional function which builds a widget depending on the <HT>`RtMultiProvider`</HT>. If it not defined, the <HT>`child`</HT> widget is returned.
+It receives the following parameters:
+  - `context`: The <HM>`BuildContext`</HM> of the widget. A handle to the location of <HT>`RtMultiProvider`</HT> in the widget tree.
+  - `child`: The `child` widget passed to the <HT>`RtMultiProvider`</HT> widget.
+
+## Usage
+
+In the following example, we have a simple counter application that uses the <HT>`RtMultiProvider`</HT> widget to provide multiple dependencies to the widget tree.
+
+<CodeTabs>
+  <ZappButton path="examples/rt_multi_provider"/>
+
+  <Tabs>
+    <TabItem label="main.dart">
+      <HM single slot="label">main.dart</HM>
+      <Code code={mainCode} lang="dart" mark={[...marks, {range: "14-31"}]} />
+    </TabItem>
+
+    <TabItem label="counter_view.dart">
+      <Code code={counterViewCode} lang="dart" mark={marks} />
+    </TabItem>
+
+    <TabItem label="counter.dart">
+      <Code code={counterCode} lang="dart" mark={marks} />
+    </TabItem>
+
+    <TabItem label="counter_controller.dart">
+      <Code code={counterControllerCode} lang="dart" mark={marks} />
+    </TabItem>
+  </Tabs>
+</CodeTabs>

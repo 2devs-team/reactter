@@ -8,6 +8,8 @@ import 'package:examples/examples/2_calculator/widgets/calculator_action_button.
 import 'package:examples/examples/2_calculator/widgets/calculator_number_button.dart';
 import 'package:examples/examples/2_calculator/widgets/calculator_result.dart';
 
+const kCalculatorSize = Size(230, 315);
+
 class CalculatorPage extends StatelessWidget {
   const CalculatorPage({Key? key}) : super(key: key);
 
@@ -20,50 +22,87 @@ class CalculatorPage extends StatelessWidget {
           appBar: AppBar(
             title: const Text('Calculator'),
           ),
-          body: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              CalculatorResult(),
-              Row(
-                children: [
-                  CalculatorActionButton(action: ActionCalculator.clear),
-                  CalculatorActionButton(action: ActionCalculator.sign),
-                  CalculatorActionButton(action: ActionCalculator.porcentage),
-                  CalculatorActionButton(action: ActionCalculator.divide),
-                ],
+          body: Center(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                maxWidth: kCalculatorSize.width,
+                maxHeight: kCalculatorSize.height,
               ),
-              Row(
-                children: [
-                  CalculatorNumberButton(number: 7),
-                  CalculatorNumberButton(number: 8),
-                  CalculatorNumberButton(number: 9),
-                  CalculatorActionButton(action: ActionCalculator.multiply),
-                ],
+              child: AspectRatio(
+                aspectRatio: kCalculatorSize.width / kCalculatorSize.height,
+                child: FittedBox(
+                  fit: BoxFit.fitWidth,
+                  child: Container(
+                    color: Colors.grey.shade900,
+                    width: kCalculatorSize.width,
+                    height: kCalculatorSize.height,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        CalculatorResult(),
+                        Row(
+                          children: [
+                            CalculatorActionButton(
+                              action: ActionCalculator.clear,
+                            ),
+                            CalculatorActionButton(
+                              action: ActionCalculator.sign,
+                            ),
+                            CalculatorActionButton(
+                              action: ActionCalculator.porcentage,
+                            ),
+                            CalculatorActionButton(
+                              action: ActionCalculator.divide,
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            CalculatorNumberButton(number: 7),
+                            CalculatorNumberButton(number: 8),
+                            CalculatorNumberButton(number: 9),
+                            CalculatorActionButton(
+                              action: ActionCalculator.multiply,
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            CalculatorNumberButton(number: 4),
+                            CalculatorNumberButton(number: 5),
+                            CalculatorNumberButton(number: 6),
+                            CalculatorActionButton(
+                              action: ActionCalculator.subtract,
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            CalculatorNumberButton(number: 1),
+                            CalculatorNumberButton(number: 2),
+                            CalculatorNumberButton(number: 3),
+                            CalculatorActionButton(
+                              action: ActionCalculator.add,
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            CalculatorNumberButton(number: 0, flex: 2),
+                            CalculatorActionButton(
+                              action: ActionCalculator.point,
+                            ),
+                            CalculatorActionButton(
+                              action: ActionCalculator.equal,
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               ),
-              Row(
-                children: [
-                  CalculatorNumberButton(number: 4),
-                  CalculatorNumberButton(number: 5),
-                  CalculatorNumberButton(number: 6),
-                  CalculatorActionButton(action: ActionCalculator.subtract),
-                ],
-              ),
-              Row(
-                children: [
-                  CalculatorNumberButton(number: 1),
-                  CalculatorNumberButton(number: 2),
-                  CalculatorNumberButton(number: 3),
-                  CalculatorActionButton(action: ActionCalculator.add),
-                ],
-              ),
-              Row(
-                children: [
-                  CalculatorNumberButton(number: 0),
-                  CalculatorActionButton(action: ActionCalculator.point),
-                  CalculatorActionButton(action: ActionCalculator.equal),
-                ],
-              ),
-            ],
+            ),
           ),
         );
       },

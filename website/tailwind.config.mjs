@@ -35,7 +35,6 @@ export default {
       },
       fontFamily: {
         sans: ['"Inter"'],
-        mono: ['"IBM Plex Mono"'],
       },
     },
   },

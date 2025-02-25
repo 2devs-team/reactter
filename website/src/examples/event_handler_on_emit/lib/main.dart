@@ -5,7 +5,7 @@ import 'my_dependency.dart';
 void main() {
   // Listen to the `myEvent` event of the `MyDependency` before it's created.
   Rt.on(
-    RtDependency<MyDependency>(),
+    RtDependencyRef<MyDependency>(),
     CustomEvent.myEvent,
     (instance, param) => print('CustomEvent emitted with param: $param'),
   );
@@ -62,10 +62,10 @@ void main() {
   // because it's deleted.
   Rt.emit(myDependency, CustomEvent.myEvent, 'This is not printed');
 
-  // Can still emit to the `myEvent` event using the `RtDependency`
+  // Can still emit to the `myEvent` event using the `RtDependencyRef`
   // Print:
   //  CustomEvent.myEvent emitted with param: 42
-  Rt.emit(RtDependency<MyDependency>(), CustomEvent.myEvent, 42);
+  Rt.emit(RtDependencyRef<MyDependency>(), CustomEvent.myEvent, 42);
 
   runApp(MyApp());
 }

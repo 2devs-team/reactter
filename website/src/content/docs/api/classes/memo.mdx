@@ -1,0 +1,96 @@
+---
+title: Memo
+description: Learn how to use memoization in Reactter.
+sidebar:
+  order: 9
+---
+import { HM, HT } from '@/components/Highlight';
+
+<HT><a href="https://pub.dev/documentation/reactter/latest/reactter/Memo-class.html" target="_blank">`Memo`</a></HT> is a class callable with _**memoization**_ logic which it stores computation results in cache, and retrieve that same information from the cache the next time it's needed instead of computing it again.
+
+> _**Memoization**_ is a powerful trick that can help speed up our code, especially when dealing with repetitive and heavy computing functions.
+
+## Syntax
+
+```dart showLineNumbers=false
+Memo<T, A>(
+  T computeValue(A arg), [
+  MemoInterceptor<T, A>? interceptor,
+]);
+```
+
+<HT>`Memo`</HT> accepts these properties:
+
+- <HM>**`computeValue`**</HM>: A method that takes an argument of type <HT>`A`</HT> and returns a value of <HT>`T`</HT> type. This is the core function that will be memoized.
+- **`interceptor`**: A <HT><a href="https://pub.dev/documentation/reactter/latest/reactter/MemoInterceptor-class.html" target="_blank">`MemoInterceptor`</a></HT> that allows you to intercept the memoization function calls and modify the memoization process.
+  Reactter providers some interceptors:
+  - <HT><a href="https://pub.dev/documentation/reactter/latest/reactter/MemoSafeAsyncInterceptor-class.html" target="_blank">**`MemoSafeAsyncInterceptor`**</a></HT>: prevents caching if the <HT>`Future`</HT> calculation function throws an error during execution.
+  - <HT><a href="https://pub.dev/documentation/reactter/latest/reactter/MemoTemporaryCacheInterceptor-class.html" target="_blank">**`MemoTemporaryCacheInterceptor`**</a></HT>: removes memoized values from the cache after a specified duration.
+  - <HT><a href="https://pub.dev/documentation/reactter/latest/reactter/MemoWrapperInterceptor-class.html" target="_blank">**`MemoWrapperInterceptor`**</a></HT>: Wraps a memoized function, enabling the definition of callbacks for initialization, successful completion, error handling, and finishing.
+  - <HT><a href="https://pub.dev/documentation/reactter/latest/reactter/MultiMemoInterceptor-class.html" target="_blank">**`MultiMemoInterceptor`**</a></HT>: allows multiple memoization interceptors to be used together.
+
+## Methods
+
+<HT>`Memo`</HT> provides the following methods that will help you manipulate the cache as you wish:
+
+- <HM>**`get`**</HM>: Returns the cached value by argument passed.
+    ```dart showLineNumbers=false
+    T? get(A arg);
+    ```
+- <HM>**`remove`**</HM>: Removes the cached value by argument passed.
+    ```dart showLineNumbers=false
+    T? remove(A arg);
+    ```
+- <HM>**`clear`**</HM>: Removes all cached data.
+    ```dart showLineNumbers=false
+    void clear();
+    ```
+
+## Example
+
+Here's an example of factorial using <HT>`Memo`</HT>:
+
+```dart
+late final factorialMemo = Memo(calculateFactorial);
+
+/// A factorial(n!) represents the multiplication of all numbers between 1 and n.
+/// For example, factorial(3) equals 3 x 2 x 1, which is 6.
+BigInt calculateFactorial(int number) {
+  if (number == 0) return BigInt.one;
+  return BigInt.from(number) * factorialMemo(number - 1);
+}
+
+void main() {
+  // Calculate the factorial of 50(1 to 50).
+  final f50 = factorialMemo(50);
+  // Calculate the factorial of 10(1 to 10).
+  // The result is retrieved from the cache,
+  // computed previously for f50.
+  final f10 = factorialMemo(10);
+  // Calculate the factorial of 100(1 to 100).
+  // First calculates the factorial from 51 to 100,
+  // then retrieves the remainder from cache, calculated by f50(1 to 50).
+  final f100 = factorialMemo(100);
+
+  print(
+    'Results:\n'
+    '\t10!: $f10\n'
+    '\t50!: $f50\n'
+    '\t100!: $f100\n'
+  );
+}
+```
+
+In the above example, the <HM>`factorialMemo`</HM> function is called with different numbers, and the results are stored in the cache.
+When the same number is passed to the <HM>`factorialMemo`</HM> function again, the result is retrieved from the cache instead of recalculating it.
+
+:::note
+The `computeValue` of <HT>`Memo`</HT> accepts one argument only.
+If you want to add more arguments, you can supply it using the <HT><a href="https://dart.dev/language/records" target="_blank">`Record`</a></HT>(if your proyect support)
+or <HT>[`Args`](/reactter/api/classes/args)</HT>(A generic arguments provided by Reactter).
+:::
+
+:::note
+Use <HM><a href="https://pub.dev/documentation/reactter/latest/reactter/Memo/inline.html" target="_blank">`Memo.inline`</a></HM> in case there is a typing conflict,
+e.g. with the <HT>[`UseAsyncState`](/reactter/api/hooks/use_async_state)</HT> and <HT>[`UseCompute`](/reactter/api/hooks/use_compute)</HT> hooks which a <HT>`Function`</HT> type is required.
+:::

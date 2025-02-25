@@ -413,6 +413,188 @@ extension SignalListExt<E> on Signal<List<E>> {
   /// [setRange] instead.
   void replaceRange(int start, int end, Iterable<E> replacements) =>
       update((_) => value.replaceRange(start, end, replacements));
+
+  /// Returns the concatenation of this list and [other].
+  ///
+  /// Returns a new list containing the elements of this list followed by
+  /// the elements of [other].
+  ///
+  /// The default behavior is to return a normal growable list.
+  /// Some list types may choose to return a list of the same type as themselves
+  /// (see [Uint8List.+]);
+  List<E> operator +(List<E> other) => value + other;
+
+  /// Returns a view of this list as a list of [R] instances.
+  ///
+  /// If this list contains only instances of [R], all read operations
+  /// will work correctly. If any operation tries to read an element
+  /// that is not an instance of [R], the access will throw instead.
+  ///
+  /// Elements added to the list (e.g., by using [add] or [addAll])
+  /// must be instances of [R] to be valid arguments to the adding function,
+  /// and they must also be instances of [E] to be accepted by
+  /// this list as well.
+  ///
+  /// Methods which accept `Object?` as argument, like [contains] and [remove],
+  /// will pass the argument directly to the this list's method
+  /// without any checks.
+  /// That means that you can do `listOfStrings.cast<int>().remove("a")`
+  /// successfully, even if it looks like it shouldn't have any effect.
+  ///
+  /// Typically implemented as `List.castFrom<E, R>(this)`.
+  List<R> cast<R>() => value.cast<R>();
+
+  /// An [Iterable] of the objects in this list in reverse order.
+  /// ```dart
+  /// final numbers = <String>['two', 'three', 'four'];
+  /// final reverseOrder = numbers.reversed;
+  /// print(reverseOrder.toList()); // [four, three, two]
+  /// ```
+  Iterable<E> get reversed => value.reversed;
+
+  /// The first index of [element] in this list.
+  ///
+  /// Searches the list from index [start] to the end of the list.
+  /// The first time an object `o` is encountered so that `o == element`,
+  /// the index of `o` is returned.
+  /// ```dart
+  /// final notes = <String>['do', 're', 'mi', 're'];
+  /// print(notes.indexOf('re')); // 1
+  ///
+  /// final indexWithStart = notes.indexOf('re', 2); // 3
+  /// ```
+  /// Returns -1 if [element] is not found.
+  /// ```dart
+  /// final notes = <String>['do', 're', 'mi', 're'];
+  /// final index = notes.indexOf('fa'); // -1
+  /// ```
+  int indexOf(E element, [int start = 0]) => value.indexOf(element, start);
+
+  /// The first index in the list that satisfies the provided [test].
+  ///
+  /// Searches the list from index [start] to the end of the list.
+  /// The first time an object `o` is encountered so that `test(o)` is true,
+  /// the index of `o` is returned.
+  ///
+  /// ```dart
+  /// final notes = <String>['do', 're', 'mi', 're'];
+  /// final first = notes.indexWhere((note) => note.startsWith('r')); // 1
+  /// final second = notes.indexWhere((note) => note.startsWith('r'), 2); // 3
+  /// ```
+  ///
+  /// Returns -1 if [element] is not found.
+  /// ```dart
+  /// final notes = <String>['do', 're', 'mi', 're'];
+  /// final index = notes.indexWhere((note) => note.startsWith('k')); // -1
+  /// ```
+  int indexWhere(bool Function(E element) test, [int start = 0]) =>
+      value.indexWhere(test);
+
+  /// The last index in the list that satisfies the provided [test].
+  ///
+  /// Searches the list from index [start] to 0.
+  /// The first time an object `o` is encountered so that `test(o)` is true,
+  /// the index of `o` is returned.
+  /// If [start] is omitted, it defaults to the [length] of the list.
+  ///
+  /// ```dart
+  /// final notes = <String>['do', 're', 'mi', 're'];
+  /// final first = notes.lastIndexWhere((note) => note.startsWith('r')); // 3
+  /// final second = notes.lastIndexWhere((note) => note.startsWith('r'),
+  ///     2); // 1
+  /// ```
+  ///
+  /// Returns -1 if [element] is not found.
+  /// ```dart
+  /// final notes = <String>['do', 're', 'mi', 're'];
+  /// final index = notes.lastIndexWhere((note) => note.startsWith('k'));
+  /// print(index); // -1
+  /// ```
+  int lastIndexWhere(bool Function(E element) test, [int? start]) =>
+      value.lastIndexWhere(test, start);
+
+  /// The last index of [element] in this list.
+  ///
+  /// Searches the list backwards from index [start] to 0.
+  ///
+  /// The first time an object `o` is encountered so that `o == element`,
+  /// the index of `o` is returned.
+  /// ```dart
+  /// final notes = <String>['do', 're', 'mi', 're'];
+  /// const startIndex = 2;
+  /// final index = notes.lastIndexOf('re', startIndex); // 1
+  /// ```
+  /// If [start] is not provided, this method searches from the end of the
+  /// list.
+  /// ```dart
+  /// final notes = <String>['do', 're', 'mi', 're'];
+  /// final index = notes.lastIndexOf('re'); // 3
+  /// ```
+  /// Returns -1 if [element] is not found.
+  /// ```dart
+  /// final notes = <String>['do', 're', 'mi', 're'];
+  /// final index = notes.lastIndexOf('fa'); // -1
+  /// ```
+  int lastIndexOf(E element, [int? start]) => value.lastIndexOf(element, start);
+
+  /// Returns a new list containing the elements between [start] and [end].
+  ///
+  /// The new list is a `List<E>` containing the elements of this list at
+  /// positions greater than or equal to [start] and less than [end] in the same
+  /// order as they occur in this list.
+  ///
+  /// ```dart
+  /// final colors = <String>['red', 'green', 'blue', 'orange', 'pink'];
+  /// print(colors.sublist(1, 3)); // [green, blue]
+  /// ```
+  ///
+  /// If [end] is omitted, it defaults to the [length] of this list.
+  ///
+  /// ```dart
+  /// final colors = <String>['red', 'green', 'blue', 'orange', 'pink'];
+  /// print(colors.sublist(3)); // [orange, pink]
+  /// ```
+  ///
+  /// The `start` and `end` positions must satisfy the relations
+  /// 0 ≤ `start` ≤ `end` ≤ [length].
+  /// If `end` is equal to `start`, then the returned list is empty.
+  List<E> sublist(int start, [int? end]) => value.sublist(start, end);
+
+  /// Creates an [Iterable] that iterates over a range of elements.
+  ///
+  /// The returned iterable iterates over the elements of this list
+  /// with positions greater than or equal to [start] and less than [end].
+  ///
+  /// The provided range, [start] and [end], must be valid at the time
+  /// of the call.
+  /// A range from [start] to [end] is valid if 0 ≤ `start` ≤ `end` ≤ [length].
+  /// An empty range (with `end == start`) is valid.
+  ///
+  /// The returned [Iterable] behaves like `skip(start).take(end - start)`.
+  /// That is, it does *not* break if this list changes size, it just
+  /// ends early if it reaches the end of the list early
+  /// (if `end`, or even `start`, becomes greater than [length]).
+  /// ```dart
+  /// final colors = <String>['red', 'green', 'blue', 'orange', 'pink'];
+  /// final firstRange = colors.getRange(0, 3);
+  /// print(firstRange.join(', ')); // red, green, blue
+  ///
+  /// final secondRange = colors.getRange(2, 5);
+  /// print(secondRange.join(', ')); // blue, orange, pink
+  /// ```
+  Iterable<E> getRange(int start, int end) => value.getRange(start, end);
+
+  /// An unmodifiable [Map] view of this list.
+  ///
+  /// The map uses the indices of this list as keys and the corresponding objects
+  /// as values. The `Map.keys` [Iterable] iterates the indices of this list
+  /// in numerical order.
+  /// ```dart
+  /// var words = <String>['fee', 'fi', 'fo', 'fum'];
+  /// var map = words.asMap();  // {0: fee, 1: fi, 2: fo, 3: fum}
+  /// map.keys.toList(); // [0, 1, 2, 3]
+  /// ```
+  Map<int, E> asMap() => value.asMap();
 }
 
 extension SignalListNullExt<E> on Signal<List<E>?> {
@@ -818,4 +1000,211 @@ extension SignalListNullExt<E> on Signal<List<E>?> {
     if (value == null) return;
     update((_) => value?.replaceRange(start, end, replacements));
   }
+
+  /// The object at the given [index] in the list.
+  ///
+  /// The [index] must be a valid index of this list,
+  /// which means that `index` must be non-negative and
+  /// less than [length].
+  E? operator [](int index) => value?[index];
+
+  /// Returns a view of this list as a list of [R] instances.
+  ///
+  /// If this list contains only instances of [R], all read operations
+  /// will work correctly. If any operation tries to read an element
+  /// that is not an instance of [R], the access will throw instead.
+  ///
+  /// Elements added to the list (e.g., by using [add] or [addAll])
+  /// must be instances of [R] to be valid arguments to the adding function,
+  /// and they must also be instances of [E] to be accepted by
+  /// this list as well.
+  ///
+  /// Methods which accept `Object?` as argument, like [contains] and [remove],
+  /// will pass the argument directly to the this list's method
+  /// without any checks.
+  /// That means that you can do `listOfStrings.cast<int>().remove("a")`
+  /// successfully, even if it looks like it shouldn't have any effect.
+  ///
+  /// Typically implemented as `List.castFrom<E, R>(this)`.
+  List<R>? cast<R>() => value?.cast<R>();
+
+  /// The first element of the list.
+  ///
+  /// The list must be non-empty when accessing its first element.
+  ///
+  /// The first element of a list can be modified, unlike an [Iterable].
+  /// A `list.first` is equivalent to `list[0]`,
+  /// both for getting and setting the value.
+  ///
+  /// ```dart
+  /// final numbers = <int>[1, 2, 3];
+  /// print(numbers.first); // 1
+  /// numbers.first = 10;
+  /// print(numbers.first); // 10
+  /// numbers.clear();
+  /// numbers.first; // Throws.
+  /// ```
+  set first(E valueToSet) => value?.first = valueToSet;
+
+  /// The number of objects in this list.
+  ///
+  /// The valid indices for a list are `0` through `length - 1`.
+  /// ```dart
+  /// final numbers = <int>[1, 2, 3];
+  /// print(numbers.length); // 3
+  /// ```
+  int get length => value?.length ?? 0;
+
+  /// An [Iterable] of the objects in this list in reverse order.
+  /// ```dart
+  /// final numbers = <String>['two', 'three', 'four'];
+  /// final reverseOrder = numbers.reversed;
+  /// print(reverseOrder.toList()); // [four, three, two]
+  /// ```
+  Iterable<E>? get reversed => value?.reversed;
+
+  /// The first index of [element] in this list.
+  ///
+  /// Searches the list from index [start] to the end of the list.
+  /// The first time an object `o` is encountered so that `o == element`,
+  /// the index of `o` is returned.
+  /// ```dart
+  /// final notes = <String>['do', 're', 'mi', 're'];
+  /// print(notes.indexOf('re')); // 1
+  ///
+  /// final indexWithStart = notes.indexOf('re', 2); // 3
+  /// ```
+  /// Returns -1 if [element] is not found.
+  /// ```dart
+  /// final notes = <String>['do', 're', 'mi', 're'];
+  /// final index = notes.indexOf('fa'); // -1
+  /// ```
+  int? indexOf(E element, [int start = 0]) => value?.indexOf(element, start);
+
+  /// The first index in the list that satisfies the provided [test].
+  ///
+  /// Searches the list from index [start] to the end of the list.
+  /// The first time an object `o` is encountered so that `test(o)` is true,
+  /// the index of `o` is returned.
+  ///
+  /// ```dart
+  /// final notes = <String>['do', 're', 'mi', 're'];
+  /// final first = notes.indexWhere((note) => note.startsWith('r')); // 1
+  /// final second = notes.indexWhere((note) => note.startsWith('r'), 2); // 3
+  /// ```
+  ///
+  /// Returns -1 if [element] is not found.
+  /// ```dart
+  /// final notes = <String>['do', 're', 'mi', 're'];
+  /// final index = notes.indexWhere((note) => note.startsWith('k')); // -1
+  /// ```
+  int? indexWhere(bool Function(E element) test, [int start = 0]) =>
+      value?.indexWhere(test);
+
+  /// The last index in the list that satisfies the provided [test].
+  ///
+  /// Searches the list from index [start] to 0.
+  /// The first time an object `o` is encountered so that `test(o)` is true,
+  /// the index of `o` is returned.
+  /// If [start] is omitted, it defaults to the [length] of the list.
+  ///
+  /// ```dart
+  /// final notes = <String>['do', 're', 'mi', 're'];
+  /// final first = notes.lastIndexWhere((note) => note.startsWith('r')); // 3
+  /// final second = notes.lastIndexWhere((note) => note.startsWith('r'),
+  ///     2); // 1
+  /// ```
+  ///
+  /// Returns -1 if [element] is not found.
+  /// ```dart
+  /// final notes = <String>['do', 're', 'mi', 're'];
+  /// final index = notes.lastIndexWhere((note) => note.startsWith('k'));
+  /// print(index); // -1
+  /// ```
+  int? lastIndexWhere(bool Function(E element) test, [int? start]) =>
+      value?.lastIndexWhere(test, start);
+
+  /// The last index of [element] in this list.
+  ///
+  /// Searches the list backwards from index [start] to 0.
+  ///
+  /// The first time an object `o` is encountered so that `o == element`,
+  /// the index of `o` is returned.
+  /// ```dart
+  /// final notes = <String>['do', 're', 'mi', 're'];
+  /// const startIndex = 2;
+  /// final index = notes.lastIndexOf('re', startIndex); // 1
+  /// ```
+  /// If [start] is not provided, this method searches from the end of the
+  /// list.
+  /// ```dart
+  /// final notes = <String>['do', 're', 'mi', 're'];
+  /// final index = notes.lastIndexOf('re'); // 3
+  /// ```
+  /// Returns -1 if [element] is not found.
+  /// ```dart
+  /// final notes = <String>['do', 're', 'mi', 're'];
+  /// final index = notes.lastIndexOf('fa'); // -1
+  /// ```
+  int? lastIndexOf(E element, [int? start]) =>
+      value?.lastIndexOf(element, start);
+
+  /// Returns a new list containing the elements between [start] and [end].
+  ///
+  /// The new list is a `List<E>` containing the elements of this list at
+  /// positions greater than or equal to [start] and less than [end] in the same
+  /// order as they occur in this list.
+  ///
+  /// ```dart
+  /// final colors = <String>['red', 'green', 'blue', 'orange', 'pink'];
+  /// print(colors.sublist(1, 3)); // [green, blue]
+  /// ```
+  ///
+  /// If [end] is omitted, it defaults to the [length] of this list.
+  ///
+  /// ```dart
+  /// final colors = <String>['red', 'green', 'blue', 'orange', 'pink'];
+  /// print(colors.sublist(3)); // [orange, pink]
+  /// ```
+  ///
+  /// The `start` and `end` positions must satisfy the relations
+  /// 0 ≤ `start` ≤ `end` ≤ [length].
+  /// If `end` is equal to `start`, then the returned list is empty.
+  List<E>? sublist(int start, [int? end]) => value?.sublist(start, end);
+
+  /// Creates an [Iterable] that iterates over a range of elements.
+  ///
+  /// The returned iterable iterates over the elements of this list
+  /// with positions greater than or equal to [start] and less than [end].
+  ///
+  /// The provided range, [start] and [end], must be valid at the time
+  /// of the call.
+  /// A range from [start] to [end] is valid if 0 ≤ `start` ≤ `end` ≤ [length].
+  /// An empty range (with `end == start`) is valid.
+  ///
+  /// The returned [Iterable] behaves like `skip(start).take(end - start)`.
+  /// That is, it does *not* break if this list changes size, it just
+  /// ends early if it reaches the end of the list early
+  /// (if `end`, or even `start`, becomes greater than [length]).
+  /// ```dart
+  /// final colors = <String>['red', 'green', 'blue', 'orange', 'pink'];
+  /// final firstRange = colors.getRange(0, 3);
+  /// print(firstRange.join(', ')); // red, green, blue
+  ///
+  /// final secondRange = colors.getRange(2, 5);
+  /// print(secondRange.join(', ')); // blue, orange, pink
+  /// ```
+  Iterable<E>? getRange(int start, int end) => value?.getRange(start, end);
+
+  /// An unmodifiable [Map] view of this list.
+  ///
+  /// The map uses the indices of this list as keys and the corresponding objects
+  /// as values. The `Map.keys` [Iterable] iterates the indices of this list
+  /// in numerical order.
+  /// ```dart
+  /// var words = <String>['fee', 'fi', 'fo', 'fum'];
+  /// var map = words.asMap();  // {0: fee, 1: fi, 2: fo, 3: fum}
+  /// map.keys.toList(); // [0, 1, 2, 3]
+  /// ```
+  Map<int, E>? asMap() => value?.asMap();
 }

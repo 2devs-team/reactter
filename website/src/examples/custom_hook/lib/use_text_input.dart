@@ -10,7 +10,8 @@ class UseTextInput extends RtHook {
   String _value = '';
   String? get value => _value;
 
-  UseTextInput() {
+  @override
+  initHook() {
     UseEffect(() {
       controller.addListener(() {
         update(() => _value = controller.text);

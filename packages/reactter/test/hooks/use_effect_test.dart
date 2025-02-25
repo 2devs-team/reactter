@@ -1,5 +1,5 @@
 import 'package:reactter/reactter.dart';
-import 'package:test/test.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 import '../shareds/test_controllers.dart';
 
@@ -8,11 +8,11 @@ void main() {
     final testController = Rt.create(() => TestController());
     final uEffect = UseEffect(() {}, [])..bind(testController!);
 
-    expect(uEffect.instanceBinded, isA<TestController>());
+    expect(uEffect.boundInstance, isA<TestController>());
 
     uEffect.unbind();
 
-    expect(uEffect.instanceBinded, isNull);
+    expect(uEffect.boundInstance, isNull);
 
     Rt.delete<TestController>();
   });
@@ -128,7 +128,8 @@ void main() {
       Rt.delete<UseEffectTestController>();
     });
 
-    test("should be called with DispatchEffect when it initialized later", () {
+    test("should be called with AutoDispatchEffect when it initialized later",
+        () {
       final testController = UseEffectDispatchController();
       int nCalls = 0;
 
@@ -146,7 +147,7 @@ void main() {
 
       expect(nCalls, 0);
       expect(uEffect, isA<UseEffect>());
-      expect(uEffect.instanceBinded, isA<DispatchEffect>());
+      expect(uEffect.boundInstance, isA<AutoDispatchEffect>());
       expect(nCalls, 1);
     });
 
@@ -170,6 +171,16 @@ void main() {
       testController.stateInt.value += 1;
 
       expect(nCalls, 2);
+    });
+    test("should catch error", () {
+      expect(
+        () {
+          UseEffect.runOnInit(() {
+            throw Exception("Error");
+          }, []);
+        },
+        throwsA(isA<AssertionError>()),
+      );
     });
   });
 
@@ -243,7 +254,7 @@ void main() {
       Rt.delete<UseEffectTestController>();
     });
 
-    test("should be called with dispatchEffect", () {
+    test("should be called with autodispatchEffect", () {
       final testController = TestController();
       final stateA = testController.stateBool;
       final stateB = testController.stateInt;
@@ -254,17 +265,21 @@ void main() {
       UseEffect(
         () {
           return () {
-            nCalls += 1;
+            nCalls++;
 
             if (nCalls == 1) {
-              expect(stateA.value, true);
+              expect(stateA.value, false);
               expect(stateB.value, 0);
               expect(stateC.value, "initial");
             } else if (nCalls == 2) {
               expect(stateA.value, true);
-              expect(stateB.value, 1);
+              expect(stateB.value, 0);
               expect(stateC.value, "initial");
             } else if (nCalls == 3) {
+              expect(stateA.value, true);
+              expect(stateB.value, 1);
+              expect(stateC.value, "initial");
+            } else if (nCalls == 4) {
               expect(stateA.value, true);
               expect(stateB.value, 1);
               expect(stateC.value, "new value");
@@ -324,10 +339,58 @@ void main() {
 
       Rt.unregister<UseEffectTestController>();
     });
+
+    test("should catch error", () {
+      expect(
+        () {
+          UseEffect.runOnInit(() {
+            () => throw Exception("Error");
+          }, []);
+        },
+        isNot(throwsA(isA<AssertionError>())),
+      );
+
+      expect(
+        () {
+          final stateA = UseState('initial');
+
+          UseEffect.runOnInit(() {
+            return () => throw Exception(stateA.value);
+          }, [stateA]);
+
+          stateA.value = 'throw error';
+        },
+        throwsA(isA<AssertionError>()),
+      );
+    });
+  });
+
+  test("UseEffect should get debug label", () {
+    final uEffect = UseEffect(() {}, [], debugLabel: "uEffect");
+
+    expect(uEffect.debugLabel, "uEffect");
+  });
+
+  test("UseEffect should get debug info", () {
+    final testController = Rt.create(() => UseEffectTestController())!;
+    final stateA = testController.stateBool;
+    final stateB = testController.stateInt;
+    final stateC = testController.signalString;
+
+    final uEffect = UseEffect(() {}, [stateA, stateB, stateC]);
+
+    expect(
+      uEffect.debugInfo,
+      {
+        "dependencies": [stateA, stateB, stateC],
+      },
+    );
+
+    Rt.delete<UseEffectTestController>();
   });
 }
 
-class UseEffectDispatchController extends DispatchEffect {}
+class UseEffectDispatchController extends AutoDispatchEffect {}
 
 class UseEffectTestController extends TestController {
   final testControllerInner = TestController();

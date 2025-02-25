@@ -1,0 +1,57 @@
+---
+title: RtDependencyRef
+description: Represents dependency managed by Reactter's dependency injection.
+sidebar:
+  order: 4
+---
+
+import { HE, HM, HT } from '@/components/Highlight';
+import CodeTabs from '@/components/CodeTabs.astro';
+import { Tabs, TabItem } from "@/components/Tabs";
+import ZappButton from "@/components/ZappButton.astro";
+import { Code } from "@astrojs/starlight/components";
+import { marks } from '@/examples/marks.ts'
+
+import counterControllerEventHandlerCode from '@/examples/lifecycle_event_handler/lib/counter_controller.dart?raw';
+import counterEventHandlerCode from '@/examples/lifecycle_event_handler/lib/counter.dart?raw';
+import counterViewEventHandlerCode from '@/examples/lifecycle_event_handler/lib/counter_view.dart?raw';
+import counterMainEventHandlerCode from '@/examples/lifecycle_event_handler/lib/main.dart?raw';
+
+<HT><a href="https://pub.dev/documentation/reactter/latest/reactter/RtDependencyRef-class.html" target="_blank">`RtDependencyRef`</a></HT> is a class that represents a reference to a dependency managed by Reactter's dependency injection system.
+
+## Syntax
+
+```dart showLineNumbers=false
+  RtDependencyRef<T>([String? id]);
+```
+
+The <HT>`RtDependencyRef`</HT> class accepts this parameter:
+
+- <HM>**`id`**</HM>: *(optional)* A unique identifier for the dependency.
+
+## Usage
+
+To use <HT>`RtDependencyRef`</HT>, you need to instantiate it, pass the type of dependency you want to reference and use for event handling, e.g.:
+
+<CodeTabs>
+  <ZappButton path="examples/lifecycle_event_handler"/>
+
+  <Tabs>
+    <TabItem>
+      <HM single slot="label">counter_view.dart</HM>
+      <Code code={counterViewEventHandlerCode} lang="dart" collapse={["34-60"]} mark={[...marks, {range: "11-15"}, {range: "17-21"}, {range: "23-27"}, {range: "29-33"}]} />
+    </TabItem>
+
+    <TabItem label="counter_controller.dart">
+      <Code code={counterControllerEventHandlerCode} lang="dart" mark={marks}/>
+    </TabItem>
+
+    <TabItem label="counter.dart">
+      <Code code={counterEventHandlerCode} lang="dart" mark={marks} />
+    </TabItem>
+
+    <TabItem label="main.dart">
+      <Code code={counterMainEventHandlerCode} lang="dart" mark={marks} />
+    </TabItem>
+  </Tabs>
+</CodeTabs>

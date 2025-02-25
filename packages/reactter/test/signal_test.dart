@@ -1,27 +1,15 @@
 import 'package:reactter/reactter.dart';
-import 'package:test/test.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 import 'shareds/test_controllers.dart';
 
 void main() {
   group("Signal", () {
-    test("should be created by Obj", () {
-      final obj = Obj(true);
-
-      expect(obj.toSignal, isA<Signal<bool>>());
-    });
-
     test("should be cast away nullability", () {
       final signalNull = Signal<bool?>(false);
 
       expect(signalNull.value, false);
       expect(signalNull.notNull, isA<Signal<bool>>());
-    });
-
-    test("should be casted to Obj", () {
-      final signal = Signal(true);
-
-      expect(signal.toObj, isA<Obj<bool>>());
     });
 
     test("should notifies when its value is changed", () {
@@ -61,7 +49,7 @@ void main() {
       expectLater(didUpdateChecked, true);
     });
 
-    test("should be refreshed", () {
+    test("should be notified manually", () {
       final signal = Signal("initial");
       int count = 0;
 
@@ -69,11 +57,11 @@ void main() {
         count += 1;
       });
 
-      signal.refresh();
+      signal.notify();
 
       expectLater(count, 1);
 
-      signal.refresh();
+      signal.notify();
 
       expectLater(count, 1);
     });
@@ -110,10 +98,7 @@ void main() {
     test("should be able to used on instance with nested way", () {
       late final bool willUpdateChecked;
       late final bool didUpdateChecked;
-
-      final test2Controller = Rt.create(() => Test2Controller())!;
-      final testController = test2Controller.testController.instance!;
-
+      final testController = Rt.create<TestController>(() => TestController())!;
       final signalString = testController.signalString;
 
       expect(signalString(), "initial");
@@ -139,7 +124,7 @@ void main() {
     });
 
     test("should be able to bind to another instance", () {
-      final testController = Rt.create(() => SignalTestController())!;
+      final testController = Rt.create(() => TestController())!;
       final signalString = testController.signalString;
 
       expect(signalString(), "initial");
@@ -148,18 +133,40 @@ void main() {
 
       expect(signalString(), "change signal");
 
-      Rt.destroy<SignalTestController>();
+      Rt.destroy<TestController>();
 
       expect(
-        signalString("no throw a assertion error"),
-        "no throw a assertion error",
+        () {
+          signalString("throw a assertion error because it's been destroyed");
+        },
+        throwsA(isA<AssertionError>()),
       );
     });
-  });
-}
 
-class SignalTestController extends TestController {
-  SignalTestController() {
-    signalString.bind(TestController());
-  }
+    test("should get debug label", () {
+      final signal = Signal("initial", debugLabel: "signal");
+
+      expect(signal.debugLabel, "signal");
+    });
+
+    test("should get debug info", () {
+      final signal = Signal("initial");
+
+      expect(signal.debugInfo, {"value": "initial"});
+
+      signal("change value");
+
+      expect(signal.debugInfo, {"value": "change value"});
+    });
+
+    test("should get value as String", () {
+      final signal = Signal("initial");
+
+      expect(signal.toString(), "initial");
+
+      signal("change value");
+
+      expect("$signal", "change value");
+    });
+  });
 }

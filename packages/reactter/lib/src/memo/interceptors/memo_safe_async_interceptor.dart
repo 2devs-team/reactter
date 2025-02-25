@@ -17,10 +17,3 @@ class MemoSafeAsyncInterceptor<T, A> extends MemoInterceptor<T, A> {
     }
   }
 }
-
-/// {@macro reactter.memo_safe_async_interceptor}
-@Deprecated(
-  'Use `MemoSafeAsyncInterceptor` instead. '
-  'This feature was deprecated after v7.3.0.',
-)
-typedef AsyncMemoSafe<T, A> = MemoSafeAsyncInterceptor<T, A>;

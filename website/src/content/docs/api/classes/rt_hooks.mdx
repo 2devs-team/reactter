@@ -1,0 +1,54 @@
+---
+title: RtHook
+description: Aprende aceca de los Hooks en Reactter.
+sidebar:
+  order: 3
+---
+
+import { HM, HK, HT } from '@/components/Highlight';
+import StatePropertiesMethodsRef from '@/content/docs/shareds/state_properties_methods_ref.mdx';
+import CreatingCustomHook from '@/content/docs/shareds/creating_custom_hook.mdx';
+import UsingCustomHook from '@/content/docs/shareds/using_custom_hook.mdx';
+
+:::tip
+This documentation assumes you've already read the [hooks](/reactter/core_concepts/hooks/).
+It's recommended read that first if you're new in Reactter.
+:::
+
+<HT><a href="https://pub.dev/documentation/reactter/latest/reactter/RtHook-class.html" target="_blank">`RtHook`</a></HT> is a class that provides a way to create a custom hook.
+
+## Syntax
+
+```dart showLineNumbers=false
+abstract class RtHook with RtState<RtHook> {
+  static get $register => HookBindingZone<RtHook>();
+  HookBindingZone<RtHook> get $;
+  void initHook()
+  void update([Function()? fnUpdate])
+}
+```
+
+## Properties & Methods
+
+- **`$register`**: A static getter to allow access to <HT>`HookBindingZone`</HT>.
+It's responsible for registering a <HT>`RtHook`</HT> and attaching collected states to it.
+- **`$`**: A required getter to access the <HT>`HookBindingZone`</HT> instance.
+It must be defined has a <HK>`final`</HK> property on first line of the class for registering the hook and attach the states below it, like this:
+
+  ```dart showLineNumbers=false
+  final $ = RtHook.$register;
+  ```
+- <HM>**`initHook`**</HM>: Called when the hook is initialized.
+Useful for setting up state dependencies or performing side effects when the hook is first created.
+
+<StatePropertiesMethodsRef/>
+
+## Usage
+
+### Creating a custom hook
+
+<CreatingCustomHook/>
+
+### Using the hook
+
+<UsingCustomHook/>

@@ -16,7 +16,7 @@ Future<String> _resolveStateAsync([bool throwError = false]) async {
   return "resolved";
 }
 
-class TestController extends LifecycleObserver {
+class TestController with RtDependencyLifecycle {
   final signalString = Signal("initial");
   final signalInt = Signal(0);
   final stateBool = UseState(false);
@@ -26,5 +26,5 @@ class TestController extends LifecycleObserver {
   final stateList = UseState([]);
   final stateMap = UseState({});
   final stateClass = UseState<TestClass?>(null);
-  final stateAsync = UseAsyncState("initial", _resolveStateAsync);
+  final stateAsync = UseAsyncState(_resolveStateAsync, "initial");
 }

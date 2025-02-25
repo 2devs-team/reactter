@@ -1,0 +1,84 @@
+---
+title: RtDependencyLifecycle
+description: The base class for all lifecycle observers in Reactter.
+sidebar:
+  order: 6
+---
+import { HM, HT } from '@/components/Highlight';
+import CodeTabs from '@/components/CodeTabs.astro';
+import { Tabs, TabItem } from "@/components/Tabs";
+import ZappButton from "@/components/ZappButton.astro";
+import { Code } from "@astrojs/starlight/components";
+import { marks } from '@/examples/marks.ts'
+
+import counterControllerRtDependencyLifecycleCode from '@/examples/rt_dependency_lifecycle/lib/counter_controller.dart?raw';
+import counterRtDependencyLifecycleCode from '@/examples/rt_dependency_lifecycle/lib/counter.dart?raw';
+import counterViewRtDependencyLifecycleCode from '@/examples/rt_dependency_lifecycle/lib/counter_view.dart?raw';
+import counterMainRtDependencyLifecycleCode from '@/examples/rt_dependency_lifecycle/lib/main.dart?raw';
+
+:::tip
+This documentation assumes you've already read the [Lifecycle](/reactter/core_concepts/lifecycle/).
+It's recommended read that first if you're new in Reactter.
+:::
+
+<HT><a href="https://pub.dev/documentation/reactter/latest/reactter/RtDependencyLifecycle-class.html" target="_blank">`RtDependencyLifecycle`</a></HT> is a class that provides a way to observe the lifecycle of a dependency. 
+
+## Syntax
+
+```dart showLineNumbers=false
+abstract class RtDependencyLifecycle {
+  void onCreated() {}
+  void onWillMount() {}
+  void onDidMount() {}
+  void onWillUpdate(RtState state) {}
+  void onDidUpdate(RtState state) {}
+  void onWillUnmount() {}
+  void onDidUnmount() {}
+}
+```
+
+## Methods
+
+- <HM>**`onCreated`**</HM>: Called when the dependency is created.
+This is the first lifecycle method invoked.
+- <HM>**`onWillMount`**</HM>(only in **flutter_reactter**): Called just before the dependency is mounted.
+Useful for pre-mount setup.
+- <HM>**`onDidMount`**</HM>(only in **flutter_reactter**): Called immediately after the dependency is mounted.
+Ideal for post-mount initialization.
+- <HM>**`onWillUpdate`**</HM>: Called before the dependency is updated.
+The parameter is the state (RtState) that triggered the update.
+Use this to react to state changes before they take effect.
+- <HM>**`onDidUpdate`**</HM>: Called after the dependency is updated.
+The parameter is the state (RtState) that triggered the update.
+Use this to react to state changes after they take effect.
+- <HM>**`onWillUnmount`**</HM>(only in **flutter_reactter**): Called just before the dependency is unmounted.
+Useful for cleanup tasks.
+- <HM>**`onDidUnmount`**</HM>(only in **flutter_reactter**): Called immediately after the dependency is unmounted.
+Ideal for final cleanup or resource release.
+
+## Example
+
+Here's an example of a simple RtDependencyLifecycle implementation:
+
+<CodeTabs>
+  <ZappButton path="examples/"/>
+
+  <Tabs>
+    <TabItem>
+      <HM single slot="label">counter_controller.dart</HM>
+      <Code code={counterControllerRtDependencyLifecycleCode} lang="dart" mark={[...marks, {range: "14-17"}, {range: "19-22"}, {range: "24-27"}, {range: "29-32"}, {range: "34-37"}, {range: "39-42"}, {range: "44-47"}]}/>
+    </TabItem>
+
+    <TabItem label="counter_view.dart">
+      <Code code={counterViewRtDependencyLifecycleCode} lang="dart" mark={marks} />
+    </TabItem>
+
+    <TabItem label="counter.dart">
+      <Code code={counterRtDependencyLifecycleCode} lang="dart" mark={marks} />
+    </TabItem>
+
+    <TabItem label="main.dart">
+      <Code code={counterMainRtDependencyLifecycleCode} lang="dart" mark={marks} />
+    </TabItem>
+  </Tabs>
+</CodeTabs>

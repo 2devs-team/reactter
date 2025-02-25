@@ -21,76 +21,92 @@ final mathOperationMethods = {
 };
 
 class CalculatorController {
-  final result = Signal("0");
-  final mathOperation = Signal<ActionCalculator?>(null);
+  final uResult = UseState("0", debugLabel: "uResult");
+  final uMathOperation = UseState<ActionCalculator?>(
+    null,
+    debugLabel: "uMathOperation",
+  );
 
   ActionCalculator? _lastAction;
   double? _numberMemorized;
 
-  late final _actionMethods = {
-    ActionCalculator.number: _insertNumber,
-    ActionCalculator.add: _resolveMathOperation,
-    ActionCalculator.subtract: _resolveMathOperation,
-    ActionCalculator.multiply: _resolveMathOperation,
-    ActionCalculator.divide: _resolveMathOperation,
-    ActionCalculator.equal: _equal,
-    ActionCalculator.sign: _changeSign,
-    ActionCalculator.porcentage: _calculatePercentage,
-    ActionCalculator.point: _addPoint,
-    ActionCalculator.clear: _clear,
-  };
-
   void executeAction(ActionCalculator action, [int? value]) {
-    final actionMethod = _actionMethods[action];
-
-    () {
-      if (actionMethod is Function(int) && value != null) {
-        return actionMethod(value);
-      }
-
-      if (actionMethod is Function(ActionCalculator)) {
-        return actionMethod(action);
-      }
-
-      actionMethod?.call();
-    }();
+    switch (action) {
+      case ActionCalculator.number:
+        if (value != null) _insertNumber(value);
+        break;
+      case ActionCalculator.add:
+      case ActionCalculator.subtract:
+      case ActionCalculator.multiply:
+      case ActionCalculator.divide:
+        _resolveMathOperation(action);
+        break;
+      case ActionCalculator.equal:
+        _equal();
+        break;
+      case ActionCalculator.sign:
+        _changeSign();
+        break;
+      case ActionCalculator.porcentage:
+        _calculatePercentage();
+        break;
+      case ActionCalculator.point:
+        _addPoint();
+        break;
+      case ActionCalculator.clear:
+        _clear();
+        break;
+    }
 
     _lastAction = action;
   }
 
   void _insertNumber(int value) {
-    if (_lastAction != ActionCalculator.number) _resetResult();
+    if (![
+      ActionCalculator.number,
+      ActionCalculator.point,
+      ActionCalculator.sign,
+    ].contains(_lastAction)) {
+      _resetResult();
+    }
+
     _concatValue(value);
   }
 
   void _resolveMathOperation(ActionCalculator action) {
-    mathOperation.value = action;
+    uMathOperation.value = action;
     _resolve();
-    _numberMemorized = double.tryParse(result.value);
+    _numberMemorized = double.tryParse(uResult.value);
   }
 
   void _equal() {
-    final resultNumber = double.tryParse(result.value);
+    final resultNumber = double.tryParse(uResult.value);
+
     _resolve();
-    if (_lastAction != ActionCalculator.equal) _numberMemorized = resultNumber;
+
+    if (_lastAction != ActionCalculator.equal) {
+      _numberMemorized = resultNumber;
+    }
   }
 
   void _changeSign() {
-    final resultNumber = double.tryParse(result.value) ?? 0;
-    result(_formatValue(resultNumber * -1));
+    final resultNumber = double.tryParse(uResult.value) ?? 0;
+    uResult.value = _formatValue(resultNumber * -1);
   }
 
   void _calculatePercentage() {
-    final resultNumber = double.tryParse(result.value) ?? 0;
-    result(_formatValue(resultNumber / 100));
+    final resultNumber = double.tryParse(uResult.value) ?? 0;
+    uResult.value = _formatValue(resultNumber / 100);
   }
 
   void _addPoint() {
-    if (!result.value.contains(".")) result("$result.");
+    if (uResult.value.contains(".")) return;
+
+    uResult.value = "${uResult.value}.";
   }
 
   void _clear() {
-    mathOperation.value = null;
+    uMathOperation.value = null;
     _numberMemorized = null;
     _resetResult();
   }
@@ -98,21 +114,23 @@ class CalculatorController {
   void _resolve() {
     if (_numberMemorized == null) return;
 
-    final resultNumber = double.tryParse(result.value) ?? 0;
-    final mathOperationMethod = mathOperationMethods[mathOperation.value];
+    final resultNumber = double.tryParse(uResult.value) ?? 0;
+    final mathOperationMethod = mathOperationMethods[uMathOperation.value];
     final resultOfOperation = mathOperationMethod?.call(
       _numberMemorized ?? resultNumber,
       resultNumber,
     );
 
-    result(_formatValue(resultOfOperation ?? 0));
+    uResult.value = _formatValue(resultOfOperation ?? 0);
   }
 
-  void _resetResult() => result(_formatValue(0.0));
+  void _resetResult() {
+    uResult.value = _formatValue(0.0);
+  }
 
   void _concatValue(int? value) {
-    final numConcatenated = double.tryParse("$result$value") ?? 0;
-    result(_formatValue(numConcatenated));
+    final numConcatenated = double.tryParse("${uResult.value}$value") ?? 0;
+    uResult.value = _formatValue(numConcatenated);
   }
 
   String _formatValue(double value) {

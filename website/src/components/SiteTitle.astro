@@ -3,10 +3,10 @@ import { logos } from "virtual:starlight/user-images";
 import config from "virtual:starlight/user-config";
 import type { Props } from "@astrojs/starlight/props";
 
-const href = Astro.props.locale ?? "/";
+const { siteTitle, siteTitleHref } = Astro.props;
 ---
 
-<a {href} class="site-title sl-flex gap-2">
+<a href={siteTitleHref} class="site-title sl-flex gap-2">
   {
     config.logo && logos.dark && (
       <>
@@ -36,7 +36,7 @@ const href = Astro.props.locale ?? "/";
       "sr-only": config.logo?.replacesTitle,
     }}
   >
-    {config.title.en}
+    {siteTitle}
   </span>
 </a>
 

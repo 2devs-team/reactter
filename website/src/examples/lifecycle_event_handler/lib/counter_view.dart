@@ -9,25 +9,25 @@ class CounterView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Rt.on(
-      RtDependency<CounterController>(),
+      RtDependencyRef<CounterController>(),
       Lifecycle.unregistered,
       (_, __) => print('CounterController unregistered'),
     );
 
     Rt.on(
-      RtDependency<CounterController>(),
+      RtDependencyRef<CounterController>(),
       Lifecycle.registered,
       (_, __) => print('CounterController registered'),
     );
 
     Rt.on(
-      RtDependency<CounterController>(),
+      RtDependencyRef<CounterController>(),
       Lifecycle.created,
       (_, __) => print('CounterController created'),
     );
 
     Rt.on(
-      RtDependency<CounterController>(),
+      RtDependencyRef<CounterController>(),
       Lifecycle.deleted,
       (_, __) => print('CounterController deleted'),
     );

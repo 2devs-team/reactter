@@ -1,0 +1,156 @@
+---
+title: Vinculación del estado a la dependencia
+description: Aprende a vincular un estado a una dependencia en Reactter para una gestión de estado más eficiente y reactiva.
+---
+
+import { Code } from "@astrojs/starlight/components";
+import { HE, HK, HM, HN, HS, HT } from '@/components/Highlight';
+
+:::tip
+Este guía asume que ya has leído sobre [Inyección de dependencias](/reactter/es/core_concepts/dependency_injection) y [Gestión del estado](/reactter/es/core_concepts/state_management).
+Se recomienda leer eso primero si eres nuevo en Reactter.
+:::
+
+Un estado de Reactter(<HT>[`RtState`](/reactter/es/core_concepts/state_management/#state)</HT>) como <HT>[`Signal`](/reactter/es/api/classes/signal)</HT> o cualquier <HT>[`Hooks`](/reactter/es/core_concepts/hooks)</HT> puede ser vinculado a la dependencia, permitiendo que el estado sea manipulado directamente desde la dependencia y notificar a sus oyentes sobre cualquier cambio.
+Además, asegura que el estado se elimine automáticamente cuando la dependencia ya no sea necesaria.
+
+Al integrar el estado directamente dentro de las dependencias, se beneficia de un **código más limpio** y **mantenible**.
+El manejo automático por parte de Reactter significa **menos código repetitivo** y **menos errores* relacionados con la gestión manual del estado, lo que conduce a un proceso de desarrollo más eficiente.
+Este enfoque **simplifica** la sincronización entre el estado y su dependencia asociada, **mejorando la capacidad de respuesta** y la **fiabilidad** general de su aplicación.
+
+### Vinculación automática
+
+Para que esto suceda automáticamente, el estado debe declararse como propiedad o dentro del constructor de la dependencia.
+Cuando se hace esto, Reactter se encarga automáticamente de vincular el estado a la dependencia, asegurando una gestión y reactividad del estado sin problemas, por ejemplo:
+
+```dart title="count_controller.dart" "UseState" "UseEffect"
+import "package:reactter/reactter.dart";
+
+class CountController {
+  // Estado declarado como propiedad
+  final uCount = UseState(0);
+
+  CountController() {
+    // Estado declarado dentro del constructor
+    UseEffect(() {
+      print("Count: ${uCount.value}");
+    }, [uCount]);
+  }
+}
+```
+
+En el ejemplo anterior, el estado `uCount` se declara como propiedad de la clase <HT>`CountController`</HT> y el hook <HT>`UseEffect`</HT> se utiliza dentro del constructor para reaccionar a los cambios en el estado `uCount`, imprimiendo su valor cada vez que cambia.
+Esto vincula automáticamente el estado `uCount` y el hook <HT>`UseEffect`</HT> a la instancia de <HT>`CountController`</HT>, demostrando cómo Reactter maneja la vinculación y reactividad de forma transparente.
+
+:::caution
+Si el estado se declara de forma perezosa (por ejemplo, utilizando la palabra clave <HK>`late`</HK>), no se vinculará automáticamente a la dependencia.
+En tales casos, debes usar el método <HT>`Rt.lazyState`</HT> para vincular el estado a la dependencia(Ver [vinculación perezoso](#vinculación-perezosa)).
+:::
+
+### Vinculación perezosa
+
+Cuando un estado se declara de forma perezosa, no se vincula automáticamente a la dependencia.
+En tales casos, puedes usar el método <HT>[`Rt.lazyState`](/reactter/es/api/methods/state_management_methods/#rtlazy_state)</HT> para vincular el estado a la dependencia, por ejemplo:
+
+```dart title="count_controller.dart" "UseState" "Rt.lazyState"
+import "package:reactter/reactter.dart";
+
+class CountController {
+  final int initialCount;
+
+  late final uCount = Rt.lazyState(
+    () => UseState(this.initialCount),
+    this,
+  );
+
+  CountController([this.initialCount = 0]) {
+    UseEffect(() {
+      print("Count: ${uCount.value}");
+    }, [uCount]);
+  }
+}
+```
+
+En el ejemplo anterior, el estado `uCount` se declara de forma perezosa utilizando la palabra clave <HK>`late`</HK>.
+Para vincular el estado a la instancia de <HT>`CountController`</HT>, se utiliza el método <HT>[`Rt.lazyState`](/reactter/es/api/methods/state_management_methods/#rtlazy_state)</HT>, pasando la función de creación del estado y la instancia de la dependencia como argumentos.
+Esto asegura que cuando se accede a `uCount`, se vinculará automáticamente a la instancia de <HT>`CountController`</HT>.
+
+### Vinculación manual
+
+Si bien la vinculación automática simplifica la gestión del estado, puede haber escenarios en los que necesites vincular manualmente el estado a una dependencia.
+La vinculación manual proporciona un mayor control sobre cómo y cuándo se asocia el estado con la dependencia.
+
+Para vincular manualmente un estado a una dependencia, debes vincular explícitamente el estado dentro de la dependencia utilizando el método <HM>`bind`</HM> del estado, por ejemplo:
+
+```dart title="count_controller.dart" "UseState" "bind"
+class CountController {
+  late final uCount = UseState(this.initialCount);
+
+  final int initialCount;
+
+  CountController([this.initialCount = 0]) {
+    count.bind(this);
+  }
+}
+```
+
+En el ejemplo anterior, el estado `uCount` se declara de forma perezosa utilizando la palabra clave <HK>`late`</HK>.
+Para vincular el estado a la instancia de <HT>`CountController`</HT>, se utiliza el método <HM>`bind`</HM> del estado, pasando la instancia de la dependencia como argumento.
+Esto asegura que el estado `uCount` esté asociado a la instancia de <HT>`CountController`</HT>, lo que permite que la dependencia actualice reactivamente en función de los cambios en el estado.
+
+:::note
+La [vinculación manual](#vinculación-manual) y [vinculación perezosa](#vinculación-perezosa) tienen propositos diferentes.
+La vinculación manual es útil cuando se necesita un control preciso sobre el proceso de vinculación de estados, mientras que la **vinculación perezosa** es adecuada cuando se desea que el estado se inicialice sólo cuando se accede a él por primera vez.
+Elige el método adecuado en función de tus necesidades específicas.
+:::
+
+### Desvinculación automática
+
+Cuando se elimina una dependencia, el estado asociado se elimina automáticamente.
+Este mecanismo de desvinculación automática simplifica la gestión de estados y reduce el riesgo de fugas de memoria o desperdicio de recursos.
+
+En el ejemplo siguiente, el estado `uCount` se elimina automáticamente cuando se borra la instancia <HT>`CountController`</HT>, lo que garantiza que los recursos se liberan de forma eficiente:
+
+```dart title="main.dart" "Rt.create" "Rt.delete"
+import "./count_controller.dart";
+
+void main() {
+  final controller = Rt.create(() => CountController(10));
+  controller.uCount.value += 2; // Count: 12
+  Rt.delete<CountController>();
+  controller.uCount.value += 3; // Error: "Can't update when it's been disposed"
+}
+```
+
+### Desvinculación manual
+
+En algunos casos, puede que necesites desvincular manualmente un estado de una dependencia.
+La desvinculación manual proporciona un mayor control sobre cuándo se libera el estado y puede ser útil en escenarios en los que se desea desvincular el estado de forma temporal o permanente.
+
+Para desvincular manualmente un estado de una dependencia, puedes utilizar el método <HM>`unbind`</HM> del estado, por ejemplo:
+
+```dart title="count_controller.dart" "UseState" "unbind"
+class CountController {
+  late final uCount = UseState(this.initialCount);
+
+  final int initialCount;
+
+  CountController([this.initialCount = 0]) {
+    count.bind(this);
+  }
+
+  void dispose() {
+    count.unbind(this);
+  }
+}
+```
+
+:::caution
+Aunque la desvinculación manual proporciona un mayor control, un uso inadecuado puede provocar problemas de gestión de memoria y aumentar el riesgo de errores.
+Se recomienda utilizar la [desvinculación automática](#desvinculación-automática) siempre que sea posible, ya que simplifica el proceso y reduce la probabilidad de introducir fugas de memoria o de no liberar los recursos correctamente.
+
+La desvinculación manual debe utilizarse con precaución y sólo cuando sea absolutamente necesario.
+Además, los desarrolladores deben asegurarse de realizar un seguimiento del proceso de desvinculación para evitar dejar estados no utilizados en memoria, lo que podría afectar negativamente al rendimiento y la utilización de recursos.
+:::
+
+

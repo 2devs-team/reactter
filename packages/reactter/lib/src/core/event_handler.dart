@@ -1,16 +1,14 @@
-part of 'core.dart';
+part of '../internals.dart';
 
 /// A abstract-class that adds event handler features to classes that use it.
 ///
 /// It contains methods for adding, removing, and triggering events,
 /// as well as storing event callbacks.
 @internal
-abstract class EventHandler {
+abstract class EventHandler implements IContext {
+  @override
   @internal
-  DependencyInjection get dependencyInjection;
-
-  @internal
-  Logger get logger;
+  EventHandler get eventHandler => this;
 
   final _notifiers = HashSet<EventNotifier>();
 
@@ -71,11 +69,14 @@ abstract class EventHandler {
     if (notifier?._dependencyRef == null) {
       notifier?.notifyListeners(param);
       notifierPartner?.notifyListeners(param);
-      return;
+    } else {
+      notifierPartner?.notifyListeners(param);
+      notifier?.notifyListeners(param);
     }
 
-    notifierPartner?.notifyListeners(param);
-    notifier?.notifyListeners(param);
+    if (eventName is Lifecycle) {
+      _notifyToObservers(instance, eventName, param);
+    }
   }
 
   /// Removes all instance's events
@@ -83,18 +84,29 @@ abstract class EventHandler {
     final notifiers = _notifiers.where((notifier) {
       if (!generic && notifier._dependencyRef != null) return false;
 
-      return notifier == instance;
+      return instance != null && notifier.isInstanceOrDependencyRef(instance);
     });
 
-    for (final notifier in {...notifiers}) {
+    final boundInstance = instance is RtState ? instance.boundInstance : null;
+
+    for (final notifier in notifiers.toList(growable: false)) {
+      if (boundInstance != null &&
+          notifier.isInstanceOrDependencyRef(boundInstance)) {
+        continue;
+      }
+
       notifier.dispose();
       _notifiers.remove(notifier);
+      stateManagement._deferredEvents.remove(notifier);
     }
   }
 
   /// Checks if an object has any listeners.
   bool _hasListeners(Object? instance) {
-    return _notifiers.any((notifier) => notifier == instance);
+    return instance != null &&
+        _notifiers.any(
+          (notifier) => notifier.isInstanceOrDependencyRef(instance),
+        );
   }
 
   /// Retrieves the [EventNotifier] for the given [instance] and [eventName].
@@ -105,7 +117,6 @@ abstract class EventHandler {
           instance,
           eventName,
           dependencyInjection,
-          logger,
           _offEventNotifier,
         );
   }
@@ -120,8 +131,8 @@ abstract class EventHandler {
   /// If the [EventNotifier] does not exist in the lookup table, it creates a new one.
   EventNotifier? _getEventNotifierPartner(Object? instance, Enum eventName) {
     final instancePartner = instance is DependencyRef
-        ? dependencyInjection._getDependencyRegisterByRef(instance)?.instance
-        : dependencyInjection._getDependencyRef(instance);
+        ? dependencyInjection.getDependencyRegisterByRef(instance)?.instance
+        : dependencyInjection.getDependencyRef(instance);
 
     if (instancePartner == null) return null;
 
@@ -140,17 +151,58 @@ abstract class EventHandler {
   void _resolveLifecycleEvent(
     Object? instance,
     Lifecycle lifecycle, [
-    StateBase? state,
+    dynamic param,
   ]) {
-    if (instance is LifecycleObserver) {
-      return _executeLifecycleObserver(instance, lifecycle, state);
+    final instanceObj = instance is DependencyRef
+        ? dependencyInjection.getDependencyRegisterByRef(instance)?.instance
+        : instance;
+
+    if (instanceObj is DependencyLifecycle) {
+      _processLifecycleCallbacks(instanceObj, lifecycle, param);
     }
+  }
 
-    if (instance is! DependencyRef) return;
+  void _notifyToObservers(
+    Object? instanceOrDependencyRef,
+    Lifecycle lifecycle,
+    dynamic param,
+  ) {
+    final dependencyRef = instanceOrDependencyRef is DependencyRef
+        ? instanceOrDependencyRef
+        : dependencyInjection.getDependencyRef(instanceOrDependencyRef);
 
-    final instanceObj =
-        dependencyInjection._getDependencyRegisterByRef(instance)?.instance;
+    final instance = param is Object
+        ? param
+        : dependencyInjection
+            .getDependencyRegisterByRef(dependencyRef)
+            ?.instance;
 
-    return _resolveLifecycleEvent(instanceObj, lifecycle, state);
+    if (dependencyRef == null) return;
+
+    for (final observer
+        in IDependencyObserver._observers.toList(growable: false)) {
+      switch (lifecycle) {
+        case Lifecycle.registered:
+          observer.onDependencyRegistered(dependencyRef);
+          break;
+        case Lifecycle.created:
+          observer.onDependencyCreated(dependencyRef, instance);
+          break;
+        case Lifecycle.didMount:
+          observer.onDependencyMounted(dependencyRef, instance);
+          break;
+        case Lifecycle.didUnmount:
+          observer.onDependencyUnmounted(dependencyRef, instance);
+          break;
+        case Lifecycle.deleted:
+          observer.onDependencyDeleted(dependencyRef, instance);
+          break;
+        case Lifecycle.unregistered:
+          observer.onDependencyUnregistered(dependencyRef);
+          break;
+        default:
+          break;
+      }
+    }
   }
 }

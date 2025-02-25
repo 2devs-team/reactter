@@ -12,7 +12,7 @@ class MyCustomForm extends StatelessWidget {
       builder: (context, myController, child) {
         return Scaffold(
           appBar: AppBar(
-            title: const Text("Retrieve Text Input"),
+            title: const Text("Custom hook example"),
           ),
           body: Padding(
             padding: const EdgeInsets.all(16),

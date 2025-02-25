@@ -1,0 +1,314 @@
+---
+title: RtProvider
+description: Learn how to use a RtProvider in Reactter.
+sidebar:
+  order: 2
+---
+import { HE, HM, HT } from '@/components/Highlight';
+import CodeTabs from '@/components/CodeTabs.astro';
+import { Tabs, TabItem } from "@/components/Tabs";
+import ZappButton from "@/components/ZappButton.astro";
+import { Code } from "@astrojs/starlight/components";
+import { marks } from '@/examples/marks.ts'
+
+import counterControllerCode from '@/examples/counter/lib/counter_controller.dart?raw';
+import counterCode from '@/examples/counter/lib/counter.dart?raw';
+import counterViewCode from '@/examples/counter/lib/counter_view.dart?raw';
+import mainCode from '@/examples/counter/lib/main.dart?raw';
+
+import counterControllerIdCode from '@/examples/rt_provider_id/lib/counter_controller.dart?raw';
+import counterIdCode from '@/examples/rt_provider_id/lib/counter.dart?raw';
+import counterViewIdCode from '@/examples/rt_provider_id/lib/counter_view.dart?raw';
+import mainIdCode from '@/examples/rt_provider_id/lib/main.dart?raw';
+
+import counterControllerChildCode from '@/examples/rt_provider_child/lib/counter_controller.dart?raw';
+import counterChildCode from '@/examples/rt_provider_child/lib/counter.dart?raw';
+import counterWithButtonsChildCode from '@/examples/rt_provider_child/lib/counter_with_buttons.dart?raw';
+import counterViewChildCode from '@/examples/rt_provider_child/lib/counter_view.dart?raw';
+import mainChildCode from '@/examples/rt_provider_child/lib/main.dart?raw';
+
+import counterControllerLazyCode from '@/examples/rt_provider_lazy/lib/counter_controller.dart?raw';
+import counterLazyCode from '@/examples/rt_provider_lazy/lib/counter.dart?raw';
+import counterViewLazyCode from '@/examples/rt_provider_lazy/lib/counter_view.dart?raw';
+import mainLazyCode from '@/examples/rt_provider_lazy/lib/main.dart?raw';
+
+import counterControllerInitCode from '@/examples/rt_provider_init/lib/counter_controller.dart?raw';
+import counterInitCode from '@/examples/rt_provider_init/lib/counter.dart?raw';
+import counterViewInitCode from '@/examples/rt_provider_init/lib/counter_view.dart?raw';
+import mainInitCode from '@/examples/rt_provider_init/lib/main.dart?raw';
+
+import counterControllerModeCode from '@/examples/rt_provider_mode/lib/counter_controller.dart?raw';
+import counterModeCode from '@/examples/rt_provider_mode/lib/counter.dart?raw';
+import counterViewModeCode from '@/examples/rt_provider_mode/lib/counter_view.dart?raw';
+import mainModeCode from '@/examples/rt_provider_mode/lib/main.dart?raw';
+
+:::tip
+This documentation assumes you've already read the [Dependency Injection](/reactter/core_concepts/dependency_injection) and [Rendering Control](/reactter/core_concepts/rendering_control).
+It's recommended read that first if you're new in Reactter.
+:::
+
+The <HT><a href="https://pub.dev/documentation/flutter_reactter/latest/flutter_reactter/RtProvider-class.html">`RtProvider`</a></HT> widget injects a dependency into its descendant widgets, ensuring the dependency is accessible throughout its subtree. It facilitates sharing the dependency across multiple widgets seamlessly.
+
+## Syntax
+
+The <HT>`RtProvider`</HT> class has three constructors, each catering to different dependency injection needs.
+
+- <HT>`RtProvider`</HT>: Default constructor that provides a dependency using a builder function.
+
+  ```dart showLineNumbers=false
+  RtProvider<T>(
+    T instanceBuilder(), {
+    Key? key,
+    String? id,
+    DependencyMode mode = DependencyMode.builder,
+    Widget? child,
+    Widget builder(
+      BuildContext context,
+      T instance,
+      Widget? child,
+    )?,
+  })
+  ```
+
+- <HT>`RtProvider.init`</HT>: This constructor initializes the dependency instance before it is mounted.
+
+  ```dart showLineNumbers=false
+  RtProvider<T>.init(
+    T instanceBuilder(), {
+    Key? key,
+    String? id,
+    DependencyMode mode = DependencyMode.builder,
+    Widget? child,
+    Widget builder(
+      BuildContext context,
+      T instance,
+      Widget? child,
+    )?,
+  })
+  ```
+
+- <HT>`RtProvider.lazy`</HT>: This constructor defers the instantiation of the dependency until it is accessed for the first time.
+
+  :::caution
+  While lazy-loading enhances performance by deferring instantiation until required, it's important to note that it may result in the loss of lifecycle mount tracing.
+  :::
+
+  ```dart showLineNumbers=false
+  RtProvider<T>.lazy(
+    T instanceBuilder(), {
+    Key? key,
+    String? id,
+    DependencyMode mode = DependencyMode.builder,
+    Widget? child,
+    Widget builder(
+      BuildContext context,
+      Widget? child,
+    )?,
+  })
+  ```
+
+## Properties
+
+- <HM>`instanceBuilder`</HM>: A function that creates an instance of the <HT>`T`</HT> dependency. This function is registered by [Dependency Injection](/reactter/core_concepts/dependency_injection).
+- `key`: An optional <HT>`Key`</HT> to use for identifying the widget.
+- `id`: An optional identifier for the <HT>`T`</HT> dependency.
+  If omitted, the dependency will be located by its type(<HT>`T`</HT>).
+- `mode`: The mode of the dependency injection. By default, it uses the builder mode(<HE>`DependecyMode.builder`</HE>).
+  Learn more about the [dependency modes](/reactter/core_concepts/dependency_injection/#dependency-modes).
+- `child`: An optional <HT>`Widget`</HT> that remains static while the widget tree is rebuilt.
+  It is passed to the <HM>`builder`</HM> function if it is defined.
+- <HM>`builder`</HM>: An optional function which builds a widget based on the dependency.
+If it not defined, the <HT>`child`</HT> widget is returned.
+It receives the following parameters:
+  - `context`: The <HM>`BuildContext`</HM> of the widget. A handle to the location of <HT>`RtProvider`</HT> in the widget tree.
+  - `instance`: The instance of the <HT>`T`</HT> dependency. It is available only to default constructor.
+  - `child`: The `child` widget passed to the <HT>`RtProviders`</HT> widget.
+
+## Usage
+
+### Basic Usage
+
+To use <HT>`RtProvider`</HT>, wrap it around the widget tree where you want to inject the dependency.
+
+Here's an example of how to use it:
+
+<CodeTabs>
+  <ZappButton path="examples/counter"/>
+
+  <Tabs>
+    <TabItem>
+      <HM single slot="label">counter.dart</HM>
+      <Code code={counterCode} lang="dart" mark={[...marks, {range: "11-13, 37-38"}]} collapse={"14-36"} />
+    </TabItem>
+
+    <TabItem label="counter_controller.dart">
+      <Code code={counterControllerCode} lang="dart" mark={marks} />
+    </TabItem>
+
+    <TabItem label="counter_view.dart">
+      <Code code={counterViewCode} lang="dart" mark={marks} />
+    </TabItem>
+
+    <TabItem label="main.dart">
+      <Code code={mainCode} lang="dart" mark={marks} />
+    </TabItem>
+  </Tabs>
+</CodeTabs>
+
+### Using `id`
+
+<HT>`RtProvider`</HT> offers the `id` property that allows you to provide an identifier for the dependency.
+This is useful when you want to create multiple instances of the same dependency.
+
+Here's an example of how to use it:
+
+<CodeTabs>
+  <ZappButton path="examples/rt_provider_id"/>
+
+  <Tabs>
+    <TabItem>
+      <HM single slot="label">counter.dart</HM>
+      <Code code={counterIdCode} lang="dart" mark={[...marks, {range: "13-16, 41-42"}, {range: "15", label: "👉"}]} collapse={"17-40"} />
+    </TabItem>
+
+    <TabItem>
+      <HM single slot="label">counter_view.dart</HM>
+      <Code code={counterViewIdCode} lang="dart" mark={[...marks, {range: "17, 19, 21"}]} />
+    </TabItem>
+
+    <TabItem label="counter_controller.dart">
+      <Code code={counterControllerIdCode} lang="dart" mark={marks} />
+    </TabItem>
+
+    <TabItem label="main.dart">
+      <Code code={mainIdCode} lang="dart" mark={marks} />
+    </TabItem>
+  </Tabs>
+</CodeTabs>
+
+### Using `child`
+
+<HT>`RtProvider`</HT> offers the `child` property to pass a widget that is independent of the <HT>`RtProvider`</HT> and is passed to the <HM>`builder`</HM> function.
+This is useful when you want to reuse a widget.
+
+:::note
+The `child` argument can't accessed to the dependency instance without a consumer.
+:::
+
+Here's an example of how to use it:
+
+<CodeTabs>
+  <ZappButton path="examples/rt_provider_child"/>
+
+  <Tabs>
+    <TabItem>
+      <HM single slot="label">counter.dart</HM>
+      <Code code={counterChildCode} lang="dart" mark={[...marks, {range: "12-23"}, {range: "14", label: "👉"}]}/>
+    </TabItem>
+
+    <TabItem>
+      <HM single slot="label">counter_with_buttons.dart</HM>
+      <Code code={counterWithButtonsChildCode} lang="dart" mark={[...marks, {range: "21, 8-9, 31-32"}]} />
+    </TabItem>
+
+    <TabItem>
+      <HM single slot="label">counter_view.dart</HM>
+      <Code code={counterViewChildCode} lang="dart" mark={[...marks, {range: "15, 18"}]} />
+    </TabItem>
+
+    <TabItem label="counter_controller.dart">
+      <Code code={counterControllerChildCode} lang="dart" mark={marks} />
+    </TabItem>
+
+    <TabItem label="main.dart">
+      <Code code={mainChildCode} lang="dart" mark={marks} />
+    </TabItem>
+  </Tabs>
+</CodeTabs>
+
+### Immediate initialization
+
+The <HT>`RtProvider.init`</HT> constructor initializes the dependency before it is mounted. It is useful when you want to initialize the dependency immediately.
+
+Here's an example of how to use it:
+
+<CodeTabs>
+  <ZappButton path="examples/rt_provider_init"/>
+
+  <Tabs>
+    <TabItem>
+      <HM single slot="label">counter.dart</HM>
+      <Code code={counterInitCode} lang="dart" mark={[...marks, {range: "11-16, 40-41, 51, 60"}]} collapse={"17-39"} />
+    </TabItem>
+
+    <TabItem label="counter_controller.dart">
+      <Code code={counterControllerInitCode} lang="dart" mark={marks} />
+    </TabItem>
+
+    <TabItem label="counter_view.dart">
+      <Code code={counterViewInitCode} lang="dart" mark={marks} />
+    </TabItem>
+
+    <TabItem label="main.dart">
+      <Code code={mainInitCode} lang="dart" mark={marks} />
+    </TabItem>
+  </Tabs>
+</CodeTabs>
+
+### Initialization lazily
+
+The <HT>`RtProvider.lazy`</HT> constructor initializes the dependency lazily. It creates the dependency only when it is accessed for the first time.
+
+Here's an example of how to use it:
+
+<CodeTabs>
+  <ZappButton path="examples/rt_provider_lazy"/>
+
+  <Tabs>
+    <TabItem>
+      <HM single slot="label">counter.dart</HM>
+      <Code code={counterLazyCode} lang="dart" mark={[...marks, {range: "11-16, 57-58"}]} collapse={"32-53"} />
+    </TabItem>
+
+    <TabItem label="counter_controller.dart">
+      <Code code={counterControllerLazyCode} lang="dart" mark={marks} />
+    </TabItem>
+
+    <TabItem label="counter_view.dart">
+      <Code code={counterViewLazyCode} lang="dart" mark={marks} />
+    </TabItem>
+
+    <TabItem label="main.dart">
+      <Code code={mainLazyCode} lang="dart" mark={marks} />
+    </TabItem>
+  </Tabs>
+</CodeTabs>
+
+### Initialization modes
+<HT>`RtProvider`</HT> provides a `mode` property that allows you to initialize the dependency with different [modes](/reactter/core_concepts/dependency_injection/#dependency-modes).
+
+Here's an example of how to use it:
+
+<CodeTabs>
+  <ZappButton path="examples/rt_provider_mode"/>
+
+  <Tabs>
+    <TabItem>
+      <HM single slot="label">counter.dart</HM>
+      <Code code={counterModeCode} lang="dart" mark={[...marks, {range: "13-17, 42-43"}, {range: "16", label: "👉"}]} collapse={"18-41"} />
+    </TabItem>
+
+    <TabItem>
+      <HM single slot="label">counter_view.dart</HM>
+      <Code code={counterViewModeCode} lang="dart" mark={[...marks, {range: "34, 37, 41"}]}  />
+    </TabItem>
+
+    <TabItem label="counter_controller.dart">
+      <Code code={counterControllerModeCode} lang="dart" mark={marks} />
+    </TabItem>
+
+    <TabItem label="main.dart">
+      <Code code={mainModeCode} lang="dart" mark={marks} />
+    </TabItem>
+  </Tabs>
+</CodeTabs>

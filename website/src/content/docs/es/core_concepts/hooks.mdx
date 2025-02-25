@@ -1,0 +1,112 @@
+---
+title: Hooks
+description: Aprende aceca de los Hooks en Reactter.
+sidebar:
+  order: 6
+---
+
+import { HE, HM, HN, HT } from '@/components/Highlight';
+import CodeTabs from '@/components/CodeTabs.astro';
+import { Tabs, TabItem } from "@/components/Tabs";
+import ZappButton from "@/components/ZappButton.astro";
+import { Code } from "@astrojs/starlight/components";
+import { marks } from '@/examples/marks.ts'
+
+import StatePropertiesMethodsRef from '@/content/docs/es/shareds/state_properties_methods_ref.mdx';
+
+import MainCode from '@/examples/custom_hook/lib/main.dart?raw';
+import MyCustomFormCode from '@/examples/custom_hook/lib/my_custom_form.dart?raw';
+import MyControllerCode from '@/examples/custom_hook/lib/my_controller.dart?raw';
+import UseTextInputCode from '@/examples/custom_hook/lib/use_text_input.dart?raw';
+
+Los hooks son clases con la capacidad de usar estados y gestionar efectos secundarios.
+Son un concepto fundamental en Reactter y se utilizan para encapsular la lógica que se puede reutilizar en cualquier parte de la aplicación.
+
+## API
+
+Reactter provee los siguientes hooks:
+
+- <HT>[`UseState`](/reactter/es/api/hooks/use_state)</HT>
+- <HT>[`UseAsyncState`](/reactter/es/api/hooks/use_async_state)</HT>
+- <HT>[`UseReducer`](/reactter/es/api/hooks/use_reducer)</HT>
+- <HT>[`UseCompute`](/reactter/es/api/hooks/use_compute)</HT>
+- <HT>[`UseEffect`](/reactter/es/api/hooks/use_effect)</HT>
+- <HT>[`UseDependency`](/reactter/es/api/hooks/use_instance)</HT>
+
+## ¿Cómo funciona?
+
+Los hooks en Reactter son clases que extienden de <HT>[`RtHook`](/reactter/es/api/classes/rt_hook)</HT> es responsable de vincular el hook a otros hooks y estados, y de gestionar el ciclo de vida del hook.
+
+Los hooks en Reactter son esencialmente entidades con estado porque <HT>[`RtHook`](/reactter/es/api/classes/rt_hook)</HT> hereda de <HT>`RtState`</HT> esta herencia permite a los hooks gestionar tanto el estado como los métodos del ciclo de vida de manera eficiente.
+
+Para gestionar estos aspectos, los Hooks proporcionan lo siguiente:
+
+<StatePropertiesMethodsRef/>
+
+## Hook personalizado
+
+Reactter proporciona una forma de crear _**hooks personalizados**_ para encapsular la lógica que se puede reutilizar en cualquier parte de la aplicación.
+
+Hay varias ventajas en usar _**hoks personalizados**_:
+
+- **Reusabilidad**: para usar el mismo hook una y otra vez, sin necesidad de escribirlo dos veces.
+- **Código limpio**: extraer parte del código en un hook proporcionará una base de código más limpia.
+- **Mantenibilidad**: más fácil de mantener. si necesita cambiar la lógica del hook, solo necesita cambiarla una vez.
+
+### Crear un hook personalizado
+
+Para crear un _**hook personalizado**_, debes crear una clase que extienda de <HT>[`RtHook`](/reactter/es/api/classes/rt_hook)</HT> y seguir la convención de nomenclatura con el prefijo <HT>`Use`</HT>.
+
+Aquí tienes un ejemplo de un _**hook personalizado**_ que gestiona el estado de un campo de texto:
+
+<Code code={UseTextInputCode} lang="dart" mark={[...marks, {range: "5-6", label: "*      This line is REQUIRED!        "}]} />
+
+:::caution[¡Atención!]
+Para crear un _**hook**_, debes registrarlo agregando la siguiente línea:
+
+```dart showLineNumbers=false
+final $ = RtHook.$register;
+```
+
+Es importante tener en cuenta que los estados y hooks definidos por encima de esta línea no estarán vinculados al hook.
+Para evitar esto, se recomienda colocar esta línea como la primera línea en el cuerpo de la clase.
+:::
+
+Como se muestra en el ejemplo anterior, podemos utilizar otros hooks como <HT>[`UseEffect`](/reactter/es/api/hooks/use_effect)</HT> para monitorear los cambios en el controlador del campo de texto y asegurarnos de que se elimine cuando el hook se destruya.
+
+El método <HM>`update`</HM> se utiliza para establecer el `_value` interno en el texto actual del controlador, lo que mantiene el estado sincronizado con el campo de texto.
+Este método es parte de la clase <HT>`RtHook`</HT> que te permite actualizar el estado del hook.
+
+### Usar un hook personalizado
+
+Los _**hook personalizados**_ pueden ser llamados desde cualquier parte del código y acceder a su lógica compartida, por ejemplo:
+
+<CodeTabs>
+  <ZappButton path="examples/custom_hook"/>
+
+  <Tabs>
+    <TabItem>
+      <HM single slot="label">my_controller.dart</HM>
+      <Code code={MyControllerCode} lang="dart" mark={[...marks, {range: "5-6"}, 11, 12]}/>
+    </TabItem>
+
+    <TabItem>
+      <HM single slot="label">my_custom_form.dart</HM>
+      <Code code={MyCustomFormCode} lang="dart" mark={[...marks, 43, 49]}/>
+    </TabItem>
+
+    <TabItem label="use_text_input.dart">
+      <Code code={UseTextInputCode} lang="dart" mark={[...marks]}/>
+    </TabItem>
+
+    <TabItem label="main.dart">
+      <Code code={MainCode} lang="dart" mark={marks} />
+    </TabItem>
+  </Tabs>
+</CodeTabs>
+
+En el ejemplo anterior, el formulario recopila los datos ingresados en los campos de nombre y apellido, los combina en un nombre completo y muestra el resultado.
+<HT>`MyController`</HT> utiliza el hook <HT>`UseTextInput`</HT> (hook personalizado creado previamente) para capturar los valores de nombre y apellido.
+
+El estado `fullName` se define mediante <HT>[`UseCompute`](/reactter/es/api/hooks/use_compute)</HT>, lo que permite calcular el nombre completo en función de los valores de `firstNameInput` y `lastNameInput`.
+Esto garantiza que el nombre completo se actualice automáticamente cada vez que se modifiquen las entradas

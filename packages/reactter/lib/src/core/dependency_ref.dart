@@ -1,4 +1,4 @@
-part of 'core.dart';
+part of '../internals.dart';
 
 /// A generic class that represents the reference to a dependency in Reactter's context.
 /// Provides an optional [id] parameter for identifying the dependency.
@@ -8,20 +8,14 @@ part of 'core.dart';
 class DependencyRef<T extends Object?> {
   final String? id;
 
+  Type get type => getType<T?>();
+
   const DependencyRef([this.id]);
 
-  @override
-  String toString() {
-    final type = T.toString().replaceAll(RegExp(r'\?'), '');
-    final id = this.id != null ? "[id='${this.id}']" : "";
-
-    return '$type$id';
-  }
-
-  int _getTypeHashCode<TT extends T?>() => TT.hashCode;
+  Type getType<TT extends T?>() => TT;
 
   @override
-  int get hashCode => Object.hash(_getTypeHashCode<T?>(), id.hashCode);
+  int get hashCode => Object.hash(type, id);
 
   @override
   bool operator ==(Object other) {

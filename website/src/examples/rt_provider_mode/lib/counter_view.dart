@@ -51,7 +51,7 @@ class CounterView extends StatelessWidget {
   void _listenLifecycle() {
     for (final mode in DependencyMode.values) {
       Rt.on(
-        RtDependency<CounterController>(
+        RtDependencyRef<CounterController>(
           mode.toString(),
         ),
         Lifecycle.registered,
@@ -61,7 +61,7 @@ class CounterView extends StatelessWidget {
       );
 
       Rt.on(
-        RtDependency<CounterController>(
+        RtDependencyRef<CounterController>(
           mode.toString(),
         ),
         Lifecycle.created,
@@ -71,7 +71,7 @@ class CounterView extends StatelessWidget {
       );
 
       Rt.on(
-        RtDependency<CounterController>(
+        RtDependencyRef<CounterController>(
           mode.toString(),
         ),
         Lifecycle.deleted,
@@ -81,7 +81,7 @@ class CounterView extends StatelessWidget {
       );
 
       Rt.on(
-        RtDependency<CounterController>(
+        RtDependencyRef<CounterController>(
           mode.toString(),
         ),
         Lifecycle.unregistered,

@@ -1,19 +1,27 @@
 import 'dart:async';
 
 import 'args.dart';
-import 'core/core.dart' show LogLevel;
 import 'hooks/hooks.dart';
 import 'memo/memo.dart' show Memo;
+import 'logger.dart' show LogLevel;
+
+/// {@template log_output}
+/// An function to specify the log output destination.
+///
+///   - [message]: The log message.
+///   - [name]: The name of the logger.
+///   - [level]: The integer value of the [LogLevel].
+///   - [stackTrace]: The stack trace of the log message.
+/// {@endtemplate}
+typedef LogOutput = void Function(
+  String message, {
+  required String name,
+  required int level,
+  StackTrace? stackTrace,
+});
 
 /// A function to generate the instance of [T] dependency.
 typedef InstanceBuilder<T> = T Function();
-
-/// Rt.log type
-typedef LogWriterCallback = void Function(
-  String text, {
-  Object error,
-  LogLevel level,
-});
 
 /// UseAsyncState.when's parameter type for representing a value
 typedef WhenValueReturn<T, R> = R Function(T value);

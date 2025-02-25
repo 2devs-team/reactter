@@ -1,0 +1,86 @@
+---
+title: RtWatcher
+description: Learn how to use the RtWatcher in Reactter.
+sidebar:
+  order: 6
+---
+
+import { HM, HT, HN } from "@/components/Highlight";
+import CodeTabs from '@/components/CodeTabs.astro';
+import { Tabs, TabItem } from "@/components/Tabs";
+import ZappButton from "@/components/ZappButton.astro";
+import { Code } from "@astrojs/starlight/components";
+import { marks } from '@/examples/marks.ts'
+
+import counterCode from '@/examples/rt_watcher/lib/counter.dart?raw';
+import counterViewCode from '@/examples/rt_watcher/lib/counter_view.dart?raw';
+import mainCode from '@/examples/rt_watcher/lib/main.dart?raw';
+
+The <HT><a href="https://pub.dev/documentation/flutter_reactter/latest/flutter_reactter/RtWatcher-class.html">`RtWatcher`</a></HT> widget allows you to watch states and automatically rebuilds the widget tree whenever a monitored state changes.
+
+## Syntax
+
+The <HT>`RtWatcher`</HT> widget has two ways to use it:
+
+- **Using the default constructor**:
+
+```dart showLineNumbers=false
+RtWatcher(
+  Widget builder(
+    BuildContext context,
+    RtState watch(RtState state),
+  ), {
+    Key? key,
+  },
+)
+```
+
+- **Using the Builder constructor**:
+
+```dart showLineNumbers=false
+RtWatcher.builder({
+  Key? key,
+  Widget? child,
+  required Widget builder(
+    BuildContext context,
+    RtState watch(RtState state),
+    widget? child,
+  ),
+})
+```
+
+## Properties
+
+- `key`: An optional <HT>`Key`</HT> to use for identifying the widget.
+- `child`: An optional <HT>`Widget`</HT> that remains static while the widget tree is rebuilt.
+  Useful for parts of the UI that don't depend on the watched states and can remain unchanged.
+  It is passed to the <HM>`builder`</HM> function if it is defined.
+- <HM>`builder`</HM>: A required function that returns a widget.
+  This function is called whenever any of the states being watched change.
+  It takes three parameters:
+  - `context`: The <HT>`BuildContext`</HT> of the <HT>`RtWatcher`</HT> widget.
+  - <HM>`watch`</HM>: A function to watch the state that should trigger a rebuild when it changes.
+  - `child`: The `child` widget passed to <HT>`RtWatcher`</HT>.
+
+## Usage
+
+The following example demonstrates how to use the <HT>`RtlWatcher`</HT> widget to listen for changes in a state and rebuild the widget tree accordingly.
+
+<CodeTabs>
+  <ZappButton path="examples/rt_watcher"/>
+
+  <Tabs>
+    <TabItem>
+      <HM single slot="label">counter.dart</HM>
+      <Code code={counterCode} lang="dart" mark={[...marks, {range: "11-38"}]}/>
+    </TabItem>
+
+    <TabItem label="counter_view.dart">
+      <Code code={counterViewCode} lang="dart" mark={marks} />
+    </TabItem>
+
+    <TabItem label="main.dart">
+      <Code code={mainCode} lang="dart" mark={marks} />
+    </TabItem>
+  </Tabs>
+</CodeTabs>

@@ -79,6 +79,9 @@ abstract class RtComponent<T extends Object> extends StatelessWidget {
   /// An indentify of the [T] dependency.
   String? get id => null;
 
+  /// How to handle the [T] dependency.
+  DependencyMode get mode => DependencyMode.builder;
+
   /// How to builder the [T] dependency.
   InstanceBuilder<T>? get builder => null;
 
@@ -112,6 +115,7 @@ abstract class RtComponent<T extends Object> extends StatelessWidget {
     return RtProvider<T>(
       builder!,
       id: id,
+      mode: mode,
       builder: (context, instance, _) => render(context, _getInstance(context)),
     );
   }
@@ -139,10 +143,3 @@ abstract class RtComponent<T extends Object> extends StatelessWidget {
     );
   }
 }
-
-/// {@macro flutter_reactter.rt_component}
-@Deprecated(
-  'Use `RtComponent` instead. '
-  'This feature was deprecated after v7.3.0.',
-)
-typedef ReactterComponent<T extends Object> = RtComponent<T>;

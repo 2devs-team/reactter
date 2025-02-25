@@ -1,0 +1,62 @@
+---
+title: RtStateObserver
+description: The base class for observing and reacting to the lifecycle events of states in Reactter, such as creation, binding, updating, and disposal.
+sidebar:
+  order: 2
+---
+
+import { HM, HT } from '@/components/Highlight';
+
+<HT><a href="https://pub.dev/documentation/reactter/latest/reactter/RtStateObserver-class.html" target="_blank">`RtStateObserver`</a></HT> is a class that provides a way to observe the lifecycle of states in Reactter.
+
+## Syntax
+
+```dart showLineNumbers=false
+  RtStateObserver({
+    void onBound(RtState state, Object instance)?,
+    void onUnbound(RtState state, Object instance)?,
+    void onCreated(RtState state)?,
+    void onUpdated(RtState state)?,
+    void onDisposed(RtState state)?,
+  });
+```
+
+The <HT>`RtStateObserver`</HT> class accepts these parameters:
+
+- <HM>**`onBound`**</HM>: *(optional)* Called when a `state` is bound to an `instance`.
+- <HM>**`onUnbound`**</HM>: *(optional)* Called when a `state` is unbound from an `instance`.
+- <HM>**`onCreated`**</HM>: *(optional)* Called when a `state` is initialized.
+- <HM>**`onUpdated`**</HM>: *(optional)* Called when a `state` undergoes a change or update.
+- <HM>**`onDisposed`**</HM>: *(optional)* Called when a `state` is disposed or cleaned up.
+
+## Usage
+
+To use <HT>`RtStateObserver`</HT>, you need to instantiate it, pass the callbacks you want to use and then add it using the <HM>[`Rt.addObserver`](/reactter/api/methods/debugging_methods/#rtaddobserver)</HM> method, e.g.:
+
+```dart "RtStateObserver" "Rt.addObserver"
+import 'package:reactter/reactter.dart';
+
+void main() {
+  // Create a state observer with lifecycle callbacks
+  final stateObserver = RtStateObserver(
+    onBound: (state, instance) {
+      print('State($state) bound to instance($instance)');
+    },
+    onUnbound: (state, instance) {
+      print('State($state) unbound from instance($instance)');
+    },
+    onCreated: (state) {
+      print('State($state) created');
+    },
+    onUpdated: (state) {
+      print('State($state) updated');
+    },
+    onDisposed: (state) {
+      print('State($state) disposed');
+    },
+  );
+
+  // Add the state observer to Reactter's observer system
+  Rt.addObserver(stateObserver);
+}
+```

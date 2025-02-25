@@ -1,0 +1,176 @@
+---
+title: Debugging Methods
+description: Reactter debugging methods
+sidebar:
+  order: 4
+---
+
+import { HN, HM, HT, HS } from '@/components/Highlight';
+
+Reactter provides a set of debugging methods to help you debug your states and dependencies in the finest detail.
+
+## <HM>`Rt.initializeDevTools`</HM>
+
+The <HM>`Rt.initializeDevTools`</HM> method initializes the [Reactter DevTools](http://localhost:4321/reactter/devtools_extension) for debugging purposes.
+Only works in development mode.
+
+### Syntax
+
+```dart showLineNumbers=false
+Rt.initializeDevTools();
+```
+
+:::tip
+This method should be called at the beginning of your application.
+:::
+
+## <HM>`Rt.initializeLogger`</HM>
+
+The <HM>`Rt.initializeLogger`</HM> method initializes the Reactter logger for debugging purposes. Only works in development mode.
+
+### Syntax
+
+```dart showLineNumbers=false
+Rt.initializeLogger({
+  String name = 'REACTTER',
+  LogOutput output = dev.log,
+});
+
+typedef LogOutput = void Function(
+  String message, {
+  required String name,
+  required int level,
+  StackTrace? stackTrace,
+});
+```
+
+### Parameters
+
+- **`name`**: *(optional)* The name of the logger. Default is <HS>`'REACTTER'`</HS>.
+- <HM>**`output`**</HM>: *(optional)* The output function(<HT>`LogOutput`</HT>) for the logger. Default is <HM>`dev.log`</HM>.
+
+  The Parameters of the output function(<HT>`LogOutput`</HT>) are:
+    - **`message`**: The message to log.
+    - **`name`**: The name of the logger.
+    - **`level`**: The level of the log message.
+      The levels are(Copy from [package:logging](https://pub.dev/packages/logging)):
+      - <HN>`0`</HN>: Special key to turn on logging for all levels.
+      - <HN>`300`</HN>: Key for highly detailed tracing.
+      - <HN>`400`</HN>: Key for fairly detailed tracing.
+      - <HN>`500`</HN>: Key for tracing information.
+      - <HN>`700`</HN>: Key for static configuration messages.
+      - <HN>`800`</HN>: Key for informational messages.
+      - <HN>`900`</HN>: Key for potential problems.
+      - <HN>`1000`</HN>: Key for serious failures.
+      - <HN>`1200`</HN>: Key for extra debugging loudness.
+      - <HN>`2000`</HN>: Special key to turn off all logging.
+    - **`stackTrace`**: *(optional)* The stack trace of the log message.
+
+### Usage
+
+You can customize the logger output function to log messages in your preferred way, e.g.:
+
+```dart showLineNumbers=false
+Rt.initializeLogger(
+  output: (String message, {required String name, required int level, StackTrace? stackTrace}) {
+    print('[$name] $message');
+  },
+);
+```
+
+Or use another package like [logging](https://pub.dev/packages/logging) to log messages, e.g.:
+
+```dart showLineNumbers=false
+void initializeLogger() {
+  final logger = Logger('REACTTER');
+  final levelMapper = { for (final level in Level.LEVELS) level.value: level };
+
+  Rt.initializeLogger(
+    output: (String message, {required String name, required int level, StackTrace? stackTrace}) {
+      logger.log(
+        levelMapper[level] ?? Level.INFO,
+        message,
+        name: name,
+        stackTrace: stackTrace,
+      )
+    },
+  );
+}
+
+void main() {
+  initializeLogger();
+  runApp(MyApp());
+}
+```
+
+## <HM>`Rt.addObserver`</HM>
+
+The <HM>`Rt.addObserver`</HM> method adds an observer to the Reactter store to listen to the state or dependency lifecycle.
+
+### Syntax
+
+```dart showLineNumbers=false
+Rt.addObserver(IObserver observer);
+```
+
+### Parameters
+
+- **`observer`**: The observer to add like <HT>[`RtStateObserver`](/reactter/api/classes/rt_state_observer)</HT> or <HT>[`RtDependencyObserver`](/reactter/api/classes/rt_dependency_observer)</HT>.
+
+### Usage
+
+You can add a <HT>[`RtStateObserver`](/reactter/api/classes/rt_state_observer)</HT> to listen to the state lifecycle, e.g.:
+
+```dart showLineNumbers=false
+final stateObserver = RtStateObserver(
+  onChanged: (state) {
+    print('State changed: $state');
+  },
+);
+
+Rt.addObserver(stateObserver);
+```
+
+Or add a <HT>[`RtDependencyObserver`](/reactter/api/classes/rt_dependency_observer)</HT> to listen to the dependency lifecycle, e.g.:
+
+```dart showLineNumbers=false
+final dependencyObserver = RtDependencyObserver(
+  onCreated: (dependency, instance) {
+    print('Dependency created: $dependency');
+  },
+);
+
+Rt.addObserver(dependencyObserver);
+```
+
+## <HM>`Rt.removeObserver`</HM>
+
+The <HM>`Rt.removeObserver`</HM> method removes an observer from the Reactter store.
+
+### Syntax
+
+```dart showLineNumbers=false
+Rt.removeObserver(IObserver observer);
+```
+
+### Parameters
+
+- **`observer`**: The observer to remove.
+
+### Usage
+
+You can remove the observer added before, e.g.:
+
+```dart showLineNumbers=false collapse={1-8}
+final stateObserver = RtStateObserver(
+  onChanged: (state) {
+    print('State changed: $state');
+  },
+);
+
+Rt.addObserver(stateObserver);
+// {...}
+Rt.removeObserver(stateObserver);
+```
+
+

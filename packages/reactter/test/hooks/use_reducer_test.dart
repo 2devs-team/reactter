@@ -1,5 +1,5 @@
 import 'package:reactter/reactter.dart';
-import 'package:test/test.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 import '../shareds/test_controllers.dart';
 
@@ -52,6 +52,22 @@ void main() {
       testController.stateReduce.dispatch(IncrementAction());
 
       expectLater(isStateChanged, true);
+    });
+
+    test('should get debug label', () {
+      final testController = TestController();
+
+      expect(testController.stateReduce.debugLabel, 'stateReduce');
+    });
+
+    test('should get debug info', () {
+      final testController = TestController();
+
+      expect(testController.stateReduce.debugInfo['value'].count, 0);
+
+      testController.stateReduce.dispatch(IncrementAction());
+
+      expect(testController.stateReduce.debugInfo['value'].count, 1);
     });
   });
 }

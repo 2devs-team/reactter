@@ -1,0 +1,114 @@
+---
+title: Control del renderizado
+description: Aprende cómo controlar el renderizado en Reactter.
+sidebar:
+  order: 4
+  badge:
+    text: Flutter
+---
+import { HE, HM, HT } from '@/components/Highlight';
+import CodeTabs from '@/components/CodeTabs.astro';
+import { Tabs, TabItem } from "@/components/Tabs";
+import ZappButton from "@/components/ZappButton.astro";
+import { Code } from "@astrojs/starlight/components";
+import { marks } from '@/examples/marks.ts'
+
+import counterControllerCode from '@/examples/counter/lib/counter_controller.dart?raw';
+import counterCode from '@/examples/counter/lib/counter.dart?raw';
+import counterViewCode from '@/examples/counter/lib/counter_view.dart?raw';
+import counterMainCode from '@/examples/counter/lib/main.dart?raw';
+
+En Flutter, el control eficiente del renderizado es crucial para crear aplicaciones de alto rendimiento, receptivas y escalables.
+El paquete **_flutter_reactter_** ofrece una manera sencilla de gestionar el comportamiento del renderizado en el árbol de widgets, permitiendo optimizar el rendimiento y ajustar la capacidad de respuesta de la aplicación con facilidad.
+
+## API
+
+Este paquete proporciona los siguientes mecanismos de control del renderizado:
+
+- Widgets
+  - <HT>[`RtScope`](/reactter/api/widgets/rt_scope)</HT>
+  - <HT>[`RtProvider`](/reactter/api/widgets/rt_provider)</HT>
+  - <HT>[`RtProviders`](/reactter/api/widgets/rt_providers)</HT>
+  - <HT>[`RtConsumer`](/reactter/api/widgets/rt_consumer)</HT>
+  - <HT>[`RtSelector`](/reactter/api/widgets/rt_selector)</HT>
+  - <HT>[`RtWatcher`](/reactter/api/widgets/rt_watcher)</HT>
+  - <HT>[`RtComponent`](/reactter/api/widgets/rt_component)</HT>
+  - <HT>[`RtSignalWatcher`](/reactter/api/widgets/rt_signal_watcher)</HT>
+- Extensiones
+  - <HM>[`BuilderContext.use`](/reactter/api/extensions/builder_context_use)</HM>
+  - <HM>[`BuilderContext.watch`](/reactter/api/extensions/builder_context_watch)</HM>
+  - <HM>[`BuilderContext.watchId`](/reactter/api/extensions/builder_context_watch_id)</HM>
+  - <HM>[`BuilderContext.select`](/reactter/api/extensions/builder_context_select)</HM>
+
+## How it works
+
+El control del renderizado en Reactter se basa en dos conceptos fundamentales de Flutter:
+
+- **InheritedWidget**: Este mecanismo poderoso comparte eficientemente datos en todo el árbol de widgets.
+Reactter extiende esta capacidad con el widget <HT>`RtProvider`</HT>, que almacena dependencias utilizando el sistema de inyección de dependencias.
+Esto permite que los widgets descendientes accedan a estas dependencias según sea necesario.
+
+- **Extensiones de BuildContext**: Estos métodos facilitan el acceso a dependencias y el control del renderizado dentro del árbol de widgets.
+Los widgets de Reactter como <HT>`RtConsumer`</HT>, <HT>`RtSelector`</HT> y <HT>`RtComponent`</HT> utilizan estos métodos para observar dependencias o estados.
+Cuando la dependencia o cualquier estado observado cambia, estos widgets activan rápidamente la reconstrucción del árbol de widgets para reflejar el estado actualizado.
+
+### Ejemplo
+
+Veamos cómo crear una aplicación de contador simple usando Reactter para demostrar cómo controlar el renderizado del árbol de widgets en Flutter.
+
+<CodeTabs>
+  <ZappButton path="examples/counter"/>
+
+  <Tabs>
+    <TabItem label="counter.dart">
+      <Code code={counterCode} lang="dart" mark={marks} />
+    </TabItem>
+
+    <TabItem label="counter_controller.dart">
+      <Code code={counterControllerCode} lang="dart" mark={marks} />
+    </TabItem>
+
+    <TabItem label="counter_view.dart">
+      <Code code={counterViewCode} lang="dart" mark={marks} />
+    </TabItem>
+
+    <TabItem label="main.dart">
+      <Code code={counterMainCode} lang="dart" mark={marks} />
+    </TabItem>
+  </Tabs>
+</CodeTabs>
+
+Ahora, cuando ejecutes la aplicación, verás una aplicación de contador con dos botones para incrementar y decrementar el valor de `count`.
+
+En este caso, solo el widget <HT>`Text`</HT> se reconstruirá cuando el valor de `count` cambie, mientras que el widget <HT>`CounterView`</HT> no se reconstruirá por completo.
+Esto se debe a que el widget <HT>`RtConsumer`</HT> observa la propiedad `count` y activa la reconstrucción del árbol de widgets únicamente cuando el valor de `count` cambia.
+
+En el ejemplo anterior, utilizamos el widget <HT>`RtConsumer`</HT> para observar la propiedad `count` de la instancia `counterController`,
+pero podemos lograr la misma funcionalidad utilizando el método <HM>`watch`</HM> de la clase <HT>`BuildContext`</HT>.
+
+A continuación, mostramos cómo modificar el código para emplear el método <HM>`watch`</HM> junto al widget <HT>`Builder`</HT> y lograr el mismo resultado:
+
+```dart title="counter_view.dart" startLineNumber={23} del={1-5} ins={6-13} "RtConsumer" "context.watch"
+            // Observe the `count` property of the `counterController`
+            // and rebuild the widget tree when the `count` value changes
+            RtConsumer<CounterController>(
+              listenStates: (counterController) => [counterController.count],
+              builder: (context, counterController, child) {
+            Builder(
+              builder: (context) {
+                // Observe the `count` property of the `counterController`
+                // and rebuild the widget tree when the `count` value changes
+                final counterController = context.watch<CounterController>(
+                  (counterController) => [counterController.count],
+                );
+
+                return Text("${counterController.count}");
+              },
+            ),
+```
+
+Mientras que el método <HM>`watch`</HM> puede emplearse directamente dentro del método <HM>`builder`</HM> del widget <HT>`RtProvider`</HT>,
+es aconsejable utilizarlo junto a un widget <HT>`Builder`</HT> para evitar reconstrucciones innecesarias del árbol de widgets.
+Esta práctica aprovecha el alcance de <HT>`BuildContext`</HT>, ofreciendo un enfoque más granular para controlar el renderizado dentro del árbol de widgets.
+
+Para casos de uso más avanzados, puedes emplear otros widgets de Reactter y métodos de <HT>`BuildContext`</HT> para poder refinar aún más el control del renderizado del árbol de widgets.

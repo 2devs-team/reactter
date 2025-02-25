@@ -1,0 +1,169 @@
+---
+title: Actualizar objectos en estado
+description: Aprende a actualizar objectos en estado de Reactter.
+---
+import { HM, HN, HS, HT } from '@/components/Highlight';
+
+Un estado de Reactter(<HT>`RtState`</HT>) como <HT>`Signal`</HT>, <HT>`UseState`</HT>, <HT>`UseAsyncState`</HT>, <HT>`UseReducer`</HT> y <HT>`UseCompute`</HT> pueden contener cualquier tipo de valor de Dart, incluidos objetos.
+Sin embargo, no debes modificar los objetos contenidos en el estado de Reactter directamente.
+
+En esta guía, aprenderás cómo actualizar objetos de forma segura y efectiva en un estado Reactter.
+
+## ¿Qué es una mutación?
+
+Puedes almacenar cualquier tipo de valor de Dart en el estado.
+
+```dart showLineNumbers=false
+final count = Signal(0);
+```
+
+Hasta ahora has estado trabajando con números, cadenas y booleanos.
+Estos tipos de valores de Dart son _**inmutables**_, lo que significa que no se pueden cambiar o son _**de solo lectura**_.
+Puedes desencadenar una nueva representación para reemplazar un valor:
+
+```dart showLineNumbers=false
+count.value = 2;
+```
+
+El estado `count` cambió de <HN>`0`</HN> a <HN>`2`</HN>, pero el número <HN>`0`</HN> en sí mismo no cambió.
+No es posible realizar cambios en los valores primitivos incorporados como números, cadenas y booleanos en Dart.
+
+Ahora considera un objeto en un estado:
+
+```dart showLineNumbers=false collapse={1-7}
+class User {
+  String name;
+  int age;
+
+  User({required this.name, required this.age});
+}
+
+final user = Signal(User(name: "Jane Doe", age: 25));
+```
+
+Tecnicamente, es posible cambiar el contenido del objeto en sí. Esto se llama una **mutación**:
+
+```dart showLineNumbers=false
+user.value.name = "John Doe";
+```
+
+Sin embargo, aunque los objetos en el estado de Reactter son técnicamente mutables, debes tratarlos como si fueran inmutables, como números, booleanos y cadenas.
+En lugar de mutarlos, siempre debes reemplazarlos.
+
+## Tratar el estado como de solo lectura
+
+En otras palabras, debes tratar cualquier objeto de Dart que pongas en el estado como de solo lectura.
+
+El siguiente ejemplo mantiene un objeto en el estado para representar al usuario.
+El nombre del usuario se cambia de <HS>`"Jane Doe"`</HS> a <HS>`"John Doe"`</HS> cuando haces clic en el botón,
+pero el nombre del usuario sigue siendo el mismo.
+
+```dart title="main.dart" "Signal" "User" "RtSignalWatcher" "user.value.name" "user.value.age" "user" mark={31}
+import 'package:flutter/material.dart';
+import 'package:reactter/reactter.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class User {
+  String name;
+  int age;
+
+  User({required this.name, required this.age});
+}
+
+final user = Signal(User(name: "Jane Doe", age: 25));
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(title: Text("Inmutable state example")),
+        body: Center(
+          child: RtSignalWatcher((){
+            return Column(
+              children: [
+                Text('Name: ${user.value.name}'),
+                Text('Age: ${user.value.age}'),
+                ElevatedButton(
+                  onPressed: () {
+                    user.value.name = "John Doe";
+                  },
+                  child: Text("Change Name"),
+                ),
+              ],
+            );
+          }),
+        ),
+      ),
+    );
+  }
+}
+```
+
+El problema está en este fragmento de código.
+
+```dart startLineNumber=24
+user.value.name = "John Doe";
+```
+
+Este código modifica el objeto asignado a un nuevo `name` cuando se hace clic en el botón
+pero no desencadena un nuevo renderizado porque el objeto en sí no ha cambiado.
+La propiedad `name` del objeto ha cambiado, pero el objeto en sí no lo ha hecho.
+Y Reactter no sabe que el objeto ha cambiado porque sigue siendo el mismo objeto.
+Aunque la mutación del estado puede funcionar en algunos casos, no lo recomendamos.
+Debes tratar el valor de estado al que tienes acceso como de solo lectura.
+
+Para desencadenar un nuevo renderizado en este caso, crea un nuevo objeto y pásalo a la función de configuración del estado:
+
+```dart startLineNumber=24
+user.value = User(name: "John Doe", age: user.value.age);
+```
+
+Cunado `value` se establece en un nuevo objeto, Reactter sabe que el estado ha cambiado y desencadena un nuevo renderizado.
+
+## Copiar objetos
+
+En el ejemplo anterior, creaste un nuevo objeto con el mismo `age` y un `name` diferente.
+Pero ¿qué pasa si quieres cambiar el `age` y mantener el `name` igual?. También puedes hacerlo:
+
+```dart showLineNumbers=false
+user.value = User(name: user.value.name, age: 30);
+```
+
+Esto es un patrón común cuando trabajas con objetos en el estado.
+Sin embargo, crear un nuevo objeto cada vez que quieras cambiar una propiedad puede ser tedioso.
+Para simplificar este proceso, puedes agregar el siguiente método(<HM>`copyWith`</HM>) a la clase <HT>`User`</HT>:
+
+```dart collapse={2-6} ins="final" ins={7-13} mark={2-3} mark="copyWith"
+class User {
+  final String name;
+  final int age;
+
+  const User({required this.name, required this.age});
+
+  User copyWith({String? name, int? age}) {
+    return User(
+      name: name ?? this.name,
+      age: age ?? this.age,
+    );
+  }
+}
+```
+
+Este método crea un nuevo objeto con las mismas propiedades que el objeto original, excepto por las propiedades que especifiques.
+Puedes usar este método para crear un nuevo objeto con el mismo `name` y un `age` diferente:
+
+```dart showLineNumbers=false ".copyWith"
+user.value = user.value.copyWith(age: 30);
+```
+
+## Resumen
+
+- Trata los objetos en el estado como de solo lectura.
+- Cuando necesites actualizar un objeto, crea uno nuevo o haz una copia del objeto existente, y luego establece el estado para usar este nuevo o copiado objeto.
+- Evita mutar objetos en el estado directamente.
+- Crea un nuevo objeto y pásalo a la función de configuración del estado para desencadenar un nuevo renderizado.
+- Usa el método <HM>`copyWith`</HM> para crear un nuevo objeto con las mismas propiedades que el objeto original, excepto por las propiedades que especifiques.

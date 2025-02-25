@@ -1,0 +1,206 @@
+---
+title: State Management Methods
+description: Documentation of State Management Methods in Reactter.
+sidebar:
+  order: 1
+---
+import { HE, HK, HM, HN, HS, HT } from '@/components/Highlight';
+
+:::tip
+This documentation assumes you've already read the [State Management](/reactter/core_concepts/state_management).
+It's recommended read that first if you're new in Reactter.
+:::
+
+Reactter provides several methods to manage states in a more efficient way. These methods are used to create and manipulate states in a more organized way.
+
+## <HM>`Rt.lazyState`</HM>
+
+<HM>`Rt.lazyState`</HM> is a method that allows to create a state lazily in a dependency(class registered via the [dependency injection](/reactter/core_concepts/dependency_injection)).
+It's useful when you want to create a state that depends on other states or variables.
+
+<HM>`Rt.lazyState`</HM> is generally used in states declared with the <HK>`late`</HK> keyword.
+
+#### Syntax
+
+```dart showLineNumbers=false
+T Rt.lazyState<T extends ReactterState>(T stateFn(), Object instance);
+```
+
+#### Example
+
+For example, you can create a state lazily in a class like this:
+
+```dart title="counter_controller.dart" "Rt.lazyState" "UseState"
+import "package:reactter/reactter.dart";
+
+class CountController {
+  final int initialCount;
+
+  late final uCount = Rt.lazyState(
+    () => UseState(this.initialCount),
+    this,
+  );
+
+  CountController([this.initialCount = 0]) {
+    UseEffect(() {
+      print("Count: ${uCount.value}");
+    }, [uCount]);
+  }
+}
+```
+and then use it like this:
+
+```dart title="main.dart" "Rt.create" "Rt.delete"
+import "./counter_controller.dart";
+
+void main() {
+  final controller = Rt.create(() => CounterController(10));
+  controller.uCount.value += 2; // Count: 12
+  Rt.delete<CounterController>();
+  controller.uCount.value += 3; // Error: "Can't update when it's been disposed"
+}
+```
+
+In the example, the `uCount` state is lazily declared inside the <HT>`CountController`</HT> class using <HM>`Rt.lazyState`</HM>. It's accessed after creating the <HT>`CountController`</HT> instance, and when the instance is deleted, the state is automatically disposed, ensuring efficient resource management.
+
+
+## <HM>`Rt.registerState`</HM>
+
+<HM>`Rt.registerState`</HM> is a method that allows to register a <HT>[`RtState`](/reactter/api/classes/rt_state)</HT> instance.
+All states created must be registered using this method for proper management and disposal.
+
+:::note
+In most cases, you don't need to manually use the <HM>`Rt.registerState`</HM> method to create a state when using <HT>[`RtHook`](/reactter/api/classes/rt_hook)</HT> or <HT>[`Signal`](/reactter/api/classes/signal)</HT> classes, as they automatically handle the registration of the state instance.
+
+However, if you're creating a custom state using the <HT>[`RtState`](/reactter/api/classes/rt_state)</HT> class directly, you **must** use <HM>`Rt.registerState`</HM> to properly register the state instance.
+:::
+
+#### Syntax
+
+```dart showLineNumbers=false
+T Rt.registerState<T extends RtState>(T stateFn());
+```
+
+#### Example
+
+In this example, the custom state using <HT>[`RtState`](/reactter/api/classes/rt_state)</HT> class is created and registered using <HM>`Rt.registerState`</HM> method.
+
+```dart collapse={13-20} mark={1,12} "RtState" "Rt.registerState" "Rt.on" "Lifecycle.didUpdate" /update(?=\u0028)/
+class MyState extends RtState<MyState> {
+  int _value = 0;
+  int get value => _value;
+  set value(int n) {
+    if (n == _value) return;
+    update(() => _value = n); // set new value and notify observers
+  }
+
+  MyState([int value = 0]) : _value = value;
+}
+
+final state = Rt.registerState<MyState>(() => MyState()); // Register state
+
+Rt.on(
+  state,
+  Lifecycle.didUpdate,
+  (_, __) => print('State updated: ${state.value}')
+);
+
+state.value = 42; // Calls update internally
+```
+
+## <HM>`Rt.batch`</HM>
+
+The <HM>`Rt.batch`</HM> method allows multiple state changes to be grouped together, triggering them all at the end when the <HM>`callback`</HM> completes. This ensures that associated side effects occur only once, improving performance and reducing unnecessary re-renders.
+
+#### Syntax
+
+```dart showLineNumbers=false
+T Rt.batch(T callback());
+```
+
+#### Example
+
+In this example, the <HT>`UserController`</HT> class demonstrates how to use the <HM>`Rt.batch`</HM> method to manage state updates efficiently.
+
+```dart title="user_controller.dart" "Rt.batch" "UseState" "UseEffect"
+import "package:reactter/reactter.dart";
+
+class UserController {
+  final uName = UseState("John");
+  final uAge = UseState(25);
+
+  UserController() {
+    UseEffect(() {
+      print("Name: ${uName.value}, Age: ${uAge.value}");
+    }, [uName, uAge]);
+  }
+
+  void updateUserInfo(String name, int age) {
+    Rt.batch(() {
+      uName.value = name;
+      uAge.value = age;
+    });
+  }
+}
+```
+
+By using <HM>`Rt.batch`</HM>, the updates to `uName` and `uAge` are grouped together, ensuring that the <HT>`UseEffect`</HT> hook's callback is triggered only once after both state changes have been made.
+This improves performance by reducing unnecessary re-renders and ensuring that side effects, like printing the updated values, occur only once per batch of state changes.
+
+:::note
+<HM>`Rt.batch`</HM> supports nested batching, meaning you can call <HM>`Rt.batch`</HM> within another <HM>`Rt.batch`</HM>. In such cases, the inner batch will be executed immediately, but the outer batch will delay the side effects until it completes.
+This ensures that all grouped state changes are applied efficiently and side effects are still minimized, e.g.:
+
+```dart
+void updateUserInfo(String name, int age, String email) {
+  Rt.batch(() {
+    uName.value = name;
+    uAge.value = age;
+
+    Rt.batch(() {
+      uEmail.value = email;
+    });
+  });
+}
+```
+:::
+
+## <HM>`Rt.untracked`</HM>
+
+The <HM>`Rt.untracked`</HM> method allows you to perform multiple state changes that are not tracked by the Reactter framework.
+This means that changes made using this method won't trigger associated side effects or re-renders typically observed in reactive state management systems.
+
+#### Syntax
+
+```dart showLineNumbers=false
+T Rt.untracked(T callback());
+```
+
+#### Example
+
+In this example, the <HT>`UserController`</HT> class demonstrates how to use the <HM>`Rt.untracked`</HM> method to update the states without triggering the associated side effects.
+
+```dart title="user_controller.dart" "Rt.untracked" "UseState" "UseEffect"
+import "package:reactter/reactter.dart";
+
+class UserController {
+  final uName = UseState("John");
+  final uAge = UseState(25);
+
+  UserController() {
+    UseEffect(() {
+      print("Name: ${uName.value}, Age: ${uAge.value}");
+    }, [uName, uAge]);
+  }
+
+  void updateUserInfo(String name, int age) {
+    Rt.untracked(() {
+      uName.value = name;
+      uAge.value = age;
+    });
+  }
+}
+```
+
+By using <HM>`Rt.untracked`</HM>, the updates to `uName` and `uAge` are made without triggering the associated side effects, ensuring that the <HT>`UseEffect`</HT> hook's callback is not triggered after these state changes.
+This is useful when you want to update states without causing re-renders or side effects, e.g., when initializing states or performing batch updates.

@@ -1,0 +1,97 @@
+---
+title: UseState
+description: UseState hook documentation.
+sidebar:
+  order: 1
+---
+import { Code } from "@astrojs/starlight/components";
+import { HK, HM, HT } from '@/components/Highlight';
+import MDXRedry from '@/components/MDXRedry.astro';
+import StatePropertiesMethodsRef from '@/content/docs/shareds/state_properties_methods_ref.mdx';
+import * as NoteLateState from '@/content/docs/shareds/note_late_state.mdx';
+import * as NoteStateValueNotifies from '@/content/docs/shareds/note_state_value_notifies.mdx';
+import * as ListeningChangesState from '@/content/docs/shareds/listening_changes_state.mdx';
+
+<HT><a href="https://pub.dev/documentation/reactter/latest/reactter/UseState-class.html">`UseState`</a></HT> is a [hook](/reactter/core_concepts/hooks) that allows to declare state variables and manipulate its `value`, which in turn notifies about its changes to listeners.
+
+## Syntax
+
+```dart showLineNumbers=false
+UseState<T>(T initialValue, { String? debugLabel });
+```
+
+<HT>`UseState`</HT> accepts these parameters:
+
+- **`initialValue`**: Initial value of <HT>`T`</HT> type that it will hold.
+- **`debugLabel`**: *(optional)* A label to identify the hook in the [DevTools extension](/reactter/devtools_extension).
+
+## Properties & Methods
+
+<HT>`UseState`</HT> provides the following properties and methods:
+
+- **`value`**: A getter/setter that allows to read and write its state.
+<StatePropertiesMethodsRef/>
+
+## Usage
+
+### Declaration
+
+<HT>`UseState`</HT> can be initialized using the constructor class:
+
+```dart showLineNumbers=false "UseState"
+final intState = UseState<int>(0);
+final strState = UseState("initial value");
+final userState = UseState(User());
+```
+
+<MDXRedry mdx={NoteLateState} vars={{stateName: 'UseState'}}>
+  <Fragment slot="exampleCode">
+```dart title="counter_controller.dart" collapse={1-3, 8-10} "late" "Rt.lazyState" "UseState"
+class CounterController {
+  final int initialCount;
+
+  late final count = Rt.lazyState(
+    () => UseState(this.initialCount),
+    this,
+  );
+
+  Counter([this.initialCount = 0]);
+}
+```
+  </Fragment>
+</MDXRedry>
+
+### Reading and writing the value
+
+<HT>`UseState`</HT> has a `value` property that allows to read and write its state:
+
+```dart showLineNumbers=false ".value"
+intState.value = 10;
+print("Current state: ${intState.value}");
+```
+<MDXRedry mdx={NoteStateValueNotifies} vars={{
+  stateName: 'UseState',
+}}/>
+
+### Updating the state
+
+Use <HM>`update`</HM> method to notify changes after run a set of instructions:
+
+```dart showLineNumbers=false ".update"
+uState.update((value) {
+  uState.value = "New value";
+});
+```
+
+Use <HM>`notify`</HM> method to force to notify changes.
+
+```dart showLineNumbers=false ".notify"
+userState.notify();
+```
+
+### Listening to changes
+
+<MDXRedry mdx={ListeningChangesState} vars={{
+  stateName: 'UseState',
+  stateVariable: 'myState',
+}}/>

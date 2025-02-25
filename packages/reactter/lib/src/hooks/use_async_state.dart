@@ -1,7 +1,7 @@
 part of 'hooks.dart';
 
 enum UseAsyncStateStatus {
-  standby,
+  idle,
   loading,
   done,
   error,
@@ -13,6 +13,16 @@ abstract class UseAsyncStateBase<T> extends RtHook {
   @override
   final $ = RtHook.$register;
 
+  final String? _debugLabel;
+  @override
+  String? get debugLabel => _debugLabel ?? super.debugLabel;
+  @override
+  Map<String, dynamic> get debugInfo => {
+        'value': value,
+        'error': error,
+        'status': status,
+      };
+
   /// Stores the initial value.
   final T _initialValue;
 
@@ -20,47 +30,104 @@ abstract class UseAsyncStateBase<T> extends RtHook {
   /// Need to call [resolve] to execute.
   final Function _asyncFunction;
 
-  final UseState<T> _value;
-  final _error = UseState<Object?>(null);
-  final _status = UseState(UseAsyncStateStatus.standby);
+  final UseState<T> _uValue;
+  late final uValue = Rt.lazyState(
+    () => UseCompute(() => _uValue.value, [_uValue]),
+    this,
+  );
+  T get value => _uValue.value;
 
-  T get value => _value.value;
-  Object? get error => _error.value;
-  UseAsyncStateStatus get status => _status.value;
+  final _uError = UseState<Object?>(null);
+  late final uError = Rt.lazyState(
+    () => UseCompute(() => _uError.value, [_uError]),
+    this,
+  );
+  Object? get error => _uError.value;
+
+  final _uStatus = UseState(UseAsyncStateStatus.idle);
+  late final uStatus = Rt.lazyState(
+    () => UseCompute(() => _uStatus.value, [_uStatus]),
+    this,
+  );
+  UseAsyncStateStatus get status => _uStatus.value;
+
+  late final uIsLoading = Rt.lazyState(
+    () => UseCompute(() => status == UseAsyncStateStatus.loading, [uStatus]),
+    this,
+  );
+  bool get isLoading => uIsLoading.value;
+
+  late final uIsDone = Rt.lazyState(
+    () => UseCompute(() => status == UseAsyncStateStatus.done, [uStatus]),
+    this,
+  );
+  bool get isDone => uIsDone.value;
+
+  late final uIsError = Rt.lazyState(
+    () => UseCompute(() => status == UseAsyncStateStatus.error, [uStatus]),
+    this,
+  );
+  bool get isError => uIsError.value;
+
+  Future<T> _future = Completer<T>().future;
+  Future<T> get future => _future;
+
+  bool _isCanceled = false;
 
   UseAsyncStateBase(
-    T initialValue,
     Function asyncFunction,
-  )   : _initialValue = initialValue,
+    T initialValue, {
+    String? debugLabel,
+  })  : _initialValue = initialValue,
         _asyncFunction = asyncFunction,
-        _value = UseState(initialValue);
+        _debugLabel = debugLabel,
+        _uValue = UseState(initialValue);
 
   /// Execute [asyncFunction] to resolve [value].
   FutureOr<T?> _resolve<A>([A? arg]) async {
     try {
-      _status.value = UseAsyncStateStatus.loading;
+      _uStatus.value = UseAsyncStateStatus.loading;
 
       final asyncFunctionExecuting =
           arg == null ? _asyncFunction() : _asyncFunction(arg);
 
-      _value.value = asyncFunctionExecuting is Future
-          ? await asyncFunctionExecuting
-          : asyncFunctionExecuting;
+      _future = asyncFunctionExecuting is Future<T>
+          ? asyncFunctionExecuting
+          : Future.value(asyncFunctionExecuting);
 
-      _status.value = UseAsyncStateStatus.done;
+      final response = await _future;
 
-      return _value.value;
+      if (_isCanceled) return null;
+
+      Rt.batch(() {
+        _uValue.value = response;
+        _uStatus.value = UseAsyncStateStatus.done;
+      });
+
+      return _uValue.value;
     } catch (e) {
-      _error.value = e;
-      _status.value = UseAsyncStateStatus.error;
+      Rt.batch(() {
+        _uError.value = e;
+        _uStatus.value = UseAsyncStateStatus.error;
+      });
 
       return null;
+    } finally {
+      if (_isCanceled) {
+        _uStatus.value = UseAsyncStateStatus.done;
+        _isCanceled = false;
+      }
     }
+  }
+
+  /// Cancels the async function execution.
+  void cancel() {
+    if (status == UseAsyncStateStatus.loading) _isCanceled = true;
   }
 
   /// Returns a new value of [R] depending on the state of the hook:
   ///
-  /// `standby`: When the state has the initial value.
+  /// `idle`: When the state has the initial value.
   /// `loading`: When the request for the state is retrieving the value.
   /// `done`: When the request is done.
   /// `error`: If any errors happens in the request.
@@ -69,14 +136,14 @@ abstract class UseAsyncStateBase<T> extends RtHook {
   ///
   /// ```dart
   /// final valueComputed = appController.asyncState.when<String>(
-  ///   standby: (value) => "⚓️ Standby: ${value}",
+  ///   idle: (value) => "⚓️ Idle: ${value}",
   ///   loading: (value) => "⏳ Loading...",
   ///   done: (value) => "✅ Resolved: ${value}",
   ///   error: (error) => "❌ Error: ${error}",
   /// )
   /// ```
   R? when<R>({
-    WhenValueReturn<T, R>? standby,
+    WhenValueReturn<T, R>? idle,
     WhenValueReturn<T, R>? loading,
     WhenValueReturn<T, R>? done,
     WhenErrorReturn<R>? error,
@@ -93,18 +160,20 @@ abstract class UseAsyncStateBase<T> extends RtHook {
       return done?.call(value);
     }
 
-    return standby?.call(value);
+    return idle?.call(value);
   }
 
   /// Reset [value], [status] and [error] to its [initial] state.
   void reset() {
-    _value.value = _initialValue;
-    _error.value = null;
-    _status.value = UseAsyncStateStatus.standby;
+    Rt.batch(() {
+      _uValue.value = _initialValue;
+      _uError.value = null;
+      _uStatus.value = UseAsyncStateStatus.idle;
+    });
   }
 }
 
-/// {@template use_async_state}
+/// {@template reactter.use_async_state}
 /// A [ReactteHook] that manages the state as async way.
 ///
 /// [T] is use to define the type of [value].
@@ -141,7 +210,7 @@ abstract class UseAsyncStateBase<T> extends RtHook {
 ///
 /// ```dart
 /// final valueComputed = appController.asyncState.when<String>(
-///   standby: (value) => "⚓️ Standby: $value",
+///   idle: (value) => "⚓️ Standby: $value",
 ///   loading: (value) => "⏳ Loading...",
 ///   done: (value) => "✅ Resolved: $value",
 ///   error: (error) => "❌ Error: $error",
@@ -156,18 +225,28 @@ abstract class UseAsyncStateBase<T> extends RtHook {
 /// * [UseAsyncStateArg], the same as it, but with arguments.
 /// {@endtemplate}
 class UseAsyncState<T> extends UseAsyncStateBase<T> {
-  /// {@macro use_async_state}
+  /// {@macro reactter.use_async_state}
   UseAsyncState(
-    T initialValue,
     AsyncFunction<T> asyncFunction,
-  ) : super(initialValue, asyncFunction);
+    T initialValue, {
+    String? debugLabel,
+  }) : super(
+          asyncFunction,
+          initialValue,
+          debugLabel: debugLabel,
+        );
 
-  /// {@macro use_async_state_arg}
+  /// {@macro reactter.use_async_state_arg}
   static UseAsyncStateArg<T, A> withArg<T, A>(
-    T initialValue,
     AsyncFunctionArg<T, A> asyncFunction,
-  ) {
-    return UseAsyncStateArg<T, A>(initialValue, asyncFunction);
+    T initialValue, {
+    String? debugLabel,
+  }) {
+    return UseAsyncStateArg<T, A>(
+      asyncFunction,
+      initialValue,
+      debugLabel: debugLabel,
+    );
   }
 
   /// Execute [asyncFunction] to resolve [value].
@@ -176,7 +255,7 @@ class UseAsyncState<T> extends UseAsyncStateBase<T> {
   }
 }
 
-/// {@template use_async_state_arg}
+/// {@template reactter.use_async_state_arg}
 /// A [ReactteHook] that manages the state as async way.
 ///
 /// [T] is use to define the type of [value]
@@ -213,7 +292,7 @@ class UseAsyncState<T> extends UseAsyncStateBase<T> {
 ///
 /// ```dart
 /// final valueComputed = appController.asyncState.when<String>(
-///   standby: (value) => "⚓️ Standby: $value",
+///   idle: (value) => "⚓️ Standby: $value",
 ///   loading: (value) => "⏳ Loading...",
 ///   done: (value) => "✅ Resolved: $value",
 ///   error: (error) => "❌ Error: $error",
@@ -229,11 +308,16 @@ class UseAsyncState<T> extends UseAsyncStateBase<T> {
 /// * [Args], a generic arguments.
 /// {@endtemplate}
 class UseAsyncStateArg<T, A> extends UseAsyncStateBase<T> {
-  /// {@macro use_async_state_arg}
+  /// {@macro reactter.use_async_state_arg}
   UseAsyncStateArg(
-    T initialValue,
     AsyncFunctionArg<T, A> asyncFunction,
-  ) : super(initialValue, asyncFunction);
+    T initialValue, {
+    String? debugLabel,
+  }) : super(
+          asyncFunction,
+          initialValue,
+          debugLabel: debugLabel,
+        );
 
   /// Execute [asyncFunction] to resolve [value].
   FutureOr<T?> resolve(A arg) async {

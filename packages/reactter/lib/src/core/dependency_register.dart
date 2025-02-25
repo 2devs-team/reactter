@@ -1,4 +1,4 @@
-part of 'core.dart';
+part of '../internals.dart';
 
 /// A class that represents a dependency register in Reactter.
 ///
@@ -17,7 +17,7 @@ class DependencyRegister<T> extends DependencyRef<T?> {
   final DependencyMode mode;
 
   /// Stores the refs where the instance was created.
-  final refs = HashSet<int>();
+  final LinkedHashSet<Object> refs = LinkedHashSet<Object>();
 
   T? _instance;
   T? get instance => _instance;
@@ -28,16 +28,8 @@ class DependencyRegister<T> extends DependencyRef<T?> {
     this.mode = DependencyMode.builder,
   }) : super(id);
 
+  /// Creates an instance of the dependency.
   T? builder() {
-    _instance = _builder();
-
-    return _instance;
-  }
-
-  @override
-  String toString() {
-    final hashCode = instance != null ? "(${instance.hashCode})" : "";
-
-    return '${super.toString()}$hashCode';
+    return _instance = _builder();
   }
 }
