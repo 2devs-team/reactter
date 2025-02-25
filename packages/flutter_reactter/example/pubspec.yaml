@@ -12,7 +12,7 @@ dependencies:
   http: ^0.13.6
   url_launcher: ^6.1.2
   intl: ^0.17.0
-  flutter_reactter: ^8.0.0-dev
+  flutter_reactter: ^8.0.0
   # flutter_reactter:
   #   path: ../../flutter_reactter
 

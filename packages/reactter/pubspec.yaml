@@ -4,7 +4,7 @@ homepage: https://2devs-team.github.io/reactter/
 documentation: https://2devs-team.github.io/reactter/
 repository: https://github.com/2devs-team/reactter/tree/master/packages/reactter
 license: MIT License
-version: 8.0.0-dev.31
+version: 8.0.0
 
 topics:
   - reactive
