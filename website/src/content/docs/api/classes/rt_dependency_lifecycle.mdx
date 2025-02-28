@@ -46,10 +46,10 @@ Useful for pre-mount setup.
 - <HM>**`onDidMount`**</HM>(only in **flutter_reactter**): Called immediately after the dependency is mounted.
 Ideal for post-mount initialization.
 - <HM>**`onWillUpdate`**</HM>: Called before the dependency is updated.
-The parameter is the state (RtState) that triggered the update.
+The parameter is the state (<HT>`RtState`</HT>) that triggered the update.
 Use this to react to state changes before they take effect.
 - <HM>**`onDidUpdate`**</HM>: Called after the dependency is updated.
-The parameter is the state (RtState) that triggered the update.
+The parameter is the state (<HT>`RtState`</HT>) that triggered the update.
 Use this to react to state changes after they take effect.
 - <HM>**`onWillUnmount`**</HM>(only in **flutter_reactter**): Called just before the dependency is unmounted.
 Useful for cleanup tasks.
@@ -58,10 +58,10 @@ Ideal for final cleanup or resource release.
 
 ## Example
 
-Here's an example of a simple RtDependencyLifecycle implementation:
+Here's an example of a simple <HT>`RtDependencyLifecycle`</HT> implementation:
 
 <CodeTabs>
-  <ZappButton path="examples/"/>
+  <ZappButton path="examples/rt_dependency_lifecycle"/>
 
   <Tabs>
     <TabItem>
