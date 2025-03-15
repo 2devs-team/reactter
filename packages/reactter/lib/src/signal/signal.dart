@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:reactter/src/framework.dart';
+import 'package:reactter/src/internals.dart';
 
 part 'extensions/signal_bigint.dart';
 part 'extensions/signal_bool.dart';
@@ -12,6 +13,8 @@ part 'extensions/signal_map.dart';
 part 'extensions/signal_num.dart';
 part 'extensions/signal_set.dart';
 part 'extensions/signal_string.dart';
+part 'computed.dart';
+part 'effect.dart';
 
 /// This enumeration is used to represent different events that can occur when
 /// getting or setting the value of a `Signal` object.
@@ -86,10 +89,7 @@ enum SignalEvent { onGetValue, onSetValue }
 /// package on your dependencies and use its Widgets.
 ///
 /// {@endtemplate}
-class Signal<T> with RtState {
-  bool _shouldGetValueNotify = true;
-  bool _shouldSetValueNotify = true;
-
+class Signal<T> with RtState, StateDependency {
   T _value;
   final String? _debugLabel;
 
@@ -97,12 +97,11 @@ class Signal<T> with RtState {
   String? get debugLabel => _debugLabel ?? super.debugLabel;
 
   @override
-  Map<String, dynamic> get debugInfo => {'value': value};
+  Map<String, dynamic> get debugInfo => {'value': _value};
 
   /// Returns the [value] of the signal.
   T get value {
-    _notifyGetValue();
-
+    SignalRuntime.link(this);
     return _value;
   }
 
@@ -111,10 +110,7 @@ class Signal<T> with RtState {
   set value(T val) {
     if (_value == val) return;
 
-    update((_) {
-      _value = val;
-      _notifySetValue();
-    });
+    update((_) => _value = val);
   }
 
   /// {@macro reactter.signal}
@@ -134,19 +130,21 @@ class Signal<T> with RtState {
   T call([T? val]) {
     assert(!isDisposed, "You can call when it's been disposed");
 
-    if (val != null) value = val;
+    if (val == null) return value;
 
-    return value;
+    if (val != _value) update((_) => _value = val);
+
+    return _value;
   }
 
   /// Executes [callback], and notifies the listeners about the update.
   @override
   void update(void Function(T value) fnUpdate) {
-    super.update(() => fnUpdate(value));
+    super.update(() => fnUpdate(_value));
   }
 
   @override
-  String toString() => value.toString();
+  String toString() => _value.toString();
 
   @override
   // ignore: unnecessary_overrides
@@ -173,23 +171,7 @@ class Signal<T> with RtState {
   ///
   @override
   bool operator ==(Object other) =>
-      other is Signal<T> ? identical(this, other) : value == other;
-
-  void _notifyGetValue() {
-    if (!_shouldGetValueNotify) return;
-
-    _shouldGetValueNotify = false;
-    Rt.emit(Signal, SignalEvent.onGetValue, this);
-    _shouldGetValueNotify = true;
-  }
-
-  void _notifySetValue() {
-    if (!_shouldSetValueNotify) return;
-
-    _shouldSetValueNotify = false;
-    Rt.emit(Signal, SignalEvent.onSetValue, this);
-    _shouldSetValueNotify = true;
-  }
+      other is Signal<T> ? identical(this, other) : _value == other;
 }
 
 extension SignalNullExt<T> on Signal<T?> {
